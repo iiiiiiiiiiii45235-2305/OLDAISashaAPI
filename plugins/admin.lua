@@ -1027,6 +1027,6 @@ end
 
 return {
     action = action,
-    cron = true,
+    cron = cron,
     triggers = { '^/a', '^###(forward)' }
 }
