@@ -1,7 +1,7 @@
 local function action(msg, blocks, ln)
-    
+
     if not(msg.chat.type == 'private') then return end
-    
+
     local questions = {
         'Can you make a command to delete <insert what you would like to delete here>?',
         'Can you add a function to kick/ban who writes a specific word?',
@@ -31,7 +31,7 @@ local function action(msg, blocks, ln)
         'Can you make the "anti media" directly kick/ban instead of warn? Or can you make the number of warns configurable?',
         'Can you make something to block only Telegram links?',
     }
-    
+
     local answer = {
         'The Bot Api doesn\'t offer a method to delete message, but the Bot Support said that this feature will arrive. You can read the conversation [here](https://telegram.me/GroupButler_ch/32)',
         'I\'ve received many requests about this feature, I\'m sorry but I think everyone could avoid the words check just by changing an "_E_ " with a "_3_ ", or in general every character can be replaced with any other character. This function will probably added when bots can delete messages, but is not 100% confirmed',
@@ -60,16 +60,16 @@ local function action(msg, blocks, ln)
         'I\'m not going to add this dictatorial things. In my opinion, the bot already allows you to block everything could be source of spam or off-topic in a group, and for me it already feels like an Hitlerian weapon for a paranoid admin.',
         'This "media warns" system will change as soon as I have some time to make some tests. For now it will stay as it is. My idea is to allow Admins to choose how many warns are needed to kick someone for posting a forbidden media. I\'ll see',
         'No, the current system uses a nice field in the messages object given by the api that includes all the links in a message, I\'m not going to add other plugins with arranged triggers only for Telegram links. I\'m sorry :(',
-        
+
     }
-    
+
     local text
-    
+
     if not blocks[2] then
         local i = 1
         text = '*All the available questions*. Type `/faq [question number]`  to get the anwer\n\n'
-        for k,v in pairs(questions) do
-            text = text..'*'..i..'* - `'..v..'`\n'
+        for k, v in pairs(questions) do
+            text = text .. '*' .. i .. '* - `' .. v .. '`\n'
             i = i + 1
         end
         api.sendMessage(msg.chat.id, text, true)
@@ -79,7 +79,7 @@ local function action(msg, blocks, ln)
         if n > #answer or n == 0 then
             api.sendMessage(msg.chat.id, '_Number not valid_', true)
         else
-            text = '*'..questions[n]..'*\n\n'..answer[n]
+            text = '*' .. questions[n] .. '*\n\n' .. answer[n]
             api.sendMessage(msg.chat.id, text, true)
         end
     end
@@ -88,7 +88,8 @@ end
     
 return {
     action = action,
-    triggers = {
+    triggers =
+    {
         '^/(faq)$',
         '^/(faq) (%d%d?)',
     }

@@ -1,88 +1,91 @@
 local function make_keyboard(mod, mod_current_position)
-	local keyboard = {}
-	keyboard.inline_keyboard = {}
-	if mod then --extra options for the mod
-	    local list = {
-	        ['Banhammer'] = '!banhammer',
-	        ['Group info'] = '!info',
-	        ['Flood manager'] = '!flood',
-	        ['Media settings'] = '!media',
-	        ['Welcome settings'] = '!welcome',
-	        ['General settings'] = '!settings',
-	        ['Extra commands'] = '!extra',
-	        ['Warns'] = '!warns',
-	        ['Characters strictness'] = '!char',
-	        ['Links'] = '!links',
-	        ['Languages'] = '!lang'
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    if mod then
+        -- extra options for the mod
+        local list = {
+            ['Banhammer'] = '!banhammer',
+            ['Group info'] = '!info',
+            ['Flood manager'] = '!flood',
+            ['Media settings'] = '!media',
+            ['Welcome settings'] = '!welcome',
+            ['General settings'] = '!settings',
+            ['Extra commands'] = '!extra',
+            ['Warns'] = '!warns',
+            ['Characters strictness'] = '!char',
+            ['Links'] = '!links',
+            ['Languages'] = '!lang'
         }
-        local line = {}
-        for k,v in pairs(list) do
-            --if mod_current_position ~= v:gsub('!', '') then --(to remove the current tab button)
+        local line = { }
+        for k, v in pairs(list) do
+            -- if mod_current_position ~= v:gsub('!', '') then --(to remove the current tab button)
             if next(line) then
-                local button = {text = '📍'..k, callback_data = v}
-                --change emoji if it's the current position button
-                if mod_current_position == v:gsub('!', '') then button.text = '💡 '..k end
+                local button = { text = '📍' .. k, callback_data = v }
+                -- change emoji if it's the current position button
+                if mod_current_position == v:gsub('!', '') then button.text = '💡 ' .. k end
                 table.insert(line, button)
                 table.insert(keyboard.inline_keyboard, line)
-                line = {}
+                line = { }
             else
-                local button = {text = '📍'..k, callback_data = v}
-                --change emoji if it's the current position button
-                if mod_current_position == v:gsub('!', '') then button.text = '💡 '..k end
+                local button = { text = '📍' .. k, callback_data = v }
+                -- change emoji if it's the current position button
+                if mod_current_position == v:gsub('!', '') then button.text = '💡 ' .. k end
                 table.insert(line, button)
             end
-            --end --(to remove the current tab button)
+            -- end --(to remove the current tab button)
         end
-        if next(line) then --if the numer of buttons is odd, then add the last button alone
+        if next(line) then
+            -- if the numer of buttons is odd, then add the last button alone
             table.insert(keyboard.inline_keyboard, line)
         end
     end
     local bottom_bar
     if mod then
-		bottom_bar = {{text = '🔰 User commands', callback_data = '!user'}}
-	else
-	    bottom_bar = {{text = '🔰 Admin commands', callback_data = '!mod'}}
-	end
-	table.insert(bottom_bar, {text = 'Info', callback_data = '!info_button'}) --insert the "Info" button
-	table.insert(keyboard.inline_keyboard, bottom_bar)
-	return keyboard
+        bottom_bar = { { text = '🔰 User commands', callback_data = '!user' } }
+    else
+        bottom_bar = { { text = '🔰 Admin commands', callback_data = '!mod' } }
+    end
+    table.insert(bottom_bar, { text = 'Info', callback_data = '!info_button' })
+    -- insert the "Info" button
+    table.insert(keyboard.inline_keyboard, bottom_bar)
+    return keyboard
 end
 
 local function do_keybaord_credits()
-	local keyboard = {}
+    local keyboard = { }
     keyboard.inline_keyboard = {
-    	{
-    		{text = 'Channel', url = 'https://telegram.me/'..config.channel:gsub('@', '')},
-    		{text = 'GitHub', url = 'https://github.com/RememberTheAir/GroupButler'},
-    		{text = 'Rate me!', url = 'https://telegram.me/storebot?start='..bot.username},
-		},
-		{
-		    {text = '🔙', callback_data = '!user'}
+        {
+            { text = 'Channel', url = 'https://telegram.me/' .. config.channel:gsub('@', '') },
+            { text = 'GitHub', url = 'https://github.com/RememberTheAir/GroupButler' },
+            { text = 'Rate me!', url = 'https://telegram.me/storebot?start=' .. bot.username },
+        },
+        {
+            { text = '🔙', callback_data = '!user' }
         }
-	}
-	return keyboard
+    }
+    return keyboard
 end
 
 local function do_keyboard_private()
-    local keyboard = {}
+    local keyboard = { }
     keyboard.inline_keyboard = {
-    	{
-    		{text = '👥 Add me to a group', url = 'https://telegram.me/'..bot.username..'?startgroup=new'},
-    		{text = '📢 Bot channel', url = 'https://telegram.me/'..config.channel:gsub('@', '')},
-	    },
-	    {
-	        {text = '📕 All the commands', callback_data = '!user'}
+        {
+            { text = '👥 Add me to a group', url = 'https://telegram.me/' .. bot.username .. '?startgroup=new' },
+            { text = '📢 Bot channel', url = 'https://telegram.me/' .. config.channel:gsub('@', '') },
+        },
+        {
+            { text = '📕 All the commands', callback_data = '!user' }
         }
     }
     return keyboard
 end
 
 local function do_keyboard_startme()
-    local keyboard = {}
+    local keyboard = { }
     keyboard.inline_keyboard = {
-    	{
-    		{text = 'Start me', url = 'https://telegram.me/'..bot.username}
-	    }
+        {
+            { text = 'Start me', url = 'https://telegram.me/' .. bot.username }
+        }
     }
     return keyboard
 end
@@ -121,9 +124,9 @@ local action = function(msg, blocks, ln)
         local text
         if query == 'info_button' then
             keyboard = do_keybaord_credits()
-		    api.editMessageText(msg.chat.id, msg_id, lang[ln].credits, keyboard, true)
-		    return
-		end
+            api.editMessageText(msg.chat.id, msg_id, lang[ln].credits, keyboard, true)
+            return
+        end
         local with_mods_lines = true
         if query == 'user' then
             text = lang[ln].help.all
@@ -132,57 +135,58 @@ local action = function(msg, blocks, ln)
             text = lang[ln].help.kb_header
         end
         if query == 'info' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'banhammer' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'flood' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'media' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'welcome' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'extra' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'warns' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'char' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'links' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'lang' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         elseif query == 'settings' then
-        	text = lang[ln].help.mods[query]
+            text = lang[ln].help.mods[query]
         end
         keyboard = make_keyboard(with_mods_lines, query)
         local res, code = api.editMessageText(msg.chat.id, msg_id, text, keyboard, true)
         if not res and code and code == 111 then
             api.answerCallbackQuery(msg.cb_id, '❗️ Already on this tab')
         elseif query ~= 'user' and query ~= 'mod' and query ~= 'info_button' then
-            api.answerCallbackQuery(msg.cb_id, '💡 '..lang[ln].help.mods[query]:sub(1, string.find(lang[ln].help.mods[query], '\n')):mEscape_hard())
+            api.answerCallbackQuery(msg.cb_id, '💡 ' .. lang[ln].help.mods[query]:sub(1, string.find(lang[ln].help.mods[query], '\n')):mEscape_hard())
         end
     end
 end
 
 return {
-	action = action,
-	admin_not_needed = true,
-	triggers = {
-	    '^/(start)$',
-	    '^/(help)$',
-	    '^###cb:!(user)',
-	    '^###cb:!(info_button)',
-	    '^###cb:!(mod)',
-	    '^###cb:!(info)',
-	    '^###cb:!(banhammer)',
-	    '^###cb:!(flood)',
-	    '^###cb:!(media)',
-	    '^###cb:!(links)',
-	    '^###cb:!(lang)',
-	    '^###cb:!(welcome)',
-	    '^###cb:!(extra)',
-	    '^###cb:!(warns)',
-	    '^###cb:!(char)',
-	    '^###cb:!(settings)',
+    action = action,
+    admin_not_needed = true,
+    triggers =
+    {
+        '^/(start)$',
+        '^/(help)$',
+        '^###cb:!(user)',
+        '^###cb:!(info_button)',
+        '^###cb:!(mod)',
+        '^###cb:!(info)',
+        '^###cb:!(banhammer)',
+        '^###cb:!(flood)',
+        '^###cb:!(media)',
+        '^###cb:!(links)',
+        '^###cb:!(lang)',
+        '^###cb:!(welcome)',
+        '^###cb:!(extra)',
+        '^###cb:!(warns)',
+        '^###cb:!(char)',
+        '^###cb:!(settings)',
     }
 }
