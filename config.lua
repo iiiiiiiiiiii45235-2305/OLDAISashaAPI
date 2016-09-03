@@ -41,6 +41,7 @@ return {
         'warn',
         'whitelist',
     },
+    disabled_plugin_on_chat = { },
     sudo_users = { 41400331, },
     moderation = { data = 'data/moderation.json' },
     likecounter = { db = 'data/likecounterdb.json' },
