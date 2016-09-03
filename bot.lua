@@ -17,15 +17,15 @@ end
 -- Returns the config from config.lua file.
 -- If file doesn't exist, create it.
 function load_config()
-    local f = io.open('./data/config.lua', "r")
+    local f = io.open('./config.lua', "r")
     -- If config.lua doesn't exist
     if not f then
-        print(clr.blue .. "Created new config file: data/config.lua")
+        print(clr.blue .. "Created new config file: config.lua")
         create_config()
     else
         f:close()
     end
-    local config = loadfile("./data/config.lua")()
+    local config = loadfile("./config.lua")()
     for v, user in pairs(config.sudo_users) do
         print(clr.green .. "Sudo user: " .. user)
     end
@@ -154,8 +154,8 @@ function create_config()
             -- too many callback_data requests
         }
     }
-    serialize_to_file(config, './data/config.lua', false)
-    print(clr.blue .. 'saved config into ./data/config.lua')
+    serialize_to_file(config, './config.lua', false)
+    print(clr.blue .. 'saved config into ./config.lua')
 end
 
 function load_langs()
