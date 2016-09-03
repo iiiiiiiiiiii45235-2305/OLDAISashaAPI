@@ -196,9 +196,6 @@ function load_database()
 end
 
 function bot_init()
-    require("utils")
-    require("methods")
-    require("ranks")
     config = { }
     langs = { }
     bot = nil
@@ -210,6 +207,9 @@ function bot_init()
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return
     end
+    require("utils")
+    require("methods")
+    require("ranks")
 
     load_langs()
     load_api()
