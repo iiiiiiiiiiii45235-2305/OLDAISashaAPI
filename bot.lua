@@ -492,12 +492,12 @@ end
 function msg_valid(msg)
     -- Before bot was started more or less
     if msg.date < os.time() -5 then
-        print(clr.pink .. 'Not valid: old msg')
+        print(clr.purple .. 'Not valid: old msg')
         return false
     end
 
     if is_channel_disabled(msg.receiver) and not is_momod(msg) then
-        print(clr.pink .. 'Not valid: channel disabled')
+        print(clr.purple .. 'Not valid: channel disabled')
         return false
     end
 
