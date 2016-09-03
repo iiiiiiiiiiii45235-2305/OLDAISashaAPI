@@ -48,9 +48,6 @@ local function get_object_info(obj, chat_id, lang)
             if isBanned(obj.id, chat_id) then
                 otherinfo = otherinfo .. 'BANNED '
             end
-            if is_muted_user(chat_id, obj.id) then
-                otherinfo = otherinfo .. 'MUTED '
-            end
             if is_blocked(obj.id) then
                 otherinfo = otherinfo .. 'PM BLOCKED '
             end

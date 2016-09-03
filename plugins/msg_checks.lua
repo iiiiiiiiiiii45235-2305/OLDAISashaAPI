@@ -70,15 +70,6 @@ local function check_msg(msg)
             end
             return
         end
-        if is_muted(msg.chat.id, "Text: yes") and msg.text and not msg.media and not msg.service then
-            if strict == "yes" then
-                kickUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            return
-        end
     end
     if msg.media then
         -- msg.media checks
@@ -116,54 +107,6 @@ local function check_msg(msg)
             end
         end
         if msg.contact and lock_contacts == "yes" then
-            if strict == "yes" then
-                kickUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            return
-        end
-        -- ".jpg",
-        if is_muted(msg.chat.id, 'Photo: yes') and msg.photo and not msg.service then
-            if strict == "yes" then
-                kickUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            return
-        end
-        if is_muted(msg.chat.id, 'Gifs: yes') and is_gif_caption and msg.document and not msg.service then
-            if msg.document.mime_type == 'video/mp4' then
-                if strict == "yes" then
-                    kickUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                if msg.chat.type == 'group' then
-                    banUser(bot.id, msg.from.id, msg.chat.id)
-                end
-            end
-            return
-        end
-        if is_muted(msg.chat.id, 'Audio: yes') and(msg.audio or msg.voice) and not msg.service then
-            if strict == "yes" then
-                kickUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            return
-        end
-        if is_muted(msg.chat.id, 'Video: yes') and msg.video and not msg.service then
-            if strict == "yes" then
-                kickUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            return
-        end
-        if is_muted(msg.chat.id, 'Documents: yes') and msg.document and not msg.service then
             if strict == "yes" then
                 kickUser(bot.id, msg.from.id, msg.chat.id)
             end
@@ -303,21 +246,7 @@ local function pre_process(msg)
             else
                 strict = 'no'
             end
-            if is_muted_user(msg.chat.id, msg.from.id) and not msg.service then
-                if msg.chat.type == 'group' then
-                    kickUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                msg = clean_msg(msg)
-                return msg
-            end
             if not is_mod(msg) then
-                if msg and not msg.service and is_muted(msg.chat.id, 'All: yes') then
-                    if msg.chat.type == 'group' then
-                        kickUser(bot.id, msg.from.id, msg.chat.id)
-                    end
-                    msg = clean_msg(msg)
-                    return msg
-                end
                 local tmp = check_msg(msg)
                 if tmp then
                     msg = tmp
