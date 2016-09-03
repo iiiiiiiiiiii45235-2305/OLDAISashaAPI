@@ -1,269 +1,516 @@
-local function cron()
-	local all = db:hgetall('tempbanned')
-	if next(all) then
-		for unban_time,info in pairs(all) do
-			if os.time() > tonumber(unban_time) then
-				local chat_id, user_id = info:match('(-%d+):(%d+)')
-				api.unbanUser(chat_id, user_id, true)
-				api.unbanUser(chat_id, user_id, false)
-				db:hdel('tempbanned', unban_time)
-				db:srem('chat:'..chat_id..':tempbanned', user_id) --hash needed to check if an user is already tempbanned or not
-			end
-		end
-	end
+local function user_msgs(user_id, chat_id)
+    local user_info
+    local uhash = 'user:' .. user_id
+    local user = redis:hgetall(uhash)
+    local um_hash = 'msgs:' .. user_id .. ':' .. chat_id
+    user_info = tonumber(redis:get(um_hash) or 0)
+    return user_info
 end
 
-local function get_user_id(msg, blocks)
-	if msg.cb then
-		return blocks[2]
-	elseif msg.reply then
-		return msg.reply.from.id
-	elseif blocks[2] then
-		return res_user_group(blocks[2], msg.chat.id)
-	end
+-- Returns chat's total messages
+local function get_msgs_chat(chat_id)
+    local hash = 'chatmsgs:' .. chat_id
+    local msgs = redis:get(hash)
+    if not msgs then
+        return 0
+    end
+    return msgs
 end
 
-local function getBanList(chat_id, ln)
-    local text = lang[ln].banhammer.banlist_header
-    local hash = 'chat:'..chat_id..':bannedlist'
-    local banned_users, mot = rdb.get(hash)
-    if not banned_users or not next(banned_users) then
-        return lang[ln].banhammer.banlist_empty, true
-    else
-        local i = 1
-        for banned_id,info in pairs(banned_users) do
-            text = text..'*'..i..'* - '..info.nick:mEscape()
-            if info.why then text = text..'\n*⌦* '..info.why:mEscape() end
-            text = text..'\n'
-            i = i + 1
+local function kickinactive(chat_id, num, lang)
+    local kicked = 0
+    local hash = 'chat:' .. chat_id .. ':users'
+    local users = redis:smembers(hash)
+
+    for i = 1, #users do
+        if tonumber(users[i]) ~= tonumber(bot.id) and not is_momod2(users[i], chat_id) then
+            local msgs = user_msgs(users[i], chat_id)
+            if tonumber(msgs) < tonumber(num) then
+                kickUser(bot.id, users[i], chat_id)
+                kicked = kicked + 1
+            end
         end
-        return text
+    end
+    sendMessage(chat_id, langs[lang].massacre:gsub('X', kicked))
+end
+
+local function run(msg, matches)
+    if msg.service then
+        return
+    end
+    if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
+        -- /kickme
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
+            -- Save to logs
+            kickUser(bot.id, msg.from.id, msg.chat.id)
+            return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+        else
+            return langs[msg.lang].useYourGroups
+        end
+    end
+    if is_mod(msg) then
+        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
+            if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                -- /kick
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                else
+                                    -- return error cant kick chat
+                                end
+                            else
+                                -- return error no forward
+                            end
+                        end
+                    else
+                        if msg.reply_to_message.service then
+                            if msg.reply_to_message.service_type == 'chat_add_user' then
+                                return kickUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                            else
+                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            end
+                        else
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                end
+                if string.match(matches[2], '^%d+$') then
+                    return kickUser(msg.from.id, matches[2], msg.chat.id)
+                else
+                    -- not sure if it works
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].useYourGroups
+            end
+        end
+        if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'esplodi' or matches[1]:lower() == 'kaboom' then
+            if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                -- /ban
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                else
+                                    -- return error cant ban chat
+                                end
+                            else
+                                -- return error no forward
+                            end
+                        end
+                    else
+                        if msg.reply_to_message.service then
+                            if msg.reply_to_message.service_type == 'chat_add_user' then
+                                return banUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                            else
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            end
+                        else
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                end
+                if string.match(matches[2], '^%d+$') then
+                    return banUser(msg.from.id, matches[2], msg.chat.id)
+                else
+                    -- not sure if it works
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return banUser(msg.from.id, obj_user.id, msg.chat.id)
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].useYourGroups
+            end
+        end
+        if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sasha compila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' or matches[1]:lower() == 'compila' then
+            if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                -- /unban
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                else
+                                    -- return error cant unban chat
+                                end
+                            else
+                                -- return error no forward
+                            end
+                        end
+                    else
+                        if msg.reply_to_message.service then
+                            if msg.reply_to_message.service_type == 'chat_add_user' then
+                                return unbanUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                            else
+                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            end
+                        else
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                end
+                if string.match(matches[2], '^%d+$') then
+                    return unbanUser(msg.from.id, matches[2], msg.chat.id)
+                else
+                    -- not sure if it works
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].useYourGroups
+            end
+        end
+        if matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban" then
+            -- /banlist
+            if matches[2] and is_admin(msg) then
+                return ban_list(matches[2])
+            else
+                if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                    return ban_list(msg.chat.id)
+                else
+                    return langs[msg.lang].useYourGroups
+                end
+            end
+        end
+        if is_owner(msg) then
+            if matches[1]:lower() == 'kickinactive' then
+                -- /kickinactive
+                local num = matches[2] or 0
+                return kickinactive(msg.chat.id, tonumber(num), msg.lang)
+            end
+            if is_admin(msg) then
+                if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
+                    -- /gban
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return gbanUser(msg.reply_to_message.forward_from.id)
+                                    else
+                                        -- return error cant gban chat
+                                    end
+                                else
+                                    -- return error no forward
+                                end
+                            end
+                        else
+                            if msg.reply_to_message.service then
+                                if msg.reply_to_message.service_type == 'chat_add_user' then
+                                    return gbanUser(msg.reply_to_message.added.id)
+                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                    return gbanUser(msg.reply_to_message.removed.id)
+                                else
+                                    return gbanUser(msg.reply_to_message.from.id)
+                                end
+                            else
+                                return gbanUser(msg.reply_to_message.from.id)
+                            end
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return gbanUser(matches[2])
+                    else
+                        -- not sure if it works
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return gbanUser(obj_user.id)
+                            end
+                        end
+                    end
+                    return
+                end
+                if matches[1]:lower() == 'ungban' or matches[1]:lower() == 'sasha supersbanna' or matches[1]:lower() == 'supersbanna' then
+                    -- /ungban
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return ungbanUser(msg.reply_to_message.forward_from.id)
+                                    else
+                                        -- return error cant ungban chat
+                                    end
+                                else
+                                    -- return error no forward
+                                end
+                            end
+                        else
+                            if msg.reply_to_message.service then
+                                if msg.reply_to_message.service_type == 'chat_add_user' then
+                                    return ungbanUser(msg.reply_to_message.added.id)
+                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                    return ungbanUser(msg.reply_to_message.removed.id)
+                                else
+                                    return ungbanUser(msg.reply_to_message.from.id)
+                                end
+                            else
+                                return ungbanUser(msg.reply_to_message.from.id)
+                            end
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return ungbanUser(matches[2])
+                    else
+                        -- not sure if it works
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return ungbanUser(obj_user.id)
+                            end
+                        end
+                    end
+                    return
+                end
+                if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
+                    -- /gbanlist
+                    local list = banall_list()
+                    local file = io.open("./groups/gbanlist.txt", "w")
+                    file:write(list)
+                    file:flush()
+                    file:close()
+                    send_document(receiver, "./groups/gbanlist.txt", ok_cb, false)
+                    return sendMessage(msg.chat.id, list)
+                end
+                return
+            else
+                return langs[msg.lang].require_admin
+            end
+        else
+            return langs[msg.lang].require_owner
+        end
+    else
+        return langs[msg.lang].require_mod
     end
 end
 
-local function check_valid_time(temp)
-	temp = tonumber(temp)
-	if temp == 0 then
-		return false, 1
-	elseif temp > 10080 then --1 week
-		return false, 2
-	else
-		return temp
-	end
+local function clean_msg(msg)
+    -- clean msg but returns it
+    if msg.text then
+        msg.text = ''
+    end
+    if msg.media then
+        if msg.caption then
+            msg.caption = ''
+        end
+    end
+    if msg.forward then
+        if msg.forward_from then
+            msg.forward_from = clean_msg(msg.forward_from)
+        elseif msg.forward_from_chat then
+            msg.forward_from_chat = clean_msg(msg.forward_from_chat)
+        end
+    end
+    return msg
 end
 
-local function get_time_reply(minutes)
-	local time_string = ''
-	local time_table = {}
-	time_table.days = math.floor(minutes/(60*24))
-	minutes = minutes - (time_table.days*60*24)
-	time_table.hours = math.floor(minutes/60)
-	time_table.minutes = minutes % 60
-	if not(time_table.days == 0) then
-		time_string = time_table.days..'d'
-	end
-	if not(time_table.hours == 0) then
-		time_string = time_string..' '..time_table.hours..'h'
-	end
-	time_string = time_string..' '..time_table.minutes..'m'
-	return time_string, time_table
-end
-
-local action = function(msg, blocks, ln)
-	if msg.chat.type ~= 'private' then
-		if is_mod(msg) then
-			
-			--commands that don't need a target user
-			
-			if blocks[1] == 'kickme' then
-				api.sendReply(msg, lang[ln].kick_errors[2], true)
-				return
-			end
-			if blocks[1] == 'banlist' and not blocks[2] then
-   				local banlist, is_empty = getBanList(msg.chat.id, ln)
-   				if is_empty then
-   					api.sendReply(msg, banlist, true)
-   				else
-   					api.sendKeyboard(msg.chat.id, banlist, {inline_keyboard={{{text = 'Clean', callback_data = 'banlist-'}}}}, true)
-   				end
-   				mystat('/banlist')
-   				return
-   			end
-		    if blocks[1] == 'banlist' and blocks[2] and blocks[2] == '-' then
-		    	local res, error = rdb.rem('chat:'..msg.chat.id..':bannedlist')
-		    	if res then
-		    		if msg.cb then --if cleaned via the inline button
-		    			api.editMessageText(msg.chat.id, msg.message_id, lang[ln].banhammer.banlist_cleaned, false, true)
-		    		else --if cleaned via message
-		    			api.sendReply(msg, lang[ln].banhammer.banlist_cleaned, true)
-		    		end
-	    		else
-	    			local text
-	    			--get thetext
-		    		if error:match('hash does not exists') then
-		    			text = lang[ln].banhammer.banlist_empty
-		    		else
-		    			text = lang[ln].banhammer.banlist_error
-		    		end
-		    		--reply or edit
-		    		if msg.cb then
-		    			api.editMessageText(msg.chat.id, msg.message_id, text, false, true)
-		    		else
-		    			api.sendReply(msg, text, true)
-		    		end
-    			end
-    			return
-	    	end
-		    
-		    --commands that need a target user
-		    
-		    if not msg.reply_to_message and not blocks[2] and not msg.cb then
-		        api.sendReply(msg, lang[ln].banhammer.reply)
-		        return
-		    end
-		    if msg.reply and msg.reply.from.id == bot.id then return end
-		 	
-		 	local res
-		 	local chat_id = msg.chat.id
-		 	
-		 	if blocks[1] == 'tempban' then
-				if not msg.reply then
-					api.sendReply(msg, lang[ln].banhammer.reply)
-					return
-				end
-				local user_id = msg.reply.from.id
-				local temp, code = check_valid_time(blocks[2])
-				if not temp then
-					if code == 1 then
-						api.sendReply(msg, lang[ln].banhammer.tempban_zero)
-					else
-						api.sendReply(msg, lang[ln].banhammer.tempban_week)
-					end
-					return
-				end
-				local val = msg.chat.id..':'..user_id
-				local unban_time = os.time() + (temp * 60)
-				
-				--try to kick
-				local res, motivation = api.banUser(chat_id, user_id, is_normal_group, ln)
-		    	if not res then
-		    		if not motivation then
-		    			motivation = lang[ln].banhammer.general_motivation
-		    		end
-		    		api.sendReply(msg, motivation, true)
-		    	else
-		    		cross.saveBan(user_id, 'tempban') --save the ban
-		    		db:hset('tempbanned', unban_time, val) --set the hash
-					local time_reply = get_time_reply(temp)
-					local banned_name = getname(msg.reply)
-					local is_already_tempbanned = db:sismember('chat:'..chat_id..':tempbanned', user_id) --hash needed to check if an user is already tempbanned or not
-					if is_already_tempbanned then
-						api.sendMessage(chat_id, make_text(lang[ln].banhammer.tempban_updated..time_reply, banned_name))
-					else
-						api.sendMessage(chat_id, make_text(lang[ln].banhammer.tempban_banned..time_reply, banned_name))
-						db:sadd('chat:'..chat_id..':tempbanned', user_id) --hash needed to check if an user is already tempbanned or not
-					end
-				end
-			end
-		 	
-		 	--get the user id, send message and break if not found
-		 	local user_id = get_user_id(msg, blocks)
-		 	if not user_id then
-		 		api.sendReply(msg, lang[ln].bonus.no_user, true)
-		 		return
-		 	end
-		 	
-		 	if blocks[1] == 'kick' then
-		    	local res, motivation = api.kickUser(chat_id, user_id, ln)
-		    	if not res then
-		    		if not motivation then
-		    			motivation = lang[ln].banhammer.general_motivation
-		    		end
-		    		api.sendReply(msg, motivation, true)
-		    	else
-		    		cross.saveBan(user_id, 'kick')
-		    	end
-		    	mystat('/kick')
-	    	end
-	   		
-	   		local is_normal_group = false
-	   		if msg.chat.type == 'group' then is_normal_group = true end
-	   		
-	   		if blocks[1] == 'ban' then
-	   			local res, motivation = api.banUser(chat_id, user_id, is_normal_group, ln)
-		    	if not res then
-		    		if not motivation then
-		    			motivation = lang[ln].banhammer.general_motivation
-		    		end
-		    		api.sendReply(msg, motivation, true)
-		    	else
-		    		--save the ban
-		    		cross.saveBan(user_id, 'ban')
-		    		--add to banlist
-		    		local why, nick
-		    		if msg.reply then
-		    			nick = getname(msg.reply)
-		    			why = msg.text:input()
-		    		else
-		    			nick = blocks[2]
-		    			why = msg.text:gsub('^/ban @[%w_]+%s?', '')
-		    		end
-		    		cross.addBanList(msg.chat.id, user_id, nick, why)
-		    		api.sendKeyboard(msg.chat.id, 'User '..nick:mEscape()..' banned!', {inline_keyboard = {{{text = 'Unban', callback_data = 'unban:'..user_id}}}}, true)
-		    	end
-		    	mystat('/ban')
-    		end
-   			if blocks[1] == 'unban' then
-   				local status = cross.getUserStatus(chat_id, user_id)
-   				if not(status == 'kicked') and not(msg.chat.type == 'group') then
-   					api.sendReply(msg, lang[ln].banhammer.not_banned, true)
-   					return
-   				end
-   				local res = api.unbanUser(chat_id, user_id, is_normal_group)
-   				local text
-   				if not res and msg.chat.type == 'group' then
-   					--api.sendReply(msg, lang[ln].banhammer.not_banned, true)
-   					text = lang[ln].banhammer.not_banned
-   				else
-   					cross.remBanList(msg.chat.id, user_id)
-   					text = lang[ln].banhammer.unbanned
-   					--api.sendReply(msg, lang[ln].banhammer.unbanned, true)
-   				end
-   				if not msg.cb then
-   					api.sendReply(msg, text, true)
-   				else
-   					api.editMessageText(msg.chat.id, msg.message_id, text..'\n`['..user_id..']`', false, true)
-   				end
-   				mystat('/unban')
-   			end
-		else
-			if blocks[1] == 'kickme' then
-				api.kickUser(msg.chat.id, msg.from.id, ln)
-				mystat('/kickme')
-			end
-			if msg.cb then --if the user tap on 'unban', show the pop-up
-				api.answerCallbackQuery(msg.cb_id, lang[ln].not_mod:mEscape_hard())
-			end
-		end
-	end
+local function pre_process(msg)
+    local data = load_data(_config.moderation.data)
+    -- SERVICE MESSAGE
+    if msg.service then
+        if msg.service_type then
+            -- Check if banned user joins chat by link
+            if msg.service_type == 'chat_add_user_link' then
+                print('Checking invited user ' .. msg.from.id)
+                if is_banned(msg.from.id, msg.chat.id) or is_gbanned(msg.from.id) then
+                    -- Check it with redis
+                    print('User is banned!')
+                    savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
+                    -- Save to logs
+                    banUser(bot.id, msg.from.id, msg.chat.id)
+                end
+            end
+            -- Check if banned user joins chat
+            if msg.service_type == 'chat_add_user' then
+                print('Checking invited user ' .. msg.added.id)
+                if is_banned(msg.added.id, msg.chat.id) and not is_mod2(msg.from.id, msg.chat.id) or is_gbanned(msg.added.id) and not is_admin2(msg.from.id) then
+                    -- Check it with redis
+                    print('User is banned!')
+                    savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
+                    -- Save to logs
+                    kickUser(bot.id, user_id, msg.chat.id)
+                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                    redis:incr(banhash)
+                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                    local banaddredis = redis:get(banhash)
+                    if banaddredis then
+                        if tonumber(banaddredis) >= 4 and not is_owner(msg) then
+                            kickUser(bot.id, msg.from.id, msg.chat.id)
+                            -- Kick user who adds ban ppl more than 3 times
+                        end
+                        if tonumber(banaddredis) >= 8 and not is_owner(msg) then
+                            banUser(bot.id, msg.from.id, msg.chat.id)
+                            -- Ban user who adds ban ppl more than 7 times
+                            local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                            redis:set(banhash, 0)
+                            -- Reset the Counter
+                        end
+                    end
+                end
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)]['settings'] then
+                        if data[tostring(msg.chat.id)]['settings']['lock_bots'] then
+                            bots_protection = data[tostring(msg.chat.id)]['settings']['lock_bots']
+                        end
+                    end
+                end
+                if msg.added.username then
+                    if string.sub(msg.added.username:lower(), -3) == 'bot' and not is_mod(msg) and bots_protection == "yes" then
+                        --- Will kick bots added by normal users
+                        savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
+                        -- Save to logs
+                        kickUser(bot.id, msg.added.id, msg.chat.id)
+                    end
+                end
+            end
+            -- No further checks
+            return msg
+        end
+    end
+    -- banned user is talking !
+    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+        -- if not data['groups'][tostring(msg.chat.id)] and not is_realm(msg) then
+        -- Check if this group is one of my groups or not
+        -- chat_del_user('chat#id'..msg.chat.id,'user#id'..bot.id,ok_cb,false)
+        -- return
+        -- end
+        if is_banned(msg.from.id, msg.chat.id) or is_gbanned(msg.from.id) then
+            -- Check it with redis
+            print('Banned user talking!')
+            savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
+            -- Save to logs
+            kickUser(bot.id, msg.from.id, msg.chat.id)
+            msg = clean_msg(msg)
+        end
+    end
+    return msg
 end
 
 return {
-	action = action,
-	cron = cron,
-	triggers = {
-		'^/(kickme)%s?',
-		'^/(kick) (@[%w_]+)',
-		'^/(kick)',
-		'^/(banlist)$',
-		'^/(banlist) (-)$',
-		'^/(ban) (@[%w_]+)',
-		'^/(ban)',
-		--'^/(tempban) (@[%w_]+) (%d+)',
-		'^/(tempban) (%d+)',
-		'^/(unban) (@[%w_]+)',
-		'^/(unban)',
-		'^###cb:(unban):(%d+)$',
-		'^###cb:(banlist)(-)$'
-	}
+    description = "BANHAMMER",
+    patterns =
+    {
+        "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
+        "^[#!/]([Kk][Ii][Cc][Kk]) (.*)$",
+        "^[#!/]([Kk][Ii][Cc][Kk])$",
+        "^[#!/]([Kk][Ii][Cc][Kk][Ii][Nn][Aa][Cc][Tt][Ii][Vv][Ee])$",
+        "^[#!/]([Kk][Ii][Cc][Kk][Ii][Nn][Aa][Cc][Tt][Ii][Vv][Ee]) (%d+)$",
+        "^[#!/]([Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Bb][Aa][Nn])$",
+        "^[#!/]([Uu][Nn][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Uu][Nn][Bb][Aa][Nn])$",
+        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) (.*)$",
+        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Gg][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Gg][Bb][Aa][Nn])$",
+        "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn])$",
+        "^[#!/]([Gg][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+        -- kickme
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii][Mm][Ii])",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Pp][Ll][Oo][Dd][Ii][Mm][Ii])",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Pp][Aa][Rr][Aa][Mm][Ii])",
+        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa][Mm][Ii])",
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa][Mm][Ii])",
+        -- kick
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii])$",
+        "^([Uu][Cc][Cc][Ii][Dd][Ii]) (.*)$",
+        "^([Uu][Cc][Cc][Ii][Dd][Ii])$",
+        "^([Ss][Pp][Aa][Rr][Aa]) (.*)$",
+        "^([Ss][Pp][Aa][Rr][Aa])$",
+        -- ban
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Bb][Aa][Nn][Nn][Aa])$",
+        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Ee][Ss][Pp][Ll][Oo][Dd][Ii]) (.*)$",
+        "^([Ee][Ss][Pp][Ll][Oo][Dd][Ii])$",
+        "^([Kk][Aa][Bb][Oo][Oo][Mm]) (.*)$",
+        "^([Kk][Aa][Bb][Oo][Oo][Mm])$",
+        -- unban
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Bb][Aa][Nn][Nn][Aa])$",
+        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        -- banlist
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
+        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) (.*)$",
+        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
+        -- gban
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
+        "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
+        -- ungban
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa])$",
+        "^([Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
+        "^([Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa])$",
+        -- gbanlist
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
+        "^([Ll][Ii][Ss][Tt][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
+    },
+    run = run,
+    pre_process = pre_process,
+    min_rank = 0,
+    syntax =
+    {
+        "USER",
+        "(#kickme|sasha (uccidimi|esplodimi|sparami|decompilami|bannami))",
+        "MOD",
+        "(#kick|spara|[sasha] uccidi) <id>|<username>|<reply>|from",
+        "(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from",
+        "(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from",
+        "(#banlist|[sasha] lista ban)",
+        "OWNER",
+        "#kickinactive [<msgs>]",
+        "ADMIN",
+        "(#banlist|[sasha] lista ban) <group_id>",
+        "(#gban|[sasha] superbanna) <id>|<username>|<reply>|from",
+        "(#ungban|[sasha] supersbanna) <id>|<username>|<reply>|from",
+        "(#gbanlist|[sasha] lista superban)",
+    },
 }

@@ -1,182 +1,288 @@
-local function doKeyboard_warn(user_id)
-	local keyboard = {}
-    keyboard.inline_keyboard = {
-    	{
-    		{text = 'Reset warns', callback_data = 'resetwarns:'..user_id},
-    		{text = 'Remove warn', callback_data = 'removewarn:'..user_id}
-    	}
-    }
-    return keyboard
+﻿local function set_warn(user_id, chat_id, value)
+    local data = load_data(_config.moderation.data)
+    local lang = get_lang(chat_id)
+    if tonumber(value) < 0 or tonumber(value) > 10 then
+        return langs[lang].errorWarnRange
+    end
+    local warn_max = value
+    data[tostring(chat_id)]['settings']['warn_max'] = warn_max
+    save_data(_config.moderation.data, data)
+    savelog(chat_id, " [" .. user_id .. "] set warn to [" .. value .. "]")
+    return langs[lang].warnSet .. value
 end
 
-local function action(msg, blocks, ln)
-    
-    --chat:id:warntype
-    --chat:id:warns (3d)
-    --chat:id:max
-    
-    if msg.chat.type == 'private' then return end
-    if not is_mod(msg) then
-    	if msg.cb then --show a pop up if a normal user tap on an inline button
-    		api.answerCallbackQuery(msg.cb_id, lang[ln].not_mod:mEscape_hard())
-    	end
-    	return
+local function get_warn(chat_id)
+    local data = load_data(_config.moderation.data)
+    local lang = get_lang(chat_id)
+    local warn_max = data[tostring(chat_id)]['settings']['warn_max']
+    if not warn_max then
+        return langs[lang].noWarnSet
     end
-    
-    if blocks[1] == 'warnmax' then
-    	local hash, new, default, is_media
-    	if blocks[2] == 'media' then
-    		hash = 'chat:'..msg.chat.id..':mediamax'
-    		new = blocks[3]
-    		default = 2
-    		is_media = ' (media)'
-    	else
-    		hash = 'chat:'..msg.chat.id..':max'
-    		new = blocks[2]
-    		default = 3
-    		is_media = ''
-    	end
-		local old = (db:get(hash)) or default
-		db:set(hash, new)
-        local text = make_text(lang[ln].warn.warnmax, old, new, is_media)
-        api.sendReply(msg, text, true)
-        mystat('/warnmax') --save stats
-        return
+    return langs[lang].warnSet .. warn_max
+end
+
+local function get_user_warns(user_id, chat_id)
+    local lang = get_lang(chat_id)
+    local hashonredis = redis:get(chat_id .. ':warn:' .. user_id)
+    local warn_msg = langs[lang].yourWarnings
+    local warn_chat = string.match(get_warn(chat_id), "%d+")
+
+    if hashonredis then
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
+        send_large_msg('chat#id' .. chat_id, warn_msg)
+        send_large_msg('channel#id' .. chat_id, warn_msg)
+    else
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0')
+        send_large_msg('chat#id' .. chat_id, warn_msg)
+        send_large_msg('channel#id' .. chat_id, warn_msg)
     end
-    
-    if blocks[1] == 'warn' and blocks[2] and (blocks[2] == 'kick' or blocks[2] == 'ban') then
-    	if blocks[2] == 'kick' or blocks[2] == 'ban' then
-    		local hash = 'chat:'..msg.chat.id..':warntype'
-			db:set(hash, blocks[2])
-			api.sendReply(msg, make_text(lang[ln].warn.changed_type, blocks[2]), true)
-			mystat('/warnkickban')
-			return
-		end
-		--else, consider it a normal warn
+end
+
+local function warn_user(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        local lang = get_lang(chat_id)
+        local warn_chat = string.match(get_warn(chat_id), "%d+")
+        redis:incr(chat_id .. ':warn:' .. target)
+        local hashonredis = redis:get(chat_id .. ':warn:' .. target)
+        if not hashonredis then
+            redis:set(chat_id .. ':warn:' .. target, 1)
+            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', '1'))
+            hashonredis = 1
+        end
+        if tonumber(warn_chat) ~= 0 then
+            if tonumber(hashonredis) >= tonumber(warn_chat) then
+                redis:getset(chat_id .. ':warn:' .. target, 0)
+                kickUser(executer, target, chat_id)
+            end
+            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
+        end
+        savelog(chat_id, "[" .. executer .. "] warned user " .. result.peer_id .. " Y")
+    else
+        sendMessage(chat_id, langs[lang].require_rank)
+        savelog(chat_id, "[" .. executer .. "] warned user " .. result.peer_id .. " N")
     end
-    
-    if blocks[1] == 'resetwarns' and msg.cb then
-    	local user_id = blocks[2]
-    	print(msg.chat.id, user_id)
-    	db:hdel('chat:'..msg.chat.id..':warns', user_id)
-		db:hdel('chat:'..msg.chat.id..':mediawarn', user_id)
-		
-		api.editMessageText(msg.chat.id, msg.message_id, lang[ln].warn.nowarn, false, true)
-		mystat('/cbresetwarns')
-		return
-	end
-	
-	if blocks[1] == 'removewarn' and msg.cb then
-    	local user_id = blocks[2]
-    	print(msg.chat.id, user_id)
-		local num = db:hincrby('chat:'..msg.chat.id..':warns', user_id, -1) --add one warn
-		local nmax = (db:get('chat:'..msg.chat.id..':max')) or 3 --get the max num of warnings
-		local diff = tonumber(nmax)-tonumber(num)
-		
-		local text = make_text(lang[ln].warn.warn_removed, num, nmax)
-		
-		api.editMessageText(msg.chat.id, msg.message_id, text, false, true)
-		mystat('/cbremovewarn')
-		return
-	end
-    
-    --warning to reply to a message
-    if not msg.reply then
-        api.sendReply(msg, lang[ln].warn.warn_reply)
-	    return
-	end
-	--return nil if a mod is warned
-	if is_mod(msg.reply) then
-		api.sendReply(msg, lang[ln].warn.mod)
-	    return
-	end		
-	--return nil if an user flag the bot
-	if msg.reply.from.id == bot.id then
-	    return
-	end
-    
-    if blocks[1] == 'warn' then
-	    
-	    local name = getname(msg.reply)
-		local hash = 'chat:'..msg.chat.id..':warns'
-		local hash_max = 'chat:'..msg.chat.id..':max'
-		local num = db:hincrby(hash, msg.reply.from.id, 1) --add one warn
-		local nmax = (db:get(hash_max)) or 3 --get the max num of warnings
-		local text, res, motivation
-		
-		if tonumber(num) >= tonumber(nmax) then
-			local type = db:get('chat:'..msg.chat.id..':warntype')
-			--try to kick/ban
-			if type == 'ban' then
-				text = make_text(lang[ln].warn.warned_max_ban, name:mEscape())..' ('..num..'/'..nmax..')'
-				local is_normal_group = false
-	    		if msg.chat.type == 'group' then is_normal_group = true end
-				res, motivation = api.banUser(msg.chat.id, msg.reply.from.id, is_normal_group, ln)
-	    	else --kick
-				text = make_text(lang[ln].warn.warned_max_kick, name:mEscape())..' ('..num..'/'..nmax..')'
-		    	res, motivation = api.kickUser(msg.chat.id, msg.reply.from.id, ln)
-		    end
-		    --if kick/ban fails, send the motivation
-		    if not res then
-		    	if not motivation then
-		    		motivation = lang[ln].banhammer.general_motivation
-		    	end
-		    	text = motivation
-		    else
-		    	cross.saveBan(msg.reply.from.id, 'warn') --add ban
-		    	if type == 'ban' then --add to the banlist
-		    		local why = lang[ln].warn.ban_motivation
-		    		if blocks[2] then why = blocks[2] end
-		    		cross.addBanList(msg.chat.id, msg.reply.from.id, name, why)
-		    	end
-		    	db:hdel('chat:'..msg.chat.id..':warns', msg.reply.from.id) --if kick/ban works, remove the warns
-		    	db:hdel('chat:'..msg.chat.id..':mediawarn', msg.reply.from.id)
-		    end
-		    api.sendReply(msg, text, true) --if the user reached the max num of warns, kick and send message
-		else
-			local diff = tonumber(nmax)-tonumber(num)
-			text = make_text(lang[ln].warn.warned, name:mEscape(), num, nmax)
-			local keyboard = doKeyboard_warn(msg.reply.from.id)
-			api.sendKeyboard(msg.chat.id, text, keyboard, true, msg.message_id) --if the user is under the max num of warnings, send the inline keyboard
-		end
-        
-        mystat('/warn') --save stats
+end
+
+local function unwarn_user(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        local lang = get_lang(chat_id)
+        local warns = redis:get(chat_id .. ':warn:' .. target)
+        if tonumber(warns) <= 0 then
+            redis:set(chat_id .. ':warn:' .. target, 0)
+            sendMessage(chat_id, langs[lang].alreadyZeroWarnings)
+        else
+            redis:set(chat_id .. ':warn:' .. target, warns - 1)
+            sendMessage(chat_id, langs[lang].unwarned)
+        end
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. result.peer_id .. " Y")
+    else
+        sendMessage(chat_id, langs[lang].require_rank)
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. result.peer_id .. " N")
     end
-    
-    if blocks[1] == 'getwarns' then
-        
-	    local name = getname(msg.reply):mEscape()
-		local num = (db:hget('chat:'..msg.chat.id..':warns', msg.reply.from.id)) or 0
-		local max = (db:get('chat:'..msg.chat.id..':max')) or 3
-		local num_media = (db:hget('chat:'..msg.chat.id..':mediawarn', msg.reply.from.id)) or 0
-		local max_media = (db:get('chat:'..msg.chat.id..':mediamax')) or 2
-		local text = make_text(lang[ln].warn.getwarns, name, num, max, num_media, max_media)
-        
-        api.sendReply(msg, text, true)
-        mystat('/getwarns') --save stats
+end
+
+local function unwarnall_user(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        local lang = get_lang(chat_id)
+        redis:set(chat_id .. ':warn:' .. target, 0)
+        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. result.peer_id .. " Y")
+        sendMessage(chat_id, langs[lang].zeroWarnings)
+    else
+        sendMessage(chat_id, langs[lang].require_rank)
+        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. result.peer_id .. " N")
     end
-    
-    if blocks[1] == 'nowarns' then
-		db:hdel('chat:'..msg.chat.id..':warns', msg.reply.from.id)
-		db:hdel('chat:'..msg.chat.id..':mediawarn', msg.reply.from.id)
-        
-        api.sendReply(msg, lang[ln].warn.nowarn, true)
-        mystat('/nowarns') --save stats
+end
+
+local function run(msg, matches)
+    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+        if is_mod(msg) then
+            if matches[1]:lower() == 'setwarn' and matches[2] then
+                local txt = set_warn(msg.from.id, msg.chat.id, matches[2])
+                if matches[2] == '0' then
+                    return langs[msg.lang].neverWarn
+                else
+                    return txt
+                end
+            end
+            if matches[1]:lower() == 'getwarn' then
+                return get_warn(msg.chat.id)
+            end
+            if get_warn(msg.chat.id) == langs[msg.lang].noWarnSet then
+                return langs[msg.lang].noWarnSet
+            else
+                if matches[1]:lower() == 'getuserwarns' or matches[1]:lower() == 'sasha ottieni avvertimenti' or matches[1]:lower() == 'ottieni avvertimenti' then
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return get_user_warns(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        -- return error cant whitelist chat
+                                    end
+                                else
+                                    -- return error no forward
+                                end
+                            end
+                        else
+                            return get_user_warns(msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return get_user_warns(matches[2], msg.chat.id)
+                    else
+                        -- not sure if it works
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return get_user_warns(obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+                if matches[1]:lower() == 'warn' or matches[1]:lower() == 'sasha avverti' or matches[1]:lower() == 'avverti' then
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return warn_user(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        -- return error cant whitelist chat
+                                    end
+                                else
+                                    -- return error no forward
+                                end
+                            end
+                        else
+                            return warn_user(msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return warn_user(matches[2], msg.chat.id)
+                    else
+                        -- not sure if it works
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return warn_user(obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+                if matches[1]:lower() == 'unwarn' then
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return unwarn_user(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        -- return error cant whitelist chat
+                                    end
+                                else
+                                    -- return error no forward
+                                end
+                            end
+                        else
+                            return unwarn_user(msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return unwarn_user(matches[2], msg.chat.id)
+                    else
+                        -- not sure if it works
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return unwarn_user(obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+                if matches[1]:lower() == 'unwarnall' or matches[1]:lower() == 'sasha azzera avvertimenti' or matches[1]:lower() == 'azzera avvertimenti' then
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return unwarnall_user(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        -- return error cant whitelist chat
+                                    end
+                                else
+                                    -- return error no forward
+                                end
+                            end
+                        else
+                            return unwarnall_user(msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return unwarnall_user(matches[2], msg.chat.id)
+                    else
+                        -- not sure if it works
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return unwarnall_user(obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    else
+        return langs[msg.lang].useYourGroups
     end
 end
 
 return {
-	action = action,
-	triggers = {
-		'^/(warn) (kick)$',
-		'^/(warn) (ban)$',
-		'^/(warnmax) (%d%d?)$',
-		'^/(warnmax) (media) (%d%d?)$',
-		'^/(warn)$',
-		'^/(warn) (.*)$',
-		'^/(getwarns)$',
-		'^/(nowarns)$',
-		'^###cb:(resetwarns):(%d+)$',
-		'^###cb:(removewarn):(%d+)$',
-	}
+    description = "WARN",
+    patterns =
+    {
+        "^[#!/]([Ss][Ee][Tt][Ww][Aa][Rr][Nn]) (%d+)$",
+        "^[#!/]([Gg][Ee][Tt][Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) (.*)$",
+        "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
+        "^[#!/]([Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) (.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll])$",
+        -- getuserwarns
+        "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        -- warn
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
+        "^([Aa][Vv][Vv][Ee][Rr][Tt][Ii]) (.*)$",
+        "^([Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
+        -- unwarnall
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+    },
+    run = run,
+    min_rank = 1,
+    syntax =
+    {
+        "MOD",
+        "#setwarn <value>",
+        "#getwarn",
+        "(#getuserwarns|[sasha] ottieni avvertimenti) <id>|<username>|<reply>|from",
+        "(#warn|[sasha] avverti) <id>|<username>|<reply>|from",
+        "#unwarn <id>|<username>|<reply>|from",
+        "(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from",
+    },
 }

@@ -1,188 +1,275 @@
-local function make_keyboard(mod, mod_current_position)
-	local keyboard = {}
-	keyboard.inline_keyboard = {}
-	if mod then --extra options for the mod
-	    local list = {
-	        ['Banhammer'] = '!banhammer',
-	        ['Group info'] = '!info',
-	        ['Flood manager'] = '!flood',
-	        ['Media settings'] = '!media',
-	        ['Welcome settings'] = '!welcome',
-	        ['General settings'] = '!settings',
-	        ['Extra commands'] = '!extra',
-	        ['Warns'] = '!warns',
-	        ['Characters strictness'] = '!char',
-	        ['Links'] = '!links',
-	        ['Languages'] = '!lang'
-        }
-        local line = {}
-        for k,v in pairs(list) do
-            --if mod_current_position ~= v:gsub('!', '') then --(to remove the current tab button)
-            if next(line) then
-                local button = {text = '📍'..k, callback_data = v}
-                --change emoji if it's the current position button
-                if mod_current_position == v:gsub('!', '') then button.text = '💡 '..k end
-                table.insert(line, button)
-                table.insert(keyboard.inline_keyboard, line)
-                line = {}
+-- Get commands for that plugin
+local function plugin_help(var, chat, rank)
+    local lang = get_lang(chat)
+    local plugin = ''
+    if tonumber(var) then
+        local i = 0
+        for name in pairsByKeys(plugins) do
+            if _config.disabled_plugin_on_chat[chat] then
+                if not _config.disabled_plugin_on_chat[chat][name] or _config.disabled_plugin_on_chat[chat][name] == false then
+                    i = i + 1
+                    if i == tonumber(var) then
+                        plugin = plugins[name]
+                    end
+                end
             else
-                local button = {text = '📍'..k, callback_data = v}
-                --change emoji if it's the current position button
-                if mod_current_position == v:gsub('!', '') then button.text = '💡 '..k end
-                table.insert(line, button)
+                i = i + 1
+                if i == tonumber(var) then
+                    plugin = plugins[name]
+                end
             end
-            --end --(to remove the current tab button)
         end
-        if next(line) then --if the numer of buttons is odd, then add the last button alone
-            table.insert(keyboard.inline_keyboard, line)
-        end
-    end
-    local bottom_bar
-    if mod then
-		bottom_bar = {{text = '🔰 User commands', callback_data = '!user'}}
-	else
-	    bottom_bar = {{text = '🔰 Admin commands', callback_data = '!mod'}}
-	end
-	table.insert(bottom_bar, {text = 'Info', callback_data = '!info_button'}) --insert the "Info" button
-	table.insert(keyboard.inline_keyboard, bottom_bar)
-	return keyboard
-end
-
-local function do_keybaord_credits()
-	local keyboard = {}
-    keyboard.inline_keyboard = {
-    	{
-    		{text = 'Channel', url = 'https://telegram.me/'..config.channel:gsub('@', '')},
-    		{text = 'GitHub', url = 'https://github.com/RememberTheAir/GroupButler'},
-    		{text = 'Rate me!', url = 'https://telegram.me/storebot?start='..bot.username},
-		},
-		{
-		    {text = '🔙', callback_data = '!user'}
-        }
-	}
-	return keyboard
-end
-
-local function do_keyboard_private()
-    local keyboard = {}
-    keyboard.inline_keyboard = {
-    	{
-    		{text = '👥 Add me to a group', url = 'https://telegram.me/'..bot.username..'?startgroup=new'},
-    		{text = '📢 Bot channel', url = 'https://telegram.me/'..config.channel:gsub('@', '')},
-	    },
-	    {
-	        {text = '📕 All the commands', callback_data = '!user'}
-        }
-    }
-    return keyboard
-end
-
-local function do_keyboard_startme()
-    local keyboard = {}
-    keyboard.inline_keyboard = {
-    	{
-    		{text = 'Start me', url = 'https://telegram.me/'..bot.username}
-	    }
-    }
-    return keyboard
-end
-
-local action = function(msg, blocks, ln)
-    -- save stats
-    if blocks[1] == 'start' then
-        db:hset('bot:users', msg.from.id, 'xx')
-        db:hincrby('bot:general', 'users', 1)
-        if msg.chat.type == 'private' then
-            local message = make_text(lang[ln].help.private, msg.from.first_name:mEscape())
-            local keyboard = do_keyboard_private()
-            api.sendKeyboard(msg.from.id, message, keyboard, true)
-        end
-        return
-    end
-    local keyboard = make_keyboard()
-    if blocks[1] == 'help' then
-        mystat('/help')
-        if msg.chat.type == 'private' then
-            local message = make_text(lang[ln].help.private, msg.from.first_name:mEscape())
-            local keyboard = do_keyboard_private()
-            api.sendKeyboard(msg.from.id, message, keyboard, true)
-            return
-        end
-        local res = api.sendKeyboard(msg.from.id, 'Choose the *role* to see the available commands:', keyboard, true)
-        if res then
-            api.sendMessage(msg.chat.id, lang[ln].help.group_success, true)
+    else
+        if _config.disabled_plugin_on_chat[chat] then
+            if not _config.disabled_plugin_on_chat[chat][var] or _config.disabled_plugin_on_chat[chat][var] == false then
+                plugin = plugins[var]
+            end
         else
-            api.sendKeyboard(msg.chat.id, lang[ln].help.group_not_success, do_keyboard_startme(), true)
+            plugin = plugins[var]
         end
     end
-    if msg.cb then
-        local query = blocks[1]
-        local msg_id = msg.message_id
-        local text
-        if query == 'info_button' then
-            keyboard = do_keybaord_credits()
-		    api.editMessageText(msg.chat.id, msg_id, lang[ln].credits, keyboard, true)
-		    return
-		end
-        local with_mods_lines = true
-        if query == 'user' then
-            text = lang[ln].help.all
-            with_mods_lines = false
-        elseif query == 'mod' then
-            text = lang[ln].help.kb_header
+    if not plugin or plugin == "" then
+        return nil
+    end
+    if plugin.min_rank <= tonumber(rank) then
+        local help_permission = true
+        -- '=========================\n'
+        local text = ''
+        -- = '=======================\n'
+        local textHash = plugin.description:lower()
+        if langs[lang][textHash] then
+            for i = 1, #langs[lang][plugin.description:lower()], 1 do
+                if rank_table[langs[lang][plugin.description:lower()][i]] then
+                    if rank_table[langs[lang][plugin.description:lower()][i]] > rank then
+                        help_permission = false
+                    end
+                end
+                if help_permission then
+                    text = text .. langs[lang][plugin.description:lower()][i] .. '\n'
+                end
+            end
         end
-        if query == 'info' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'banhammer' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'flood' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'media' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'welcome' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'extra' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'warns' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'char' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'links' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'lang' then
-        	text = lang[ln].help.mods[query]
-        elseif query == 'settings' then
-        	text = lang[ln].help.mods[query]
+        return text .. '\n'
+    else
+        return ''
+    end
+end
+
+-- !help command
+local function telegram_help(chat, rank)
+    local lang = get_lang(chat)
+    local i = 0
+    local text = langs[lang].pluginListStart
+    -- Plugins names
+    for name in pairsByKeys(plugins) do
+        if _config.disabled_plugin_on_chat[chat] then
+            if not _config.disabled_plugin_on_chat[chat][name] or _config.disabled_plugin_on_chat[chat][name] == false then
+                i = i + 1
+                if plugins[name].min_rank <= tonumber(rank) then
+                    text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
+                end
+            end
+        else
+            i = i + 1
+            if plugins[name].min_rank <= tonumber(rank) then
+                text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
+            end
         end
-        keyboard = make_keyboard(with_mods_lines, query)
-        local res, code = api.editMessageText(msg.chat.id, msg_id, text, keyboard, true)
-        if not res and code and code == 111 then
-            api.answerCallbackQuery(msg.cb_id, '❗️ Already on this tab')
-        elseif query ~= 'user' and query ~= 'mod' and query ~= 'info_button' then
-            api.answerCallbackQuery(msg.cb_id, '💡 '..lang[ln].help.mods[query]:sub(1, string.find(lang[ln].help.mods[query], '\n')):mEscape_hard())
+    end
+
+    text = text .. '\n' .. langs[lang].helpInfo
+    return text
+end
+
+-- !helpall command
+local function help_all(chat, rank)
+    local text = ""
+    local i = 0
+    local temp
+    for name in pairsByKeys(plugins) do
+        temp = plugin_help(name, chat, rank)
+        if temp ~= nil then
+            text = text .. temp
+            i = i + 1
+        end
+    end
+    return text
+end
+
+-- Get command syntax for that plugin
+local function plugin_syntax(var, chat, rank)
+    local lang = get_lang(chat)
+    local plugin = ''
+    if tonumber(var) then
+        local i = 0
+        for name in pairsByKeys(plugins) do
+            if _config.disabled_plugin_on_chat[chat] then
+                if not _config.disabled_plugin_on_chat[chat][name] or _config.disabled_plugin_on_chat[chat][name] == false then
+                    i = i + 1
+                    if i == tonumber(var) then
+                        plugin = plugins[name]
+                    end
+                end
+            else
+                i = i + 1
+                if i == tonumber(var) then
+                    plugin = plugins[name]
+                end
+            end
+        end
+    else
+        if _config.disabled_plugin_on_chat[chat] then
+            if not _config.disabled_plugin_on_chat[chat][var] or _config.disabled_plugin_on_chat[chat][var] == false then
+                plugin = plugins[var]
+            end
+        else
+            plugin = plugins[var]
+        end
+    end
+    if not plugin or plugin == "" then
+        return nil
+    end
+    if plugin.min_rank <= tonumber(rank) then
+        local help_permission = true
+        -- '=========================\n'
+        local text = ''
+        -- = '=======================\n'
+        if plugin.syntax then
+            for i = 1, #plugin.syntax, 1 do
+                if rank_table[plugin.syntax[i]] then
+                    if rank_table[plugin.syntax[i]] > rank then
+                        help_permission = false
+                    end
+                end
+                if help_permission then
+                    text = text .. plugin.syntax[i] .. '\n'
+                end
+            end
+        end
+        return text .. '\n'
+    else
+        return ''
+    end
+end
+
+-- !syntaxall command
+local function syntax_all(chat, rank, filter)
+    local text = ""
+    local i = 0
+    local temp
+    for name in pairsByKeys(plugins) do
+        temp = plugin_syntax(name, chat, rank, filter)
+        if temp ~= nil then
+            text = text .. temp
+            i = i + 1
+        end
+    end
+    return text
+end
+
+local function run(msg, matches)
+    if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
+        for v, user in pairs(_config.sudo_users) do
+            if user ~= bot.id then
+                local obj_user = getChat(user)
+                local lang = get_lang(msg.chat.id)
+                local text = 'SUDO INFO'
+                if obj_user.first_name then
+                    text = text .. langs[lang].name .. obj_user.first_name
+                end
+                if obj_user.last_name then
+                    text = text .. langs[lang].surname .. obj_user.last_name
+                end
+                if obj_user.username then
+                    text = text .. langs[lang].username .. '@' .. obj_user.username
+                end
+                local msgs = tonumber(redis:get('msgs:' .. user .. ':' .. msg.chat.tg_cli_id) or 0)
+                text = text .. langs[lang].date .. os.date('%c') ..
+                langs[lang].totalMessages .. msgs
+                text = text .. '\n🆔: ' .. user .. '\n\n'
+            end
+        end
+        return sendMessage(msg.chat.id, text)
+    end
+
+    table.sort(plugins)
+    if matches[1]:lower() == "helpall" or matches[1]:lower() == "sasha aiuto tutto" then
+        return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+    end
+    if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
+        if not matches[2] then
+            return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+        else
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            if temp ~= nil then
+                if temp ~= '' then
+                    return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. temp)
+                else
+                    return langs[msg.lang].require_higher
+                end
+            else
+                return matches[2]:lower() .. langs[msg.lang].notExists
+            end
+        end
+    end
+
+    if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
+        return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+    end
+    if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
+        local cmd_find = false
+        local text = ''
+        for name, plugin in pairsByKeys(plugins) do
+            if plugin.syntax then
+                for k, v in pairsByKeys(plugin.syntax) do
+                    if string.find(v, matches[2]:lower()) then
+                        cmd_find = true
+                        text = text .. v .. '\n'
+                    end
+                end
+            end
+        end
+        if not cmd_find then
+            return sendMessage(msg.chat.id, langs[msg.lang].commandNotFound)
+        else
+            return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. text)
         end
     end
 end
 
 return {
-	action = action,
-	admin_not_needed = true,
-	triggers = {
-	    '^/(start)$',
-	    '^/(help)$',
-	    '^###cb:!(user)',
-	    '^###cb:!(info_button)',
-	    '^###cb:!(mod)',
-	    '^###cb:!(info)',
-	    '^###cb:!(banhammer)',
-	    '^###cb:!(flood)',
-	    '^###cb:!(media)',
-	    '^###cb:!(links)',
-	    '^###cb:!(lang)',
-	    '^###cb:!(welcome)',
-	    '^###cb:!(extra)',
-	    '^###cb:!(warns)',
-	    '^###cb:!(char)',
-	    '^###cb:!(settings)',
-    }
+    description = "HELP",
+    patterns =
+    {
+        "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
+        "^[#!/]([Hh][Ee][Ll][Pp])$",
+        "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
+        "^[#!/]([Aa][Ll][Ll][Ss][Yy][Nn][Tt][Aa][Xx])$",
+        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
+        "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
+        -- helpall
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Uu][Tt][Tt][Oo])$",
+        -- help
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo])$",
+        -- help <plugin_name>|<plugin_number>
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo]) ([^%s]+)$",
+        -- allsyntax
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Tt][Aa][Ss][Ss][Ii] [Tt][Uu][Tt][Tt][Oo])$",
+        -- syntax <filter>
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Tt][Aa][Ss][Ss][Ii]) (.*)$",
+        -- sudolist
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Ss][Uu][Dd][Oo])$",
+    },
+    run = run,
+    min_rank = 0,
+    syntax =
+    {
+        "USER",
+        "(#sudolist|sasha lista sudo)",
+        "(#help|sasha aiuto)",
+        "(#help|sasha aiuto) <plugin_name>|<plugin_number>",
+        "(#helpall|sasha aiuto tutto)",
+        "(#syntax|sasha sintassi) <filter>",
+        "(#syntaxall|sasha sintassi tutto)",
+    },
 }
