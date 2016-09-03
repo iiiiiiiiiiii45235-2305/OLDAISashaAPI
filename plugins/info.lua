@@ -22,10 +22,10 @@ local function get_object_info(obj, chat_id, lang)
             if obj.first_name then
                 text = text .. langs[lang].name .. obj.first_name
             end
-            if obj_user.last_name then
+            if obj.last_name then
                 text = text .. langs[lang].surname .. obj.last_name
             end
-            if obj_user.username then
+            if obj.username then
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
             local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
@@ -203,11 +203,11 @@ local function run(msg, matches)
             if is_mod(msg) then
                 if string.match(matches[2], '^%d+$') then
                     local obj = getChat(matches[2])
-                    return get_object_info(obj, msg.chat.id, msg.lang)
+                    return get_object_info(obj.result, msg.chat.id, msg.lang)
                 else
                     -- not sure if it works
                     local obj = resolveUsername(matches[2]:gsub('@', ''))
-                    return get_object_info(obj, msg.chat.id, msg.lang)
+                    return get_object_info(obj.result, msg.chat.id, msg.lang)
                 end
             else
                 return langs[msg.lang].require_mod

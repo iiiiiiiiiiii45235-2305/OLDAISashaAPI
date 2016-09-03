@@ -193,7 +193,6 @@ function bot_init()
     require("utils")
     require("methods")
     require("ranks")
-    printvardump(clr)
 
     while not bot do
         -- Get bot info and retry if unable to connect.
