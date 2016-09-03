@@ -192,7 +192,6 @@ function bot_init()
     require("utils")
     require("methods")
     require("ranks")
-    printvardump(config)
 
     while not bot do
         -- Get bot info and retry if unable to connect.
@@ -585,7 +584,7 @@ function print_msg(msg)
     local hour = os.date('%H')
     local minute = os.date('%M')
     local second = os.date('%S')
-    local print_text = clr.blue .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. msg.chat.print_name .. clr.reset .. clr.red .. msg.from.print_name .. clr.reset .. clr.white .. ' >>> '
+    local print_text = clr.blue .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. msg.chat.print_name .. ' ' .. clr.reset .. clr.red .. msg.from.print_name .. clr.reset .. clr.white .. ' >>> '
     if msg.forward then
         print_text = print_text .. clr.white .. '[forward] '
     end
