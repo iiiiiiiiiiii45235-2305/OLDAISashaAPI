@@ -226,13 +226,15 @@ function adjust_user(tab)
 end
 
 function adjust_group(tab)
-    tab.tg_cli_id = tonumber(tostring(tab.id):gsub('-', ''))
+    local id_without_minus = tostring(tab.id):gsub('-', '')
+    tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
 end
 
 function adjust_supergroup_channel(tab)
-    tab.tg_cli_id = tonumber(tostring(tab.id):gsub('-100', ''))
+    local id_without_minus = tostring(tab.id):gsub('-100', '')
+    tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
 end
