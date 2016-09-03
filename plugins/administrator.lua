@@ -110,18 +110,18 @@ local function run(msg, matches)
         end
         if matches[1] == 'redis backup' then
             local groups = db:smembers('bot:groupsid')
-            vardump(groups)
+            printvardump(groups)
             div()
             local all_groups = { }
             for k, v in pairs(groups) do
                 local current = { }
                 current = group_table(v)
-                vardump(current)
+                printvardump(current)
                 div()
                 table.insert(all_groups, current)
             end
             div()
-            vardump(all_groups)
+            printvardump(all_groups)
             save_data("./logs/redisbackup.json", all_groups)
             if not(msg.chat.type == 'private') then
                 api.sendMessage(msg.chat.id, 'I\'ve sent you the .json file in private')

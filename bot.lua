@@ -3,7 +3,6 @@ clr = require "term.colors"
 last_cron = os.date('%M')
 last_db_cron = os.date('%H')
 last_administrator_cron = os.date('%d')
-config = { }
 
 -- Save the content of config to config.lua
 function save_config()
@@ -158,7 +157,7 @@ end
 function load_langs()
     print(clr.blue .. 'Loading languages.lua')
     local ok, err = pcall( function()
-        local t = dofile(config.languages)()
+        local t = dofile('languages.lua')()
         langs = t
     end )
 
@@ -208,6 +207,7 @@ function bot_init()
     require("utils")
     require("methods")
     require("ranks")
+    printvardump(config)
 
     load_langs()
     while not bot do
@@ -703,7 +703,7 @@ while is_started do
     local res = getUpdates(last_update + 1)
     -- Get the latest updates!
     if res then
-        -- vardump(res)
+        -- printvardump(res)
         for i, msg in ipairs(res.result) do
             -- Go through every new message.
             last_update = msg.update_id
