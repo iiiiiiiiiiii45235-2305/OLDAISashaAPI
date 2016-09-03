@@ -980,7 +980,7 @@ local function contact_mods(msg)
 
 
     local already_contacted = { }
-    local list = getChatAdministrators(chat_id)
+    local list = getChatAdministrators(msg.chat.id)
     if list then
         for i, admin in pairs(list.result) do
             already_contacted[tonumber(admin.user.id)] = admin.user.id
