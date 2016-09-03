@@ -175,11 +175,6 @@ function load_langs()
     end
 end
 
-function load_api()
-    print(clr.blue .. 'Loading methods.lua')
-    api = require('methods')
-end
-
 -- Enable plugins in config.lua
 function load_plugins()
     for k, v in pairs(config.enabled_plugins) do
