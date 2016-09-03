@@ -155,7 +155,7 @@ function vardumptext(value)
     return serpent.block(value, { comment = false })
 end
 
-local function per_away(text)
+function per_away(text)
     local text = tostring(text):gsub('%%', '£&£')
     return text
 end
@@ -187,7 +187,7 @@ function write_file(path, text, mode)
     return true
 end
 
-local function create_folder(name)
+function create_folder(name)
     local cmd = io.popen('sudo mkdir ' .. name)
     cmd:read('*all')
     cmd = io.popen('sudo chmod -R 777 ' .. name)
@@ -465,7 +465,7 @@ function div()
     print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
 end
 
-local function migrate_ban_list(old, new)
+function migrate_ban_list(old, new)
     local hash = 'chat:' .. old .. ':banned'
     local banned = redis:smembers(hash)
     if next(banned) then
@@ -613,7 +613,7 @@ end
 
 ----------------------- specific cross-plugins functions---------------------
 
-local function initGroup(chat_id)
+function initGroup(chat_id)
 
     -- default settings
     hash = 'chat:' .. chat_id .. ':settings'
@@ -660,7 +660,7 @@ local function initGroup(chat_id)
     print('Stats saved', 'Groups: ' .. num)
 end
 
-local function addBanList(chat_id, user_id, nick, why)
+function addBanList(chat_id, user_id, nick, why)
     local hash = 'chat:' .. chat_id .. ':bannedlist'
     local res, is_id_added = set(hash, user_id, 'nick', nick)
     if why and not(why == '') then
@@ -669,14 +669,14 @@ local function addBanList(chat_id, user_id, nick, why)
     return is_id_added
 end
 
-local function remBanList(chat_id, user_id)
+function remBanList(chat_id, user_id)
     if not chat_id or not user_id then return false end
     local hash = 'chat:' .. chat_id .. ':bannedlist'
     local res, des = rem(hash, user_id)
     return res
 end
 
-local function getUserStatus(chat_id, user_id)
+function getUserStatus(chat_id, user_id)
     local res = getChatMember(chat_id, user_id)
     if res then
         return res.result.status
@@ -685,12 +685,12 @@ local function getUserStatus(chat_id, user_id)
     end
 end
 
-local function saveBan(user_id, motivation)
+function saveBan(user_id, motivation)
     local hash = 'ban:' .. user_id
     return redis:hincrby(hash, motivation, 1)
 end
 
-local function is_info_message_key(key)
+function is_info_message_key(key)
     if key == 'Modlist' or key == 'Rules' or key == 'About' or key == 'Extra' then
         return true
     else

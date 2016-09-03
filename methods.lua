@@ -7,7 +7,7 @@ if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
 
-local function sendRequest(url)
+function sendRequest(url)
     -- print(url)
     local dat, code = HTTPS.request(url)
 
@@ -37,12 +37,12 @@ local function sendRequest(url)
     return tab
 end
 
-local function getMe()
+function getMe()
     local url = BASE_URL .. '/getMe'
     return sendRequest(url)
 end
 
-local function getUpdates(offset)
+function getUpdates(offset)
     local url = BASE_URL .. '/getUpdates?timeout=20'
     if offset then
         url = url .. '&offset=' .. offset
@@ -50,33 +50,33 @@ local function getUpdates(offset)
     return sendRequest(url)
 end
 
-local function getChat(chat_id)
+function getChat(chat_id)
     local url = BASE_URL .. '/getChat?chat_id=' .. chat_id
     return sendRequest(url)
 end
 
-local function getChatAdministrators(chat_id)
+function getChatAdministrators(chat_id)
     local url = BASE_URL .. '/getChatAdministrators?chat_id=' .. chat_id
     return sendRequest(url)
 end
 
-local function getChatMembersCount(chat_id)
+function getChatMembersCount(chat_id)
     local url = BASE_URL .. '/getChatMembersCount?chat_id=' .. chat_id
     return sendRequest(url)
 end
 
-local function getChatMember(chat_id, user_id)
+function getChatMember(chat_id, user_id)
     local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
     return sendRequest(url)
 end
 
-local function getFile(file_id)
+function getFile(file_id)
     local url = BASE_URL ..
     '/getFile?file_id=' .. file_id
     return sendRequest(url)
 end
 
-local function getCode(error)
+function getCode(error)
     for k, v in pairs(config.api_errors) do
         if error:match(v) then
             return k
@@ -86,7 +86,7 @@ local function getCode(error)
     return 7
 end
 
-local function code2text(code, ln)
+function code2text(code, ln)
     -- the default error description can't be sent as output, so a translation is needed
     if code == 101 or code == 105 or code == 107 then
         return langs[ln].kick_errors[1]
@@ -103,7 +103,7 @@ local function code2text(code, ln)
 end
 
 -- never call this outside this file
-local function kickChatMember(user_id, chat_id)
+function kickChatMember(user_id, chat_id)
     local url = BASE_URL .. '/kickChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
     local dat, res = HTTPS.request(url)
     local tab = JSON.decode(dat)
@@ -122,7 +122,7 @@ local function kickChatMember(user_id, chat_id)
 end
 
 -- never call this outside this file
-local function unbanChatMember(user_id, chat_id)
+function unbanChatMember(user_id, chat_id)
     local url = BASE_URL .. '/unbanChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
     -- return sendRequest(url)
     local dat, res = HTTPS.request(url)
@@ -139,12 +139,12 @@ local function unbanChatMember(user_id, chat_id)
     return tab
 end
 
-local function leaveChat(chat_id)
+function leaveChat(chat_id)
     local url = BASE_URL .. '/leaveChat?chat_id=' .. chat_id
     return sendRequest(url)
 end
 
-local function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
+function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
     -- print(text)
     local text_max = 4096
     local text_len = string.len(text)
@@ -194,7 +194,7 @@ local function sendMessage(chat_id, text, use_markdown, reply_to_message_id, sen
     -- return false, and the code
 end
 
-local function sendMessage_SUDOERS(text)
+function sendMessage_SUDOERS(text)
     for v, user in pairs(config.sudo_users) do
         if user ~= bot.id then
             -- print(text)
@@ -203,19 +203,19 @@ local function sendMessage_SUDOERS(text)
     end
 end
 
-local function sendReply(msg, text, markd, send_sound)
+function sendReply(msg, text, markd, send_sound)
     return sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
 end
 
-local function sendAdmin(text, markdown)
+function sendAdmin(text, markdown)
     return sendMessage(config.admin.owner, text, markdown)
 end
 
-local function sendLog(text, markdown)
+function sendLog(text, markdown)
     return sendMessage(config.log_chat or config.admin.owner, text, markdown)
 end
 
-local function forwardMessage(chat_id, from_chat_id, message_id)
+function forwardMessage(chat_id, from_chat_id, message_id)
     local url = BASE_URL ..
     '/forwardMessage?chat_id=' .. chat_id ..
     '&from_chat_id=' .. from_chat_id ..
@@ -223,7 +223,7 @@ local function forwardMessage(chat_id, from_chat_id, message_id)
     return sendRequest(url)
 end
 
-local function sendKeyboard(chat_id, text, keyboard, markdown)
+function sendKeyboard(chat_id, text, keyboard, markdown)
     local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
     if markdown then
         url = url .. '&parse_mode=Markdown'
@@ -244,7 +244,7 @@ local function sendKeyboard(chat_id, text, keyboard, markdown)
     -- return false, and the code
 end
 
-local function editMessageText(chat_id, message_id, text, keyboard, markdown)
+function editMessageText(chat_id, message_id, text, keyboard, markdown)
     local url = BASE_URL ..
     '/editMessageText?chat_id=' .. chat_id ..
     '&message_id=' .. message_id ..
@@ -269,7 +269,7 @@ local function editMessageText(chat_id, message_id, text, keyboard, markdown)
     -- return false, and the code
 end
 
-local function answerCallbackQuery(callback_query_id, text, show_alert)
+function answerCallbackQuery(callback_query_id, text, show_alert)
     local url = BASE_URL ..
     '/answerCallbackQuery?callback_query_id=' .. callback_query_id ..
     '&text=' .. URL.escape(text)
@@ -279,7 +279,7 @@ local function answerCallbackQuery(callback_query_id, text, show_alert)
     return sendRequest(url)
 end
 
-local function sendChatAction(chat_id, action)
+function sendChatAction(chat_id, action)
     -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location
     local url = BASE_URL ..
     '/sendChatAction?chat_id=' .. chat_id ..
@@ -287,7 +287,7 @@ local function sendChatAction(chat_id, action)
     return sendRequest(url)
 end
 
-local function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
+function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
     local url = BASE_URL ..
     '/sendLocation?chat_id=' .. chat_id ..
     '&latitude=' .. latitude ..
@@ -300,7 +300,7 @@ end
 
 ----------------------------By Id-----------------------------------------
 
-local function sendPhotoId(chat_id, file_id, reply_to_message_id)
+function sendPhotoId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendPhoto?chat_id=' .. chat_id ..
     '&photo=' .. file_id
@@ -310,7 +310,7 @@ local function sendPhotoId(chat_id, file_id, reply_to_message_id)
     return sendRequest(url)
 end
 
-local function sendStickerId(chat_id, file_id, reply_to_message_id)
+function sendStickerId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendSticker?chat_id=' .. chat_id ..
     '&sticker=' .. file_id
@@ -320,7 +320,7 @@ local function sendStickerId(chat_id, file_id, reply_to_message_id)
     return sendRequest(url)
 end
 
-local function sendVoiceId(chat_id, file_id, reply_to_message_id)
+function sendVoiceId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendVoice?chat_id' .. chat_id ..
     '&voice=' .. file_id
@@ -330,7 +330,7 @@ local function sendVoiceId(chat_id, file_id, reply_to_message_id)
     return sendRequest(url)
 end
 
-local function sendAudioId(chat_id, file_id, reply_to_message_id)
+function sendAudioId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendAudio?chat_id' .. chat_id ..
     '&audio=' .. file_id
@@ -340,7 +340,7 @@ local function sendAudioId(chat_id, file_id, reply_to_message_id)
     return sendRequest(url)
 end
 
-local function sendVideoId(chat_id, file_id, reply_to_message_id)
+function sendVideoId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendVideo?chat_id' .. chat_id ..
     '&video=' .. file_id
@@ -350,7 +350,7 @@ local function sendVideoId(chat_id, file_id, reply_to_message_id)
     return sendRequest(url)
 end
 
-local function sendDocumentId(chat_id, file_id, reply_to_message_id)
+function sendDocumentId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendDocument?chat_id=' .. chat_id ..
     '&document=' .. file_id
@@ -362,12 +362,12 @@ end
 
 ----------------------------To curl--------------------------------------------
 
-local function curlRequest(curl_command)
+function curlRequest(curl_command)
     -- Use at your own risk. Will not check for success.
     io.popen(curl_command)
 end
 
-local function sendPhoto(chat_id, photo, caption, reply_to_message_id)
+function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     local url = BASE_URL .. '/sendPhoto'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
     if reply_to_message_id then
@@ -379,7 +379,7 @@ local function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     return curlRequest(curl_command)
 end
 
-local function sendSticker(chat_id, sticker, reply_to_message_id)
+function sendSticker(chat_id, sticker, reply_to_message_id)
     local url = BASE_URL .. '/sendSticker'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
     if reply_to_message_id then
@@ -388,7 +388,7 @@ local function sendSticker(chat_id, sticker, reply_to_message_id)
     return curlRequest(curl_command)
 end
 
-local function sendVoice(chat_id, voice, reply_to_message_id)
+function sendVoice(chat_id, voice, reply_to_message_id)
     local url = BASE_URL .. '/sendVoice'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
     if reply_to_message_id then
@@ -400,7 +400,7 @@ local function sendVoice(chat_id, voice, reply_to_message_id)
     return curlRequest(curl_command)
 end
 
-local function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, title)
+function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, title)
     local url = BASE_URL .. '/sendAudio'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
     if reply_to_message_id then
@@ -418,7 +418,7 @@ local function sendAudio(chat_id, audio, reply_to_message_id, duration, performe
     return curlRequest(curl_command)
 end
 
-local function sendVideo(chat_id, video, reply_to_message_id, duration, performer, title)
+function sendVideo(chat_id, video, reply_to_message_id, duration, performer, title)
     local url = BASE_URL .. '/sendVideo'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
     if reply_to_message_id then
@@ -433,7 +433,7 @@ local function sendVideo(chat_id, video, reply_to_message_id, duration, performe
     return curlRequest(curl_command)
 end
 
-local function sendDocument(chat_id, document, reply_to_message_id)
+function sendDocument(chat_id, document, reply_to_message_id)
     local url = BASE_URL .. '/sendDocument'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
     if reply_to_message_id then
@@ -442,7 +442,7 @@ local function sendDocument(chat_id, document, reply_to_message_id)
     return curlRequest(curl_command)
 end
 
-local function sendDocument_SUDOERS(document)
+function sendDocument_SUDOERS(document)
     for v, user in pairs(config.sudo_users) do
         if user ~= bot.id then
             local url = BASE_URL .. '/sendDocument'
@@ -455,7 +455,7 @@ end
 -- *** END API FUNCTIONS ***
 
 -- call this to kick
-local function kickUser(executer, target, chat_id)
+function kickUser(executer, target, chat_id)
     if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
         -- try to kick
         local res, code = kickChatMember(target, chat_id)
@@ -485,7 +485,7 @@ local function kickUser(executer, target, chat_id)
 end
 
 -- call this to ban
-local function banUser(executer, target, chat_id, normal_group)
+function banUser(executer, target, chat_id, normal_group)
     if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
         -- try to kick. "code" is already specific
         local res, code = kickChatMember(target, chat_id)
@@ -528,7 +528,7 @@ local function banUser(executer, target, chat_id, normal_group)
 end
 
 -- call this to unban
-local function unbanUser(target, chat_id, normal_group)
+function unbanUser(target, chat_id, normal_group)
     savelog(msg.chat.tg_cli_id, "[" .. msg.from.id .. "] unbanned user " .. matches[2])
     if normal_group then
         local hash = 'banned:' .. chat_id
@@ -647,7 +647,7 @@ function isWhitelisted(user_id)
     return whitelisted or false
 end
 
-local function resolveUsername(username)
+function resolveUsername(username)
     local url = PWR_URL .. '/getChat?chat_id=@' .. username
     local dat, code = HTTPS.request(url)
 
@@ -665,46 +665,3 @@ local function resolveUsername(username)
         end
     end
 end
-
---[[return {
-    sendRequest = sendRequest,
-    getMe = getMe,
-    getUpdates = getUpdates,
-    getChat = getChat,
-    getChatAdministrators = getChatAdministrators,
-    getChatMembersCount = getChatMembersCount,
-    getChatMember = getChatMember,
-    getFile = getFile,
-    getCode = getCode,
-    code2text = code2text,
-    kickUser = kickUser,
-    kickChatMember = kickChatMember,
-    banUser = banUser,
-    banUserId = banUserId,
-    unbanUser = unbanUser,
-    unbanChatMember = unbanChatMember,
-    leaveChat = leaveChat,
-    resolveUsername = resolveUsername,
-    sendMessage = sendMessage,
-    sendReply = sendReply,
-    sendAdmin = sendAdmin,
-    sendLog = sendLog,
-    forwardMessage = forwardMessage,
-    sendKeyboard = sendKeyboard,
-    editMessageText = editMessageText,
-    answerCallbackQuery = answerCallbackQuery,
-    sendChatAction = sendChatAction,
-    sendLocation = sendLocation,
-    -- send by id
-    sendPhotoId = sendPhotoId,
-    sendStickerId = sendStickerId,
-    sendDocumentId = sendDocumentId,
-    -- send curl
-    curlRequest = curlRequest,
-    sendPhoto = sendPhoto,
-    sendSticker = sendSticker,
-    sendVoice = sendVoice,
-    sendAudio = sendAudio,
-    sendVideo = sendVideo,
-    sendDocument = sendDocument
-}]]

@@ -210,7 +210,6 @@ function bot_init()
     require("ranks")
 
     load_langs()
-    load_api()
     while not bot do
         -- Get bot info and retry if unable to connect.
         bot = getMe()
@@ -596,6 +595,32 @@ function match_plugin(plugin, plugin_name, msg)
     end
 end
 
+function print_msg(msg)
+    local hour = os.date('%H')
+    local minute = os.date('%M')
+    local second = os.date('%S')
+    local print_text = clr.blue .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. msg.chat.print_name .. clr.reset .. clr.red .. msg.from.print_name .. clr.reset .. clr.white .. ' >>> '
+    if msg.forward then
+        print_text = print_text .. clr.white .. '[forward] '
+    end
+    if msg.reply then
+        print_text = print_text .. clr.white .. '[reply] '
+    end
+    if msg.media then
+        print_text = print_text .. clr.white .. '[' .. media_type .. '] '
+        if msg.caption then
+            print_text = print_text .. msg.caption
+        end
+    end
+    if msg.service then
+        print_text = print_text .. clr.white .. '[' .. service_type .. '] '
+    end
+    if msg.text then
+        print_text = print_text .. msg.text
+    end
+    print(print_text)
+end
+
 -- This function is called when tg receive a msg
 function on_msg_receive(msg)
     if not is_started then
@@ -611,6 +636,7 @@ function on_msg_receive(msg)
     msg = pre_process_media_msg(msg)
     msg = pre_process_service_msg(msg)
     msg = adjust_msg(msg)
+    print_msg(msg)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
