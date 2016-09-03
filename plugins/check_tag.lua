@@ -53,12 +53,12 @@ local function pre_process(msg)
             for v, user in pairs(config.sudo_users) do
                 -- exclude bot tags, autotags and tags of API version
                 if tonumber(msg.from.id) ~= tonumber(bot.id) and tonumber(msg.from.id) ~= tonumber(user) and tonumber(msg.from.id) ~= 202256859 then
-                    local obj_user = getChat(user)
+                    local obj_user = getChat(user).result
                     local tagged = check_tag(msg, user, obj_user)
 
                     if tagged then
                         if msg.reply then
-                            forwardMessage(obj_user.id, msg.chat.id, msg.reply_to_message.message_id)
+                            forwardMessage(obj_user.result.id, msg.chat.id, msg.reply_to_message.message_id)
                         end
                         local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
                         if msg.from.username then

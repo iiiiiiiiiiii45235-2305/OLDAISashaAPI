@@ -33,7 +33,7 @@ local function run(msg, matches)
             return whitelist_user(matches[2], lang)
         else
             -- not sure if it works
-            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+            local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
             if obj_user then
                 if obj_user.type == 'private' then
                     return whitelist_user(obj_user.id, lang)

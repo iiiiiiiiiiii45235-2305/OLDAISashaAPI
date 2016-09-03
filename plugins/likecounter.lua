@@ -128,7 +128,7 @@ local function run(msg, matches)
                     return like(likedata, msg.chat.id, matches[2])
                 else
                     -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                     if obj_user then
                         if obj_user.type == 'private' then
                             return like(likedata, msg.chat.id, obj_user.id)
@@ -158,7 +158,7 @@ local function run(msg, matches)
                     return dislike(likedata, msg.chat.id, matches[2])
                 else
                     -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                     if obj_user then
                         if obj_user.type == 'private' then
                             return dislike(likedata, msg.chat.id, obj_user.id)

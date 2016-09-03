@@ -171,7 +171,7 @@ local function run(msg, matches)
     if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
         for v, user in pairs(config.sudo_users) do
             if user ~= bot.id then
-                local obj_user = getChat(user)
+                local obj_user = getChat(user).result
                 local lang = get_lang(msg.chat.id)
                 local text = 'SUDO INFO'
                 if obj_user.first_name then

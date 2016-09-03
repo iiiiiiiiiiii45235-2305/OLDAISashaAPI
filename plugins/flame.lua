@@ -37,7 +37,7 @@ local function run(msg, matches)
                     return flame_user(msg.from.id, matches[2], msg.chat.id)
                 else
                     -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                     if obj_user then
                         if obj_user.type == 'private' then
                             return flame_user(msg.from.id, obj_user.id, msg.chat.id)
@@ -62,24 +62,18 @@ local function run(msg, matches)
                 local hashonredis = redis:get(hash)
                 local user = redis:get(tokick)
                 if hashonredis and user then
-                    local obj_user = getChat(user)
+                    local obj_user = getChat(user).result
                     local text = langs[msg.lang].flaming
                     if obj_user.first_name then
                         text = text .. '\n' .. obj_user.first_name
                     end
-                    if obj_user.real_first_name then
-                        text = text .. '\n' .. obj_user.real_first_name
-                    end
                     if obj_user.last_name then
                         text = text .. '\n' .. obj_user.last_name
-                    end
-                    if obj_user.real_last_name then
-                        text = text .. '\n' .. obj_user.real_last_name
                     end
                     if obj_user.username then
                         text = text .. '\n@' .. obj_user.username
                     end
-                    text = text .. '\n' .. obj_user.peer_id
+                    text = text .. '\n' .. obj_user.id
                     return text
                 else
                     return langs[msg.lang].errorParameter

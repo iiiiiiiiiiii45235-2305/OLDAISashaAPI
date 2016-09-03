@@ -117,7 +117,7 @@ local function run(msg, matches)
                 return get_reverse_rank(msg.chat.id, matches[2])
             else
                 -- not sure if it works
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                 if obj_user then
                     if obj_user.type == 'private' then
                         return get_reverse_rank(msg.chat.id, obj_user.id)
@@ -152,7 +152,7 @@ local function run(msg, matches)
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
                 -- not sure if it works
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                 if obj_user then
                     if obj_user.type == 'private' then
                         return is_here(msg.chat.id, obj_user.id)
@@ -199,12 +199,12 @@ local function run(msg, matches)
         elseif matches[2] then
             if is_mod(msg) then
                 if string.match(matches[2], '^%d+$') then
-                    local obj = getChat(matches[2])
-                    return get_object_info(obj.result, msg.chat.id, msg.lang)
+                    local obj = getChat(matches[2]).result
+                    return get_object_info(obj, msg.chat.id, msg.lang)
                 else
                     -- not sure if it works
-                    local obj = resolveUsername(matches[2]:gsub('@', ''))
-                    return get_object_info(obj.result, msg.chat.id, msg.lang)
+                    local obj = resolveUsername(matches[2]:gsub('@', '')).result
+                    return get_object_info(obj, msg.chat.id, msg.lang)
                 end
             else
                 return langs[msg.lang].require_mod

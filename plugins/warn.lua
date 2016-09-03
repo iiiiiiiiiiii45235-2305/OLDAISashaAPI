@@ -132,7 +132,7 @@ local function run(msg, matches)
                         return get_user_warns(matches[2], msg.chat.id)
                     else
                         -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return get_user_warns(obj_user.id, msg.chat.id)
@@ -163,7 +163,7 @@ local function run(msg, matches)
                         return warn_user(matches[2], msg.chat.id)
                     else
                         -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return warn_user(obj_user.id, msg.chat.id)
@@ -194,7 +194,7 @@ local function run(msg, matches)
                         return unwarn_user(matches[2], msg.chat.id)
                     else
                         -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return unwarn_user(obj_user.id, msg.chat.id)
@@ -225,7 +225,7 @@ local function run(msg, matches)
                         return unwarnall_user(matches[2], msg.chat.id)
                     else
                         -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return unwarnall_user(obj_user.id, msg.chat.id)
