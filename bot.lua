@@ -595,7 +595,7 @@ function print_msg(msg)
     local minute = os.date('%M')
     local second = os.date('%S')
     local chat_name = msg.chat.title or(msg.chat.first_name .. msg.chat.last_name or '')
-    local sender_name = msg.from.title or(msg.from.first_name .. msg.from.las_name or '')
+    local sender_name = msg.from.title or(msg.from.first_name .. msg.from.last_name or '')
     local print_text = clr.blue .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.white .. ' >>> '
     if msg.forward then
         print_text = print_text .. clr.white .. '[forward] '
