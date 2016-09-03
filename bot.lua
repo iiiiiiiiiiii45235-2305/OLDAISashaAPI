@@ -69,6 +69,7 @@ function create_config()
             'warn',
             'whitelist',
         },
+        disabled_plugin_on_chat = { },
         sudo_users = { 41400331, },
         moderation = { data = 'data/moderation.json' },
         likecounter = { db = 'data/likecounterdb.json' },
@@ -192,7 +193,7 @@ function bot_init()
     require("utils")
     require("methods")
     require("ranks")
-printvardump(clr)
+    printvardump(clr)
 
     while not bot do
         -- Get bot info and retry if unable to connect.
