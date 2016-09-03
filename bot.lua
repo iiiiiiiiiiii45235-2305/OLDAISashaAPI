@@ -1,7 +1,3 @@
-require("utils")
-require("methods")
-require("ranks")
-
 local f = assert(io.popen('/usr/bin/git describe --tags', 'r'))
 VERSION = assert(f:read('*a'))
 f:close()
@@ -200,9 +196,11 @@ function load_database()
 end
 
 function bot_init()
+    require("utils")
+    require("methods")
+    require("ranks")
     config = { }
     langs = { }
-    api = { }
     bot = nil
     plugins = { }
     database = nil
