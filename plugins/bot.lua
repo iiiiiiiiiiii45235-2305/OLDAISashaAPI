@@ -4,15 +4,15 @@ local function enable_channel(chat_id, to_id)
     end
     local lang = get_lang(chat_id)
 
-    if not _config.disabled_channels then
-        _config.disabled_channels = { }
+    if not config.disabled_channels then
+        config.disabled_channels = { }
     end
 
-    if _config.disabled_channels[chat_id] == nil then
+    if config.disabled_channels[chat_id] == nil then
         return sendMessage(to_id, langs[lang].botOn)
     end
 
-    _config.disabled_channels[chat_id] = false
+    config.disabled_channels[chat_id] = false
 
     save_config()
     return sendMessage(to_id, langs[lang].botOn)
@@ -24,11 +24,11 @@ local function disable_channel(chat_id, to_id)
     end
     local lang = get_lang(chat_id)
 
-    if not _config.disabled_channels then
-        _config.disabled_channels = { }
+    if not config.disabled_channels then
+        config.disabled_channels = { }
     end
 
-    _config.disabled_channels[chat_id] = true
+    config.disabled_channels[chat_id] = true
 
     save_config()
     return sendMessage(to_id, langs[lang].botOff)

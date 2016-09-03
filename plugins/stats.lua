@@ -108,7 +108,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'aisasha' then
         -- Put everything you like :)
         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] used /aisasha ")
-        return _config.about_text
+        return config.about_text
     end
     if matches[1]:lower() == "stats" or matches[1]:lower() == "messages" then
         if not matches[2] then

@@ -37,7 +37,7 @@ function get_rank(user_id, chat_id)
             if not is_sudo(user_id) then
                 if not is_admin2(user_id) then
                     local higher_rank = rank_table["USER"]
-                    local data = load_data(_config.moderation.data)
+                    local data = load_data(config.moderation.data)
                     if data['groups'] then
                         -- if there are any groups check for everyone of them the rank of the user and choose the higher one
                         for id_string in pairs(data['groups']) do
@@ -101,7 +101,7 @@ end
 
 function is_mod(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local user_id = msg.from.id
 
     local res = getChatMember(msg.chat.id, user_id)
@@ -142,7 +142,7 @@ function is_mod(msg)
         end
     end
 
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true
@@ -158,7 +158,7 @@ end
 
 function is_mod2(user_id, group_id)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
 
     local res = getChatMember(group_id, user_id)
     if res then
@@ -198,7 +198,7 @@ function is_mod2(user_id, group_id)
         end
     end
 
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true
@@ -214,7 +214,7 @@ end
 
 function is_owner(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local user_id = msg.from.id
 
     local res = getChatMember(msg.chat.id, user_id)
@@ -242,7 +242,7 @@ function is_owner(msg)
         end
     end
 
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true
@@ -258,7 +258,7 @@ end
 
 function is_owner2(user_id, group_id)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
 
     local res = getChatMember(user_id, user_id)
     if res then
@@ -285,7 +285,7 @@ function is_owner2(user_id, group_id)
         end
     end
 
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true
@@ -301,7 +301,7 @@ end
 
 function is_admin(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local user_id = msg.from.id
     local admins = 'admins'
     if data[tostring(admins)] then
@@ -311,7 +311,7 @@ function is_admin(msg)
         end
     end
 
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true
@@ -327,7 +327,7 @@ end
 
 function is_admin2(user_id)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local admins = 'admins'
     if data[tostring(admins)] then
         if data[tostring(admins)][tostring(user_id)] then
@@ -335,7 +335,7 @@ function is_admin2(user_id)
             var = true
         end
     end
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true
@@ -352,7 +352,7 @@ end
 function is_sudo(msg)
     local var = false
     -- Check users id in config
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(msg.from.id) then
             -- bot sudo
             var = true
@@ -364,7 +364,7 @@ end
 function is_sudo2(user_id)
     local var = false
     -- Check users id in config
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if tostring(user) == tostring(user_id) then
             -- bot sudo
             var = true

@@ -1,6 +1,6 @@
 -- Returns the key (index) in the config.enabled_plugins table
 local function plugin_enabled(name)
-    for k, v in pairs(_config.enabled_plugins) do
+    for k, v in pairs(config.enabled_plugins) do
         if name == v then
             return k
         end
@@ -25,7 +25,7 @@ local function list_plugins(only_enabled)
         --  ✅ enabled, ❌ disabled
         local status = '❌'
         -- Check if is enabled
-        for k2, v2 in pairs(_config.enabled_plugins) do
+        for k2, v2 in pairs(config.enabled_plugins) do
             if v == v2 .. '.lua' then
                 status = '✅'
             end
@@ -53,8 +53,8 @@ local function enable_plugin(plugin_name, lang)
     -- Checks if plugin exists
     if plugin_exists(plugin_name) then
         -- Add to the config table
-        table.insert(_config.enabled_plugins, plugin_name)
-        print(plugin_name .. ' added to _config table')
+        table.insert(config.enabled_plugins, plugin_name)
+        print(plugin_name .. ' added to config table')
         save_config()
         -- Reload the plugins
         reload_plugins()
@@ -75,7 +75,7 @@ local function disable_plugin(name, lang)
         return '✖️ ' .. name .. langs[lang].alreadyDisabled
     end
     -- Disable and reload
-    table.remove(_config.enabled_plugins, k)
+    table.remove(config.enabled_plugins, k)
     save_config()
     reload_plugins()
     return '❌ ' .. name .. langs[lang].disabled
@@ -87,15 +87,15 @@ local function disable_plugin_on_chat(chat_id, plugin)
         return '❔ ' .. plugin .. langs[lang].notExists
     end
 
-    if not _config.disabled_plugin_on_chat then
-        _config.disabled_plugin_on_chat = { }
+    if not config.disabled_plugin_on_chat then
+        config.disabled_plugin_on_chat = { }
     end
 
-    if not _config.disabled_plugin_on_chat[chat_id] then
-        _config.disabled_plugin_on_chat[chat_id] = { }
+    if not config.disabled_plugin_on_chat[chat_id] then
+        config.disabled_plugin_on_chat[chat_id] = { }
     end
 
-    _config.disabled_plugin_on_chat[chat_id][plugin] = true
+    config.disabled_plugin_on_chat[chat_id][plugin] = true
 
     save_config()
     return '❌ ' .. plugin .. langs[lang].disabledOnChat
@@ -103,37 +103,37 @@ end
 
 local function reenable_plugin_on_chat(chat_id, plugin)
     local lang = get_lang(chat_id)
-    if not _config.disabled_plugin_on_chat then
+    if not config.disabled_plugin_on_chat then
         return langs[lang].noDisabledPlugin
     end
 
-    if not _config.disabled_plugin_on_chat[chat_id] then
+    if not config.disabled_plugin_on_chat[chat_id] then
         return langs[lang].noDisabledPlugin
     end
 
-    if not _config.disabled_plugin_on_chat[chat_id][plugin] then
+    if not config.disabled_plugin_on_chat[chat_id][plugin] then
         return langs[lang].pluginNotDisabled
     end
 
-    _config.disabled_plugin_on_chat[chat_id][plugin] = false
+    config.disabled_plugin_on_chat[chat_id][plugin] = false
     save_config()
     return '✅ ' .. plugin .. langs[lang].pluginEnabledAgain
 end
 
 local function list_disabled_plugin_on_chat(chat_id)
     local lang = get_lang(chat_id)
-    if not _config.disabled_plugin_on_chat then
+    if not config.disabled_plugin_on_chat then
         return langs[lang].noDisabledPlugin
     end
 
-    if not _config.disabled_plugin_on_chat[chat_id] then
+    if not config.disabled_plugin_on_chat[chat_id] then
         return langs[lang].noDisabledPlugin
     end
 
     local status = '❌'
     local text = ''
-    for k in pairs(_config.disabled_plugin_on_chat[chat_id]) do
-        if _config.disabled_plugin_on_chat[chat_id][k] == true then
+    for k in pairs(config.disabled_plugin_on_chat[chat_id]) do
+        if config.disabled_plugin_on_chat[chat_id][k] == true then
             text = text .. status .. ' ' .. k .. '\n'
         end
     end

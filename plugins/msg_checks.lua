@@ -252,7 +252,7 @@ local function pre_process(msg)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if msg and not is_whitelisted(msg.from.id) then
             -- if regular user
-            local data = load_data(_config.moderation.data)
+            local data = load_data(config.moderation.data)
             if data[tostring(msg.chat.id)] and data[tostring(msg.chat.id)]['settings'] then
                 settings = data[tostring(msg.chat.id)]['settings']
             else

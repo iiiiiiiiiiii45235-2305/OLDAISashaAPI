@@ -9,7 +9,7 @@ local function like(likedata, chat, user)
             likedata[chat][user] = 0
         end
         likedata[chat][user] = tonumber(likedata[chat][user] + 1)
-        save_data(_config.likecounter.db, likedata)
+        save_data(config.likecounter.db, likedata)
     end
 end
 
@@ -24,7 +24,7 @@ local function dislike(likedata, chat, user)
             likedata[chat][user] = 0
         end
         likedata[chat][user] = tonumber(likedata[chat][user] -1)
-        save_data(_config.likecounter.db, likedata)
+        save_data(config.likecounter.db, likedata)
     end
 end
 
@@ -71,7 +71,7 @@ local function run(msg, matches)
     if msg.chat.type ~= 'user' then
         if matches[1]:lower() == 'createlikesdb' then
             if is_sudo(msg) then
-                local f = io.open(_config.likecounter.db, 'w+')
+                local f = io.open(config.likecounter.db, 'w+')
                 f:write('{}')
                 f:close()
                 return sendReply(msg, langs[msg.lang].likesdbCreated)
@@ -80,22 +80,22 @@ local function run(msg, matches)
             end
         end
 
-        local likedata = load_data(_config.likecounter.db)
+        local likedata = load_data(config.likecounter.db)
 
         if not likedata[tostring(msg.chat.id)] then
             likedata[tostring(msg.chat.id)] = { }
-            save_data(_config.likecounter.db, likedata)
+            save_data(config.likecounter.db, likedata)
         end
 
         if matches[1]:lower() == 'addlikes' and matches[2] and matches[3] and is_sudo(msg) then
             likedata[tostring(msg.chat.id)][matches[2]] = tonumber(likedata[tostring(msg.chat.id)][matches[2]] + matches[3])
-            save_data(_config.likecounter.db, likedata)
+            save_data(config.likecounter.db, likedata)
             return sendReply(msg, langs[msg.lang].cheating)
         end
 
         if matches[1]:lower() == 'remlikes' and matches[2] and matches[3] and is_sudo(msg) then
             likedata[tostring(msg.chat.id)][matches[2]] = tonumber(likedata[tostring(msg.chat.id)][matches[2]] - matches[3])
-            save_data(_config.likecounter.db, likedata)
+            save_data(config.likecounter.db, likedata)
             return sendReply(msg, langs[msg.lang].cheating)
         end
 

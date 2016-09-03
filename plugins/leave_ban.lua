@@ -2,7 +2,7 @@
     if msg.service then
         if msg.service_type then
             local leave_ban = 'no'
-            local data = load_data(_config.moderation.data)
+            local data = load_data(config.moderation.data)
             if data[tostring(msg.chat.id)] then
                 if data[tostring(msg.chat.id)]['settings'] then
                     if data[tostring(msg.chat.id)]['settings']['leave_ban'] then

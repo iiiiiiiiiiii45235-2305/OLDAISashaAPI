@@ -5,8 +5,8 @@ local function plugin_help(var, chat, rank)
     if tonumber(var) then
         local i = 0
         for name in pairsByKeys(plugins) do
-            if _config.disabled_plugin_on_chat[chat] then
-                if not _config.disabled_plugin_on_chat[chat][name] or _config.disabled_plugin_on_chat[chat][name] == false then
+            if config.disabled_plugin_on_chat[chat] then
+                if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
                     i = i + 1
                     if i == tonumber(var) then
                         plugin = plugins[name]
@@ -20,8 +20,8 @@ local function plugin_help(var, chat, rank)
             end
         end
     else
-        if _config.disabled_plugin_on_chat[chat] then
-            if not _config.disabled_plugin_on_chat[chat][var] or _config.disabled_plugin_on_chat[chat][var] == false then
+        if config.disabled_plugin_on_chat[chat] then
+            if not config.disabled_plugin_on_chat[chat][var] or config.disabled_plugin_on_chat[chat][var] == false then
                 plugin = plugins[var]
             end
         else
@@ -62,8 +62,8 @@ local function telegram_help(chat, rank)
     local text = langs[lang].pluginListStart
     -- Plugins names
     for name in pairsByKeys(plugins) do
-        if _config.disabled_plugin_on_chat[chat] then
-            if not _config.disabled_plugin_on_chat[chat][name] or _config.disabled_plugin_on_chat[chat][name] == false then
+        if config.disabled_plugin_on_chat[chat] then
+            if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
                 i = i + 1
                 if plugins[name].min_rank <= tonumber(rank) then
                     text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
@@ -103,8 +103,8 @@ local function plugin_syntax(var, chat, rank)
     if tonumber(var) then
         local i = 0
         for name in pairsByKeys(plugins) do
-            if _config.disabled_plugin_on_chat[chat] then
-                if not _config.disabled_plugin_on_chat[chat][name] or _config.disabled_plugin_on_chat[chat][name] == false then
+            if config.disabled_plugin_on_chat[chat] then
+                if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
                     i = i + 1
                     if i == tonumber(var) then
                         plugin = plugins[name]
@@ -118,8 +118,8 @@ local function plugin_syntax(var, chat, rank)
             end
         end
     else
-        if _config.disabled_plugin_on_chat[chat] then
-            if not _config.disabled_plugin_on_chat[chat][var] or _config.disabled_plugin_on_chat[chat][var] == false then
+        if config.disabled_plugin_on_chat[chat] then
+            if not config.disabled_plugin_on_chat[chat][var] or config.disabled_plugin_on_chat[chat][var] == false then
                 plugin = plugins[var]
             end
         else
@@ -169,7 +169,7 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
-        for v, user in pairs(_config.sudo_users) do
+        for v, user in pairs(config.sudo_users) do
             if user ~= bot.id then
                 local obj_user = getChat(user)
                 local lang = get_lang(msg.chat.id)

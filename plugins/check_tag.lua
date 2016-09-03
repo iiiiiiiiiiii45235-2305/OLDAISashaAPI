@@ -50,7 +50,7 @@ local function pre_process(msg)
     if msg then
         -- exclude private chats with bot
         if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') then
-            for v, user in pairs(_config.sudo_users) do
+            for v, user in pairs(config.sudo_users) do
                 -- exclude bot tags, autotags and tags of API version
                 if tonumber(msg.from.id) ~= tonumber(bot.id) and tonumber(msg.from.id) ~= tonumber(user) and tonumber(msg.from.id) ~= 202256859 then
                     local obj_user = getChat(user)

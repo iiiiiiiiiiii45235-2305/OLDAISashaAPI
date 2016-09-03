@@ -286,7 +286,7 @@ end
 local function cron()
     -- send database and last backup
     -- save database
-    save_data(_config.database.db, database)
+    save_data(config.database.db, database)
 
     -- do backup
     local time = os.time()

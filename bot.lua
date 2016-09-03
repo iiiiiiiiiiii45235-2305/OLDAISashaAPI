@@ -10,9 +10,9 @@ last_cron = os.date('%M')
 last_db_cron = os.date('%H')
 last_administrator_cron = os.date('%d')
 
--- Save the content of _config to config.lua
+-- Save the content of config to config.lua
 function save_config()
-    serialize_to_file(_config, './data/config.lua', false)
+    serialize_to_file(config, './data/config.lua', false)
     print(clr.blue .. 'saved config into ./data/config.lua')
 end
 
@@ -163,13 +163,13 @@ end
 function load_langs()
     print(clr.blue .. 'Loading languages.lua')
     local ok, err = pcall( function()
-        local t = dofile(_config.languages)()
+        local t = dofile(config.languages)()
         langs = t
     end )
 
     if not ok then
         print(clr.red .. 'Error loading languages.lua')
-        print(tostring(clr.red .. io.popen("lua " .. _config.languages .. ".lua"):read('*all')))
+        print(tostring(clr.red .. io.popen("lua " .. config.languages .. ".lua"):read('*all')))
         print(clr.red .. err)
     end
 end
@@ -181,7 +181,7 @@ end
 
 -- Enable plugins in config.lua
 function load_plugins()
-    for k, v in pairs(_config.enabled_plugins) do
+    for k, v in pairs(config.enabled_plugins) do
         print(clr.blue .. "Loading plugin", v)
 
         local ok, err = pcall( function()
@@ -200,19 +200,19 @@ end
 
 function load_database()
     print(clr.blue .. 'Loading database.json')
-    database = load_data(_config.database.db)
+    database = load_data(config.database.db)
 end
 
 function bot_init()
-    _config = { }
+    config = { }
     langs = { }
     api = { }
     bot = nil
     plugins = { }
     database = nil
 
-    _config = load_config()
-    if _config.bot_api_key == '' then
+    config = load_config()
+    if config.bot_api_key == '' then
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return
     end
@@ -545,9 +545,9 @@ function match_plugins(msg)
     end
 end
 
--- Check if plugin is on _config.disabled_plugin_on_chat table
+-- Check if plugin is on config.disabled_plugin_on_chat table
 local function is_plugin_disabled_on_chat(plugin_name, receiver)
-    local disabled_chats = _config.disabled_plugin_on_chat
+    local disabled_chats = config.disabled_plugin_on_chat
     -- Table exists and chat has disabled plugins
     if disabled_chats and disabled_chats[receiver] then
         -- Checks if plugin is disabled on this chat

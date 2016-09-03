@@ -974,15 +974,15 @@ function format_http_params(params, is_get)
 end
 
 function is_channel_disabled(receiver)
-    if not _config.disabled_channels then
+    if not config.disabled_channels then
         return false
     end
 
-    if _config.disabled_channels[receiver] == nil then
+    if config.disabled_channels[receiver] == nil then
         return false
     end
 
-    return _config.disabled_channels[receiver]
+    return config.disabled_channels[receiver]
 end
 
 -- Returns a table with matches or nil
@@ -1067,7 +1067,7 @@ end
 -- Check if this chat is a group or not
 function is_our_group(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local groups = 'groups'
     local chat = msg.chat.tg_cli_id
     if data[tostring(groups)] then
@@ -1082,7 +1082,7 @@ end
 
 function is_our_super_group(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local groups = 'groups'
     local chat = msg.chat.tg_cli_id
     if data[tostring(groups)] then
@@ -1097,7 +1097,7 @@ end
 
 function is_our_log_group(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local GBan_log = 'GBan_log'
     if data[tostring(GBan_log)] then
         if data[tostring(GBan_log)][tostring(msg.chat.tg_cli_id)] then

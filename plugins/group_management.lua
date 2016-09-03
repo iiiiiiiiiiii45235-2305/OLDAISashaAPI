@@ -5,7 +5,7 @@ group_type = ''
 -- INPM
 local function all_chats(msg)
     i = 1
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local groups = 'groups'
     if not data[tostring(groups)] then
         return langs[msg.lang].noGroups
@@ -68,40 +68,40 @@ end
 -- INREALM
 local function admin_promote(user, chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data.admins then
         data.admins = { }
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
     end
     if data.admins[tostring(user.id)] then
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].alreadyAdmin)
     end
     data.admins[tostring(user.id)] =(user.username or user.print_name)
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].promoteAdmin)
 end
 
 local function admin_demote(user, chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data.admins then
         data.admins = { }
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
     end
     if not data.admins[tostring(user.id)] then
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].notAdmin)
     end
     data.admins[tostring(user.id)] = nil
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].demoteAdmin)
 end
 
 local function admin_list(chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data.admins then
         data.admins = { }
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
     end
     local message = langs[lang].adminListStart
     for k, v in pairs(data.admins) do
@@ -111,7 +111,7 @@ local function admin_list(chat_id)
 end
 
 local function groups_list(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data.groups then
         return langs[msg.lang].noGroups
     end
@@ -151,7 +151,7 @@ local function realm_lock_group_member(data, target, lang)
         return langs[lang].membersAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_member'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].membersLocked
     end
 end
@@ -162,7 +162,7 @@ local function realm_unlock_group_member(data, target, lang)
         return langs[lang].membersAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_member'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].membersUnlocked
     end
 end
@@ -173,7 +173,7 @@ local function realm_lock_group_flood(data, target, lang)
         return langs[lang].floodAlreadyLocked
     else
         data[tostring(target)]['settings']['flood'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].floodLocked
     end
 end
@@ -184,7 +184,7 @@ local function realm_unlock_group_flood(data, target, lang)
         return langs[lang].floodAlreadyUnlocked
     else
         data[tostring(target)]['settings']['flood'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].floodUnlocked
     end
 end
@@ -195,7 +195,7 @@ local function realm_lock_group_arabic(data, target, lang)
         return langs[lang].arabicAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_arabic'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].arabicLocked
     end
 end
@@ -206,7 +206,7 @@ local function realm_unlock_group_arabic(data, target, lang)
         return langs[lang].arabicAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_arabic'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].arabicUnlocked
     end
 end
@@ -217,7 +217,7 @@ local function realm_lock_group_rtl(data, target, lang)
         return langs[lang].rtlAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_rtl'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].rtlLocked
     end
 end
@@ -228,7 +228,7 @@ local function realm_unlock_group_rtl(data, target, lang)
         return langs[lang].rtlAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_rtl'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].rtlUnlocked
     end
 end
@@ -239,7 +239,7 @@ local function realm_lock_group_links(data, target, lang)
         return langs[lang].linksAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_link'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].linksLocked
     end
 end
@@ -250,7 +250,7 @@ local function realm_unlock_group_links(data, target, lang)
         return langs[lang].linksAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_link'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].linksUnlocked
     end
 end
@@ -261,7 +261,7 @@ local function realm_lock_group_spam(data, target, lang)
         return langs[lang].spamAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_spam'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].spamLocked
     end
 end
@@ -272,7 +272,7 @@ local function realm_unlock_group_spam(data, target, lang)
         return langs[lang].spamAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_spam'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].spamUnlocked
     end
 end
@@ -283,7 +283,7 @@ local function realm_lock_group_sticker(data, target, lang)
         return langs[lang].stickersAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_sticker'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].stickersLocked
     end
 end
@@ -294,14 +294,14 @@ local function realm_unlock_group_sticker(data, target, lang)
         return langs[lang].stickersAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_sticker'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].stickersUnlocked
     end
 end
 
 -- show group settings
 local function realm_group_settings(target, lang)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local settings = data[tostring(target)]['settings']
     local text = langs[lang].groupSettings .. target .. ":" ..
     langs[lang].nameLock .. settings.lock_name ..
@@ -312,7 +312,7 @@ end
 
 -- show SuperGroup settings
 local function realm_supergroup_settings(target, lang)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if data[tostring(target)]['settings'] then
         if not data[tostring(target)]['settings']['lock_rtl'] then
             data[tostring(target)]['settings']['lock_rtl'] = 'no'
@@ -337,7 +337,7 @@ local function realm_supergroup_settings(target, lang)
 end
 
 local function realms_list(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data.realms then
         return langs[msg.lang].noRealms
     end
@@ -368,7 +368,7 @@ end
 
 -- INGROUP
 local function modadd(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if is_group(msg) then
         return langs[msg.lang].groupAlreadyAdded
     end
@@ -390,13 +390,13 @@ local function modadd(msg)
                         flood = 'yes',
                     }
                 }
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 if not data[tostring('groups')] then
                     data[tostring('groups')] = { }
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                 end
                 data[tostring('groups')][tostring(msg.chat.id)] = msg.chat.id
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
             end
         end
@@ -404,7 +404,7 @@ local function modadd(msg)
 end
 
 local function realmadd(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if is_realm(msg) then
         return langs[msg.lang].realmAlreadyAdded
     end
@@ -424,13 +424,13 @@ local function realmadd(msg)
                         flood = 'yes'
                     }
                 }
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 if not data[tostring('realms')] then
                     data[tostring('realms')] = { }
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                 end
                 data[tostring('realms')][tostring(msg.chat.id)] = msg.chat.id
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
             end
         end
@@ -438,42 +438,42 @@ local function realmadd(msg)
 end
 
 local function modrem(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not is_group(msg) then
         return langs[msg.lang].groupNotAdded
     end
     -- Group configuration removal
     data[tostring(msg.chat.id)] = nil
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     if not data[tostring('groups')] then
         data[tostring('groups')] = nil
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
     end
     data[tostring('groups')][tostring(msg.chat.id)] = nil
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return sendMessage(msg.chat.id, langs[msg.lang].groupRemoved)
 end
 
 local function realmrem(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not is_realm(msg) then
         return langs[msg.lang].realmNotAdded
     end
     -- Realm configuration removal
     data[tostring(msg.chat.id)] = nil
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     if not data[tostring('realms')] then
         data[tostring('realms')] = nil
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
     end
     data[tostring('realms')][tostring(msg.chat.id)] = nil
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return sendMessage(msg.chat.it, langs[msg.lang].realmRemoved)
 end
 
 local function promote(chat_id, user)
     local lang = get_lang(chat_id)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data[chat_id] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
@@ -481,13 +481,13 @@ local function promote(chat_id, user)
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].alreadyMod)
     end
     data[chat_id]['moderators'][tostring(member_id)] =(user.username or user.print_name)
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].promoteMod)
 end
 
 local function demote(chat_id, user)
     local lang = get_lang(chat_id)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if not data[chat_id] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
@@ -495,12 +495,12 @@ local function demote(chat_id, user)
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].notMod)
     end
     data[chat_id]['moderators'][tostring(member_id)] = nil
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].demoteMod)
 end
 
 local function modlist(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local groups = "groups"
     if not data[tostring(groups)][tostring(msg.chat.id)] then
         return langs[msg.lang].groupNotAdded
@@ -520,7 +520,7 @@ local function modlist(msg)
 end
 
 local function show_group_settingsmod(target, lang)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if data[tostring(target)] then
         if data[tostring(target)]['settings']['flood_msg_max'] then
             NUM_MSG_MAX = tonumber(data[tostring(target)]['settings']['flood_msg_max'])
@@ -606,14 +606,14 @@ local function check_member_super(extra, success, result)
                     strict = 'no'
                 }
             }
-            save_data(_config.moderation.data, data)
+            save_data(config.moderation.data, data)
             local groups = 'groups'
             if not data[tostring(groups)] then
                 data[tostring(groups)] = { }
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
             end
             data[tostring(groups)][tostring(msg.chat.id)] = msg.chat.id
-            save_data(_config.moderation.data, data)
+            save_data(config.moderation.data, data)
             local text = langs[msg.lang].supergroupAdded
             return reply_msg(msg.id, text, ok_cb, false)
         end
@@ -630,14 +630,14 @@ local function check_member_superrem(extra, success, result)
         if member_id ~= bot.id then
             -- Group configuration removal
             data[tostring(msg.chat.id)] = nil
-            save_data(_config.moderation.data, data)
+            save_data(config.moderation.data, data)
             local groups = 'groups'
             if not data[tostring(groups)] then
                 data[tostring(groups)] = nil
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
             end
             data[tostring(groups)][tostring(msg.chat.id)] = nil
-            save_data(_config.moderation.data, data)
+            save_data(config.moderation.data, data)
             local text = langs[msg.lang].supergroupRemoved
             return reply_msg(msg.id, text, ok_cb, false)
         end
@@ -646,21 +646,21 @@ end
 
 -- Function to Add supergroup
 local function superadd(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local receiver = get_receiver(msg)
     channel_get_users(receiver, check_member_super, { receiver = receiver, data = data, msg = msg })
 end
 
 -- Function to remove supergroup
 local function superrem(msg)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local receiver = get_receiver(msg)
     channel_get_users(receiver, check_member_superrem, { receiver = receiver, data = data, msg = msg })
 end
 
 -- Show supergroup settings; function
 local function show_supergroup_settings(target, lang)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if data[tostring(target)] then
         if data[tostring(target)]['settings']['flood_msg_max'] then
             NUM_MSG_MAX = tonumber(data[tostring(target)]['settings']['flood_msg_max'])
@@ -712,7 +712,7 @@ local function lock_group_arabic(data, target, lang)
         return langs[lang].arabicAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_arabic'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].arabicLocked
     end
 end
@@ -723,7 +723,7 @@ local function unlock_group_arabic(data, target, lang)
         return langs[lang].arabicAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_arabic'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].arabicUnlocked
     end
 end
@@ -734,7 +734,7 @@ local function lock_group_bots(data, target, lang)
         return langs[lang].botsAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_bots'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].botsLocked
     end
 end
@@ -745,7 +745,7 @@ local function unlock_group_bots(data, target, lang)
         return langs[lang].botsAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_bots'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].botsUnlocked
     end
 end
@@ -756,7 +756,7 @@ local function lock_group_flood(data, target, lang)
         return langs[lang].floodAlreadyLocked
     else
         data[tostring(target)]['settings']['flood'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].floodLocked
     end
 end
@@ -767,7 +767,7 @@ local function unlock_group_flood(data, target, lang)
         return langs[lang].floodAlreadyUnlocked
     else
         data[tostring(target)]['settings']['flood'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].floodUnlocked
     end
 end
@@ -778,7 +778,7 @@ local function lock_group_member(data, target, lang)
         return langs[lang].membersAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_member'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].membersLocked
     end
 end
@@ -789,7 +789,7 @@ local function unlock_group_member(data, target, lang)
         return langs[lang].membersAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_member'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].membersUnlocked
     end
 end
@@ -800,7 +800,7 @@ local function lock_group_leave(data, target, lang)
         return langs[lang].leaveAlreadyLocked
     else
         data[tostring(target)]['settings']['leave_ban'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].leaveLocked
     end
 end
@@ -811,7 +811,7 @@ local function unlock_group_leave(data, target, lang)
         return langs[lang].leaveAlreadyUnlocked
     else
         data[tostring(target)]['settings']['leave_ban'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].leaveUnlocked
     end
 end
@@ -822,7 +822,7 @@ local function lock_group_links(data, target, lang)
         return langs[lang].linksAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_link'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].linksLocked
     end
 end
@@ -833,7 +833,7 @@ local function unlock_group_links(data, target, lang)
         return langs[lang].linksAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_link'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].linksUnlocked
     end
 end
@@ -844,7 +844,7 @@ local function lock_group_spam(data, target, lang)
         return langs[lang].spamAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_spam'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].spamLocked
     end
 end
@@ -855,7 +855,7 @@ local function unlock_group_spam(data, target, lang)
         return langs[lang].spamAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_spam'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].spamUnlocked
     end
 end
@@ -866,7 +866,7 @@ local function lock_group_rtl(data, target, lang)
         return langs[lang].rtlAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_rtl'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].rtlLocked
     end
 end
@@ -877,7 +877,7 @@ local function unlock_group_rtl(data, target, lang)
         return langs[lang].rtlAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_rtl'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].rtlUnlocked
     end
 end
@@ -888,7 +888,7 @@ local function lock_group_sticker(data, target, lang)
         return langs[lang].stickersAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_sticker'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].stickersLocked
     end
 end
@@ -899,7 +899,7 @@ local function unlock_group_sticker(data, target, lang)
         return langs[lang].stickersAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_sticker'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].stickersUnlocked
     end
 end
@@ -910,7 +910,7 @@ local function lock_group_contacts(data, target, lang)
         return langs[lang].contactsAlreadyLocked
     else
         data[tostring(target)]['settings']['lock_contacts'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].contactsLocked
     end
 end
@@ -921,7 +921,7 @@ local function unlock_group_contacts(data, target, lang)
         return langs[lang].contactsAlreadyUnlocked
     else
         data[tostring(target)]['settings']['lock_contacts'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].contactsUnlocked
     end
 end
@@ -932,7 +932,7 @@ local function enable_strict_rules(data, target, lang)
         return langs[lang].strictrulesAlreadyLocked
     else
         data[tostring(target)]['settings']['strict'] = 'yes'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].strictrulesLocked
     end
 end
@@ -943,16 +943,16 @@ local function disable_strict_rules(data, target, lang)
         return langs[lang].strictrulesAlreadyUnlocked
     else
         data[tostring(target)]['settings']['strict'] = 'no'
-        save_data(_config.moderation.data, data)
+        save_data(config.moderation.data, data)
         return langs[lang].strictrulesUnlocked
     end
 end
 
 local function chat_set_owner(user, chat_id)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)]['set_owner'] = tostring(user.id)
-    save_data(_config.moderation.data, data)
+    save_data(config.moderation.data, data)
     return(user.username or user.print_name) .. ' [' .. user.id .. ']' .. langs[lang].setOwner
 end
 
@@ -988,7 +988,7 @@ local function contact_mods(msg)
         end
     end
 
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
 
     -- owner
     local owner = data[tostring(msg.chat.id)]['set_owner']
@@ -1013,17 +1013,17 @@ local function contact_mods(msg)
 end
 
 local function run(msg, matches)
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     if matches[1]:lower() == 'type' then
         if is_mod(msg) then
             if data[tostring(msg.chat.id)] then
                 if not data[tostring(msg.chat.id)]['group_type'] then
                     if msg.chat.type == 'group' and not is_realm(msg) then
                         data[tostring(msg.chat.id)]['group_type'] = 'Group'
-                        save_data(_config.moderation.data, data)
+                        save_data(config.moderation.data, data)
                     elseif msg.chat.type == 'supergroup' then
                         data[tostring(msg.chat.id)]['group_type'] = 'SuperGroup'
-                        save_data(_config.moderation.data, data)
+                        save_data(config.moderation.data, data)
                     end
                 end
                 return data[tostring(msg.chat.id)]['group_type']
@@ -1073,13 +1073,13 @@ local function run(msg, matches)
             if is_admin(msg) then
                 -- Group configuration removal
                 data[tostring(matches[2])] = nil
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 if not data[tostring('groups')] then
                     data[tostring('groups')] = nil
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                 end
                 data[tostring('groups')][tostring(matches[2])] = nil
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return sendMessage(msg.chat.id, langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed)
             else
                 return langs[msg.lang].require_admin
@@ -1140,7 +1140,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'setgpowner' and matches[2] and matches[3] then
             if is_admin(msg) then
                 data[tostring(matches[2])]['set_owner'] = matches[3]
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return sendMessage(matches[2], matches[3] .. langs[lang].setOwner)
             else
                 return langs[msg.lang].require_admin
@@ -1262,7 +1262,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'setgprules' then
             if is_admin(msg) then
                 data[tostring(matches[2])]['rules'] = matches[3]
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return langs[msg.lang].newRules .. matches[3]
             else
                 return langs[msg.lang].require_admin
@@ -1271,7 +1271,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'setgroupabout' and matches[2] and matches[3] then
             if is_admin(msg) then
                 data[tostring(matches[2])]['description'] = matches[3]
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return langs[msg.lang].newDescription .. matches[3]
             else
                 return langs[msg.lang].require_admin
@@ -1450,7 +1450,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == 'sasha imposta regole' then
                 if is_mod(msg) then
                     data[tostring(msg.chat.id)]['rules'] = matches[2]
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] has changed group rules to [" .. matches[2] .. "]")
                     return langs[msg.lang].newRules .. matches[2]
                 else
@@ -1460,7 +1460,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setabout' or matches[1]:lower() == 'sasha imposta descrizione' then
                 if is_mod(msg) then
                     data[tostring(msg.chat.id)]['description'] = matches[2]
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] has changed group description to [" .. matches[2] .. "]")
                     return langs[msg.lang].newDescription .. matches[2]
                 else
@@ -1563,7 +1563,7 @@ local function run(msg, matches)
         if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
             if is_owner(msg) then
                 data[tostring(msg.chat.id)]['settings']['set_link'] = matches[2]
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return langs[msg.lang].linkSaved
             else
                 return langs[msg.lang].require_owner
@@ -1572,7 +1572,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'unsetlink' or matches[1]:lower() == "sasha elimina link" then
             if is_owner(msg) then
                 data[tostring(msg.chat.id)]['settings']['set_link'] = nil
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 return langs[msg.lang].linkDeleted
             else
                 return langs[msg.lang].require_owner
@@ -1646,7 +1646,7 @@ local function run(msg, matches)
                     return langs[msg.lang].errorFloodRange
                 end
                 data[tostring(msg.chat.id)]['settings']['flood_msg_max'] = matches[2]
-                save_data(_config.moderation.data, data)
+                save_data(config.moderation.data, data)
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. matches[2] .. "]")
                 return langs[msg.lang].floodSet .. matches[2]
             else
@@ -1663,18 +1663,18 @@ local function run(msg, matches)
                     local message = langs[msg.lang].modListStart .. string.gsub(msg.chat.print_name, '_', ' ') .. ':\n'
                     for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
                         data[tostring(msg.chat.id)]['moderators'][tostring(k)] = nil
-                        save_data(_config.moderation.data, data)
+                        save_data(config.moderation.data, data)
                     end
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
                 end
                 if matches[2]:lower() == 'rules' then
                     data[tostring(msg.chat.id)]['rules'] = nil
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned rules")
                 end
                 if matches[2]:lower() == 'about' then
                     data[tostring(msg.chat.id)]['description'] = nil
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned about")
                 end
             else
@@ -1734,7 +1734,7 @@ local function run(msg, matches)
             if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
                 if is_owner(msg) then
                     data[tostring(msg.chat.id)]['settings']['set_link'] = matches[2]
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     return langs[msg.lang].linkSaved
                 else
                     return langs[msg.lang].require_owner
@@ -1743,7 +1743,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'unsetlink' or matches[1]:lower() == "sasha elimina link" then
                 if is_owner(msg) then
                     data[tostring(msg.chat.id)]['settings']['set_link'] = nil
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     return langs[msg.lang].linkDeleted
                 else
                     return langs[msg.lang].require_owner
@@ -1886,7 +1886,7 @@ local function run(msg, matches)
             if matches[1]:lower() == "setabout" or matches[1]:lower() == "sasha imposta descrizione" then
                 if is_mod(msg) then
                     data[tostring(msg.chat.id)]['description'] = matches[2]
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set SuperGroup description to: " .. matches[2])
                     return langs[msg.lang].newDescription .. matches[2]
                 else
@@ -1896,7 +1896,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == "sasha imposta regole" then
                 if is_mod(msg) then
                     data[tostring(msg.chat.id)]['rules'] = matches[2]
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] has changed group rules to [" .. matches[2] .. "]")
                     return langs[msg.lang].newRules .. matches[2]
                 else
@@ -1911,7 +1911,7 @@ local function run(msg, matches)
                         end
                         for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
                             data[tostring(msg.chat.id)]['moderators'][tostring(k)] = nil
-                            save_data(_config.moderation.data, data)
+                            save_data(config.moderation.data, data)
                         end
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
                         return langs[msg.lang].modlistCleaned
@@ -1922,7 +1922,7 @@ local function run(msg, matches)
                             return langs[msg.lang].noRules
                         end
                         data[tostring(msg.chat.id)][data_cat] = nil
-                        save_data(_config.moderation.data, data)
+                        save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned rules")
                         return langs[msg.lang].rulesCleaned
                     end
@@ -1934,7 +1934,7 @@ local function run(msg, matches)
                             return langs[msg.lang].noDescription
                         end
                         data[tostring(msg.chat.id)][data_cat] = nil
-                        save_data(_config.moderation.data, data)
+                        save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned about")
                         return langs[msg.lang].descriptionCleaned
                     end
@@ -2046,7 +2046,7 @@ local function run(msg, matches)
                         return langs[msg.lang].errorFloodRange
                     end
                     data[tostring(msg.chat.id)]['settings']['flood_msg_max'] = matches[2]
-                    save_data(_config.moderation.data, data)
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. matches[2] .. "]")
                     return langs[msg.lang].floodSet .. matches[2]
                 else

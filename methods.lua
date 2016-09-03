@@ -195,7 +195,7 @@ local function sendMessage(chat_id, text, use_markdown, reply_to_message_id, sen
 end
 
 local function sendMessage_SUDOERS(text)
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if user ~= bot.id then
             -- print(text)
             sendMessage(user, text)
@@ -443,7 +443,7 @@ local function sendDocument(chat_id, document, reply_to_message_id)
 end
 
 local function sendDocument_SUDOERS(document)
-    for v, user in pairs(_config.sudo_users) do
+    for v, user in pairs(config.sudo_users) do
         if user ~= bot.id then
             local url = BASE_URL .. '/sendDocument'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. user .. '" -F "document=@' .. document .. '"'

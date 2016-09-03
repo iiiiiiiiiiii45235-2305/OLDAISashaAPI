@@ -128,7 +128,7 @@ end
 local function run(msg, matches)
     if is_sudo(msg) then
         if matches[1]:lower() == 'createdatabase' then
-            local f = io.open(_config.database.db, 'w+')
+            local f = io.open(config.database.db, 'w+')
             f:write('{}')
             f:close()
             return sendReply(msg, langs[msg.lang].dbCreated)
@@ -164,7 +164,7 @@ local function run(msg, matches)
                     old_usernames = old_usernames,
                     groups = groups,
                 }
-                save_data(_config.database.db, database)
+                save_data(config.database.db, database)
                 return langs[msg.lang].userManuallyAdded
             elseif matches[2]:lower() == 'group' then
                 local id = t[1]
@@ -179,7 +179,7 @@ local function run(msg, matches)
                     lang = lang,
                     type = type,
                 }
-                save_data(_config.database.db, database)
+                save_data(config.database.db, database)
                 return langs[msg.lang].groupManuallyAdded
             elseif matches[2]:lower() == 'supergroup' then
                 local id = t[1]
@@ -205,7 +205,7 @@ local function run(msg, matches)
                     username = username,
                     old_usernames = old_usernames,
                 }
-                save_data(_config.database.db, database)
+                save_data(config.database.db, database)
                 --
                 return langs[msg.lang].supergroupManuallyAdded
             elseif matches[2]:lower() == 'channel' then
@@ -232,7 +232,7 @@ local function run(msg, matches)
                     username = username,
                     old_usernames = old_usernames,
                 }
-                save_data(_config.database.db, database)
+                save_data(config.database.db, database)
                 --
                 return langs[msg.lang].channelManuallyAdded
             end
@@ -241,7 +241,7 @@ local function run(msg, matches)
         if (matches[1]:lower() == 'delete' or matches[1]:lower() == 'sasha elimina' or matches[1]:lower() == 'elimina') and matches[2] then
             if database[tostring(matches[2])] then
                 database[tostring(matches[2])] = nil
-                save_data(_config.database.db, database)
+                save_data(config.database.db, database)
                 --
                 return langs[msg.lang].recordDeleted
             else
@@ -251,7 +251,7 @@ local function run(msg, matches)
 
         if matches[1]:lower() == 'uploaddb' then
             print('SAVING USERS/GROUPS DATABASE')
-            save_data(_config.database.db, database)
+            save_data(config.database.db, database)
             if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
                 sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json', ok_cb, false)
                 return langs[msg.lang].databaseSent
@@ -267,7 +267,7 @@ local function run(msg, matches)
                         local res = getFile(msg.reply_to_message.document.file_id)
                         local download_link = telegram_file_link(res)
                         download_to_file(download_link, '/home/pi/AISashaAPI/data/database.json')
-                        database = load_data(_config.database.db)
+                        database = load_data(config.database.db)
                         return langs[msg.lang].databaseDownloaded
                     else
                         --
@@ -342,7 +342,7 @@ local function save_to_db(msg)
         end
     else
         sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp)
-        local f = io.open(_config.database.db, 'w+')
+        local f = io.open(config.database.db, 'w+')
         f:write('{}')
         f:close()
     end
@@ -355,7 +355,7 @@ end
 
 local function cron()
     print('SAVING USERS/GROUPS DATABASE')
-    save_data(_config.database.db, database)
+    save_data(config.database.db, database)
 end
 
 return {
