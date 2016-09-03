@@ -39,7 +39,7 @@ local function get_object_info(obj, chat_id, lang)
                     otherinfo = otherinfo .. chat_member.status:upper()
                 end
             end
-            if is_whitelisted(obj.id) then
+            if redis:sismember('whitelist', obj.id) then
                 otherinfo = otherinfo .. 'WHITELISTED '
             end
             if is_gbanned(obj.id) then
