@@ -1,4 +1,6 @@
 require("utils")
+require("methods")
+require("ranks")
 
 local f = assert(io.popen('/usr/bin/git describe --tags', 'r'))
 VERSION = assert(f:read('*a'))
