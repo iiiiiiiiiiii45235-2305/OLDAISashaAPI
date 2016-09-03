@@ -132,17 +132,6 @@ function set_owner(chat_id, user_id, nick)
     -- owner
 end
 
-function is_banned(chat_id, user_id)
-    -- useful only for normal groups
-    local hash = 'banned:' .. chat_id
-    local res = redis:sismember(hash, user_id)
-    if res then
-        return true
-    else
-        return false
-    end
-end
-
 function mystat(cmd)
     redis:hincrby('commands:stats', cmd, 1)
 end

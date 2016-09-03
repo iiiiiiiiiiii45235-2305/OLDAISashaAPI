@@ -341,7 +341,7 @@ local function pre_process(msg)
             -- Check if banned user joins chat by link
             if msg.service_type == 'chat_add_user_link' then
                 print('Checking invited user ' .. msg.from.id)
-                if is_banned(msg.from.id, msg.chat.id) or is_gbanned(msg.from.id) then
+                if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
                     -- Check it with redis
                     print('User is banned!')
                     savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
@@ -352,7 +352,7 @@ local function pre_process(msg)
             -- Check if banned user joins chat
             if msg.service_type == 'chat_add_user' then
                 print('Checking invited user ' .. msg.added.id)
-                if is_banned(msg.added.id, msg.chat.id) and not is_mod2(msg.from.id, msg.chat.id) or is_gbanned(msg.added.id) and not is_admin2(msg.from.id) then
+                if isBanned(msg.added.id, msg.chat.id) and not is_mod2(msg.from.id, msg.chat.id) or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
                     -- Check it with redis
                     print('User is banned!')
                     savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
@@ -403,7 +403,7 @@ local function pre_process(msg)
         -- chat_del_user('chat#id'..msg.chat.id,'user#id'..bot.id,ok_cb,false)
         -- return
         -- end
-        if is_banned(msg.from.id, msg.chat.id) or is_gbanned(msg.from.id) then
+        if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
             -- Check it with redis
             print('Banned user talking!')
             savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
