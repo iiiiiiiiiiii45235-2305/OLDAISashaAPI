@@ -5,7 +5,7 @@ local function run(msg, matches)
             output = langs[msg.lang].doneNoOutput
         else
             if type(output) == 'table' then
-                output = vtext(output)
+                output = vardumptext(output)
             end
             output = '```\n' .. output .. '\n```'
         end

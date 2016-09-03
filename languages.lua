@@ -1,861 +1,751 @@
 return {
-    en =
+    phrases =
     {
-        status =
-        {
-            kicked = '&&&1 is banned from this group',
-            left = '&&&1 left the group or has been kicked and unbanned',
-            administrator = '&&&1 is an Admin',
-            creator = '&&&1 is the group creator',
-            unknown = 'This user has nothing to do with this chat',
-            member = '&&&1 is a chat member'
-        },
-        getban =
-        {
-            header = '*Global stats* for ',
-            nothing = '`Nothing to display`',
-            kick = 'Kick: ',
-            ban = 'Ban: ',
-            tempban = 'Tempban: ',
-            flood = 'Removed for flood: ',
-            warn = 'Removed for warns: ',
-            media = 'Removed for forbidden media: ',
-            arab = 'Removed for arab chars: ',
-            rtl = 'Removed for RTL char: ',
-            kicked = '_Kicked!_',
-            banned = '_Banned!_'
-        },
-        bonus =
-        {
-            general_pm = '_I\'ve sent you the message in private_',
-            no_user = 'I\'ve never seen this user before.\nIf you want to teach me who he is, forward me a message from him',
-            the_group = 'the group',
-            adminlist_admin_required = 'I\'m not a group Admin.\n*Only an Admin can see the administrators list*',
-            settings_header = 'Current settings for *the group*:\n\n*Language*: `&&&1`\n',
-            reply = '*Reply to someone* to use this command, or write a *username*',
-            too_long = 'This text is too long, I can\'t send it',
-            msg_me = '_Message me first so I can message you_',
-            menu_cb_settings = 'Tap on an icon!',
-            menu_cb_warns = 'Use the row below to change the warns settings!',
-            menu_cb_media = 'Tap on a switch!',
-            tell = '*Group ID*: &&&1',
-        },
-        not_mod = 'You are *not* a moderator',
-        breaks_markdown = 'This text breaks the markdown.\nMore info about a proper use of markdown [here](https://telegram.me/GroupButler_ch/46).',
-        credits = '*Some useful links:*',
-        extra =
-        {
-            setted = '&&&1 command saved!',
-            usage = 'Write next to /extra the title of the command and the text associated.\nFor example:\n/extra #motm stay positive. The bot will reply _\'Stay positive\'_ each time someone writes #motm',
-            new_command = '*New command set!*\n&&&1\n&&&2',
-            no_commands = 'No commands set!',
-            commands_list = 'List of *custom commands*:\n&&&1',
-            command_deleted = '&&&1 command have been deleted',
-            command_empty = '&&&1 command does not exist'
-        },
-        help =
-        {
-            mods =
-            {
-                banhammer = "*Moderators: banhammer powers*\n\n"
-                .. "`/kick [by reply|username]` = kick a user from the group (he can be added again).\n"
-                .. "`/ban [by reply|username]` = ban a user from the group (also from normal groups).\n"
-                .. "`/tempban [minutes]` = ban an user for a specific amount of minutes (minutes must be < 10.080, one week). For now, only by reply.\n"
-                .. "`/unban [by reply|username]` = unban the user from the group.\n"
-                .. "`/getban [by reply|username]` = returns the *global* number of bans/kicks received by the user. Divided in categories.\n"
-                .. "`/status [username]` = show the current status of the user `(member|kicked/left the chat|banned|admin/creator|never seen)`.\n"
-                .. "`/banlist` = show a list of banned users. Includes the motivations (if given during the ban)\n"
-                .. "`/banlist -` = clean the banlist.\n"
-                .. "\n*Note*: you can write something after `/ban` command (or after the username, if you are banning by username)."
-                .. " This comment will be used as the motivation of the ban.",
-                info = "*Moderators: info about the group*\n\n"
-                .. "`/setrules [group rules]` = set the new regulation for the group (the old will be overwritten).\n"
-                .. "`/addrules [text]` = add some text at the end of the existing rules.\n"
-                .. "`/setabout [group description]` = set a new description for the group (the old will be overwritten).\n"
-                .. "`/addabout [text]` = add some text at the end of the existing description.\n"
-                .. "\n*Note:* the markdown is supported. If the text sent breaks the markdown, the bot will notify that something is wrong.\n"
-                .. "For a correct use of the markdown, check [this post](https://telegram.me/GroupButler_ch/46) in the channel",
-                flood = "*Moderators: flood settings*\n\n"
-                .. "`/antiflood` = manage the flood settings in private, with an inline keyboard. You can change the sensitivity, the action (kick/ban), and even set some exceptions.\n"
-                .. "`/antiflood [number]` = set how many messages a user can write in 5 seconds.\n"
-                .. "_Note_ : the number must be higher than 3 and lower than 26.\n",
-                media = "*Moderators: media settings*\n\n"
-                .. "`/media` = receive via private message an inline keyboard to change all the media settings.\n"
-                .. "`/warnmax media [number]` = set the max number of warnings before be kicked/banned for have sent a forbidden media.\n"
-                .. "`/nowarns (by reply)` = reset the number of warnings for the users (*NOTE: both regular warnings and media warnings*).\n"
-                .. "`/media list` = show the current settings for all the media.\n"
-                .. "\n*List of supported media*: _image, audio, video, sticker, gif, voice, contact, file, link_\n",
-                welcome = "*Moderators: welcome settings*\n\n"
-                .. "`/menu` = receive in private the menu keyboard. You will find an opton to enable/disable the welcome message.\n"
-                .. "\n*Custom welcome message:*\n"
-                .. "`/welcome Welcome $name, enjoy the group!`\n"
-                .. "Write after \"/welcome\" your welcome message. You can use some placeholders to include the name/username/id of the new member of the group\n"
-                .. "Placeholders: _$username_ (will be replaced with the username); _$name_ (will be replaced with the name); _$id_ (will be replaced with the id); _$title_ (will be replaced with the group title).\n"
-                .. "\n*GIF/sticker as welcome message*\n"
-                .. "You can use a particular gif/sticker as welcome message. To set it, reply to a gif/sticker with \'/welcome\'\n"
-                .. "\n*Composed welcome message*\n"
-                .. "You can compose your welcome message with the rules, the description and the moderators list.\n"
-                .. "You can compose it by writing `/welcome` followed by the codes of what the welcome message has to include.\n"
-                .. "_Codes_ : *r* = rules; *a* = description (about); *m* = adminlist.\n"
-                .. "For example, with \"`/welcome rm`\", the welcome message will show rules and moderators list",
-                extra = "*Moderators: extra commands*\n\n"
-                .. "`/extra [#trigger] [reply]` = set a reply to be sent when someone writes the trigger.\n"
-                .. "_Example_ : with \"`/extra #hello Good morning!`\", the bot will reply \"Good morning!\" each time someone writes #hello.\n"
-                .. "`/extra list` = get the list of your custom commands.\n"
-                .. "`/extra del [#trigger]` = delete the trigger and its message.\n"
-                .. "`/disable extra` = only an admin can use #extra commands in a group. For the other users, the bot will reply in private.\n"
-                .. "`/enable extra` = everyone use #extra commands in a group, and not only the Admins.\n"
-                .. "\n*Note:* the markdown is supported. If the text sent breaks the markdown, the bot will notify that something is wrong.\n"
-                .. "For a correct use of the markdown, check [this post](https://telegram.me/GroupButler_ch/46) in the channel",
-                warns = "*Moderators: warns*\n\n"
-                .. "`/warn [kick/ban]` = choose the action to perform once the max number of warnings is reached.\n"
-                .. "`/warn [by reply]` = warn a user. Once the max number is reached, he will be kicked/banned.\n"
-                .. "`/warnmax` = set the max number of the warns before the kick/ban.\n"
-                .. "`/getwarns [by reply]` = see how many times a user have been warned.\n"
-                .. "`/nowarns (by reply)` = reset the number of warnings for the users (*NOTE: both regular warnings and media warnings*).\n",
-                char = "*Moderators: special characters*\n\n"
-                .. "`/menu` = you will receive in private the menu keyboard.\n"
-                .. "Here you will find two particular options: _Arab and RTL_.\n"
-                .. "\n*Arab*: when Arab it's not allowed (🚫), everyone who will write an arab character will be kicked from the group.\n"
-                .. "*Rtl*: it stands for 'Righ To Left' character, and it's the responsible of th wierd service messages that are written in the opposite sense.\n"
-                .. "When Rtl is not allowed (🚫), everyone that writes this character (or that has it in his name) will be kicked.",
-                links = "*Moderators: links*\n\n"
-                .. '`/setlink [link|\'no\']` : set the group link, so it can be re-called by other admins, or unset it\n'
-                .. "`/link` = get the group link, if already setted by the owner\n"
-                .. "`/setpoll [pollbot link]` = save a poll link from @pollbot. Once setted, moderators can retrieve it with `/poll`.\n"
-                .. "`/setpoll no` = delete the current poll link.\n"
-                .. "`/poll` = get the current poll link, if setted\n"
-                .. "\n*Note*: the bot can recognize valid group links/poll links. If a link is not valid, you won't receive a reply.",
-                lang = "*Moderators: group language*\n\n"
-                .. "`/lang` = choose the group language (can be changed in private too).\n"
-                .. "\n*Note*: translators are volunteers, so I can't ensure the correctness of all the translations. And I can't force them to translate the new strings after each update (not translated strings are in english)."
-                .. "\nAnyway, translations are open to everyone. Use `/strings` command to receive a _.lua_ file with all the strings (in english).\n"
-                .. "Use `/strings [lang code]` to receive the file for that specific language (example: _/strings es_ ).\n"
-                .. "In the file you will find all the instructions: follow them, and as soon as possible your language will be available ;)",
-                settings = "*Moderators: group settings*\n\n"
-                .. "`/menu` = manage the group settings in private with an handy inline keyboard.\n"
-                .. "`/adminmode on` = _/rules, /adminlist_ and every #extra command will be sent in private unless if triggered by an admin.\n"
-                .. "`/adminmode off` = _/rules, /adminlist_ and every #extra command will be sent in the group, no exceptions.\n"
-                .. "`/report [on/off]` (by reply) = the user won't be able (_off_) or will be able (_on_) to use \"@admin\" command.\n",
-            },
-            all = '*Commands for all*:\n'
-            .. '`/dashboard` : see all the group info from private\n'
-            .. '`/rules` (if unlocked) : show the group rules\n'
-            .. '`/about` (if unlocked) : show the group description\n'
-            .. '`/adminlist` (if unlocked) : show the moderators of the group\n'
-            .. '`@admin` (if unlocked) : by reply= report the message replied to all the admins; no reply (with text)= send a feedback to all the admins\n'
-            .. '`/kickme` : get kicked by the bot\n'
-            .. '`/faq` : some useful answers to frequent quetions\n'
-            .. '`/id` : get the chat id, or the user id if by reply\n'
-            .. '`/echo [text]` : the bot will send the text back (with markdown, available only in private for non-admin users)\n'
-            .. '`/info` : show some useful informations about the bot\n'
-            .. '`/group` : get the discussion group link\n'
-            .. '`/c` <feedback> : send a feedback/report a bug/ask a question to my creator. _ANY KIND OF SUGGESTION OR FEATURE REQUEST IS WELCOME_. He will reply ASAP\n'
-            .. '`/help` : show this message.'
-            .. '\n\nIf you like this bot, please leave the vote you think it deserves [here](https://telegram.me/storebot?start=groupbutler_bot)',
-            private = 'Hey, *&&&1*!\n'
-            .. 'I\'m a simple bot created in order to help people to manage their groups.\n'
-            .. '\n*What can I do for you?*\n'
-            .. 'Wew, I have a lot of useful tools!\n'
-            .. '• You can *kick or ban* users (even in normal groups) by reply/username\n'
-            .. '• Set rules and a description\n'
-            .. '• Turn on a configurable *anti-flood* system\n'
-            .. '• Customize the *welcome message*, also with gif and stickers\n'
-            .. '• Warn users, and kick/ban them if they reach a max number of warns\n'
-            .. '• Warn or kick users if they send a specific media\n'
-            .. '...and more, below you can find the "all commands" button to get the whole list!\n'
-            .. '\nTo use me, *you need to add me as administrator of the group*, or Telegram won\'t let me work! (if you have some doubts about this, check [this post](https://telegram.me/GroupButler_ch/63))'
-            .. '\nYou can report bugs/send feedbacks/ask a question to my creator just using "`/c <feedback>`" command. EVERYTHING IS WELCOME!',
-            group_success = '_I\'ve sent you the help message in private_',
-            group_not_success = '_Please message me first so I can message you_',
-            initial = 'Choose the *role* to see the available commands:',
-            kb_header = 'Tap on a button to see the *related commands*'
-        },
-        links =
-        {
-            no_link = '*No link* for this group. Ask the owner to generate one',
-            link = '[&&&1](&&&2)',
-            link_no_input = 'This is not a *public supergroup*, so you need to write the link near /setlink',
-            link_invalid = 'This link is *not valid!*',
-            link_updated = 'The link has been updated.\n*Here\'s the new link*: [&&&1](&&&2)',
-            link_setted = 'The link has been setted.\n*Here\'s the link*: [&&&1](&&&2)',
-            link_unsetted = 'Link *unsetted*',
-            poll_unsetted = 'Poll *unsetted*',
-            poll_updated = 'The poll have been updated.\n*Vote here*: [&&&1](&&&2)',
-            poll_setted = 'The link have been setted.\n*Vote here*: [&&&1](&&&2)',
-            no_poll = '*No active polls* for this group',
-            poll = '*Vote here*: [&&&1](&&&2)'
-        },
-        mod =
-        {
-            modlist = '*Creator*:\n&&&1\n\n*Admins*:\n&&&2'
-        },
-        report =
-        {
-            no_input = 'Write your suggestions/bugs/doubt near the !',
-            sent = 'Feedback sent!',
-            feedback_reply = '*Hello, this is a reply from the bot owner*:\n&&&1',
-        },
-        service =
-        {
-            welcome = 'Hi &&&1, and welcome to *&&&2*!',
-            welcome_rls = 'Total anarchy!',
-            welcome_abt = 'No description for this group.',
-            welcome_modlist = '\n\n*Creator*:\n&&&1\n*Admins*:\n&&&2',
-            abt = '\n\n*Description*:\n',
-            rls = '\n\n*Rules*:\n',
-        },
-        setabout =
-        {
-            no_bio = '*No description* for this group.',
-            no_bio_add = '*No description for this group*.\nUse /setabout [bio] to set-up a new description',
-            no_input_add = 'Please write something next this poor "/addabout"',
-            added = '*Description added:*\n"&&&1"',
-            no_input_set = 'Please write something next this poor "/setabout"',
-            clean = 'The bio has been cleaned.',
-            new = '*New bio:*\n"&&&1"',
-            about_setted = 'New description *saved successfully*!'
-        },
-        setrules =
-        {
-            no_rules = '*Total anarchy*!',
-            no_rules_add = '*No rules* for this group.\nUse /setrules [rules] to set-up a new constitution',
-            no_input_add = 'Please write something next this poor "/addrules"',
-            added = '*Rules added:*\n"&&&1"',
-            no_input_set = 'Please write something next this poor "/setrules"',
-            clean = 'Rules has been wiped.',
-            new = '*New rules:*\n"&&&1"',
-            rules_setted = 'New rules *saved successfully*!'
-        },
-        settings =
-        {
-            disable =
-            {
-                rules_locked = '/rules command is now available only for moderators',
-                about_locked = '/about command is now available only for moderators',
-                welcome_locked = 'Welcome message won\'t be displayed* from now',
-                modlist_locked = '/adminlist command is now available only for moderators',
-                flag_locked = '/flag command won\'t be available from now',
-                extra_locked = '#extra commands are now available only for moderator',
-                flood_locked = 'Anti-flood is now off',
-                report_locked = '@admin command won\'t be available from now',
-                admin_mode_locked = 'Admin mode off',
-            },
-            enable =
-            {
-                rules_unlocked = '/rules command is now available for all',
-                about_unlocked = '/about command is now available for all',
-                welcome_unlocked = 'Welcome message will be displayed',
-                modlist_unlocked = '/adminlist command is now available for all',
-                flag_unlocked = '/flag command is now available',
-                extra_unlocked = 'Extra # commands are now available for all',
-                flood_unlocked = 'Anti-flood is now on',
-                report_unlocked = '@admin command is now available',
-                admin_mode_unlocked = 'Admin mode on',
-            },
-            welcome =
-            {
-                no_input = 'Welcome and...?',
-                media_setted = 'New media setted as welcome message: ',
-                reply_media = 'Reply to a `sticker` or a `gif` to set them as *welcome message*',
-                a = 'New settings for the welcome message:\nRules\n*About*\nModerators list',
-                r = 'New settings for the welcome message:\n*Rules*\nAbout\nModerators list',
-                m = 'New settings for the welcome message:\nRules\nAbout\n*Moderators list*',
-                ra = 'New settings for the welcome message:\n*Rules*\n*About*\nModerators list',
-                rm = 'New settings for the welcome message:\n*Rules*\nAbout\n*Moderators list*',
-                am = 'New settings for the welcome message:\nRules\n*About*\n*Moderators list*',
-                ram = 'New settings for the welcome message:\n*Rules*\n*About*\n*Moderators list*',
-                no = 'New settings for the welcome message:\nRules\nAbout\nModerators list',
-                wrong_input = 'Argument unavailable.\nUse _/welcome [no|r|a|ra|ar]_ instead',
-                custom = '*Custom welcome message* setted!\n\n&&&1',
-                custom_setted = '*Custom welcome message saved!*',
-                wrong_markdown = '_Not setted_ : I can\'t send you back this message, probably the markdown is *wrong*.\nPlease check the text sent',
-            },
-            resume =
-            {
-                header = 'Current settings for *&&&1*:\n\n*Language*: `&&&2`\n',
-                w_a = '*Welcome type*: `welcome + about`\n',
-                w_r = '*Welcome type*: `welcome + rules`\n',
-                w_m = '*Welcome type*: `welcome + adminlist`\n',
-                w_ra = '*Welcome type*: `welcome + rules + about`\n',
-                w_rm = '*Welcome type*: `welcome + rules + adminlist`\n',
-                w_am = '*Welcome type*: `welcome + about + adminlist`\n',
-                w_ram = '*Welcome type*: `welcome + rules + about + adminlist`\n',
-                w_no = '*Welcome type*: `welcome only`\n',
-                w_media = '*Welcome type*: `gif/sticker`\n',
-                w_custom = '*Welcome type*: `custom message`\n',
-                legenda = '✅ = _enabled/allowed_\n🚫 = _disabled/not allowed_\n👥 = _sent in group (always for admins)_\n👤 = _sent in private_'
-            },
-            char =
-            {
-                arab_kick = 'Senders of arab messages will be kicked',
-                arab_ban = 'Senders of arab messages will be banned',
-                arab_allow = 'Arab language allowed',
-                rtl_kick = 'The use of the RTL character will lead to a kick',
-                rtl_ban = 'The use of the RTL character will lead to a ban',
-                rtl_allow = 'RTL character allowed',
-            },
-            broken_group = 'There are no settings saved for this group.\nPlease run /initgroup to solve the problem :)',
-            Rules = '/rules',
-            About = '/about',
-            Welcome = 'Welcome message',
-            Modlist = '/adminlist',
-            Flag = 'Flag',
-            Extra = 'Extra',
-            Flood = 'Anti-flood',
-            Rtl = 'Rtl',
-            Arab = 'Arab',
-            Report = 'Report',
-            Admin_mode = 'Admin mode',
-        },
-        warn =
-        {
-            warn_reply = 'Reply to a message to warn the user',
-            changed_type = 'New action on max number of warns received: *&&&1*',
-            mod = 'A moderator can\'t be warned',
-            warned_max_kick = 'User &&&1 *kicked*: reached the max number of warnings',
-            warned_max_ban = 'User &&&1 *banned*: reached the max number of warnings',
-            warned = '&&&1 *have been warned.*\n_Number of warnings_   *&&&2*\n_Max allowed_   *&&&3*',
-            warnmax = 'Max number of warnings changed&&&3.\n*Old* value: &&&1\n*New* max: &&&2',
-            getwarns_reply = 'Reply to a user to check his numebr of warns',
-            getwarns = '&&&1 (*&&&2/&&&3*)\nMedia: (*&&&4/&&&5*)',
-            nowarn_reply = 'Reply to a user to delete his warns',
-            warn_removed = '*Warn removed!*\n_Number of warnings_   *&&&1*\n_Max allowed_   *&&&2*',
-            ban_motivation = 'Too many warnings',
-            inline_high = 'The new value is too high (>12)',
-            inline_low = 'The new value is too low (<1)',
-            nowarn = 'The number of warns received by this user have been *reset*'
-        },
-        setlang =
-        {
-            list = '*List of available languages:*',
-            success = '*New language set:* &&&1'
-        },
         banhammer =
         {
-            kicked = '&&&1 have been kicked! (but is still able to join)',
-            banned = '&&&1 have been banned!',
-            already_banned_normal = '&&&1 is *already banned*!',
-            unbanned = 'User unbanned!',
-            reply = 'Reply to someone',
-            globally_banned = '&&&1 have been globally banned!',
-            not_banned = 'The user is not banned',
-            banlist_header = '*Banned users*:\n\n',
-            banlist_empty = '_The list is empty_',
-            banlist_error = '_An error occurred while cleaning the banlist_',
-            banlist_cleaned = '_The banlist has been cleaned_',
-            tempban_zero = 'For this, you can directly use /ban',
-            tempban_week = 'The time limit is one week (10.080 minutes)',
-            tempban_banned = 'User &&&1 banned. Ban expiration:',
-            tempban_updated = 'Ban time updated for &&&1. Ban expiration:',
-            general_motivation = 'I can\'t kick this user.\nProbably I\'m not an Amdin, or the user is an Admin iself'
+            "Ancora ancora ancora! 😍",
+            "الله أَكْبَر",
+            "Datemene un altro dai dai.",
+            "R.I.P.",
+            "Ora dovremmo nascondere il corpo. 🚔",
+            "DIE DIE BASTARD!",
+            "Lalalalalala.",
+            "Oh che bel castello marcondirondirondello, oh che bel castello marcondirondironBAN.",
+            "Oddio cos'ho fatto? 😱",
+            "Giro giro tondo, casca il mondo, casca la terra, tutti giù per BAN.",
+            "Tempo presente del verbo Bannare:\nIo banno, Tu vieni bannato.",
+            "Bim Bum BAN.",
+            "Datemi un'arma.",
+            "BOOM!",
+            "Headshot.",
+            "BANG! 🔫",
+            "Bye Bye.",
+            "Allahuakbar.",
+            "Muori idiota.",
+            "Sei stato terminato.",
+            "Ecco che se ne va.",
+            "Saluta tutti.",
+            "Ciaoooooo.",
+            "( ͡° ͜ʖ ͡°)",
+            "BLOOD.",
+            "Killed",
+            "¯\\_(ツ)_/¯",
+            "Fine.",
+            "😊",
+            ":3",
+            "Shake that bottle and make it [BAN]",
+            "Tieni 💣",
+            "Centro 🎯",
+            "💥",
+            "☠",
+            "AVADA KEDABAN",
         },
-        floodmanager =
+        flame =
         {
-            number_invalid = '`&&&1` is not a valid value!\nThe value should be *higher* than `3` and *lower* then `26`',
-            not_changed = 'The max number of messages is already &&&1',
-            changed_plug = 'The *max number* of messages (in *5 seconds*) changed _from_  &&&1 _to_  &&&2',
-            kick = 'Now flooders will be kicked',
-            ban = 'Now flooders will be banned',
-            changed_cross = '&&&1 -> &&&2',
-            text = 'Texts',
-            image = 'Images',
-            sticker = 'Stickers',
-            gif = 'Gif',
-            video = 'Videos',
-            sent = '_I\'ve sent you the anti-flood menu in private_',
-            ignored = '[&&&1] will be ignored by the anti-flood',
-            not_ignored = '[&&&1] won\'t be ignored by the anti-flood',
-            number_cb = 'Current sensitivity. Tap on the + or the -',
-            header = 'You can manage the group flood settings from here.\n'
-            .. '\n*1st row*\n'
-            .. '• *ON/OFF*: the current status of the anti-flood\n'
-            .. '• *Kick/Ban*: what to do when someone is flooding\n'
-            .. '\n*2nd row*\n'
-            .. '• you can use *+/-* to chnage the current sensitivity of the antiflood system\n'
-            .. '• the number it\'s the max number of messages that can be sent in _5 seconds_\n'
-            .. '• max value: _25_ - min value: _4_\n'
-            .. '\n*3rd row* and below\n'
-            .. 'You can set some exceptions for the antiflood:\n'
-            .. '• ✅: the media will be ignored by the anti-flood\n'
-            .. '• ❌: the media won\'t be ignored by the anti-flood\n'
-            .. '• *Note*: in "_texts_" are included all the other types of media (file, audio...)'
+            "Davvero ritardato del cazzo stai zitto.",
+            "Mi sembri peggio dei cristiani porcoddio.",
+            "Dei calci in bocca meriti altrochè.",
+            "Scusa eh ma quanto ti senti frocio da 1 a 10? no perchè a me il 10 sembra fisso.",
+            "Fai un favore al gruppo, ucciditi da solo.",
+            "Sei sicuro di non avere qualche cromosoma in più?",
+            "Dio se sei messo male amico.",
+            "Per favore calate il banhammer sulla sua testa.",
+            "Parla parla scemo del cazzo.",
+            "SEI SICURO DI VOLERTI METTERE CONTRO UNA BOTTESSA?",
+            "Vai a farti una vita reale sennò giuro che ti squarto.",
+            "Dimmi un po', per caso hai i genitori parenti?",
+            "CON CHE CORAGGIO PARLI ANCORA BRUTTA FOGNA?",
+            "Ok adesso mi prenderò un attimo di tempo per te, dimmi, cosa ti turba?",
+            "Finito il tempo, ops.",
         },
-        mediasettings =
+        ruletagame =
         {
-            warn = 'This kind of media are *not allowed* in this group.\n_The next time_ you will be kicked or banned',
-            settings_header = '*Current settings for media*:\n\n',
-            changed = 'New status for [&&&1] = &&&2',
-        },
-        preprocess =
-        {
-            flood_ban = '&&&1 *banned* for flood!',
-            flood_kick = '&&&1 *kicked* for flood!',
-            media_kick = '&&&1 *kicked*: media sent not allowed!',
-            media_ban = '&&&1 *banned*: media sent not allowed!',
-            rtl_kicked = '&&&1 *kicked*: rtl character in names/messages not allowed!',
-            arab_kicked = '&&&1 *kicked*: arab message detected!',
-            rtl_banned = '&&&1 *banned*: rtl character in names/messages not allowed!',
-            arab_banned = '&&&1 *banned*: arab message detected!',
-            flood_motivation = 'Banned for flood',
-            media_motivation = 'Sent a forbidden media',
-            first_warn = 'This type of media is *not allowed* in this chat.'
-        },
-        kick_errors =
-        {
-            [1] = 'I\'m not an admin, I can\'t kick people',
-            [2] = 'I can\'t kick or ban an admin',
-            [3] = 'There is no need to unban in a normal group',
-            [4] = 'This user is not a chat member',
-        },
-        flag =
-        {
-            no_input = 'Reply to a message to report it to an admin, or write something next \'@admin\' to send a feedback to them',
-            reported = 'Reported!',
-            no_reply = 'Reply to a user!',
-            blocked = 'The user from now can\'t use \'@admin\'',
-            already_blocked = 'The user is already unable to use \'@admin\'',
-            unblocked = 'The user now can use \'@admin\'',
-            already_unblocked = 'The user is already able to use \'@admin\'',
-        },
-        all =
-        {
-            dashboard =
+            safe =
             {
-                private = '_I\'ve sent you the group dashboard in private_',
-                first = 'Navigate this message to see *all the info* about this group!',
-                flood = '- *Status*: `&&&1`\n- *Action* when an user floods: `&&&2`\n- Number of messages *every 5 seconds* allowed: `&&&3`\n- *Ignored media*:\n&&&4',
-                settings = 'Settings',
-                admins = 'Admins',
-                rules = 'Rules',
-                about = 'Description',
-                welcome = 'Welcome message',
-                extra = 'Extra commands',
-                flood = 'Anti-flood settings',
-                media = 'Media settings'
+                "Ti è andata bene.",
+                "Fiuu.",
+                "Per poco.",
+                "Ritenta, sarai più fortunato.",
+                "Ancora ancora.",
+                "Fortunello.",
+                "Gioca di nuovo.",
+                "Mancato.",
+                "Salvo.",
+                "Forse la prossima volta non ti andrà così bene.",
+                "Riproviamo?",
+                "Meh.",
+                "Muoviti riprova.",
+                "Di più di più.",
+                "Se non continui ti passo un kick gratis.",
+                "Argh.",
+                "Ti sei cagato addosso eh?",
+                "Continua a provare che prima o poi riesci a suicidarti.",
+                "Cilecca.",
+                "Merda, si è inceppata.",
             },
-            menu = '_I\'ve sent you the settings menu in private_',
-            menu_first = 'Manage the settings of the group.\n'
-            .. '\nSome commands (_/rules, /about, /adminlist, #extra commands_) can be *disabled for non-admin users*\n'
-            .. 'What happens if a command is disabled for non-admins:\n'
-            .. '• If the command is triggered by an admin, the bot will reply *in the group*\n'
-            .. '• If the command is triggered by a normal user, the bot will reply *in the private chat with the user* (obviously, only if the user has already started the bot)\n'
-            .. '\nThe icons near the command will show the current status:\n'
-            .. '• 👥: the bot will reply *in the group*, with everyone\n'
-            .. '• 👤: the bot will reply *in private* with normal users and in the group with admins\n'
-            .. '\n*Other settings*: for the other settings, icon are self explanatory\n',
-            media_first = 'Tap on a voice in the right colon to *change the setting*'
+            godsafe =
+            {
+                "Maledetto.",
+                "Ma quanto culo hai?",
+                "Mi riprenderò quei punti.",
+                "Non hai le palle di rifarlo.",
+                "No io non ci posso credere.",
+                "Come hai fatto??",
+                "La prossima volta non sarò così clemente.",
+                "Hai fegato. Ti premierò.",
+                "(╯°□°）╯︵ ┻━┻",
+            },
+            killed =
+            {
+                "BOOM!",
+                "Headshot.",
+                "BANG! 🔫",
+                "Bye Bye.",
+                "Allahuakbar.",
+                "Muori idiota.",
+                "Sei stato terminato.",
+                "Ecco che se ne va.",
+                "Come dici? Vuoi un kick? Ecco a te, attento che brucia.",
+                "Saluta tutti.",
+                "Ciaoooooo.",
+                "( ͡° ͜ʖ ͡°)",
+                "BLOOD.",
+                "Killed",
+                "Porca POOHtana.",
+                "¯\\_(ツ)_/¯",
+                "Fine.",
+                "😊",
+                ":3",
+                "Shake that bottle and make it [BANG]",
+                "Tieni 💣",
+                "Centro 🎯",
+                "💥",
+                "☠",
+                "Avada Kedavra.",
+            },
+        },
+        interact =
+        {
+            howareyou =
+            {
+                "Benissimo sto mangiando lamponi :3",
+                "Bene tesoro tu?",
+                "Mi sento un po' bipolare",
+                "Non mi sento tanto bene",
+                "Levati",
+                "Oggi non va",
+                "Non voglio parlarne",
+            },
+            no =
+            {
+                "Ma anche no",
+                "Non provarci nemmeno",
+                "Sognatelo",
+                "No",
+                "No ti prego",
+                "No solo perchè sei te",
+                "Ovvio che no",
+                "Ma no dai",
+                "Assolutamente no",
+                "Direi di no",
+                "Per me è no",
+            },
+            idontknow =
+            {
+                "Decidi tu",
+                "Non lo so",
+                "Mah",
+                "Dipende da te",
+                "Lascio a te la scelta",
+                "Forse",
+                "Se ne sei convinto",
+                "Vedi te",
+            },
+            yes =
+            {
+                "Siiiiiii",
+                "Yeee",
+                "Awww :3",
+                "😍😍😍",
+                "E perchè no?",
+                "Si",
+                "Si ti prego",
+                "Si solo perchè sei te",
+                "Ovvio che si",
+                "Massì dai",
+                "Assolutamente si",
+                "Direi di si",
+                "Per me è si",
+            },
+            iloveyou =
+            {
+                "Awww :3",
+                "Caroo grazie",
+                "Owww :3",
+                "Anche io ti voglio bene ❤️",
+                "Ti vedo più come un utente",
+            },
         },
     },
+    -- ####
     it =
     {
-        status =
-        {
-            kicked = '&&&1 è bannato da questo gruppo',
-            left = '&&&1 ha lasciato il gruppo, o è stato kickato e unbannato',
-            administrator = '&&&1 è un Admin',
-            creator = '&&&1 è il creatore del gruppo',
-            unknown = 'Questo utente non ha nulla a che fare con questo gruppo',
-            member = '&&&1 è un membro del gruppo'
-        },
-        getban =
-        {
-            header = '*Info globali* su ',
-            nothing = '`Nulla da segnalare`',
-            kick = 'Kick: ',
-            ban = 'Ban: ',
-            tempban = 'Tempban: ',
-            flood = 'Rimosso per flood: ',
-            warn = 'Rimosso per warns: ',
-            media = 'Rimosso per media vietati: ',
-            arab = 'Rimosso per caratteri arabi: ',
-            rtl = 'Rimosso per carattere RTL: ',
-            kicked = '_Kickato!_',
-            banned = '_Bannato!_'
-        },
-        bonus =
-        {
-            general_pm = '_Ti ho inviato il messaggio in privato_',
-            the_group = 'il gruppo',
-            settings_header = 'Impostazioni correnti per *il gruppo*:\n\n*Lingua*: `&&&1`\n',
-            no_user = 'Non ho mai visto questo utente prima.\nSe vuoi insegnarmi dirmi chi è, inoltrami un suo messaggio',
-            reply = '*Rispondi a qualcuno* per usare questo comando, o scrivi lo *username*',
-            adminlist_admin_required = 'Non sono un Admin del gruppo.\n*Solo un Admin puà vedere la lista degli amministratori*',
-            too_long = 'Questo testo è troppo lungo, non posso inviarlo',
-            msg_me = '_Scrivimi prima tu, in modo che io possa scriverti_',
-            menu_cb_settings = 'Tocca le icone sulla destra!',
-            menu_cb_warns = 'Usa la riga sottostante per modificare le impostazioni dei warns!',
-            menu_cb_media = 'Usa uno switch!',
-            tell = '*ID gruppo*: &&&1'
-        },
-        not_mod = '*Non sei* un moderatore!',
-        breaks_markdown = 'Questo messaggio impedisce il markdown.\nControlla quante volte hai usato asterischi oppure underscores.\nPiù info [qui](https://telegram.me/GroupButler_ch/46)',
-        credits = '*Alcuni link utili:*',
-        extra =
-        {
-            setted = '&&&1 salvato!',
-            usage = 'Scrivi accanto a /extra il titolo del comando ed il testo associato.\nAd esempio:\n/extra #ciao Hey, ciao!. Il bot risponderà _\'Hey, ciao!\'_ ogni volta che qualcuno scriverà #ciao',
-            new_command = '*Nuovo comando impostato!*\n&&&1\n&&&2',
-            no_commands = 'Nessun comando impostato!',
-            commands_list = 'Lista dei *comandi personalizzati*:\n&&&1',
-            command_deleted = 'Il comando personalizzato &&&1 è stato eliminato',
-            command_empty = 'Il comando &&&1 non esiste'
-        },
-        help =
-        {
-            mods =
-            {
-                banhammer = "*Moderatori: il banhammer*\n\n"
-                .. "`/kick [by reply|username]` = kicka un utente dal gruppo (potrà essere aggiunto nuovamente).\n"
-                .. "`/ban [by reply|username]` = banna un utente dal gruppo (anche per gruppi normali).\n"
-                .. "`/tempban [minutes]` = banna un utente per un tot di minuti (i minuti devono essere < 10.080, ovvero una settimana). Per ora funziona solo by reply.\n"
-                .. "`/unban [by reply|username]` = unbanna l\'utente dal gruppo.\n"
-                .. "`/getban [by reply|username]` = mostra il *numero globale* di ban/kick ricevuti dall'utente, e divisi per categoria.\n"
-                .. "`/status [username]` = mostra la posizione attuale dell\'utente `(membro|kickato/ha lasciato il gruppo|bannato|admin/creatore|mai visto)`.\n"
-                .. "`/banlist` = mostra la lista degli utenti bannati. Sono incluse le motivazioni (se descritte durante il ban).\n"
-                .. "`/banlist -` = elimina la lista degli utenti bannati.\n"
-                .. "\n*Nota*: puoi scrivere qualcosa dopo il comando `/ban` (o dopo l'username, se stai bannando per username)."
-                .. " Questo commento verrà considerato la motivazione.",
-                info = "*Moderatori: info sul gruppo*\n\n"
-                .. "`/setrules [regole del gruppo]` = imposta il regolamento del gruppo (quello vecchio verrà eventualmente sovrascritto).\n"
-                .. "`/addrules [testo]` = aggiungi del testo al regolamento già esistente.\n"
-                .. "`/setabout [descrizione]` = imposta una nuova descrizione per il gruppo (quella vecchia verrà eventualmente sovrascritta).\n"
-                .. "`/addabout [testo]` = aggiungi del testo alla descrizione già esistente.\n"
-                .. "\n*Nota:* il markdown è permesso. Se del testo presenta un markdown scorretto, il bot notificherà che qualcosa è andato storto.\n"
-                .. "Per un markdown corretto, consulta [questo post](https://telegram.me/GroupButler_ch/46) nel canale ufficiale",
-                flood = "*Moderatori: impostazioni flood*\n\n"
-                .. "`/antiflood` = gestisci le impostazioni dell\'antiflood in privato, tramite una tastiera inline. Puoi cambiare la sensibilità, l\'azione (kick/ban), ed anche impostare una lista di media ignorati.\n"
-                .. "`/antiflood [numero]` = imposta quanti messaggi possono essere inviati in 5 secondi senza attivare l\'anti-flood.\n"
-                .. "_Nota_ : il numero deve essere maggiore di 3 e minore di 26.\n",
-                media = "*Moderatori: impostazioni media*\n\n"
-                .. "`/media` = ricevi in privato una tastiera inline per gestire le impostazioni di tutti i media.\n"
-                .. "`/warnmax media [numero]` = imposta il numero massimo di warning prima di essere kickato/bannato per aver inviato un media vietato.\n"
-                .. "`/nowarns (by reply)` = resetta il numero di warnings ricevuti dall'utente (*NOTA: sia warn normali che warn per i media*).\n"
-                .. "`/media list` = mostra l'elenco delle impostazioni attuali per i media.\n"
-                .. "\n*Lista dei media supportati*: _image, audio, video, sticker, gif, voice, contact, file, link_\n",
-                welcome = "*Moderatori: messaggio di benvenuto*\n\n"
-                .. "`/menu` = ricevi in privato la tastiera del menu. Lì troverai un\'opzione per abilitare/disabilitare il messaggio di benvenuto.\n"
-                .. "\n*Messaggio di benvenuto personalizzato:*\n"
-                .. "`/welcome Benvenuto $name, benvenuto nel gruppo!`\n"
-                .. "Scrivi dopo \"/welcome\" il tuo benvenuto personalizzato. Puoi usare dei segnaposto per includere nome/username/id del nuovo membro del gruppo\n"
-                .. "Segnaposto: _$username_ (verrà sostituito con lo username); _$name_ (verrà sostituito col nome); _$id_ (verrà sostituito con l\'id); _$title_ (verrà sostituito con il nome del gruppo).\n"
-                .. "\n*GIF/sticker come messaggio di benvenuto*\n"
-                .. "Puoi usare una gif/uno sticker per dare il benvenuto ai nuovi membri. Per impostare la gif/sticker, invialo e rispondigli con \'/welcome\'\n"
-                .. "\n*Messaggio di benvenuto composto*\n"
-                .. "Puoi comporre il messaggio di benvenuto con le regole, la descrizione e la lista dei moderatori.\n"
-                .. "Per comporlo, scrivi `/welcome` seguito dai codici di cosa vuoi includere nel messaggio.\n"
-                .. "_Codici_ : *r* = regole; *a* = descrizione (about); *m* = moderatori.\n"
-                .. "Ad esempio, con \"`/welcome rm`\"il messaggio di benvenuto mostrerà regole e moderatori",
-                extra = "*Moderatori: comandi extra*\n\n"
-                .. "`/extra [#comando] [risposta]` = scrivi la risposta che verrà inviata quando il comando viene scritto.\n"
-                .. "_Esempio_ : con \"`/extra #ciao Buon giorno!`\", il bot risponderà \"Buon giorno!\" ogni qualvolta qualcuno scriverà #ciao.\n"
-                .. "`/extra list` = ottieni la lista dei comandi personalizzati impostati.\n"
-                .. "`/extra del [#comando]` = elimina il comando ed il messaggio associato.\n"
-                .. "`/disable extra` = solo gli admin potranno usare un comando #extra nel gruppo. Per gli altri utenti, verrà inviato in privato.\n"
-                .. "`/enable extra` = chiunque potrà usare i comandi #extra in un gruppo, non solo gli admin.\n"
-                .. "\n*Nota:* il markdown è permesso. Se del testo presenta un markdown scorretto, il bot notificherà che qualcosa è andato storto.\n"
-                .. "Per un markdown corretto, consulta [questo post](https://telegram.me/GroupButler_ch/46) nel canale ufficiale",
-                warns = "*Moderatori: warns*\n\n"
-                .. "`/warn [kick/ban]` = scegli l\'azione da compiere (kick/ban) quando il numero massimo di warns viene raggiunto.\n"
-                .. "`/warn [by reply]` = ammonisci (warn) un utente. Quando il numero massimo di warn viene raggiunto dall\'utente, verrà kickato/bannato.\n"
-                .. "`/warnmax` = imposta il numero massimo di richiami prima di kickare/bannare.\n"
-                .. "`/getwarns [by reply]` = restituisce il numero di volte che un utente è stato richiamato.\n"
-                .. "`/nowarns (by reply)` = resetta il numero di warnings ricevuti dall'utente (*NOTA: sia warn normali che warn per i media*).\n",
-                char = "*Moderatori: i caratteri*\n\n"
-                .. "`/menu` = riceverai la tastiera del menu in privato dove potrai trovare due opzioni particolari: _Arabo ed Rtl_.\n"
-                .. "\n*Arabo*: quando l'arabo non è permesso (🚫), chiunque scriva un carattere arabo evrrà kickato dal gruppo.\n"
-                .. "*Rtl*: sta per carattere 'Righ To Left'. In poche parole, se inserito nel proprio nome, qualsiasi stringa (scritta) dell\'app di Telegram che contiene il nome dell'utente verrà visualizzata al contrario"
-                .. " (ad esempio, lo 'sta scrivendo'). Quando il carattere Rtl non è permesso (🚫), chiunque ne farà utilizzo nel nome (o nei messaggi) verrà kickato.",
-                links = "*Moderatori: link*\n\n"
-                .. '`/setlink [link|\'no\']` : imposta il link del gruppo, in modo che possa essere richiesto da altri Admin, oppure eliminalo\n'
-                .. "`/link` = ottieni il link del gruppo, se già impostato dal proprietario\n"
-                .. "`/setpoll [link pollbot]` = salva un link ad un sondaggio di @pollbot. Una volta impostato, i moderatori possono ottenerlo con `/poll`.\n"
-                .. "`/setpoll no` = elimina il link al sondaggio corrente.\n"
-                .. "`/poll` = ottieni il link al sondaggio corrente, se impostato.\n"
-                .. "\n*Note*: il bot può riconoscere link validi a gruppi/sondaggi. Se il link non è valido, non otterrai una risposta.",
-                lang = "*Moderatori: linguaggio del bot*\n\n"
-                .. "`/lang` = scegli la lingua del bot (può essere cambiata anche in privato).\n"
-                .. "\n*Nota*: i traduttori sono utenti volontari, quindi non posso assicurare la correttezza delle traduzioni. E non posso costringerli a tradurre le nuove stringhe dopo un aggiornamento (le stringhe non tradotte saranno in inglese)."
-                .. "\nComunque, chiunque può tradurre il bot. Usa il comando `/strings` per ricevere un file _.lua_ con tutte le stringhe (in inglese).\n"
-                .. "Usa `/strings [codice lingua]` per ricevere il file associato alla lingua richiesta (esempio: _/strings es_ ).\n"
-                .. "Nel file troverai tutte le istruzioni: seguile, e il linguggio sarà disponibile il prima possibile ;)  (traduzione in italiano NON NECESSARIA)",
-                settings = "*Moderatori: impostazioni del gruppo*\n\n"
-                .. "`/menu` = gestisci le impostazioni del gruppo in privato tramite una comoda tastiera inline.\n"
-                .. "`/adminmode on` = _/rules, /adminlist_ ed ogni comando #extra verranno inviati in privato a meno che non sia un Admin ad usarli.\n"
-                .. "`/adminmode off` = _/rules, /adminlist_ ed ogni comando #extra verranno inviati sempre nel gruppo.\n"
-                .. "`/report [on/off]` (by reply) = l'utente non potrà (_off_) o potrà (_on_) usare il comando \"@admin\".\n",
-            },
-            all = '*Comandi per tutti*:\n'
-            .. '`/dashboard` : consulta tutte le info sul gruppo in privato\n'
-            .. '`/rules` (se sbloccato) : mostra le regole del gruppo\n'
-            .. '`/about` (se sbloccato) : mostra la descrizione del gruppo\n'
-            .. '`/adminlist` (se sbloccato) : mostra la lista dei moderatori\n'
-            .. '`@admin` (se sbloccato) : by reply= inoltra il messaggio a cui hai risposto agli admin; no reply (con descrizione)= inoltra un feedback agli admin\n'
-            .. '`/kickme` : fatti kickare dal bot\n'
-            .. '`/faq` : le risposte alle domande più frequenti\n'
-            .. '`/id` : mostra l\'id del gruppo, oppure l\'id dell\'utente a cui si ha risposto\n'
-            .. '`/echo [testo]` : il bot replicherà il testo scritto (markdown supportato, disponibile solo in privato per non-admin)\n'
-            .. '`/info` : mostra alcune info sul bot\n'
-            .. '`/group` : ottieni il link del gruppo di discussione (inglese)\n'
-            .. '`/c` <feedback> : invia un feedback/segnala un bug/fai una domanda al creatore. _OGNI GENERE DI SUGGERIMENTO E\' IL BENVENUTO_. Risponderà ASAP\n'
-            .. '`/help` : show this message.'
-            .. '\n\nSe ti piace questo bot, per favore lascia il voto che credi si meriti [qui](https://telegram.me/storebot?start=groupbutler_bot)',
-            private = 'Hey, *&&&1*!\n'
-            .. 'Sono un semplice bot creato con lo scopo di aiutare gli utenti di Telegram ad amministrare i propri gruppi.\n'
-            .. '\n*Cosa posso fare per aiutarti?*\n'
-            .. 'Beh, ho un sacco di funzioni utili!\n'
-            .. '• Puoi *kickare or bannare* gli utenti (anche in gruppi normali) by replyo by username\n'
-            .. '• Puoi impostare regole e descrizione\n'
-            .. '• Puoi attivare un *anti-flood* configurabile\n'
-            .. '• Puoi personalizzare il *messaggio di benvenuto*, ed usare anche gif e sticker\n'
-            .. '• Puoi ammonire gli utenti, e kickarli/bannarli se raggiungono il numero massimo di ammonizioni\n'
-            .. '• Puoi decidere se ammonire o kickare gli utenti che inviano un media specifico\n'
-            .. '...e questo è solo l\'inizio, puoi trovare tutti i comandi disponibili premendo sul pulsante "all commands", appena qui sotto :)\n'
-            .. '\nPer usarmi, *devo essere impostato come amministratore*, o non potrò funzionare correttamente! (se non ti fidi, spero di toglierti qualche dubbio sul perchè di questa necessità con [questo post](https://telegram.me/GroupButler_ch/63))'
-            .. '\nPuoi segnalare bug/inviare un feedback/fare una domanda al mio creatore usando il comando "`/c <feedback>`". SI ACCETTA QUALSIASI RICHIESTA/SEGNALAZIONE!',
-            group_success = '_Ti ho inviato il messaggio in privato_',
-            group_not_success = '_Per favore, avviami cosicchè io possa risponderti_',
-            initial = 'Scegli un *ruolo* per visualizzarne i comandi:',
-            kb_header = 'Scegli una voce per visualizzarne i *comandi associati*'
-        },
-        links =
-        {
-            no_link = '*Nessun link* per questo gruppo. Chiedi al proprietario di settarne uno',
-            link = '[&&&1](&&&2)',
-            link_invalid = 'Questo link *non è valido!*',
-            link_no_input = 'Questo non è un *supergruppo pubblico*, quindi devi specificare il link affianco a /setlink',
-            link_updated = 'Il link è stato aggiornato.\n*Ecco il nuovo link*: [&&&1](&&&2)',
-            link_setted = 'Il link è stato impostato.\n*Ecco il link*: [&&&1](&&&2)',
-            link_unsetted = 'Link *rimosso*',
-            poll_unsetted = 'Sondaggio *rimosso*',
-            poll_updated = 'Il sondaggio è stato aggiornato.\n*Vota qui*: [&&&1](&&&2)',
-            poll_setted = 'Il sondaggio è stato impostato.\n*Vota qui*: [&&&1](&&&2)',
-            no_poll = '*Nessun sondaggio attivo* in questo gruppo',
-            poll = '*Vota qui*: [&&&1](&&&2)'
-        },
-        mod =
-        {
-            modlist = '*Creatore*:\n&&&1\n\n*Admin*:\n&&&2',
-        },
-        report =
-        {
-            no_input = 'Scrivi il tuo suggerimento/bug/dubbio accanto al punto esclamativo (!)',
-            sent = 'Feedback inviato!',
-            feedback_reply = '*Hello, this is a reply from the bot owner*:\n&&&1',
-        },
-        service =
-        {
-            welcome = 'Ciao &&&1, e benvenuto/a in *&&&2*!',
-            welcome_rls = 'Anarchia totale!',
-            welcome_abt = 'Nessuna descrizione per questo gruppo.',
-            welcome_modlist = '\n\n*Creatore*:\n&&&1\n*Admin*:\n&&&2',
-            abt = '\n\n*Descrizione*:\n',
-            rls = '\n\n*Regole*:\n',
-        },
-        setabout =
-        {
-            no_bio = '*Nessuna descrizione* per questo gruppo.',
-            no_bio_add = '*Nessuna descrizione per questo gruppo*.\nUsa /setabout [descrizione] per impostare una nuova descrizione',
-            no_input_add = 'Per favore, scrivi qualcosa accanto a "/addabout"',
-            added = '*Descrzione aggiunta:*\n"&&&1"',
-            no_input_set = 'Per favore, scrivi qualcosa accanto a "/setabout"',
-            clean = 'La descrizione è stata eliminata.',
-            new = '*Nuova descrizione:*\n"&&&1"',
-            about_setted = 'La nuova descrizione *è stata salvata correttamente*!'
-        },
-        setrules =
-        {
-            no_rules = '*Anarchia totale*!',
-            no_rules_add = '*Nessuna regola* in questo gruppo.\nUsa /setrules [regole] per impostare delle nuove regole',
-            no_input_add = 'Per favore, scrivi qualcosa accanto a "/addrules"',
-            added = '*Rules added:*\n"&&&1"',
-            no_input_set = 'Per favore, scrivi qualcosa accanto a "/setrules"',
-            clean = 'Le regole sono state eliminate.',
-            new = '*Nuove regole:*\n"&&&1"',
-            rules_setted = 'Le nuove regole *sono state salvate correttamente*!'
-        },
-        settings =
-        {
-            disable =
-            {
-                rules_locked = '/rules è ora utilizzabile solo dai moderatori',
-                about_locked = '/about è ora utilizzabile solo dai moderatori',
-                welcome_locked = 'Il messaggio di benvenuto non verrà mostrato da ora',
-                modlist_locked = '/adminlist è ora utilizzabile solo dai moderatori',
-                flag_locked = '/flag command won\'t be available from now',
-                extra_locked = 'I comandi #extra sono ora utilizzabili solo dai moderatori',
-                rtl_locked = 'Anti-RTL è ora on',
-                flood_locked = 'L\'anti-flood è ora off',
-                arab_locked = 'Anti-caratteri arabi è ora on',
-                report_locked = '@admin non sarà disponibile da ora',
-                admin_mode_locked = 'Admin mode off',
-            },
-            enable =
-            {
-                rules_unlocked = '/rules è ora utilizzabile da tutti',
-                about_unlocked = '/about è ora utilizzabile da tutti',
-                welcome_unlocked = 'il messaggio di benvenuto da ora verrà mostrato',
-                modlist_unlocked = '/adminlist è ora utilizzabile da tutti',
-                flag_unlocked = '/flag command is now available',
-                extra_unlocked = 'I comandi #extra sono già disponibili per tutti',
-                rtl_unlocked = 'Anti-RTL è ora off',
-                flood_unlocked = 'L\'anti-flood è ora on',
-                arab_unlocked = 'Anti-caratteri arabi è ora off',
-                report_unlocked = '@admin è ora disponibile',
-                admin_mode_unlocked = 'Admin mode on',
-            },
-            welcome =
-            {
-                no_input = 'Welcome e...?',
-                media_setted = 'Media impostato come messaggio di benvenuto: ',
-                reply_media = 'Rispondi ad uno `sticker` a ad una `gif` per usarli come *messaggio di benvenuto*',
-                a = 'Nuove impostazioni per il messaggio di benvenuto:\nRegole\n*Descrizione*\nLista dei moderatori',
-                r = 'Nuove impostazioni per il messaggio di benvenuto:\n*Regole*\nDescrizione\nLista dei moderatori',
-                m = 'Nuove impostazioni per il messaggio di benvenuto:\nRegole\nDescrizione\n*Lista dei moderatori*',
-                ra = 'Nuove impostazioni per il messaggio di benvenuto:\n*Regole*\n*Descrizione*\nLista dei moderatori',
-                rm = 'Nuove impostazioni per il messaggio di benvenuto:\n*Regole*\nDescrizione\n*Lista dei moderatori*',
-                am = 'Nuove impostazioni per il messaggio di benvenuto:\nRegole\n*Descrizione*\n*Lista dei moderatori*',
-                ram = 'Nuove impostazioni per il messaggio di benvenuto:\n*Regole*\n*Descrizione*\n*Lista dei moderatori*',
-                no = 'Nuove impostazioni per il messaggio di benvenuto:\nRegole\nDescrizione\nLista dei moderatori',
-                wrong_input = 'Argomento non disponibile.\nUsa invece _/welcome [no|r|a|ra|ar]_',
-                custom = '*Messaggio di benvenuto personalizzato* impostato!\n\n&&&1',
-                custom_setted = '*Messaggio di benvenuto personalizzato salvato!*',
-                wrong_markdown = '_Non impostato_ : non posso reinviarti il messaggio, probabilmente il markdown usato è *sbagliato*.\nPer favore, controlla il messaggio inviato e riprova',
-            },
-            resume =
-            {
-                header = 'Impostazioni correnti di *&&&1*:\n\n*Lingua*: `&&&2`\n',
-                w_media = "*Tipo di benvenuto*: `gif/sticker`\n",
-                w_custom = "*Tipo di benvenuto*: `messaggio personalizzato`\n",
-                w_a = '*Tipo di benvenuto*: `benvenuto + descrizione`\n',
-                w_r = '*Tipo di benvenuto*: `benvenuto + regole`\n',
-                w_m = '*Tipo di benvenuto*: `benvenuto + moderatori`\n',
-                w_ra = '*Tipo di benvenuto*: `benvenuto + regole + descrizione`\n',
-                w_rm = '*Tipo di benvenuto*: `benvenuto + regole + moderatori`\n',
-                w_am = '*Tipo di benvenuto*: `benvenuto + descrizione + moderatori`\n',
-                w_ram = '*Tipo di benvenuto*: `benvenuto + regole + descrizione + moderatori`\n',
-                w_no = '*Tipo di benvenuto*: `solo benvenuto`\n',
-                w_media = '*Tipo di benvenuto*: `gif/sticker`\n',
-                legenda = '✅ = _abilitato/permesso_\n🚫 = _disabilitato/non permesso_\n👥 = _inviato nel gruppo (sempre, per gli admin)_\n👤 = _inviato in privato_'
-            },
-            char =
-            {
-                arab_kick = 'Messaggi in arabo = kick',
-                arab_ban = 'Messaggi in arabo = ban',
-                arab_allow = 'Messaggi in arabo permessi',
-                rtl_kick = 'Uso del carattere RTL = kick',
-                rtl_ban = 'Uso del carattere RTL = ban',
-                rtl_allow = 'Carattere RTL consentito',
-            },
-            broken_group = 'Sembra che questo gruppo non abbia delle impostazioni salvate.\nPer favore, usa /initgroup per risolvere il problem :)',
-            Rules = '/rules',
-            About = '/about',
-            Welcome = 'Messaggio di benvenuto',
-            Modlist = '/adminlist',
-            Flag = 'Flag',
-            Extra = 'Extra',
-            Flood = 'Anti-flood',
-            Rtl = 'Rtl',
-            Arab = 'Arabo',
-            Report = 'Report',
-            Admin_mode = 'Admin mode',
-        },
-        warn =
-        {
-            warn_reply = 'Rispondi ad un messaggio per ammonire un utente (warn)',
-            changed_type = 'Nuova azione: *&&&1*',
-            mod = 'Un moderatore non può essere ammonito',
-            warned_max_kick = 'Utente &&&1 *kickato*: raggiunto il numero massimo di warns',
-            warned_max_ban = 'Utente &&&1 *bannato*: raggiunto il numero massimo di warns',
-            warned = '*L\'utente* &&&1 *è stato ammonito.*\n_Numero di ammonizioni_   *&&&2*\n_Max consentito_   *&&&3*',
-            warnmax = 'Numero massimo di waning aggiornato&&&3.\n*Vecchio* valore: &&&1\n*Nuovo* valore: &&&2',
-            getwarns_reply = 'Rispondi ad un utente per ottenere il suo numero di ammonizioni',
-            getwarns = '&&&1 (*&&&2/&&&3*)\nMedia: (*&&&4/&&&5*)',
-            nowarn_reply = 'Rispondi ad un utente per azzerarne le ammonizioni',
-            ban_motivation = 'Troppi warning',
-            inline_high = 'Il nuovo valore è troppo alto (>12)',
-            inline_low = 'Il nuovo valore è troppo basso (<1)',
-            warn_removed = '*Warn rimosso!*\n_Numero di ammonizioni_   *&&&1*\n_Max consentito_   *&&&2*',
-            nowarn = 'Il numero di ammonizioni ricevute da questo utente è stato *azzerato*'
-        },
-        setlang =
-        {
-            list = '*Elenco delle lingue disponibili:*',
-            success = '*Nuovo linguaggio impostato:* &&&1'
-        },
-        banhammer =
-        {
-            kicked = '&&&1 è stato kickato! (ma può ancora rientrare)',
-            banned = '&&&1 è stato bannato!',
-            unbanned = 'L\'utente è stato unbannato!',
-            reply = 'Rispondi a qualcuno',
-            globally_banned = '&&&1 è stato bannato globalmente!',
-            no_unbanned = 'Questo è un gruppo normale, gli utenti non vengono bloccati se kickati',
-            already_banned_normal = '&&&1 è *già bannato*!',
-            not_banned = 'L\'utente non è bannato',
-            banlist_header = '*Utenti bannati*:\n\n',
-            banlist_empty = '_La lista è vuota_',
-            banlist_error = '_Si è verificato un errore nello svuotare la banlist_',
-            banlist_cleaned = '_La lista degli utenti bannati è stata eliminata_',
-            tempban_zero = 'Puoi usare direttamente /ban per questo',
-            tempban_week = 'Il limite è una settimana (10.080 minuti)',
-            tempban_banned = 'L\'utente &&&1 è stato bannato. Scadenza del ban:',
-            tempban_updated = 'Scadenza aggiornata per &&&1. Scadenza ban:',
-            general_motivation = 'Non posso kickare questo utente.\nProbabilmente non sono un Admin, o l\'utente che hai cercato di kickare è un Admin'
-        },
-        floodmanager =
-        {
-            number_invalid = '`&&&1` non è un valore valido!\nil valore deve essere *maggiore* di `3` e *minore* di `26`',
-            not_changed = 'il massimo numero di messaggi che può essere inviato in 5 secondi è già &&&1',
-            changed_plug = 'Il numero *massimo di messaggi* che possono essere inviato in *5 secondi* è passato _da_  &&&1 _a_  &&&2',
-            enabled = 'Antiflood abilitato',
-            disabled = 'Antiflood disabilitato',
-            kick = 'I flooders verranno kickati',
-            ban = 'I flooders verranno bannati',
-            changed_cross = '&&&1 -> &&&2',
-            text = 'Messaggi normali',
-            image = 'Immagini',
-            sticker = 'Stickers',
-            gif = 'Gif',
-            video = 'Video',
-            sent = '_Ti ho inviato il menu dell\'anti-flood in privato_',
-            ignored = '[&&&1] saranno ignorati dall\'anti-flood',
-            not_ignored = '[&&&1] verranno considerati dall\'anti-flood',
-            number_cb = 'Sensibilità del flood. Tappa su + oppure -',
-            header = 'Puoi gestire le impostazioni dell\'anti-flood da qui.\n'
-            .. '\n*1^ riga*\n'
-            .. '• *ON/OFF*: lo stato corrente dell\'anti-flood\n'
-            .. '• *Kick/Ban*: cosa fare quando un utente sta floodando\n'
-            .. '\n*2^ riga*\n'
-            .. '• puoi usare *+/-* per cambiare la sensibilità dell\'anti-flood\n'
-            .. '• il valore rappresenta il numero massimo di messaggi che possono essere inviati in _5 secondi_\n'
-            .. '• valore max: _25_ - valore min: _4_\n'
-            .. '\n*3^ riga* ed a seguire\n'
-            .. 'Puoi impostare alcune eccezioni per l\'anti-flood:\n'
-            .. '• ✅: il media verrà ignorato dal conteggio del flood\n'
-            .. '• ❌: il media verrà considerato nel conteggio del flood\n'
-            .. '• *Nota*: in "_messaggi normali_" sono compresi anche tutti i media non citati (file, audio...)'
-        },
-        mediasettings =
-        {
-            warn = 'Questo tipo di media *non è consentito* in questo gruppo.\n_La prossima volta_ verrai kickato o bannato',
-            settings_header = '*Impostazioni correnti per i media*:\n\n',
-            changed = 'Nuovo stato per [&&&1] = &&&2',
-        },
-        preprocess =
-        {
-            flood_ban = '&&&1 *bannato* per flood',
-            flood_kick = '&&&1 *kickato* per flood',
-            media_kick = '&&&1 *kickato*: media inviato non consentito',
-            media_ban = '&&&1 *bannato*: media inviato non consentito',
-            rtl_kicked = '&&&1 *kickato*: carattere rtl nel nome/nei messaggi non consentito',
-            arab_kicked = '&&&1 *kickato*: caratteri arabi non consentiti',
-            rtl_banned = '&&&1 *bannato*: carattere rtl nel nome/nei messaggi non consentito',
-            arab_banned = '&&&1 *bannato*: caratteri arabi non consentiti',
-            flood_motivation = 'Bannato per flood',
-            media_motivation = 'Ha inviato un media non consentito',
-            first_warn = 'Questo tipo di media *non è consentito* in questo gruppo.'
-        },
+        -- global --
+        require_sudo = '🚫 Questo comando richiede i privilegi di sudo.',
+        require_admin = '🚫 Questo comando richiede privilegi da admin o superiori.',
+        require_owner = '🚫 Questo comando richiede privilegi da owner o superiori.',
+        require_mod = '🚫 Questo comando richiede privilegi da moderatore o superiori.',
+        require_rank = '🚫 Non puoi eseguire questo comando su qualcuno che ha privilegi superiori o uguali ai tuoi!',
+        errorTryAgain = 'Errore, prova di nuovo.',
+        opsError = 'Ops, errore.',
+        useYourGroups = 'Usalo nei tuoi gruppi!',
+        user = 'Utente ',
+        kicked = ' rimosso.',
+        banned = ' bannato.',
+        unbanned = ' unbannato.',
+        gbanned = ' bannato globalmente.',
+        ungbanned = ' unbannato globalmente.',
+        autoexecDenial = 'Non puoi usare autoexec tramite un altro comando.',
+
+        -- seedbot.lua --
+        sender = 'Mittente: ',
+        receiver = 'Ricevente: ',
+        msgText = 'Testo del messaggio: ',
+
+        -- utils.lua --
+        errorImageDownload = 'Errore nel download dell\'immagine.',
+        banListStart = 'Lista ban:\n\n',
+        gbanListStart = 'Lista ban globali:\n\n',
+        mutedUsersStart = 'Utenti muti di:',
+        mutedTypesStart = 'Muti di:',
+        mute = 'Muto ',
+        noAutoKick = 'Non puoi rimuoverti da solo.',
+        noAutoBan = 'Non puoi bannarti da solo.',
+
+        -- administrator.lua --
+        sendNewPic = 'Mandami la nuova foto.',
+        botPicChanged = 'Foto cambiata!',
+        logSet = 'Il log è stato aggiunto.',
+        logUnset = 'Il log è stato rimosso.',
+        markRead = 'Segna come già letto',
+        pmSent = 'Messaggio mandato',
+        cantBlockAdmin = 'Non puoi bloccare un admin.',
+        userBlocked = 'Utente bloccato.',
+        userUnblocked = 'Utente sbloccato.',
+        contactListSent = 'Ti ho mandato in privato la lista dei contatti nel formato da te richiesto.',
+        removedFromContacts = ' rimosso dai contatti.',
+        addedToContacts = ' aggiunto ai contatti.',
+        contactMissing = 'Non ho il tuo numero di telefono!',
+        chatListSent = 'Ti ho mandato in privato la lista delle chat nel formato da te richiesto.',
+        gbansSync = 'Lista ban globali sincronizzata.',
+        longidUpdate = 'Aggiorna long_ID.',
+        alreadyLog = 'Già un gruppo di log.',
+        notLog = 'Non un gruppo di log.',
+        backupDone = 'Backup eseguito, ti invio il log in privato.',
+        backupSent = 'Ti sto inviando il backup.',
+        backupMissing = 'Backup mancante.',
+        autoSendBackupDb = 'Ti sto inviando il backup automatico.',
+        botStats = 'Statistiche bot: ',
+        botRestarted = 'Bot riavviato.',
+        botStopped = 'Bot spento.',
+        redisDbSaved = 'Database redis salvato.',
+
+        -- anti_spam.lua --
+        blockedForSpam = ' bloccato (SPAM).',
+        floodNotAdmitted = 'Il flood non è ammesso.\n',
+        statusRemoved = 'Utente rimosso.',
+        gbannedFrom = ' bannato globalmente da ',
+
+        -- banhammer.lua --
+        noUsernameFound = 'Non trovo nessun utente con quell\'username.',
+        massacre = 'Massacro => X',
+
+        -- bot.lua --
+        botOn = 'Sono tornata. 😏',
+        botOff = 'Nulla da fare qui. 🚀',
+
+        -- botinteract.lua --
+        botSet = ' è stato salvato per l\'interazione con la chat.',
+        botUnset = ' è stato rimosso dai bot con cui interagire.',
+        sendMeMedia = 'Mandami ora il media che vuoi che io inoltri.',
+        mediaForwarded = 'Media inoltrato.',
+
+        -- database.lua --
+        dbCreated = 'Database creato.',
+        dataLeaked = 'Data leaked.',
+        userManuallyAdded = 'Utente aggiunto manualmente al database.',
+        groupManuallyAdded = 'Gruppo aggiunto manualmente al database.',
+        errorUserOrGroup = 'Solo gruppi o utenti.',
+        userDeleted = 'Utente eliminato dal database.',
+        groupDeleted = 'Gruppo eliminato dal database.',
+        databaseDownloaded = 'Database scaricato\n',
+        databaseSent = 'Ti sto inviando il database.',
+        databaseMissing = 'Database mancante.',
+        databaseFuckedUp = 'Errore, crash durante il salvataggio del database, ripristinarlo al più presto.',
+
+        -- delword.lua --
+        delwordList = 'Lista censure:\n',
+        delwordAdded = 'Censura aggiunta su ',
+        delwordRemoved = 'Censura rimossa da ',
+
+        -- fakecommand.lua --
+        fakecommandYouTried = 'Ci hai provato pezzente, non eseguirai un comando che richiede un rango superiore al tuo.',
+
+        -- feedback.lua --
+        feedStart = '@EricSolinas hai ricevuto un feedback: #newfeedback\n\nMittente',
+        feedName = '\nNome: ',
+        feedSurname = '\nCognome: ',
+        feedUsername = '\nUsername: @',
+        feedSent = 'Feedback inviato!',
+
+        -- filemanager.lua --
+        backHomeFolder = 'Sei tornato alla cartella base: ',
+        youAreHere = 'Sei qui: ',
+        folderCreated = 'Cartella \'X\' creata.',
+        folderDeleted = 'Cartella \'X\' eliminata.',
+        fileCreatedWithContent = ' creato con \'X\' come contenuto.',
+        copiedTo = ' copiato in ',
+        movedTo = ' spostato in ',
+        sendingYou = 'Ti sto inviando ',
+        useQuoteOnFile = 'Usa \'rispondi\' sul file che vuoi che scarichi.',
+        needMedia = 'Mi serve un file.',
+        fileDownloadedTo = 'File scaricato in: ',
+        errorDownloading = 'Errore durante il download.',
+        noSuchFile = ' non esiste.',
+
+        -- flame.lua --
+        cantFlameHigher = 'Non puoi flammare un mod/owner/admin/sudo/!',
+        noAutoFlame = 'Non posso flammarmi da sola trisomico del cazzo!',
+        hereIAm = 'Eccomi qua!',
+        stopFlame = 'Si si mi fermo però porca madonna.',
+        flaming = 'Sto flammando: ',
+        errorParameter = 'Errore variabile redis mancante.',
+
+        -- help.lua --
+        require_higher = '🚫 Questo plugin richiede privilegi superiori a quelli che possiedi.\n',
+        pluginListStart = 'ℹ️Lista plugin: \n\n',
+        helpInfo = 'ℹ️Scrivi "!help <plugin_name>|<plugin_number>" per maggiori informazioni su quel plugin.\nℹ️O "!helpall" per mostrare tutte le informazioni.',
+        errorNoPlugin = 'Questo plugin non esiste o non ha una descrizione.',
+        helpIntro = 'Ogni \'#\' può essere sostituito con i simboli \'/\' o \'!\'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale.\nLe parentesi tonde indicano una scelta evidenziata da \'|\' che significa "oppure".\n\n',
+        commandNotFound = 'Sintassi comando non trovata.',
+
+        -- games --
+        groupAlreadySignedUp = 'Gruppo già registrato.',
+        groupSignedUp = 'Gruppo registrato con i valori di default.',
+        requireGroupSignUp = 'Prima di giocare è necessario far registrare il gruppo.',
+        challenge = 'SFIDA',
+        challenger = 'Sfidante: ',
+        challenged = 'Sfidato: ',
+        challengeModTerminated = 'Sfida terminata da un moderatore.',
+        challengeRejected = 'X ha rifiutato la sfida, codardo!',
+        cantChallengeYourself = 'Non puoi sfidarti da solo.',
+        cantChallengeMe = 'Non puoi sfidare me, perderesti di sicuro.',
+        notAccepted = 'Non ancora accettata.',
+        accepted = 'In corso.',
+        notYourTurn = 'Non è il tuo turno.',
+        yourTurn = ' sta a te.',
+        challengeEnd = 'Morto, Sfida terminata.',
+        noChallenge = 'Nessuna sfida in corso.',
+        errorOngoingChallenge = 'Impossibile avviare più sfide contemporaneamente.',
+        challengeSet = 'Sfida avviata, X può accettare con /accept o rifiutare con /reject.',
+        wrongPlayer = 'Non sei tu X.',
+        deaths = 'Numero morti: ',
+        duels = 'Sfide totali: ',
+        wonduels = 'Sfide vinte: ',
+        lostduels = 'Sfide perse: ',
+        actualstreak = 'Serie attuale: ',
+        longeststreak = 'Serie più lunga: ',
+        attempts = 'Tentativi totali: ',
+        score = 'Punteggio: ',
+        cheating = 'Trucco inserito.',
+        scoreLeaderboard = 'Classifica punti\n',
+        attemptsLeaderboard = 'Classifica tentativi\n',
+        deathsLeaderboard = 'Classifica morti\n',
+        streakLeaderboard = 'Classifica serie\n',
+        duelsLeaderboard = 'Classifica sfide\n',
+        victoriesLeaderboard = 'Classifica vittorie\n',
+        defeatsLeaderboard = 'Classifica sconfitte\n',
+        likesLeaderboard = 'Classifica like\n',
+
+        -- get.lua --
+        globalEnable = 'Variabili globali abilitate su questa chat.',
+        globalDisable = 'Variabili globali disabilitate su questa chat.',
+
+        -- goodbyewelcome.lua --
+        newWelcome = 'Nuovo messaggio di benvenuto:\n',
+        newGoodbye = 'Nuovo messaggio di addio:\n',
+        welcomeRemoved = 'Benvenuto rimosso.',
+        goodbyeRemoved = 'Addio rimosso.',
+        newWelcomeNumber = 'Il benvenuto sarà mandato ogni X membri.',
+        neverWelcome = 'Il messaggio di benvenuto non sarà più mandato.',
+        noSetValue = 'Nessun valore impostato.',
+
+        -- group_management.lua --
+        -- ex common --
+        newDescription = 'Nuova descrizione:\n',
+        noDescription = 'Nessuna descrizione disponibile.',
+        description = 'Descrizione chat: ',
+        newRules = 'Nuove regole:\n',
+        noRules = 'Nessuna regola disponibile.',
+        rules = 'Regole chat: ',
+        sendNewGroupPic = 'Mandami la nuova foto del gruppo.',
+        photoSaved = 'Foto salvata.',
+        groupSettings = 'Impostazioni gruppo: ',
+        supergroupSettings = 'Impostazioni supergruppo: ',
+        noGroups = 'Nessun gruppo al momento.',
+        errorFloodRange = 'Errore, il range è [3-200]',
+        floodSet = 'Il flood è stato impostato a ',
+        noOwnerCallAdmin = 'Nessun proprietario, chiedi ad un admin di settarne uno.',
+        ownerIs = 'Il proprietario del gruppo è ',
+        errorCreateLink = 'Errore creazione link d\'invito.\nNon sono la creatrice.\n\nSe hai il link usa /setlink per impostarlo',
+        createLinkInfo = 'Crea un link usando /newlink.',
+        linkCreated = 'Nuovo link creato.',
+        linkSaved = 'Nuovo link impostato.',
+        linkDeleted = 'Link eliminato.',
+        groupLink = 'Link\n',
+        adminListStart = 'Admins:\n',
+        alreadyMod = ' è già un mod.',
+        promoteMod = ' è stato promosso a mod.',
+        notMod = ' non è un mod.',
+        demoteMod = ' è stato degradato da mod.',
+        noGroupMods = 'Nessun moderatore in questo gruppo.',
+        modListStart = 'Moderatori di ',
+        muteUserAdd = ' aggiunto alla lista degli utenti silenziati.',
+        muteUserRemove = ' rimosso dalla lista degli utenti silenziati.',
+        modlistCleaned = 'Lista mod svuotata.',
+        rulesCleaned = 'Regole svuotate.',
+        descriptionCleaned = 'Descrizione svuotata.',
+        mutelistCleaned = 'Lista muti svuotata.',
+        cantContact = 'Se non mi scrive per primo/a non posso contattare ',
+        -- ex inpm.lua --
+        groupsJoin = 'Gruppi:\nUsa /join <group_id> per entrare\n\n',
+        realmsJoin = 'Reami:\nUsa /join <realm_id> per entrare\n\n',
+        chatNotFound = 'Chat non trovata.',
+        aliasSaved = 'Alias salvato.',
+        aliasDeleted = 'Alias eliminato.',
+        noAliasFound = 'Nessun gruppo trovato con quell\'alias.',
+        -- ex inrealm.lua --
+        none = 'Nessuno',
+        realm = 'Regno ',
+        group = 'Gruppo ',
+        created = ' creato.',
+        chatTypeNotFound = 'Tipo chat non trovato.',
+        usersIn = 'Utenti in ',
+        alreadyAdmin = ' è già un admin.',
+        promoteAdmin = ' è stato promosso ad admin.',
+        notAdmin = ' non è un admin.',
+        demoteAdmin = ' è stato degradato da admin.',
+        noRealms = 'Nessun regno al momento.',
+        inThisGroup = ' in questo gruppo',
+        groupListStart = 'Gruppi:\n',
+        realmListStart = 'Reami:\n',
+        logAlreadyYes = 'Gruppo di log già abilitato.',
+        logYes = 'Gruppo di log abilitato.',
+        logAlreadyNo = 'Gruppo di log già disabilitato.',
+        logNo = 'Gruppo di log disabilitato.',
+        descriptionSet = 'Descrizione settata per: ',
+        errorGroup = 'Errore, gruppo ',
+        errorRealm = 'Errore, regno ',
+        notFound = ' non trovato',
+        chat = 'Chat ',
+        removed = ' rimossa',
+        groupListCreated = 'Lista gruppi creata.',
+        realmListCreated = 'Lista reami creata.',
+        -- ex ingroup.lua --
+        welcomeNewRealm = 'Benvenuto nel tuo nuovo regno.',
+        realmIs = 'Questo è un regno.',
+        realmAdded = 'Il regno è stato aggiunto.',
+        realmAlreadyAdded = 'Il regno è già stato aggiunto.',
+        realmRemoved = 'Il regno è stato rimosso.',
+        realmNotAdded = 'Regno non aggiunto.',
+        errorAlreadyRealm = 'Errore, è già un regno.',
+        errorNotRealm = 'Errore, non è un regno.',
+        promotedOwner = 'Sei stato promosso a proprietario.',
+        groupIs = 'Questo è un gruppo.',
+        groupAlreadyAdded = 'Il gruppo è già stato aggiunto.',
+        groupAddedOwner = 'Il gruppo è stato aggiunto e tu promosso a proprietario.',
+        groupRemoved = 'Il gruppo è stato rimosso.',
+        groupNotAdded = 'Gruppo non aggiunto.',
+        errorAlreadyGroup = 'Errore, è già un gruppo.',
+        errorNotGroup = 'Errore, non è un gruppo.',
+        noAutoDemote = 'Non puoi degradarti da solo.',
+        -- ex supergroup.lua --
+        makeBotAdmin = 'Promuovimi prima amministratrice!',
+        groupIs = 'Questo è un gruppo.',
+        supergroupAlreadyAdded = 'Il supergruppo è già stato aggiunto.',
+        errorAlreadySupergroup = 'Errore, è già un supergruppo.',
+        supergroupAdded = 'Il supergruppo è stato aggiunto.',
+        supergroupRemoved = 'Il supergruppo è stato rimosso.',
+        supergroupNotAdded = 'Supergruppo non aggiunto.',
+        membersOf = 'Membri di ',
+        membersKickedFrom = 'Membri rimossi da ',
+        cantKickOtherAdmin = 'Non puoi rimuovere altri amministratori.',
+        promoteSupergroupMod = ' è stato promosso ad amministratore (telegram).',
+        demoteSupergroupMod = ' è stato degradato da amministratore (telegram).',
+        alreadySupergroupMod = ' è già un amministratore (telegram).',
+        notSupergroupMod = ' non è un amministratore (telegram).',
+        cantDemoteOtherAdmin = 'Non puoi degradare altri amministratori.',
+        leftKickme = 'Uscito tramite /kickme.',
+        setOwner = ' ora è l\'owner.',
+        inThisSupergroup = ' in questo supergruppo.',
+        supergroupUsernameChanged = 'Username supergruppo cambiato.',
+        errorChangeUsername = 'Errore nell\'impostare l\'username.\nPotrebbe già essere in uso.\n\nPuoi usare lettere numeri e l\'underscore.\nLunghezza minima 5 caratteri.',
+        usernameCleaned = 'Username gruppo pulito.',
+        errorCleanedUsername = 'Errore nel tentativo di pulire l\'username.',
+
+        -- info.lua --
+        infoWord = 'INFO',
+        youAre = '\nTu sei',
+        name = '\nNome: ',
+        surname = '\nCognome: ',
+        username = '\nUsername: ',
+        phone = '\nTelefono: ',
+        rank = '\nRango: ',
+        date = '\nData: ',
+        totalMessages = '\nMessaggi totali: ',
+        otherInfo = '\nAltre informazioni: ',
+        noOtherInfo = 'Nessuna.',
+        peer_id = '\nPeer_id: ',
+        long_id = '\nId: ',
+        chatType = '\nTipo chat: ',
+        youAreWriting = '\n\nStai scrivendo a',
+        groupName = '\nNome gruppo: ',
+        supergroupName = '\nNome supergruppo: ',
+        channelName = '\nNome canale: ',
+        userWord = 'UTENTE',
+        groupWord = 'GRUPPO',
+        supergroupWord = 'SUPERGRUPPO',
+        channelWord = 'CANALE',
+        noObject = 'Nessun oggetto trovato.',
+        users = '\nUtenti: ',
+        admins = '\nAdmins: ',
+        kickedUsers = '\nUtenti rimossi: ',
+        userInfo = 'Info utente:',
+        peerTypeUnknown = 'Tipo sconosciuto.',
+        ishereYes = 'Si.',
+        ishereNo = 'No.',
+        noLinkAvailable = 'Nessun link disponibile.',
+
+        -- invite.lua --
+        userBanned = 'L\'utente è bannato.',
+        userGbanned = 'L\'utente è bannato globalmente.',
+        privateGroup = 'Il gruppo è privato.',
+
+        --[[
+        -- knivesgame.lua --
+        knivesAlreadySignedUp = 'Sei già registrato, usa /ruleta per morire.',
+        knivesSignedUp = 'Sei stato registrato, have a nice death.',
+        knivesDeleted = 'Sei stato eliminato dalla ruleta.',
+        knivesRequireSignUp = 'Prima di morire devi registrarti, usa /registerme.',
+        knivesGroupDeleted = 'Gruppo disabilitato per ruleta.',
+        knivesRequirePoints = 'Richiede almeno 11 punti.',
+        knivesRequireZeroPoints = 'Non puoi eliminarti se sei in negativo col punteggio.',
+        roundsLeft = 'Round rimasti: ',
+        shotsLeft = 'Colpi rimasti: ',
+        capsChanged = 'Proiettili nella pistola: ',
+        challengeCapsChanged = 'Proiettili nella pistola da sfida: ',
+        cylinderChanged = 'Nuovo tamburo da: ',
+        challengeCylinderChanged = 'Nuovo tamburo sfida da: ',
+        errorCapsRange = 'Errore, il range è [1-X].',
+        errorCylinderRange = 'Errore, il range è [5-10].',
+        cylinderCapacity = 'Capienza tamburo: ',
+        challengeCylinderCapacity = 'Capienza tamburo sfida: ',
+        capsNumber = 'Proiettili: ',
+        challengeCapsNumber = 'Proiettili sfida: ',
+        forwardingRuleta = 'L\'inoltro dei messaggi su ruleta non è consentito.',
+        ruletaDeathPercentage = 'Le probabilità di morire sono del ',
+        ]]
+
+        -- lua_exec.lua --
+        doneNoOutput = 'Fatto, nessun output.',
+
+        -- likecounter.lua --
+        forwardingLike = 'L\'inoltro dei messaggi per i like non è consentito.',
+        likesdbCreated = 'Database likecounter creato.',
+
+        -- locks --
+        nameLock = '\nBlocco nome: ',
+        nameAlreadyLocked = 'Nome gruppo già bloccato.',
+        nameLocked = 'Nome gruppo bloccato.',
+        nameAlreadyUnlocked = 'Nome gruppo già sbloccato.',
+        nameUnlocked = 'Nome gruppo sbloccato.',
+        photoLock = '\nBlocco foto: ',
+        photoAlreadyLocked = 'Foto gruppo già bloccata.',
+        photoLocked = 'Foto gruppo bloccata.',
+        photoAlreadyUnlocked = 'Foto gruppo già sbloccata.',
+        photoUnlocked = 'Foto gruppo sbloccata.',
+        membersLock = '\nBlocco membri: ',
+        membersAlreadyLocked = 'Membri gruppo già bloccati.',
+        membersLocked = 'Membri gruppo bloccati.',
+        membersAlreadyUnlocked = 'Membri gruppo già sbloccati.',
+        membersUnlocked = 'Membri gruppo sbloccati.',
+        leaveLock = '\nBlocco abbandono: ',
+        leaveAlreadyLocked = 'Uscita già punita col ban.',
+        leaveLocked = 'Uscita punita col ban.',
+        leaveAlreadyUnlocked = 'Uscita già consentita.',
+        leaveUnlocked = 'Uscita consentita.',
+        spamLock = '\nBlocco spam: ',
+        spamAlreadyLocked = 'Spam già vietato.',
+        spamLocked = 'Spam vietato.',
+        spamAlreadyUnlocked = 'Spam già consentito.',
+        spamUnlocked = 'Spam consentito.',
+        floodSensibility = '\nSensibilità flood: ',
+        floodUnlockOwners = 'Solo i proprietari possono sbloccare il flood.',
+        floodLock = '\nBlocco flood: ',
+        floodAlreadyLocked = 'Flood già bloccato.',
+        floodLocked = 'Flood bloccato.',
+        floodAlreadyUnlocked = 'Flood già sbloccato.',
+        floodUnlocked = 'Flood sbloccato.',
+        arabicLock = '\nBlocco arabo: ',
+        arabicAlreadyLocked = 'Arabo già vietato.',
+        arabicLocked = 'Arabo vietato.',
+        arabicAlreadyUnlocked = 'Arabo già consentito.',
+        arabicUnlocked = 'Arabo consentito.',
+        botsLock = '\nBlocco bot: ',
+        botsAlreadyLocked = 'Bots già vietati.',
+        botsLocked = 'Bots vietati.',
+        botsAlreadyUnlocked = 'Bots già consentiti.',
+        botsUnlocked = 'Bots consentiti.',
+        linksLock = '\nBlocco link: ',
+        linksAlreadyLocked = 'Link già vietati.',
+        linksLocked = 'Link vietati.',
+        linksAlreadyUnlocked = 'Link già consentiti.',
+        linksUnlocked = 'Link consentiti.',
+        rtlLock = '\nBlocco RTL: ',
+        rtlAlreadyLocked = 'Caratteri RTL già vietati.',
+        rtlLocked = 'Caratteri RTL vietati.',
+        rtlAlreadyUnlocked = 'Caratteri RTL già consentiti.',
+        rtlUnlocked = 'Caratteri RTL consentiti.',
+        tgserviceLock = '\nBlocco messaggi di servizio: ',
+        tgserviceAlreadyLocked = 'Messaggi di servizio già bloccati.',
+        tgserviceLocked = 'Messaggi di servizio bloccati.',
+        tgserviceAlreadyUnlocked = 'Messaggi di servizio già sbloccati.',
+        tgserviceUnlocked = 'Messaggi di servizio sbloccati.',
+        stickersLock = '\nBlocco stickers: ',
+        stickersAlreadyLocked = 'Stickers già vietati.',
+        stickersLocked = 'Stickers vietati.',
+        stickersAlreadyUnlocked = 'Stickers già consentiti.',
+        stickersUnlocked = 'Stickers consentiti.',
+        public = '\nPubblico: ',
+        publicAlreadyYes = 'Gruppo già pubblico.',
+        publicYes = 'Gruppo pubblico.',
+        publicAlreadyNo = 'Gruppo già privato.',
+        publicNo = 'Gruppo privato.',
+        contactsAlreadyLocked = 'Condivisione contatti già vietata.',
+        contactsLocked = 'Condivisione contatti vietata.',
+        contactsAlreadyUnlocked = 'Condivisione contatti già consentita.',
+        contactsUnlocked = 'Condivisione contatti consentita.',
+        strictrules = '\nPugno di ferro: ',
+        strictrulesAlreadyLocked = 'Pugno di ferro già attivato.',
+        strictrulesLocked = 'Pugno di ferro attivato.',
+        strictrulesAlreadyUnlocked = 'Pugno di ferro già disattivato.',
+        strictrulesUnlocked = 'Pugno di ferro disattivato.',
+
+        -- me.lua --
+        meString = 'Hai mandato W (X%) messaggi e questa chat ne ha Z.',
+
+        -- onservice.lua --
+        notMyGroup = 'Questo non è un mio gruppo, addio.',
+
+        -- plugins.lua --
+        enabled = ' abilitato.',
+        disabled = ' disabilitato.',
+        alreadyEnabled = ' già abilitato.',
+        alreadyDisabled = ' già disabilitato.',
+        notExists = ' non esiste o è disabilitato.',
+        systemPlugin = '⛔️ Non è possibile disabilitare questo plugin in quanto è necessario per il corretto funzionamento del sistema.',
+        disabledOnChat = ' disabilitato su questa chat.',
+        noDisabledPlugin = '❔ Nessun plugin disabilitato su questa chat.',
+        pluginNotDisabled = '✔️ Questo plugin non è disabilitato su questa chat.',
+        pluginEnabledAgain = ' nuovamente abilitato.',
+        pluginsReloaded = '💊 Plugins ricaricati.',
+
+        -- pokedex.lua --
+        noPoke = 'Nessun pokémon trovato.',
+        pokeName = 'Nome: ',
+        pokeWeight = 'Peso: ',
+        pokeHeight = 'Altezza: ',
+
+        -- ruletagame.lua --
+        ruletadbCreated = 'Database ruleta creato.',
+        ruletaAlreadySignedUp = 'Sei già registrato, usa /ruleta per morire.',
+        ruletaSignedUp = 'Sei stato registrato, have a nice death.',
+        ruletaDeleted = 'Sei stato eliminato dalla ruleta.',
+        ruletaRequireSignUp = 'Prima di morire devi registrarti, usa /registerme.',
+        ruletaGroupDeleted = 'Gruppo disabilitato per ruleta.',
+        ruletaRequirePoints = 'Richiede almeno 11 punti.',
+        ruletaRequireZeroPoints = 'Non puoi eliminarti se sei in negativo col punteggio.',
+        roundsLeft = 'Round rimasti: ',
+        shotsLeft = 'Colpi rimasti: ',
+        capsChanged = 'Proiettili nella pistola: ',
+        challengeCapsChanged = 'Proiettili nella pistola da sfida: ',
+        cylinderChanged = 'Nuovo tamburo da: ',
+        challengeCylinderChanged = 'Nuovo tamburo sfida da: ',
+        errorCapsRange = 'Errore, il range è [1-X].',
+        errorCylinderRange = 'Errore, il range è [5-10].',
+        cylinderCapacity = 'Capienza tamburo: ',
+        challengeCylinderCapacity = 'Capienza tamburo sfida: ',
+        capsNumber = 'Proiettili: ',
+        challengeCapsNumber = 'Proiettili sfida: ',
+        forwardingRuleta = 'L\'inoltro dei messaggi su ruleta non è consentito.',
+        ruletaDeathPercentage = 'Le probabilità di morire sono del ',
+
+        -- set.lua --
+        saved = ' salvato.',
+        gSaved = ' variabile globale salvata.',
+        sendMedia = 'Mandami il media che vuoi salvare (audio o foto).',
+        cancelled = 'Annullato.',
+        nothingToSet = 'Niente da salvare.',
+        mediaSaved = 'Media salvato.',
+        setsRestored = ' sets ripristinati.',
+        globalSetsRestored = ' global sets ripristinati.',
+
+        --[[
+        -- spam.lua --
+        msgSet = 'Messaggio impostato.',
+        msgsToSend = 'Messaggi da mandare: ',
+        timeBetweenMsgs = 'Tempo tra ogni messaggio: X secondi.',
+        msgNotSet = 'Non hai impostato il messaggio, usa /setspam.',
+        ]]
+
+        -- stats.lua --
+        usersInChat = 'Utenti in questa chat\n',
+        totalChatMessages = 'Messaggi totali della chat: ',
+        groups = '\nGruppi: ',
+        statsCleaned = 'Statistiche azzerate.',
+        botStats = 'Statistiche bot:\n',
+
+        -- strings.lua --
+        langUpdate = 'ℹ️ Stringhe aggiornate.',
+        langSet = 'ℹ️ Lingua impostata.',
+
+        -- tempmessage.lua --
+        wrongTimeFormat = 'Formato timer errato.',
+
+        -- unset.lua --
+        deleted = ' eliminato.',
+        gDeleted = ' variabile globale eliminata.',
+
+        -- warn.lua --
+        errorWarnRange = 'Errore, il range è [0-10].',
+        warnSet = 'Il warn è stato impostato a ',
+        neverWarn = 'Gli avvertimenti non funzioneranno più.',
+        noWarnSet = 'Il warn non è ancora stato impostato.',
+        cantWarnHigher = 'Non puoi avvertire un mod/owner/admin/sudo!',
+        warned = 'Sei stato avvertito X volte, datti una regolata!',
+        unwarned = 'Ti è stato tolto un avvertimento, continua così!',
+        alreadyZeroWarnings = 'Sei già a zero avvertimenti.',
+        zeroWarnings = 'I tuoi avvertimenti sono stati azzerati.',
+        yourWarnings = 'Sei a quota X avvertimenti su un massimo di Y.',
+
+        -- whitelist.lua --
+        userBot = 'Utente/Bot ',
+        whitelistRemoved = ' rimosso dalla whitelist.',
+        whitelistAdded = ' aggiunto alla whitelist.',
+        whitelistCleaned = 'Whitelist svuotata.',
+        whitelistStart = 'Whitelist:\n',
+
+        -- kick_errors
         kick_errors =
         {
             [1] = 'Non sono admin, non posso kickare utenti',
@@ -863,43 +753,1838 @@ return {
             [3] = 'Non c\'è bisogno di unbannare in un gruppo normale',
             [4] = 'Questo utente non fa parte del gruppo',
         },
-        flag =
+
+        ------------
+        -- Usages --
+        ------------
+        administrator =
         {
-            no_input = 'Rispondi ad un messaggio per segnalarlo agli admin, o scrivi qualcosa accanto ad \'@admin\' per inviare un feedback ai moderatori',
-            reported = 'Segnalato!',
-            no_reply = 'Rispondi a qualcuno!',
-            blocked = 'Questo utente da ora non potrà usare \'@admin\'',
-            already_blocked = 'Questo utente non può già usare \'@admin\'',
-            unblocked = 'L\'utente ora può usare \'@admin\'',
-            already_unblocked = 'L\'utente può già usare \'@admin\'',
+            '🅿️ ADMINISTRATOR',
+            'Plugin per amministratori di Sasha.',
+            'ADMIN',
+            '(#pm|sasha messaggia) <user_id> <msg>: Sasha invia <msg> a <user_id>.',
+            '#import <group_link>: Sasha entra nel gruppo tramite <group_link>.',
+            '(#block|sasha blocca) <user_id>: Sasha blocca <user_id>.',
+            '(#unblock|sasha sblocca) <user_id>: Sasha sblocca <user_id>.',
+            '(#markread|sasha segna letto) (on|off): Sasha segna come [non] letti i messaggi ricevuti.',
+            '(#setbotphoto|sasha cambia foto): Sasha chiede la foto da settare come profilo.',
+            '(#updateid|sasha aggiorna longid): Sasha salva il long_id.',
+            '(#addlog|sasha aggiungi log): Sasha aggiunge il log.',
+            '(#remlog|sasha rimuovi log): Sasha rimuove il log.',
+            '#checkspeed: Sasha calcola la velocità con cui processa i messaggi.',
+            'SUDO',
+            '(#contactlist|sasha lista contatti) (txt|json): Sasha manda la lista dei contatti.',
+            '(#dialoglist|sasha lista chat) (txt|json): Sasha manda la lista delle chat.',
+            '(#addcontact|sasha aggiungi contatto) <phone> <name> <surname>: Sasha aggiunge il contatto specificato.',
+            '(#delcontact|sasha elimina contatto) <user_id>: Sasha elimina il contatto <user_id>.',
+            '(#sendcontact|sasha invia contatto) <phone> <name> <surname>: Sasha invia il contatto specificato.',
+            '(#mycontact|sasha mio contatto): Sasha invia il contatto del richiedente.',
+            '(#sync_gbans|sasha sincronizza superban): Sasha sincronizza la lista dei superban con quella offerta da TeleSeed.',
+            '(#backup|sasha esegui backup): Sasha esegue un backup di se stessa e invia il log al richiedente.',
+            '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
+            '#vardump [<reply>|<msg_id>]: Sasha esegue il vardump del messaggio specificato.',
         },
-        all =
+
+        apod =
         {
-            dashboard =
-            {
-                private = '_Ti ho inviato la scheda del gruppo in privato_',
-                first = 'Naviga questo messaggio tramite i tasti per consultare *tutte le info* sul gruppo!',
-                flood = '- *Stato*: `&&&1`\n- *Azione* da intraprendere quando un utente sta floodando: `&&&2`\n- Numero di messaggi *in 5 secondi* consentito: `&&&3`\n- *Media ignorati*:\n&&&4',
-                settings = 'Impostazioni',
-                admins = 'Admin',
-                rules = 'Regole',
-                about = 'Descrizione',
-                welcome = 'Messaggio di benvenuto',
-                extra = 'Comandi extra',
-                flood = 'Impostazioni Anti-flood',
-                media = 'Impostazioni dei media'
-            },
-            menu = '_Ti ho inviato il menu delle impostazioni in privato_',
-            menu_first = 'Gestisci le impostazioni del gruppo.\n'
-            .. '\nAlcuni comandi (_/rules, /about, /adminlist, comandi #extra_) possono essere *disabilitati per utento *non*-admin*\n'
-            .. 'Cosa accade se un comando è disabilitato per i non-admin:\n'
-            .. '• Se il comando è richiesto da un admin, il bot risponderà *nel gruppo*\n'
-            .. '• Se il comando è richiesto da un utente normale, il bot risponderà *in privato all\'utente* (ovviamente, solo se l\'utente aveva già avviato il bot in precedenza)\n'
-            .. '\nL\'icona vicino al comando indica lo stato corrente:\n'
-            .. '• 👥: il bot risponderà *nel gruppo*, senza distinzioni\n'
-            .. '• 👤: il bot risponderà *in prvato* se richiesto da un utente, nel gruppo invece se richiesto da un admin\n'
-            .. '\n*Altre impostazioni*: per le altre impostazioni, l\'icona esprime bene il loro stato corrente\n',
-            media_first = 'Tocca una voce sulla colonna destra per *cambiare le impostazioni*'
+            '🅿️ APOD',
+            'Plugin per l\'Astronomy Picture of the Day.',
+            'USER',
+            '#apod|#astro [<date>]: Sasha manda l\'APOD.',
+            '(#apod|#astro)hd [<date>]: Sasha manda l\'APOD in HD.',
+            '(#apod|#astro)text [<date>]: Sasha manda la spiegazione dell\'APOD.',
+            'Se c\'è <date> ed è nel formato AAAA-MM-GG l\'APOD è di <date>.',
+        },
+
+        banhammer =
+        {
+            '🅿️ BANHAMMER',
+            'Plugin per la gestione dei kick e dei ban.',
+            'USER',
+            '(#kickme|sasha (uccidimi|esplodimi|sparami|decompilami|bannami)): Sasha rimuove l\'utente.',
+            'MOD',
+            '(#kick|spara|[sasha] uccidi) <id>|<username>|<reply>|from: Sasha rimuove l\'utente specificato.',
+            '(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from: Sasha banna l\'utente specificato e lo rimuove, se tenta di rientrare viene nuovamente rimosso.',
+            '(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from: Sasha sbanna l\'utente specificato.',
+            '(#banlist|[sasha] lista ban): Sasha mostra la lista di utenti bannati dal gruppo.',
+            'ADMIN',
+            '(#banlist|[sasha] lista ban) <group_id>: Sasha mostra la lista di utenti bannati da <group_id>.',
+            '(#gban|[sasha] superbanna) <id>|<username>|<reply>|from: Sasha superbanna l\'utente specificato e lo rimuove, se tenta di rientrare viene nuovamente rimosso.',
+            '(#ungban|[sasha] supersbanna) <id>|<username>|<reply>|from: Sasha supersbanna l\'utente specificato.',
+            '(#gbanlist|[sasha] lista superban): Sasha mostra la lista di utenti super bannati.',
+        },
+
+        bot =
+        {
+            '🅿️ BOT',
+            'Plugin per attivare e disattivare Sasha sul gruppo.',
+            'OWNER',
+            '#bot|sasha on|off: Sasha si attiva|disattiva.',
+            'ADMIN',
+            '#bot|sasha <group_id> on|off: Sasha si attiva|disattiva nel gruppo specificato.',
+        },
+
+        botinteract =
+        {
+            '🅿️ BOTINTERACT',
+            'Plugin per l\'interazione con i bot',
+            'USER',
+            '$<text>: Sasha manda <text> al bot.',
+            '#sendmedia: Sasha manderà il media che verrà inviato nella chat al bot.',
+            '#undo: Sasha annulla il comando sendmedia.',
+            'MOD',
+            '#unsetbot <username>: Sasha smetterà di interagire con <username>.',
+            'ADMIN',
+            '#setbot <username>: Sasha interagirà con <username>.',
+        },
+
+        broadcast =
+        {
+            '🅿️ BROADCAST',
+            'Plugin per mandare messaggi broadcast.',
+            'ADMIN',
+            '#br <group_id> <text>: Sasha invia <text> a <group_id>.',
+            'SUDO',
+            '#broadcast <text>: Sasha invia <text> a tutti i gruppi.',
+        },
+
+        database =
+        {
+            '🅿️ DATABASE',
+            'Plugin per il salvataggio delle informazioni di utenti e gruppi.',
+            'SUDO',
+            '#createdatabase: Sasha crea il database.',
+            '(#dodatabase|sasha esegui database): Sasha salva i dati di tutti gli utenti del gruppo e i dati del gruppo.',
+            '(#search|[sasha] cerca) <id>: Sasha cerca <id> nel database.',
+            '(#delete|[sasha] elimina) <id>: Sasha elimina <id> dal database.',
+            '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha aggiunge manualmente al database l\'utente specificato.',
+            '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>\n<long_id>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il gruppo specificato.',
+            '#uploaddb: Sasha manda il database.',
+            '#replacedb <reply>: Sasha sostituisce il database.',
+        },
+
+        delword =
+        {
+            '🅿️ DELWORD',
+            'Plugin per la censura delle parole.',
+            'USER',
+            '(#dellist|[sasha] lista censura): Sasha manda una lista di parole o pattern censurati.',
+            'OWNER',
+            '(#delword|[sasha] censura) <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata nei supergruppi Sasha eliminerà il messaggio mentre nei gruppi rimuoverà il membro.',
+        },
+
+        dogify =
+        {
+            '🅿️ DOGIFY',
+            'Plugin per la creazione di immagini col doge.',
+            'USER',
+            '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha crea un\'immagine col doge e le parole specificate.',
+        },
+
+        duckduckgo =
+        {
+            '🅿️ DUCKDUCKGO',
+            'Plugin per la ricerca su duckduckgo.',
+            'USER',
+            '#duck[duck]go <terms>: Sasha cerca <terms> su DuckDuckGo.',
+        },
+
+        fakecommand =
+        {
+            '🅿️ FAKECOMMAND',
+            'Plugin per testare i comandi.',
+            'MOD',
+            '(#user|#mod|#owner|#admin) <command>: Sasha esegue <command> come se fosse stato inviato da un utente con il rango specificato.',
+        },
+
+        feedback =
+        {
+            '🅿️ FEEDBACK',
+            'Plugin per mandare feedback.',
+            'USER',
+            '#feedback <text>: Sasha invia <text> come feedback.',
+        },
+
+        filemanager =
+        {
+            '🅿️ FILEMANAGER',
+            'Plugin per la gestione del server di Sasha.',
+            'SUDO',
+            '#folder: Sasha manda la directory attuale.',
+            '#cd [<directory>]: Sasha entra in <directory>, se non è specificata torna alla cartella base.',
+            '#ls: Sasha manda la lista di file e cartelle della directory corrente.',
+            '#mkdir <directory>: Sasha crea <directory>.',
+            '#rmdir <directory>: Sasha elimina <directory>.',
+            '#rm <file>: Sasha elimina <file>.',
+            '#touch <file>: Sasha crea <file>.',
+            '#cat <file>: Sasha manda il contenuto di <file>.',
+            '#tofile <file> <text>: Sasha crea <file> con <text> come contenuto.',
+            '#shell <command>: Sasha esegue <command>.',
+            '#cp <file> <directory>: Sasha copia <file> in <directory>.',
+            '#mv <file> <directory>: Sasha sposta <file> in <directory>.',
+            '#upload <file>: Sasha manda <file> nella chat.',
+            '#download <reply>: Sasha scarica il file contenuto in <reply>.',
+        },
+
+        flame =
+        {
+            '🅿️ FLAME',
+            'Plugin per flammare gli utenti.',
+            'MOD',
+            '(#startflame|[sasha] flamma) <id>|<username>|<reply>|from: Sasha flamma l\'utente specificato.',
+            '(#stopflame|[sasha] stop flame): Sasha smette di flammare.',
+            '(#flameinfo|[sasha] info flame): Sasha manda le info su chi sta flammando.',
+        },
+
+        get =
+        {
+            '🅿️ GET',
+            'Plugin per ottenere le cose salvate con SET.',
+            'USER',
+            '(#getlist|#get|sasha lista): Sasha mostra una lista delle variabili settate.',
+            '(#getgloballist|#getglobal|sasha lista globali): Sasha mostra una lista delle variabili globali settate.',
+            'OWNER',
+            '#enableglobal: Sasha abilita i get globali sulla chat.',
+            '#disableglobal: Sasha disabilita i get globali sulla chat.',
+            '#exportgroupsets: Sasha esporta i set della chat.',
+            'ADMIN',
+            '#exportglobalsets: Sasha esporta i get globali.',
+        },
+
+        goodbyewelcome =
+        {
+            '🅿️ GOODBYEWELCOME',
+            'Plugin per il benvenuto e l\'addio dei membri.',
+            'USER',
+            '#getwelcome: Sasha manda il benvenuto.',
+            '#getgoodbye: Sasha manda l\'addio.',
+            'MOD',
+            '#setwelcome <text>: Sasha imposta <text> come benvenuto.',
+            '#setgoodbye <text>: Sasha imposta <text> come addio.',
+            '#unsetwelcome: Sasha rimuove il benvenuto.',
+            '#unsetgoodbye: Sasha rimuove l\'addio.',
+            '#setmemberswelcome <value>: Sasha dopo <value> membri manderà il benvenuto con le regole, se zero il benvenuto non verrà più mandato.',
+            '#getmemberswelcome: Sasha manda il numero di membri entrati dopo i quali invia il benvenuto.',
+        },
+
+        group_management =
+        {
+            '🅿️ GROUP_MANAGEMENT',
+            'Plugin per la gestione dei gruppi.',
+            -- COMMON
+            'USER',
+            '(#rules|sasha regole): Sasha mostra le regole del gruppo.',
+            '(#about|sasha descrizione): Sasha mostra la descrizione del gruppo.',
+            '(#modlist|[sasha] lista mod): Sasha mostra la lista dei moderatori.',
+            '#owner: Sasha mostra l\'id del proprietario del gruppo.',
+            "#admins [<reply>|<text>]: Sasha contatta gli admin",
+            'MOD',
+            '#type: Sasha manda il tipo di gruppo in cui ci si trova.',
+            '#setname <group_name>: Sasha imposta il nome del gruppo con <group_name>.',
+            '#setphoto: Sasha imposta e blocca la foto del gruppo.',
+            '(#setrules|sasha imposta regole) <text>: Sasha imposta <text> come regole.',
+            '(#setabout|sasha imposta descrizione) <text>: Sasha imposta <text> come descrizione.',
+            '#muteuser|voce <id>|<username>|<reply>|from: Sasha imposta|toglie il muto sull\'utente.',
+            '(#muteslist|lista muti): Sasha manda la lista delle variabili mute della chat.',
+            '(#mutelist|lista utenti muti): Sasha manda la lista degli utenti muti della chat.',
+            '#settings: Sasha mostra le impostazioni del gruppo.',
+            '#public yes|no: Sasha imposta il gruppo come pubblico|privato.',
+            '(#newlink|sasha crea link): Sasha crea il link del gruppo.',
+            '(#link|sasha link): Sasha mostra il link del gruppo.',
+            '#setflood <value>: Sasha imposta il flood massimo del gruppo a <value>.',
+            'GRUPPI',
+            '(#lock|[sasha] blocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha blocca l\'opzione specificata.',
+            '(#unlock|[sasha] sblocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha sblocca l\'opzione specificata.',
+            'SUPERGRUPPI',
+            '(#bots|[sasha] lista bot): Sasha manda la lista dei bot.',
+            '#del <reply>: Sasha elimina il messaggio specificato.',
+            '(#lock|[sasha] blocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha blocca l\'opzione specificata.',
+            '(#unlock|[sasha] sblocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha sblocca l\'opzione specificata.',
+            'OWNER',
+            '#log: Sasha manda un file contenente il log del gruppo/regno.',
+            '(#setlink|sasha imposta link) <link>: Sasha imposta <link> come link d\'invito.',
+            '(#unsetlink|sasha elimina link): Sasha elimina il link salvato.',
+            '(#promote|[sasha] promuovi) <username>|<reply>: Sasha promuove a moderatore l\'utente specificato.',
+            '(#demote|[sasha] degrada) <username>|<reply>: Sasha degrada l\'utente specificato.',
+            '#mute|silenzia all|text|documents|gifs|video|photo|audio: Sasha imposta il muto sulla variabile specificata.',
+            '#unmute|ripristina all|text|documents|gifs|video|photo|audio: Sasha rimuove il muto sulla variabile specificata.',
+            '#setowner <id>|<username>|<reply>: Sasha imposta l\'utente specificato come proprietario.',
+            'GRUPPI',
+            '#clean modlist|rules|about: Sasha pulisce il parametro specificato.',
+            'SUPERGRUPPI',
+            '(#getadmins|[sasha] lista admin): Sasha manda la lista degli amministratori.',
+            '#promoteadmin <id>|<username>|<reply>: Sasha promuove l\'utente specificato ad amministratore (telegram).',
+            '#demoteadmin <id>|<username>|<reply>: Sasha degrada l\'utente specificato (telegram).',
+            '#clean rules|about|modlist|mutelist: Sasha azzera la variabile specificata.',
+            'ADMIN',
+            '#add: Sasha aggiunge il gruppo in cui ci si trova.',
+            '#rem: Sasha rimuove il gruppo in cui ci si trova.',
+            'ex INGROUP.LUA',
+            '#add realm: Sasha aggiunge il regno.',
+            '#rem realm: Sasha rimuove il regno.',
+            '#kill group|realm: Sasha elimina ogni utente nel gruppo|regno e poi lo chiude.',
+            'ex INPM.LUA',
+            '(#join|#inviteme|[sasha] invitami) <chat_id>|<alias>: Sasha tenta di aggiungere l\'utente a <chat_id>|<alias>.',
+            '#getaliaslist: Sasha manda la lista degli alias.',
+            '#allchats: Sasha mostra l\'elenco delle chat.',
+            '#allchatlist: Sasha manda un file con l\'elenco delle chat.',
+            '#setalias <alias> <group_id>: Sasha imposta <alias> come alias di <group_id>.',
+            '#unsetalias <alias>: Sasha elimina <alias>.',
+            'SUPERGRUPPI',
+            '#tosuper: Sasha aggiorna il gruppo a supergruppo.',
+            '#setusername <text>: Sasha cambia l\'username del gruppo con <text>.',
+            '#kill supergroup: Sasha elimina ogni utente nel supergruppo e poi lo chiude.',
+            'peer_id',
+            'msg.to.id',
+            'msg.to.peer_id',
+            'REGNI',
+            '#setgpowner <group_id> <user_id>: Sasha imposta <user_id> come proprietario di <group_id>.',
+            '(#creategroup|sasha crea gruppo) <group_name>: Sasha crea un gruppo col nome specificato.',
+            '(#createsuper|sasha crea supergruppo) <group_name>: Sasha crea un supergruppo col nome specificato.',
+            '(#createrealm|sasha crea regno) <realm_name>: Sasha crea un regno col nome specificato.',
+            '(#setabout|sasha imposta descrizione) <group_id> <text>: Sasha cambia la descrizione di <group_id> in <text>.',
+            '(#setrules|sasha imposta regole) <group_id> <text>: Sasha cambia le regole di <group_id> in <text>.',
+            '#setname <realm_name>: Sasha cambia il nome del regno in <realm_name>.',
+            '#setname|#setgpname <group_id> <group_name>: Sasha cambia il nome di <group_id> in <group_name>.',
+            '(#lock|[sasha] blocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha blocca l\'impostazione specificata di <group_id>.',
+            '(#unlock|[sasha] sblocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha sblocca l\'impostazione specificata di <group_id>.',
+            '#settings <group_id>: Sasha manda le impostazioni di <group_id>.',
+            '#type: Sasha mostra il tipo del gruppo.',
+            '#kill group|supergroup|realm <group_id>: Sasha rimuove tutti i membri di <group_id> e <group_id>.',
+            '#rem <group_id>: Sasha rimuove il gruppo.',
+            '#list admins|groups|realms: Sasha mostra una lista della variabile specificata.',
+            'SUDO',
+            '#addadmin <user_id>|<username>: Sasha promuove l\'utente specificato ad amminstratore.',
+            '#removeadmin <user_id>|<username>: Sasha degrada l\'utente specificato.',
+        },
+
+        help =
+        {
+            '🅿️ HELP',
+            'Plugin di aiuto, USATELO!',
+            'USER',
+            '(#sudolist|sasha lista sudo): Sasha manda la lista dei sudo.',
+            '(#help|sasha aiuto): Sasha mostra una lista dei plugin disponibili.',
+            '(#help|sasha aiuto) <plugin_name>|<plugin_number>: Sasha mostra l\'aiuto per il plugin specificato.',
+            '(#helpall|sasha aiuto tutto): Sasha mostra tutti i comandi di tutti i plugin.',
+            '(#syntax|sasha sintassi) <filter>: Sasha mostra la sintassi dei comandi che corrispondono a <filter>.',
+            '(#syntaxall|sasha sintassi tutto): Sasha mostra la sintassi di tutti i comandi di tutti i plugin.',
+        },
+
+        info =
+        {
+            '🅿️ INFO',
+            'Plugin per ottenere informazioni.',
+            'USER',
+            '#getrank|rango [<id>|<username>|<reply>]: Sasha manda il rank dell\'utente.',
+            '(#info|[sasha] info): Sasha manda le info dell\'utente e della chat o di se stessa',
+            '#ishere <id>|<username>: Sasha dice se l\'utente specificato è presente nel gruppo.',
+            '(#groupinfo|[sasha] info gruppo): Sasha manda le info del gruppo.',
+            'MOD',
+            '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha manda le info dell\'utente specificato.',
+            '(#who|#members|[sasha] lista membri): Sasha manda la lista degli utenti.',
+            '(#kicked|[sasha] lista rimossi): Sasha manda la lista degli utenti rimossi.',
+            'ADMIN',
+            '(#groupinfo|[sasha] info gruppo) <group_id>: Sasha manda le info del gruppo specificato.',
+            '(#grouplink|[sasha] link gruppo) <group_id>: Sasha manda il link del gruppo specificato.',
+        },
+
+        interact =
+        {
+            '🅿️ INTERACT',
+            'Plugin per l\'interazione con gli utenti.',
+            'MOD',
+            '(#echo|sasha ripeti) [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio.',
+        },
+
+        invite =
+        {
+            '🅿️ INVITE',
+            'Plugin per l\'invito di utenti nei gruppi.',
+            -- 'OWNER',
+            'ADMIN',
+            '(#invite|[sasha] invita|[sasha] resuscita) <id>|<username>|<reply>: Sasha invita l\'utente specificato.',
+        },
+
+        --[[
+        knivesgame =
+        {
+            '🅿️ KNIVESGAME',
+            'Plugin per il gioco dei coltelli.',
+            'USER',
+            'Knives by AISasha. Knives è il lancio dei coltelli, Sasha lancia i coltelli con una certa precisione, se ti centra sei fuori altrimenti rimani.',
+            '#registerme|#registrami: Sasha registra l\'utente al gioco.',
+            '#deleteme|#eliminami: Sasha elimina i dati dell\'utente.',
+            '#knivesinfo: Sasha manda le informazioni di knives.',
+            '#mystats|#punti: Sasha manda le statistiche dell\'utente.',
+            '#knives: Sasha cerca di ucciderti.',
+            '#challenge|#sfida <username>|<reply>: Sasha avvia una sfida tra il mittente e l\'utente specificato, il vincitore vincerà 20 punti mentre il perdente ne perderà 20.',
+            '#accept|#accetta: Sasha conferma la sfida.',
+            '#reject|#rifiuta: Sasha cancella la sfida, se la sfida è già stata avviata ed è cancellata da uno dei giocatori esso perde 20 punti e viene ucciso.',
+            '#challengeinfo: Sasha manda le informazioni della sfida in corso.',
+            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha manda la classifica del parametro specificato, se nulla è specificato manderà quella dei punteggi.',
+            'MOD',
+            '#setaccuracy <value>: Sasha imposta la precisione a <value>.',
+            '#setchallengeaccuracy <value>: Sasha imposta la precisione nelle sfide a <value>.',
+            'ADMIN',
+            '(#registergroupknives|registra gruppo knives): Sasha abilita il gruppo a giocare a knives.',
+            '(#deletegroup|elimina gruppo): Sasha disabilita il gruppo per knives.',
+            'SUDO',
+            '#createknivesdb: Sasha crea il database di knives.',
+            '#addpoints <id> <value>: Sasha aggiunge <value> punti all\'utente specificato.',
+            '#rempoints <id> <value>: Sasha sottrae <value> punti all\'utente specificato.',
+        },
+        ]]
+
+        likecounter =
+        {
+            '🅿️ LIKECOUNTER',
+            'Plugin per il conteggio dei likes.',
+            'USER',
+            '#like|#1up <id>|<username>|<reply>|from: Sasha aggiunge un like all\'utente specificato.',
+            '#dislike|#1down <id>|<username>|<reply>|from: Sasha toglie un like all\'utente specificato.',
+            '#likes: Sasha manda la classifica dei likes.',
+            'SUDO',
+            '#createlikesdb:  Sasha crea il database di likecounter.',
+            '#addlikes <id> <value>: Sasha aggiunge <value> likes all\'utente specificato.',
+            '#remlikes <id> <value>: Sasha toglie <value> likes all\'utente specificato.',
+        },
+
+        lua_exec =
+        {
+            '🅿️ LUA_EXEC',
+            'Plugin per l\'esecuzione di codice LUA.',
+            'SUDO',
+            '#lua <command>: Sasha esegue <command>.',
+        },
+
+        me =
+        {
+            '🅿️ ME',
+            'Plugin per sapere i messaggi mandati.',
+            'USER',
+            '#me: Sasha dice quanti messaggi hai mandato.',
+        },
+
+        onservice =
+        {
+            '🅿️ ONSERVICE',
+            'Plugin per far abbandonare un gruppo a Sasha.',
+            'ADMIN',
+            '(#leave|sasha abbandona) [<group_id>]: Sasha lascia il gruppo.',
+        },
+
+        plugins =
+        {
+            '🅿️ PLUGINS',
+            'Plugin per attivare e disattivare plugin.',
+            'OWNER',
+            '(#plugins|[sasha] lista plugins): Sasha mostra una lista di tutti i plugins.',
+            '(#disabledlist|([sasha] lista disabilitati|disattivati)): Sasha mostra una lista dei plugins disabilitati su questa chat.',
+            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha riabilita <plugin> su questa chat.',
+            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disabilita <plugin> su questa chat.',
+            'SUDO',
+            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha abilita <plugin>, se specificato solo su questa chat.',
+            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disabilita <plugin>, se specificato solo su questa chat.',
+            '(#[plugin[s]] reload|[sasha] ricarica): Sasha ricarica tutti i plugins.',
+        },
+
+        pokedex =
+        {
+            '🅿️ POKEDEX',
+            'Plugin per ottenere informazioni su un pokémon.',
+            'USER',
+            '#pokedex|#pokemon <name>|<id>: Sasha cerca il pokémon specificato e ne invia le informazioni.',
+        },
+
+        qr =
+        {
+            '🅿️ QR',
+            'Plugin per creare QR Code.',
+            'USER',
+            '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha crea il QR Code di <text>, se specificato colora il QR Code.',
+            'I colori possono essere specificati come segue:',
+            'Testo => red|green|blue|purple|black|white|gray.',
+            'Notazione Esadecimale => ("a56729" è marrone).',
+            'Notazione Decimale => ("255-192-203" è rosa).',
+        },
+
+        reactions =
+        {
+            '🅿️ REACTIONS',
+            'Plugin per far reagire Sasha.',
+            'SUDO',
+            '#writing on|off: Sasha (fa finta|smette di far finta) di scrivere.',
+        },
+
+        ruletagame =
+        {
+            '🅿️ RULETAGAME',
+            'Plugin per il gioco della roulette russa.',
+            'Ruleta by AISasha, inspired from Leia (#RIP) and Arya (#RIP). Ruleta è la roulette russa con la pistola, tamburo da tot colpi con tot proiettili al suo interno, si spara e se c\'è il proiettile sei fuori altrimenti rimani.',
+            'USER',
+            '#registerme|#registrami: Sasha registra l\'utente alla roulette.',
+            '#deleteme|#eliminami: Sasha elimina i dati dell\'utente.',
+            '#ruletainfo: Sasha manda le informazioni della roulette.',
+            '#mystats|#punti: Sasha manda le statistiche dell\'utente.',
+            '#ruleta: Sasha cerca di ucciderti.',
+            '#godruleta: Sasha ti dà il 50% di probabilità di guadagnare 70 punti, con l\'altro 50% li perdi tutti (richiede almeno 11 punti).',
+            '#challenge|#sfida <username>|<reply>: Sasha avvia una sfida tra il mittente e l\'utente specificato, il vincitore vincerà 20 punti mentre il perdente ne perderà 20.',
+            '#accept|#accetta: Sasha conferma la sfida.',
+            '#reject|#rifiuta: Sasha cancella la sfida, se la sfida è già stata avviata ed è cancellata da uno dei giocatori esso perde 20 punti e viene ucciso.',
+            '#challengeinfo: Sasha manda le informazioni della sfida in corso.',
+            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha manda la classifica del parametro specificato, se nulla è specificato manderà quella dei punteggi.',
+            'MOD',
+            '#setcaps <value>: Sasha mette <value> proiettili nel tamburo.',
+            '#setchallengecaps <value>: Sasha mette <value> proiettili nel tamburo delle sfide.',
+            'OWNER',
+            '#setcylinder <value>: Sasha imposta un tamburo da <value> colpi nel range [5-10].',
+            '#setchallengecylinder <value>: Sasha imposta un tamburo da <value> colpi per le sfide nel range [5-10].',
+            'ADMIN',
+            '(#registergroupruleta|registra gruppo ruleta): Sasha abilita il gruppo a giocare a ruleta.',
+            '(#deletegroupruleta|elimina gruppo ruleta): Sasha disabilita il gruppo per ruleta.',
+            'SUDO',
+            '#createruletadb: Sasha crea il database di ruleta.',
+            '#addpoints <id> <value>: Sasha aggiunge <value> punti all\'utente specificato.',
+            '#rempoints <id> <value>: Sasha sottrae <value> punti all\'utente specificato.',
+        },
+
+        set =
+        {
+            '🅿️ SET',
+            'Plugin per salvare cose.',
+            'MOD',
+            '(#set|[sasha] setta) <var_name> <text>: Sasha salva <text> come risposta a <var_name>.',
+            '(#setmedia|[sasha] setta media) <var_name>: Sasha salva il media (foto o audio) che le verrà inviato come risposta a <var_name>.',
+            '(#cancel|[sasha] annulla): Sasha annulla un #setmedia.',
+            'OWNER',
+            '#importgroupsets <group_sets>: Sasha ripristina tutti i set di <group_sets>.',
+            'ADMIN',
+            '#importglobalsets <global_sets>: Sasha ripristina tutti i set globali di <global_sets>.',
+            '#setglobal <var_name> <text>: Sasha salva globalmente <text> come risposta a <var_name>.',
+        },
+
+        shout =
+        {
+            '🅿️ SHOUT',
+            'Plugin per urlare delle parole.',
+            'USER',
+            '(#shout|[sasha] grida|[sasha] urla) <text>: Sasha "urla" <text>.',
+        },
+
+        spam =
+        {
+            '🅿️ SPAM',
+            'Plugin per spammare fastidiosamente.',
+            'OWNER',
+            '(#spam|[sasha] spamma) [<messages> <seconds>] <text>: Sasha inzia a spammare <text>, se specificato per <messages> volte ogni <seconds> secondi.',
+        },
+
+        stats =
+        {
+            '🅿️ STATS',
+            'Plugin per ottenere statistiche sui gruppi e su Sasha.',
+            'USER',
+            '[#]aisasha: Sasha invia la propria descrizione.',
+            'MOD',
+            '(#stats|#messages): Sasha invia le statistiche della chat.',
+            '(#realstats|#realmessages): Sasha invia le statistiche con solo i membri del gruppo.',
+            '(#cleanstats|#cleanmessages): Sasha pulisce le statistiche.',
+            '(#statslist|#messageslist): Sasha invia un file con le statistiche della chat.',
+            'ADMIN',
+            '(#stats|#messages) group <group_id>: Sasha invia le statistiche relative al gruppo specificato.',
+            '(#realstats|#realmessages) group <group_id>: Sasha invia le statistiche relative al gruppo specificato con solo i membri del gruppo.',
+            '(#cleanstats|#cleanmessages) group <group_id>: Sasha pulisce le statistiche relative al gruppo specificato.',
+            '(#statslist|#messageslist) group <group_id>: Sasha invia un file con le statistiche relative al gruppo specificato.',
+            '(#stats|#messages) aisasha: Sasha invia le proprie statistiche.',
+        },
+
+        strings =
+        {
+            '🅿️ STRINGS',
+            'Plugin per la gestione delle lingue di Sasha.',
+            'USER',
+            '(#setlang|lingua) (it|en): Sasha imposta la lingua in cui deve parlare (funziona solo in privato con l\'utente).',
+            'OWNER',
+            '(#setlang|lingua) (it|en): Sasha imposta la lingua in cui deve parlare in questo gruppo.',
+            'SUDO',
+            '(#reloadstrings|[sasha] aggiorna stringhe): Sasha aggiorna le stringhe di testo.',
+        },
+
+        tagall =
+        {
+            '🅿️ TAGALL',
+            'Plugin per taggare tutti i membri con un username.',
+            'OWNER',
+            '(#tagall|sasha tagga tutti) <text>: Sasha tagga tutti i membri del gruppo con username e scrive <text>.',
+        },
+
+        tempmessage =
+        {
+            '🅿️ TEMPMESSAGE',
+            'Plugin per temporizzare i messaggi.',
+            'MOD',
+            '(#tempmsg|[sasha] temporizza) <hour> <minutes> <seconds> <text>: Sasha eliminerà il messaggio dopo il tempo specificato.',
+            '(#tempmsg|[sasha] temporizza) (<hour>|<minutes>|<seconds>)(h|m|s) <text>: Sasha eliminerà il messaggio dopo il tempo specificato.',
+            '(#tempmsg|[sasha] temporizza) <hour>|<minutes>(h|m) <minutes>|<seconds>(m|s) <text>: Sasha eliminerà il messaggio dopo il tempo specificato.'
+        },
+
+        tex =
+        {
+            '🅿️ TEX',
+            'Plugin per generare equazioni.',
+            'USER',
+            '(#tex|[sasha] equazione) <equation>: Sasha converte <equation> in immagine.',
+        },
+
+        unset =
+        {
+            '🅿️ UNSET',
+            'Plugin per eliminare cose salvate con SET.',
+            'MOD',
+            '(#unset|[sasha] unsetta) <var_name>: Sasha elimina <var_name>.',
+            'ADMIN',
+            '#unsetglobal <var_name>: Sasha elimina globalmente <var_name>.',
+        },
+
+        urbandictionary =
+        {
+            '🅿️ URBANDICTIONARY',
+            'Plugin per interagire con l\'Urban Dictionary.',
+            'USER',
+            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha mostra la definizione di <text> dall\'Urban Dictionary.',
+        },
+
+        warn =
+        {
+            '🅿️ WARN',
+            'Plugin per la gestione degli avvertimenti.',
+            'MOD',
+            '#setwarn <value>: Sasha imposta gli avvertimenti massimi a <value>, se zero gli avvertimenti non funzioneranno più.',
+            '#getwarn: Sasha manda il numero di avvertimenti massimi.',
+            '(#getuserwarns|[sasha] ottieni avvertimenti) <id>|<username>|<reply>|from: Sasha manda il numero di avvertimenti ricevuti dall\'utente.',
+            '(#warn|[sasha] avverti) <id>|<username>|<reply>|from: Sasha avverte l\'utente.',
+            '#unwarn <id>|<username>|<reply>|from: Sasha diminuisce di uno gli avvertimenti dell\'utente.',
+            '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from: Sasha azzera gli avvertimenti dell\'utente.',
+        },
+
+        webshot =
+        {
+            '🅿️ WEBSHOT',
+            'Plugin per fare screenshots di siti.',
+            'MOD',
+            '(#webshot|[sasha] webshotta) <url> [<size>]: Sasha esegue uno screenshot di <url> e lo invia, se <size> è specificata di quella dimensione.',
+            'La dimensione può essere:',
+            'T: (120 x 90px)',
+            'S: (200 x 150px)',
+            'E: (320 x 240px)',
+            'N: (400 x 300px)',
+            'M: (640 x 480px)',
+            'L: (800 x 600px)',
+            'X: (1024 x 768px)',
+            'Nmob: (480 x 800px)',
+            'ADMIN',
+            'F: Pagina intera (può essere un processo molto lungo)',
+            'Fmob: Pagina intera (può essere un processo lungo)',
+        },
+
+        whitelist =
+        {
+            '🅿️ WHITELIST',
+            'Plugin per la gestione della whitelist.',
+            'ADMIN',
+            '#whitelist [<id>|<username>|<reply>]: Sasha aggiunge|rimuove l\'utente specificato alla|dalla whitelist, se nulla è specificato Sasha manda la whitelist.',
+            '#clean whitelist: Sasha pulisce la whitelist.',
+        },
+    },
+    -- ####
+    en =
+    {
+        -- global --
+        require_sudo = '🚫 This plugin requires sudo privileges.',
+        require_admin = '🚫 This plugin requires admin privileges or higher.',
+        require_owner = '🚫 This plugin requires owner privileges or higher.',
+        require_mod = '🚫 This plugin requires mod privileges or higher.',
+        require_rank = '🚫 You can\'t do this to someone who\'s higher than you or at your same rank!',
+        errorTryAgain = 'Error, try again.',
+        opsError = 'Ops, error.',
+        useYourGroups = 'Use it in your groups!',
+        user = 'User ',
+        kicked = ' kicked.',
+        banned = ' banned.',
+        unbanned = ' unbanned.',
+        gbanned = ' globally banned.',
+        ungbanned = ' globally unbanned.',
+        autoexecDenial = 'You can\'t use autoexec from another command.',
+
+        -- seedbot.lua --
+        sender = 'Sender: ',
+        receiver = 'Receiver: ',
+        msgText = 'Message: ',
+
+        -- utils.lua --
+        errorImageDownload = 'Error downloading the picture.',
+        banListStart = 'Banlist:\n\n',
+        gbanListStart = 'GBanlist:\n\n',
+        mutedUsersStart = 'Muted users of:',
+        mutedTypesStart = 'Mutes of:',
+        mute = 'Mute ',
+        alreadyEnabled = ' already enabled.',
+        enabled = ' enabled.',
+        alreadyDisabled = ' already disabled.',
+        disabled = ' disabled',
+        noAutoKick = 'You can\'t kick yourself.',
+        noAutoBan = 'You can\'t ban yourself.',
+
+        -- administrator.lua --
+        sendNewPic = 'Send me the new picture.',
+        botPicChanged = 'Picture changed!',
+        logSet = 'Log added.',
+        logUnset = 'Log removed.',
+        markRead = 'Mark read',
+        pmSent = 'Message sent',
+        cantBlockAdmin = 'You can\'t block admins.',
+        userBlocked = 'User blocked.',
+        userUnblocked = 'User unblocked.',
+        contactListSent = 'I\'ve sent you the contactlist in the requested format.',
+        removedFromContacts = ' removed from contacts.',
+        addedToContacts = ' added to contacts.',
+        contactMissing = 'I haven\'t got your phone number!',
+        chatListSent = 'I\'ve sent you the dialoglist in the requested format.',
+        gbansSync = 'GBanlist sync completed.',
+        longidUpdate = 'Update long_ID.',
+        alreadyLog = 'Already a log group.',
+        notLog = 'Not a log group.',
+        backupDone = 'Backup finished, I\'m sending you the log.',
+        backupSent = 'I\'m sending you the backup.',
+        backupMissing = 'Backup missing.',
+        autoSendBackupDb = 'I\'m sending you the automatic backup.',
+        botStats = 'Bot\'s stats: ',
+        botRestarted = 'Bot reloaded.',
+        botStopped = 'Bot stopped.',
+        redisDbSaved = 'Redis db saved.',
+
+        -- anti_spam.lua --
+        blockedForSpam = ' blocked (SPAM).',
+        floodNotAdmitted = 'Flooding is not admitted.\n',
+        statusRemoved = 'User kicked.',
+        gbannedFrom = ' globally banned from ',
+
+        -- banhammer.lua --
+        noUsernameFound = 'Can\'t find a user with that username.',
+        massacre = 'Massacre => X',
+
+        -- bot.lua --
+        botOn = 'I\'m back. 😏',
+        botOff = 'Nothing to do here. 🚀',
+
+        -- botinteract.lua --
+        botSet = ' has been saved to interact with chat.',
+        botUnset = ' has been removed from bots to interact with.',
+        sendMeMedia = 'Send me the media you want me to forward.',
+        mediaForwarded = 'Media forwarded.',
+
+        -- database.lua --
+        dbCreated = 'Database created.',
+        dataLeaked = 'Data leaked.',
+        userManuallyAdded = 'User manually added to the database.',
+        groupManuallyAdded = 'Group manually added to the database.',
+        errorUserOrGroup = 'Just groups or users.',
+        userDeleted = 'User deleted from database.',
+        groupDeleted = 'Group deleted from database.',
+        databaseDownloaded = 'Database downloaded\n',
+        databaseSent = 'I\'m sending you the database.',
+        databaseMissing = 'Database missing.',
+        databaseFuckedUp = 'Error, crash while saving database, restore it as soon as possible.',
+
+        -- delword.lua --
+        delwordList = 'Censorship list:\n',
+        delwordAdded = 'Censorship added on ',
+        delwordRemoved = 'Censorship removed from ',
+
+        -- fakecommand.lua --
+        fakecommandYouTried = 'You tried asshole, you won\'t execute a command that requires a rank higher than yours.',
+
+        -- feedback.lua --
+        feedStart = '@EricSolinas you received a feedback: #newfeedback\n\nSender',
+        feedName = '\nName: ',
+        feedSurname = '\nSurname: ',
+        feedUsername = '\nUsername: @',
+        feedSent = 'Feedback sent!',
+
+        -- filemanager.lua --
+        backHomeFolder = 'You\'re in the base folder: ',
+        youAreHere = 'You are here: ',
+        folderCreated = 'Folder \'X\' created.',
+        folderDeleted = 'Folder \'X\' deleted.',
+        fileCreatedWithContent = ' created with \'X\' as contents.',
+        copiedTo = ' copied to ',
+        movedTo = ' moved to ',
+        sendingYou = 'I\'m sending ',
+        useQuoteOnFile = 'Use \'reply\' on the file you want me to download.',
+        needMedia = 'I need a file.',
+        fileDownloadedTo = 'File downloaded to: ',
+        errorDownloading = 'Error during the download.',
+        noSuchFile = ' doesn\'t exist.',
+
+        -- flame.lua --
+        cantFlameHigher = 'You can\'t flame mod/owner/admin/sudo/!',
+        noAutoFlame = 'I can\'t flame myself you jerk!',
+        hereIAm = 'Here I am!',
+        stopFlame = 'Yeah I\'m done, holy shit.',
+        flaming = 'I\'m flaming: ',
+        errorParameter = 'Redis variable missing.',
+
+        -- help.lua --
+        require_higher = '🚫 This plugin requires higher privileges.\n',
+        pluginListStart = 'ℹ️Plugins list: \n\n',
+        helpInfo = 'ℹ️Write "!help <plugin_name>|<plugin_number>" for more info on that plugin.\nℹ️Or "!helpall" to have all commands.',
+        errorNoPlugin = 'This plugin doesn\'t exist or doesn\'t have a description.',
+        helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets with \'|\' means that\'s a choice".\n\n',
+        commandNotFound = 'Sintassi comando non trovata.',
+
+        -- games --
+        groupAlreadySignedUp = 'Group already registered.',
+        groupSignedUp = 'Group registered with default values.',
+        requireGroupSignUp = 'Before playing the group must be registered.',
+        challenge = 'CHALLENGE',
+        challenger = 'Challenger: ',
+        challenged = 'Challenged: ',
+        challengeModTerminated = 'Challenge terminated by mod.',
+        challengeRejected = 'X rejected challenge, coward!',
+        cantChallengeYourself = 'You can\'t start a challenge with yourself.',
+        cantChallengeMe = 'You can\'t start a challenge with me, you would lose it.',
+        notAccepted = 'Not accepted yet.',
+        accepted = 'Ongoing.',
+        notYourTurn = 'Not your turn.',
+        yourTurn = ' it\'s your turn.',
+        challengeEnd = 'Dead, Challenge finished.',
+        noChallenge = 'No ongoing challenge.',
+        errorOngoingChallenge = 'Can\'t start multiple challenges at the same time.',
+        challengeSet = 'Challenge started, X can accept with /accept or reject with /reject.',
+        wrongPlayer = 'You\'re not X.',
+        deaths = 'Deaths: ',
+        duels = 'Challenges: ',
+        wonduels = 'Won challenges: ',
+        lostduels = 'Lost challenges: ',
+        actualstreak = 'Actual streak: ',
+        longeststreak = 'Longest streak: ',
+        attempts = 'Total attempts: ',
+        score = 'Score: ',
+        cheating = 'Cheat used.',
+        scoreLeaderboard = 'Score leaderboard\n',
+        attemptsLeaderboard = 'Attempts leaderboard\n',
+        deathsLeaderboard = 'Deaths leaderboard\n',
+        streakLeaderboard = 'Streak leaderboard\n',
+        duelsLeaderboard = 'Duels leaderboard\n',
+        victoriesLeaderboard = 'Victories leaderboard\n',
+        defeatsLeaderboard = 'Defeats leaderboard\n',
+        likesLeaderboard = 'Likes leaderboard\n',
+
+        -- get.lua --
+        globalEnable = 'Global variables enabled on this chat.',
+        globalDisable = 'Global variables disabled on this chat.',
+
+        -- goodbyewelcome.lua --
+        newWelcome = 'New welcome message:\n',
+        newGoodbye = 'New goodbye message:\n',
+        welcomeRemoved = 'Welcome removed.',
+        goodbyeRemoved = 'Goodbye removed.',
+        newWelcomeNumber = 'Welcome message will be sent every X members.',
+        neverWelcome = 'Welcome message will not be sent anymore.',
+        noSetValue = 'No value set.',
+
+        -- group_management.lua --
+        -- ex common --
+        newDescription = 'New description:\n',
+        noDescription = 'No description available.',
+        description = 'Chat description: ',
+        newRules = 'New rules:\n',
+        noRules = 'No rules available.',
+        rules = 'Chat rules: ',
+        sendNewGroupPic = 'Send the new group picture.',
+        photoSaved = 'Picture saved.',
+        groupSettings = 'Group settings: ',
+        supergroupSettings = 'Supergroup settings: ',
+        noGroups = 'No groups at the moment.',
+        errorFloodRange = 'Error, range is [3-200]',
+        floodSet = 'Flood set to ',
+        noOwnerCallAdmin = 'No owner, contact an admin to set one.',
+        ownerIs = 'Group owner is ',
+        errorCreateLink = 'Error, can\'t create link.\nI\'m not the owner.',
+        errorCreateSuperLink = 'Error, can\'t create link.\nI\'m not the owner.\n\nIf you have the link use /setlink to set it',
+        createLinkInfo = 'Create a link using /newlink.',
+        linkCreated = 'New link created.',
+        groupLink = 'Link\n',
+        adminListStart = 'Admins:\n',
+        alreadyMod = ' is already a mod.',
+        promoteMod = ' has been promoted to mod.',
+        notMod = ' is not a mod.',
+        demoteMod = ' has been demoted from mod.',
+        noGroupMods = 'No mod in this group.',
+        modListStart = 'Mods of ',
+        muteUserAdd = ' added to muted users list.',
+        muteUserRemove = ' removed from muted users list.',
+        modlistCleaned = 'Mod list cleaned.',
+        rulesCleaned = 'Rules cleaned.',
+        descriptionCleaned = 'Description cleaned.',
+        mutelistCleaned = 'Mute list cleaned.',
+        cantContact = 'If (s)he doesn\'t write me first I can\'t contact ',
+        -- ex inpm.lua --
+        groupsJoin = 'Groups:\nUse /join <group_id> to join\n\n',
+        realmsJoin = 'Realm:\nUse /join <realm_id> to join\n\n',
+        chatNotFound = 'Chat not found.',
+        aliasSaved = 'Alias saved.',
+        aliasDeleted = 'Alias deleted.',
+        noAliasFound = 'No group with that alias.',
+        -- ex inrealm.lua --
+        none = 'No one',
+        realm = 'Realm ',
+        group = 'Groups ',
+        created = ' created.',
+        chatTypeNotFound = 'Chat type not found.',
+        usersIn = 'Users in ',
+        alreadyAdmin = ' is already admin.',
+        promoteAdmin = ' has been promoted to admin.',
+        notAdmin = ' is not admin.',
+        demoteAdmin = ' has been demoted from admin.',
+        noRealms = 'No realm at the moment.',
+        inThisGroup = ' in this group',
+        groupListStart = 'Groups:\n',
+        realmListStart = 'Realms:\n',
+        logAlreadyYes = 'Log group already enabled.',
+        logYes = 'Log group enabled.',
+        logAlreadyNo = 'Log group already disabled.',
+        logNo = 'Log group disabled.',
+        descriptionSet = 'Description set for: ',
+        errorGroup = 'Error, group ',
+        errorRealm = 'Error, realm ',
+        notFound = ' not found',
+        chat = 'Chat ',
+        removed = ' removed',
+        groupListCreated = 'Group list created.',
+        realmListCreated = 'Realm list created.',
+        -- ex ingroup.lua --
+        welcomeNewRealm = 'Welcome to your new realm.',
+        realmIs = 'This is a realm.',
+        realmAdded = 'Realm has been added.',
+        realmAlreadyAdded = 'Realm is already added.',
+        realmRemoved = 'Realm has been removed.',
+        realmNotAdded = 'Realm not added.',
+        errorAlreadyRealm = 'Error, already a realm.',
+        errorNotRealm = 'Error, not a realm.',
+        promotedOwner = 'You\'ve been promoted as owner.',
+        groupIs = 'This is a group.',
+        groupAlreadyAdded = 'Group is already added.',
+        groupAddedOwner = 'Group has been added and you\'ve been promoted as owner.',
+        groupRemoved = 'Group has been removed.',
+        groupNotAdded = 'Group not added.',
+        errorAlreadyGroup = 'Error, already a group.',
+        errorNotGroup = 'Error, not a group.',
+        noAutoDemote = 'You can\'t demote yourself.',
+        -- ex supergroup.lua --
+        makeBotAdmin = 'Promote me as administrator!',
+        groupIs = 'This is a group.',
+        supergroupAlreadyAdded = 'Supergroup already added.',
+        errorAlreadySupergroup = 'Error, already a supergroup.',
+        supergroupAdded = 'Supergroup has been added.',
+        supergroupRemoved = 'Supergroup has been removed.',
+        supergroupNotAdded = 'Supergroup not added.',
+        membersOf = 'Members of ',
+        membersKickedFrom = 'Members kicked from ',
+        cantKickOtherAdmin = 'You can\'t kick other admins.',
+        promoteSupergroupMod = ' has been promoted to administrator (telegram).',
+        demoteSupergroupMod = ' has been demoted from administrator (telegram).',
+        alreadySupergroupMod = ' is already an administrator (telegram).',
+        notSupergroupMod = ' is not an administrator (telegram).',
+        cantDemoteOtherAdmin = 'You can\'t demote other admins.',
+        leftKickme = 'Left using /kickme.',
+        setOwner = ' is the owner.',
+        inThisSupergroup = ' in this supergroup.',
+        linkSaved = 'New link set.',
+        linkDeleted = 'Link deleted.',
+        supergroupUsernameChanged = 'Supergroup username changed.',
+        errorChangeUsername = 'Error changing username.\nIt could be already in use.\n\nYou can use letters numbers and underscore.\nMinimum length 5 characters.',
+        usernameCleaned = 'Supergroup username cleaned.',
+        errorCleanedUsername = 'Error while cleaning supergroup username.',
+
+        -- info.lua --
+        infoWord = 'INFO',
+        youAre = '\nYou are',
+        name = '\nName: ',
+        surname = '\nSurname: ',
+        username = '\nUsername: ',
+        phone = '\nPhone: ',
+        rank = '\nRank: ',
+        date = '\nDate: ',
+        totalMessages = '\nTotal messages: ',
+        otherInfo = '\nOther info: ',
+        noOtherInfo = 'Nothing.',
+        peer_id = '\nPeer_id: ',
+        long_id = '\nId: ',
+        chatType = '\nChat type: ',
+        youAreWriting = '\n\nYou are writing to',
+        groupName = '\nGroup name: ',
+        supergroupName = '\nSupergroup name: ',
+        channelName = '\nChannel name: ',
+        userWord = 'USER',
+        groupWord = 'GROUP',
+        supergroupWord = 'SUPERGROUP',
+        channelWord = 'CHANNEL',
+        noObject = 'No object found.',
+        users = '\nUsers: ',
+        admins = '\nAdmins: ',
+        kickedUsers = '\nKicked users: ',
+        userInfo = 'User info:',
+        peerTypeUnknown = 'Type unknown.',
+        ishereYes = 'Yes.',
+        ishereNo = 'No.',
+        noLinkAvailable = 'No link available.',
+
+        -- invite.lua --
+        userBanned = 'User is banned.',
+        userGbanned = 'User is globally banned.',
+        privateGroup = 'Group is private.',
+
+        -- lua_exec.lua --
+        doneNoOutput = 'Done, no output.',
+
+        -- likecounter.lua --
+        forwardingLike = 'Forwarding for likes is not allowed.',
+        likesdbCreated = 'Likecounter database created.',
+
+        -- locks --
+        nameLock = '\nLock name: ',
+        nameAlreadyLocked = 'Name already locked.',
+        nameLocked = 'Name locked.',
+        nameAlreadyUnlocked = 'Name already unlocked.',
+        nameUnlocked = 'Name unlocked.',
+        photoLock = '\nLock photo: ',
+        photoAlreadyLocked = 'Photo already locked.',
+        photoLocked = 'Photo locked.',
+        photoAlreadyUnlocked = 'Photo already unlocked.',
+        photoUnlocked = 'Photo unlocked.',
+        membersLock = '\nLock members: ',
+        membersAlreadyLocked = 'Members already locked.',
+        membersLocked = 'Members locked.',
+        membersAlreadyUnlocked = 'Members already unlocked.',
+        membersUnlocked = 'Members unlocked.',
+        leaveLock = '\nLock leave: ',
+        leaveAlreadyLocked = 'Leave already locked.',
+        leaveLocked = 'Leave locked.',
+        leaveAlreadyUnlocked = 'Leave already unlocked.',
+        leaveUnlocked = 'Leave unlocked.',
+        spamLock = '\nLock spam: ',
+        spamAlreadyLocked = 'Spam already locked.',
+        spamLocked = 'Spam locked.',
+        spamAlreadyUnlocked = 'Spam already unlocked.',
+        spamUnlocked = 'Spam unlocked.',
+        floodSensibility = '\nFlood sensibility: ',
+        floodUnlockOwners = 'Only owners can unlock flood.',
+        floodLock = '\nLock flood: ',
+        floodAlreadyLocked = 'Flood already locked.',
+        floodLocked = 'Flood locked.',
+        floodAlreadyUnlocked = 'Flood already unlocked.',
+        floodUnlocked = 'Flood unlocked.',
+        arabicLock = '\nLock arabic: ',
+        arabicAlreadyLocked = 'Arabic already locked.',
+        arabicLocked = 'Arabic locked.',
+        arabicAlreadyUnlocked = 'Arabic already unlocked.',
+        arabicUnlocked = 'Arabic unlocked.',
+        botsLock = '\nLock bots: ',
+        botsAlreadyLocked = 'Bots already locked.',
+        botsLocked = 'Bots locked.',
+        botsAlreadyUnlocked = 'Bots already unlocked.',
+        botsUnlocked = 'Bots unlocked.',
+        linksLock = '\nLock links: ',
+        linksAlreadyLocked = 'Links already locked.',
+        linksLocked = 'Links locked.',
+        linksAlreadyUnlocked = 'Links already unlocked.',
+        linksUnlocked = 'Links unlocked.',
+        rtlLock = '\nLock RTL: ',
+        rtlAlreadyLocked = 'RTL characters already locked già vietati.',
+        rtlLocked = 'RTL characters locked.',
+        rtlAlreadyUnlocked = 'RTL characters already unlocked.',
+        rtlUnlocked = 'RTL characters unlocked.',
+        tgserviceLock = '\nLock service messages: ',
+        tgserviceAlreadyLocked = 'Service messages already locked.',
+        tgserviceLocked = 'Service messages locked.',
+        tgserviceAlreadyUnlocked = 'Service messages already unlocked.',
+        tgserviceUnlocked = 'Service messages unlocked.',
+        stickersLock = '\nLock stickers: ',
+        stickersAlreadyLocked = 'Stickers already locked.',
+        stickersLocked = 'Stickers locked.',
+        stickersAlreadyUnlocked = 'Stickers already unlocked.',
+        stickersUnlocked = 'Stickers unlocked.',
+        public = '\nPublic: ',
+        publicAlreadyYes = 'Group already public.',
+        publicYes = 'Public group.',
+        publicAlreadyNo = 'Group already private.',
+        publicNo = 'Private group.',
+        contactsAlreadyLocked = 'Contacts already locked.',
+        contactsLocked = 'Contacts locked.',
+        contactsAlreadyUnlocked = 'Contacts already unlocked.',
+        contactsUnlocked = 'Contacts unlocked.',
+        strictrules = '\nStrict rules: ',
+        strictrulesAlreadyLocked = 'Strict rules already enabled.',
+        strictrulesLocked = 'Strict rules enabled.',
+        strictrulesAlreadyUnlocked = 'Strict rules already disabled.',
+        strictrulesUnlocked = 'Strict rules disabled.',
+
+        -- me.lua --
+        meString = 'You have sent W (X%) messages and this chat has Z messages.',
+
+        -- onservice.lua --
+        notMyGroup = 'This is not one of my groups, bye.',
+
+        -- plugins.lua --
+        enabled = ' enabled.',
+        disabled = ' disabled.',
+        alreadyEnabled = ' already enabled.',
+        alreadyDisabled = ' already disabled.',
+        notExists = ' not exists or is disabled.',
+        systemPlugin = '⛔️ You can\'t disable this plugin because is a system one.',
+        disabledOnChat = ' disabled on chat.',
+        noDisabledPlugin = '❔ No plugins disabled on chat.',
+        pluginNotDisabled = '✔️ This plugin is not disabled on chat.',
+        pluginEnabledAgain = ' enabled on chat again.',
+        pluginsReloaded = '💊 Plugins reloaded.',
+
+        -- pokedex.lua --
+        noPoke = 'No pokémon found.',
+        pokeName = 'Name: ',
+        pokeWeight = 'Weight: ',
+        pokeHeight = 'Height: ',
+
+        -- ruletagame.lua --
+        ruletadbCreated = 'Ruleta database created.',
+        ruletaAlreadySignedUp = 'You\'re already registered, use /ruleta to die.',
+        ruletaSignedUp = 'You\'ve been registered, have a nice death.',
+        ruletaDeleted = 'You\'ve been deleted from the game.',
+        ruletaRequireSignUp = 'Before dying you need to be registered, use /registerme.',
+        ruletaGroupDeleted = 'Group disabled for ruleta.',
+        ruletaRequirePoints = 'Require at least 11 points.',
+        ruletaRequireZeroPoints = 'You can\'t be deleted with a score < 0.',
+        roundsLeft = 'Rounds Left: ',
+        shotsLeft = 'Shots Left: ',
+        capsChanged = 'Bullets in gun: ',
+        challengeCapsChanged = 'Bullets in challenge gun: ',
+        cylinderChanged = 'New cylinder capacity: ',
+        challengeCylinderChanged = 'New challenge cylinder capacity: ',
+        errorCapsRange = 'Error, range is [1-X].',
+        errorCylinderRange = 'Error, range is [5-10].',
+        cylinderCapacity = 'Cylinder capacity: ',
+        challengeCylinderCapacity = 'Challenge cylinder capacity: ',
+        capsNumber = 'Bullets: ',
+        challengeCapsNumber = 'Challenge bullets: ',
+        forwardingRuleta = 'Forwarding in ruleta is not allowed.',
+        ruletaDeathPercentage = 'Chances to die are ',
+
+        -- set.lua --
+        saved = ' saved.',
+        gSaved = ' global variable saved.',
+        sendMedia = 'Send me the media you want to save (audio or picture).',
+        cancelled = 'Cancelled.',
+        nothingToSet = 'Nothing to set.',
+        mediaSaved = 'Media saved.',
+        setsRestored = ' sets restored.',
+        globalSetsRestored = ' global sets restored.',
+
+        -- spam.lua --
+        --[[
+        msgSet = 'Message set.',
+        msgsToSend = 'Messages to send: ',
+        timeBetweenMsgs = 'Time between every message: X seconds.',
+        msgNotSet = 'You haven\'t set the message, use /setspam.',
+        ]]
+
+        -- stats.lua --
+        usersInChat = 'Users on chat\n',
+        totalChatMessages = 'Total messages of the chat: ',
+        groups = '\nGroups: ',
+        statsCleaned = 'Stats cleaned.',
+        botStats = 'Bot stats:\n',
+
+        -- strings.lua --
+        langUpdate = 'ℹ️ Strings updated.',
+        langSet = 'ℹ️ Language set.',
+
+        -- tempmessage.lua --
+        wrongTimeFormat = 'Wrong time format.',
+
+        -- unset.lua --
+        deleted = ' deleted.',
+        gDeleted = ' global variable deleted.',
+
+        -- warn.lua --
+        errorWarnRange = 'Error, range is [0-10].',
+        warnSet = 'Warn has been set to ',
+        neverWarn = 'Warn will not work anymore.',
+        noWarnSet = 'Warn hasn\t been set yet.',
+        cantWarnHigher = 'You can\'t warn mod/owner/admin/sudo!',
+        warned = 'You\'ve been warned X times, calm down!',
+        unwarned = 'One warn has been deleted, keep it up!',
+        alreadyZeroWarnings = 'You\'re already at zero warns.',
+        zeroWarnings = 'Your warns has been removed.',
+        yourWarnings = 'You\'re at X warns on Y.',
+
+        -- whitelist.lua --
+        userBot = 'User/Bot ',
+        whitelistRemoved = ' removed from whitelist.',
+        whitelistAdded = ' added to whitelist.',
+        whitelistCleaned = 'Whitelist cleaned.',
+        whitelistStart = 'Whitelist:\n',
+
+        -- kick_errors
+        kick_errors =
+        {
+            [1] = 'I\'m not an admin, I can\'t kick people',
+            [2] = 'I can\'t kick or ban an admin',
+            [3] = 'There is no need to unban in a normal group',
+            [4] = 'This user is not a chat member',
+        },
+
+        ------------
+        -- Usages --
+        ------------
+        administrator =
+        {
+            '🅿️ ADMINISTRATOR',
+            'Plugin for Sasha\'s administrators.',
+            'ADMIN',
+            '(#pm|sasha messaggia) <user_id> <msg>: Sasha writes <msg> to <user_id>.',
+            '#import <group_link>: Sasha joins <group_link>.',
+            '(#block|sasha blocca) <user_id>: Sasha blocks <user_id>.',
+            '(#unblock|sasha sblocca) <user_id>: Sasha unblocks <user_id>.',
+            '(#markread|sasha segna letto) (on|off): Sasha marks as [not] read messages that receives.',
+            '(#setbotphoto|sasha cambia foto): Sasha waits for a pic to set as bot\'s profile.',
+            '(#updateid|sasha aggiorna longid): Sasha saves long_id.',
+            '(#addlog|sasha aggiungi log): Sasha adds log.',
+            '(#remlog|sasha rimuovi log): Sasha removes log.',
+            '#checkspeed: Sasha calculates how much time she needs to process messages.',
+            'SUDO',
+            '(#contactlist|sasha lista contatti) (txt|json): Sasha sends contacts list.',
+            '(#dialoglist|sasha lista chat) (txt|json): Sasha sends chats list.',
+            '(#addcontact|sasha aggiungi contatto) <phone> <name> <surname>: Sasha adds specified contact.',
+            '(#delcontact|sasha elimina contatto) <user_id>: Sasha deletes contact of <user_id>.',
+            '(#sendcontact|sasha invia contatto) <phone> <name> <surname>: Sasha sends contact with specified information.',
+            '(#mycontact|sasha mio contatto): Sasha sends sender contact.',
+            '(#sync_gbans|sasha sincronizza superban): Sasha syncs gbans list with the one offered by TeleSeed.',
+            '(#backup|sasha esegui backup): Sasha makes a backup of herself and sends log to the sender.',
+            '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
+            '#vardump [<reply>|<msg_id>]: Sasha sends vardump of specified message.',
+        },
+
+        apod =
+        {
+            '🅿️ APOD',
+            'Plugin for the Astronomy Picture of the Day.',
+            'USER',
+            '#apod|astro [<date>]: Sasha sends APOD.',
+            '(#apod|#astro)hd [<date>]: Sasha sends APOD in HD.',
+            '(#apod|#astro)text [<date>]: Sasha sends explanation of the APOD.',
+            'If <date> is specified and it\'s in this format AAAA-MM-GG the APOD refers to <date>.',
+        },
+
+        banhammer =
+        {
+            '🅿️ BANHAMMER',
+            'Plugin for the management of kick and bans.',
+            'USER',
+            '(#kickme|sasha (uccidimi|esplodimi|sparami|decompilami|bannami)): Sasha kicks sender.',
+            'MOD',
+            '(#kick|spara|[sasha] uccidi) <id>|<username>|<reply>|from: Sasha kicks specified user.',
+            '(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from: Sasha kicks and bans specified user, if he tries to join again it\'s automatically kicked.',
+            '(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from: Sasha unbans specified user.',
+            '(#banlist|[sasha] lista ban): Sasha sends bans list of the group.',
+            'ADMIN',
+            '(#banlist|[sasha] lista ban) <group_id>: Sasha sends bans list of <group_id>.',
+            '(#gban|[sasha] superbanna) <id>|<username>|<reply>|from: Sasha kicks and gbans specified user, if he tries to join again it\'s automatically kicked.',
+            '(#ungban|[sasha] supersbanna) <id>|<username>|<reply>|from: Sasha ungbans specified user.',
+            '(#gbanlist|[sasha] lista superban): Sasha sends gbans list.',
+        },
+
+        bot =
+        {
+            '🅿️ BOT',
+            'Plugin to enable or disable Sasha on the group.',
+            'OWNER',
+            '#bot|sasha on|off: Sasha goes on|off on the group.',
+            'ADMIN',
+            '#bot|sasha <group_id> on|off: Sasha goes on|off on the specified group.',
+        },
+
+        botinteract =
+        {
+            '🅿️ BOTINTERACT',
+            'Plugin for the interaction with bots.',
+            'USER',
+            '$<text>: Sasha sends <text> to the bot.',
+            '#sendmedia: Sasha will forward the media that will be sent to chat.',
+            '#undo: Sasha cancel sendmedia.',
+            'MOD',
+            '#unsetbot <username>: Sasha will stop the interaction with <username>.',
+            'ADMIN',
+            '#setbot <username>: Sasha will interact with <username>.',
+        },
+
+        broadcast =
+        {
+            '🅿️ BROADCAST',
+            'Plugin to send broadcast messages.',
+            'ADMIN',
+            '#br <group_id> <text>: Sasha sends <text> to <group_id>.',
+            'SUDO',
+            '#broadcast <text>: Sasha sends <text> to all groups.',
+        },
+
+        database =
+        {
+            '🅿️ DATABASE',
+            'Plugin to save all users and groups info.',
+            'SUDO',
+            '#createdatabase: Sasha creates the database.',
+            '(#dodatabase|sasha esegui database): Sasha saves all info of all users of group and group info.',
+            '(#search|[sasha] cerca) <id>: Sasha searches for <id> in the database.',
+            '(#delete|[sasha] elimina) <id>: Sasha deleted <id> from the database.',
+            '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha manually adds specified user to the database.',
+            '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>\n<long_id>\n[<username>\n<old_usernames>]: Sasha manually adds specified group to the database.',
+            '#uploaddb: Sasha uploads the database.',
+            '#replacedb <reply>: Sasha replaces the database.',
+        },
+
+        delword =
+        {
+            '🅿️ DELWORD',
+            'Plugin for the management of censorships.',
+            'USER',
+            '(#dellist|[sasha] lista censura): Sasha sends a list of censored words or patterns.',
+            'OWNER',
+            '(#delword|[sasha] censura) <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it in supergroups the message is deleted and in normal groups the user is kicked.',
+        },
+
+        dogify =
+        {
+            '🅿️ DOGIFY',
+            'Plugin to create picture with doge.',
+            'USER',
+            '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha creates a pic with doge and specified words.',
+        },
+
+        duckduckgo =
+        {
+            '🅿️ DUCKDUCKGO',
+            'Plugin for the research on duckduckgo.',
+            'USER',
+            '#duck[duck]go <terms>: Sasha searches <terms> on DuckDuckGo.',
+        },
+
+        fakecommand =
+        {
+            '🅿️ FAKECOMMAND',
+            'Plugin to test commands.',
+            'MOD',
+            '(#user|#mod|#owner|#admin) <command>: Sasha executes <command> as it would be sent by a user with the specified rank.',
+        },
+
+        feedback =
+        {
+            '🅿️ FEEDBACK',
+            'Plugin for feedbacks.',
+            'USER',
+            '#feedback <text>: Sasha sends <text> as feedback.',
+        },
+
+        filemanager =
+        {
+            '🅿️ FILEMANAGER',
+            'Plugin for the management of Sasha\'s server.',
+            'SUDO',
+            '#folder: Sasha sends actual directory.',
+            '#cd [<directory>]: Sasha enters in <directory>, if it\'s not specified it returns to base folder.',
+            '#ls: Sasha sends the list of files and folders of the current directory.',
+            '#mkdir <directory>: Sasha creates <directory>.',
+            '#rmdir <directory>: Sasha deletes <directory>.',
+            '#rm <file>: Sasha deletes <file>.',
+            '#touch <file>: Sasha creates <file>.',
+            '#cat <file>: Sasha sends <file> content.',
+            '#tofile <file> <text>: Sasha creates <file> with <text> as content.',
+            '#shell <command>: Sasha executes <command>.',
+            '#cp <file> <directory>: Sasha copies <file> in <directory>.',
+            '#mv <file> <directory>: Sasha moves <file> in <directory>.',
+            '#upload <file>: Sasha uploads <file> on chat.',
+            '#download <reply>: Sasha downloads the file in <reply>.',
+        },
+
+        flame =
+        {
+            '🅿️ FLAME',
+            'Plugin to start flames.',
+            'MOD',
+            '(#startflame|[sasha] flamma) <id>|<username>|<reply>|from: Sasha flames specified user.',
+            '(#stopflame|[sasha] stop flame): Sasha stops flame.',
+            '(#flameinfo|[sasha] info flame): Sasha sends flamed user info.',
+        },
+
+        get =
+        {
+            '🅿️ GET',
+            'Plugin to get things saved with SET.',
+            'USER',
+            '(#getlist|#get|sasha lista): Sasha sends a list of saved variables.',
+            '(#getgloballist|#getglobal|sasha lista globali): Sasha sends a list of globally saved variables.',
+            'OWNER',
+            '#enableglobal: Sasha enables global gets on chat.',
+            '#disableglobal: Sasha disables global gets on chat.',
+            '#exportgroupsets: Sasha exports sets from chat.',
+            'ADMIN',
+            '#exportglobalsets: Sasha exports global sets.',
+        },
+
+        goodbyewelcome =
+        {
+            '🅿️ GOODBYEWELCOME',
+            'Plugin for welcome and goodbye.',
+            'USER',
+            '#getwelcome: Sasha sends welcome.',
+            '#getgoodbye: Sasha sends goodbye.',
+            'MOD',
+            '#setwelcome <text>: Sasha sets <text> as welcome.',
+            '#setgoodbye <text>: Sasha sets <text> as goodbye.',
+            '#unsetwelcome: Sasha removes welcome.',
+            '#unsetgoodbye: Sasha removes goodbye.',
+            '#setmemberswelcome <value>: Sasha after <value> members will send welcome, if zero welcome will not be sent anymore.',
+            '#getmemberswelcome: Sasha sends value of users that are needed to get welcome.',
+        },
+
+        group_management =
+        {
+            '🅿️ GROUP_MANAGEMENT',
+            'Plugin for the management of groups.',
+            -- COMMON
+            'USER',
+            '(#rules|sasha regole): Sasha sends group\'s rules.',
+            '(#about|sasha descrizione): Sasha sends group\'s about.',
+            '(#modlist|[sasha] lista mod): Sasha sends moderators list.',
+            '#owner: Sasha sends owner\'s id.',
+            "#admins [<reply>|<text>]: Sasha contacts admins",
+            'MOD',
+            '#type: Sasha manda il tipo di gruppo in cui ci si trova.',
+            '#setname <group_name>: Sasha changes group\'s name with <group_name>.',
+            '#setphoto: Sasha waits for a pic to set it as group profile pic.',
+            '(#setrules|sasha imposta regole) <text>: Sasha changes group\'s rules with <text>.',
+            '(#setabout|sasha imposta descrizione) <text>: Sasha changes group\'s about with <text>.',
+            '#muteuser|voce <id>|<username>|<reply>|from: Sasha [un]mute specified user.',
+            '(#muteslist|lista muti): Sasha sends muted parameters list.',
+            '(#mutelist|lista utenti muti): Sasha sends muted users list.',
+            '#settings: Sasha sends group settings.',
+            '#public yes|no: Sasha makes group public|private.',
+            '(#newlink|sasha crea link): Sasha creates group\'s link.',
+            '(#link|sasha link): Sasha sends group\'s link.',
+            '#setflood <value>: Sasha sets <value> as max flood.',
+            'GROUPS',
+            '(#lock|[sasha] blocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha locks specified parameter.',
+            '(#unlock|[sasha] sblocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha unlocks specified parameter.',
+            'SUPERGROUPS',
+            '(#bots|[sasha] lista bot): Sasha sends bots list.',
+            '#del <reply>: Sasha deletes specified message.',
+            '(#lock|[sasha] blocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha locks specified parameter.',
+            '(#unlock|[sasha] sblocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha unlocks specified parameter.',
+            'OWNER',
+            '#log: Sasha sends a file that contains group/realm log.',
+            '(#setlink|sasha imposta link) <link>: Sasha saves <link> as group\'s link.',
+            '(#unsetlink|sasha elimina link): Sasha deletes the saved link.',
+            '(#promote|[sasha] promuovi) <username>|<reply>: Sasha promotes to mod specified user.',
+            '(#demote|[sasha] degrada) <username>|<reply>: Sasha demotes from mod specified user.',
+            '#mute|silenzia all|text|documents|gifs|video|photo|audio: Sasha mute specified parameter.',
+            '#unmute|ripristina all|text|documents|gifs|video|photo|audio: Sasha unmute specified parameter.',
+            '#setowner <id>|<username>|<reply>: Sasha sets specified user as owner.',
+            'GROUPS',
+            '#clean modlist|rules|about: Sasha cleans specified parameter.',
+            'SUPERGROUPS',
+            '(#getadmins|[sasha] lista admin): Sasha sends telegram\'s administrators list.',
+            '#promoteadmin <id>|<username>|<reply>: Sasha promotes specified user to telegram\'s administrator.',
+            '#demoteadmin <id>|<username>|<reply>: Sasha demotes specified user from telegram\'s administrator.',
+            '#clean rules|about|modlist|mutelist: Sasha cleans specified parameter.',
+            'ADMIN',
+            '#add: Sasha adds the group in which you are.',
+            '#rem: Sasha removes the group in which you are.',
+            'ex INGROUP.LUA',
+            '#add realm: Sasha adds realm.',
+            '#rem realm: Sasha removes realm.',
+            '#kill group|realm: Sasha kicks every user in group|realm and removes it.',
+            'ex INPM.LUA',
+            '(#join|#inviteme|[sasha] invitami) <chat_id>|<alias>: Sasha tries to add the sender to <chat_id>|<alias>.',
+            '#getaliaslist: Sasha sends alias list.',
+            '#allchats: Sasha sends a list of all chats.',
+            '#allchatlist: Sasha sends a file with a list of all chats.',
+            '#setalias <alias> <group_id>: Sasha sets <alias> as alias of <group_id>.',
+            '#unsetalias <alias>: Sasha deletes <alias>.',
+            'SUPERGROUPS',
+            '#tosuper: Sasha converts group to supergroup.',
+            '#setusername <text>: Sasha changes group\'s username with <text>.',
+            '#kill supergroup: Sasha kicks every user in supergroup and removes it.',
+            'peer_id',
+            'msg.to.id',
+            'msg.to.peer_id',
+            'REALMS',
+            '#setgpowner <group_id> <user_id>: Sasha sets <user_id> as owner of <group_id>.',
+            '(#creategroup|sasha crea gruppo) <group_name>: Sasha creates a group with specified name.',
+            '(#createsuper|sasha crea supergruppo) <group_name>: Sasha creates a supergroup with specified name.',
+            '(#createrealm|sasha crea regno) <realm_name>: Sasha creates a realm with specified name.',
+            '(#setabout|sasha imposta descrizione) <group_id> <text>: Sasha changes <group_id>\'s about with <text>.',
+            '(#setrules|sasha imposta regole) <group_id> <text>: Sasha changes <group_id>\'s rules with <text>.',
+            '#setname <realm_name>: Sasha changes realm\'s name with <realm_name>.',
+            '#setname|#setgpname <group_id> <group_name>: Sasha changes <group_id>\'s name with <group_name>.',
+            '(#lock|[sasha] blocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha locks <group_id>\'s specified setting.',
+            '(#unlock|[sasha] sblocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha unlocks <group_id>\'s specified setting.',
+            '#settings <group_id>: Sasha sends <group_id>\'s settings.',
+            '#type: Sasha sends group\'s type.',
+            '#kill group|supergroup|realm <group_id>: Sasha kicks all members of <group_id> and removes <group_id>.',
+            '#rem <group_id>: Sasha removes group.',
+            '#list admins|groups|realms: Sasha sends list of specified parameter.',
+            'SUDO',
+            '#addadmin <user_id>|<username>: Sasha promotes specified user to administrator.',
+            '#removeadmin <user_id>|<username>: Sasha demotes specified user from administrator.',
+        },
+
+        help =
+        {
+            '🅿️ HELP',
+            'Plugin to help users with commands, USE IT!',
+            'USER',
+            '(#sudolist|sasha lista sudo): Sasha sends sudo list.',
+            '(#help|sasha aiuto): Sasha sends a list of plugins.',
+            '(#help|sasha aiuto) <plugin_name>|<plugin_number>: Sasha sends help of specified plugin.',
+            '(#helpall|sasha aiuto tutto): Sasha sends help of all plugins.',
+            '(#syntax|sasha sintassi) <filter>: Sasha sends syntax of all commands that matches with <filter>.',
+            '(#syntaxall|sasha sintassi tutto): Sasha sends syntax of all commands of all plugins.',
+        },
+
+        info =
+        {
+            '🅿️ INFO',
+            'Plugin to obtain info.',
+            'USER',
+            '#getrank|rango [<id>|<username>|<reply>]: Sasha sends rank of specified user.',
+            '(#info|[sasha] info): Sasha sends user\'s info or chat\'s info or her info.',
+            '#ishere <id>|<username>: Sasha says if the specified user is in the group.',
+            '(#groupinfo|[sasha] info gruppo): Sasha sends info of the group.',
+            'MOD',
+            '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha sends info of specified user.',
+            '(#who|#members|[sasha] lista membri): Sasha users list.',
+            '(#kicked|[sasha] lista rimossi): Sasha sends kicked users list.',
+            'ADMIN',
+            '(#groupinfo|[sasha] info gruppo) <group_id>: Sasha sends info of specified group.',
+            '(#grouplink|[sasha] link gruppo) <group_id>: Sasha sends link of specified group.',
+        },
+
+        interact =
+        {
+            '🅿️ INTERACT',
+            'Plugin for the interaction with users.',
+            'MOD',
+            '(#echo|sasha ripeti) [<reply>]<text>: Sasha repeat <text>, if in reply of a message she replies to that message.',
+        },
+
+        invite =
+        {
+            '🅿️ INVITE',
+            'Plugin to invite users.',
+            --  'OWNER',
+            'ADMIN',
+            '(#invite|[sasha] invita|[sasha] resuscita) <id>|<username>|<reply>: Sasha invites specified user.',
+        },
+
+        --[[
+        knivesgame =
+        {
+            '🅿️ KNIVESGAME',
+            'Plugin for knives game.',
+            'USER',
+            'Knives by AISasha. Knives is the throwing knives game, Sasha throws a knife with a certain accuracy, if she hits you you\'re out, otherwise you stay.',
+            '#registerme|#registrami: Sasha registers user to the game.',
+            '#deleteme|#eliminami: Sasha deletes user from the game.',
+            '#knivesinfo: Sasha sends knife\'s info.',
+            '#mystats|#punti: Sasha sends user stats.',
+            '#knives: Sasha tries to kill you.',
+            '#challenge|#sfida <username>|<reply>: Sasha starts a challenge between sender and specified user, the winner will win 20 points while the loser will lose 20 points.',
+            '#accept|#accetta: Sasha confirms challenge.',
+            '#reject|#rifiuta: Sasha deletes challenge, if the challenge is confirmed and deleted by one of the two player he will lose 20 points.',
+            '#challengeinfo: Sasha sends current challenge info.',
+            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha sends the leaderboard of the specified parameter, if nothing is specified the leaederboard will show scores.',
+            'MOD',
+            '#setaccuracy <value>: Sasha sets <value> as accuracy.',
+            '#setchallengeaccuracy <value>: Sasha sets <value> as challenge accuracy.',
+            'ADMIN',
+            '(#registergroupknives|registra gruppo knives): Sasha enables group to play knives.',
+            '(#deletegroup|elimina gruppo): Sasha disables group to play knives.',
+            'SUDO',
+            '#createknivesdb:  Sasha creates knives database.',
+            '#addpoints <id> <value>: Sasha adds <value> points to specified user.',
+            '#rempoints <id> <value>: Sasha subtracts <value> points to specified user.',
+        },
+        ]]
+
+        likecounter =
+        {
+            '🅿️ LIKECOUNTER',
+            'Plugin for the management of likes.',
+            'USER',
+            '#like|#1up <id>|<username>|<reply>|from: Sasha adds a like to specified user.',
+            '#dislike|#1down <id>|<username>|<reply>|from: Sasha removes a like from specified user.',
+            '#likes: Sasha sends the likes leaderboard.',
+            'SUDO',
+            '#createlikesdb:  Sasha creates likecounter database.',
+            '#addlikes <id> <value>: Sasha adds <value> likes to specified user.',
+            '#remlikes <id> <value>: Sasha removes <value> likes to specified user.',
+        },
+
+        lua_exec =
+        {
+            '🅿️ LUA_EXEC',
+            'Plugin for executing LUA code.',
+            'SUDO',
+            '#lua <command>: Sasha executes <command>.',
+        },
+
+        me =
+        {
+            '🅿️ ME',
+            'Plugin to know number of sent messages.',
+            'USER',
+            '#me: Sasha tells you how many messages you\'ve sent.',
+        },
+
+        onservice =
+        {
+            '🅿️ ONSERVICE',
+            'Plugin to make Sasha leave a group.',
+            'ADMIN',
+            '(#leave|sasha abbandona) [<group_id>]: Sasha leaves the group.',
+        },
+
+        plugins =
+        {
+            '🅿️ PLUGINS',
+            'Plugin to enable or disable plugins.',
+            'OWNER',
+            '(#plugins|[sasha] lista plugins): Sasha sends a list of all plugins.',
+            '(#disabledlist|([sasha] lista disabilitati|disattivati)): Sasha sends disabled plugins list.',
+            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha re enables <plugin> on this chat.',
+            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disables <plugin> on this chat.',
+            'SUDO',
+            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha enables <plugin>, if specified just on chat.',
+            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disables <plugin>, if specified just on chat.',
+            '(#[plugin[s]] reload|[sasha] ricarica): Sasha reloads all plugins.',
+        },
+
+        pokedex =
+        {
+            '🅿️ POKEDEX',
+            'Plugin to obtain info on pokémons.',
+            'USER',
+            '#pokedex|#pokemon <name>|<id>: Sasha searches specified pokemon and sends its info.',
+        },
+
+        qr =
+        {
+            '🅿️ QR',
+            'Plugin to create QR Codes.',
+            'USER',
+            '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha creates QR Code of <text>, if specified it colors QR Code.',
+            'Colors can be specified as follows:',
+            'Text => red|green|blue|purple|black|white|gray.',
+            'Hexadecimal => ("a56729" è marrone).',
+            'Decimal => ("255-192-203" è rosa).',
+        },
+
+        reactions =
+        {
+            '🅿️ REACTIONS',
+            'Plugin to make Sasha reacts.',
+            'SUDO',
+            '#writing on|off: Sasha (pretends|stops pretending) to write.',
+        },
+
+        ruletagame =
+        {
+            '🅿️ RULETAGAME',
+            'Plugin for russian roulette.',
+            'Ruleta by AISasha, inspired from Leia (#RIP) and Arya (#RIP). Ruleta is the russian roulette with gun, cylinder and bullets, Sasha shots and if there\'s the bullet you\'re out, otherwise you stay.',
+            'USER',
+            '#registerme|#registrami: Sasha registers user to the game.',
+            '#deleteme|#eliminami: Sasha deletes user from the game.',
+            '#ruletainfo: Sasha sends gun\'s info.',
+            '#mystats|#punti: Sasha sends user stats.',
+            '#ruleta: Sasha tries to kill you.',
+            '#godruleta: Sasha gives you 50% to gain 70 points and 50% to lose them all (requires at least 11 points).',
+            '#challenge|#sfida <username>|<reply>: Sasha starts a challenge between sender and specified user, the winner will win 20 points while the loser will lose 20 points.',
+            '#accept|#accetta: Sasha confirms challenge.',
+            '#reject|#rifiuta: Sasha deletes challenge, if the challenge is confirmed and deleted by one of the two player he will lose 20 points.',
+            '#challengeinfo: Sasha sends current challenge info.',
+            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha sends the leaderboard of the specified parameter, if nothing is specified the leaederboard will show scores.',
+            'MOD',
+            '#setcaps <value>: Sasha puts <value> bullets in cylinder.',
+            '#setchallengecaps <value>: Sasha puts <value> bullets in challenge cylinder.',
+            'OWNER',
+            '#setcylinder <value>: Sasha chooses a cylinder with <value> max bullets in the range [5-10].',
+            '#setchallengecylinder <value>: Sasha chooses a challenge cylinder with <value> max bullets in the range [5-10].',
+            'ADMIN',
+            '(#registergroupruleta|registra gruppo ruleta): Sasha enables group to play ruleta.',
+            '(#deletegroupruleta|elimina gruppo ruleta): Sasha disables group to play ruleta.',
+            'SUDO',
+            '#createruletadb: Sasha creates ruleta database.',
+            '#addpoints <id> <value>: Sasha adds <value> points to specified user.',
+            '#rempoints <id> <value>: Sasha subtracts <value> points to specified user.',
+        },
+
+        set =
+        {
+            '🅿️ SET',
+            'Plugin to save things.',
+            'MOD',
+            '(#set|[sasha] setta) <var_name> <text>: Sasha saves <text> as answer to <var_name>.',
+            '(#setmedia|[sasha] setta media) <var_name>: Sasha saves the media (audio or picture) that will be sent as answer to <var_name>.',
+            '(#cancel|[sasha] annulla): Sasha cancels #setmedia.',
+            'OWNER',
+            '#importgroupsets <group_sets>: Sasha restores all the group sets in <group_sets>.',
+            'ADMIN',
+            '#importglobalsets <global_sets>: Sasha restores all the global sets in <global_sets>.',
+            '#setglobal <var_name> <text>: Sasha globally saves <text> as answer to <var_name>.',
+        },
+
+        shout =
+        {
+            '🅿️ SHOUT',
+            'Plugin to shout words.',
+            'USER',
+            '(#shout|[sasha] grida|[sasha] urla) <text>: Sasha "shouts" <text>.',
+        },
+
+        spam =
+        {
+            '🅿️ SPAM',
+            'Plugin for spamming.',
+            'OWNER',
+            '(#spam|[sasha] spamma) [<messages> <seconds>] <text>: Sasha starts spamming <text> for <messages> times every <seconds> seconds.',
+        },
+
+        stats =
+        {
+            '🅿️ STATS',
+            'Plugin to obtain stats on groups and Sasha.',
+            'USER',
+            '[#]aisasha: Sasha sends her description.',
+            'MOD',
+            '(#stats|#messages): Sasha sends chat\'s stats.',
+            '(#realstats|#realmessages): Sasha sends chat\'s stats with just group members.',
+            '(#cleanstats|#cleanmessages): Sasha cleans chat\'s stats.',
+            '(#statslist|#messageslist): Sasha sends file with chat\'s stats.',
+            'ADMIN',
+            '(#stats|#messages) group <group_id>: Sasha sends <group_id>\'s stats.',
+            '(#realstats|#realmessages) group <group_id>: Sasha sends <group_id>\'s stats with just group members.',
+            '(#cleanstats|#cleanmessages) group <group_id>: Sasha cleans <group_id>\'s stats.',
+            '(#statslist|#messageslist) group <group_id>: Sasha sends file with <group_id>\'s stats.',
+            '(#stats|#messages) aisasha: Sasha sends her stats.',
+        },
+
+        strings =
+        {
+            '🅿️ STRINGS',
+            'Plugin for the management of Sasha\'s languages.',
+            'USER',
+            '(#setlang|lingua) (it|en): Sasha sets the language she has to talk (works just in private with the user).',
+            'OWNER',
+            '(#setlang|lingua) (it|en): Sasha sets the language she has to talk in this group.',
+            'SUDO',
+            '(#reloadstrings|[sasha] aggiorna stringhe): Sasha updates strings.',
+        },
+
+        tagall =
+        {
+            '🅿️ TAGALL',
+            'Plugin to tag all users with username.',
+            'OWNER',
+            '(#tagall|sasha tagga tutti) <text>: Sasha tags all group\'s members and writes <text>.',
+        },
+
+        tempmessage =
+        {
+            '🅿️ TEMPMESSAGE',
+            'Plugin to temporize messages.',
+            'MOD',
+            '(#tempmsg|[sasha] temporizza) <hour> <minutes> <seconds> <text>: Sasha will delete that message after the specified time.',
+            '(#tempmsg|[sasha] temporizza) (<hour>|<minutes>|<seconds>)(h|m|s) <text>: Sasha will delete that message after the specified time.',
+            '(#tempmsg|[sasha] temporizza) <hour>|<minutes>(h|m) <minutes>|<seconds>(m|s) <text>: Sasha will delete that message after the specified time.'
+        },
+
+        tex =
+        {
+            '🅿️ TEX',
+            'Plugin to create equations.',
+            'USER',
+            '(#tex|[sasha] equazione) <equation>: Sasha converts <equation> in image.',
+        },
+
+        unset =
+        {
+            '🅿️ UNSET',
+            'Plugin to delete things saved with SET.',
+            'MOD',
+            '(#unset|[sasha] unsetta) <var_name>: Sasha deletes <var_name>.',
+            'ADMIN',
+            '#unsetglobal <var_name>: Sasha globally deletes <var_name>.',
+        },
+
+        urbandictionary =
+        {
+            '🅿️ URBANDICTIONARY',
+            'Plugin for the interaction with the Urban Dictionary.',
+            'USER',
+            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha searches <text> in the Urban Dictionary.',
+        },
+
+        warn =
+        {
+            '🅿️ WARN',
+            'Plugin for the management of warns.',
+            'MOD',
+            '#setwarn <value>: Sasha sets max warns to <value>, if zero warns will not work.',
+            '#getwarn: Sasha sends max warns value.',
+            '(#getuserwarns|[sasha] ottieni avvertimenti) <id>|<username>|<reply>|from: Sasha sends user\'s warns.',
+            '(#warn|[sasha] avverti) <id>|<username>|<reply>|from: Sasha warns specified user.',
+            '#unwarn <id>|<username>|<reply>|from: Sasha removes one warn from specified user.',
+            '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from: Sasha removes all warns from specified user.',
+        },
+
+        webshot =
+        {
+            '🅿️ WEBSHOT',
+            'Plugin to make screenshots of websites.',
+            'MOD',
+            '(#webshot|[sasha] webshotta) <url> [<size>]: Sasha does a screenshot of <url> and sends it, if <size> is specified it sends of that dimension.',
+            'Size can be:',
+            'T: (120 x 90px)',
+            'S: (200 x 150px)',
+            'E: (320 x 240px)',
+            'N: (400 x 300px)',
+            'M: (640 x 480px)',
+            'L: (800 x 600px)',
+            'X: (1024 x 768px)',
+            'Nmob: (480 x 800px)',
+            'ADMIN',
+            'F: Full page (can be a very long process)',
+            'Fmob: Full page (can be a long process)',
+        },
+
+        whitelist =
+        {
+            '🅿️ WHITELIST',
+            'Plugin for the management of the whitelist.',
+            'ADMIN',
+            '#whitelist [<id>|<username>|<reply>]: Sasha adds|removes specified user to|from whitelist, if nothing is specified Sasha sends the whitelist.',
+            '#clean whitelist: Sasha cleans whitelist.',
         },
     },
 }

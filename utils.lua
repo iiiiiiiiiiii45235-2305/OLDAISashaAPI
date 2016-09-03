@@ -1,6 +1,6 @@
 URL = require "socket.url"
 http = require "socket.http"
-https = require "ssl.https"
+HTTPS = require "ssl.https"
 ltn12 = require "ltn12"
 
 serpent =(loadfile "./libs/serpent.lua")()
@@ -743,7 +743,7 @@ function download_to_file(url, file_name)
 
     if url:starts('https') then
         options.redirect = false
-        response = { https.request(options) }
+        response = { HTTPS.request(options) }
     else
         response = { http.request(options) }
     end

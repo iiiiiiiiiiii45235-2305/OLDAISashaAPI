@@ -131,7 +131,7 @@ local function run(msg, matches)
         if matches[1] == 'usernames' then
             local usernames = db:hkeys('bot:usernames')
             local file = io.open("./logs/usernames.txt", "w")
-            file:write(vtext(usernames):gsub('"', ''))
+            file:write(vardumptext(usernames):gsub('"', ''))
             file:close()
             api.sendDocument(msg.from.id, './logs/usernames.txt')
             api.sendMessage(msg.chat.id, 'Instruction processed. Total number of usernames: ' .. #usernames)

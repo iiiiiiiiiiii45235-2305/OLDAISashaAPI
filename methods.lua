@@ -24,7 +24,7 @@ function sendRequest(url)
         -- error code 400 is general: try to specify
         redis:hincrby('bot:errors', code, 1)
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vtext(dat) .. '\n' .. code)
+            sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
         end
         return false, code
     end

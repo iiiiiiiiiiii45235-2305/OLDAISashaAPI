@@ -154,20 +154,6 @@ function create_config()
     print(clr.blue .. 'saved config into ./config.lua')
 end
 
-function load_langs()
-    print(clr.blue .. 'Loading languages.lua')
-    local ok, err = pcall( function()
-        local t = dofile('languages.lua')()
-        langs = t
-    end )
-
-    if not ok then
-        print(clr.red .. 'Error loading languages.lua')
-        print(tostring(clr.red .. io.popen("lua languages.lua"):read('*all')))
-        print(clr.red .. err)
-    end
-end
-
 -- Enable plugins in config.lua
 function load_plugins()
     for k, v in pairs(config.enabled_plugins) do
@@ -194,7 +180,6 @@ end
 
 function bot_init()
     config = { }
-    langs = { }
     bot = nil
     plugins = { }
     database = nil
@@ -209,7 +194,6 @@ function bot_init()
     require("ranks")
     printvardump(config)
 
-    load_langs()
     while not bot do
         -- Get bot info and retry if unable to connect.
         bot = getMe()
