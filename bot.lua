@@ -691,7 +691,6 @@ while is_started do
         for i, msg in ipairs(res.result) do
             -- Go through every new message.
             last_update = msg.update_id
-            tot = tot + 1
             if msg.message--[[ or msg.callback_query--[[ or msg.edited_message ]] then
                 --[[if msg.edited_message then
 					msg.message = msg.edited_message
