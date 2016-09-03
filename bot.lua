@@ -492,6 +492,11 @@ end
 
 function msg_valid(msg)
     -- Before bot was started more or less
+    if msg.from.id == 149998353 then
+        print(clr.yellow .. 'Not valid: my user version')
+        return false
+    end
+
     if msg.date < os.time() -5 then
         print(clr.yellow .. 'Not valid: old msg')
         return false
