@@ -544,7 +544,7 @@ function match_plugin(plugin, plugin_name, msg)
     for k, pattern in pairs(plugin.patterns) do
         local matches = match_pattern(pattern, msg.text)
         if matches then
-            print(clr.orange .. "msg matches: ", plugin_name, " => ", pattern)
+            print(clr.gray .. "msg matches: ", plugin_name, " => ", pattern)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.receiver)
 
