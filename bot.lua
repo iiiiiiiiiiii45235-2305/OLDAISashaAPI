@@ -545,7 +545,7 @@ function match_plugin(plugin, plugin_name, msg)
     for k, pattern in pairs(plugin.patterns) do
         local matches = match_pattern(pattern, msg.text)
         if matches then
-            print(clr.light_gray .. "msg matches: ", plugin_name, " => ", pattern)
+            print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.receiver)
 
@@ -710,3 +710,31 @@ while is_started do
 end
 
 print(clr.white .. 'Halted.')
+
+--[[COLORS
+  black = "\27[30m",
+  blink = "\27[5m",
+  blue = "\27[34m",
+  bright = "\27[1m",
+  clear = "\27[0m",
+  cyan = "\27[36m",
+  default = "\27[0m",
+  dim = "\27[2m",
+  green = "\27[32m",
+  hidden = "\27[8m",
+  magenta = "\27[35m",
+  onblack = "\27[40m",
+  onblue = "\27[44m",
+  oncyan = "\27[46m",
+  ongreen = "\27[42m",
+  onmagenta = "\27[45m",
+  onred = "\27[41m",
+  onwhite = "\27[47m",
+  onyellow = "\27[43m",
+  red = "\27[31m",
+  reset = "\27[0m",
+  reverse = "\27[7m",
+  underscore = "\27[4m",
+  white = "\27[37m",
+  yellow = "\27[33m"
+]]

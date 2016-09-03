@@ -250,7 +250,7 @@ end
 local function pre_process(msg)
     -- Begin 'RondoMsgChecks' text checks by @rondoozle
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if msg and not redis:sismember('whitelist', msg.from.id)( then
+        if msg and not redis:sismember('whitelist', msg.from.id) then
             -- if regular user
             local data = load_data(config.moderation.data)
             if data[tostring(msg.chat.id)] and data[tostring(msg.chat.id)]['settings'] then
