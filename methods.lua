@@ -208,11 +208,25 @@ function sendReply(msg, text, markd, send_sound)
 end
 
 function sendAdmin(text, markdown)
-    return sendMessage(config.admin.owner, text, markdown)
+    for v, user in pairs(config.sudo_users) do
+        if user ~= bot.id then
+            -- print(text)
+            sendMessage(user, text, markdown)
+        end
+    end
 end
 
 function sendLog(text, markdown)
-    return sendMessage(config.log_chat or config.admin.owner, text, markdown)
+    if config.log_chat then
+        return sendMessage(config.log_chat, text, markdown)
+    else
+        for v, user in pairs(config.sudo_users) do
+            if user ~= bot.id then
+                -- print(text)
+                sendMessage(user, text, markdown)
+            end
+        end
+    end
 end
 
 function forwardMessage(chat_id, from_chat_id, message_id)

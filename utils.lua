@@ -553,7 +553,12 @@ function change_one_header(id)
     file = io.open(log_path, "w")
     file:write(logtxt)
     file:close()
-    sendDocument(config.admin.owner, log_path)
+    for v, user in pairs(config.sudo_users) do
+        if user ~= bot.id then
+            -- print(text)
+            sendDocument(user, log_path)
+        end
+    end
 end
 
 function change_extra_header(id)
@@ -576,7 +581,12 @@ function change_extra_header(id)
     file = io.open(log_path, "w")
     file:write(logtxt)
     file:close()
-    sendDocument(config.admin.owner, log_path)
+    for v, user in pairs(config.sudo_users) do
+        if user ~= bot.id then
+            -- print(text)
+            sendDocument(user, log_path)
+        end
+    end
 end
 
 function download_to_file(url, file_path)
