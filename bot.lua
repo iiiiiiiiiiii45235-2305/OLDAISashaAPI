@@ -1,6 +1,7 @@
 local f = assert(io.popen('/usr/bin/git describe --tags', 'r'))
 VERSION = assert(f:read('*a'))
 f:close()
+clr = require "term.colors"
 
 last_cron = os.date('%M')
 last_db_cron = os.date('%H')

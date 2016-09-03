@@ -8,7 +8,6 @@ json =(loadfile "./libs/JSON.lua")()
 mimetype =(loadfile "./libs/mimetype.lua")()
 redis =(loadfile "./libs/redis.lua")()
 JSON =(loadfile "./libs/dkjson.lua")()
-clr = require "term.colors"
 langs = dofile("languages.lua")
 db = Redis.connect('127.0.0.1', 6379)
 
