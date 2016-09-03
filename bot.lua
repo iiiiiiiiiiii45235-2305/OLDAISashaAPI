@@ -9,6 +9,7 @@ f:close()
 last_cron = os.date('%M')
 last_db_cron = os.date('%H')
 last_administrator_cron = os.date('%d')
+config = { }
 
 -- Save the content of config to config.lua
 function save_config()
