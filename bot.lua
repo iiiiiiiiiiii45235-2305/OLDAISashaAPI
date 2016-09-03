@@ -163,7 +163,7 @@ function load_langs()
 
     if not ok then
         print(clr.red .. 'Error loading languages.lua')
-        print(tostring(clr.red .. io.popen("lua " .. config.languages .. ".lua"):read('*all')))
+        print(tostring(clr.red .. io.popen("lua languages.lua"):read('*all')))
         print(clr.red .. err)
     end
 end
