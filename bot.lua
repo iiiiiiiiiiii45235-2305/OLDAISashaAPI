@@ -179,7 +179,6 @@ function load_database()
 end
 
 function bot_init()
-printvardump(clr)
     config = { }
     bot = nil
     plugins = { }
@@ -193,6 +192,7 @@ printvardump(clr)
     require("utils")
     require("methods")
     require("ranks")
+printvardump(clr)
 
     while not bot do
         -- Get bot info and retry if unable to connect.
