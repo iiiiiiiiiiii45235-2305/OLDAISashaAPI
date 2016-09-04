@@ -75,7 +75,7 @@ function create_config()
         likecounter = { db = 'data/likecounterdb.json' },
         database = { db = 'data/database.json' },
         about_text = "AISashaAPI by @EricSolinas based on @GroupButler_bot and @TeleSeed supergroup branch with something taken from @DBTeam.\nThanks guys.",
-        log_chat = - 1001057801239,
+        log_chat = - 1001043389864,
         api_errors =
         {
             [101] = 'Not enough rights to kick participant',
@@ -157,7 +157,9 @@ end
 
 -- Enable plugins in config.lua
 function load_plugins()
+    local index = 0
     for k, v in pairs(config.enabled_plugins) do
+        index = index + 1
         print(clr.white .. "Loading plugin", v)
 
         local ok, err = pcall( function()
@@ -171,7 +173,7 @@ function load_plugins()
             print(clr.red .. err)
         end
     end
-    print(clr.white .. 'Plugins loaded: ', #plugins)
+    print(clr.white .. 'Plugins loaded: ', index)
 end
 
 function load_database()

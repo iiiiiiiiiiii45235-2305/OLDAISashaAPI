@@ -1,6 +1,6 @@
 return {
     bot_api_key = '',
-    log_chat = - 1001057801239,
+    log_chat = - 1001043389864,
     channel = '@AISashaChannel',
     -- channel username with the '@'
     help_group = '',
