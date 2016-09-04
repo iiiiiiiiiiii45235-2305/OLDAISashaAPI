@@ -1277,7 +1277,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'rem' and not matches[2] then
-            if not is_admin(msg) then
+            if is_admin(msg) then
                 if not is_group(msg) then
                     return langs[msg.lang].errorNotGroup
                 end
