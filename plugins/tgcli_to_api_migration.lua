@@ -113,6 +113,7 @@ local function run(msg, matches)
                     if old_moderation_data[id_string] then
                         if old_moderation_data[id_string].group_type == 'SuperGroup' then
                             new_moderation_data['groups'][tostring('-100' .. id_string)] = '-100' .. id_string
+                            new_moderation_data[tostring('-100' .. id_string)] = { }
                             new_moderation_data[tostring('-100' .. id_string)].group_type = old_moderation_data[id_string].group_type
                             new_moderation_data[tostring('-100' .. id_string)].moderators = old_moderation_data[id_string].moderators
                             new_moderation_data[tostring('-100' .. id_string)].rules = old_moderation_data[id_string].rules
@@ -124,6 +125,7 @@ local function run(msg, matches)
                             new_moderation_data[tostring('-100' .. id_string)].goodbye = old_moderation_data[id_string].goodbye
                         elseif old_moderation_data[id_string].group_type == 'Group' then
                             new_moderation_data['groups'][tostring('-' .. id_string)] = '-' .. id_string
+                            new_moderation_data[tostring('-' .. id_string)] = { }
                             new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
                             new_moderation_data[tostring('-' .. id_string)].moderators = old_moderation_data[id_string].moderators
                             new_moderation_data[tostring('-' .. id_string)].rules = old_moderation_data[id_string].rules
@@ -146,6 +148,7 @@ local function run(msg, matches)
                 for id_string in pairs(old_moderation_data['realms']) do
                     if old_moderation_data[id_string] then
                         new_moderation_data['realms'][tostring('-' .. id_string)] = '-' .. id_string
+                        new_moderation_data[tostring('-' .. id_string)] = { }
                         new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
                         new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
                     else
@@ -167,6 +170,7 @@ local function run(msg, matches)
                         if old_database_data['groups'][id_string] then
                             if old_database_data['groups'][id_string].username and old_database_data['groups'][id_string].old_usernames then
                                 -- supergroups
+                                new_database_data[tostring('-100' .. id_string)] = { }
                                 new_database_data[tostring('-100' .. id_string)].old_print_names = old_database_data['groups'][id_string].old_print_names
                                 new_database_data[tostring('-100' .. id_string)].print_name = old_database_data['groups'][id_string].print_name
                                 new_database_data[tostring('-100' .. id_string)].old_usernames = old_database_data['groups'][id_string].old_usernames
@@ -174,6 +178,7 @@ local function run(msg, matches)
                                 new_database_data[tostring('-100' .. id_string)].lang = old_database_data['groups'][id_string].lang
                             else
                                 -- groups
+                                new_database_data[tostring('-' .. id_string)] = { }
                                 new_database_data[tostring('-' .. id_string)].old_print_names = old_database_data['groups'][id_string].old_print_names
                                 new_database_data[tostring('-' .. id_string)].print_name = old_database_data['groups'][id_string].print_name
                                 new_database_data[tostring('-' .. id_string)].lang = old_database_data['groups'][id_string].lang
@@ -187,6 +192,7 @@ local function run(msg, matches)
             if old_database_data['users'] then
                 for id_string in pairs(old_database_data['users']) do
                     if old_database_data['users'][id_string] then
+                        new_database_data[id_string] = { }
                         new_database_data[id_string].old_print_names = old_database_data['users'][id_string].old_print_names
                         new_database_data[id_string].print_name = old_database_data['users'][id_string].print_name
                         new_database_data[id_string].old_usernames = old_database_data['users'][id_string].old_usernames
