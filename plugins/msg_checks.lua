@@ -8,13 +8,6 @@ local function clean_msg(msg)
             msg.caption = ''
         end
     end
-    if msg.forward then
-        if msg.forward_from then
-            msg.forward_from = clean_msg(msg.forward_from)
-        elseif msg.forward_from_chat then
-            msg.forward_from_chat = clean_msg(msg.forward_from_chat)
-        end
-    end
     return msg
 end
 
