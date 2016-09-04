@@ -403,6 +403,23 @@ local function modadd(msg)
     end
 end
 
+local function modrem(msg)
+    local data = load_data(config.moderation.data)
+    if not is_group(msg) then
+        return langs[msg.lang].groupNotAdded
+    end
+    -- Group configuration removal
+    data[tostring(msg.chat.id)] = nil
+    save_data(config.moderation.data, data)
+    if not data[tostring('groups')] then
+        data[tostring('groups')] = nil
+        save_data(config.moderation.data, data)
+    end
+    data[tostring('groups')][tostring(msg.chat.id)] = nil
+    save_data(config.moderation.data, data)
+    return sendMessage(msg.chat.id, langs[msg.lang].groupRemoved)
+end
+
 local function realmadd(msg)
     local data = load_data(config.moderation.data)
     if is_realm(msg) then
@@ -435,23 +452,6 @@ local function realmadd(msg)
             end
         end
     end
-end
-
-local function modrem(msg)
-    local data = load_data(config.moderation.data)
-    if not is_group(msg) then
-        return langs[msg.lang].groupNotAdded
-    end
-    -- Group configuration removal
-    data[tostring(msg.chat.id)] = nil
-    save_data(config.moderation.data, data)
-    if not data[tostring('groups')] then
-        data[tostring('groups')] = nil
-        save_data(config.moderation.data, data)
-    end
-    data[tostring('groups')][tostring(msg.chat.id)] = nil
-    save_data(config.moderation.data, data)
-    return sendMessage(msg.chat.id, langs[msg.lang].groupRemoved)
 end
 
 local function realmrem(msg)
@@ -573,89 +573,62 @@ local function show_group_settingsmod(target, lang)
 end
 
 -- SUPERGROUP
--- Check members #Add supergroup
-local function check_member_super(extra, success, result)
-    local receiver = extra.receiver
-    local data = extra.data
-    local msg = extra.msg
-    if success == 0 then
-        send_large_msg(receiver, langs[msg.lang].promoteBotAdmin)
+local function superadd(msg)
+    local data = load_data(config.moderation.data)
+    if is_super_group(msg) then
+        return langs[msg.lang].supergroupAlreadyAdded
     end
-    for k, v in pairs(result) do
-        local member_id = v.peer_id
-        if member_id ~= bot.id then
-            -- SuperGroup configuration
-            data[tostring(msg.chat.id)] = {
-                group_type = 'SuperGroup',
-                long_id = msg.chat.peer_id,
-                moderators = { },
-                set_owner = member_id,
-                settings =
-                {
-                    set_name = string.gsub(msg.chat.title,'_',' '),
+    local list = getChatAdministrators(msg.chat.id)
+    if list then
+        for i, admin in pairs(list.result) do
+            if admin.status == 'creator' then
+                -- Group configuration
+                data[tostring(msg.chat.id)] = {
+                    group_type = 'SuperGroup',
+                    moderators = { },
+                    set_owner = tostring(admin.user.id),
+                    settings =
+                    {
+                    set_name = string.gsub(msg.chat.print_name,'_',' '),
                     lock_arabic = 'no',
                     lock_link = "no",
                     flood = 'yes',
                     lock_spam = 'yes',
                     lock_sticker = 'no',
                     member = 'no',
-                    public = 'no',
                     lock_rtl = 'no',
-                    lock_tgservice = 'yes',
                     lock_contacts = 'no',
                     strict = 'no'
+                    }
                 }
-            }
-            save_data(config.moderation.data, data)
-            local groups = 'groups'
-            if not data[tostring(groups)] then
-                data[tostring(groups)] = { }
                 save_data(config.moderation.data, data)
+                if not data[tostring('groups')] then
+                    data[tostring('groups')] = { }
+                    save_data(config.moderation.data, data)
+                end
+                data[tostring('groups')][tostring(msg.chat.id)] = msg.chat.id
+                save_data(config.moderation.data, data)
+                return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
             end
-            data[tostring(groups)][tostring(msg.chat.id)] = msg.chat.id
-            save_data(config.moderation.data, data)
-            local text = langs[msg.lang].supergroupAdded
-            return reply_msg(msg.id, text, ok_cb, false)
         end
     end
 end
 
--- Check Members #rem supergroup
-local function check_member_superrem(extra, success, result)
-    local receiver = extra.receiver
-    local data = extra.data
-    local msg = extra.msg
-    for k, v in pairs(result) do
-        local member_id = v.id
-        if member_id ~= bot.id then
-            -- Group configuration removal
-            data[tostring(msg.chat.id)] = nil
-            save_data(config.moderation.data, data)
-            local groups = 'groups'
-            if not data[tostring(groups)] then
-                data[tostring(groups)] = nil
-                save_data(config.moderation.data, data)
-            end
-            data[tostring(groups)][tostring(msg.chat.id)] = nil
-            save_data(config.moderation.data, data)
-            local text = langs[msg.lang].supergroupRemoved
-            return reply_msg(msg.id, text, ok_cb, false)
-        end
-    end
-end
-
--- Function to Add supergroup
-local function superadd(msg)
-    local data = load_data(config.moderation.data)
-    local receiver = get_receiver(msg)
-    channel_get_users(receiver, check_member_super, { receiver = receiver, data = data, msg = msg })
-end
-
--- Function to remove supergroup
 local function superrem(msg)
     local data = load_data(config.moderation.data)
-    local receiver = get_receiver(msg)
-    channel_get_users(receiver, check_member_superrem, { receiver = receiver, data = data, msg = msg })
+    if not is_group(msg) then
+        return langs[msg.lang].groupNotAdded
+    end
+    -- Group configuration removal
+    data[tostring(msg.chat.id)] = nil
+    save_data(config.moderation.data, data)
+    if not data[tostring('groups')] then
+        data[tostring('groups')] = nil
+        save_data(config.moderation.data, data)
+    end
+    data[tostring('groups')][tostring(msg.chat.id)] = nil
+    save_data(config.moderation.data, data)
+    return sendMessage(msg.chat.id, langs[msg.lang].supergroupRemoved)
 end
 
 -- Show supergroup settings; function
