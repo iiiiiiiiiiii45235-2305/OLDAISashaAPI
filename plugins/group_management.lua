@@ -616,7 +616,7 @@ end
 
 local function superrem(msg)
     local data = load_data(config.moderation.data)
-    if not is_group(msg) then
+    if not is_super_group(msg) then
         return langs[msg.lang].groupNotAdded
     end
     -- Group configuration removal
