@@ -1405,7 +1405,7 @@ local function run(msg, matches)
                 if not data[tostring(msg.chat.id)]['description'] then
                     return langs[msg.lang].noDescription
                 end
-                return langs[msg.lang].description .. string.gsub(msg.chat.print_name, "_", " ") .. ':\n\n' .. about
+                return langs[msg.lang].description .. string.gsub(msg.chat.print_name, "_", " ") .. ':\n\n' .. data[tostring(msg.chat.id)]['description']
             end
             if matches[1]:lower() == 'rules' or matches[1]:lower() == 'sasha regole' then
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
@@ -1929,7 +1929,7 @@ local function run(msg, matches)
                     end
                     if matches[2]:lower() == 'member' then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked member ")
-                        return lock_group_membermod(data, msg.chat.id, msg.lang)
+                        return lock_group_member(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'rtl' then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked rtl chars. in names")
@@ -1975,7 +1975,7 @@ local function run(msg, matches)
                     end
                     if matches[2]:lower() == 'member' then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked member ")
-                        return unlock_group_membermod(data, msg.chat.id, msg.lang)
+                        return unlock_group_member(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'rtl' then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked RTL chars. in names")
