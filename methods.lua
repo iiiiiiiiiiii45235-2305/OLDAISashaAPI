@@ -681,7 +681,7 @@ function isWhitelisted(user_id)
 end
 
 function resolveUsername(username)
-    username = '@' .. username
+    username = '@' .. username:lower()
     local obj = resolveChannelSupergroupsUsernames(username)
     if obj then
         return obj
