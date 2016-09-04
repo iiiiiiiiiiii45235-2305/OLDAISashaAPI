@@ -117,7 +117,7 @@ local function run(msg, matches)
                 return get_reverse_rank(msg.chat.id, matches[2])
             else
                 -- not sure if it works
-                local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                local user_id = resolveUsername(matches[2]:gsub('@', '')).result
                 if obj_user then
                     if obj_user.type == 'private' then
                         return get_reverse_rank(msg.chat.id, obj_user.id)

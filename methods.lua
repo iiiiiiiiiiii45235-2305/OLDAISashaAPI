@@ -466,6 +466,25 @@ function sendDocument_SUDOERS(document)
     end
 end
 
+function resolveChannelSupergroupsUsernames(username)
+    local url = PWR_URL .. '/getChat?chat_id=' .. username
+    local dat, code = HTTPS.request(url)
+
+    if not dat then
+        return false, code
+    end
+
+    local tab = JSON.decode(dat)
+
+    if not tab then
+        return false
+    else
+        if tab.ok then
+            return tab.result
+        end
+    end
+end
+
 -- *** END API FUNCTIONS ***
 
 -- call this to kick
@@ -662,20 +681,17 @@ function isWhitelisted(user_id)
 end
 
 function resolveUsername(username)
-    local url = PWR_URL .. '/getChat?chat_id=@' .. username
-    local dat, code = HTTPS.request(url)
-
-    if not dat then
-        return false, code
-    end
-
-    local tab = JSON.decode(dat)
-
-    if not tab then
-        return false
+    username = '@' .. username
+    local obj = resolveChannelSupergroupsUsernames(username)
+    if obj then
+        return obj
     else
-        if tab.ok then
-            return tab.result
+        local hash = 'bot:usernames'
+        local stored = db:hget(hash, username)
+        if stored then
+            return getChat(stored).result
+        else
+            return false
         end
     end
 end
