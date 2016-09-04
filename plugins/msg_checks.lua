@@ -23,7 +23,6 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
-            return
         end
         local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
         -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
@@ -35,12 +34,6 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
-            return
-        end
-        if msg.service then
-            if lock_tgservice == "yes" then
-                return
-            end
         end
         local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
         if is_squig_msg and lock_arabic == "yes" then
@@ -50,7 +43,6 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
-            return
         end
         local print_name = msg.from.print_name
         local is_rtl = print_name:match("‮") or msg.text:match("‮")
@@ -61,7 +53,6 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
-            return
         end
     end
     if msg.media then
@@ -77,7 +68,6 @@ local function check_msg(msg)
                 if msg.chat.type == 'group' then
                     banUser(bot.id, msg.from.id, msg.chat.id)
                 end
-                return
             end
             local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
             if is_squig_caption and lock_arabic == "yes" then
@@ -87,26 +77,23 @@ local function check_msg(msg)
                 if msg.chat.type == 'group' then
                     banUser(bot.id, msg.from.id, msg.chat.id)
                 end
-                return
-            end
-            if lock_sticker == "yes" and msg.caption:match("sticker.webp") then
-                if strict == "yes" then
-                    kickUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                if msg.chat.type == 'group' then
-                    banUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                return
             end
         end
-        if msg.contact and lock_contacts == "yes" then
+        if lock_sticker == "yes" and msg.sticker then
             if strict == "yes" then
                 kickUser(bot.id, msg.from.id, msg.chat.id)
             end
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
-            return
+        end
+        if lock_contacts == "yes" and msg.contact then
+            if strict == "yes" then
+                kickUser(bot.id, msg.from.id, msg.chat.id)
+            end
+            if msg.chat.type == 'group' then
+                banUser(bot.id, msg.from.id, msg.chat.id)
+            end
         end
     end
     if msg.service then
@@ -246,6 +233,7 @@ local function pre_process(msg)
     return msg
 end
 -- End pre_process function
+
 return {
     description = "MSG_CHECKS",
     patterns = { },
