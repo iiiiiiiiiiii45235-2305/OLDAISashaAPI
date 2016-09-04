@@ -656,7 +656,7 @@ function print_msg(msg)
         print_text = print_text .. clr.white .. '[reply] '
     end
     if msg.media then
-        print_text = print_text .. clr.white .. '[' .. media_type .. '] '
+        print_text = print_text .. clr.white .. '[' ..(media_type or 'unsupported') .. '] '
         if msg.caption then
             print_text = print_text .. msg.caption
         end
@@ -672,7 +672,7 @@ function print_msg(msg)
         elseif service_type == 'chat_add_user_link' then
             print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link '
         else
-            print_text = print_text .. clr.white .. '[' .. service_type .. '] '
+            print_text = print_text .. clr.white .. '[' ..(service_type or 'unsupported') .. '] '
         end
     end
     if msg.text then
