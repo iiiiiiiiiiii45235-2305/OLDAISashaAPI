@@ -206,7 +206,7 @@ local function run(msg, matches)
         end
     end
     --
-    return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted
+    return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
 end
 
 return {
