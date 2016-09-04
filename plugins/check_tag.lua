@@ -28,21 +28,11 @@ local function check_tag(msg, user_id, user)
         end
     end
 
-    local tagged = false
-    -- if forward check forward
-    if msg.forward then
-        if msg.forward_from then
-            tagged = check_tag(msg.forward_from, user_id, user)
-        elseif msg.forward_from_chat then
-            tagged = check_tag(msg.forward_from_chat, user_id, user)
-        end
-    end
-
     -- if reply check reply
     if msg.reply then
-        tagged = check_tag(msg.reply_to_message, user_id, user)
+        return check_tag(msg.reply_to_message, user_id, user)
     end
-    return tagged
+    return false
 end
 
 -- send message to sudoers when tagged

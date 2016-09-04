@@ -116,13 +116,6 @@ local function check_msg(msg)
             return
         end
     end
-    if msg.forward then
-        if msg.forward_from then
-            msg.forward_from = check_msg(msg.forward_from)
-        elseif msg.forward_from_chat then
-            msg.forward_from_chat = check_msg(msg.forward_from_chat)
-        end
-    end
     if msg.service then
         -- msg.service checks
         if msg.adder and msg.added then

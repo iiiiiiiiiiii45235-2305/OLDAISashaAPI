@@ -82,13 +82,6 @@ local function check_word(msg, word)
             end
         end
     end
-    if msg.forward then
-        if msg.forward_from then
-            answer = check_word(msg.forward_from, word)
-        elseif msg.forward_from_chat then
-            answer = check_word(msg.forward_from_chat, word)
-        end
-    end
     return answer
 end
 
