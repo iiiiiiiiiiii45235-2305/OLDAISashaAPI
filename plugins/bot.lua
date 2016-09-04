@@ -36,7 +36,7 @@ end
 
 local function run(msg, matches)
     if is_owner(msg) then
-        if not string.match(matches[1], '^%d+$') then
+        if not string.match(matches[1], '^%-?%d+$') then
             if matches[1]:lower() == 'on' then
                 enable_channel(msg.chat.id)
             end

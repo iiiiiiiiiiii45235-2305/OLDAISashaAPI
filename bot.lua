@@ -236,7 +236,7 @@ function adjust_group(tab)
     return tab
 end
 
-function adjust_supergrou(tab)
+function adjust_supergroup(tab)
     local id_without_minus = tostring(tab.id):gsub('-100', '')
     tab.type = 'supergroup'
     tab.tg_cli_id = tonumber(id_without_minus)
@@ -256,13 +256,7 @@ end
 -- recursive to simplify code
 function adjust_msg(msg)
     -- sender print_name and tg_cli_id
-    if msg.from.type then
-        if msg.from.type == 'channel' then
-            msg.from = adjust_channel(msg.from)
-        else
-            msg.from = adjust_user(msg.from)
-        end
-    end
+    msg.from = adjust_user(msg.from)
 
     if msg.new_chat_participant then
         msg.new_chat_participant = adjust_user(msg.new_chat_participant)
