@@ -1653,7 +1653,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'add' and not matches[2] then
             if is_admin(msg) then
                 if is_super_group(msg) then
-                    return reply_msg(msg.id, langs[msg.lang].supergroupAlreadyAdded, ok_cb, false)
+                    return sendReply(msg, langs[msg.lang].supergroupAlreadyAdded)
                 end
                 print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added SuperGroup")
@@ -1664,14 +1664,13 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == 'rem' and is_admin(msg) and not matches[2] then
+        if matches[1]:lower() == 'rem' and not matches[2] then
             if is_admin(msg) then
                 if not is_super_group(msg) then
-                    return reply_msg(msg.id, langs[msg.lang].supergroupRemoved, ok_cb, false)
+                    return sendReply(msg, langs[msg.lang].supergroupRemoved)
                 end
                 print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")
                 superrem(msg)
-                rem_mutes(msg.chat.id)
             else
                 return langs[msg.lang].require_admin
             end
