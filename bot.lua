@@ -383,11 +383,9 @@ end
 local function pre_process_forward(msg)
     if msg.forward_from or msg.forward_from_chat then
         msg.forward = true
-        if msg.reply then
-            if msg.reply_to_message.forward_from or msg.reply_to_message.forward_from_chat then
-                msg.reply_to_message.forward = true
-            end
-        end
+    end
+    if msg.reply then
+        msg.reply_to_message = pre_process_forward(msg.reply_to_message)
     end
     return msg
 end
