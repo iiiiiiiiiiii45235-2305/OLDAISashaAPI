@@ -83,8 +83,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return kickUser(msg.from.id, matches[2], msg.chat.id)
                 else
-                    -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return kickUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -129,8 +128,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return banUser(msg.from.id, matches[2], msg.chat.id)
                 else
-                    -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return banUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -175,8 +173,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return unbanUser(msg.from.id, matches[2], msg.chat.id)
                 else
-                    -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return unbanUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -239,8 +236,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return gbanUser(matches[2])
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return gbanUser(obj_user.id)
@@ -281,8 +277,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return ungbanUser(matches[2])
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return ungbanUser(obj_user.id)

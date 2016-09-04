@@ -176,8 +176,7 @@ local function run(msg, matches)
             elseif string.match(matches[2], '^%d+$') then
                 return blockUser(matches[2], msg.lang)
             else
-                -- not sure if it works
-                local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                 if obj_user then
                     if obj_user.type == 'private' then
                         return blockUser(obj_user.id, msg.lang)
@@ -209,8 +208,7 @@ local function run(msg, matches)
             elseif string.match(matches[2], '^%d+$') then
                 return unblockUser(matches[2], msg.lang)
             else
-                -- not sure if it works
-                local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                 if obj_user then
                     if obj_user.type == 'private' then
                         return unblockUser(obj_user.id, msg.lang)

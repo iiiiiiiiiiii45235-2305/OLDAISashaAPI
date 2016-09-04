@@ -1090,7 +1090,6 @@ local function run(msg, matches)
                 if msg.reply then
                     return admin_promote(msg.reply_to_message.from, msg.chat.id)
                 elseif string.match(matches[2], '^%d+$') then
-                    -- not sure if it works
                     local obj_user = getChat(matches[2]).result
                     if obj_user then
                         if obj_user.type == 'private' then
@@ -1098,8 +1097,7 @@ local function run(msg, matches)
                         end
                     end
                 else
-                    -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return admin_promote(obj_user, msg.chat.id)
@@ -1116,7 +1114,6 @@ local function run(msg, matches)
                 if msg.reply then
                     return admin_demote(msg.reply_to_message.from, msg.chat.id)
                 elseif string.match(matches[2], '^%d+$') then
-                    -- not sure if it works
                     local obj_user = getChat(matches[2]).result
                     if obj_user then
                         if obj_user.type == 'private' then
@@ -1124,8 +1121,7 @@ local function run(msg, matches)
                         end
                     end
                 else
-                    -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return admin_demote(obj_user, msg.chat.id)
@@ -1376,8 +1372,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return promote(msg.chat.id, obj_user)
@@ -1416,8 +1411,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return demote(msg.chat.id, obj_user)
@@ -1619,7 +1613,6 @@ local function run(msg, matches)
                 end
                 if string.match(matches[2], '^%d+$') then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
-                    -- not sure if it works
                     local obj_user = getChat(matches[2]).result
                     if obj_user then
                         if obj_user.type == 'private' then
@@ -1627,8 +1620,7 @@ local function run(msg, matches)
                         end
                     end
                 else
-                    -- not sure if it works
-                    local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return chat_set_owner(obj_user, msg.chat.id)
@@ -1782,16 +1774,14 @@ local function run(msg, matches)
                     end
                     if string.match(matches[2], '^%d+$') then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]).result
+                        local obj_user = getChat(matches[2]).result
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return chat_set_owner(obj_user, msg.chat.id)
                             end
                         end
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return chat_set_owner(obj_user, msg.chat.id)
@@ -1830,8 +1820,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return promote(msg.chat.id, obj_user)
@@ -1870,8 +1859,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        -- not sure if it works
-                        local obj_user = resolveUsername(matches[2]:gsub('@', '')).result
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return demote(msg.chat.id, obj_user)
