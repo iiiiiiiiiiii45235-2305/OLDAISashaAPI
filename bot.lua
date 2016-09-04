@@ -221,6 +221,13 @@ function bot_init()
     -- whether the bot should be running or not.
 end
 
+function adjust_bot(tab)
+    tab.type = 'private'
+    tab.tg_cli_id = tonumber(tab.id)
+    tab.print_name = tab.first_name ..(tab.last_name or '')
+    return tab
+end
+
 function adjust_user(tab)
     tab.type = 'private'
     tab.tg_cli_id = tonumber(tab.id)
@@ -286,7 +293,7 @@ function adjust_msg(msg)
     if msg.chat.type then
         if msg.chat.type == 'private' then
             -- private chat
-            msg.chat = adjust_user(msg.chat)
+            msg.chat = adjust_bot(bot)
             msg.receiver = 'user#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'group' then
             -- group
