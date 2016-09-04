@@ -293,7 +293,8 @@ function adjust_msg(msg)
     if msg.chat.type then
         if msg.chat.type == 'private' then
             -- private chat
-            msg.chat = adjust_bot(bot)
+            msg.bot = adjust_bot(bot)
+            msg.chat = adjust_user(msg.chat)
             msg.receiver = 'user#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'group' then
             -- group

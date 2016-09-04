@@ -210,7 +210,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         else
-            return get_object_info(msg.from, msg.chat.id, msg.lang) .. '\n\n' .. get_object_info(msg.chat, msg.chat.id, msg.lang)
+            return get_object_info(msg.from, msg.chat.id, msg.lang) .. '\n\n' .. get_object_info(msg.bot or msg.chat, msg.chat.id, msg.lang)
         end
         return
     end
