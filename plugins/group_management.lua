@@ -474,13 +474,13 @@ end
 local function promote(chat_id, user)
     local lang = get_lang(chat_id)
     local data = load_data(config.moderation.data)
-    if not data[chat_id] then
+    if not data[tostring(chat_id)] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
-    if data[chat_id]['moderators'][tostring(member_id)] then
+    if data[tostring(chat_id)]['moderators'][tostring(member_id)] then
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].alreadyMod)
     end
-    data[chat_id]['moderators'][tostring(member_id)] =(user.username or user.print_name)
+    data[tostring(chat_id)]['moderators'][tostring(member_id)] =(user.username or user.print_name)
     save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].promoteMod)
 end
@@ -488,13 +488,13 @@ end
 local function demote(chat_id, user)
     local lang = get_lang(chat_id)
     local data = load_data(config.moderation.data)
-    if not data[chat_id] then
+    if not data[tostring(chat_id)] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
-    if not data[chat_id]['moderators'][tostring(member_id)] then
+    if not data[tostring(chat_id)]['moderators'][tostring(member_id)] then
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].notMod)
     end
-    data[chat_id]['moderators'][tostring(member_id)] = nil
+    data[tostring(chat_id)]['moderators'][tostring(member_id)] = nil
     save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].demoteMod)
 end
@@ -1898,12 +1898,6 @@ local function run(msg, matches)
                         save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned about")
                         return langs[msg.lang].descriptionCleaned
-                    end
-                    if matches[2]:lower() == 'mutelist' then
-                        chat_id = msg.chat.id
-                        local hash = 'mute_user:' .. chat_id
-                        redis:del(hash)
-                        return langs[msg.lang].mutelistCleaned
                     end
                 else
                     return langs[msg.lang].require_owner
