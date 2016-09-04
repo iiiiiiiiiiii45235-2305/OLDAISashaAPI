@@ -78,7 +78,7 @@ local function run(msg, matches)
             end
 
             -- migrate likes from likecounterdb.json
-            local old_likecounter_path = '/home/pi/AISashaAPI/data/likecounterdb.json'
+            local old_likecounter_path = '/home/pi/AISashaExp/data/likecounterdb.json'
             local new_likecounter_path = '/home/pi/AISashaAPI/data/likecounterdb.json'
             local old_likecounter_data = load_data(old_likecounter_path)
             local new_likecounter_data = load_data(new_likecounter_path)
@@ -103,7 +103,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'sudomigrate' then
         if is_sudo(msg) then
             -- migrate group from moderation.json
-            local old_moderation_path = '/home/pi/AISashaAPI/data/moderation.json'
+            local old_moderation_path = '/home/pi/AISashaExp/data/moderation.json'
             local new_moderation_path = '/home/pi/AISashaAPI/data/moderation.json'
             local old_moderation_data = load_data(old_moderation_path)
             local new_moderation_data = load_data(new_moderation_path)
@@ -154,7 +154,7 @@ local function run(msg, matches)
             save_data(new_moderation_path, new_moderation_data)
 
             -- migrate database from database.json
-            local old_database_path = '/home/pi/AISashaAPI/data/database.json'
+            local old_database_path = '/home/pi/AISashaExp/data/database.json'
             local new_database_path = '/home/pi/AISashaAPI/data/database.json'
             local old_database_data = load_data(old_database_path)
             local new_database_data = load_data(new_database_path)
