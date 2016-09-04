@@ -321,7 +321,7 @@ return {
     description = "ADMINISTRATOR",
     patterns =
     {
-        "^[#!/]([Pp][Mm]) (%d+) (.*)$",
+        "^[#!/]([Pp][Mm]) (%-?%d+) (.*)$",
         "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
         "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk]) (.*)$",
         "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
@@ -337,7 +337,7 @@ return {
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
         -- pm
-        "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%d+) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- pmunblock
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (.*)$",

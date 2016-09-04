@@ -24,7 +24,7 @@ return {
     patterns =
     {
         "^[#!/]([Bb][Rr][Oo][Aa][Dd][Cc][Aa][Ss][Tt]) +(.+)$",
-        "^[#!/]([Bb][Rr]) (%d+) (.*)$"
+        "^[#!/]([Bb][Rr]) (%-?%d+) (.*)$"
     },
     run = run,
     min_rank = 3,

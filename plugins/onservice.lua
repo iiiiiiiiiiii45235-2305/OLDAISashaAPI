@@ -28,10 +28,10 @@ return {
     description = "ONSERVICE",
     patterns =
     {
-        "^[#!/]([Ll][Ee][Aa][Vv][Ee]) (%d+)$",
+        "^[#!/]([Ll][Ee][Aa][Vv][Ee]) (%-?%d+)$",
         "^[#!/]([Ll][Ee][Aa][Vv][Ee])$",
         -- leave
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Bb][Bb][Aa][Nn][Dd][Oo][Nn][Aa]) (%d+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Bb][Bb][Aa][Nn][Dd][Oo][Nn][Aa]) (%-?%d+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Bb][Bb][Aa][Nn][Dd][Oo][Nn][Aa])$",
         "^!!tgservice (.+)$",
     },

@@ -2069,24 +2069,24 @@ return {
         "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss][Ll][Ii][Ss][Tt])$",
 
         -- INREALM
-        "^[#!/]([Rr][Ee][Mm]) (%d+)$",
+        "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
         "^[#!/]([Aa][Dd][Dd][Aa][Dd][Mm][Ii][Nn]) (.*)$",
         "^[#!/]([Rr][Ee][Mm][Oo][Vv][Ee][Aa][Dd][Mm][Ii][Nn]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Oo][Ww][Nn][Ee][Rr]) (%d+) (%d+)$",-- (group id) (owner id)
         "^[#!/]([Ll][Ii][Ss][Tt]) (.*)$",
-        "^[#!/]([Ll][Oo][Cc][Kk]) (%d+) (.*)$",
-        "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%d+) (.*)$",
-        "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%d+)$",
-        "^[#!/]([Ss][Uu][Pp][Ee][Rr][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%d+)$",
-        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Rr][Uu][Ll][Ee][Ss]) (%d+) (.*)$",
-        "^[#!/]([Ss][Ee][Tt][Ss][Uu][Pp][Ee][Rr][Gg][Rr][Oo][Uu][Pp][Aa][Bb][Oo][Uu][Tt]) (%d+) (.*)$",
-        "^[#!/]([Ss][Ee][Tt][Gg][Rr][Oo][Uu][Pp][Aa][Bb][Oo][Uu][Tt]) (%d+) (.*)$",
+        "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) (.*)$",
+        "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
+        "^[#!/]([Ss][Uu][Pp][Ee][Rr][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Rr][Uu][Ll][Ee][Ss]) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Ss][Uu][Pp][Ee][Rr][Gg][Rr][Oo][Uu][Pp][Aa][Bb][Oo][Uu][Tt]) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Rr][Oo][Uu][Pp][Aa][Bb][Oo][Uu][Tt]) (%-?%d+) (.*)$",
         -- lock
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa]) (%d+) (.*)$",
-        "^([Bb][Ll][Oo][Cc][Cc][Aa]) (%d+) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) (.*)$",
+        "^([Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) (.*)$",
         -- unlock
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%d+) (.*)$",
-        "^([Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%d+) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) (.*)$",
+        "^([Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) (.*)$",
 
         -- INGROUP
         "^[#!/]([Aa][Dd][Dd]) ([Rr][Ee][Aa][Ll][Mm])$",

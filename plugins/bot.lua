@@ -64,13 +64,13 @@ return {
     {
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn])",
         "^[#!/][Bb][Oo][Tt] ([Oo][Ff][Ff])",
-        "^[#!/][Bb][Oo][Tt] (%d+) ([Oo][Nn])",
-        "^[#!/][Bb][Oo][Tt] (%d+) ([Oo][Ff][Ff])",
+        "^[#!/][Bb][Oo][Tt] (%-?%d+) ([Oo][Nn])",
+        "^[#!/][Bb][Oo][Tt] (%-?%d+) ([Oo][Ff][Ff])",
         -- bot
         "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Nn])",
         "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Ff][Ff])",
-        "^[Ss][Aa][Ss][Hh][Aa] (%d+) ([Oo][Nn])",
-        "^[Ss][Aa][Ss][Hh][Aa] (%d+) ([Oo][Ff][Ff])",
+        "^[Ss][Aa][Ss][Hh][Aa] (%-?%d+) ([Oo][Nn])",
+        "^[Ss][Aa][Ss][Hh][Aa] (%-?%d+) ([Oo][Ff][Ff])",
     },
     run = run,
     min_rank = 2,
