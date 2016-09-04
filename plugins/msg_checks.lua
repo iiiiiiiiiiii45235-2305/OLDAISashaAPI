@@ -192,68 +192,66 @@ end
 -- Begin pre_process function
 local function pre_process(msg)
     -- Begin 'RondoMsgChecks' text checks by @rondoozle
-    if msg.chat then
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if msg and not redis:sismember('whitelist', msg.from.id) then
-                -- if regular user
-                local data = load_data(config.moderation.data)
-                if data[tostring(msg.chat.id)] and data[tostring(msg.chat.id)]['settings'] then
-                    settings = data[tostring(msg.chat.id)]['settings']
+    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+        if msg and not redis:sismember('whitelist', msg.from.id) then
+            -- if regular user
+            local data = load_data(config.moderation.data)
+            if data[tostring(msg.chat.id)] and data[tostring(msg.chat.id)]['settings'] then
+                settings = data[tostring(msg.chat.id)]['settings']
+            else
+                return msg
+            end
+            if settings.lock_arabic then
+                lock_arabic = settings.lock_arabic
+            else
+                lock_arabic = 'no'
+            end
+            if settings.lock_rtl then
+                lock_rtl = settings.lock_rtl
+            else
+                lock_rtl = 'no'
+            end
+            if settings.lock_tgservice then
+                lock_tgservice = settings.lock_tgservice
+            else
+                lock_tgservice = 'no'
+            end
+            if settings.lock_link then
+                lock_link = settings.lock_link
+            else
+                lock_link = 'no'
+            end
+            if settings.lock_member then
+                lock_member = settings.lock_member
+            else
+                lock_member = 'no'
+            end
+            if settings.lock_spam then
+                lock_spam = settings.lock_spam
+            else
+                lock_spam = 'no'
+            end
+            if settings.lock_sticker then
+                lock_sticker = settings.lock_sticker
+            else
+                lock_sticker = 'no'
+            end
+            if settings.lock_contacts then
+                lock_contacts = settings.lock_contacts
+            else
+                lock_contacts = 'no'
+            end
+            if settings.strict then
+                strict = settings.strict
+            else
+                strict = 'no'
+            end
+            if not is_mod(msg) then
+                local tmp = check_msg(msg)
+                if tmp then
+                    msg = tmp
                 else
-                    return msg
-                end
-                if settings.lock_arabic then
-                    lock_arabic = settings.lock_arabic
-                else
-                    lock_arabic = 'no'
-                end
-                if settings.lock_rtl then
-                    lock_rtl = settings.lock_rtl
-                else
-                    lock_rtl = 'no'
-                end
-                if settings.lock_tgservice then
-                    lock_tgservice = settings.lock_tgservice
-                else
-                    lock_tgservice = 'no'
-                end
-                if settings.lock_link then
-                    lock_link = settings.lock_link
-                else
-                    lock_link = 'no'
-                end
-                if settings.lock_member then
-                    lock_member = settings.lock_member
-                else
-                    lock_member = 'no'
-                end
-                if settings.lock_spam then
-                    lock_spam = settings.lock_spam
-                else
-                    lock_spam = 'no'
-                end
-                if settings.lock_sticker then
-                    lock_sticker = settings.lock_sticker
-                else
-                    lock_sticker = 'no'
-                end
-                if settings.lock_contacts then
-                    lock_contacts = settings.lock_contacts
-                else
-                    lock_contacts = 'no'
-                end
-                if settings.strict then
-                    strict = settings.strict
-                else
-                    strict = 'no'
-                end
-                if not is_mod(msg) then
-                    local tmp = check_msg(msg)
-                    if tmp then
-                        msg = tmp
-                    else
-                        return
-                    end
+                    return
                 end
             end
         end
