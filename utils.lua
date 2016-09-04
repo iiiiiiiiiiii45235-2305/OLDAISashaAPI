@@ -375,101 +375,10 @@ function migrate_table(t, hash)
     return txt
 end
 
-function migrate_chat_info(old, new, on_request)
-    if not old or not new then
-        print('A group id is missing')
-        return false
-    end
-    local owner_id = redis:hkeys('chat:' .. old .. ':owner')
-    local owner_name = redis:hvals('chat:' .. old .. ':owner')
-    local settings = redis:hgetall('chat:' .. old .. ':settings')
-    local media = redis:hgetall('chat:' .. old .. ':media')
-    local flood = redis:hgetall('chat:' .. old .. ':flood')
-    local about = redis:get('chat:' .. old .. ':about')
-    local rules = redis:get('chat:' .. old .. ':rules')
-    local extra = redis:hgetall('chat:' .. old .. ':extra')
-    local admblock = redis:smembers('chat:' .. old .. ':reportblocked')
-    local logtxt = 'FROM [' .. old .. '] TO [' .. new .. ']\n'
-
-    -- migrate about
-    logtxt = logtxt .. 'Migrating about...'
-    if about then
-        res = redis:set('chat:' .. new .. ':about', about)
-        logtxt = logtxt .. give_result(res) .. '\n'
-    else
-        logtxt = logtxt .. ' empty\n'
-    end
-
-    -- migrate rules
-    logtxt = logtxt .. 'Migrating rules...'
-    if rules then
-        res = redis:set('chat:' .. new .. ':rules', rules)
-        logtxt = logtxt .. give_result(res) .. '\n'
-    else
-        logtxt = logtxt .. ' empty\n'
-    end
-
-    -- migrate settings
-    logtxt = logtxt .. 'Migrating settings...\n'
-    logtxt = logtxt .. migrate_table(settings, 'chat:' .. new .. ':settings')
-
-    -- migrate media settings
-    logtxt = logtxt .. 'Migrating media settings...\n'
-    logtxt = logtxt .. migrate_table(media, 'chat:' .. new .. ':media')
-
-    -- migrate extra
-    logtxt = logtxt .. 'Migrating extra...\n'
-    logtxt = logtxt .. migrate_table(extra, 'chat:' .. new .. ':extra')
-
-    -- migrate flood settings
-    logtxt = logtxt .. 'Migrating flood settings...\n'
-    logtxt = logtxt .. migrate_table(flood, 'chat:' .. new .. ':flood')
-
-    -- migrate adminblocked list
-    logtxt = logtxt .. 'Migrating admin-blocked...\n'
-    if admblocked and next(admblocked) then
-        for k, v in pairs(admblock) do
-            logtxt = logtxt .. v .. ' migration: '
-            local res = redis:sadd('chat:' .. new .. ':reportblocked')
-            logtxt = logtxt .. give_result(res) .. '\n'
-        end
-    else
-        logtxt = logtxt .. 'List empty\n'
-    end
-
-    -- flood
-    print(logtxt)
-    --[[local log_path = "./logs/migration_from["..tostring(old):gsub('-', '').."]to["..tostring(new):gsub('-', '').."].txt"
-	file = io.open(log_path, "w")
-	file:write(logtxt)
-    file:close()
-	if on_request then
-		sendDocument(config.admin.owner, log_path)
-	end]]
-end
-
 function div()
     print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
     print('XXXXXXXXXXXXXXXXXX BREAK XXXXXXXXXXXXXXXXXXX')
     print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-end
-
-function migrate_ban_list(old, new)
-    local hash = 'chat:' .. old .. ':banned'
-    local banned = redis:smembers(hash)
-    if next(banned) then
-        for i = 1, #banned do
-            kickChatMember(new, banned[i])
-        end
-    end
-end	
-
-function to_supergroup(msg)
-    local old = msg.chat.id
-    local new = msg.migrate_to_chat_id
-    migrate_chat_info(old, new, false)
-    migrate_ban_list(old, new)
-    sendMessage(new, '(_service notification: migration of the group executed_)', true)
 end
 
 function getname(msg)
@@ -969,6 +878,50 @@ function format_http_params(params, is_get)
         end
     end
     return str
+end
+
+function is_realm(msg)
+    local var = false
+    local realms = 'realms'
+    local data = load_data(_config.moderation.data)
+    local chat = msg.to.id
+    if data[tostring(realms)] then
+        if data[tostring(realms)][tostring(chat)] then
+            var = true
+        end
+        return var
+    end
+end
+
+-- Check if this chat is a group or not
+function is_group(msg)
+    local var = false
+    local data = load_data(_config.moderation.data)
+    local groups = 'groups'
+    local chat = msg.to.id
+    if data[tostring(groups)] then
+        if data[tostring(groups)][tostring(chat)] then
+            if msg.to.type == 'group' then
+                var = true
+            end
+        end
+        return var
+    end
+end
+
+function is_super_group(msg)
+    local var = false
+    local data = load_data(_config.moderation.data)
+    local groups = 'groups'
+    local chat = msg.to.id
+    if data[tostring(groups)] then
+        if data[tostring(groups)][tostring(chat)] then
+            if msg.to.type == 'supergroup' then
+                var = true
+            end
+            return var
+        end
+    end
 end
 
 function is_channel_disabled(receiver)

@@ -77,6 +77,14 @@ local function run(msg, matches)
                 sendMessage(msg.chat.id, i .. langs[msg.lang].setsRestored)
             end
 
+            -- migrate ban
+            local banned = redis:smembers('banned:' .. msg.chat.tg_cli_id)
+            if next(banned) then
+                for i = 1, #banned do
+                    banUser(msg.chat.id, banned[i])
+                end
+            end
+
             -- migrate likes from likecounterdb.json
             local old_likecounter_path = '/home/pi/AISashaExp/data/likecounterdb.json'
             local new_likecounter_path = '/home/pi/AISashaAPI/data/likecounterdb.json'

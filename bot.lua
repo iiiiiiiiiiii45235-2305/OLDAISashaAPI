@@ -468,6 +468,14 @@ function migrate_to_supergroup(msg)
         redis:hdel('group:' .. old .. ':variables', name)
     end
 
+    -- migrate ban
+    local banned = redis:smembers('banned:' .. msg.chat.tg_cli_id)
+    if next(banned) then
+        for i = 1, #banned do
+            banUser(msg.chat.id, banned[i])
+        end
+    end
+
     -- migrate likes from likecounterdb.json
     local data = load_data(config.likecounter.db)
     if data then
