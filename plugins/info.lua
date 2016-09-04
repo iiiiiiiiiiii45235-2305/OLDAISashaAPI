@@ -86,7 +86,7 @@ local function get_object_info(obj, chat_id, lang)
         else
             return langs[lang].peerTypeUnknown
         end
-        return sendMessage(chat_id, text)
+        return text
     else
         return langs[lang].noObject
     end
