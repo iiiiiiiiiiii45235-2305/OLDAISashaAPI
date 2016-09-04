@@ -108,6 +108,7 @@ local function run(msg, matches)
             local old_moderation_data = load_data(old_moderation_path)
             local new_moderation_data = load_data(new_moderation_path)
             if old_moderation_data['groups'] then
+                new_moderation_data['groups'] = { }
                 for id_string in pairs(old_moderation_data['groups']) do
                     if old_moderation_data[id_string] then
                         if old_moderation_data[id_string].group_type == 'SuperGroup' then
@@ -141,6 +142,7 @@ local function run(msg, matches)
                 end
             end
             if old_moderation_data['realms'] then
+                new_moderation_data['realms'] = { }
                 for id_string in pairs(old_moderation_data['realms']) do
                     if old_moderation_data[id_string] then
                         new_moderation_data['realms'][tostring('-' .. id_string)] = '-' .. id_string
