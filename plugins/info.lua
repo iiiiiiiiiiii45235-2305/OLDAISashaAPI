@@ -198,12 +198,12 @@ local function run(msg, matches)
             end
         elseif matches[2] then
             if is_mod(msg) then
-                if string.match(matches[2], '^%d+$') then
+                if string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2]).result
                     return get_object_info(obj, msg.chat.id, msg.lang)
                 else
                     -- not sure if it works
-                    local obj = resolveUsername(matches[2]:gsub('@', '')).result
+                    local obj = resolveUsername(matches[2]:gsub('@', ''))
                     return get_object_info(obj, msg.chat.id, msg.lang)
                 end
             else

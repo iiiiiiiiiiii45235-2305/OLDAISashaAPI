@@ -205,6 +205,8 @@ local function run(msg, matches)
             save_data(new_database_path, new_database_data)
         end
     end
+    --
+    return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted
 end
 
 return {
