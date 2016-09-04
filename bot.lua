@@ -243,11 +243,13 @@ end
 -- recursive to simplify code
 function adjust_msg(msg)
     -- sender print_name and tg_cli_id
-    if msg.from.type then
-        if msg.from.type == 'channel' then
-            msg.from = adjust_supergroup_channel(msg.from)
-        else
-            msg.from = adjust_user(msg.from)
+    if msg.from then
+        if msg.from.type then
+            if msg.from.type == 'channel' then
+                msg.from = adjust_supergroup_channel(msg.from)
+            else
+                msg.from = adjust_user(msg.from)
+            end
         end
     end
 
@@ -276,21 +278,23 @@ function adjust_msg(msg)
         msg.removed = adjust_user(msg.removed)
     end
 
-    if msg.chat.type then
-        if msg.chat.type == 'private' then
-            -- private chat
-            msg.chat = adjust_user(msg.chat)
-            msg.receiver = 'user#id' .. msg.chat.tg_cli_id
-        else
-            -- group/supergroup/channel
-            if msg.chat.type == 'group' then
-                -- group
-                msg.chat = adjust_group(msg.chat)
-                msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
+    if msg.chat then
+        if msg.chat.type then
+            if msg.chat.type == 'private' then
+                -- private chat
+                msg.chat = adjust_user(msg.chat)
+                msg.receiver = 'user#id' .. msg.chat.tg_cli_id
             else
-                -- supergroup/channel
-                msg.chat = adjust_supergroup_channel(msg.chat)
-                msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
+                -- group/supergroup/channel
+                if msg.chat.type == 'group' then
+                    -- group
+                    msg.chat = adjust_group(msg.chat)
+                    msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
+                else
+                    -- supergroup/channel
+                    msg.chat = adjust_supergroup_channel(msg.chat)
+                    msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
+                end
             end
         end
     end
@@ -310,7 +314,7 @@ function adjust_msg(msg)
     end
 
     -- group language
-    msg.lang = get_lang(msg.chat.tg_cli_id)
+    msg.lang = get_lang(msg.chat.id)
     return msg
 end
 
