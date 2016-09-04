@@ -447,6 +447,58 @@ function pre_process_media_msg(msg)
     return msg
 end
 
+function migrate_to_supergroup(msg)
+    local old = msg.chat.id
+    local new = msg.migrate_to_chat_id
+    if not old or not new then
+        print('A group id is missing')
+        return false
+    end
+
+    local data = load_data(config.moderation.data)
+    data[tostring(new)] = data[tostring(old)]
+    data[tostring(old)] = nil
+    data['groups'][tostring(new)] = tonumber(new)
+    data['groups'][tostring(old)] = nil
+
+    -- migrate get
+    local vars = redis:hgetall('group:' .. old .. ':variables')
+    for name, value in pairs(vars) do
+        redis:hset('supergroup:' .. new .. ':variables', name, value)
+        redis:hdel('group:' .. old .. ':variables', name)
+    end
+
+    -- migrate likes from likecounterdb.json
+    local data = load_data(config.likecounter.db)
+    if data then
+        for id_string in pairs(data) do
+            -- if there are any groups check for everyone of them to find the one requesting migration, if found migrate
+            if id_string == tostring(old) then
+                data[tostring(new)] = data[id_string]
+                data[id_string] = nil
+            end
+        end
+    end
+    save_data(config.likecounter.db, data)
+
+    -- migrate database from database.json
+    local data = load_data(config.database.db)
+    if data then
+        for id_string in pairs(data) do
+            -- if there are any groups move their data from cli to api db
+            if id_string == tostring(old) then
+                data[tostring(new)] = data[tostring(old)]
+                data[tostring(new)].old_usernames = 'NOUSER'
+                data[tostring(new)].username = 'NOUSER'
+                data[tostring(old)] = nil
+            end
+        end
+    end
+    save_data(config.database.db, data)
+    --
+    sendMessage(new, '(_service notification: migration of the group executed_)', true)
+end
+
 -- recursive to simplify code
 function pre_process_service_msg(msg)
     if msg.service or msg.migrate_from_chat_id or msg.pinned_message or msg.new_chat_photo or msg.new_chat_title then

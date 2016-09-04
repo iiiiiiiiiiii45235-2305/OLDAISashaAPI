@@ -112,7 +112,7 @@ local function run(msg, matches)
                 for id_string in pairs(old_moderation_data['groups']) do
                     if old_moderation_data[id_string] then
                         if old_moderation_data[id_string].group_type == 'SuperGroup' then
-                            new_moderation_data['groups'][tostring('-100' .. id_string)] = '-100' .. id_string
+                            new_moderation_data['groups'][tostring('-100' .. id_string)] = tonumber('-100' .. id_string)
                             new_moderation_data[tostring('-100' .. id_string)] = { }
                             new_moderation_data[tostring('-100' .. id_string)].group_type = old_moderation_data[id_string].group_type
                             new_moderation_data[tostring('-100' .. id_string)].moderators = old_moderation_data[id_string].moderators
@@ -124,7 +124,7 @@ local function run(msg, matches)
                             new_moderation_data[tostring('-100' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers
                             new_moderation_data[tostring('-100' .. id_string)].goodbye = old_moderation_data[id_string].goodbye
                         elseif old_moderation_data[id_string].group_type == 'Group' then
-                            new_moderation_data['groups'][tostring('-' .. id_string)] = '-' .. id_string
+                            new_moderation_data['groups'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
                             new_moderation_data[tostring('-' .. id_string)] = { }
                             new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
                             new_moderation_data[tostring('-' .. id_string)].moderators = old_moderation_data[id_string].moderators
@@ -147,7 +147,7 @@ local function run(msg, matches)
                 new_moderation_data['realms'] = { }
                 for id_string in pairs(old_moderation_data['realms']) do
                     if old_moderation_data[id_string] then
-                        new_moderation_data['realms'][tostring('-' .. id_string)] = '-' .. id_string
+                        new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
                         new_moderation_data[tostring('-' .. id_string)] = { }
                         new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
                         new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
