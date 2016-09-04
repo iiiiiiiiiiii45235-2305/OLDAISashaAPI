@@ -430,13 +430,6 @@ function pre_process_media_msg(msg)
     if msg.reply then
         pre_process_media_msg(msg.reply_to_message)
     end
-    if msg.forward then
-        if msg.forward_from then
-            pre_process_media_msg(msg.forward_from)
-        elseif msg.forward_from_chat then
-            pre_process_media_msg(msg.forward_from_chat)
-        end
-    end
     return msg
 end
 
@@ -482,13 +475,6 @@ function pre_process_service_msg(msg)
     end
     if msg.reply then
         pre_process_service_msg(msg.reply_to_message)
-    end
-    if msg.forward then
-        if msg.forward_from then
-            pre_process_service_msg(msg.forward_from)
-        elseif msg.forward_from_chat then
-            pre_process_service_msg(msg.forward_from_chat)
-        end
     end
     return msg
 end
