@@ -222,20 +222,31 @@ function bot_init()
 end
 
 function adjust_user(tab)
+    tab.type = 'private'
     tab.tg_cli_id = tonumber(tab.id)
     tab.print_name = tab.first_name ..(tab.last_name or '')
     return tab
 end
 
 function adjust_group(tab)
+    tab.type = 'group'
     local id_without_minus = tostring(tab.id):gsub('-', '')
     tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
 end
 
-function adjust_supergroup_channel(tab)
+function adjust_supergrou(tab)
     local id_without_minus = tostring(tab.id):gsub('-100', '')
+    tab.type = 'supergroup'
+    tab.tg_cli_id = tonumber(id_without_minus)
+    tab.print_name = tab.title
+    return tab
+end
+
+function adjust_channel(tab)
+    local id_without_minus = tostring(tab.id):gsub('-100', '')
+    tab.type = 'channel'
     tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
@@ -247,7 +258,7 @@ function adjust_msg(msg)
     -- sender print_name and tg_cli_id
     if msg.from.type then
         if msg.from.type == 'channel' then
-            msg.from = adjust_supergroup_channel(msg.from)
+            msg.from = adjust_channel(msg.from)
         else
             msg.from = adjust_user(msg.from)
         end
@@ -283,17 +294,18 @@ function adjust_msg(msg)
             -- private chat
             msg.chat = adjust_user(msg.chat)
             msg.receiver = 'user#id' .. msg.chat.tg_cli_id
-        else
-            -- group/supergroup/channel
-            if msg.chat.type == 'group' then
-                -- group
-                msg.chat = adjust_group(msg.chat)
-                msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
-            else
-                -- supergroup/channel
-                msg.chat = adjust_supergroup_channel(msg.chat)
-                msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
-            end
+        elseif msg.chat.type == 'group' then
+            -- group
+            msg.chat = adjust_group(msg.chat)
+            msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
+        elseif msg.chat.type == 'supergroup' then
+            -- supergroup
+            msg.chat = adjust_supergroup(msg.chat)
+            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
+        elseif msg.chat.type == 'channel' then
+            -- channel
+            msg.chat = adjust_channel(msg.chat)
+            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
         end
     end
 
@@ -302,7 +314,7 @@ function adjust_msg(msg)
         if msg.forward_from then
             msg.forward_from = adjust_user(msg.forward_from)
         elseif msg.forward_from_chat then
-            msg.forward_from_chat = adjust_supergroup_channel(msg.forward_from_chat)
+            msg.forward_from_chat = adjust_channel(msg.forward_from_chat)
         end
     end
 
