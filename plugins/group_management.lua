@@ -589,16 +589,16 @@ local function superadd(msg)
                     set_owner = tostring(admin.user.id),
                     settings =
                     {
-                    set_name = string.gsub(msg.chat.print_name,'_',' '),
-                    lock_arabic = 'no',
-                    lock_link = "no",
-                    flood = 'yes',
-                    lock_spam = 'yes',
-                    lock_sticker = 'no',
-                    member = 'no',
-                    lock_rtl = 'no',
-                    lock_contacts = 'no',
-                    strict = 'no'
+                        set_name = string.gsub(msg.chat.print_name,'_',' '),
+                        lock_arabic = 'no',
+                        lock_link = "no",
+                        flood = 'yes',
+                        lock_spam = 'yes',
+                        lock_sticker = 'no',
+                        member = 'no',
+                        lock_rtl = 'no',
+                        lock_contacts = 'no',
+                        strict = 'no'
                     }
                 }
                 save_data(config.moderation.data, data)
