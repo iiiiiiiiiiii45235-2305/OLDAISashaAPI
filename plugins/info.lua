@@ -232,9 +232,9 @@ local function pre_process(msg)
     if msg.chat.type == 'private' and msg.forward then
         if is_admin(msg) then
             if msg.forward_from then
-                return get_object_info(msg.forward_from, msg.chat.id, msg.lang)
+                sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id, msg.lang))
             elseif msg.forward_from_chat then
-                return get_object_info(msg.forward_from_chat, msg.chat.id, msg.lang)
+                sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id, msg.lang))
             end
         end
     end

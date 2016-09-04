@@ -338,7 +338,7 @@ local function save_to_db(msg)
 
         -- if reply adjust reply
         if msg.reply then
-            save_to_db(msg.reply_to_message)
+            msg.reply_to_message = save_to_db(msg.reply_to_message)
         end
     else
         sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp)

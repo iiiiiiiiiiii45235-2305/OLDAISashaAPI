@@ -23,6 +23,7 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
+            msg = clean_msg(msg)
         end
         local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
         -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
@@ -34,6 +35,7 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
+            msg = clean_msg(msg)
         end
         local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
         if is_squig_msg and lock_arabic == "yes" then
@@ -43,6 +45,7 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
+            msg = clean_msg(msg)
         end
         local print_name = msg.from.print_name
         local is_rtl = print_name:match("‮") or msg.text:match("‮")
@@ -53,6 +56,7 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
+            msg = clean_msg(msg)
         end
     end
     if msg.media then
@@ -68,6 +72,7 @@ local function check_msg(msg)
                 if msg.chat.type == 'group' then
                     banUser(bot.id, msg.from.id, msg.chat.id)
                 end
+                msg = clean_msg(msg)
             end
             local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
             if is_squig_caption and lock_arabic == "yes" then
@@ -77,6 +82,7 @@ local function check_msg(msg)
                 if msg.chat.type == 'group' then
                     banUser(bot.id, msg.from.id, msg.chat.id)
                 end
+                msg = clean_msg(msg)
             end
         end
         if lock_sticker == "yes" and msg.sticker then
@@ -86,6 +92,7 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
+            msg = clean_msg(msg)
         end
         if lock_contacts == "yes" and msg.contact then
             if strict == "yes" then
@@ -94,6 +101,7 @@ local function check_msg(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
+            msg = clean_msg(msg)
         end
     end
     if msg.service then
@@ -111,15 +119,19 @@ local function check_msg(msg)
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
+                    msg = clean_msg(msg)
                 end
                 local print_name = msg.from.print_name
                 local is_rtl_name = print_name:match("‮")
                 if is_rtl_name and lock_rtl == "yes" then
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
-                    kickUser(bot.id, msg.from.id, msg.chat.id)
+                    if strict == "yes" then
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
+                        kickUser(bot.id, msg.from.id, msg.chat.id)
+                    end
                     if msg.chat.type == 'group' then
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
+                    msg = clean_msg(msg)
                 end
                 if lock_member == 'yes' then
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#lockmember)")
@@ -127,6 +139,7 @@ local function check_msg(msg)
                     if msg.chat.type == 'group' then
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
+                    msg = clean_msg(msg)
                 end
             elseif msg.adder.id ~= msg.added.id then
                 if string.len(msg.added.print_name) > 70 and lock_group_spam == 'yes' then
@@ -139,15 +152,19 @@ local function check_msg(msg)
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
+                    msg = clean_msg(msg)
                 end
                 local print_name = msg.added.print_name
                 local is_rtl_name = print_name:match("‮")
                 if is_rtl_name and lock_rtl == "yes" then
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
-                    kickUser(bot.id, msg.added.id, msg.chat.id)
+                    if strict == "yes" then
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
+                        kickUser(bot.id, msg.added.id, msg.chat.id)
+                    end
                     if msg.chat.type == 'group' then
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
+                    msg = clean_msg(msg)
                 end
                 if msg.chat.type == 'supergroup' and lock_member == 'yes' then
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
@@ -155,6 +172,7 @@ local function check_msg(msg)
                     if msg.chat.type == 'group' then
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
+                    msg = clean_msg(msg)
                 end
             end
         end
@@ -223,8 +241,6 @@ local function pre_process(msg)
                 local tmp = check_msg(msg)
                 if tmp then
                     msg = tmp
-                else
-                    return
                 end
             end
         end
