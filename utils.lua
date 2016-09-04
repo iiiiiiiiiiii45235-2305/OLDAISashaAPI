@@ -883,8 +883,8 @@ end
 function is_realm(msg)
     local var = false
     local realms = 'realms'
-    local data = load_data(_config.moderation.data)
-    local chat = msg.to.id
+    local data = load_data(config.moderation.data)
+    local chat = msg.chat.id
     if data[tostring(realms)] then
         if data[tostring(realms)][tostring(chat)] then
             var = true
@@ -896,12 +896,12 @@ end
 -- Check if this chat is a group or not
 function is_group(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local groups = 'groups'
-    local chat = msg.to.id
+    local chat = msg.chat.id
     if data[tostring(groups)] then
         if data[tostring(groups)][tostring(chat)] then
-            if msg.to.type == 'group' then
+            if msg.chat.type == 'group' then
                 var = true
             end
         end
@@ -911,12 +911,12 @@ end
 
 function is_super_group(msg)
     local var = false
-    local data = load_data(_config.moderation.data)
+    local data = load_data(config.moderation.data)
     local groups = 'groups'
-    local chat = msg.to.id
+    local chat = msg.chat.id
     if data[tostring(groups)] then
         if data[tostring(groups)][tostring(chat)] then
-            if msg.to.type == 'supergroup' then
+            if msg.chat.type == 'supergroup' then
                 var = true
             end
             return var
