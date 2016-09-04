@@ -88,19 +88,23 @@ local function run(msg, matches)
 end
 
 local function pre_process(msg)
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        local hash = 'flame:' .. msg.chat.id
-        local tokick = 'tokick:' .. msg.chat.id
-        if tostring(msg.from.id) == tostring(redis:get(tokick)) then
-            redis:incr(hash)
-            local hashonredis = redis:get(hash)
-            if hashonredis then
-                reply_msg(msg.id, langs.phrases.flame[tonumber(hashonredis)], ok_cb, false)
-                if tonumber(hashonredis) == #langs.phrases.flame then
-                    local user_id = redis:get(tokick)
-                    kickUser(bot.id, user_id, msg.chat.id)
-                    redis:del(hash)
-                    redis:del(tokick)
+    if msg.chat then
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            local hash = 'flame:' .. msg.chat.id
+            local tokick = 'tokick:' .. msg.chat.id
+            if msg.from then
+                if tostring(msg.from.id) == tostring(redis:get(tokick)) then
+                    redis:incr(hash)
+                    local hashonredis = redis:get(hash)
+                    if hashonredis then
+                        reply_msg(msg.id, langs.phrases.flame[tonumber(hashonredis)], ok_cb, false)
+                        if tonumber(hashonredis) == #langs.phrases.flame then
+                            local user_id = redis:get(tokick)
+                            kickUser(bot.id, user_id, msg.chat.id)
+                            redis:del(hash)
+                            redis:del(tokick)
+                        end
+                    end
                 end
             end
         end
