@@ -595,8 +595,8 @@ function print_msg(msg)
     local hour = os.date('%H')
     local minute = os.date('%M')
     local second = os.date('%S')
-    local chat_name = msg.chat.title or(msg.chat.first_name .. msg.chat.last_name or '')
-    local sender_name = msg.from.title or(msg.from.first_name .. msg.from.last_name or '')
+    local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
+    local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
     local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> '
     if msg.forward then
         print_text = print_text .. clr.white .. '[forward] '
@@ -613,13 +613,13 @@ function print_msg(msg)
     if msg.service then
         -- white action reset red name reset
         if service_type == 'chat_del_user' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name .. msg.remover.last_name or '') .. clr.reset .. clr.white .. ' deleted user ' ..(msg.removed.first_name .. msg.removed.last_name or '')
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' ..(msg.removed.first_name ..(msg.removed.last_name or ''))
         elseif service_type == 'chat_del_user_leave' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name .. msg.remover.last_name or '') .. clr.reset .. clr.white .. ' left the chat '
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' left the chat '
         elseif service_type == 'chat_add_user' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name .. msg.adder.last_name or '') .. clr.reset .. clr.white .. ' added user ' ..(msg.added.first_name .. msg.added.last_name or '')
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' added user ' ..(msg.added.first_name ..(msg.added.last_name or ''))
         elseif service_type == 'chat_add_user_link' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name .. msg.adder.last_name or '') .. clr.reset .. clr.white .. ' joined chat by invite link '
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link '
         else
             print_text = print_text .. clr.white .. '[' .. service_type .. '] '
         end
