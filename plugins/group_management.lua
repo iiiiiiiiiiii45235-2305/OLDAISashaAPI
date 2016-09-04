@@ -477,10 +477,10 @@ local function promote(chat_id, user)
     if not data[tostring(chat_id)] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
-    if data[tostring(chat_id)]['moderators'][tostring(member_id)] then
+    if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].alreadyMod)
     end
-    data[tostring(chat_id)]['moderators'][tostring(member_id)] =(user.username or user.print_name)
+    data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name)
     save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].promoteMod)
 end
@@ -491,10 +491,10 @@ local function demote(chat_id, user)
     if not data[tostring(chat_id)] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
-    if not data[tostring(chat_id)]['moderators'][tostring(member_id)] then
+    if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
         return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].notMod)
     end
-    data[tostring(chat_id)]['moderators'][tostring(member_id)] = nil
+    data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
     save_data(config.moderation.data, data)
     return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].demoteMod)
 end
