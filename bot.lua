@@ -314,7 +314,9 @@ function adjust_msg(msg)
     end
 
     -- group language
-    msg.lang = get_lang(msg.chat.id)
+    if msg.chat then
+        msg.lang = get_lang(msg.chat.id)
+    end
     return msg
 end
 
