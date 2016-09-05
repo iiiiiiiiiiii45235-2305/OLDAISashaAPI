@@ -1148,18 +1148,6 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if msg.service then
-            if msg.service_type == 'chat_add_user' then
-                if msg.added then
-                    if msg.added.id ~= 149998353 then
-                        -- if not admin and not bot then
-                        if not is_admin(msg) then
-                            return kickUser(bot.id, msg.added.id, msg.chat.id)
-                        end
-                    end
-                end
-            end
-        end
         if (matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca') and matches[2] and matches[3] then
             if is_admin(msg) then
                 if matches[3]:lower() == 'member' then
@@ -1303,21 +1291,6 @@ local function run(msg, matches)
             end
         end
         if data[tostring(msg.chat.id)] then
-            local settings = data[tostring(msg.chat.id)]['settings']
-            if msg.service then
-                if msg.service_type == 'chat_add_user' then
-                    if settings.lock_member == 'yes' and not is_owner2(msg.action.user.id, msg.chat.id) then
-                        return kickUser(bot.id, msg.added.id, msg.chat.id)
-                    elseif settings.lock_member == 'yes' and tonumber(msg.from.id) == tonumber(bot.id) then
-                        return
-                    elseif settings.lock_member == 'no' then
-                        return
-                    end
-                end
-                if msg.service_type == 'chat_del_user' then
-                    return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.action.user.id)
-                end
-            end
             if matches[1]:lower() == 'promote' or matches[1]:lower() == 'sasha promuovi' or matches[1]:lower() == 'promuovi' then
                 if is_owner(msg) then
                     if msg.reply then
@@ -2026,6 +1999,33 @@ local function run(msg, matches)
     end
 end
 
+local function pre_process(msg)
+    if msg.service then
+        if is_realm(msg) then
+            if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_user_link' then
+                if msg.added.id ~= 149998353 then
+                    -- if not admin and not bot then
+                    if not is_admin(msg) then
+                        kickUser(bot.id, msg.added.id, msg.chat.id)
+                    end
+                end
+            end
+        end
+        if is_group(msg) then
+            local settings = data[tostring(msg.chat.id)]['settings']
+            if msg.service_type == 'chat_add_user' then
+                if settings.lock_member == 'yes' and not is_owner2(msg.added.id, msg.chat.id) then
+                    kickUser(bot.id, msg.added.id, msg.chat.id)
+                end
+            end
+            if msg.service_type == 'chat_del_user' then
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.action.user.id)
+            end
+        end
+    end
+    return msg
+end
+
 return {
     description = "GROUP_MANAGEMENT",
     patterns =
@@ -2091,7 +2091,6 @@ return {
         "^[#!/]([Cc][Ll][Ee][Aa][Nn]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
-        "^!!tgservice (.+)$",
         -- rules
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ee][Gg][Oo][Ll][Ee])$",
         -- about
@@ -2127,6 +2126,7 @@ return {
         -- unsetlink
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Ll][Ii][Nn][Kk])$",
     },
+    pre_process = pre_process,
     run = run,
     min_rank = 0,
     syntax =
