@@ -114,7 +114,9 @@ local function run(msg, matches)
     if matches[1]:lower() == 'getmemberswelcome' and is_mod(msg) then
         return get_memberswelcome(msg.chat.id)
     end
+end
 
+local function pre_process(msg)
     if msg.service then
         if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
             local hash
@@ -135,10 +137,11 @@ local function run(msg, matches)
                 redis:set(hash, 0)
             end
         end
-        if msg.service_type == "chat_del_user" and get_goodbye(msg.chat.id) ~= '' then
+        if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
             sendMessage(msg.chat.id, get_goodbye(msg.chat.id) .. ' ' .. msg.removed.print_name:gsub('_', ' '))
         end
     end
+    return msg
 end
 
 return {
@@ -153,8 +156,8 @@ return {
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Mm][Bb][Ee][Rr][Ss][Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Mm][Ee][Mm][Bb][Ee][Rr][Ss][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
-        "^!!tgservice (.+)$",
     },
+    pre_process = pre_process,
     run = run,
     min_rank = 0,
     syntax =

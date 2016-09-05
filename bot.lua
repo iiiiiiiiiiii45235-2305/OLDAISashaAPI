@@ -7,7 +7,7 @@ last_administrator_cron = os.date('%d')
 -- Save the content of config to config.lua
 function save_config()
     serialize_to_file(config, './data/config.lua', false)
-    print(clr.white .. 'saved config into ./data/config.lua')
+    print(clr.white .. 'saved config into ./data/config.lua' .. clr.reset)
 end
 
 -- Returns the config from config.lua file.
@@ -16,14 +16,14 @@ function load_config()
     local f = io.open('./config.lua', "r")
     -- If config.lua doesn't exist
     if not f then
-        print(clr.white .. "Created new config file: config.lua")
+        print(clr.white .. "Created new config file: config.lua" .. clr.reset)
         create_config()
     else
         f:close()
     end
     local config = loadfile("./config.lua")()
     for v, user in pairs(config.sudo_users) do
-        print(clr.green .. "Sudo user: " .. user)
+        print(clr.green .. "Sudo user: " .. user .. clr.reset)
     end
     return config
 end
@@ -152,7 +152,7 @@ function create_config()
         }
     }
     serialize_to_file(config, './config.lua', false)
-    print(clr.white .. 'saved config into ./config.lua')
+    print(clr.white .. 'saved config into ./config.lua' .. clr.reset)
 end
 
 -- Enable plugins in config.lua
@@ -160,7 +160,7 @@ function load_plugins()
     local index = 0
     for k, v in pairs(config.enabled_plugins) do
         index = index + 1
-        print(clr.white .. "Loading plugin", v)
+        print(clr.white .. "Loading plugin", v .. clr.reset)
 
         local ok, err = pcall( function()
             local t = loadfile("plugins/" .. v .. '.lua')()
@@ -168,16 +168,16 @@ function load_plugins()
         end )
 
         if not ok then
-            print(clr.red .. 'Error loading plugin ' .. v)
-            print(tostring(clr.red .. io.popen("lua plugins/" .. v .. ".lua"):read('*all')))
-            print(clr.red .. err)
+            print(clr.red .. 'Error loading plugin ' .. v .. clr.reset)
+            print(tostring(clr.red .. io.popen("lua plugins/" .. v .. ".lua"):read('*all') .. clr.reset))
+            print(clr.red .. err .. clr.reset)
         end
     end
-    print(clr.white .. 'Plugins loaded: ', index)
+    print(clr.white .. 'Plugins loaded: ', index .. clr.reset)
 end
 
 function load_database()
-    print(clr.white .. 'Loading database.json')
+    print(clr.white .. 'Loading database.json' .. clr.reset)
     database = load_data(config.database.db)
 end
 
@@ -205,7 +205,7 @@ function bot_init()
     load_plugins()
     load_database()
 
-    print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id)
+    print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
     redis:hincrby('bot:general', 'starts', 1)
     sendAdmin('*Bot started!*\n_' .. os.date('On %A, %d %B %Y\nAt %X') .. '_\n' .. #plugins .. ' plugins loaded', true)
 
@@ -555,18 +555,18 @@ end
 
 function msg_valid(msg)
     if msg.from.id == 149998353 then
-        print(clr.yellow .. 'Not valid: my user version')
+        print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
         return false
     end
 
     -- Before bot was started more or less
     if msg.date < os.time() -5 then
-        print(clr.yellow .. 'Not valid: old msg')
+        print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
         return false
     end
 
     if is_channel_disabled(msg.receiver) and not is_momod(msg) then
-        print(clr.yellow .. 'Not valid: channel disabled')
+        print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
         return false
     end
 
@@ -614,7 +614,7 @@ function match_plugin(plugin, plugin_name, msg)
     for k, pattern in pairs(plugin.patterns) do
         local matches = match_pattern(pattern, msg.text)
         if matches then
-            print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern)
+            print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.receiver)
 
@@ -656,37 +656,38 @@ function print_msg(msg)
     local second = os.date('%S')
     local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
     local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
-    local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> '
+    local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
     if msg.forward then
-        print_text = print_text .. clr.white .. '[forward] '
+        print_text = print_text .. clr.white .. '[forward] ' .. clr.reset
     end
     if msg.reply then
-        print_text = print_text .. clr.white .. '[reply] '
+        print_text = print_text .. clr.white .. '[reply] ' .. clr.reset
     end
     if msg.media then
-        print_text = print_text .. clr.white .. '[' ..(media_type or 'unsupported') .. '] '
+        print_text = print_text .. clr.white .. '[' ..(media_type or 'unsupported') .. '] ' .. clr.reset
         if msg.caption then
-            print_text = print_text .. msg.caption
+            print_text = print_text .. clr.white .. msg.caption .. clr.reset
         end
     end
     if msg.service then
         -- white action reset red name reset
         if service_type == 'chat_del_user' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' ..(msg.removed.first_name ..(msg.removed.last_name or ''))
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. clr.reset
         elseif service_type == 'chat_del_user_leave' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' left the chat '
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' left the chat ' .. clr.reset
         elseif service_type == 'chat_add_user' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' added user ' ..(msg.added.first_name ..(msg.added.last_name or ''))
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' added user ' ..(msg.added.first_name ..(msg.added.last_name or '')) .. clr.reset
         elseif service_type == 'chat_add_user_link' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link '
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link ' .. clr.reset
         else
-            print_text = print_text .. clr.white .. '[' ..(service_type or 'unsupported') .. '] '
+            print_text = print_text .. clr.white .. '[' ..(service_type or 'unsupported') .. '] ' .. clr.reset
         end
     end
     if msg.text then
-        print_text = print_text .. clr.blue .. msg.text
+        print_text = print_text .. clr.blue .. msg.text .. clr.reset
     end
     print(print_text)
+    print(msg.chat.id)
 end
 
 -- This function is called when tg receive a msg
@@ -784,14 +785,14 @@ while is_started do
             end
         end
     else
-        print(clr.red .. 'Connection error')
+        print(clr.red .. 'Connection error' .. clr.reset)
     end
     cron_plugins()
     cron_database()
     cron_administrator()
 end
 
-print(clr.white .. 'Halted.')
+print(clr.white .. 'Halted.' .. clr.reset)
 
 --[[COLORS
   black = "\27[30m",

@@ -12,16 +12,21 @@ local function run(msg, matches)
         else
             return langs[msg.lang].require_admin
         end
-    elseif msg.service then
+    end
+end
+
+local function pre_process(msg)
+    if msg.service then
         if msg.adder and msg.added then
             if tostring(msg.added.id) == bot.id then
                 if not is_admin(msg) then
                     sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
-                    return leaveChat(msg.chat.id)
+                    leaveChat(msg.chat.id)
                 end
             end
         end
     end
+    return msg
 end
 
 return {
@@ -33,8 +38,8 @@ return {
         -- leave
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Bb][Bb][Aa][Nn][Dd][Oo][Nn][Aa]) (%-?%d+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Bb][Bb][Aa][Nn][Dd][Oo][Nn][Aa])$",
-        "^!!tgservice (.+)$",
     },
+    pre_process = pre_process,
     run = run,
     min_rank = 3,
     syntax =
