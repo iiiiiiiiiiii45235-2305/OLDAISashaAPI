@@ -395,33 +395,33 @@ function pre_process_media_msg(msg)
     if msg.media or msg.contact or msg.location then
         if msg.media then
             if msg.photo then
-                msg.text = "(%[(photo)%])"
+                msg.text = "%[(photo)%]"
                 msg.media_type = 'photo'
             elseif msg.video then
-                msg.text = "(%[(video)%])"
+                msg.text = "%[(video)%]"
                 msg.media_type = 'video'
             elseif msg.audio then
-                msg.text = "(%[(audio)%])"
+                msg.text = "%[(audio)%]"
                 msg.media_type = 'audio'
             elseif msg.voice then
-                msg.text = "(%[(voice)%])"
+                msg.text = "%[(voice)%]"
                 msg.media_type = 'voice'
             elseif msg.document then
-                msg.text = "(%[(document)%])"
+                msg.text = "%[(document)%]"
                 msg.media_type = 'document'
                 if msg.document.mime_type == 'video/mp4' then
-                    msg.text = "(%[(gif)%])"
+                    msg.text = "%[(gif)%]"
                     msg.media_type = 'gif'
                 end
             elseif msg.sticker then
-                msg.text = "(%[(sticker)%])"
+                msg.text = "%[(sticker)%]"
                 msg.media_type = 'sticker'
             end
         elseif msg.contact then
-            msg.text = "(%[(contact)%])"
+            msg.text = "%[(contact)%]"
             msg.media_type = 'contact'
         elseif msg.location then
-            msg.text = "(%[(geo)%])"
+            msg.text = "%[(geo)%]"
             msg.media_type = 'geo'
         end
         msg.media = true
@@ -618,7 +618,7 @@ function match_plugin(plugin, plugin_name, msg)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.receiver)
 
-            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "(%[(document)%])" and pattern ~= "(%[(photo)%])" and pattern ~= "(%[(video)%])" and pattern ~= "(%[(audio)%])" and pattern ~= "(%[(contact)%])" and pattern ~= "(%[(geo)%])" then
+            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(geo)%]" then
                 if msg.chat.type == 'private' then
                     if disabled then
                         savelog(msg.chat.tg_cli_id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
