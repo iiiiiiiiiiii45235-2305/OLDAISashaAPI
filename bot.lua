@@ -392,31 +392,30 @@ end
 
 -- recursive to simplify code
 function pre_process_media_msg(msg)
-    if msg.media or msg.contact or msg.location then
-        if msg.media then
-            if msg.photo then
-                msg.text = "%[(photo)%]"
-                msg.media_type = 'photo'
-            elseif msg.video then
-                msg.text = "%[(video)%]"
-                msg.media_type = 'video'
-            elseif msg.audio then
-                msg.text = "%[(audio)%]"
-                msg.media_type = 'audio'
-            elseif msg.voice then
-                msg.text = "%[(voice)%]"
-                msg.media_type = 'voice'
-            elseif msg.document then
-                msg.text = "%[(document)%]"
-                msg.media_type = 'document'
-                if msg.document.mime_type == 'video/mp4' then
-                    msg.text = "%[(gif)%]"
-                    msg.media_type = 'gif'
-                end
-            elseif msg.sticker then
-                msg.text = "%[(sticker)%]"
-                msg.media_type = 'sticker'
+    if msg.photo or msg.video or msg.audio or msg.voice or msg.document or msg.sticker or msg.contact or msg.location then
+        msg.media = true
+        if msg.photo then
+            msg.text = "%[(photo)%]"
+            msg.media_type = 'photo'
+        elseif msg.video then
+            msg.text = "%[(video)%]"
+            msg.media_type = 'video'
+        elseif msg.audio then
+            msg.text = "%[(audio)%]"
+            msg.media_type = 'audio'
+        elseif msg.voice then
+            msg.text = "%[(voice)%]"
+            msg.media_type = 'voice'
+        elseif msg.document then
+            msg.text = "%[(document)%]"
+            msg.media_type = 'document'
+            if msg.document.mime_type == 'video/mp4' then
+                msg.text = "%[(gif)%]"
+                msg.media_type = 'gif'
             end
+        elseif msg.sticker then
+            msg.text = "%[(sticker)%]"
+            msg.media_type = 'sticker'
         elseif msg.contact then
             msg.text = "%[(contact)%]"
             msg.media_type = 'contact'
@@ -424,7 +423,6 @@ function pre_process_media_msg(msg)
             msg.text = "%[(geo)%]"
             msg.media_type = 'geo'
         end
-        msg.media = true
 
         if msg.entities then
             for i, entity in pairs(msg.entities) do
