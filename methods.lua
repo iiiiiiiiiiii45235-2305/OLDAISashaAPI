@@ -518,7 +518,7 @@ function kickUser(executer, target, chat_id)
 end
 
 -- call this to ban
-function banUser(executer, target, chat_id, normal_group)
+function banUser(executer, target, chat_id)
     if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
         -- try to kick. "code" is already specific
         local res, code = kickChatMember(target, chat_id)
@@ -528,10 +528,8 @@ function banUser(executer, target, chat_id, normal_group)
             savelog(chat_id, "[" .. executer .. "] banned user " .. target)
             redis:hincrby('bot:general', 'ban', 1)
             -- genreal: save how many kicks
-            if normal_group then
-                local hash = 'banned:' .. chat_id
-                redis:sadd(hash, target)
-            end
+            local hash = 'banned:' .. chat_id
+            redis:sadd(hash, target)
             return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
             -- return res and not the text
         else
@@ -561,18 +559,15 @@ function banUser(executer, target, chat_id, normal_group)
 end
 
 -- call this to unban
-function unbanUser(target, chat_id, normal_group)
+function unbanUser(target, chat_id)
     savelog(chat_id, "[" .. target .. "] unbanned")
-    if normal_group then
-        local hash = 'banned:' .. chat_id
-        local removed = redis:srem(hash, target)
-        if removed == 0 then
-            return false
-        end
-    else
-        -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
-        local res, code = unbanChatMember(target, chat_id)
+    local hash = 'banned:' .. chat_id
+    local removed = redis:srem(hash, target)
+    if removed == 0 then
+        return false
     end
+    -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
+    local res, code = unbanChatMember(target, chat_id)
     return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].unbanned
 end
 
