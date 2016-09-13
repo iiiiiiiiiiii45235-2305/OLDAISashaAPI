@@ -229,7 +229,7 @@ local function run(msg, matches)
             if matches[1]:lower() == "sync_gbans" or matches[1]:lower() == "sasha sincronizza lista superban" then
                 mystat('/sync_gbans')
                 local url = "https://seedteam.org/Teleseed/Global_bans.json"
-                local SEED_gbans = http.request(url)
+                local SEED_gbans = HTTPS.request(url)
                 local jdat = json:decode(SEED_gbans)
                 for k, v in pairs(jdat) do
                     redis:hset('user:' .. v, 'print_name', k)
