@@ -168,13 +168,13 @@ local function pre_process(msg, matches)
         for i, word in pairs(t) do
             local answer = check_word(msg, word:lower())
             if answer then
+                sendReply(msg, answer)
                 sendPhotoId(msg.chat.id, answer)
                 sendStickerId(msg.chat.id, answer)
                 sendVoiceId(msg.chat.id, answer)
                 sendAudioId(msg.chat.id, answer)
                 sendVideoId(msg.chat.id, answer)
                 sendDocumentId(msg.chat.id, answer)
-                sendReply(msg, answer)
             end
         end
     end
