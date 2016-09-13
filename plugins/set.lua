@@ -47,45 +47,9 @@ local function set_media(msg, name)
 end
 
 local function run(msg, matches)
-    local hash = get_variables_hash(msg, false)
-    if msg.media then
-        if hash then
-            local name = redis:hget(hash, 'waiting')
-            if name then
-                if is_mod(msg) then
-                    if msg.media then
-                        local file_id = ''
-                        if msg.media_type == 'photo' then
-                            file_id = msg.photo.file_id
-                        elseif msg.media_type == 'video' then
-                            file_id = msg.video.file_id
-                        elseif msg.media_type == 'audio' then
-                            file_id = msg.audio.file_id
-                        elseif msg.media_type == 'voice' then
-                            file_id = msg.voice.file_id
-                        elseif msg.media_type == 'document' then
-                            file_id = msg.document.file_id
-                        elseif msg.media_type == 'sticker' then
-                            file_id = msg.sticker.file_id
-                        else
-                            return langs[msg.lang].useQuoteOnFile
-                        end
-                        redis:hset(hash, name, msg.media_type .. file_id)
-                        redis:hdel(hash, 'waiting')
-                        return langs[msg.lang].mediaSaved
-                    end
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            return
-        else
-            return langs[msg.lang].nothingToSet
-        end
-    end
-
     if matches[1]:lower() == 'cancel' or matches[1]:lower() == 'sasha annulla' or matches[1]:lower() == 'annulla' then
         if is_mod(msg) then
+            local hash = get_variables_hash(msg, false)
             redis:hdel(hash, 'waiting')
             return langs[msg.lang].cancelled
         else
@@ -118,6 +82,45 @@ local function run(msg, matches)
     end
 end
 
+local function pre_process(msg)
+    if msg.media then
+        local hash = get_variables_hash(msg, false)
+        if hash then
+            local name = redis:hget(hash, 'waiting')
+            if name then
+                if is_mod(msg) then
+                    if msg.media then
+                        local file_id = ''
+                        if msg.media_type == 'photo' then
+                            file_id = msg.photo.file_id
+                        elseif msg.media_type == 'video' then
+                            file_id = msg.video.file_id
+                        elseif msg.media_type == 'audio' then
+                            file_id = msg.audio.file_id
+                        elseif msg.media_type == 'voice' then
+                            file_id = msg.voice.file_id
+                        elseif msg.media_type == 'document' then
+                            file_id = msg.document.file_id
+                        elseif msg.media_type == 'sticker' then
+                            file_id = msg.sticker.file_id
+                        else
+                            sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+                        end
+                        redis:hset(hash, name, msg.media_type .. file_id)
+                        redis:hdel(hash, 'waiting')
+                        sendMessage(msg.chat.id, langs[msg.lang].mediaSaved)
+                    end
+                else
+                    sendMessage(msg.chat.id, langs[msg.lang].require_mod)
+                end
+            end
+        else
+            sendMessage(msg.chat.id, langs[msg.lang].nothingToSet)
+        end
+    end
+    return msg
+end
+
 return {
     description = "SET",
     patterns =
@@ -143,6 +146,7 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
         "^([Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
     },
+    pre_process = pre_process,
     run = run,
     min_rank = 1,
     syntax =
