@@ -103,6 +103,7 @@ function is_mod(msg)
     local var = false
     local data = load_data(config.moderation.data)
     local user_id = msg.from.id
+    local chat_id = msg.chat.id
 
     local res = getChatMember(msg.chat.id, user_id)
     if res then
@@ -117,18 +118,18 @@ function is_mod(msg)
         end
     end
 
-    if data[tostring(msg.chat.tg_cli_id)] then
-        if data[tostring(msg.chat.tg_cli_id)]['moderators'] then
-            if data[tostring(msg.chat.tg_cli_id)]['moderators'][tostring(user_id)] then
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['moderators'] then
+            if data[tostring(chat_id)]['moderators'][tostring(user_id)] then
                 -- mod
                 var = true
             end
         end
     end
 
-    if data[tostring(msg.chat.tg_cli_id)] then
-        if data[tostring(msg.chat.tg_cli_id)]['set_owner'] then
-            if data[tostring(msg.chat.tg_cli_id)]['set_owner'] == tostring(user_id) then
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['set_owner'] then
+            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
                 -- owner
                 var = true
             end
@@ -150,7 +151,7 @@ function is_mod(msg)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(msg.from.id) == '*0' or tostring(msg.from.id) == '*1' then
+    if tostring(user_id) == '*1' or tostring(user_id) == '*2' or tostring(user_id) == '*3' then
         var = true
     end
     return var
@@ -206,7 +207,7 @@ function is_mod2(user_id, group_id)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*0' or tostring(user_id) == '*1' then
+    if tostring(user_id) == '*1' or tostring(user_id) == '*2' or tostring(user_id) == '*3' then
         var = true
     end
     return var
@@ -216,6 +217,7 @@ function is_owner(msg)
     local var = false
     local data = load_data(config.moderation.data)
     local user_id = msg.from.id
+    local chat_id = msg.chat.id
 
     local res = getChatMember(msg.chat.id, user_id)
     if res then
@@ -226,9 +228,9 @@ function is_owner(msg)
         end
     end
 
-    if data[tostring(msg.chat.tg_cli_id)] then
-        if data[tostring(msg.chat.tg_cli_id)]['set_owner'] then
-            if data[tostring(msg.chat.tg_cli_id)]['set_owner'] == tostring(user_id) then
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['set_owner'] then
+            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
                 -- owner
                 var = true
             end
@@ -250,7 +252,7 @@ function is_owner(msg)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*0' or tostring(user_id) == '*1' or tostring(user_id) == '*2' then
+    if tostring(user_id) == '*2' or tostring(user_id) == '*3' then
         var = true
     end
     return var
@@ -293,7 +295,7 @@ function is_owner2(user_id, group_id)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*0' or tostring(user_id) == '*1' or tostring(user_id) == '*2' then
+    if tostring(user_id) == '*2' or tostring(user_id) == '*3' then
         var = true
     end
     return var
@@ -319,7 +321,7 @@ function is_admin(msg)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*0' or tostring(user_id) == '*1' or tostring(user_id) == '*2' or tostring(user_id) == '*3' then
+    if tostring(user_id) == '*3' then
         var = true
     end
     return var
@@ -343,7 +345,7 @@ function is_admin2(user_id)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*0' or tostring(user_id) == '*1' or tostring(user_id) == '*2' or tostring(user_id) == '*3' then
+    if tostring(user_id) == '*3' then
         var = true
     end
     return var
