@@ -53,7 +53,7 @@ local function api_set_value(msg, name, value)
     end
 
     if api_get_hash(msg) then
-        redis:hset(api_get_hash(msg), name, value)
+        redis:hset(api_get_hash(msg), name:gsub('_', ' '), value)
         return name .. langs[msg.lang].saved
     end
 end
@@ -72,7 +72,7 @@ local function run(msg, matches)
                     local answer = cli_get_value(msg, word:lower())
                     if answer then
                         api_set_value(msg, word:lower(), answer)
-                        redis:hdel(cli_get_hash(msg), word:lower())
+                        redis:hdel(cli_get_hash(msg), word:lower():gsub(' ', '_'))
                     end
                 end
             end
