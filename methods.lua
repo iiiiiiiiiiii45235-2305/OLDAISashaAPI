@@ -171,7 +171,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                save_log('send_msg', code .. '\n' .. text)
+                savelog('send_msg', code .. '\n' .. text)
             end
         end
     else
@@ -184,7 +184,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                save_log('send_msg', code .. '\n' .. text)
+                savelog('send_msg', code .. '\n' .. text)
             end
         end
         res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
@@ -250,7 +250,7 @@ function sendKeyboard(chat_id, text, keyboard, markdown)
     if not res and code then
         -- if the request failed and a code is returned (not 403 and 429)
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            save_log('send_msg', code .. '\n' .. text)
+            savelog('send_msg', code .. '\n' .. text)
         end
     end
 
@@ -275,7 +275,7 @@ function editMessageText(chat_id, message_id, text, keyboard, markdown)
     if not res and code then
         -- if the request failed and a code is returned (not 403 and 429)
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            save_log('send_msg', code .. '\n' .. text)
+            savelog('send_msg', code .. '\n' .. text)
         end
     end
 
