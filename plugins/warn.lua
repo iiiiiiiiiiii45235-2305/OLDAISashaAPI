@@ -54,10 +54,10 @@ local function warn_user(executer, target, chat_id)
             end
             sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
         end
-        savelog(chat_id, "[" .. executer .. "] warned user " .. result.peer_id .. " Y")
+        savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
     else
         sendMessage(chat_id, langs[lang].require_rank)
-        savelog(chat_id, "[" .. executer .. "] warned user " .. result.peer_id .. " N")
+        savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " N")
     end
 end
 
@@ -72,10 +72,10 @@ local function unwarn_user(executer, target, chat_id)
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
             sendMessage(chat_id, langs[lang].unwarned)
         end
-        savelog(chat_id, "[" .. executer .. "] unwarned user " .. result.peer_id .. " Y")
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
     else
         sendMessage(chat_id, langs[lang].require_rank)
-        savelog(chat_id, "[" .. executer .. "] unwarned user " .. result.peer_id .. " N")
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " N")
     end
 end
 
@@ -83,11 +83,11 @@ local function unwarnall_user(executer, target, chat_id)
     if compare_ranks(executer, target, chat_id) then
         local lang = get_lang(chat_id)
         redis:set(chat_id .. ':warn:' .. target, 0)
-        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. result.peer_id .. " Y")
+        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
         sendMessage(chat_id, langs[lang].zeroWarnings)
     else
         sendMessage(chat_id, langs[lang].require_rank)
-        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. result.peer_id .. " N")
+        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")
     end
 end
 
