@@ -70,7 +70,7 @@ local function run(msg, matches)
                         else
                             return langs[msg.lang].useQuoteOnFile
                         end
-                        redis:hset(hash, name, file_id)
+                        redis:hset(hash, name, msg.media_type .. file_id)
                         redis:hdel(hash, 'waiting')
                         return langs[msg.lang].mediaSaved
                     end

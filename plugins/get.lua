@@ -168,13 +168,21 @@ local function pre_process(msg, matches)
         for i, word in pairs(t) do
             local answer = check_word(msg, word:lower())
             if answer then
-                sendReply(msg, answer)
-                sendPhotoId(msg.chat.id, answer)
-                sendStickerId(msg.chat.id, answer)
-                sendVoiceId(msg.chat.id, answer)
-                sendAudioId(msg.chat.id, answer)
-                sendVideoId(msg.chat.id, answer)
-                sendDocumentId(msg.chat.id, answer)
+                if string.match(answer, '^photo') then
+                    sendPhotoId(msg.chat.id, answer:gsub('^photo', ''))
+                elseif string.match(answer, '^video') then
+                    sendVideoId(msg.chat.id, answer:gsub('^video', ''))
+                elseif string.match(answer, '^audio') then
+                    sendAudioId(msg.chat.id, answer:gsub('^audio', ''))
+                elseif string.match(answer, '^voice') then
+                    sendVoiceId(msg.chat.id, answer:gsub('^voice', ''))
+                elseif string.match(answer, '^document') then
+                    sendDocumentId(msg.chat.id, answer:gsub('^document', ''))
+                elseif string.match(answer, '^sticker') then
+                    sendStickerId(msg.chat.id, answer:gsub('^sticker', ''))
+                else
+                    sendReply(msg, answer)
+                end
             end
         end
     end
