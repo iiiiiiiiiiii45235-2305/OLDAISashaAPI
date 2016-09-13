@@ -147,7 +147,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    return unbanUser(msg.reply_to_message.forward_from.id, msg.chat.id)
                                 else
                                     -- return error cant unban chat
                                 end
@@ -158,24 +158,24 @@ local function run(msg, matches)
                     else
                         if msg.reply_to_message.service then
                             if msg.reply_to_message.service_type == 'chat_add_user' then
-                                return unbanUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                                return unbanUser(msg.reply_to_message.added.id, msg.chat.id)
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                                return unbanUser(msg.reply_to_message.removed.id, msg.chat.id)
                             else
-                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                                return unbanUser(msg.reply_to_message.from.id, msg.chat.id)
                             end
                         else
-                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return unbanUser(msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
                 end
                 if string.match(matches[2], '^%d+$') then
-                    return unbanUser(msg.from.id, matches[2], msg.chat.id)
+                    return unbanUser(matches[2], msg.chat.id)
                 else
                     local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
-                            return unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                            return unbanUser(obj_user.id, msg.chat.id)
                         end
                     end
                 end

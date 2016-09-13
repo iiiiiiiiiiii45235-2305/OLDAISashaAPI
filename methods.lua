@@ -527,7 +527,7 @@ function banUser(executer, target, chat_id)
             -- if the user has been kicked, then...
             savelog(chat_id, "[" .. executer .. "] banned user " .. target)
             redis:hincrby('bot:general', 'ban', 1)
-            -- genreal: save how many kicks
+            -- general: save how many kicks
             local hash = 'banned:' .. chat_id
             redis:sadd(hash, tostring(target))
             return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
