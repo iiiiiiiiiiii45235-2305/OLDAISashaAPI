@@ -188,6 +188,7 @@ return {
         "^[#!/]([Cc][Ll][Ee][Aa][Nn][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]([Ss][Tt][Aa][Tt][Ss][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ss][Tt][Aa][Tt][Ss]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
+        "^[#!/]([Cc][Ll][Ee][Aa][Nn][Ss][Tt][Aa][Tt][Ss]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
         "^[#!/]([Ss][Tt][Aa][Tt][Ss][Ll][Ii][Ss][Tt]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
         "^[#!/]([Bb][Oo][Tt][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]?([Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt])$",
@@ -196,6 +197,7 @@ return {
         "^[#!/]([Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
         -- cleanstats
         "^[#!/]([Cc][Ll][Ee][Aa][Nn][Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss])$",
+        "^[#!/]([Cc][Ll][Ee][Aa][Nn][Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
         -- statslist
         "^[#!/]([Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss][Ll][Ii][Ss][Tt])$",
     },

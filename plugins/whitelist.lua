@@ -16,7 +16,7 @@ local function run(msg, matches)
                 if matches[2]:lower() == 'from' then
                     if msg.reply_to_message.forward then
                         if msg.reply_to_message.forward_from then
-                            return whitelist_user(msg.reply_to_message.forward_from.id, lang)
+                            return whitelist_user(msg.reply_to_message.forward_from.id, msg.lang)
                         else
                             -- return error cant whitelist chat
                         end
@@ -25,17 +25,17 @@ local function run(msg, matches)
                     end
                 end
             else
-                return whitelist_user(msg.reply_to_message.from.id, lang)
+                return whitelist_user(msg.reply_to_message.from.id, msg.lang)
             end
         end
     elseif matches[2] then
         if string.match(matches[2], '^%d+$') then
-            return whitelist_user(matches[2], lang)
+            return whitelist_user(matches[2], msg.lang)
         else
             local obj_user = resolveUsername(matches[2]:gsub('@', ''))
             if obj_user then
                 if obj_user.type == 'private' then
-                    return whitelist_user(obj_user.id, lang)
+                    return whitelist_user(obj_user.id, msg.lang)
                 end
             end
         end
