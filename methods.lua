@@ -529,7 +529,7 @@ function banUser(executer, target, chat_id)
             redis:hincrby('bot:general', 'ban', 1)
             -- genreal: save how many kicks
             local hash = 'banned:' .. chat_id
-            redis:sadd(hash, target)
+            redis:sadd(hash, tostring(target))
             return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
             -- return res and not the text
         else
@@ -562,17 +562,17 @@ end
 function unbanUser(target, chat_id)
     savelog(chat_id, "[" .. target .. "] unbanned")
     local hash = 'banned:' .. chat_id
-    redis:srem(hash, target)
+    redis:srem(hash, tostring(target))
     -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
     local res, code = unbanChatMember(target, chat_id)
-    return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].unbanned
+    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
 end
 
 -- Check if user_id is banned in chat_id or not
 function isBanned(user_id, chat_id)
     -- Save on redis
     local hash = 'banned:' .. chat_id
-    local banned = redis:sismember(hash, user_id)
+    local banned = redis:sismember(hash, tostring(user_id))
     return banned or false
 end
 
