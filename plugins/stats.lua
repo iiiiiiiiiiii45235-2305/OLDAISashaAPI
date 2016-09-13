@@ -115,8 +115,7 @@ local function run(msg, matches)
             if is_mod(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    sendMessage(msg.chat.id, chat_stats2(msg.chat.id, msg.lang))
-                    return
+                    return sendMessage(msg.chat.id, chat_stats2(msg.chat.id, msg.lang))
                 end
             else
                 return langs[msg.lang].require_mod
@@ -125,8 +124,7 @@ local function run(msg, matches)
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    sendMessage(msg.chat.id, chat_stats2(matches[3], msg.lang))
-                    return
+                    return sendMessage(msg.chat.id, chat_stats2(matches[3], msg.lang))
                 end
             else
                 return langs[msg.lang].require_admin
@@ -136,23 +134,17 @@ local function run(msg, matches)
     elseif matches[1]:lower() == "statslist" or matches[1]:lower() == "messageslist" then
         if not matches[2] then
             if is_mod(msg) then
-                if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    chat_stats(msg.chat.id, msg.lang)
-                    return
-                end
-                sendDocument(msg.chat.id, "./groups/lists/" .. msg.chat.id .. "stats.txt")
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
+                chat_stats(msg.chat.id, msg.lang)
+                return sendDocument(msg.chat.id, "./groups/lists/" .. msg.chat.id .. "stats.txt")
             else
                 return langs[msg.lang].require_mod
             end
         elseif matches[2]:lower() == "group" then
             if is_admin(msg) then
-                if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
-                    savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    chat_stats(matches[3], msg.lang)
-                    return
-                end
-                sendDocument(msg.chat.id, "./groups/lists/" .. matches[3] .. "stats.txt")
+                savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
+                chat_stats(matches[3], msg.lang)
+                return sendDocument(msg.chat.id, "./groups/lists/" .. matches[3] .. "stats.txt")
             else
                 return langs[msg.lang].require_admin
             end
@@ -164,7 +156,7 @@ local function run(msg, matches)
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned group stats ")
                     clean_chat_stats(msg.chat.id)
-                    return
+                    return langs[msg.lang].statsCleaned
                 end
             else
                 return langs[msg.lang].require_mod
