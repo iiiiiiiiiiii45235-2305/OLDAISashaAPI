@@ -636,7 +636,7 @@ end
 --  Saves file to /tmp/. If file_name isn't provided,
 -- will get the text after the last "/" for filename
 -- and content-type for extension
-function download_to_file(url, file_name)
+function download_to_file_tmp(url, file_name)
     print("url to download: " .. url)
 
     local respbody = { }
@@ -754,7 +754,7 @@ function send_photo_from_url(receiver, url, cb_function, extra)
     cb_function = cb_function or ok_cb
     extra = extra or false
 
-    local file_path = download_to_file(url, false)
+    local file_path = download_to_file_tmp(url, false)
     if not file_path then
         -- Error
         send_msg(receiver, langs[lang].errorImageDownload, cb_function, extra)
@@ -771,7 +771,7 @@ function send_photo_from_url_callback(extra, success, result)
 
     local lang = get_lang(string.match(receiver, '%d+'))
 
-    local file_path = download_to_file(url, false)
+    local file_path = download_to_file_tmp(url, false)
     if not file_path then
         -- Error
         send_msg(receiver, langs[lang].errorImageDownload, ok_cb, false)
@@ -814,7 +814,7 @@ function send_photos_from_url_callback(extra, success, result)
     -- Take the head and remove from urls table
     local head = table.remove(urls, 1)
 
-    local file_path = download_to_file(head, false)
+    local file_path = download_to_file_tmp(head, false)
     local extra = {
         receiver = receiver,
         urls = urls,
@@ -854,7 +854,7 @@ end
 -- Download the image and send to receiver, it will be deleted.
 -- cb_function and extra are optionals callback
 function send_document_from_url(receiver, url, cb_function, extra)
-    local file_path = download_to_file(url, false)
+    local file_path = download_to_file_tmp(url, false)
     print("File path: " .. file_path)
     _send_document(receiver, file_path, cb_function, extra)
 end

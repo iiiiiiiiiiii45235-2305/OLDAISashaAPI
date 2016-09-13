@@ -563,7 +563,7 @@ function msg_valid(msg)
         return false
     end
 
-    if is_channel_disabled(msg.receiver) and not is_momod(msg) then
+    if is_channel_disabled(msg.receiver) and not is_owner(msg) then
         print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
         return false
     end

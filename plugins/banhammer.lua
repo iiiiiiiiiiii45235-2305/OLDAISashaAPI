@@ -318,8 +318,8 @@ local function run(msg, matches)
                     file:write(gbanlist)
                     file:flush()
                     file:close()
-                    sendDocument(msg.chat.id, "./groups/gbanlist.txt")
-                    return sendMessage(msg.chat.id, gbanlist)
+                    return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
+                    -- return sendMessage(msg.chat.id, gbanlist)
                 end
                 return
             else
