@@ -574,8 +574,10 @@ function kickUser(executer, target, chat_id)
             -- general: save how many kicks
             -- unban
             unbanChatMember(target, chat_id)
-            local obj = getChat(chat_id).result
-            local sent_msg = { from = bot, chat = obj, text = text, service = true, service_type = 'chat_del_user' }
+            local obj_chat = getChat(chat_id).result
+            local obj_remover = getChat(executer).result
+            local obj_removed = getChat(target).result
+            local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
             print(print_msg(sent_msg))
             return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
         else
@@ -607,8 +609,10 @@ function banUser(executer, target, chat_id)
             -- general: save how many kicks
             local hash = 'banned:' .. chat_id
             redis:sadd(hash, tostring(target))
-            local obj = getChat(chat_id).result
-            local sent_msg = { from = bot, chat = obj, text = text, service = true, service_type = 'chat_del_user' }
+            local obj_chat = getChat(chat_id).result
+            local obj_remover = getChat(executer).result
+            local obj_removed = getChat(target).result
+            local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
             print(print_msg(sent_msg))
             return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
             -- return res and not the text
