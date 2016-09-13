@@ -708,7 +708,7 @@ function isGbanned(user_id)
     return gbanned or false
 end
 
-function block_user(user_id, lang)
+function blockUser(user_id, lang)
     if not is_admin2(user_id) then
         redis:sadd('bot:blocked', user_id)
         return langs[lang].userBlocked
@@ -717,12 +717,12 @@ function block_user(user_id, lang)
     end
 end
 
-function unblock_user(user_id, lang)
+function unblockUser(user_id, lang)
     redis:srem('bot:blocked', user_id)
     return langs[lang].userUnblocked
 end
 
-function is_blocked(user_id)
+function isBlocked(user_id)
     if redis:sismember('bot:blocked', user_id) then
         return true
     else
