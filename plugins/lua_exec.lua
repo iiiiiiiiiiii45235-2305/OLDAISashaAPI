@@ -7,7 +7,6 @@ local function run(msg, matches)
             if type(output) == 'table' then
                 output = vardumptext(output)
             end
-            output = '```\n' .. output .. '\n```'
         end
         return output
     else

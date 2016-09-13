@@ -396,32 +396,32 @@ function pre_process_media_msg(msg)
     if msg.photo or msg.video or msg.audio or msg.voice or msg.document or msg.sticker or msg.contact or msg.location then
         msg.media = true
         if msg.photo then
-            msg.text = "%[(photo)%]"
+            msg.text = "%[photo%]"
             msg.media_type = 'photo'
         elseif msg.video then
-            msg.text = "%[(video)%]"
+            msg.text = "%[video%]"
             msg.media_type = 'video'
         elseif msg.audio then
-            msg.text = "%[(audio)%]"
+            msg.text = "%[audio%]"
             msg.media_type = 'audio'
         elseif msg.voice then
-            msg.text = "%[(voice)%]"
+            msg.text = "%[voice%]"
             msg.media_type = 'voice'
         elseif msg.document then
-            msg.text = "%[(document)%]"
+            msg.text = "%[document%]"
             msg.media_type = 'document'
             if msg.document.mime_type == 'video/mp4' then
-                msg.text = "%[(gif)%]"
+                msg.text = "%[gif%]"
                 msg.media_type = 'gif'
             end
         elseif msg.sticker then
-            msg.text = "%[(sticker)%]"
+            msg.text = "%[sticker%]"
             msg.media_type = 'sticker'
         elseif msg.contact then
-            msg.text = "%[(contact)%]"
+            msg.text = "%[contact%]"
             msg.media_type = 'contact'
         elseif msg.location then
-            msg.text = "%[(geo)%]"
+            msg.text = "%[geo%]"
             msg.media_type = 'geo'
         end
 
