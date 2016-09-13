@@ -138,12 +138,6 @@ return {
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
         "^[#!/]([Cc][Aa][Nn][Cc][Ee][Ll])$",
         "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Ff][Rr][Oo][Mm][Cc][Ll][Ii]) (.+)$",
-        "%[(document)%]",
-        "%[(photo)%]",
-        "%[(video)%]",
-        "%[(audio)%]",
-        "%[(voice)%]",
-        "%[(sticker)%]",
         -- set
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
         "^([Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
