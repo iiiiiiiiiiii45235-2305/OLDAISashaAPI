@@ -169,25 +169,23 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
+        local text = 'SUDO INFO'
         for v, user in pairs(config.sudo_users) do
-            if user ~= bot.id then
-                local obj_user = getChat(user).result
-                local lang = get_lang(msg.chat.id)
-                local text = 'SUDO INFO'
-                if obj_user.first_name then
-                    text = text .. langs[lang].name .. obj_user.first_name
-                end
-                if obj_user.last_name then
-                    text = text .. langs[lang].surname .. obj_user.last_name
-                end
-                if obj_user.username then
-                    text = text .. langs[lang].username .. '@' .. obj_user.username
-                end
-                local msgs = tonumber(redis:get('msgs:' .. user .. ':' .. msg.chat.tg_cli_id) or 0)
-                text = text .. langs[lang].date .. os.date('%c') ..
-                langs[lang].totalMessages .. msgs
-                text = text .. '\n🆔: ' .. user .. '\n\n'
+            local obj_user = getChat(user).result
+            local lang = get_lang(msg.chat.id)
+            if obj_user.first_name then
+                text = text .. langs[lang].name .. obj_user.first_name
             end
+            if obj_user.last_name then
+                text = text .. langs[lang].surname .. obj_user.last_name
+            end
+            if obj_user.username then
+                text = text .. langs[lang].username .. '@' .. obj_user.username
+            end
+            local msgs = tonumber(redis:get('msgs:' .. user .. ':' .. msg.chat.id) or 0)
+            text = text .. langs[lang].date .. os.date('%c') ..
+            langs[lang].totalMessages .. msgs
+            text = text .. '\n🆔: ' .. user .. '\n\n'
         end
         return sendMessage(msg.chat.id, text)
     end
@@ -244,7 +242,7 @@ return {
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
-        "^[#!/]([Aa][Ll][Ll][Ss][Yy][Nn][Tt][Aa][Xx])$",
+        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
         -- helpall
@@ -253,7 +251,7 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo])$",
         -- help <plugin_name>|<plugin_number>
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo]) ([^%s]+)$",
-        -- allsyntax
+        -- syntaxall
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Tt][Aa][Ss][Ss][Ii] [Tt][Uu][Tt][Tt][Oo])$",
         -- syntax <filter>
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Tt][Aa][Ss][Ss][Ii]) (.*)$",

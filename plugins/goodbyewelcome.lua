@@ -1,5 +1,3 @@
-multiple_kicks = { }
-
 local function set_welcome(chat_id, welcome)
     local lang = get_lang(chat_id)
     local data = load_data(config.moderation.data)

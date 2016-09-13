@@ -152,8 +152,10 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
     local url = BASE_URL ..
     '/sendMessage?chat_id=' .. chat_id ..
     '&disable_web_page_preview=true'
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
     if use_markdown then
         url = url .. '&parse_mode=Markdown'
@@ -174,6 +176,9 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                 savelog('send_msg', code .. '\n' .. text)
             end
         end
+        local obj = getChat(chat_id).result
+        local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+        print(print_msg(sent_msg))
     else
         local my_text = string.sub(text, 1, 4096)
         local rest = string.sub(text, 4096, text_len)
@@ -187,6 +192,9 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                 savelog('send_msg', code .. '\n' .. text)
             end
         end
+        local obj = getChat(chat_id).result
+        local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+        print(print_msg(sent_msg))
         res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
     end
 
@@ -234,6 +242,9 @@ function forwardMessage(chat_id, from_chat_id, message_id)
     '/forwardMessage?chat_id=' .. chat_id ..
     '&from_chat_id=' .. from_chat_id ..
     '&message_id=' .. message_id
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, forward = true }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -306,9 +317,14 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
     '/sendLocation?chat_id=' .. chat_id ..
     '&latitude=' .. latitude ..
     '&longitude=' .. longitude
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'geo' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -318,9 +334,14 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendPhoto?chat_id=' .. chat_id ..
     '&photo=' .. file_id
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -328,9 +349,14 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendSticker?chat_id=' .. chat_id ..
     '&sticker=' .. file_id
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -338,9 +364,14 @@ function sendVoiceId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendVoice?chat_id' .. chat_id ..
     '&voice=' .. file_id
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -348,9 +379,14 @@ function sendAudioId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendAudio?chat_id' .. chat_id ..
     '&audio=' .. file_id
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -358,9 +394,14 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendVideo?chat_id' .. chat_id ..
     '&video=' .. file_id
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -368,9 +409,14 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
     '/sendDocument?chat_id=' .. chat_id ..
     '&document=' .. file_id
+    local reply = false
     if reply_to_message_id then
         url = url .. '&reply_to_message_id=' .. reply_to_message_id
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+    print(print_msg(sent_msg))
     return sendRequest(url)
 end
 
@@ -384,41 +430,58 @@ end
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     local url = BASE_URL .. '/sendPhoto'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+    local reply = false
     if reply_to_message_id then
         curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+        reply = true
     end
     if caption then
         curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+    print(print_msg(sent_msg))
     return curlRequest(curl_command)
 end
 
 function sendSticker(chat_id, sticker, reply_to_message_id)
     local url = BASE_URL .. '/sendSticker'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
+    local reply = false
     if reply_to_message_id then
         curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+    print(print_msg(sent_msg))
     return curlRequest(curl_command)
 end
 
 function sendVoice(chat_id, voice, reply_to_message_id)
     local url = BASE_URL .. '/sendVoice'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
+    local reply = false
     if reply_to_message_id then
         curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+        reply = true
     end
     if duration then
         curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+    print(print_msg(sent_msg))
     return curlRequest(curl_command)
 end
 
 function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, title)
     local url = BASE_URL .. '/sendAudio'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
+    local reply = false
     if reply_to_message_id then
         curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+        reply = true
     end
     if duration then
         curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
@@ -429,14 +492,19 @@ function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, tit
     if title then
         curl_command = curl_command .. ' -F "title=' .. title .. '"'
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+    print(print_msg(sent_msg))
     return curlRequest(curl_command)
 end
 
 function sendVideo(chat_id, video, reply_to_message_id, duration, performer, title)
     local url = BASE_URL .. '/sendVideo'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
+    local reply = false
     if reply_to_message_id then
         curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+        reply = true
     end
     if caption then
         curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
@@ -444,24 +512,30 @@ function sendVideo(chat_id, video, reply_to_message_id, duration, performer, tit
     if duration then
         curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+    print(print_msg(sent_msg))
     return curlRequest(curl_command)
 end
 
 function sendDocument(chat_id, document, reply_to_message_id)
     local url = BASE_URL .. '/sendDocument'
     local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+    local reply = false
     if reply_to_message_id then
         curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+        reply = true
     end
+    local obj = getChat(chat_id).result
+    local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+    print(print_msg(sent_msg))
     return curlRequest(curl_command)
 end
 
 function sendDocument_SUDOERS(document)
     for v, user in pairs(config.sudo_users) do
         if user ~= bot.id then
-            local url = BASE_URL .. '/sendDocument'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. user .. '" -F "document=@' .. document .. '"'
-            curlRequest(curl_command)
+            sendDocument(user, document)
         end
     end
 end
@@ -500,6 +574,9 @@ function kickUser(executer, target, chat_id)
             -- general: save how many kicks
             -- unban
             unbanChatMember(target, chat_id)
+            local obj = getChat(chat_id).result
+            local sent_msg = { from = bot, chat = obj, text = text, service = true, service_type = 'chat_del_user' }
+            print(print_msg(sent_msg))
             return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
         else
             local motivation = code2text(code, get_lang(chat_id))
@@ -530,6 +607,9 @@ function banUser(executer, target, chat_id)
             -- general: save how many kicks
             local hash = 'banned:' .. chat_id
             redis:sadd(hash, tostring(target))
+            local obj = getChat(chat_id).result
+            local sent_msg = { from = bot, chat = obj, text = text, service = true, service_type = 'chat_del_user' }
+            print(print_msg(sent_msg))
             return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
             -- return res and not the text
         else
