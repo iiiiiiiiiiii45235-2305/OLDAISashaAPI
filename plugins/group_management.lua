@@ -737,6 +737,7 @@ end
 local function run(msg, matches)
     local data = load_data(config.moderation.data)
     if matches[1]:lower() == 'type' then
+        mystat('/type')
         if is_mod(msg) then
             if data[tostring(msg.chat.id)] then
                 if not data[tostring(msg.chat.id)]['group_type'] then
@@ -757,6 +758,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'log' then
+        mystat('/log')
         if is_owner(msg) then
             savelog(msg.chat.id, "log file created by owner/admin")
             return sendDocument(msg.chat.id, "./groups/logs/" .. msg.chat.id .. "log.txt")
@@ -765,13 +767,14 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'admins' then
+        mystat('/admins')
         return contact_mods(msg)
     end
 
     -- INPM
-    -- TODO: add lock and unlock join
     if is_sudo(msg) or msg.chat.type == 'private' then
         if matches[1]:lower() == 'allchats' then
+            mystat('/allchats')
             if is_admin(msg) then
                 return all_chats(msg)
             else
@@ -780,6 +783,7 @@ local function run(msg, matches)
         end
 
         if matches[1]:lower() == 'allchatslist' then
+            mystat('/allchatslist')
             if is_admin(msg) then
                 all_chats(msg)
                 return sendDocument(msg.chat.id, "./groups/lists/all_listed_groups.txt")
@@ -792,6 +796,7 @@ local function run(msg, matches)
     -- INREALM
     if is_realm(msg) then
         if matches[1]:lower() == 'rem' and string.match(matches[2], '^%-?%d+$') then
+            mystat('/rem <group_id>')
             if is_admin(msg) then
                 -- Group configuration removal
                 data[tostring(matches[2])] = nil
@@ -808,6 +813,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'addadmin' then
+            mystat('/addadmin')
             if is_sudo(msg) then
                 if msg.reply then
                     return admin_promote(msg.reply_to_message.from, msg.chat.id)
@@ -832,6 +838,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'removeadmin' then
+            mystat('/removeadmin')
             if is_sudo(msg) then
                 if msg.reply then
                     return admin_demote(msg.reply_to_message.from, msg.chat.id)
@@ -856,6 +863,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'setgpowner' and matches[2] and matches[3] then
+            mystat('/setgpowner')
             if is_admin(msg) then
                 data[tostring(matches[2])]['set_owner'] = matches[3]
                 save_data(config.moderation.data, data)
@@ -867,8 +875,10 @@ local function run(msg, matches)
         if matches[1]:lower() == 'list' then
             if is_admin(msg) then
                 if matches[2]:lower() == 'admins' then
+                    mystat('/list admins')
                     return admin_list(msg.chat.id)
                 elseif matches[2]:lower() == 'groups' then
+                    mystat('/list groups')
                     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                         groups_list(msg)
                         sendDocument(msg.chat.id, "./groups/lists/groups.txt")
@@ -880,6 +890,7 @@ local function run(msg, matches)
                     end
                     return langs[msg.lang].groupListCreated
                 elseif matches[2]:lower() == 'realms' then
+                    mystat('/list realms')
                     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                         realms_list(msg)
                         sendDocument(msg.chat.id, "./groups/lists/realms.txt")
@@ -898,24 +909,31 @@ local function run(msg, matches)
         if (matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca') and matches[2] and matches[3] then
             if is_admin(msg) then
                 if matches[3]:lower() == 'member' then
+                    mystat('/lock <group_id> member')
                     return lock_group_member(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'flood' then
+                    mystat('/lock <group_id> flood')
                     return lock_group_flood(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'arabic' then
+                    mystat('/lock <group_id> arabic')
                     return lock_group_arabic(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'links' then
+                    mystat('/lock <group_id> links')
                     return lock_group_links(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'spam' then
+                    mystat('/lock <group_id> spam')
                     return lock_group_spam(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'rtl' then
+                    mystat('/lock <group_id> rtl')
                     return lock_group_rtl(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'sticker' then
+                    mystat('/lock <group_id> sticker')
                     return lock_group_sticker(data, matches[2], msg.lang)
                 end
             else
@@ -925,24 +943,31 @@ local function run(msg, matches)
         if (matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca') and matches[2] and matches[3] then
             if is_admin(msg) then
                 if matches[3]:lower() == 'member' then
+                    mystat('/unlock <group_id> member')
                     return unlock_group_member(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'flood' then
+                    mystat('/unlock <group_id> flood')
                     return unlock_group_flood(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'arabic' then
+                    mystat('/unlock <group_id> arabic')
                     return unlock_group_arabic(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'links' then
+                    mystat('/unlock <group_id> links')
                     return unlock_group_links(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'spam' then
+                    mystat('/unlock <group_id> spam')
                     return unlock_group_spam(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'rtl' then
+                    mystat('/unlock <group_id> rtl')
                     return unlock_group_rtl(data, matches[2], msg.lang)
                 end
                 if matches[3]:lower() == 'sticker' then
+                    mystat('/unlock <group_id> sticker')
                     return unlock_group_sticker(data, matches[2], msg.lang)
                 end
             else
@@ -950,6 +975,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'settings' and data[tostring(matches[2])]['settings'] then
+            mystat('/settings <group_id>')
             if is_admin(msg) then
                 return show_group_settings(matches[2], msg.lang)
             else
@@ -957,6 +983,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'supersettings' and data[tostring(matches[2])]['settings'] then
+            mystat('/supersettings <group_id>')
             if is_admin(msg) then
                 return show_supergroup_settings(matches[2], msg.lang)
             else
@@ -964,6 +991,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'setgprules' then
+            mystat('/setgprules <group_id>')
             if is_admin(msg) then
                 data[tostring(matches[2])]['rules'] = matches[3]
                 save_data(config.moderation.data, data)
@@ -977,6 +1005,7 @@ local function run(msg, matches)
     -- INGROUP
     if msg.chat.type == 'group' then
         if matches[1]:lower() == 'add' and not matches[2] then
+            mystat('/add')
             if is_admin(msg) then
                 if is_realm(msg) then
                     return langs[msg.lang].errorAlreadyRealm
@@ -990,6 +1019,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'add' and matches[2]:lower() == 'realm' then
+            mystat('/add realm')
             if is_sudo(msg) then
                 if is_group(msg) then
                     return langs[msg.lang].errorAlreadyGroup
@@ -1003,6 +1033,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'rem' and not matches[2] then
+            mystat('/rem')
             if is_admin(msg) then
                 if not is_group(msg) then
                     return langs[msg.lang].errorNotGroup
@@ -1016,6 +1047,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'rem' and matches[2]:lower() == 'realm' then
+            mystat('/rem realm')
             if is_sudo(msg) then
                 if not is_realm(msg) then
                     return langs[msg.lang].errorNotRealm
@@ -1030,6 +1062,7 @@ local function run(msg, matches)
         end
         if data[tostring(msg.chat.id)] then
             if matches[1]:lower() == 'promote' or matches[1]:lower() == 'sasha promuovi' or matches[1]:lower() == 'promuovi' then
+                mystat('/promote')
                 if is_owner(msg) then
                     if msg.reply then
                         if matches[2] then
@@ -1038,10 +1071,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return promote(msg.chat.id, msg.reply_to_message.forward_from)
                                     else
-                                        -- return error cant kick chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -1069,6 +1102,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'demote' or matches[1]:lower() == 'sasha degrada' or matches[1]:lower() == 'degrada' then
+                mystat('/demote')
                 if is_owner(msg) then
                     if msg.reply then
                         if matches[2] then
@@ -1077,10 +1111,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return demote(msg.chat.id, msg.reply_to_message.forward_from)
                                     else
-                                        -- return error cant kick chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -1108,10 +1142,12 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'modlist' or matches[1]:lower() == 'sasha lista mod' or matches[1]:lower() == 'lista mod' then
+                mystat('/modlist')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
                 return modlist(msg)
             end
             if matches[1]:lower() == 'rules' or matches[1]:lower() == 'sasha regole' then
+                mystat('/rules')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
                 if not data[tostring(msg.chat.id)]['rules'] then
                     return langs[msg.lang].noRules
@@ -1119,6 +1155,7 @@ local function run(msg, matches)
                 return langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules']
             end
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == 'sasha imposta regole' then
+                mystat('/setrules')
                 if is_mod(msg) then
                     data[tostring(msg.chat.id)]['rules'] = matches[2]
                     save_data(config.moderation.data, data)
@@ -1132,38 +1169,47 @@ local function run(msg, matches)
         if matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca' then
             if is_mod(msg) then
                 if matches[2]:lower() == 'member' then
+                    mystat('/lock member')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked member ")
                     return lock_group_member(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'flood' then
+                    mystat('/lock flood')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked flood ")
                     return lock_group_flood(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'arabic' then
+                    mystat('/lock arabic')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked arabic ")
                     return lock_group_arabic(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'bots' then
+                    mystat('/lock bots')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked bots ")
                     return lock_group_bots(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'leave' then
+                    mystat('/lock leave')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked leaving ")
                     return lock_group_leave(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'links' then
+                    mystat('/lock links')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked link posting ")
                     return lock_group_links(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'rtl' then
+                    mystat('/lock rtl')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked rtl chars. in names")
                     return lock_group_rtl(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'sticker' then
+                    mystat('/lock sticker')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked sticker posting")
                     return lock_group_sticker(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'contacts' then
+                    mystat('/lock contacts')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked contact posting")
                     return lock_group_contacts(data, msg.chat.id, msg.lang)
                 end
@@ -1174,38 +1220,47 @@ local function run(msg, matches)
         if matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca' then
             if is_mod(msg) then
                 if matches[2]:lower() == 'member' then
+                    mystat('/unlock member')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked member ")
                     return unlock_group_member(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'flood' then
+                    mystat('/unlock flood')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked flood ")
                     return unlock_group_flood(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'arabic' then
+                    mystat('/unlock arabic')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked arabic ")
                     return unlock_group_arabic(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'bots' then
+                    mystat('/unlock bots')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked bots ")
                     return unlock_group_bots(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'leave' then
+                    mystat('/unlock leave')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked leaving ")
                     return unlock_group_leave(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'links' then
+                    mystat('/unlock links')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked link posting")
                     return unlock_group_links(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'rtl' then
+                    mystat('/unlock rtl')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked RTL chars. in names")
                     return unlock_group_rtl(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'sticker' then
+                    mystat('/unlock sticker')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked sticker posting")
                     return unlock_group_sticker(data, msg.chat.id, msg.lang)
                 end
                 if matches[2]:lower() == 'contacts' then
+                    mystat('/unlock contacts')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked contact posting")
                     return unlock_group_contacts(data, msg.chat.id, msg.lang)
                 end
@@ -1214,6 +1269,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'settings' then
+            mystat('/settings')
             if is_mod(msg) then
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                 return show_group_settings(msg.chat.id, msg.lang)
@@ -1222,6 +1278,7 @@ local function run(msg, matches)
             end
         end
         if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
+            mystat('/setlink')
             if is_owner(msg) then
                 data[tostring(msg.chat.id)]['settings']['set_link'] = matches[2]
                 save_data(config.moderation.data, data)
@@ -1231,6 +1288,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'unsetlink' or matches[1]:lower() == "sasha elimina link" then
+            mystat('/unsetlink')
             if is_owner(msg) then
                 data[tostring(msg.chat.id)]['settings']['set_link'] = nil
                 save_data(config.moderation.data, data)
@@ -1240,6 +1298,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'link' or matches[1]:lower() == 'sasha link' then
+            mystat('/link')
             if is_mod(msg) then
                 local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
                 if not group_link then
@@ -1252,6 +1311,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'owner' then
+            mystat('/owner')
             local group_owner = data[tostring(msg.chat.id)]['set_owner']
             if not group_owner then
                 return langs[msg.lang].noOwnerCallAdmin
@@ -1260,6 +1320,7 @@ local function run(msg, matches)
             return langs[msg.lang].ownerIs .. group_owner
         end
         if matches[1]:lower() == 'setowner' then
+            mystat('/setowner')
             if is_owner(msg) then
                 if msg.reply then
                     if matches[2] then
@@ -1268,10 +1329,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return chat_set_owner(msg.reply_to_message.forward_from, msg.chat.id)
                                 else
-                                    -- return error cant setowner chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
@@ -1300,6 +1361,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'setflood' then
+            mystat('/setflood')
             if is_mod(msg) then
                 if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 200 then
                     return langs[msg.lang].errorFloodRange
@@ -1315,6 +1377,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'clean' then
             if is_owner(msg) then
                 if matches[2]:lower() == 'modlist' then
+                    mystat('/clean modlist')
                     if next(data[tostring(msg.chat.id)]['moderators']) == nil then
                         -- fix way
                         return langs[msg.lang].noGroupMods
@@ -1340,6 +1403,7 @@ local function run(msg, matches)
     -- SUPERGROUP
     if msg.chat.type == 'supergroup' then
         if matches[1]:lower() == 'add' and not matches[2] then
+            mystat('/add')
             if is_admin(msg) then
                 if is_super_group(msg) then
                     return sendReply(msg, langs[msg.lang].supergroupAlreadyAdded)
@@ -1354,6 +1418,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'rem' and not matches[2] then
+            mystat('/rem')
             if is_admin(msg) then
                 if not is_super_group(msg) then
                     return sendReply(msg, langs[msg.lang].supergroupRemoved)
@@ -1366,6 +1431,7 @@ local function run(msg, matches)
         end
         if data[tostring(msg.chat.id)] then
             if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
+                mystat('/getadmins')
                 if is_owner(msg) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup Admins list")
                     return get_admins(msg.chat.id)
@@ -1374,6 +1440,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == "owner" then
+                mystat('/owner')
                 if not data[tostring(msg.chat.id)]['set_owner'] then
                     return langs[msg.lang].noOwnerCallAdmin
                 end
@@ -1381,10 +1448,12 @@ local function run(msg, matches)
                 return langs[msg.lang].ownerIs .. data[tostring(msg.chat.id)]['set_owner']
             end
             if matches[1]:lower() == "modlist" or matches[1]:lower() == "sasha lista mod" or matches[1]:lower() == "lista mod" then
+                mystat('/modlist')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
                 return modlist(msg)
             end
             if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
+                mystat('/setlink')
                 if is_owner(msg) then
                     data[tostring(msg.chat.id)]['settings']['set_link'] = matches[2]
                     save_data(config.moderation.data, data)
@@ -1394,6 +1463,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'unsetlink' or matches[1]:lower() == "sasha elimina link" then
+                mystat('/unsetlink')
                 if is_owner(msg) then
                     data[tostring(msg.chat.id)]['settings']['set_link'] = nil
                     save_data(config.moderation.data, data)
@@ -1403,6 +1473,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'link' or matches[1]:lower() == "sasha link" then
+                mystat('/link')
                 if is_mod(msg) then
                     local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
                     if not group_link then
@@ -1415,6 +1486,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'setowner' then
+                mystat('/setowner')
                 if is_owner(msg) then
                     if msg.reply then
                         if matches[2] then
@@ -1423,10 +1495,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return chat_set_owner(msg.reply_to_message.forward_from, msg.chat.id)
                                     else
-                                        -- return error cant setowner chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -1455,6 +1527,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'promote' or matches[1]:lower() == "sasha promuovi" or matches[1]:lower() == "promuovi" then
+                mystat('/promote')
                 if is_owner(msg) then
                     if msg.reply then
                         if matches[2] then
@@ -1463,10 +1536,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return promote(msg.chat.id, msg.reply_to_message.forward_from)
                                     else
-                                        -- return error cant kick chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -1494,6 +1567,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'demote' or matches[1]:lower() == "sasha degrada" or matches[1]:lower() == "degrada" then
+                mystat('/demote')
                 if is_owner(msg) then
                     if msg.reply then
                         if matches[2] then
@@ -1502,10 +1576,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return demote(msg.chat.id, msg.reply_to_message.forward_from)
                                     else
-                                        -- return error cant kick chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -1533,6 +1607,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == "sasha imposta regole" then
+                mystat('/setrules')
                 if is_mod(msg) then
                     data[tostring(msg.chat.id)]['rules'] = matches[2]
                     save_data(config.moderation.data, data)
@@ -1545,6 +1620,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'clean' then
                 if is_owner(msg) then
                     if matches[2]:lower() == 'modlist' then
+                        mystat('/clean modlist')
                         if next(data[tostring(msg.chat.id)]['moderators']) == nil then
                             return langs[msg.lang].noGroupMods
                         end
@@ -1556,6 +1632,7 @@ local function run(msg, matches)
                         return langs[msg.lang].modlistCleaned
                     end
                     if matches[2]:lower() == 'rules' then
+                        mystat('/clean rules')
                         local data_cat = 'rules'
                         if data[tostring(msg.chat.id)][data_cat] == nil then
                             return langs[msg.lang].noRules
@@ -1572,42 +1649,47 @@ local function run(msg, matches)
             if matches[1]:lower() == 'lock' or matches[1]:lower() == "sasha blocca" or matches[1]:lower() == "blocca" then
                 if is_mod(msg) then
                     if matches[2]:lower() == 'links' then
+                        mystat('/lock links')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked link posting ")
                         return lock_group_links(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'spam' then
+                        mystat('/lock spam')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked spam ")
                         return lock_group_spam(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'flood' then
+                        mystat('/lock flood')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked flood ")
                         return lock_group_flood(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'arabic' then
+                        mystat('/lock arabic')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked arabic ")
                         return lock_group_arabic(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'member' then
+                        mystat('/lock member')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked member ")
                         return lock_group_member(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'rtl' then
+                        mystat('/lock rtl')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked rtl chars. in names")
                         return lock_group_rtl(data, msg.chat.id, msg.lang)
                     end
-                    if matches[2]:lower() == 'tgservice' then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked Tgservice Actions")
-                        return lock_group_tgservice(data, msg.chat.id, msg.lang)
-                    end
                     if matches[2]:lower() == 'sticker' then
+                        mystat('/lock sticker')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked sticker posting")
                         return lock_group_sticker(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'contacts' then
+                        mystat('/lock contacts')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked contact posting")
                         return lock_group_contacts(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'strict' then
+                        mystat('/lock strict')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked enabled strict settings")
                         return enable_strict_rules(data, msg.chat.id, msg.lang)
                     end
@@ -1618,42 +1700,47 @@ local function run(msg, matches)
             if matches[1]:lower() == 'unlock' or matches[1]:lower() == "sasha sblocca" or matches[1]:lower() == "sblocca" then
                 if is_mod(msg) then
                     if matches[2]:lower() == 'links' then
+                        mystat('/unlock links')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked link posting")
                         return unlock_group_links(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'spam' then
+                        mystat('/unlock spam')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked spam")
                         return unlock_group_spam(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'flood' then
+                        mystat('/unlock flood')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked flood")
                         return unlock_group_flood(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'arabic' then
+                        mystat('/unlock arabic')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked Arabic")
                         return unlock_group_arabic(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'member' then
+                        mystat('/unlock member')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked member ")
                         return unlock_group_member(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'rtl' then
+                        mystat('/unlock rtl')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked RTL chars. in names")
                         return unlock_group_rtl(data, msg.chat.id, msg.lang)
                     end
-                    if matches[2]:lower() == 'tgservice' then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked tgservice actions")
-                        return unlock_group_tgservice(data, msg.chat.id, msg.lang)
-                    end
                     if matches[2]:lower() == 'sticker' then
+                        mystat('/unlock sticker')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked sticker posting")
                         return unlock_group_sticker(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'contacts' then
+                        mystat('/unlock contacts')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] unlocked contact posting")
                         return unlock_group_contacts(data, msg.chat.id, msg.lang)
                     end
                     if matches[2]:lower() == 'strict' then
+                        mystat('/unlock strict')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] locked disabled strict settings")
                         return disable_strict_rules(data, msg.chat.id, msg.lang)
                     end
@@ -1662,6 +1749,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'setflood' then
+                mystat('/setflood')
                 if is_mod(msg) then
                     if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 200 then
                         return langs[msg.lang].errorFloodRange
@@ -1675,6 +1763,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'settings' then
+                mystat('/settings')
                 if is_mod(msg) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup settings ")
                     return show_supergroup_settings(msg.chat.id, msg.lang)
@@ -1683,6 +1772,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'rules' or matches[1]:lower() == "sasha regole" then
+                mystat('/rules')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
                 if not data[tostring(msg.chat.id)]['rules'] then
                     return langs[msg.lang].noRules

@@ -1,6 +1,7 @@
 ﻿-- Will leave the group if be added
 local function run(msg, matches)
     if matches[1]:lower() == 'leave' or matches[1]:lower() == 'sasha abbandona' then
+        mystat('/leave')
         if is_admin(msg) then
             if not matches[2] then
                 sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)

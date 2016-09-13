@@ -39,6 +39,7 @@ local function run(msg, matches)
         return
     end
     if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
+        mystat('/kickme')
         -- /kickme
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
@@ -50,6 +51,7 @@ local function run(msg, matches)
     end
     if is_mod(msg) then
         if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
+            mystat('/kick')
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 -- /kick
                 if msg.reply then
@@ -59,10 +61,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                 else
-                                    -- return error cant kick chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
@@ -95,6 +97,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'esplodi' or matches[1]:lower() == 'kaboom' then
+            mystat('/ban')
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 -- /ban
                 if msg.reply then
@@ -104,10 +107,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                 else
-                                    -- return error cant ban chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
@@ -140,6 +143,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sasha compila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' or matches[1]:lower() == 'compila' then
+            mystat('/unban')
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 -- /unban
                 if msg.reply then
@@ -149,10 +153,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return unbanUser(msg.reply_to_message.forward_from.id, msg.chat.id)
                                 else
-                                    -- return error cant unban chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
@@ -185,6 +189,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban" then
+            mystat('/banlist')
             -- /banlist
             if matches[2] and is_admin(msg) then
                 return banList(matches[2])
@@ -198,12 +203,14 @@ local function run(msg, matches)
         end
         if is_owner(msg) then
             if matches[1]:lower() == 'kickinactive' then
+                mystat('/kickinactive')
                 -- /kickinactive
                 local num = matches[2] or 0
                 return kickinactive(msg.chat.id, tonumber(num), msg.lang)
             end
             if is_admin(msg) then
                 if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
+                    mystat('/gban')
                     -- /gban
                     if msg.reply then
                         if matches[2] then
@@ -213,10 +220,10 @@ local function run(msg, matches)
                                         gbanUser(msg.reply_to_message.forward_from.id)
                                         return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].gbanned
                                     else
-                                        -- return error cant gban chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -252,6 +259,7 @@ local function run(msg, matches)
                     return
                 end
                 if matches[1]:lower() == 'ungban' or matches[1]:lower() == 'sasha supersbanna' or matches[1]:lower() == 'supersbanna' then
+                    mystat('/ungban')
                     -- /ungban
                     if msg.reply then
                         if matches[2] then
@@ -261,10 +269,10 @@ local function run(msg, matches)
                                         ungbanUser(msg.reply_to_message.forward_from.id)
                                         return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].ungbanned
                                     else
-                                        -- return error cant ungban chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -300,6 +308,7 @@ local function run(msg, matches)
                     return
                 end
                 if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
+                    mystat('/gbanlist')
                     -- /gbanlist
                     local hash = 'gbanned'
                     local list = redis:smembers(hash)

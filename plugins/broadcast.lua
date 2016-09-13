@@ -1,5 +1,6 @@
 ﻿local function run(msg, matches)
     if matches[1] == 'br' then
+        mystat('/br')
         if is_admin(msg) then
             sendMessage(matches[2], matches[3])
         else
@@ -7,6 +8,7 @@
         end
     end
     if matches[1] == 'broadcast' then
+        mystat('/broadcast')
         if is_sudo(msg) then
             -- Only sudo!
             local data = load_data(config.moderation.data)

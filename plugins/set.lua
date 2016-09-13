@@ -48,6 +48,7 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'cancel' or matches[1]:lower() == 'sasha annulla' or matches[1]:lower() == 'annulla' then
+        mystat('/cancel')
         if is_mod(msg) then
             local hash = get_variables_hash(msg, false)
             redis:hdel(hash, 'waiting')
@@ -58,6 +59,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'setmedia' or matches[1]:lower() == 'sasha setta media' or matches[1]:lower() == 'setta media' then
+        mystat('/setmedia')
         if is_mod(msg) then
             return set_media(msg, string.sub(matches[2]:lower(), 1, 50))
         else
@@ -66,6 +68,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'set' or matches[1]:lower() == 'sasha setta' or matches[1]:lower() == 'setta' then
+        mystat('/set')
         if is_mod(msg) then
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
         else
@@ -74,6 +77,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'setglobal' then
+        mystat('/setglobal')
         if is_admin(msg) then
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
         else
@@ -137,7 +141,6 @@ return {
         "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll]) ([^%s]+) (.+)$",
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
         "^[#!/]([Cc][Aa][Nn][Cc][Ee][Ll])$",
-        "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Ff][Rr][Oo][Mm][Cc][Ll][Ii]) (.+)$",
         -- set
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
         "^([Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
@@ -157,8 +160,6 @@ return {
         "(#set|[sasha] setta) <var_name> <text>",
         "(#setmedia|[sasha] setta media) <var_name>",
         "(#cancel|[sasha] annulla)",
-        "OWNER",
-        "#importfromcli",
         "ADMIN",
         "#setglobal <var_name> <text>",
     },

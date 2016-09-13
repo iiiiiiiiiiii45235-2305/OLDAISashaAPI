@@ -16,6 +16,7 @@ local function run(msg, matches)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if is_mod(msg) then
             if matches[1]:lower() == 'startflame' or matches[1]:lower() == 'sasha flamma' or matches[1]:lower() == 'flamma' then
+                mystat('/startflame')
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -23,10 +24,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return flame_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                 else
-                                    -- return error cant kick chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
@@ -45,6 +46,7 @@ local function run(msg, matches)
                 end
                 return
             elseif matches[1]:lower() == 'stopflame' or matches[1]:lower() == 'sasha stop flame' or matches[1]:lower() == 'stop flame' then
+                mystat('/stopflame')
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
                 -- ignore higher or same rank
@@ -56,6 +58,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_rank
                 end
             elseif matches[1]:lower() == 'flameinfo' or matches[1]:lower() == 'sasha info flame' or matches[1]:lower() == 'info flame' then
+                mystat('/flameinfo')
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
                 local hashonredis = redis:get(hash)

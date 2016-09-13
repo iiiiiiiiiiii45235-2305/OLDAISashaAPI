@@ -60,6 +60,7 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'migrate' then
+        mystat('/migrate')
         if is_owner then
             -- migrate set, get, unset things
             local vars = cli_list_variables(msg)
@@ -109,8 +110,9 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'sudomigrate' then
+        mystat('/sudomigrate')
         if is_sudo(msg) then
-            -- migrate group from moderation.json
+            -- migrate groups from moderation.json
             local old_moderation_path = '/home/pi/AISashaExp/data/moderation.json'
             local new_moderation_path = '/home/pi/AISashaAPI/data/moderation.json'
             local old_moderation_data = load_data(old_moderation_path)

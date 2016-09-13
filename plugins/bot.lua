@@ -38,16 +38,20 @@ local function run(msg, matches)
     if is_owner(msg) then
         if not string.match(matches[1], '^%-?%d+$') then
             if matches[1]:lower() == 'on' then
+                mystat('/bot on')
                 enable_channel(msg.chat.id)
             end
             if matches[1]:lower() == 'off' then
+                mystat('/bot off')
                 disable_channel(msg.chat.id)
             end
         elseif is_admin(msg) then
             if matches[2]:lower() == 'on' then
+                mystat('/bot on <group_id>')
                 enable_channel(matches[1], msg.chat.id)
             end
             if matches[2]:lower() == 'off' then
+                mystat('/bot off <group_id>')
                 disable_channel(matches[1], msg.chat.id)
             end
         else

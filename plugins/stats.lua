@@ -106,12 +106,14 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'aisashabot' then
+        mystat('/aisashabot')
         -- Put everything you like :)
         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] used /aisashabot ")
         return config.about_text
     end
     if matches[1]:lower() == "stats" or matches[1]:lower() == "messages" then
         if not matches[2] then
+            mystat('/stats')
             if is_mod(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
@@ -121,6 +123,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         elseif matches[2]:lower() == "group" then
+            mystat('/stats group <group_id>')
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
@@ -133,6 +136,7 @@ local function run(msg, matches)
         return
     elseif matches[1]:lower() == "statslist" or matches[1]:lower() == "messageslist" then
         if not matches[2] then
+            mystat('/statslist')
             if is_mod(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
@@ -143,6 +147,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         elseif matches[2]:lower() == "group" then
+            mystat('/statslist group <group_id>')
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
@@ -156,6 +161,7 @@ local function run(msg, matches)
         return
     elseif matches[1]:lower() == "cleanstats" or matches[1]:lower() == "cleanmessages" then
         if not matches[2] then
+            mystat('/cleanstats')
             if is_mod(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned group stats ")
@@ -166,6 +172,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         elseif matches[2]:lower() == "group" then
+            mystat('/cleanstats group <group_id>')
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] cleaned group stats ")

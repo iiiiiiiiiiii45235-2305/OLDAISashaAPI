@@ -95,6 +95,7 @@ local function run(msg, matches)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if is_mod(msg) then
             if matches[1]:lower() == 'setwarn' and matches[2] then
+                mystat('/setwarn')
                 local txt = set_warn(msg.from.id, msg.chat.id, matches[2])
                 if matches[2] == '0' then
                     return langs[msg.lang].neverWarn
@@ -103,12 +104,14 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'getwarn' then
+                mystat('/getwarn')
                 return get_warn(msg.chat.id)
             end
             if get_warn(msg.chat.id) == langs[msg.lang].noWarnSet then
                 return langs[msg.lang].noWarnSet
             else
                 if matches[1]:lower() == 'getuserwarns' or matches[1]:lower() == 'sasha ottieni avvertimenti' or matches[1]:lower() == 'ottieni avvertimenti' then
+                    mystat('/getuserwarns')
                     if msg.reply then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then
@@ -116,10 +119,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return get_user_warns(msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
-                                        -- return error cant whitelist chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -139,6 +142,7 @@ local function run(msg, matches)
                     return
                 end
                 if matches[1]:lower() == 'warn' or matches[1]:lower() == 'sasha avverti' or matches[1]:lower() == 'avverti' then
+                    mystat('/warn')
                     if msg.reply then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then
@@ -146,10 +150,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return warn_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
-                                        -- return error cant whitelist chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -169,6 +173,7 @@ local function run(msg, matches)
                     return
                 end
                 if matches[1]:lower() == 'unwarn' then
+                    mystat('/unwarn')
                     if msg.reply then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then
@@ -176,10 +181,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return unwarn_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
-                                        -- return error cant whitelist chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else
@@ -199,6 +204,7 @@ local function run(msg, matches)
                     return
                 end
                 if matches[1]:lower() == 'unwarnall' or matches[1]:lower() == 'sasha azzera avvertimenti' or matches[1]:lower() == 'azzera avvertimenti' then
+                    mystat('/unwarnall')
                     if msg.reply then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then
@@ -206,10 +212,10 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         return unwarnall_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
-                                        -- return error cant whitelist chat
+                                        return langs[msg.lang].cantDoThisToChat
                                     end
                                 else
-                                    -- return error no forward
+                                    return langs[msg.lang].errorNoForward
                                 end
                             end
                         else

@@ -70,6 +70,7 @@ end
 local function run(msg, matches)
     if msg.chat.type ~= 'user' then
         if matches[1]:lower() == 'createlikesdb' then
+            mystat('/createlikesdb')
             if is_sudo(msg) then
                 local f = io.open(config.likecounter.db, 'w+')
                 f:write('{}')
@@ -88,18 +89,21 @@ local function run(msg, matches)
         end
 
         if matches[1]:lower() == 'addlikes' and matches[2] and matches[3] and is_sudo(msg) then
+            mystat('/addlikes')
             likedata[tostring(msg.chat.id)][matches[2]] = tonumber(likedata[tostring(msg.chat.id)][matches[2]] + matches[3])
             save_data(config.likecounter.db, likedata)
             return sendReply(msg, langs[msg.lang].cheating)
         end
 
         if matches[1]:lower() == 'remlikes' and matches[2] and matches[3] and is_sudo(msg) then
+            mystat('/remlikes')
             likedata[tostring(msg.chat.id)][matches[2]] = tonumber(likedata[tostring(msg.chat.id)][matches[2]] - matches[3])
             save_data(config.likecounter.db, likedata)
             return sendReply(msg, langs[msg.lang].cheating)
         end
 
         if (matches[1]:lower() == 'likes') then
+            mystat('/likes')
             return sendMessage(msg.chat.id, likes_leaderboard(likedata[tostring(msg.chat.id)], msg.lang))
         end
 
@@ -107,6 +111,7 @@ local function run(msg, matches)
             return sendReply(msg, langs[msg.lang].forwardingLike)
         else
             if matches[1]:lower() == 'like' or matches[1]:lower() == '1up' then
+                mystat('/like')
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -114,10 +119,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return like(likedata, msg.chat.id, msg.reply_to_message.forward_from.id)
                                 else
-                                    -- return error cant like chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
@@ -136,6 +141,7 @@ local function run(msg, matches)
                 end
                 return
             elseif matches[1]:lower() == 'dislike' or matches[1]:lower() == '1down' then
+                mystat('/dislike')
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -143,10 +149,10 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward_from then
                                     return dislike(likedata, msg.chat.id, msg.reply_to_message.forward_from.id)
                                 else
-                                    -- return error cant like chat
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                -- return error no forward
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else

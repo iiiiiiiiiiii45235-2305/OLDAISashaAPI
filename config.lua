@@ -9,7 +9,8 @@ return {
     {
         'anti_spam',
         'msg_checks',
-        -- THIS HAVE TO BE THE FIRST TWO: IF AN USER IS SPAMMING/IS BLOCKED, THE BOT WON'T GO THROUGH PLUGINS
+        'onservice',
+        -- THIS HAVE TO BE THE FIRST THREE: IF AN USER IS SPAMMING/IS BLOCKED, THE BOT WON'T GO THROUGH PLUGINS
         'administrator',
         'banhammer',
         'bot',
@@ -30,7 +31,6 @@ return {
         'likecounter',
         'lua_exec',
         'me',
-        'onservice',
         'plugins',
         'reactions',
         'set',

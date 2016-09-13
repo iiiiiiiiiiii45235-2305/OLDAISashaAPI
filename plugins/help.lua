@@ -169,6 +169,7 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
+        mystat('/sudolist')
         local text = 'SUDO INFO'
         for v, user in pairs(config.sudo_users) do
             local obj_user = getChat(user).result
@@ -192,12 +193,15 @@ local function run(msg, matches)
 
     table.sort(plugins)
     if matches[1]:lower() == "helpall" or matches[1]:lower() == "sasha aiuto tutto" then
+        mystat('/helpall')
         return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
     end
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
+            mystat('/help')
             return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
         else
+            mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
             if temp ~= nil then
                 if temp ~= '' then
@@ -212,9 +216,11 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
+        mystat('/syntaxall')
         return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
     end
     if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
+        mystat('/syntax <command>')
         local cmd_find = false
         local text = ''
         for name, plugin in pairsByKeys(plugins) do

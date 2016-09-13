@@ -35,19 +35,21 @@ local function unset_var(msg, name, global)
 end
 
 local function run(msg, matches)
-    if is_mod(msg) then
-        if matches[1]:lower() == 'unset' or matches[1]:lower() == 'sasha unsetta' or matches[1]:lower() == 'unsetta' then
+    if matches[1]:lower() == 'unset' or matches[1]:lower() == 'sasha unsetta' or matches[1]:lower() == 'unsetta' then
+        mystat('/unset')
+        if is_mod(msg) then
             return unset_var(msg, string.sub(matches[2], 1, 50), false)
+        else
+            return langs[msg.lang].require_mod
         end
+    end
+    if matches[1]:lower() == 'unsetglobal' then
+        mystat('/unsetglobal')
         if is_admin(msg) then
-            if matches[1]:lower() == 'unsetglobal' then
-                return unset_var(msg, string.sub(matches[2], 1, 50), true)
-            end
+            return unset_var(msg, string.sub(matches[2], 1, 50), true)
         else
             return langs[msg.lang].require_admin
         end
-    else
-        return langs[msg.lang].require_mod
     end
 end
 

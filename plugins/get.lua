@@ -86,14 +86,17 @@ end
 
 local function run(msg, matches)
     if (matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' or matches[1]:lower() == 'sasha lista') then
+        mystat('/get')
         return list_variables(msg, false)
     end
 
     if (matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' or matches[1]:lower() == 'sasha lista globali') then
+        mystat('/getglobal')
         return list_variables(msg, true)
     end
 
     if matches[1]:lower() == 'exportgroupsets' then
+        mystat('/exportgroupsets')
         if is_owner(msg) then
             if list_variables(msg, false) then
                 local tab = list_variables(msg, false):split('\n')
@@ -113,6 +116,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'exportglobalsets' then
+        mystat('/exportglobalsets')
         if is_admin(msg) then
             if list_variables(msg, true) then
                 local tab = list_variables(msg, true):split('\n')
@@ -132,6 +136,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'enableglobal' then
+        mystat('/enableglobal')
         if is_owner(msg) then
             redis:del(msg.chat.id .. ':gvariables')
             return langs[msg.lang].globalEnable
@@ -141,6 +146,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'disableglobal' then
+        mystat('/disableglobal')
         if is_owner(msg) then
             redis:set(msg.chat.id .. ':gvariables', true)
             return langs[msg.lang].globalDisable

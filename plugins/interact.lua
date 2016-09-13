@@ -1,5 +1,6 @@
 local function run(msg, matches)
     if (matches[1]:lower() == 'echo' or matches[1]:lower() == 'sasha ripeti') and matches[2] then
+        mystat('/echo')
         if is_mod(msg) then
             if msg.reply then
                 return sendReply(msg, matches[2])
@@ -11,6 +12,7 @@ local function run(msg, matches)
         end
     end
     -- interact
+    mystat('/interact')
     if matches[1]:lower() == 'sasha come va?' then
         return sendReply(msg, langs.phrases.interact.howareyou[math.random(#langs.phrases.interact.howareyou)])
     end

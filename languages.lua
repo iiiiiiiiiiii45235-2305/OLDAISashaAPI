@@ -205,12 +205,14 @@ return {
         unbanned = ' unbannato.',
         gbanned = ' bannato globalmente.',
         ungbanned = ' unbannato globalmente.',
-        autoexecDenial = 'Non puoi usare autoexec tramite un altro comando.',
+        cantDoThisToChat = 'Non puoi usare questo comando su un messaggio inoltrato da un canale.',
+        errorNoForward = 'Non è un messaggio inoltrato.',
 
         -- seedbot.lua --
         sender = 'Mittente: ',
         receiver = 'Ricevente: ',
         msgText = 'Testo del messaggio: ',
+        groupToSupergroup = 'Notifica di servizio: migrazione del gruppo eseguita con successo.',
 
         -- utils.lua --
         errorImageDownload = 'Errore nel download dell\'immagine.',
@@ -264,12 +266,6 @@ return {
         botOn = 'Sono tornata. 😏',
         botOff = 'Nulla da fare qui. 🚀',
 
-        -- botinteract.lua --
-        botSet = ' è stato salvato per l\'interazione con la chat.',
-        botUnset = ' è stato rimosso dai bot con cui interagire.',
-        sendMeMedia = 'Mandami ora il media che vuoi che io inoltri.',
-        mediaForwarded = 'Media inoltrato.',
-
         -- database.lua --
         dbCreated = 'Database creato.',
         dataLeaked = 'Data leaked.',
@@ -282,11 +278,6 @@ return {
         databaseSent = 'Ti sto inviando il database.',
         databaseMissing = 'Database mancante.',
         databaseFuckedUp = 'Errore, crash durante il salvataggio del database, ripristinarlo al più presto.',
-
-        -- delword.lua --
-        delwordList = 'Lista censure:\n',
-        delwordAdded = 'Censura aggiunta su ',
-        delwordRemoved = 'Censura rimossa da ',
 
         -- fakecommand.lua --
         fakecommandYouTried = 'Ci hai provato pezzente, non eseguirai un comando che richiede un rango superiore al tuo.',
@@ -328,44 +319,6 @@ return {
         errorNoPlugin = 'Questo plugin non esiste o non ha una descrizione.',
         helpIntro = 'Ogni \'#\' può essere sostituito con i simboli \'/\' o \'!\'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale.\nLe parentesi tonde indicano una scelta evidenziata da \'|\' che significa "oppure".\n\n',
         commandNotFound = 'Sintassi comando non trovata.',
-
-        -- games --
-        groupAlreadySignedUp = 'Gruppo già registrato.',
-        groupSignedUp = 'Gruppo registrato con i valori di default.',
-        requireGroupSignUp = 'Prima di giocare è necessario far registrare il gruppo.',
-        challenge = 'SFIDA',
-        challenger = 'Sfidante: ',
-        challenged = 'Sfidato: ',
-        challengeModTerminated = 'Sfida terminata da un moderatore.',
-        challengeRejected = 'X ha rifiutato la sfida, codardo!',
-        cantChallengeYourself = 'Non puoi sfidarti da solo.',
-        cantChallengeMe = 'Non puoi sfidare me, perderesti di sicuro.',
-        notAccepted = 'Non ancora accettata.',
-        accepted = 'In corso.',
-        notYourTurn = 'Non è il tuo turno.',
-        yourTurn = ' sta a te.',
-        challengeEnd = 'Morto, Sfida terminata.',
-        noChallenge = 'Nessuna sfida in corso.',
-        errorOngoingChallenge = 'Impossibile avviare più sfide contemporaneamente.',
-        challengeSet = 'Sfida avviata, X può accettare con /accept o rifiutare con /reject.',
-        wrongPlayer = 'Non sei tu X.',
-        deaths = 'Numero morti: ',
-        duels = 'Sfide totali: ',
-        wonduels = 'Sfide vinte: ',
-        lostduels = 'Sfide perse: ',
-        actualstreak = 'Serie attuale: ',
-        longeststreak = 'Serie più lunga: ',
-        attempts = 'Tentativi totali: ',
-        score = 'Punteggio: ',
-        cheating = 'Trucco inserito.',
-        scoreLeaderboard = 'Classifica punti\n',
-        attemptsLeaderboard = 'Classifica tentativi\n',
-        deathsLeaderboard = 'Classifica morti\n',
-        streakLeaderboard = 'Classifica serie\n',
-        duelsLeaderboard = 'Classifica sfide\n',
-        victoriesLeaderboard = 'Classifica vittorie\n',
-        defeatsLeaderboard = 'Classifica sconfitte\n',
-        likesLeaderboard = 'Classifica like\n',
 
         -- get.lua --
         globalEnable = 'Variabili globali abilitate su questa chat.',
@@ -526,36 +479,6 @@ return {
         ishereNo = 'No.',
         noLinkAvailable = 'Nessun link disponibile.',
 
-        -- invite.lua --
-        userBanned = 'L\'utente è bannato.',
-        userGbanned = 'L\'utente è bannato globalmente.',
-        privateGroup = 'Il gruppo è privato.',
-
-        --[[
-        -- knivesgame.lua --
-        knivesAlreadySignedUp = 'Sei già registrato, usa /ruleta per morire.',
-        knivesSignedUp = 'Sei stato registrato, have a nice death.',
-        knivesDeleted = 'Sei stato eliminato dalla ruleta.',
-        knivesRequireSignUp = 'Prima di morire devi registrarti, usa /registerme.',
-        knivesGroupDeleted = 'Gruppo disabilitato per ruleta.',
-        knivesRequirePoints = 'Richiede almeno 11 punti.',
-        knivesRequireZeroPoints = 'Non puoi eliminarti se sei in negativo col punteggio.',
-        roundsLeft = 'Round rimasti: ',
-        shotsLeft = 'Colpi rimasti: ',
-        capsChanged = 'Proiettili nella pistola: ',
-        challengeCapsChanged = 'Proiettili nella pistola da sfida: ',
-        cylinderChanged = 'Nuovo tamburo da: ',
-        challengeCylinderChanged = 'Nuovo tamburo sfida da: ',
-        errorCapsRange = 'Errore, il range è [1-X].',
-        errorCylinderRange = 'Errore, il range è [5-10].',
-        cylinderCapacity = 'Capienza tamburo: ',
-        challengeCylinderCapacity = 'Capienza tamburo sfida: ',
-        capsNumber = 'Proiettili: ',
-        challengeCapsNumber = 'Proiettili sfida: ',
-        forwardingRuleta = 'L\'inoltro dei messaggi su ruleta non è consentito.',
-        ruletaDeathPercentage = 'Le probabilità di morire sono del ',
-        ]]
-
         -- lua_exec.lua --
         doneNoOutput = 'Fatto, nessun output.',
 
@@ -660,67 +583,26 @@ return {
         pluginEnabledAgain = ' nuovamente abilitato.',
         pluginsReloaded = '💊 Plugins ricaricati.',
 
-        -- pokedex.lua --
-        noPoke = 'Nessun pokémon trovato.',
-        pokeName = 'Nome: ',
-        pokeWeight = 'Peso: ',
-        pokeHeight = 'Altezza: ',
-
-        -- ruletagame.lua --
-        ruletadbCreated = 'Database ruleta creato.',
-        ruletaAlreadySignedUp = 'Sei già registrato, usa /ruleta per morire.',
-        ruletaSignedUp = 'Sei stato registrato, have a nice death.',
-        ruletaDeleted = 'Sei stato eliminato dalla ruleta.',
-        ruletaRequireSignUp = 'Prima di morire devi registrarti, usa /registerme.',
-        ruletaGroupDeleted = 'Gruppo disabilitato per ruleta.',
-        ruletaRequirePoints = 'Richiede almeno 11 punti.',
-        ruletaRequireZeroPoints = 'Non puoi eliminarti se sei in negativo col punteggio.',
-        roundsLeft = 'Round rimasti: ',
-        shotsLeft = 'Colpi rimasti: ',
-        capsChanged = 'Proiettili nella pistola: ',
-        challengeCapsChanged = 'Proiettili nella pistola da sfida: ',
-        cylinderChanged = 'Nuovo tamburo da: ',
-        challengeCylinderChanged = 'Nuovo tamburo sfida da: ',
-        errorCapsRange = 'Errore, il range è [1-X].',
-        errorCylinderRange = 'Errore, il range è [5-10].',
-        cylinderCapacity = 'Capienza tamburo: ',
-        challengeCylinderCapacity = 'Capienza tamburo sfida: ',
-        capsNumber = 'Proiettili: ',
-        challengeCapsNumber = 'Proiettili sfida: ',
-        forwardingRuleta = 'L\'inoltro dei messaggi su ruleta non è consentito.',
-        ruletaDeathPercentage = 'Le probabilità di morire sono del ',
-
         -- set.lua --
         saved = ' salvato.',
         gSaved = ' variabile globale salvata.',
-        sendMedia = 'Mandami il media che vuoi salvare (audio o foto).',
+        sendMedia = 'Mandami il media che vuoi salvare (foto, video, audio, nota vocale, documento, sticker).',
         cancelled = 'Annullato.',
         nothingToSet = 'Niente da salvare.',
         mediaSaved = 'Media salvato.',
-        setsRestored = ' sets ripristinati.',
-        globalSetsRestored = ' global sets ripristinati.',
-
-        --[[
-        -- spam.lua --
-        msgSet = 'Messaggio impostato.',
-        msgsToSend = 'Messaggi da mandare: ',
-        timeBetweenMsgs = 'Tempo tra ogni messaggio: X secondi.',
-        msgNotSet = 'Non hai impostato il messaggio, usa /setspam.',
-        ]]
 
         -- stats.lua --
         usersInChat = 'Utenti in questa chat\n',
         totalChatMessages = 'Messaggi totali della chat: ',
         groups = '\nGruppi: ',
         statsCleaned = 'Statistiche azzerate.',
-        botStats = 'Statistiche bot:\n',
 
         -- strings.lua --
         langUpdate = 'ℹ️ Stringhe aggiornate.',
         langSet = 'ℹ️ Lingua impostata.',
 
-        -- tempmessage.lua --
-        wrongTimeFormat = 'Formato timer errato.',
+        -- tgcli_to_api_migration.lua --
+        migrationCompleted = 'Migrazione completata.',
 
         -- unset.lua --
         deleted = ' eliminato.',
@@ -763,37 +645,18 @@ return {
             'Plugin per amministratori di Sasha.',
             'ADMIN',
             '(#pm|sasha messaggia) <user_id> <msg>: Sasha invia <msg> a <user_id>.',
-            '#import <group_link>: Sasha entra nel gruppo tramite <group_link>.',
-            '(#block|sasha blocca) <user_id>: Sasha blocca <user_id>.',
-            '(#unblock|sasha sblocca) <user_id>: Sasha sblocca <user_id>.',
-            '(#markread|sasha segna letto) (on|off): Sasha segna come [non] letti i messaggi ricevuti.',
-            '(#setbotphoto|sasha cambia foto): Sasha chiede la foto da settare come profilo.',
-            '(#updateid|sasha aggiorna longid): Sasha salva il long_id.',
-            '(#addlog|sasha aggiungi log): Sasha aggiunge il log.',
-            '(#remlog|sasha rimuovi log): Sasha rimuove il log.',
+            '(#block|sasha blocca) <id>|<username>|<reply>|from: Sasha blocca l\'utente specificato.',
+            '(#unblock|sasha sblocca) <id>|<username>|<reply>|from: Sasha sblocca l\'utente specificato.',
             '#checkspeed: Sasha calcola la velocità con cui processa i messaggi.',
+            '#vardump [<reply>]: Sasha esegue il vardump del messaggio specificato.',
+            '#commandsstats: Sasha manda gli stats di tutti i comandi.',
             'SUDO',
-            '(#contactlist|sasha lista contatti) (txt|json): Sasha manda la lista dei contatti.',
-            '(#dialoglist|sasha lista chat) (txt|json): Sasha manda la lista delle chat.',
-            '(#addcontact|sasha aggiungi contatto) <phone> <name> <surname>: Sasha aggiunge il contatto specificato.',
-            '(#delcontact|sasha elimina contatto) <user_id>: Sasha elimina il contatto <user_id>.',
-            '(#sendcontact|sasha invia contatto) <phone> <name> <surname>: Sasha invia il contatto specificato.',
-            '(#mycontact|sasha mio contatto): Sasha invia il contatto del richiedente.',
+            '#botstop: Sasha si stoppa.',
+            '#botrestart: Sasha si riavvia.',
+            '#redissave: Sasha salva il database redis.',
             '(#sync_gbans|sasha sincronizza superban): Sasha sincronizza la lista dei superban con quella offerta da TeleSeed.',
             '(#backup|sasha esegui backup): Sasha esegue un backup di se stessa e invia il log al richiedente.',
             '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
-            '#vardump [<reply>|<msg_id>]: Sasha esegue il vardump del messaggio specificato.',
-        },
-
-        apod =
-        {
-            '🅿️ APOD',
-            'Plugin per l\'Astronomy Picture of the Day.',
-            'USER',
-            '#apod|#astro [<date>]: Sasha manda l\'APOD.',
-            '(#apod|#astro)hd [<date>]: Sasha manda l\'APOD in HD.',
-            '(#apod|#astro)text [<date>]: Sasha manda la spiegazione dell\'APOD.',
-            'Se c\'è <date> ed è nel formato AAAA-MM-GG l\'APOD è di <date>.',
         },
 
         banhammer =
@@ -807,6 +670,8 @@ return {
             '(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from: Sasha banna l\'utente specificato e lo rimuove, se tenta di rientrare viene nuovamente rimosso.',
             '(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from: Sasha sbanna l\'utente specificato.',
             '(#banlist|[sasha] lista ban): Sasha mostra la lista di utenti bannati dal gruppo.',
+            'OWNER',
+            '#kickinactive [<msgs>]: Sasha rimuove gli utenti inattivi.',
             'ADMIN',
             '(#banlist|[sasha] lista ban) <group_id>: Sasha mostra la lista di utenti bannati da <group_id>.',
             '(#gban|[sasha] superbanna) <id>|<username>|<reply>|from: Sasha superbanna l\'utente specificato e lo rimuove, se tenta di rientrare viene nuovamente rimosso.',
@@ -822,20 +687,6 @@ return {
             '#bot|sasha on|off: Sasha si attiva|disattiva.',
             'ADMIN',
             '#bot|sasha <group_id> on|off: Sasha si attiva|disattiva nel gruppo specificato.',
-        },
-
-        botinteract =
-        {
-            '🅿️ BOTINTERACT',
-            'Plugin per l\'interazione con i bot',
-            'USER',
-            '$<text>: Sasha manda <text> al bot.',
-            '#sendmedia: Sasha manderà il media che verrà inviato nella chat al bot.',
-            '#undo: Sasha annulla il comando sendmedia.',
-            'MOD',
-            '#unsetbot <username>: Sasha smetterà di interagire con <username>.',
-            'ADMIN',
-            '#setbot <username>: Sasha interagirà con <username>.',
         },
 
         broadcast =
@@ -858,35 +709,11 @@ return {
             '(#search|[sasha] cerca) <id>: Sasha cerca <id> nel database.',
             '(#delete|[sasha] elimina) <id>: Sasha elimina <id> dal database.',
             '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha aggiunge manualmente al database l\'utente specificato.',
-            '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>\n<long_id>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il gruppo specificato.',
+            '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>: Sasha aggiunge manualmente al database il gruppo specificato.',
+            '#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il supergruppo specificato.',
+            '#addrecord channel <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il canale specificato.',
             '#uploaddb: Sasha manda il database.',
             '#replacedb <reply>: Sasha sostituisce il database.',
-        },
-
-        delword =
-        {
-            '🅿️ DELWORD',
-            'Plugin per la censura delle parole.',
-            'USER',
-            '(#dellist|[sasha] lista censura): Sasha manda una lista di parole o pattern censurati.',
-            'OWNER',
-            '(#delword|[sasha] censura) <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata nei supergruppi Sasha eliminerà il messaggio mentre nei gruppi rimuoverà il membro.',
-        },
-
-        dogify =
-        {
-            '🅿️ DOGIFY',
-            'Plugin per la creazione di immagini col doge.',
-            'USER',
-            '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha crea un\'immagine col doge e le parole specificate.',
-        },
-
-        duckduckgo =
-        {
-            '🅿️ DUCKDUCKGO',
-            'Plugin per la ricerca su duckduckgo.',
-            'USER',
-            '#duck[duck]go <terms>: Sasha cerca <terms> su DuckDuckGo.',
         },
 
         fakecommand =
@@ -976,78 +803,45 @@ return {
             '(#rules|sasha regole): Sasha mostra le regole del gruppo.',
             '(#modlist|[sasha] lista mod): Sasha mostra la lista dei moderatori.',
             '#owner: Sasha mostra l\'id del proprietario del gruppo.',
-            "#admins [<reply>|<text>]: Sasha contatta gli admin",
+            '#admins [<reply>|<text>]: Sasha contatta gli admin',
             'MOD',
-            '#type: Sasha manda il tipo di gruppo in cui ci si trova.',
-            '#setname <group_name>: Sasha imposta il nome del gruppo con <group_name>.',
-            '#setphoto: Sasha imposta e blocca la foto del gruppo.',
+            '#type: Sasha mostra il tipo del gruppo.',
             '(#setrules|sasha imposta regole) <text>: Sasha imposta <text> come regole.',
-            '#muteuser|voce <id>|<username>|<reply>|from: Sasha imposta|toglie il muto sull\'utente.',
-            '(#muteslist|lista muti): Sasha manda la lista delle variabili mute della chat.',
-            '(#mutelist|lista utenti muti): Sasha manda la lista degli utenti muti della chat.',
             '#settings: Sasha mostra le impostazioni del gruppo.',
-            '#public yes|no: Sasha imposta il gruppo come pubblico|privato.',
-            '(#newlink|sasha crea link): Sasha crea il link del gruppo.',
             '(#link|sasha link): Sasha mostra il link del gruppo.',
             '#setflood <value>: Sasha imposta il flood massimo del gruppo a <value>.',
             'GRUPPI',
             '(#lock|[sasha] blocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha blocca l\'opzione specificata.',
             '(#unlock|[sasha] sblocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha sblocca l\'opzione specificata.',
             'SUPERGRUPPI',
-            '(#bots|[sasha] lista bot): Sasha manda la lista dei bot.',
-            '#del <reply>: Sasha elimina il messaggio specificato.',
             '(#lock|[sasha] blocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha blocca l\'opzione specificata.',
             '(#unlock|[sasha] sblocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha sblocca l\'opzione specificata.',
             'OWNER',
             '#log: Sasha manda un file contenente il log del gruppo/regno.',
             '(#setlink|sasha imposta link) <link>: Sasha imposta <link> come link d\'invito.',
             '(#unsetlink|sasha elimina link): Sasha elimina il link salvato.',
-            '(#promote|[sasha] promuovi) <username>|<reply>: Sasha promuove a moderatore l\'utente specificato.',
-            '(#demote|[sasha] degrada) <username>|<reply>: Sasha degrada l\'utente specificato.',
-            '#mute|silenzia all|text|documents|gifs|video|photo|audio: Sasha imposta il muto sulla variabile specificata.',
-            '#unmute|ripristina all|text|documents|gifs|video|photo|audio: Sasha rimuove il muto sulla variabile specificata.',
-            '#setowner <id>|<username>|<reply>: Sasha imposta l\'utente specificato come proprietario.',
-            'GRUPPI',
+            '(#promote|[sasha] promuovi) <id>|<username>|<reply>|from: Sasha promuove a moderatore l\'utente specificato.',
+            '(#demote|[sasha] degrada) <id>|<username>|<reply>|from: Sasha degrada l\'utente specificato.',
+            '#setowner <id>|<username>|<reply>|from: Sasha imposta l\'utente specificato come proprietario.',
             '#clean modlist|rules: Sasha pulisce il parametro specificato.',
             'SUPERGRUPPI',
             '(#getadmins|[sasha] lista admin): Sasha manda la lista degli amministratori.',
-            '#promoteadmin <id>|<username>|<reply>: Sasha promuove l\'utente specificato ad amministratore (telegram).',
-            '#demoteadmin <id>|<username>|<reply>: Sasha degrada l\'utente specificato (telegram).',
-            '#clean rules|modlist|mutelist: Sasha azzera la variabile specificata.',
             'ADMIN',
             '#add: Sasha aggiunge il gruppo in cui ci si trova.',
             '#rem: Sasha rimuove il gruppo in cui ci si trova.',
             'ex INGROUP.LUA',
             '#add realm: Sasha aggiunge il regno.',
             '#rem realm: Sasha rimuove il regno.',
-            '#kill group|realm: Sasha elimina ogni utente nel gruppo|regno e poi lo chiude.',
             'ex INPM.LUA',
-            '(#join|#inviteme|[sasha] invitami) <chat_id>|<alias>: Sasha tenta di aggiungere l\'utente a <chat_id>|<alias>.',
-            '#getaliaslist: Sasha manda la lista degli alias.',
             '#allchats: Sasha mostra l\'elenco delle chat.',
             '#allchatlist: Sasha manda un file con l\'elenco delle chat.',
-            '#setalias <alias> <group_id>: Sasha imposta <alias> come alias di <group_id>.',
-            '#unsetalias <alias>: Sasha elimina <alias>.',
-            'SUPERGRUPPI',
-            '#tosuper: Sasha aggiorna il gruppo a supergruppo.',
-            '#setusername <text>: Sasha cambia l\'username del gruppo con <text>.',
-            '#kill supergroup: Sasha elimina ogni utente nel supergruppo e poi lo chiude.',
-            'peer_id',
-            'msg.to.id',
-            'msg.to.peer_id',
             'REGNI',
             '#setgpowner <group_id> <user_id>: Sasha imposta <user_id> come proprietario di <group_id>.',
-            '(#creategroup|sasha crea gruppo) <group_name>: Sasha crea un gruppo col nome specificato.',
-            '(#createsuper|sasha crea supergruppo) <group_name>: Sasha crea un supergruppo col nome specificato.',
-            '(#createrealm|sasha crea regno) <realm_name>: Sasha crea un regno col nome specificato.',
             '(#setrules|sasha imposta regole) <group_id> <text>: Sasha cambia le regole di <group_id> in <text>.',
-            '#setname <realm_name>: Sasha cambia il nome del regno in <realm_name>.',
-            '#setname|#setgpname <group_id> <group_name>: Sasha cambia il nome di <group_id> in <group_name>.',
             '(#lock|[sasha] blocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha blocca l\'impostazione specificata di <group_id>.',
             '(#unlock|[sasha] sblocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha sblocca l\'impostazione specificata di <group_id>.',
             '#settings <group_id>: Sasha manda le impostazioni di <group_id>.',
-            '#type: Sasha mostra il tipo del gruppo.',
-            '#kill group|supergroup|realm <group_id>: Sasha rimuove tutti i membri di <group_id> e <group_id>.',
+            '#supersettings <supergroup_id>: Sasha manda le impostazioni di <supergroup_id>.',
             '#rem <group_id>: Sasha rimuove il gruppo.',
             '#list admins|groups|realms: Sasha mostra una lista della variabile specificata.',
             'SUDO',
@@ -1075,14 +869,10 @@ return {
             'USER',
             '#getrank|rango [<id>|<username>|<reply>]: Sasha manda il rank dell\'utente.',
             '(#info|[sasha] info): Sasha manda le info dell\'utente e della chat o di se stessa',
-            '#ishere <id>|<username>: Sasha dice se l\'utente specificato è presente nel gruppo.',
-            '(#groupinfo|[sasha] info gruppo): Sasha manda le info del gruppo.',
+            '#ishere <id>|<username>|<reply>|from: Sasha dice se l\'utente specificato è presente nel gruppo.',
             'MOD',
-            '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha manda le info dell\'utente specificato.',
-            '(#who|#members|[sasha] lista membri): Sasha manda la lista degli utenti.',
-            '(#kicked|[sasha] lista rimossi): Sasha manda la lista degli utenti rimossi.',
+            '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha manda le info del parametro specificato.',
             'ADMIN',
-            '(#groupinfo|[sasha] info gruppo) <group_id>: Sasha manda le info del gruppo specificato.',
             '(#grouplink|[sasha] link gruppo) <group_id>: Sasha manda il link del gruppo specificato.',
         },
 
@@ -1093,45 +883,6 @@ return {
             'MOD',
             '(#echo|sasha ripeti) [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio.',
         },
-
-        invite =
-        {
-            '🅿️ INVITE',
-            'Plugin per l\'invito di utenti nei gruppi.',
-            -- 'OWNER',
-            'ADMIN',
-            '(#invite|[sasha] invita|[sasha] resuscita) <id>|<username>|<reply>: Sasha invita l\'utente specificato.',
-        },
-
-        --[[
-        knivesgame =
-        {
-            '🅿️ KNIVESGAME',
-            'Plugin per il gioco dei coltelli.',
-            'USER',
-            'Knives by AISasha. Knives è il lancio dei coltelli, Sasha lancia i coltelli con una certa precisione, se ti centra sei fuori altrimenti rimani.',
-            '#registerme|#registrami: Sasha registra l\'utente al gioco.',
-            '#deleteme|#eliminami: Sasha elimina i dati dell\'utente.',
-            '#knivesinfo: Sasha manda le informazioni di knives.',
-            '#mystats|#punti: Sasha manda le statistiche dell\'utente.',
-            '#knives: Sasha cerca di ucciderti.',
-            '#challenge|#sfida <username>|<reply>: Sasha avvia una sfida tra il mittente e l\'utente specificato, il vincitore vincerà 20 punti mentre il perdente ne perderà 20.',
-            '#accept|#accetta: Sasha conferma la sfida.',
-            '#reject|#rifiuta: Sasha cancella la sfida, se la sfida è già stata avviata ed è cancellata da uno dei giocatori esso perde 20 punti e viene ucciso.',
-            '#challengeinfo: Sasha manda le informazioni della sfida in corso.',
-            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha manda la classifica del parametro specificato, se nulla è specificato manderà quella dei punteggi.',
-            'MOD',
-            '#setaccuracy <value>: Sasha imposta la precisione a <value>.',
-            '#setchallengeaccuracy <value>: Sasha imposta la precisione nelle sfide a <value>.',
-            'ADMIN',
-            '(#registergroupknives|registra gruppo knives): Sasha abilita il gruppo a giocare a knives.',
-            '(#deletegroup|elimina gruppo): Sasha disabilita il gruppo per knives.',
-            'SUDO',
-            '#createknivesdb: Sasha crea il database di knives.',
-            '#addpoints <id> <value>: Sasha aggiunge <value> punti all\'utente specificato.',
-            '#rempoints <id> <value>: Sasha sottrae <value> punti all\'utente specificato.',
-        },
-        ]]
 
         likecounter =
         {
@@ -1178,72 +929,27 @@ return {
             'OWNER',
             '(#plugins|[sasha] lista plugins): Sasha mostra una lista di tutti i plugins.',
             '(#disabledlist|([sasha] lista disabilitati|disattivati)): Sasha mostra una lista dei plugins disabilitati su questa chat.',
-            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha riabilita <plugin> su questa chat.',
-            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disabilita <plugin> su questa chat.',
+            '(#enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha riabilita <plugin> su questa chat.',
+            '(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disabilita <plugin> su questa chat.',
             'SUDO',
-            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha abilita <plugin>, se specificato solo su questa chat.',
-            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disabilita <plugin>, se specificato solo su questa chat.',
-            '(#[plugin[s]] reload|[sasha] ricarica): Sasha ricarica tutti i plugins.',
-        },
-
-        pokedex =
-        {
-            '🅿️ POKEDEX',
-            'Plugin per ottenere informazioni su un pokémon.',
-            'USER',
-            '#pokedex|#pokemon <name>|<id>: Sasha cerca il pokémon specificato e ne invia le informazioni.',
-        },
-
-        qr =
-        {
-            '🅿️ QR',
-            'Plugin per creare QR Code.',
-            'USER',
-            '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha crea il QR Code di <text>, se specificato colora il QR Code.',
-            'I colori possono essere specificati come segue:',
-            'Testo => red|green|blue|purple|black|white|gray.',
-            'Notazione Esadecimale => ("a56729" è marrone).',
-            'Notazione Decimale => ("255-192-203" è rosa).',
+            '(#enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha abilita <plugin>, se specificato solo su questa chat.',
+            '(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disabilita <plugin>, se specificato solo su questa chat.',
+            '(#reload|[sasha] ricarica): Sasha ricarica tutti i plugins.',
         },
 
         reactions =
         {
             '🅿️ REACTIONS',
             'Plugin per far reagire Sasha.',
-            'SUDO',
-            '#writing on|off: Sasha (fa finta|smette di far finta) di scrivere.',
-        },
-
-        ruletagame =
-        {
-            '🅿️ RULETAGAME',
-            'Plugin per il gioco della roulette russa.',
-            'Ruleta by AISasha, inspired from Leia (#RIP) and Arya (#RIP). Ruleta è la roulette russa con la pistola, tamburo da tot colpi con tot proiettili al suo interno, si spara e se c\'è il proiettile sei fuori altrimenti rimani.',
-            'USER',
-            '#registerme|#registrami: Sasha registra l\'utente alla roulette.',
-            '#deleteme|#eliminami: Sasha elimina i dati dell\'utente.',
-            '#ruletainfo: Sasha manda le informazioni della roulette.',
-            '#mystats|#punti: Sasha manda le statistiche dell\'utente.',
-            '#ruleta: Sasha cerca di ucciderti.',
-            '#godruleta: Sasha ti dà il 50% di probabilità di guadagnare 70 punti, con l\'altro 50% li perdi tutti (richiede almeno 11 punti).',
-            '#challenge|#sfida <username>|<reply>: Sasha avvia una sfida tra il mittente e l\'utente specificato, il vincitore vincerà 20 punti mentre il perdente ne perderà 20.',
-            '#accept|#accetta: Sasha conferma la sfida.',
-            '#reject|#rifiuta: Sasha cancella la sfida, se la sfida è già stata avviata ed è cancellata da uno dei giocatori esso perde 20 punti e viene ucciso.',
-            '#challengeinfo: Sasha manda le informazioni della sfida in corso.',
-            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha manda la classifica del parametro specificato, se nulla è specificato manderà quella dei punteggi.',
             'MOD',
-            '#setcaps <value>: Sasha mette <value> proiettili nel tamburo.',
-            '#setchallengecaps <value>: Sasha mette <value> proiettili nel tamburo delle sfide.',
-            'OWNER',
-            '#setcylinder <value>: Sasha imposta un tamburo da <value> colpi nel range [5-10].',
-            '#setchallengecylinder <value>: Sasha imposta un tamburo da <value> colpi per le sfide nel range [5-10].',
-            'ADMIN',
-            '(#registergroupruleta|registra gruppo ruleta): Sasha abilita il gruppo a giocare a ruleta.',
-            '(#deletegroupruleta|elimina gruppo ruleta): Sasha disabilita il gruppo per ruleta.',
-            'SUDO',
-            '#createruletadb: Sasha crea il database di ruleta.',
-            '#addpoints <id> <value>: Sasha aggiunge <value> punti all\'utente specificato.',
-            '#rempoints <id> <value>: Sasha sottrae <value> punti all\'utente specificato.',
+            '#typing: Sasha finge di scrivere.',
+            '#upload_photo: Sasha finge di inviare una foto.',
+            '#record_video: Sasha finge di registrare un video.',
+            '#upload_video: Sasha finge di inviare un video.',
+            '#record_audio: Sasha finge di registrare un audio.',
+            '#upload_audio: Sasha finge di inviare un audio.',
+            '#upload_document: Sasha finge di inviare un documento.',
+            '#find_location: Sasha finge di inviare una posizione.',
         },
 
         set =
@@ -1252,29 +958,10 @@ return {
             'Plugin per salvare cose.',
             'MOD',
             '(#set|[sasha] setta) <var_name> <text>: Sasha salva <text> come risposta a <var_name>.',
-            '(#setmedia|[sasha] setta media) <var_name>: Sasha salva il media (foto o audio) che le verrà inviato come risposta a <var_name>.',
+            '(#setmedia|[sasha] setta media) <var_name>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) che le verrà inviato come risposta a <var_name>.',
             '(#cancel|[sasha] annulla): Sasha annulla un #setmedia.',
-            'OWNER',
-            '#importgroupsets <group_sets>: Sasha ripristina tutti i set di <group_sets>.',
             'ADMIN',
-            '#importglobalsets <global_sets>: Sasha ripristina tutti i set globali di <global_sets>.',
             '#setglobal <var_name> <text>: Sasha salva globalmente <text> come risposta a <var_name>.',
-        },
-
-        shout =
-        {
-            '🅿️ SHOUT',
-            'Plugin per urlare delle parole.',
-            'USER',
-            '(#shout|[sasha] grida|[sasha] urla) <text>: Sasha "urla" <text>.',
-        },
-
-        spam =
-        {
-            '🅿️ SPAM',
-            'Plugin per spammare fastidiosamente.',
-            'OWNER',
-            '(#spam|[sasha] spamma) [<messages> <seconds>] <text>: Sasha inzia a spammare <text>, se specificato per <messages> volte ogni <seconds> secondi.',
         },
 
         stats =
@@ -1282,18 +969,15 @@ return {
             '🅿️ STATS',
             'Plugin per ottenere statistiche sui gruppi e su Sasha.',
             'USER',
-            '[#]aisasha: Sasha invia la propria descrizione.',
+            '[#]aisashabot: Sasha invia la propria descrizione.',
             'MOD',
             '(#stats|#messages): Sasha invia le statistiche della chat.',
-            '(#realstats|#realmessages): Sasha invia le statistiche con solo i membri del gruppo.',
             '(#cleanstats|#cleanmessages): Sasha pulisce le statistiche.',
             '(#statslist|#messageslist): Sasha invia un file con le statistiche della chat.',
             'ADMIN',
             '(#stats|#messages) group <group_id>: Sasha invia le statistiche relative al gruppo specificato.',
-            '(#realstats|#realmessages) group <group_id>: Sasha invia le statistiche relative al gruppo specificato con solo i membri del gruppo.',
             '(#cleanstats|#cleanmessages) group <group_id>: Sasha pulisce le statistiche relative al gruppo specificato.',
             '(#statslist|#messageslist) group <group_id>: Sasha invia un file con le statistiche relative al gruppo specificato.',
-            '(#stats|#messages) aisasha: Sasha invia le proprie statistiche.',
         },
 
         strings =
@@ -1308,30 +992,14 @@ return {
             '(#reloadstrings|[sasha] aggiorna stringhe): Sasha aggiorna le stringhe di testo.',
         },
 
-        tagall =
+        tgcli_to_api_migration =
         {
-            '🅿️ TAGALL',
-            'Plugin per taggare tutti i membri con un username.',
+            '🅿️ TGCLI_TO_API_MIGRATION',
+            'Plugin per la migrazione da tgcli.',
             'OWNER',
-            '(#tagall|sasha tagga tutti) <text>: Sasha tagga tutti i membri del gruppo con username e scrive <text>.',
-        },
-
-        tempmessage =
-        {
-            '🅿️ TEMPMESSAGE',
-            'Plugin per temporizzare i messaggi.',
-            'MOD',
-            '(#tempmsg|[sasha] temporizza) <hour> <minutes> <seconds> <text>: Sasha eliminerà il messaggio dopo il tempo specificato.',
-            '(#tempmsg|[sasha] temporizza) (<hour>|<minutes>|<seconds>)(h|m|s) <text>: Sasha eliminerà il messaggio dopo il tempo specificato.',
-            '(#tempmsg|[sasha] temporizza) <hour>|<minutes>(h|m) <minutes>|<seconds>(m|s) <text>: Sasha eliminerà il messaggio dopo il tempo specificato.'
-        },
-
-        tex =
-        {
-            '🅿️ TEX',
-            'Plugin per generare equazioni.',
-            'USER',
-            '(#tex|[sasha] equazione) <equation>: Sasha converte <equation> in immagine.',
+            '#migrate: Sasha migra le impostazioni del gruppo, i ban, le variabili settate e i likes.',
+            'SUDO',
+            '#sudomigrate: Sasha migra i database e i set globali.',
         },
 
         unset =
@@ -1342,14 +1010,6 @@ return {
             '(#unset|[sasha] unsetta) <var_name>: Sasha elimina <var_name>.',
             'ADMIN',
             '#unsetglobal <var_name>: Sasha elimina globalmente <var_name>.',
-        },
-
-        urbandictionary =
-        {
-            '🅿️ URBANDICTIONARY',
-            'Plugin per interagire con l\'Urban Dictionary.',
-            'USER',
-            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha mostra la definizione di <text> dall\'Urban Dictionary.',
         },
 
         warn =
@@ -1363,26 +1023,6 @@ return {
             '(#warn|[sasha] avverti) <id>|<username>|<reply>|from: Sasha avverte l\'utente.',
             '#unwarn <id>|<username>|<reply>|from: Sasha diminuisce di uno gli avvertimenti dell\'utente.',
             '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from: Sasha azzera gli avvertimenti dell\'utente.',
-        },
-
-        webshot =
-        {
-            '🅿️ WEBSHOT',
-            'Plugin per fare screenshots di siti.',
-            'MOD',
-            '(#webshot|[sasha] webshotta) <url> [<size>]: Sasha esegue uno screenshot di <url> e lo invia, se <size> è specificata di quella dimensione.',
-            'La dimensione può essere:',
-            'T: (120 x 90px)',
-            'S: (200 x 150px)',
-            'E: (320 x 240px)',
-            'N: (400 x 300px)',
-            'M: (640 x 480px)',
-            'L: (800 x 600px)',
-            'X: (1024 x 768px)',
-            'Nmob: (480 x 800px)',
-            'ADMIN',
-            'F: Pagina intera (può essere un processo molto lungo)',
-            'Fmob: Pagina intera (può essere un processo lungo)',
         },
 
         whitelist =
@@ -1412,12 +1052,14 @@ return {
         unbanned = ' unbanned.',
         gbanned = ' globally banned.',
         ungbanned = ' globally unbanned.',
-        autoexecDenial = 'You can\'t use autoexec from another command.',
+        cantDoThisToChat = 'You can\'t use this command on a message forwarded from a channel.',
+        errorNoForward = 'It\'s not a forwarded message.',
 
         -- seedbot.lua --
         sender = 'Sender: ',
         receiver = 'Receiver: ',
         msgText = 'Message: ',
+        groupToSupergroup = 'Service notification: group migration executed with success.',
 
         -- utils.lua --
         errorImageDownload = 'Error downloading the picture.',
@@ -1475,12 +1117,6 @@ return {
         botOn = 'I\'m back. 😏',
         botOff = 'Nothing to do here. 🚀',
 
-        -- botinteract.lua --
-        botSet = ' has been saved to interact with chat.',
-        botUnset = ' has been removed from bots to interact with.',
-        sendMeMedia = 'Send me the media you want me to forward.',
-        mediaForwarded = 'Media forwarded.',
-
         -- database.lua --
         dbCreated = 'Database created.',
         dataLeaked = 'Data leaked.',
@@ -1493,11 +1129,6 @@ return {
         databaseSent = 'I\'m sending you the database.',
         databaseMissing = 'Database missing.',
         databaseFuckedUp = 'Error, crash while saving database, restore it as soon as possible.',
-
-        -- delword.lua --
-        delwordList = 'Censorship list:\n',
-        delwordAdded = 'Censorship added on ',
-        delwordRemoved = 'Censorship removed from ',
 
         -- fakecommand.lua --
         fakecommandYouTried = 'You tried asshole, you won\'t execute a command that requires a rank higher than yours.',
@@ -1539,44 +1170,6 @@ return {
         errorNoPlugin = 'This plugin doesn\'t exist or doesn\'t have a description.',
         helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets with \'|\' means that\'s a choice".\n\n',
         commandNotFound = 'Sintassi comando non trovata.',
-
-        -- games --
-        groupAlreadySignedUp = 'Group already registered.',
-        groupSignedUp = 'Group registered with default values.',
-        requireGroupSignUp = 'Before playing the group must be registered.',
-        challenge = 'CHALLENGE',
-        challenger = 'Challenger: ',
-        challenged = 'Challenged: ',
-        challengeModTerminated = 'Challenge terminated by mod.',
-        challengeRejected = 'X rejected challenge, coward!',
-        cantChallengeYourself = 'You can\'t start a challenge with yourself.',
-        cantChallengeMe = 'You can\'t start a challenge with me, you would lose it.',
-        notAccepted = 'Not accepted yet.',
-        accepted = 'Ongoing.',
-        notYourTurn = 'Not your turn.',
-        yourTurn = ' it\'s your turn.',
-        challengeEnd = 'Dead, Challenge finished.',
-        noChallenge = 'No ongoing challenge.',
-        errorOngoingChallenge = 'Can\'t start multiple challenges at the same time.',
-        challengeSet = 'Challenge started, X can accept with /accept or reject with /reject.',
-        wrongPlayer = 'You\'re not X.',
-        deaths = 'Deaths: ',
-        duels = 'Challenges: ',
-        wonduels = 'Won challenges: ',
-        lostduels = 'Lost challenges: ',
-        actualstreak = 'Actual streak: ',
-        longeststreak = 'Longest streak: ',
-        attempts = 'Total attempts: ',
-        score = 'Score: ',
-        cheating = 'Cheat used.',
-        scoreLeaderboard = 'Score leaderboard\n',
-        attemptsLeaderboard = 'Attempts leaderboard\n',
-        deathsLeaderboard = 'Deaths leaderboard\n',
-        streakLeaderboard = 'Streak leaderboard\n',
-        duelsLeaderboard = 'Duels leaderboard\n',
-        victoriesLeaderboard = 'Victories leaderboard\n',
-        defeatsLeaderboard = 'Defeats leaderboard\n',
-        likesLeaderboard = 'Likes leaderboard\n',
 
         -- get.lua --
         globalEnable = 'Global variables enabled on this chat.',
@@ -1738,11 +1331,6 @@ return {
         ishereNo = 'No.',
         noLinkAvailable = 'No link available.',
 
-        -- invite.lua --
-        userBanned = 'User is banned.',
-        userGbanned = 'User is globally banned.',
-        privateGroup = 'Group is private.',
-
         -- lua_exec.lua --
         doneNoOutput = 'Done, no output.',
 
@@ -1847,67 +1435,26 @@ return {
         pluginEnabledAgain = ' enabled on chat again.',
         pluginsReloaded = '💊 Plugins reloaded.',
 
-        -- pokedex.lua --
-        noPoke = 'No pokémon found.',
-        pokeName = 'Name: ',
-        pokeWeight = 'Weight: ',
-        pokeHeight = 'Height: ',
-
-        -- ruletagame.lua --
-        ruletadbCreated = 'Ruleta database created.',
-        ruletaAlreadySignedUp = 'You\'re already registered, use /ruleta to die.',
-        ruletaSignedUp = 'You\'ve been registered, have a nice death.',
-        ruletaDeleted = 'You\'ve been deleted from the game.',
-        ruletaRequireSignUp = 'Before dying you need to be registered, use /registerme.',
-        ruletaGroupDeleted = 'Group disabled for ruleta.',
-        ruletaRequirePoints = 'Require at least 11 points.',
-        ruletaRequireZeroPoints = 'You can\'t be deleted with a score < 0.',
-        roundsLeft = 'Rounds Left: ',
-        shotsLeft = 'Shots Left: ',
-        capsChanged = 'Bullets in gun: ',
-        challengeCapsChanged = 'Bullets in challenge gun: ',
-        cylinderChanged = 'New cylinder capacity: ',
-        challengeCylinderChanged = 'New challenge cylinder capacity: ',
-        errorCapsRange = 'Error, range is [1-X].',
-        errorCylinderRange = 'Error, range is [5-10].',
-        cylinderCapacity = 'Cylinder capacity: ',
-        challengeCylinderCapacity = 'Challenge cylinder capacity: ',
-        capsNumber = 'Bullets: ',
-        challengeCapsNumber = 'Challenge bullets: ',
-        forwardingRuleta = 'Forwarding in ruleta is not allowed.',
-        ruletaDeathPercentage = 'Chances to die are ',
-
         -- set.lua --
         saved = ' saved.',
         gSaved = ' global variable saved.',
-        sendMedia = 'Send me the media you want to save (audio or picture).',
+        sendMedia = 'Send me the media you want to save (photo, video, audio, voice note, document, sticker).',
         cancelled = 'Cancelled.',
         nothingToSet = 'Nothing to set.',
         mediaSaved = 'Media saved.',
-        setsRestored = ' sets restored.',
-        globalSetsRestored = ' global sets restored.',
-
-        -- spam.lua --
-        --[[
-        msgSet = 'Message set.',
-        msgsToSend = 'Messages to send: ',
-        timeBetweenMsgs = 'Time between every message: X seconds.',
-        msgNotSet = 'You haven\'t set the message, use /setspam.',
-        ]]
 
         -- stats.lua --
         usersInChat = 'Users on chat\n',
         totalChatMessages = 'Total messages of the chat: ',
         groups = '\nGroups: ',
         statsCleaned = 'Stats cleaned.',
-        botStats = 'Bot stats:\n',
 
         -- strings.lua --
         langUpdate = 'ℹ️ Strings updated.',
         langSet = 'ℹ️ Language set.',
 
-        -- tempmessage.lua --
-        wrongTimeFormat = 'Wrong time format.',
+        -- tgcli_to_api_migration.lua --
+        migrationCompleted = 'Migration completed.',
 
         -- unset.lua --
         deleted = ' deleted.',
@@ -1950,37 +1497,18 @@ return {
             'Plugin for Sasha\'s administrators.',
             'ADMIN',
             '(#pm|sasha messaggia) <user_id> <msg>: Sasha writes <msg> to <user_id>.',
-            '#import <group_link>: Sasha joins <group_link>.',
-            '(#block|sasha blocca) <user_id>: Sasha blocks <user_id>.',
-            '(#unblock|sasha sblocca) <user_id>: Sasha unblocks <user_id>.',
-            '(#markread|sasha segna letto) (on|off): Sasha marks as [not] read messages that receives.',
-            '(#setbotphoto|sasha cambia foto): Sasha waits for a pic to set as bot\'s profile.',
-            '(#updateid|sasha aggiorna longid): Sasha saves long_id.',
-            '(#addlog|sasha aggiungi log): Sasha adds log.',
-            '(#remlog|sasha rimuovi log): Sasha removes log.',
+            '(#block|sasha blocca) <id>|<username>|<reply>|from: Sasha blocks specified user.',
+            '(#unblock|sasha sblocca) <id>|<username>|<reply>|from: Sasha unblocks specified user.',
             '#checkspeed: Sasha calculates how much time she needs to process messages.',
+            '#vardump [<reply>]: Sasha sends vardump of specified message.',
+            '#commandsstats: Sasha sends commands stats.',
             'SUDO',
-            '(#contactlist|sasha lista contatti) (txt|json): Sasha sends contacts list.',
-            '(#dialoglist|sasha lista chat) (txt|json): Sasha sends chats list.',
-            '(#addcontact|sasha aggiungi contatto) <phone> <name> <surname>: Sasha adds specified contact.',
-            '(#delcontact|sasha elimina contatto) <user_id>: Sasha deletes contact of <user_id>.',
-            '(#sendcontact|sasha invia contatto) <phone> <name> <surname>: Sasha sends contact with specified information.',
-            '(#mycontact|sasha mio contatto): Sasha sends sender contact.',
+            '#botstop: Sasha stops.',
+            '#botrestart: Sasha restarts.',
+            '#redissave: Sasha saves redis db.',
             '(#sync_gbans|sasha sincronizza superban): Sasha syncs gbans list with the one offered by TeleSeed.',
             '(#backup|sasha esegui backup): Sasha makes a backup of herself and sends log to the sender.',
             '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
-            '#vardump [<reply>|<msg_id>]: Sasha sends vardump of specified message.',
-        },
-
-        apod =
-        {
-            '🅿️ APOD',
-            'Plugin for the Astronomy Picture of the Day.',
-            'USER',
-            '#apod|astro [<date>]: Sasha sends APOD.',
-            '(#apod|#astro)hd [<date>]: Sasha sends APOD in HD.',
-            '(#apod|#astro)text [<date>]: Sasha sends explanation of the APOD.',
-            'If <date> is specified and it\'s in this format AAAA-MM-GG the APOD refers to <date>.',
         },
 
         banhammer =
@@ -1994,6 +1522,8 @@ return {
             '(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from: Sasha kicks and bans specified user, if he tries to join again it\'s automatically kicked.',
             '(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from: Sasha unbans specified user.',
             '(#banlist|[sasha] lista ban): Sasha sends bans list of the group.',
+            'OWNER',
+            '#kickinactive [<msgs>]: Sasha kicks inactive users.',
             'ADMIN',
             '(#banlist|[sasha] lista ban) <group_id>: Sasha sends bans list of <group_id>.',
             '(#gban|[sasha] superbanna) <id>|<username>|<reply>|from: Sasha kicks and gbans specified user, if he tries to join again it\'s automatically kicked.',
@@ -2009,20 +1539,6 @@ return {
             '#bot|sasha on|off: Sasha goes on|off on the group.',
             'ADMIN',
             '#bot|sasha <group_id> on|off: Sasha goes on|off on the specified group.',
-        },
-
-        botinteract =
-        {
-            '🅿️ BOTINTERACT',
-            'Plugin for the interaction with bots.',
-            'USER',
-            '$<text>: Sasha sends <text> to the bot.',
-            '#sendmedia: Sasha will forward the media that will be sent to chat.',
-            '#undo: Sasha cancel sendmedia.',
-            'MOD',
-            '#unsetbot <username>: Sasha will stop the interaction with <username>.',
-            'ADMIN',
-            '#setbot <username>: Sasha will interact with <username>.',
         },
 
         broadcast =
@@ -2045,35 +1561,11 @@ return {
             '(#search|[sasha] cerca) <id>: Sasha searches for <id> in the database.',
             '(#delete|[sasha] elimina) <id>: Sasha deleted <id> from the database.',
             '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha manually adds specified user to the database.',
-            '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>\n<long_id>\n[<username>\n<old_usernames>]: Sasha manually adds specified group to the database.',
+            '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>: Sasha manually adds specified group to the database.',
+            '#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha manually adds specified supergroup to the database.',
+            '#addrecord channel <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha manually adds specified channel to the database.',
             '#uploaddb: Sasha uploads the database.',
             '#replacedb <reply>: Sasha replaces the database.',
-        },
-
-        delword =
-        {
-            '🅿️ DELWORD',
-            'Plugin for the management of censorships.',
-            'USER',
-            '(#dellist|[sasha] lista censura): Sasha sends a list of censored words or patterns.',
-            'OWNER',
-            '(#delword|[sasha] censura) <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it in supergroups the message is deleted and in normal groups the user is kicked.',
-        },
-
-        dogify =
-        {
-            '🅿️ DOGIFY',
-            'Plugin to create picture with doge.',
-            'USER',
-            '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha creates a pic with doge and specified words.',
-        },
-
-        duckduckgo =
-        {
-            '🅿️ DUCKDUCKGO',
-            'Plugin for the research on duckduckgo.',
-            'USER',
-            '#duck[duck]go <terms>: Sasha searches <terms> on DuckDuckGo.',
         },
 
         fakecommand =
@@ -2163,78 +1655,45 @@ return {
             '(#rules|sasha regole): Sasha sends group\'s rules.',
             '(#modlist|[sasha] lista mod): Sasha sends moderators list.',
             '#owner: Sasha sends owner\'s id.',
-            "#admins [<reply>|<text>]: Sasha contacts admins",
+            '#admins [<reply>|<text>]: Sasha contacts admins',
             'MOD',
-            '#type: Sasha manda il tipo di gruppo in cui ci si trova.',
-            '#setname <group_name>: Sasha changes group\'s name with <group_name>.',
-            '#setphoto: Sasha waits for a pic to set it as group profile pic.',
+            '#type: Sasha sends group type.',
             '(#setrules|sasha imposta regole) <text>: Sasha changes group\'s rules with <text>.',
-            '#muteuser|voce <id>|<username>|<reply>|from: Sasha [un]mute specified user.',
-            '(#muteslist|lista muti): Sasha sends muted parameters list.',
-            '(#mutelist|lista utenti muti): Sasha sends muted users list.',
             '#settings: Sasha sends group settings.',
-            '#public yes|no: Sasha makes group public|private.',
-            '(#newlink|sasha crea link): Sasha creates group\'s link.',
             '(#link|sasha link): Sasha sends group\'s link.',
             '#setflood <value>: Sasha sets <value> as max flood.',
             'GROUPS',
             '(#lock|[sasha] blocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha locks specified parameter.',
             '(#unlock|[sasha] sblocca) name|member|photo|flood|arabic|bots|leave|links|rtl|sticker|contacts: Sasha unlocks specified parameter.',
             'SUPERGROUPS',
-            '(#bots|[sasha] lista bot): Sasha sends bots list.',
-            '#del <reply>: Sasha deletes specified message.',
             '(#lock|[sasha] blocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha locks specified parameter.',
             '(#unlock|[sasha] sblocca) links|spam|flood|arabic|member|rtl|tgservice|sticker|contacts|strict: Sasha unlocks specified parameter.',
             'OWNER',
             '#log: Sasha sends a file that contains group/realm log.',
             '(#setlink|sasha imposta link) <link>: Sasha saves <link> as group\'s link.',
             '(#unsetlink|sasha elimina link): Sasha deletes the saved link.',
-            '(#promote|[sasha] promuovi) <username>|<reply>: Sasha promotes to mod specified user.',
-            '(#demote|[sasha] degrada) <username>|<reply>: Sasha demotes from mod specified user.',
-            '#mute|silenzia all|text|documents|gifs|video|photo|audio: Sasha mute specified parameter.',
-            '#unmute|ripristina all|text|documents|gifs|video|photo|audio: Sasha unmute specified parameter.',
-            '#setowner <id>|<username>|<reply>: Sasha sets specified user as owner.',
-            'GROUPS',
+            '(#promote|[sasha] promuovi) <id>|<username>|<reply>|from: Sasha promotes to mod specified user.',
+            '(#demote|[sasha] degrada) <id>|<username>|<reply>|from: Sasha demotes from mod specified user.',
+            '#setowner <id>|<username>|<reply>|from: Sasha sets specified user as owner.',
             '#clean modlist|rules: Sasha cleans specified parameter.',
             'SUPERGROUPS',
             '(#getadmins|[sasha] lista admin): Sasha sends telegram\'s administrators list.',
-            '#promoteadmin <id>|<username>|<reply>: Sasha promotes specified user to telegram\'s administrator.',
-            '#demoteadmin <id>|<username>|<reply>: Sasha demotes specified user from telegram\'s administrator.',
-            '#clean rules|modlist|mutelist: Sasha cleans specified parameter.',
             'ADMIN',
             '#add: Sasha adds the group in which you are.',
             '#rem: Sasha removes the group in which you are.',
             'ex INGROUP.LUA',
             '#add realm: Sasha adds realm.',
             '#rem realm: Sasha removes realm.',
-            '#kill group|realm: Sasha kicks every user in group|realm and removes it.',
             'ex INPM.LUA',
-            '(#join|#inviteme|[sasha] invitami) <chat_id>|<alias>: Sasha tries to add the sender to <chat_id>|<alias>.',
-            '#getaliaslist: Sasha sends alias list.',
             '#allchats: Sasha sends a list of all chats.',
             '#allchatlist: Sasha sends a file with a list of all chats.',
-            '#setalias <alias> <group_id>: Sasha sets <alias> as alias of <group_id>.',
-            '#unsetalias <alias>: Sasha deletes <alias>.',
-            'SUPERGROUPS',
-            '#tosuper: Sasha converts group to supergroup.',
-            '#setusername <text>: Sasha changes group\'s username with <text>.',
-            '#kill supergroup: Sasha kicks every user in supergroup and removes it.',
-            'peer_id',
-            'msg.to.id',
-            'msg.to.peer_id',
             'REALMS',
             '#setgpowner <group_id> <user_id>: Sasha sets <user_id> as owner of <group_id>.',
-            '(#creategroup|sasha crea gruppo) <group_name>: Sasha creates a group with specified name.',
-            '(#createsuper|sasha crea supergruppo) <group_name>: Sasha creates a supergroup with specified name.',
-            '(#createrealm|sasha crea regno) <realm_name>: Sasha creates a realm with specified name.',
             '(#setrules|sasha imposta regole) <group_id> <text>: Sasha changes <group_id>\'s rules with <text>.',
-            '#setname <realm_name>: Sasha changes realm\'s name with <realm_name>.',
-            '#setname|#setgpname <group_id> <group_name>: Sasha changes <group_id>\'s name with <group_name>.',
             '(#lock|[sasha] blocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha locks <group_id>\'s specified setting.',
             '(#unlock|[sasha] sblocca) <group_id> name|member|photo|flood|arabic|links|spam|rtl|sticker: Sasha unlocks <group_id>\'s specified setting.',
             '#settings <group_id>: Sasha sends <group_id>\'s settings.',
-            '#type: Sasha sends group\'s type.',
-            '#kill group|supergroup|realm <group_id>: Sasha kicks all members of <group_id> and removes <group_id>.',
+            '#supersettings <supergroup_id>: Sasha sends <supergroup_id>\'s settings.',
             '#rem <group_id>: Sasha removes group.',
             '#list admins|groups|realms: Sasha sends list of specified parameter.',
             'SUDO',
@@ -2261,15 +1720,11 @@ return {
             'Plugin to obtain info.',
             'USER',
             '#getrank|rango [<id>|<username>|<reply>]: Sasha sends rank of specified user.',
-            '(#info|[sasha] info): Sasha sends user\'s info or chat\'s info or her info.',
-            '#ishere <id>|<username>: Sasha says if the specified user is in the group.',
-            '(#groupinfo|[sasha] info gruppo): Sasha sends info of the group.',
+            '(#info|[sasha] info): Sasha sends user\'s info and chat\'s info or her info.',
+            '#ishere <id>|<username>|<reply>|from: Sasha says if the specified user is in the group.',
             'MOD',
-            '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha sends info of specified user.',
-            '(#who|#members|[sasha] lista membri): Sasha users list.',
-            '(#kicked|[sasha] lista rimossi): Sasha sends kicked users list.',
+            '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha sends info of specified parameter.',
             'ADMIN',
-            '(#groupinfo|[sasha] info gruppo) <group_id>: Sasha sends info of specified group.',
             '(#grouplink|[sasha] link gruppo) <group_id>: Sasha sends link of specified group.',
         },
 
@@ -2280,45 +1735,6 @@ return {
             'MOD',
             '(#echo|sasha ripeti) [<reply>]<text>: Sasha repeat <text>, if in reply of a message she replies to that message.',
         },
-
-        invite =
-        {
-            '🅿️ INVITE',
-            'Plugin to invite users.',
-            --  'OWNER',
-            'ADMIN',
-            '(#invite|[sasha] invita|[sasha] resuscita) <id>|<username>|<reply>: Sasha invites specified user.',
-        },
-
-        --[[
-        knivesgame =
-        {
-            '🅿️ KNIVESGAME',
-            'Plugin for knives game.',
-            'USER',
-            'Knives by AISasha. Knives is the throwing knives game, Sasha throws a knife with a certain accuracy, if she hits you you\'re out, otherwise you stay.',
-            '#registerme|#registrami: Sasha registers user to the game.',
-            '#deleteme|#eliminami: Sasha deletes user from the game.',
-            '#knivesinfo: Sasha sends knife\'s info.',
-            '#mystats|#punti: Sasha sends user stats.',
-            '#knives: Sasha tries to kill you.',
-            '#challenge|#sfida <username>|<reply>: Sasha starts a challenge between sender and specified user, the winner will win 20 points while the loser will lose 20 points.',
-            '#accept|#accetta: Sasha confirms challenge.',
-            '#reject|#rifiuta: Sasha deletes challenge, if the challenge is confirmed and deleted by one of the two player he will lose 20 points.',
-            '#challengeinfo: Sasha sends current challenge info.',
-            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha sends the leaderboard of the specified parameter, if nothing is specified the leaederboard will show scores.',
-            'MOD',
-            '#setaccuracy <value>: Sasha sets <value> as accuracy.',
-            '#setchallengeaccuracy <value>: Sasha sets <value> as challenge accuracy.',
-            'ADMIN',
-            '(#registergroupknives|registra gruppo knives): Sasha enables group to play knives.',
-            '(#deletegroup|elimina gruppo): Sasha disables group to play knives.',
-            'SUDO',
-            '#createknivesdb:  Sasha creates knives database.',
-            '#addpoints <id> <value>: Sasha adds <value> points to specified user.',
-            '#rempoints <id> <value>: Sasha subtracts <value> points to specified user.',
-        },
-        ]]
 
         likecounter =
         {
@@ -2365,72 +1781,27 @@ return {
             'OWNER',
             '(#plugins|[sasha] lista plugins): Sasha sends a list of all plugins.',
             '(#disabledlist|([sasha] lista disabilitati|disattivati)): Sasha sends disabled plugins list.',
-            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha re enables <plugin> on this chat.',
-            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disables <plugin> on this chat.',
+            '(#enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha re enables <plugin> on this chat.',
+            '(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disables <plugin> on this chat.',
             'SUDO',
-            '(#[plugin[s]] enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha enables <plugin>, if specified just on chat.',
-            '(#[plugin[s]] disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disables <plugin>, if specified just on chat.',
-            '(#[plugin[s]] reload|[sasha] ricarica): Sasha reloads all plugins.',
-        },
-
-        pokedex =
-        {
-            '🅿️ POKEDEX',
-            'Plugin to obtain info on pokémons.',
-            'USER',
-            '#pokedex|#pokemon <name>|<id>: Sasha searches specified pokemon and sends its info.',
-        },
-
-        qr =
-        {
-            '🅿️ QR',
-            'Plugin to create QR Codes.',
-            'USER',
-            '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha creates QR Code of <text>, if specified it colors QR Code.',
-            'Colors can be specified as follows:',
-            'Text => red|green|blue|purple|black|white|gray.',
-            'Hexadecimal => ("a56729" è marrone).',
-            'Decimal => ("255-192-203" è rosa).',
+            '(#enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha enables <plugin>, if specified just on chat.',
+            '(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disables <plugin>, if specified just on chat.',
+            '(#reload|[sasha] ricarica): Sasha reloads all plugins.',
         },
 
         reactions =
         {
             '🅿️ REACTIONS',
             'Plugin to make Sasha reacts.',
-            'SUDO',
-            '#writing on|off: Sasha (pretends|stops pretending) to write.',
-        },
-
-        ruletagame =
-        {
-            '🅿️ RULETAGAME',
-            'Plugin for russian roulette.',
-            'Ruleta by AISasha, inspired from Leia (#RIP) and Arya (#RIP). Ruleta is the russian roulette with gun, cylinder and bullets, Sasha shots and if there\'s the bullet you\'re out, otherwise you stay.',
-            'USER',
-            '#registerme|#registrami: Sasha registers user to the game.',
-            '#deleteme|#eliminami: Sasha deletes user from the game.',
-            '#ruletainfo: Sasha sends gun\'s info.',
-            '#mystats|#punti: Sasha sends user stats.',
-            '#ruleta: Sasha tries to kill you.',
-            '#godruleta: Sasha gives you 50% to gain 70 points and 50% to lose them all (requires at least 11 points).',
-            '#challenge|#sfida <username>|<reply>: Sasha starts a challenge between sender and specified user, the winner will win 20 points while the loser will lose 20 points.',
-            '#accept|#accetta: Sasha confirms challenge.',
-            '#reject|#rifiuta: Sasha deletes challenge, if the challenge is confirmed and deleted by one of the two player he will lose 20 points.',
-            '#challengeinfo: Sasha sends current challenge info.',
-            '#leaderboard|#classifica [(attempts|tentativi)|(deaths|morti)|(streak|serie)|(challenges|sfide)|(victories|vittorie)|(defeats|sconfitte)]: Sasha sends the leaderboard of the specified parameter, if nothing is specified the leaederboard will show scores.',
             'MOD',
-            '#setcaps <value>: Sasha puts <value> bullets in cylinder.',
-            '#setchallengecaps <value>: Sasha puts <value> bullets in challenge cylinder.',
-            'OWNER',
-            '#setcylinder <value>: Sasha chooses a cylinder with <value> max bullets in the range [5-10].',
-            '#setchallengecylinder <value>: Sasha chooses a challenge cylinder with <value> max bullets in the range [5-10].',
-            'ADMIN',
-            '(#registergroupruleta|registra gruppo ruleta): Sasha enables group to play ruleta.',
-            '(#deletegroupruleta|elimina gruppo ruleta): Sasha disables group to play ruleta.',
-            'SUDO',
-            '#createruletadb: Sasha creates ruleta database.',
-            '#addpoints <id> <value>: Sasha adds <value> points to specified user.',
-            '#rempoints <id> <value>: Sasha subtracts <value> points to specified user.',
+            '#typing: Sasha pretends to write.',
+            '#upload_photo: Sasha pretends to upload a photo.',
+            '#record_video: Sasha pretends to record a video.',
+            '#upload_video: Sasha pretends to upload a video.',
+            '#record_audio: Sasha pretends to record an audio.',
+            '#upload_audio: Sasha pretends to upload an audio.',
+            '#upload_document: Sasha pretends to upload a document.',
+            '#find_location: Sasha pretends to send a location.',
         },
 
         set =
@@ -2439,29 +1810,10 @@ return {
             'Plugin to save things.',
             'MOD',
             '(#set|[sasha] setta) <var_name> <text>: Sasha saves <text> as answer to <var_name>.',
-            '(#setmedia|[sasha] setta media) <var_name>: Sasha saves the media (audio or picture) that will be sent as answer to <var_name>.',
+            '(#setmedia|[sasha] setta media) <var_name>: Sasha saves the media (photo, video, audio, voice note, document, sticker) that will be sent as answer to <var_name>.',
             '(#cancel|[sasha] annulla): Sasha cancels #setmedia.',
-            'OWNER',
-            '#importgroupsets <group_sets>: Sasha restores all the group sets in <group_sets>.',
             'ADMIN',
-            '#importglobalsets <global_sets>: Sasha restores all the global sets in <global_sets>.',
             '#setglobal <var_name> <text>: Sasha globally saves <text> as answer to <var_name>.',
-        },
-
-        shout =
-        {
-            '🅿️ SHOUT',
-            'Plugin to shout words.',
-            'USER',
-            '(#shout|[sasha] grida|[sasha] urla) <text>: Sasha "shouts" <text>.',
-        },
-
-        spam =
-        {
-            '🅿️ SPAM',
-            'Plugin for spamming.',
-            'OWNER',
-            '(#spam|[sasha] spamma) [<messages> <seconds>] <text>: Sasha starts spamming <text> for <messages> times every <seconds> seconds.',
         },
 
         stats =
@@ -2469,18 +1821,15 @@ return {
             '🅿️ STATS',
             'Plugin to obtain stats on groups and Sasha.',
             'USER',
-            '[#]aisasha: Sasha sends her description.',
+            '[#]aisashabot: Sasha sends her description.',
             'MOD',
             '(#stats|#messages): Sasha sends chat\'s stats.',
-            '(#realstats|#realmessages): Sasha sends chat\'s stats with just group members.',
             '(#cleanstats|#cleanmessages): Sasha cleans chat\'s stats.',
             '(#statslist|#messageslist): Sasha sends file with chat\'s stats.',
             'ADMIN',
             '(#stats|#messages) group <group_id>: Sasha sends <group_id>\'s stats.',
-            '(#realstats|#realmessages) group <group_id>: Sasha sends <group_id>\'s stats with just group members.',
             '(#cleanstats|#cleanmessages) group <group_id>: Sasha cleans <group_id>\'s stats.',
             '(#statslist|#messageslist) group <group_id>: Sasha sends file with <group_id>\'s stats.',
-            '(#stats|#messages) aisasha: Sasha sends her stats.',
         },
 
         strings =
@@ -2495,30 +1844,14 @@ return {
             '(#reloadstrings|[sasha] aggiorna stringhe): Sasha updates strings.',
         },
 
-        tagall =
+        tgcli_to_api_migration =
         {
-            '🅿️ TAGALL',
-            'Plugin to tag all users with username.',
+            '🅿️ TGCLI_TO_API_MIGRATION',
+            'Plugin for the migration from tgcli.',
             'OWNER',
-            '(#tagall|sasha tagga tutti) <text>: Sasha tags all group\'s members and writes <text>.',
-        },
-
-        tempmessage =
-        {
-            '🅿️ TEMPMESSAGE',
-            'Plugin to temporize messages.',
-            'MOD',
-            '(#tempmsg|[sasha] temporizza) <hour> <minutes> <seconds> <text>: Sasha will delete that message after the specified time.',
-            '(#tempmsg|[sasha] temporizza) (<hour>|<minutes>|<seconds>)(h|m|s) <text>: Sasha will delete that message after the specified time.',
-            '(#tempmsg|[sasha] temporizza) <hour>|<minutes>(h|m) <minutes>|<seconds>(m|s) <text>: Sasha will delete that message after the specified time.'
-        },
-
-        tex =
-        {
-            '🅿️ TEX',
-            'Plugin to create equations.',
-            'USER',
-            '(#tex|[sasha] equazione) <equation>: Sasha converts <equation> in image.',
+            '#migrate: Sasha migrates group settings, bans, variables set and likes.',
+            'SUDO',
+            '#sudomigrate: Sasha migrates databases and global sets.',
         },
 
         unset =
@@ -2529,14 +1862,6 @@ return {
             '(#unset|[sasha] unsetta) <var_name>: Sasha deletes <var_name>.',
             'ADMIN',
             '#unsetglobal <var_name>: Sasha globally deletes <var_name>.',
-        },
-
-        urbandictionary =
-        {
-            '🅿️ URBANDICTIONARY',
-            'Plugin for the interaction with the Urban Dictionary.',
-            'USER',
-            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha searches <text> in the Urban Dictionary.',
         },
 
         warn =
@@ -2550,26 +1875,6 @@ return {
             '(#warn|[sasha] avverti) <id>|<username>|<reply>|from: Sasha warns specified user.',
             '#unwarn <id>|<username>|<reply>|from: Sasha removes one warn from specified user.',
             '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from: Sasha removes all warns from specified user.',
-        },
-
-        webshot =
-        {
-            '🅿️ WEBSHOT',
-            'Plugin to make screenshots of websites.',
-            'MOD',
-            '(#webshot|[sasha] webshotta) <url> [<size>]: Sasha does a screenshot of <url> and sends it, if <size> is specified it sends of that dimension.',
-            'Size can be:',
-            'T: (120 x 90px)',
-            'S: (200 x 150px)',
-            'E: (320 x 240px)',
-            'N: (400 x 300px)',
-            'M: (640 x 480px)',
-            'L: (800 x 600px)',
-            'X: (1024 x 768px)',
-            'Nmob: (480 x 800px)',
-            'ADMIN',
-            'F: Full page (can be a very long process)',
-            'Fmob: Full page (can be a long process)',
         },
 
         whitelist =

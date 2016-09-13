@@ -1,4 +1,5 @@
 local function run(msg, matches)
+    mystat('/reactions')
     if is_mod(msg) then
         return sendChatAction(msg.chat.id, matches[1]:lower())
     else
@@ -24,13 +25,13 @@ return {
     syntax =
     {
         "MOD",
-        "#typing on|off",
-        "#upload_photo on|off",
-        "#record_video on|off",
-        "#upload_video on|off",
-        "#record_audio on|off",
-        "#upload_audio on|off",
-        "#upload_document on|off",
-        "#find_location on|off",
+        "#typing",
+        "#upload_photo",
+        "#record_video",
+        "#upload_video",
+        "#record_audio",
+        "#upload_audio",
+        "#upload_document",
+        "#find_location",
     },
 }

@@ -37,7 +37,8 @@ function create_config()
         {
             'anti_spam',
             'msg_checks',
-            -- THIS HAVE TO BE THE FIRST TWO: IF AN USER IS SPAMMING/IS BLOCKED, THE BOT WON'T GO THROUGH PLUGINS
+            'onservice',
+            -- THIS HAVE TO BE THE FIRST THREE: IF AN USER IS SPAMMING/IS BLOCKED, THE BOT WON'T GO THROUGH PLUGINS
             'administrator',
             'banhammer',
             'bot',
@@ -58,7 +59,6 @@ function create_config()
             'likecounter',
             'lua_exec',
             'me',
-            'onservice',
             'plugins',
             'reactions',
             'set',
@@ -502,8 +502,7 @@ function migrate_to_supergroup(msg)
         end
     end
     save_data(config.database.db, data)
-    --
-    sendMessage(new, '(_service notification: migration of the group executed_)', true)
+    sendMessage(new, langs[get_lang(old)].groupToSupergroup)
 end
 
 -- recursive to simplify code
@@ -564,8 +563,13 @@ function msg_valid(msg)
         return false
     end
 
-    if is_channel_disabled(msg.receiver) and not is_owner(msg) then
+    if is_channel_disabled(msg.chat.id) and not is_owner(msg) then
         print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
+        return false
+    end
+
+    if isBlocked(msg.from.id) and msg.chat.type == 'private' then
+        print(clr.yellow .. 'Not valid: user blocked' .. clr.reset)
         return false
     end
 

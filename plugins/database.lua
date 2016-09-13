@@ -128,6 +128,7 @@ end
 local function run(msg, matches)
     if is_sudo(msg) then
         if matches[1]:lower() == 'createdatabase' then
+            mystat('/createdatabase')
             local f = io.open(config.database.db, 'w+')
             f:write('{}')
             f:close()
@@ -136,6 +137,7 @@ local function run(msg, matches)
         end
 
         if (matches[1]:lower() == 'search' or matches[1]:lower() == 'sasha cerca' or matches[1]:lower() == 'cerca') and matches[2] then
+            mystat('/search')
             if database[tostring(matches[2])] then
                 return sendMessage(msg.chat.id, serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false }))
             else
@@ -144,6 +146,7 @@ local function run(msg, matches)
         end
 
         if matches[1]:lower() == 'addrecord' and matches[2] and matches[3] then
+            mystat('/addrecord')
             local t = matches[3]:split('\n')
             if matches[2]:lower() == 'user' then
                 local id = t[1]
@@ -240,6 +243,7 @@ local function run(msg, matches)
         end
 
         if (matches[1]:lower() == 'delete' or matches[1]:lower() == 'sasha elimina' or matches[1]:lower() == 'elimina') and matches[2] then
+            mystat('/delete')
             if database[tostring(matches[2])] then
                 database[tostring(matches[2])] = nil
                 save_data(config.database.db, database)
@@ -251,6 +255,7 @@ local function run(msg, matches)
         end
 
         if matches[1]:lower() == 'uploaddb' then
+            mystat('/uploaddb')
             print('SAVING USERS/GROUPS DATABASE')
             save_data(config.database.db, database)
             if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
@@ -262,6 +267,7 @@ local function run(msg, matches)
         end
 
         if matches[1]:lower() == 'replacedb' then
+            mystat('/replacedb')
             if msg.reply then
                 if msg.reply_to_message.document then
                     if msg.reply_to_message.document.mime_type == 'application/json' then
@@ -328,7 +334,7 @@ local function save_to_db(msg)
             db_user(msg.removed)
         end
 
-        -- if forward adjust forward
+        -- if forward save forward
         if msg.forward then
             if msg.forward_from then
                 db_user(msg.forward_from)
@@ -337,7 +343,7 @@ local function save_to_db(msg)
             end
         end
 
-        -- if reply adjust reply
+        -- if reply save reply
         if msg.reply then
             msg.reply_to_message = save_to_db(msg.reply_to_message)
         end

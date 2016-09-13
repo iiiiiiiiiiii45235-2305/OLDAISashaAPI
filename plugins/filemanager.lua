@@ -6,9 +6,11 @@ function run(msg, matches)
         local folder = redis:get('folder')
         if folder then
             if matches[1]:lower() == 'folder' then
+                mystat('/folder')
                 return langs[msg.lang].youAreHere .. BASE_FOLDER .. folder
             end
             if matches[1]:lower() == 'cd' then
+                mystat('/cd')
                 if not matches[2] then
                     redis:set('folder', '')
                     return langs[msg.lang].backHomeFolder .. BASE_FOLDER
@@ -19,28 +21,35 @@ function run(msg, matches)
             end
             local action = ''
             if matches[1]:lower() == 'ls' then
+                mystat('/ls')
                 action = io.popen('ls "' .. BASE_FOLDER .. folder .. '"'):read("*all")
             end
             if matches[1]:lower() == 'mkdir' and matches[2] then
+                mystat('/mkdir')
                 io.popen('cd "' .. BASE_FOLDER .. folder .. '" && mkdir \'' .. matches[2] .. '\''):read("*all")
                 return langs[msg.lang].folderCreated:gsub("X", matches[2])
             end
             if matches[1]:lower() == 'rm' and matches[2] then
+                mystat('/rm')
                 io.popen('cd "' .. BASE_FOLDER .. folder .. '" && rm -f \'' .. matches[2] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].deleted
             end
             if matches[1]:lower() == 'cat' and matches[2] then
+                mystat('/cat')
                 action = io.popen('cd "' .. BASE_FOLDER .. folder .. '" && cat \'' .. matches[2] .. '\''):read("*all")
             end
             if matches[1]:lower() == 'rmdir' and matches[2] then
+                mystat('/rmdir')
                 io.popen('cd "' .. BASE_FOLDER .. folder .. '" && rmdir \'' .. matches[2] .. '\''):read("*all")
                 return langs[msg.lang].folderDeleted:gsub("X", matches[2])
             end
             if matches[1]:lower() == 'touch' and matches[2] then
+                mystat('/touch')
                 io.popen('cd "' .. BASE_FOLDER .. folder .. '" && touch \'' .. matches[2] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].created
             end
             if matches[1]:lower() == 'tofile' and matches[2] and matches[3] then
+                mystat('/tofile')
                 file = io.open(BASE_FOLDER .. folder .. matches[2], "w")
                 file:write(matches[3])
                 file:flush()
@@ -48,17 +57,21 @@ function run(msg, matches)
                 sendMessage(msg.chat.id, langs[msg.lang].fileCreatedWithContent:gsub("X", matches[3]))
             end
             if matches[1]:lower() == 'shell' and matches[2] then
+                mystat('/shell')
                 action = io.popen('cd "' .. BASE_FOLDER .. folder .. '" && ' .. matches[2]:gsub('—', '--')):read('*all')
             end
             if matches[1]:lower() == 'cp' and matches[2] and matches[3] then
+                mystat('/cp')
                 io.popen('cd "' .. BASE_FOLDER .. folder .. '" && cp -r \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].copiedTo .. matches[3]
             end
             if matches[1]:lower() == 'mv' and matches[2] and matches[3] then
+                mystat('/mv')
                 io.popen('cd "' .. BASE_FOLDER .. folder .. '" && mv \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].movedTo .. matches[3]
             end
             if matches[1]:lower() == 'upload' and matches[2] then
+                mystat('/upload')
                 if io.popen('find ' .. BASE_FOLDER .. folder .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
@@ -67,6 +80,7 @@ function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'download' then
+                mystat('/download')
                 if msg.reply then
                     if msg.reply_to_message.media then
                         local file_name = ''

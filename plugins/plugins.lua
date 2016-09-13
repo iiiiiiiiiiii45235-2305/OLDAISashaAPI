@@ -151,6 +151,7 @@ local function run(msg, matches)
     if matches[3] then
         -- Re-enable a plugin for this chat
         if (matches[1]:lower() == 'enable' or matches[1]:lower() == 'sasha abilita' or matches[1]:lower() == 'sasha attiva' or matches[1]:lower() == 'abilita' or matches[1]:lower() == 'attiva') and matches[3]:lower() == 'chat' then
+            mystat('/enable <plugin> chat')
             if is_owner(msg) then
                 print("enable " .. matches[2] .. ' on this chat')
                 return reenable_plugin_on_chat(msg.chat.id, matches[2])
@@ -161,6 +162,7 @@ local function run(msg, matches)
 
         -- Disable a plugin on a chat
         if (matches[1]:lower() == 'disable' or matches[1]:lower() == 'sasha disabilita' or matches[1]:lower() == 'sasha disattiva' or matches[1]:lower() == 'disabilita' or matches[1]:lower() == 'disattiva') and matches[3]:lower() == 'chat' then
+            mystat('/disable plugin chat')
             if is_owner(msg) then
                 if check_plugin(matches[2]) then
                     return langs[msg.lang].systemPlugin
@@ -175,6 +177,7 @@ local function run(msg, matches)
 
     -- Show the available plugins
     if matches[1]:lower() == '#plugins' or matches[1]:lower() == '!plugins' or matches[1]:lower() == '/plugins' or matches[1]:lower() == 'sasha lista plugins' or matches[1]:lower() == 'lista plugins' then
+        mystat('/plugins')
         if is_owner(msg) then
             return list_plugins()
         else
@@ -184,6 +187,7 @@ local function run(msg, matches)
 
     -- Show on chat disabled plugin
     if matches[1]:lower() == 'disabledlist' or matches[1]:lower() == 'sasha lista disabilitati' or matches[1]:lower() == 'sasha lista disattivati' or matches[1]:lower() == 'lista disabilitati' or matches[1]:lower() == 'lista disattivati' then
+        mystat('/disabledlist')
         if is_owner(msg) then
             return list_disabled_plugin_on_chat(msg.chat.id)
         else
@@ -193,6 +197,7 @@ local function run(msg, matches)
 
     -- Reload all the plugins and strings!
     if matches[1]:lower() == 'reload' or matches[1]:lower() == 'sasha ricarica' or matches[1]:lower() == 'ricarica' then
+        mystat('/reload')
         if is_sudo(msg) then
             print(reload_plugins())
             return langs[msg.lang].pluginsReloaded
@@ -203,6 +208,7 @@ local function run(msg, matches)
 
     -- Enable a plugin
     if matches[1]:lower() == 'enable' or matches[1]:lower() == 'sasha abilita' or matches[1]:lower() == 'sasha attiva' or matches[1]:lower() == 'abilita' or matches[1]:lower() == 'attiva' then
+        mystat('/enable <plugin>')
         if is_sudo(msg) then
             print("enable: " .. matches[2])
             return enable_plugin(matches[2], msg.lang)
@@ -213,6 +219,7 @@ local function run(msg, matches)
 
     -- Disable a plugin
     if matches[1]:lower() == 'disable' or matches[1]:lower() == 'sasha disabilita' or matches[1]:lower() == 'sasha disattiva' or matches[1]:lower() == 'disabilita' or matches[1]:lower() == 'disattiva' then
+        mystat('/disable <plugin>')
         if is_sudo(msg) then
             if check_plugin(matches[2]) then
                 return langs[msg.lang].systemPlugin
@@ -230,18 +237,13 @@ return {
     patterns =
     {
         "^[#!/][Pp][Ll][Uu][Gg][Ii][Nn][Ss]$",
-        "^[#!/][Pp][Ll][Uu][Gg][Ii][Nn][Ss]? ([Ee][Nn][Aa][Bb][Ll][Ee]) ([%w_%.%-]+)$",
-        "^[#!/][Pp][Ll][Uu][Gg][Ii][Nn][Ss]? ([Dd][Ii][Ss][Aa][Bb][Ll][Ee]) ([%w_%.%-]+)$",
-        "^[#!/][Pp][Ll][Uu][Gg][Ii][Nn][Ss]? ([Ee][Nn][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^[#!/][Pp][Ll][Uu][Gg][Ii][Nn][Ss]? ([Dd][Ii][Ss][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^[#!/][Pp][Ll][Uu][Gg][Ii][Nn][Ss]? ([Rr][Ee][Ll][Oo][Aa][Dd])$",
-        "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd][Ll][Ii][Ss][Tt])",
-        -- plugins
         "^[#!/]([Ee][Nn][Aa][Bb][Ll][Ee]) ([%w_%.%-]+)$",
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee]) ([%w_%.%-]+)$",
         "^[#!/]([Ee][Nn][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd])$",
+        "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd][Ll][Ii][Ss][Tt])",
+        -- plugins
         "^[Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Pp][Ll][Uu][Gg][Ii][Nn][Ss]$",
         "^[Ss][Aa][Ss][Hh][Aa] ([Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+)$",
         "^[Ss][Aa][Ss][Hh][Aa] ([Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+)$",

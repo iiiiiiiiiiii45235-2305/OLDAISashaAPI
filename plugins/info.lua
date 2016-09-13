@@ -94,6 +94,7 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == "getrank" or matches[1]:lower() == "rango" then
+        mystat('/getrank')
         if msg.reply then
             if matches[2] then
                 if matches[2]:lower() == 'from' then
@@ -101,10 +102,10 @@ local function run(msg, matches)
                         if msg.reply_to_message.forward_from then
                             return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id)
                         else
-                            -- return error cant kick chat
+                            return langs[msg.lang].cantDoThisToChat
                         end
                     else
-                        -- return error no forward
+                        return langs[msg.lang].errorNoForward
                     end
                 else
                     return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id)
@@ -128,6 +129,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'ishere' and matches[2] then
+        mystat('/ishere')
         if msg.reply then
             if matches[2] then
                 if matches[2]:lower() == 'from' then
@@ -135,10 +137,10 @@ local function run(msg, matches)
                         if msg.reply_to_message.forward_from then
                             return is_here(msg.chat.id, msg.reply_to_message.forward_from.id)
                         else
-                            -- return error cant kick chat
+                            return langs[msg.lang].cantDoThisToChat
                         end
                     else
-                        -- return error no forward
+                        return langs[msg.lang].errorNoForward
                     end
                 else
                     return is_here(msg.chat.id, msg.reply_to_message.from.id)
@@ -160,6 +162,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'info' or matches[1]:lower() == 'sasha info' then
+        mystat('/info')
         if msg.reply then
             if is_mod(msg) then
                 if matches[2] then
@@ -171,7 +174,7 @@ local function run(msg, matches)
                                 return get_object_info(msg.reply_to_message.forward_from_chat, msg.chat.id, msg.lang)
                             end
                         else
-                            -- return error no forward
+                            return langs[msg.lang].errorNoForward
                         end
                     end
                 else
@@ -212,6 +215,7 @@ local function run(msg, matches)
         return
     end
     if matches[1]:lower() == 'grouplink' or matches[1]:lower() == 'sasha link gruppo' or matches[1]:lower() == 'link gruppo' and matches[2] then
+        mystat('/grouplink')
         if is_admin(msg) then
             local data = load_data(config.moderation.data)
             local group_link = data[tostring(matches[2])]['settings']['set_link']

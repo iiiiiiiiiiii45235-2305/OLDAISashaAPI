@@ -2,6 +2,7 @@
 -- "USER" can't use this because there's no rank lower than "USER"
 local function run(msg, matches)
     if is_mod(msg) then
+        mystat('/fakecommand')
         local rank = get_rank(msg.from.id, msg.chat.id)
         local fakerank = rank_table[matches[1]:upper()]
         print(rank, fakerank)

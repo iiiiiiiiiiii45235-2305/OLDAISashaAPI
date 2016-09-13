@@ -1,4 +1,5 @@
 local function run(msg, matches)
+    mystat('/lua <command>')
     if is_sudo(msg) then
         local output = loadstring(matches[1])()
         if not output then

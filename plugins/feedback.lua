@@ -1,4 +1,5 @@
 ﻿function run(msg, matches)
+    mystat('/feedback')
     local text = langs[msg.lang].feedStart
     if msg.from.first_name then
         text = text .. langs[msg.lang].feedName .. msg.from.first_name

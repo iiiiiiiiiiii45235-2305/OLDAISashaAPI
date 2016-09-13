@@ -78,30 +78,31 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'getwelcome' then
+        mystat('/getwelcome')
         return get_welcome(msg.chat.id)
     end
     if matches[1]:lower() == 'getgoodbye' then
+        mystat('/getgoodbye')
         return get_goodbye(msg.chat.id)
     end
     if matches[1]:lower() == 'setwelcome' and is_mod(msg) then
-        if string.match(matches[2], '[Aa][Uu][Tt][Oo][Ee][Xx][Ee][Cc]') then
-            return langs[msg.lang].autoexecDenial
-        end
+        mystat('/setwelcome')
         return set_welcome(msg.chat.id, matches[2])
     end
     if matches[1]:lower() == 'setgoodbye' and is_mod(msg) then
-        if string.match(matches[2], '[Aa][Uu][Tt][Oo][Ee][Xx][Ee][Cc]') then
-            return langs[msg.lang].autoexecDenial
-        end
+        mystat('/setgoodbye')
         return set_goodbye(msg.chat.id, matches[2])
     end
     if matches[1]:lower() == 'unsetwelcome' and is_mod(msg) then
+        mystat('/unsetwelcome')
         return unset_welcome(msg.chat.id)
     end
     if matches[1]:lower() == 'unsetgoodbye' and is_mod(msg) then
+        mystat('/unsetgoodbye')
         return unset_goodbye(msg.chat.id)
     end
     if matches[1]:lower() == 'setmemberswelcome' and is_mod(msg) then
+        mystat('/setmemberswelcome')
         local text = set_memberswelcome(msg.chat.id, matches[2])
         if matches[2] == '0' then
             return langs[msg.lang].neverWelcome
@@ -110,6 +111,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'getmemberswelcome' and is_mod(msg) then
+        mystat('/getmemberswelcome')
         return get_memberswelcome(msg.chat.id)
     end
 end

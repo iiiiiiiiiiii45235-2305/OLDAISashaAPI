@@ -1,5 +1,6 @@
 local function run(msg, matches)
     if (matches[1]:lower() == 'setlang' or matches[1]:lower() == 'lingua') and matches[2] then
+        mystat('/setlang')
         if msg.chat.type == 'private' then
             redis:set('lang:' .. msg.chat.id, matches[2]:lower())
             return langs[matches[2]:lower()].langSet
@@ -11,6 +12,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'reloadstrings' or matches[1]:lower() == 'sasha aggiorna stringhe' or matches[1]:lower() == 'aggiorna stringhe' then
+        mystat('/reloadstrings')
         if is_sudo(msg) then
             print('Loading languages.lua...')
             langs = dofile('languages.lua')
