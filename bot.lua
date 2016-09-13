@@ -174,6 +174,7 @@ function load_plugins()
         end
     end
     print(clr.white .. 'Plugins loaded: ', index .. clr.reset)
+    return index
 end
 
 function load_database()
@@ -202,12 +203,12 @@ function bot_init()
     end
     bot = bot.result
 
-    load_plugins()
+    local tot_plugins = load_plugins()
     load_database()
 
     print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
     redis:hincrby('bot:general', 'starts', 1)
-    sendAdmin('*Bot started!*\n_' .. os.date('On %A, %d %B %Y\nAt %X') .. '_\n' .. #plugins .. ' plugins loaded', true)
+    sendAdmin('*Bot started!*\n_' .. os.date('On %A, %d %B %Y\nAt %X') .. '_\n' .. tot_plugins .. ' plugins loaded', true)
 
     -- Generate a random seed and "pop" the first random number. :)
     math.randomseed(os.time())

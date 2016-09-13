@@ -3,10 +3,10 @@ local function run(msg, matches)
     if matches[1]:lower() == 'leave' or matches[1]:lower() == 'sasha abbandona' then
         if is_admin(msg) then
             if not matches[2] then
-                sendMessage(msg.chat.id)
+                sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
                 return leaveChat(msg.chat.id)
             else
-                sendMessage(matches[2])
+                sendMessage(matches[2], langs[msg.lang].notMyGroup)
                 return leaveChat(matches[2])
             end
         else

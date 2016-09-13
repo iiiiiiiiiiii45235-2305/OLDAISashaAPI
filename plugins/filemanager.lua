@@ -62,7 +62,7 @@ function run(msg, matches)
                 if io.popen('find ' .. BASE_FOLDER .. folder .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
-                    sendDocument(BASE_FOLDER .. folder .. matches[2])
+                    sendDocument(msg.chat.id, BASE_FOLDER .. folder .. matches[2])
                     return langs[msg.lang].sendingYou .. matches[2]
                 end
             end
