@@ -188,10 +188,10 @@ local function run(msg, matches)
         if matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban" then
             -- /banlist
             if matches[2] and is_admin(msg) then
-                return ban_list(matches[2])
+                return banList(matches[2])
             else
                 if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                    return ban_list(msg.chat.id)
+                    return banList(msg.chat.id)
                 else
                     return langs[msg.lang].useYourGroups
                 end
