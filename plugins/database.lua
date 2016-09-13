@@ -131,12 +131,13 @@ local function run(msg, matches)
             local f = io.open(config.database.db, 'w+')
             f:write('{}')
             f:close()
+            database = load_data(config.database.db)
             return sendReply(msg, langs[msg.lang].dbCreated)
         end
 
         if (matches[1]:lower() == 'search' or matches[1]:lower() == 'sasha cerca' or matches[1]:lower() == 'cerca') and matches[2] then
             if database[tostring(matches[2])] then
-                return sendMessage(serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false }))
+                return sendMessage(msg.chat.id, serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false }))
             else
                 return matches[2] .. langs[msg.lang].notFound
             end
