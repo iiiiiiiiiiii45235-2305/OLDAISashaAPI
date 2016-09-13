@@ -75,7 +75,6 @@ local function run(msg, matches)
                         redis:hdel(cli_get_hash(msg), word:lower())
                     end
                 end
-                sendMessage(msg.chat.id, i .. langs[msg.lang].setsRestored)
             end
 
             -- migrate ban
@@ -104,6 +103,7 @@ local function run(msg, matches)
                 end
             end
             save_data(new_likecounter_path, new_likecounter_data)
+            return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
         else
             return langs[msg.lang].require_owner
         end
@@ -215,7 +215,6 @@ local function run(msg, matches)
             save_data(new_database_path, new_database_data)
         end
     end
-    --
     return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
 end
 
