@@ -301,7 +301,7 @@ local function run(msg, matches)
                 end
                 if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
                     -- /gbanlist
-                    local list = banall_list()
+                    local list = gbanList()
                     local file = io.open("./groups/gbanlist.txt", "w")
                     file:write(list)
                     file:flush()
