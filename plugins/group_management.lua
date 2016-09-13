@@ -276,7 +276,7 @@ local function realmrem(msg)
     end
     data[tostring('realms')][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
-    return sendMessage(msg.chat.it, langs[msg.lang].realmRemoved)
+    return sendMessage(msg.chat.id, langs[msg.lang].realmRemoved)
 end
 
 local function promote(chat_id, user)
@@ -791,7 +791,7 @@ local function run(msg, matches)
 
     -- INREALM
     if is_realm(msg) then
-        if matches[1]:lower() == 'rem' and matches[2] then
+        if matches[1]:lower() == 'rem' and string.match(matches[2], '^%-?%d+$') then
             if is_admin(msg) then
                 -- Group configuration removal
                 data[tostring(matches[2])] = nil
