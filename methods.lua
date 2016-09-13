@@ -118,7 +118,7 @@ function kickChatMember(user_id, chat_id)
         return false, tab.description
     end
 
-    return tab
+    return langs[get_lang(chat_id)].phrases.banhammer
 end
 
 -- never call this outside this file
