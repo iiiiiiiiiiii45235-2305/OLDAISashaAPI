@@ -42,7 +42,7 @@ local function pre_process(msg)
 
                     if check_tag(msg, user, obj_user) then
                         if msg.reply then
-                            forwardMessage(obj_user.result.id, msg.chat.id, msg.reply_to_message.message_id)
+                            forwardMessage(obj_user.id, msg.chat.id, msg.reply_to_message.message_id)
                         end
                         local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
                         if msg.from.username then
