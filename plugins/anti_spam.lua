@@ -94,10 +94,10 @@ local function pre_process(msg)
             local username = msg.from.username
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 if msg.from.username then
-                    savelog(msg.chat.tg_cli_id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
+                    savelog(msg.chat.id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
                     sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. "[" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
                 else
-                    savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
                     sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. "[" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
                 end
             end

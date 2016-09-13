@@ -118,7 +118,7 @@ function kickChatMember(user_id, chat_id)
         return false, tab.description
     end
 
-    return langs[get_lang(chat_id)].phrases.banhammer
+    return tab
 end
 
 -- never call this outside this file
@@ -500,7 +500,7 @@ function kickUser(executer, target, chat_id)
             -- general: save how many kicks
             -- unban
             unbanChatMember(target, chat_id)
-            return res
+            return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
         else
             local motivation = code2text(code, get_lang(chat_id))
             return res, motivation
@@ -532,7 +532,7 @@ function banUser(executer, target, chat_id, normal_group)
                 local hash = 'banned:' .. chat_id
                 redis:sadd(hash, target)
             end
-            return res
+            return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
             -- return res and not the text
         else
             --- else, the user haven't been kicked
@@ -573,7 +573,7 @@ function unbanUser(target, chat_id, normal_group)
         -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
         local res, code = unbanChatMember(target, chat_id)
     end
-    return true
+    return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].unbanned
 end
 
 -- Check if user_id is banned in chat_id or not
@@ -615,6 +615,7 @@ function gbanUser(user_id)
     -- Save to redis
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
+    return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].gbanned
 end
 
 -- Global unban
@@ -622,6 +623,7 @@ function ungbanUser(user_id)
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
+    return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].ungbanned
 end
 
 -- Check if user_id is globally banned or not

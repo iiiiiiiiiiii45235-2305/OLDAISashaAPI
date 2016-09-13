@@ -41,10 +41,9 @@ local function run(msg, matches)
     if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
         -- /kickme
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
             -- Save to logs
-            kickUser(bot.id, msg.from.id, msg.chat.id)
-            return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+            return kickUser(bot.id, msg.from.id, msg.chat.id)
         else
             return langs[msg.lang].useYourGroups
         end
@@ -332,7 +331,7 @@ local function pre_process(msg)
                 if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
                     -- Check it with redis
                     print('User is banned!')
-                    savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
                     -- Save to logs
                     banUser(bot.id, msg.from.id, msg.chat.id)
                 end
@@ -343,7 +342,7 @@ local function pre_process(msg)
                 if isBanned(msg.added.id, msg.chat.id) and not is_mod2(msg.from.id, msg.chat.id) or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
                     -- Check it with redis
                     print('User is banned!')
-                    savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
                     -- Save to logs
                     kickUser(bot.id, user_id, msg.chat.id)
                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
@@ -374,7 +373,7 @@ local function pre_process(msg)
                 if msg.added.username then
                     if string.sub(msg.added.username:lower(), -3) == 'bot' and not is_mod(msg) and bots_protection == "yes" then
                         --- Will kick bots added by normal users
-                        savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
                         -- Save to logs
                         kickUser(bot.id, msg.added.id, msg.chat.id)
                     end
@@ -394,7 +393,7 @@ local function pre_process(msg)
         if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
             -- Check it with redis
             print('Banned user talking!')
-            savelog(msg.chat.tg_cli_id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
             -- Save to logs
             kickUser(bot.id, msg.from.id, msg.chat.id)
             msg = clean_msg(msg)
