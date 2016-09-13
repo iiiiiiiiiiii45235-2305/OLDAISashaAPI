@@ -146,7 +146,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return warn_user(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                        return warn_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
                                         -- return error cant whitelist chat
                                     end
@@ -155,16 +155,16 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return warn_user(msg.reply_to_message.from.id, msg.chat.id)
+                            return warn_user(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        return warn_user(matches[2], msg.chat.id)
+                        return warn_user(msg.from.id, matches[2], msg.chat.id)
                     else
                         local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
-                                return warn_user(obj_user.id, msg.chat.id)
+                                return warn_user(msg.from.id, obj_user.id, msg.chat.id)
                             end
                         end
                     end
@@ -176,7 +176,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return unwarn_user(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                        return unwarn_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
                                         -- return error cant whitelist chat
                                     end
@@ -185,16 +185,16 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return unwarn_user(msg.reply_to_message.from.id, msg.chat.id)
+                            return unwarn_user(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        return unwarn_user(matches[2], msg.chat.id)
+                        return unwarn_user(msg.from.id, matches[2], msg.chat.id)
                     else
                         local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
-                                return unwarn_user(obj_user.id, msg.chat.id)
+                                return unwarn_user(msg.from.id, obj_user.id, msg.chat.id)
                             end
                         end
                     end
@@ -206,7 +206,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return unwarnall_user(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                        return unwarnall_user(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                     else
                                         -- return error cant whitelist chat
                                     end
@@ -215,16 +215,16 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return unwarnall_user(msg.reply_to_message.from.id, msg.chat.id)
+                            return unwarnall_user(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        return unwarnall_user(matches[2], msg.chat.id)
+                        return unwarnall_user(msg.from.id, matches[2], msg.chat.id)
                     else
                         local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
-                                return unwarnall_user(obj_user.id, msg.chat.id)
+                                return unwarnall_user(msg.from.id, obj_user.id, msg.chat.id)
                             end
                         end
                     end
