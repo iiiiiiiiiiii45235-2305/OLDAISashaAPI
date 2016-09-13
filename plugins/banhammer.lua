@@ -210,7 +210,8 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return gbanUser(msg.reply_to_message.forward_from.id)
+                                        gbanUser(msg.reply_to_message.forward_from.id)
+                                        return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].gbanned
                                     else
                                         -- return error cant gban chat
                                     end
@@ -221,24 +222,30 @@ local function run(msg, matches)
                         else
                             if msg.reply_to_message.service then
                                 if msg.reply_to_message.service_type == 'chat_add_user' then
-                                    return gbanUser(msg.reply_to_message.added.id)
+                                    gbanUser(msg.reply_to_message.added.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].gbanned
                                 elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                    return gbanUser(msg.reply_to_message.removed.id)
+                                    gbanUser(msg.reply_to_message.removed.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].gbanned
                                 else
-                                    return gbanUser(msg.reply_to_message.from.id)
+                                    gbanUser(msg.reply_to_message.from.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                                 end
                             else
-                                return gbanUser(msg.reply_to_message.from.id)
+                                gbanUser(msg.reply_to_message.from.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                             end
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        return gbanUser(matches[2])
+                        gbanUser(matches[2])
+                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
                     else
                         local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
-                                return gbanUser(obj_user.id)
+                                gbanUser(obj_user.id)
+                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
                             end
                         end
                     end
@@ -251,7 +258,8 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return ungbanUser(msg.reply_to_message.forward_from.id)
+                                        ungbanUser(msg.reply_to_message.forward_from.id)
+                                        return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].ungbanned
                                     else
                                         -- return error cant ungban chat
                                     end
@@ -262,24 +270,30 @@ local function run(msg, matches)
                         else
                             if msg.reply_to_message.service then
                                 if msg.reply_to_message.service_type == 'chat_add_user' then
-                                    return ungbanUser(msg.reply_to_message.added.id)
+                                    ungbanUser(msg.reply_to_message.added.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].ungbanned
                                 elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                    return ungbanUser(msg.reply_to_message.removed.id)
+                                    ungbanUser(msg.reply_to_message.removed.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].ungbanned
                                 else
-                                    return ungbanUser(msg.reply_to_message.from.id)
+                                    ungbanUser(msg.reply_to_message.from.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
                                 end
                             else
-                                return ungbanUser(msg.reply_to_message.from.id)
+                                ungbanUser(msg.reply_to_message.from.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
                             end
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        return ungbanUser(matches[2])
+                        ungbanUser(matches[2])
+                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
                     else
                         local obj_user = resolveUsername(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
-                                return ungbanUser(obj_user.id)
+                                ungbanUser(obj_user.id)
+                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
                             end
                         end
                     end

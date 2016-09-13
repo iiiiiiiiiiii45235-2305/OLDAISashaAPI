@@ -607,7 +607,6 @@ function gbanUser(user_id)
     -- Save to redis
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
-    return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].gbanned
 end
 
 -- Global unban
@@ -615,7 +614,6 @@ function ungbanUser(user_id)
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
-    return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].ungbanned
 end
 
 -- Check if user_id is globally banned or not
