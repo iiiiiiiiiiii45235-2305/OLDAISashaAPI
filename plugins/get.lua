@@ -169,17 +169,23 @@ local function pre_process(msg)
             local answer = check_word(msg, word:lower())
             if answer then
                 if string.match(answer, '^photo') then
-                    sendPhotoId(msg.chat.id, answer:gsub('photo', ''))
+                    answer = answer:gsub('^photo', '')
+                    sendPhotoId(msg.chat.id, answer)
                 elseif string.match(answer, '^video') then
-                    sendVideoId(msg.chat.id, answer:gsub('video', ''))
+                    answer = answer:gsub('^video', '')
+                    sendVideoId(msg.chat.id, answer)
                 elseif string.match(answer, '^audio') then
-                    sendAudioId(msg.chat.id, answer:gsub('audio', ''))
+                    answer = answer:gsub('^audio', '')
+                    sendAudioId(msg.chat.id, answer)
                 elseif string.match(answer, '^voice') then
-                    sendVoiceId(msg.chat.id, answer:gsub('voice', ''))
+                    answer = answer:gsub('^voice', '')
+                    sendVoiceId(msg.chat.id, answer)
                 elseif string.match(answer, '^document') then
-                    sendDocumentId(msg.chat.id, answer:gsub('document', ''))
+                    answer = answer:gsub('^document', '')
+                    sendDocumentId(msg.chat.id, answer)
                 elseif string.match(answer, '^sticker') then
-                    sendStickerId(msg.chat.id, answer:gsub('sticker', ''))
+                    answer = answer:gsub('^sticker', '')
+                    sendStickerId(msg.chat.id, answer)
                 else
                     sendReply(msg, answer)
                 end
