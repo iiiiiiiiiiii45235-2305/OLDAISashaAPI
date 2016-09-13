@@ -623,6 +623,10 @@ function banUser(executer, target, chat_id)
 			end
 		end]]
             -- else, if the user has not been banned because of different errors from the error [106], then...
+            if code == 106 then
+                local hash = 'banned:' .. chat_id
+                redis:sadd(hash, tostring(target))
+            end
             local text = code2text(code, get_lang(chat_id))
             return res, text
             -- return the motivation too

@@ -33,7 +33,7 @@ local function get_name(user_id)
     local user_info = { }
     local uhash = 'user:' .. user_id
     local user = redis:hgetall(uhash)
-    user_info.name = user_print_name(user):gsub('_', ' ')
+    user_info.name = user.first_name ..(user.last_name or '')
     return user_info
 end
 

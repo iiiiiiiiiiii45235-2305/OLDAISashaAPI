@@ -218,7 +218,8 @@ local function run(msg, matches)
             if not group_link then
                 return langs[msg.lang].noLinkAvailable
             end
-            return matches[2] .. '\n' .. group_link
+            local obj = getChat(matches[2]).result
+            return obj.title .. '\n' .. group_link
         else
             return langs[msg.lang].require_admin
         end
