@@ -624,24 +624,6 @@ function isGbanned(user_id)
     return gbanned or false
 end
 
--- Returns globally ban list
-function gbanList()
-    local hash = 'gbanned'
-    local list = redis:smembers(hash)
-    local text = langs[get_lang(chat_id)].gbanListStart
-    for k, v in pairs(list) do
-        local user_info = redis:hgetall('user:' .. v)
-        if user_info and user_info.print_name then
-            local print_name = string.gsub(user_info.print_name, "_", " ")
-            local print_name = string.gsub(print_name, "?", "")
-            text = text .. k .. " - " .. print_name .. " [" .. v .. "]\n"
-        else
-            text = text .. k .. " - " .. v .. "\n"
-        end
-    end
-    return text
-end
-
 function block_user(user_id, lang)
     if not is_admin2(user_id) then
         redis:sadd('bot:blocked', user_id)

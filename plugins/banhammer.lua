@@ -301,13 +301,25 @@ local function run(msg, matches)
                 end
                 if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
                     -- /gbanlist
-                    local list = gbanList()
+                    local hash = 'gbanned'
+                    local list = redis:smembers(hash)
+                    local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
+                    for k, v in pairs(list) do
+                        local user_info = redis:hgetall('user:' .. v)
+                        if user_info and user_info.print_name then
+                            local print_name = string.gsub(user_info.print_name, "_", " ")
+                            local print_name = string.gsub(print_name, "?", "")
+                            gbanlist = gbanlist .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+                        else
+                            gbanlist = gbanlist .. k .. " - " .. v .. "\n"
+                        end
+                    end
                     local file = io.open("./groups/gbanlist.txt", "w")
-                    file:write(list)
+                    file:write(gbanlist)
                     file:flush()
                     file:close()
-                    send_document(receiver, "./groups/gbanlist.txt", ok_cb, false)
-                    return sendMessage(msg.chat.id, list)
+                    sendDocument(msg.chat.id, "./groups/gbanlist.txt")
+                    return sendMessage(msg.chat.id, gbanlist)
                 end
                 return
             else
