@@ -362,7 +362,7 @@ end
 
 function sendVoiceId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
-    '/sendVoice?chat_id' .. chat_id ..
+    '/sendVoice?chat_id=' .. chat_id ..
     '&voice=' .. file_id
     local reply = false
     if reply_to_message_id then
@@ -377,7 +377,7 @@ end
 
 function sendAudioId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
-    '/sendAudio?chat_id' .. chat_id ..
+    '/sendAudio?chat_id=' .. chat_id ..
     '&audio=' .. file_id
     local reply = false
     if reply_to_message_id then
@@ -392,7 +392,7 @@ end
 
 function sendVideoId(chat_id, file_id, reply_to_message_id)
     local url = BASE_URL ..
-    '/sendVideo?chat_id' .. chat_id ..
+    '/sendVideo?chat_id=' .. chat_id ..
     '&video=' .. file_id
     local reply = false
     if reply_to_message_id then
