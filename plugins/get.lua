@@ -150,7 +150,7 @@ local function run(msg, matches)
     end
 end
 
-local function pre_process(msg, matches)
+local function pre_process(msg)
     local vars = list_variables(msg, true)
     if vars ~= nil then
         local t = vars:split('\n')

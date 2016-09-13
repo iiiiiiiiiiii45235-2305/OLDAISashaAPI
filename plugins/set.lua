@@ -92,7 +92,15 @@ local function pre_process(msg)
                     if msg.media then
                         local file_id = ''
                         if msg.media_type == 'photo' then
-                            file_id = msg.photo.file_id
+                            local bigger_pic_id = ''
+                            local size = 0
+                            for k, v in pairsByKeys(msg.photo) do
+                                if v.file_size > size then
+                                    size = v.file_size
+                                    bigger_pic_id = v.file_id
+                                end
+                            end
+                            file_id = bigger_pic_id
                         elseif msg.media_type == 'video' then
                             file_id = msg.video.file_id
                         elseif msg.media_type == 'audio' then
