@@ -351,7 +351,7 @@ return {
         -- uploadbackup
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Aa] [Bb][Aa][Cc][Kk][Uu][Pp])$",
     },
-    -- cron = cron,
+    cron = cron,
     run = run,
     min_rank = 3,
     syntax =

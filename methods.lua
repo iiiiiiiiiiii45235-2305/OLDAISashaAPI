@@ -525,7 +525,7 @@ function banUser(executer, target, chat_id, normal_group)
 
         if res then
             -- if the user has been kicked, then...
-            savelog(msg.chat.tg_cli_id, "[" .. msg.from.id .. "] banned user " .. matches[2])
+            savelog(chat_id, "[" .. executer .. "] banned user " .. target)
             redis:hincrby('bot:general', 'ban', 1)
             -- genreal: save how many kicks
             if normal_group then
@@ -562,7 +562,7 @@ end
 
 -- call this to unban
 function unbanUser(target, chat_id, normal_group)
-    savelog(msg.chat.tg_cli_id, "[" .. msg.from.id .. "] unbanned user " .. matches[2])
+    savelog(chat_id, "[" .. target .. "] unbanned")
     if normal_group then
         local hash = 'banned:' .. chat_id
         local removed = redis:srem(hash, target)
