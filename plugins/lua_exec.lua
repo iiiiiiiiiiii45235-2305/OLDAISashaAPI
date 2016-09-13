@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
-        local output = loadstring(code)()
+        local output = loadstring(matches[1])()
         if not output then
             output = langs[msg.lang].doneNoOutput
         else

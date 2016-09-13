@@ -562,10 +562,7 @@ end
 function unbanUser(target, chat_id)
     savelog(chat_id, "[" .. target .. "] unbanned")
     local hash = 'banned:' .. chat_id
-    local removed = redis:srem(hash, target)
-    if removed == 0 then
-        return false
-    end
+    redis:srem(hash, target)
     -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
     local res, code = unbanChatMember(target, chat_id)
     return langs[get_lang(chat_id)].user .. target .. langs[msg.lang].unbanned
