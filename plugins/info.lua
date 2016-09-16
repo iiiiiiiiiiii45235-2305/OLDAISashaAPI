@@ -232,7 +232,8 @@ end
 
 local function pre_process(msg)
     if msg.chat.type == 'private' and msg.forward then
-        if is_admin(msg) then
+        if get_rank(msg.from.id, bot.id) > 0 then
+            -- if moderator in some group or higher
             if msg.forward_from then
                 sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id, msg.lang))
             elseif msg.forward_from_chat then
