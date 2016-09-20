@@ -1,6 +1,15 @@
 local function check_tag(msg, user_id, user)
-    -- check if username is in message
+    if msg.entities then
+        -- check if there's a mention
+        if msg.entities.type == 'text_mention' and msg.entities.user then
+            if tonumber(msg.entities.user.id) == tonumber(user_id) then
+                return true
+            end
+        end
+    end
+
     if user.username then
+        -- check if username is in message
         if msg.text then
             if string.find(msg.text:lower(), user.username:lower()) or string.find(msg.text, user.first_name) then
                 return true
@@ -14,6 +23,7 @@ local function check_tag(msg, user_id, user)
             end
         end
     else
+        -- check if first name is in message
         if msg.text then
             if string.find(msg.text, user.first_name) then
                 return true
