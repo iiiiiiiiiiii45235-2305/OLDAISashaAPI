@@ -76,6 +76,7 @@ function create_config()
         database = { db = 'data/database.json' },
         about_text = "AISashaAPI by @EricSolinas based on @GroupButler_bot and @TeleSeed supergroup branch with something taken from @DBTeam.\nThanks guys.",
         log_chat = - 1001043389864,
+        vardump_chat = - 167065200,
         api_errors =
         {
             [101] = 'Not enough rights to kick participant',
@@ -570,6 +571,12 @@ function msg_valid(msg)
 
     if isBlocked(msg.from.id) and msg.chat.type == 'private' then
         print(clr.yellow .. 'Not valid: user blocked' .. clr.reset)
+        return false
+    end
+
+    if msg.chat.id == config.vardump_chat then
+        sendMessage(msg.chat.id, vardumptext(msg))
+        print(clr.yellow .. 'Not valid: vardump chat' .. clr.reset)
         return false
     end
 
