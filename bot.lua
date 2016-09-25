@@ -700,14 +700,13 @@ function print_msg(msg)
         print_text = print_text .. clr.white .. '[reply] ' .. clr.reset
     end
     if msg.media then
-        print_text = print_text .. clr.white .. '[' ..(msg.media_type or 'unsupported') .. '] ' .. clr.reset
+        print_text = print_text .. clr.white .. '[' ..(msg.media_type or 'unsupported media') .. '] ' .. clr.reset
         if msg.caption then
             print_text = print_text .. clr.white .. msg.caption .. clr.reset
         end
     end
     if msg.service then
         -- white action reset red name reset
-
         if msg.service_type == 'chat_del_user' then
             print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. clr.reset
         elseif msg.service_type == 'chat_del_user_leave' then
@@ -717,7 +716,7 @@ function print_msg(msg)
         elseif msg.service_type == 'chat_add_user_link' then
             print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link ' .. clr.reset
         else
-            print_text = print_text .. clr.white .. '[' ..(msg.service_type or 'unsupported') .. '] ' .. clr.reset
+            print_text = print_text .. clr.white .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
         end
     end
     if msg.text then
