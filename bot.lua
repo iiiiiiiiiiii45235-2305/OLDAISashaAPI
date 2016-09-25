@@ -682,11 +682,11 @@ function print_msg(msg)
     if msg.service then
         -- white action reset red name reset
         if msg.service_type == 'chat_del_user' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. clr.reset
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. clr.reset
         elseif msg.service_type == 'chat_del_user_leave' then
             print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' left the chat ' .. clr.reset
         elseif msg.service_type == 'chat_add_user' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' added user ' ..(msg.added.first_name ..(msg.added.last_name or '')) .. clr.reset
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. clr.reset
         elseif msg.service_type == 'chat_add_user_link' then
             print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link ' .. clr.reset
         else
