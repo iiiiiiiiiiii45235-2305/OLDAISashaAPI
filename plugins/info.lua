@@ -1,10 +1,15 @@
 ﻿local function is_here(chat_id, user_id)
     local lang = get_lang(chat_id)
     local chat_member = getChatMember(chat_id, user_id)
-    if chat_member.status == 'creator' or chat_member.status == 'administrator' or chat_member.status == 'member' then
-        return langs[lang].ishereYes
-    else
-        return langs[lang].ishereNo
+    if type(chat_member) == 'table' then
+        if chat_member.result then
+            chat_member = chat_member.result
+            if chat_member.status == 'creator' or chat_member.status == 'administrator' or chat_member.status == 'member' then
+                return langs[lang].ishereYes
+            else
+                return langs[lang].ishereNo
+            end
+        end
     end
 end
 
@@ -34,9 +39,12 @@ local function get_object_info(obj, chat_id, lang)
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
             local chat_member = getChatMember(chat_id, obj.id)
-            if chat_member then
-                if chat_member.status then
-                    otherinfo = otherinfo .. chat_member.status:upper()
+            if type(chat_member) == 'table' then
+                if chat_member.result then
+                    chat_member = chat_member.result
+                    if chat_member.status then
+                        otherinfo = otherinfo .. chat_member.status:upper()
+                    end
                 end
             end
             if redis:sismember('whitelist', obj.id) then

@@ -89,11 +89,13 @@ end
 
 -- function to know if bot is admin in the group
 function is_bot_admin(chat_id)
-    local res = getChatMember(msg.chat.id, user_id)
-    if res then
-        local status = res.result.status
-        if status == 'administrator' then
-            return true
+    local res = getChatMember(chat_id, bot.id)
+    if type(res) == 'table' then
+        if res.result then
+            local status = res.result.status
+            if status == 'administrator' then
+                return true
+            end
         end
     end
     return false
@@ -105,16 +107,18 @@ function is_mod(msg)
     local user_id = msg.from.id
     local chat_id = msg.chat.id
 
-    local res = getChatMember(msg.chat.id, user_id)
-    if res then
-        local status = res.result.status
-        if status == 'administrator' then
-            -- mod
-            var = true
-        end
-        if status == 'creator' then
-            -- owner
-            var = true
+    local res = getChatMember(chat_id, user_id)
+    if type(res) == 'table' then
+        if res.result then
+            local status = res.result.status
+            if status == 'administrator' then
+                -- mod
+                var = true
+            end
+            if status == 'creator' then
+                -- owner
+                var = true
+            end
         end
     end
 
@@ -157,35 +161,37 @@ function is_mod(msg)
     return var
 end
 
-function is_mod2(user_id, group_id)
+function is_mod2(user_id, chat_id)
     local var = false
     local data = load_data(config.moderation.data)
 
-    local res = getChatMember(group_id, user_id)
-    if res then
-        local status = res.result.status
-        if status == 'administrator' then
-            -- mod
-            var = true
-        end
-        if status == 'creator' then
-            -- owner
-            var = true
+    local res = getChatMember(chat_id, user_id)
+    if type(res) == 'table' then
+        if res.result then
+            local status = res.result.status
+            if status == 'administrator' then
+                -- mod
+                var = true
+            end
+            if status == 'creator' then
+                -- owner
+                var = true
+            end
         end
     end
 
-    if data[tostring(group_id)] then
-        if data[tostring(group_id)]['moderators'] then
-            if data[tostring(group_id)]['moderators'][tostring(user_id)] then
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['moderators'] then
+            if data[tostring(chat_id)]['moderators'][tostring(user_id)] then
                 -- mod
                 var = true
             end
         end
     end
 
-    if data[tostring(group_id)] then
-        if data[tostring(group_id)]['set_owner'] then
-            if data[tostring(group_id)]['set_owner'] == tostring(user_id) then
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['set_owner'] then
+            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
                 -- owner
                 var = true
             end
@@ -219,12 +225,14 @@ function is_owner(msg)
     local user_id = msg.from.id
     local chat_id = msg.chat.id
 
-    local res = getChatMember(msg.chat.id, user_id)
-    if res then
-        local status = res.result.status
-        if status == 'creator' then
-            -- owner
-            var = true
+    local res = getChatMember(chat_id, user_id)
+    if type(res) == 'table' then
+        if res.result then
+            local status = res.result.status
+            if status == 'creator' then
+                -- owner
+                var = true
+            end
         end
     end
 
@@ -258,22 +266,24 @@ function is_owner(msg)
     return var
 end
 
-function is_owner2(user_id, group_id)
+function is_owner2(user_id, chat_id)
     local var = false
     local data = load_data(config.moderation.data)
 
-    local res = getChatMember(user_id, user_id)
-    if res then
-        local status = res.result.status
-        if status == 'creator' then
-            -- owner
-            var = true
+    local res = getChatMember(chat_id, user_id)
+    if type(res) == 'table' then
+        if res.result then
+            local status = res.result.status
+            if status == 'creator' then
+                -- owner
+                var = true
+            end
         end
     end
 
-    if data[tostring(group_id)] then
-        if data[tostring(group_id)]['set_owner'] then
-            if data[tostring(group_id)]['set_owner'] == tostring(user_id) then
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['set_owner'] then
+            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
                 -- owner
                 var = true
             end
