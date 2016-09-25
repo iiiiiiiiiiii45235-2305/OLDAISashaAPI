@@ -818,10 +818,13 @@ local function run(msg, matches)
                 if msg.reply then
                     return admin_promote(msg.reply_to_message.from, msg.chat.id)
                 elseif string.match(matches[2], '^%d+$') then
-                    local obj_user = getChat(matches[2]).result
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return admin_promote(obj_user, msg.chat.id)
+                    local obj_user = getChat(matches[2])
+                    if obj_user.result then
+                        obj_user = obj_user.result
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return admin_promote(obj_user, msg.chat.id)
+                            end
                         end
                     end
                 else
@@ -843,10 +846,13 @@ local function run(msg, matches)
                 if msg.reply then
                     return admin_demote(msg.reply_to_message.from, msg.chat.id)
                 elseif string.match(matches[2], '^%d+$') then
-                    local obj_user = getChat(matches[2]).result
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return admin_demote(obj_user, msg.chat.id)
+                    local obj_user = getChat(matches[2])
+                    if obj_user.result then
+                        obj_user = obj_user.result
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return admin_demote(obj_user, msg.chat.id)
+                            end
                         end
                     end
                 else
@@ -1082,10 +1088,13 @@ local function run(msg, matches)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2]).result
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return promote(msg.chat.id, obj_user)
+                        local obj_user = getChat(matches[2])
+                        if obj_user.result then
+                            obj_user = obj_user.result
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return promote(msg.chat.id, obj_user)
+                                end
                             end
                         end
                     else
@@ -1122,10 +1131,13 @@ local function run(msg, matches)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2]).result
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return demote(msg.chat.id, obj_user)
+                        local obj_user = getChat(matches[2])
+                        if obj_user.result then
+                            obj_user = obj_user.result
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return demote(msg.chat.id, obj_user)
+                                end
                             end
                         end
                     else
@@ -1341,10 +1353,13 @@ local function run(msg, matches)
                 end
                 if string.match(matches[2], '^%d+$') then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
-                    local obj_user = getChat(matches[2]).result
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return chat_set_owner(obj_user, msg.chat.id)
+                    local obj_user = getChat(matches[2])
+                    if obj_user.result then
+                        obj_user = obj_user.result
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return chat_set_owner(obj_user, msg.chat.id)
+                            end
                         end
                     end
                 else
@@ -1507,10 +1522,13 @@ local function run(msg, matches)
                     end
                     if string.match(matches[2], '^%d+$') then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
-                        local obj_user = getChat(matches[2]).result
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return chat_set_owner(obj_user, msg.chat.id)
+                        local obj_user = getChat(matches[2])
+                        if obj_user.result then
+                            obj_user = obj_user.result
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return chat_set_owner(obj_user, msg.chat.id)
+                                end
                             end
                         end
                     else
@@ -1547,10 +1565,13 @@ local function run(msg, matches)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2]).result
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return promote(msg.chat.id, obj_user)
+                        local obj_user = getChat(matches[2])
+                        if obj_user.result then
+                            obj_user = obj_user.result
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return promote(msg.chat.id, obj_user)
+                                end
                             end
                         end
                     else
@@ -1587,10 +1608,13 @@ local function run(msg, matches)
                         end
                     end
                     if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2]).result
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return demote(msg.chat.id, obj_user)
+                        local obj_user = getChat(matches[2])
+                        if obj_user.result then
+                            obj_user = obj_user.result
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return demote(msg.chat.id, obj_user)
+                                end
                             end
                         end
                     else

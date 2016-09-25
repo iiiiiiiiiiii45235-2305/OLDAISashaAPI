@@ -64,19 +64,22 @@ local function run(msg, matches)
                 local hashonredis = redis:get(hash)
                 local user = redis:get(tokick)
                 if hashonredis and user then
-                    local obj_user = getChat(user).result
-                    local text = langs[msg.lang].flaming
-                    if obj_user.first_name then
-                        text = text .. '\n' .. obj_user.first_name
+                    local obj_user = getChat(user)
+                    if obj_user.result then
+                        obj_user = obj_user.result
+                        local text = langs[msg.lang].flaming
+                        if obj_user.first_name then
+                            text = text .. '\n' .. obj_user.first_name
+                        end
+                        if obj_user.last_name then
+                            text = text .. '\n' .. obj_user.last_name
+                        end
+                        if obj_user.username then
+                            text = text .. '\n@' .. obj_user.username
+                        end
+                        text = text .. '\n' .. obj_user.id
+                        return text
                     end
-                    if obj_user.last_name then
-                        text = text .. '\n' .. obj_user.last_name
-                    end
-                    if obj_user.username then
-                        text = text .. '\n@' .. obj_user.username
-                    end
-                    text = text .. '\n' .. obj_user.id
-                    return text
                 else
                     return langs[msg.lang].errorParameter
                 end
