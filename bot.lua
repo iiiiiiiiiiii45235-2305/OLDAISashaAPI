@@ -513,6 +513,7 @@ function pre_process_service_msg(msg)
             if msg.group_chat_created then
                 msg.text = '!!tgservice chat_created'
                 msg.service_type = 'chat_created'
+                -- add_user
             elseif msg.adder and msg.added then
                 if msg.adder.id == msg.added.id then
                     msg.text = '!!tgservice chat_add_user_link'
@@ -521,8 +522,41 @@ function pre_process_service_msg(msg)
                     msg.text = '!!tgservice chat_add_user'
                     msg.service_type = 'chat_add_user'
                 end
+            elseif msg.new_chat_member then
+                if msg.from.id == msg.new_chat_member.id then
+                    msg.text = '!!tgservice chat_add_user_link'
+                    msg.service_type = 'chat_add_user_link'
+                else
+                    msg.text = '!!tgservice chat_add_user'
+                    msg.service_type = 'chat_add_user'
+                end
+            elseif msg.new_chat_participant then
+                if msg.from.id == msg.new_chat_participant.id then
+                    msg.text = '!!tgservice chat_add_user_link'
+                    msg.service_type = 'chat_add_user_link'
+                else
+                    msg.text = '!!tgservice chat_add_user'
+                    msg.service_type = 'chat_add_user'
+                end
+                -- del_user
             elseif msg.remover and msg.removed then
                 if msg.remover.id == msg.removed.id then
+                    msg.text = '!!tgservice chat_del_user_leave'
+                    msg.service_type = 'chat_del_user_leave'
+                else
+                    msg.text = '!!tgservice chat_del_user'
+                    msg.service_type = 'chat_del_user'
+                end
+            elseif msg.left_chat_member then
+                if msg.from.id == msg.left_chat_member.id then
+                    msg.text = '!!tgservice chat_del_user_leave'
+                    msg.service_type = 'chat_del_user_leave'
+                else
+                    msg.text = '!!tgservice chat_del_user'
+                    msg.service_type = 'chat_del_user'
+                end
+            elseif msg.left_chat_participant then
+                if msg.from.id == msg.left_chat_participant.id then
                     msg.text = '!!tgservice chat_del_user_leave'
                     msg.service_type = 'chat_del_user_leave'
                 else
