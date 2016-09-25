@@ -553,7 +553,7 @@ function pre_process_service_msg(msg)
 end
 
 function msg_valid(msg)
-    if msg.from.id == 149998353 then
+    if tostring(msg.from.id) == '149998353' then
         print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
         return false
     end
