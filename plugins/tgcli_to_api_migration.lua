@@ -81,7 +81,7 @@ local function run(msg, matches)
             local banned = redis:smembers('banned:' .. msg.chat.tg_cli_id)
             if next(banned) then
                 for i = 1, #banned do
-                    banUser(msg.chat.id, banned[i])
+                    banUser(bot.id,banned[i], msg.chat.id)
                 end
             end
 
