@@ -95,12 +95,6 @@ local function run(msg, matches)
                 bot_init(true)
                 return sendReply(msg, langs[msg.lang].botRestarted)
             end
-            if matches[1] == 'botstop' then
-                mystat('/botstop')
-                redis:bgsave()
-                is_started = false
-                return sendReply(msg, langs[msg.lang].botStopped)
-            end
             if matches[1] == 'redissave' then
                 mystat('/redissave')
                 redis:bgsave()
@@ -203,8 +197,8 @@ return {
     {
         "^[#!/]([Pp][Mm]) (%-?%d+) (.*)$",
         "^[#!/]([Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
-        "^[#!/]([Bb][Ll][Oo][Cc][Kk]) (.*)$",
-        "^[#!/]([Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
+        "^[#!/]([Bb][Ll][Oo][Cc][Kk])$",
+        "^[#!/]([Uu][Nn][Bb][Ll][Oo][Cc][Kk]) (.*)$",
         "^[#!/]([Bb][Ll][Oo][Cc][Kk]) (.*)$",
         "^[#!/]([Ss][Yy][Nn][Cc]_[Gg][Bb][Aa][Nn][Ss])$",
         -- sync your global bans with seed
@@ -212,7 +206,6 @@ return {
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee][Ii][Dd])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
-        "^[#!/]([Bb][Oo][Tt][Ss][Tt][Oo][Pp])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
@@ -245,7 +238,6 @@ return {
         "#vardump [<reply>]",
         "#commandsstats",
         "SUDO",
-        "#botstop",
         "#botrestart",
         "#redissave",
         "(#sync_gbans|sasha sincronizza superban)",
