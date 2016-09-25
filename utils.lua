@@ -941,14 +941,8 @@ function match_pattern(pattern, text, lower_case)
     if text then
         local matches = { }
         if lower_case then
-            if string.match(text:lower(), "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] " .. pattern:gsub('%^', '')) then
-                text = text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
-            end
             matches = { string.match(text:lower(), pattern) }
         else
-            if string.match(text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] " .. pattern:gsub('%^', '')) then
-                text = text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
-            end
             matches = { string.match(text, pattern) }
         end
         if next(matches) then
