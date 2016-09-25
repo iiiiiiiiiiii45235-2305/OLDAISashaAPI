@@ -1,4 +1,4 @@
-﻿local function get_variables_hash(msg, global)
+local function get_variables_hash(msg, global)
     if global then
         return 'gvariables'
     else
