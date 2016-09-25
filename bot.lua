@@ -394,52 +394,50 @@ end
 
 -- recursive to simplify code
 function pre_process_media_msg(msg)
-    if msg.photo or msg.video or msg.audio or msg.voice or msg.document or msg.sticker or msg.contact or msg.location then
-        msg.media = true
-        if msg.photo then
-            msg.text = "%[photo%]"
-            msg.media_type = 'photo'
-        elseif msg.video then
-            msg.text = "%[video%]"
-            msg.media_type = 'video'
-        elseif msg.audio then
-            msg.text = "%[audio%]"
-            msg.media_type = 'audio'
-        elseif msg.voice then
-            msg.text = "%[voice%]"
-            msg.media_type = 'voice'
-        elseif msg.document then
-            msg.text = "%[document%]"
-            msg.media_type = 'document'
-            if msg.document.mime_type == 'video/mp4' then
-                msg.text = "%[gif%]"
-                msg.media_type = 'gif'
-            end
-        elseif msg.sticker then
-            msg.text = "%[sticker%]"
-            msg.media_type = 'sticker'
-        elseif msg.contact then
-            msg.text = "%[contact%]"
-            msg.media_type = 'contact'
-        elseif msg.location then
-            msg.text = "%[geo%]"
-            msg.media_type = 'geo'
+    if msg.photo then
+        msg.text = "%[photo%]"
+        msg.media_type = 'photo'
+    elseif msg.video then
+        msg.text = "%[video%]"
+        msg.media_type = 'video'
+    elseif msg.audio then
+        msg.text = "%[audio%]"
+        msg.media_type = 'audio'
+    elseif msg.voice then
+        msg.text = "%[voice%]"
+        msg.media_type = 'voice'
+    elseif msg.document then
+        msg.text = "%[document%]"
+        msg.media_type = 'document'
+        if msg.document.mime_type == 'video/mp4' then
+            msg.text = "%[gif%]"
+            msg.media_type = 'gif'
         end
+    elseif msg.sticker then
+        msg.text = "%[sticker%]"
+        msg.media_type = 'sticker'
+    elseif msg.contact then
+        msg.text = "%[contact%]"
+        msg.media_type = 'contact'
+    elseif msg.location then
+        msg.text = "%[geo%]"
+        msg.media_type = 'geo'
+    end
+    msg.media = true
 
-        if msg.entities then
-            for i, entity in pairs(msg.entities) do
-                if entity.type == 'url' then
-                    msg.url = true
-                    msg.media = true
-                    msg.media_type = 'link'
-                    break
-                end
+    if msg.entities then
+        for i, entity in pairs(msg.entities) do
+            if entity.type == 'url' then
+                msg.url = true
+                msg.media = true
+                msg.media_type = 'link'
+                break
             end
-            if not msg.url then
-                msg.media = false
-            end
-            -- if the entity it's not an url (username/bot command), set msg.media as false
         end
+        if not msg.url then
+            msg.media = false
+        end
+        -- if the entity it's not an url (username/bot command), set msg.media as false
     end
     if msg.reply then
         pre_process_media_msg(msg.reply_to_message)
@@ -508,78 +506,74 @@ end
 
 -- recursive to simplify code
 function pre_process_service_msg(msg)
-    if msg.service or msg.migrate_from_chat_id or msg.pinned_message or msg.new_chat_photo or msg.new_chat_title then
-        if msg.service then
-            if msg.group_chat_created then
-                msg.text = '!!tgservice chat_created'
-                msg.service_type = 'chat_created'
-                -- add_user
-            elseif msg.adder and msg.added then
-                if msg.adder.id == msg.added.id then
-                    msg.text = '!!tgservice chat_add_user_link'
-                    msg.service_type = 'chat_add_user_link'
-                else
-                    msg.text = '!!tgservice chat_add_user'
-                    msg.service_type = 'chat_add_user'
-                end
-            elseif msg.new_chat_member then
-                if msg.from.id == msg.new_chat_member.id then
-                    msg.text = '!!tgservice chat_add_user_link'
-                    msg.service_type = 'chat_add_user_link'
-                else
-                    msg.text = '!!tgservice chat_add_user'
-                    msg.service_type = 'chat_add_user'
-                end
-            elseif msg.new_chat_participant then
-                if msg.from.id == msg.new_chat_participant.id then
-                    msg.text = '!!tgservice chat_add_user_link'
-                    msg.service_type = 'chat_add_user_link'
-                else
-                    msg.text = '!!tgservice chat_add_user'
-                    msg.service_type = 'chat_add_user'
-                end
-                -- del_user
-            elseif msg.remover and msg.removed then
-                if msg.remover.id == msg.removed.id then
-                    msg.text = '!!tgservice chat_del_user_leave'
-                    msg.service_type = 'chat_del_user_leave'
-                else
-                    msg.text = '!!tgservice chat_del_user'
-                    msg.service_type = 'chat_del_user'
-                end
-            elseif msg.left_chat_member then
-                if msg.from.id == msg.left_chat_member.id then
-                    msg.text = '!!tgservice chat_del_user_leave'
-                    msg.service_type = 'chat_del_user_leave'
-                else
-                    msg.text = '!!tgservice chat_del_user'
-                    msg.service_type = 'chat_del_user'
-                end
-            elseif msg.left_chat_participant then
-                if msg.from.id == msg.left_chat_participant.id then
-                    msg.text = '!!tgservice chat_del_user_leave'
-                    msg.service_type = 'chat_del_user_leave'
-                else
-                    msg.text = '!!tgservice chat_del_user'
-                    msg.service_type = 'chat_del_user'
-                end
-            end
-        elseif msg.migrate_from_chat_id then
-            msg.text = '!!tgservice migrated_from'
-            msg.service_type = 'migrated_from'
-            migrate_to_supergroup(msg)
-        elseif msg.pinned_message then
-            msg.text = '!!tgservice pinned_message'
-            msg.service_type = 'pinned_message'
-        elseif msg.new_chat_photo then
-            msg.text = '!!tgservice chat_change_photo'
-            msg.service_type = 'chat_change_photo'
-        elseif msg.new_chat_title then
-            msg.text = '!!tgservice chat_rename'
-            msg.service_type = 'chat_rename'
+    if msg.group_chat_created then
+        msg.text = '!!tgservice chat_created'
+        msg.service_type = 'chat_created'
+        -- add_user
+    elseif msg.adder and msg.added then
+        if msg.adder.id == msg.added.id then
+            msg.text = '!!tgservice chat_add_user_link'
+            msg.service_type = 'chat_add_user_link'
+        else
+            msg.text = '!!tgservice chat_add_user'
+            msg.service_type = 'chat_add_user'
         end
-        msg.service = true
+    elseif msg.new_chat_member then
+        if msg.from.id == msg.new_chat_member.id then
+            msg.text = '!!tgservice chat_add_user_link'
+            msg.service_type = 'chat_add_user_link'
+        else
+            msg.text = '!!tgservice chat_add_user'
+            msg.service_type = 'chat_add_user'
+        end
+    elseif msg.new_chat_participant then
+        if msg.from.id == msg.new_chat_participant.id then
+            msg.text = '!!tgservice chat_add_user_link'
+            msg.service_type = 'chat_add_user_link'
+        else
+            msg.text = '!!tgservice chat_add_user'
+            msg.service_type = 'chat_add_user'
+        end
+        -- del_user
+    elseif msg.remover and msg.removed then
+        if msg.remover.id == msg.removed.id then
+            msg.text = '!!tgservice chat_del_user_leave'
+            msg.service_type = 'chat_del_user_leave'
+        else
+            msg.text = '!!tgservice chat_del_user'
+            msg.service_type = 'chat_del_user'
+        end
+    elseif msg.left_chat_member then
+        if msg.from.id == msg.left_chat_member.id then
+            msg.text = '!!tgservice chat_del_user_leave'
+            msg.service_type = 'chat_del_user_leave'
+        else
+            msg.text = '!!tgservice chat_del_user'
+            msg.service_type = 'chat_del_user'
+        end
+    elseif msg.left_chat_participant then
+        if msg.from.id == msg.left_chat_participant.id then
+            msg.text = '!!tgservice chat_del_user_leave'
+            msg.service_type = 'chat_del_user_leave'
+        else
+            msg.text = '!!tgservice chat_del_user'
+            msg.service_type = 'chat_del_user'
+        end
+    elseif msg.migrate_from_chat_id then
+        msg.text = '!!tgservice migrated_from'
+        msg.service_type = 'migrated_from'
+        migrate_to_supergroup(msg)
+    elseif msg.pinned_message then
+        msg.text = '!!tgservice pinned_message'
+        msg.service_type = 'pinned_message'
+    elseif msg.new_chat_photo then
+        msg.text = '!!tgservice chat_change_photo'
+        msg.service_type = 'chat_change_photo'
+    elseif msg.new_chat_title then
+        msg.text = '!!tgservice chat_rename'
+        msg.service_type = 'chat_rename'
     end
+    msg.service = true
     if msg.reply then
         pre_process_service_msg(msg.reply_to_message)
     end
