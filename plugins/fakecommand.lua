@@ -14,10 +14,7 @@ local function run(msg, matches)
             -- replace the id of the executer with a '*' followed by the rank value so when it's checked with (i.e.) is_mod(msg) bot knows it's a fakecommand
             msg.from.id = '*' .. rank_table[matches[1]:upper()]
             if msg_valid(msg) then
-                msg = pre_process_msg(msg)
-                if msg then
-                    match_plugins(msg)
-                end
+                match_plugins(msg)
             end
         else
             -- no
