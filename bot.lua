@@ -6,8 +6,8 @@ last_administrator_cron = os.date('%d')
 
 -- Save the content of config to config.lua
 function save_config()
-    serialize_to_file(config, './data/config.lua', false)
-    print(clr.white .. 'saved config into ./data/config.lua' .. clr.reset)
+    serialize_to_file(config, './config.lua', false)
+    print(clr.white .. 'saved config into ./config.lua' .. clr.reset)
 end
 
 -- Returns the config from config.lua file.
@@ -16,8 +16,8 @@ function load_config()
     local f = io.open('./config.lua', "r")
     -- If config.lua doesn't exist
     if not f then
-        print(clr.white .. "Created new config file: config.lua" .. clr.reset)
         create_config()
+        print(clr.white .. "Created new config file: config.lua" .. clr.reset)
     else
         f:close()
     end
@@ -31,7 +31,7 @@ end
 -- Create a basic config.json file and saves it.
 function create_config()
     -- A simple config with basic plugins and ourselves as privileged user
-    config = {
+    local config = {
         bot_api_key = '',
         enabled_plugins =
         {
