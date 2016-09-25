@@ -72,7 +72,6 @@ local function run(msg, matches)
                     local answer = cli_get_value(msg, word:lower())
                     if answer then
                         api_set_value(msg, word:lower(), answer)
-                        redis:hdel(cli_get_hash(msg), word:lower():gsub(' ', '_'))
                     end
                 end
             end
@@ -81,7 +80,7 @@ local function run(msg, matches)
             local banned = redis:smembers('banned:' .. msg.chat.tg_cli_id)
             if next(banned) then
                 for i = 1, #banned do
-                    banUser(bot.id,banned[i], msg.chat.id)
+                    banUser(bot.id, banned[i], msg.chat.id)
                 end
             end
 
