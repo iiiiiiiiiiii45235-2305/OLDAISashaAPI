@@ -509,55 +509,33 @@ function pre_process_service_msg(msg)
     if msg.group_chat_created then
         msg.text = '!!tgservice chat_created'
         msg.service_type = 'chat_created'
-        -- add_user
-    elseif msg.adder and msg.added then
-        if msg.adder.id == msg.added.id then
-            msg.text = '!!tgservice chat_add_user_link'
-            msg.service_type = 'chat_add_user_link'
-        else
-            msg.text = '!!tgservice chat_add_user'
-            msg.service_type = 'chat_add_user'
-        end
     elseif msg.new_chat_member then
+        msg.adder = msg.from
         if msg.from.id == msg.new_chat_member.id then
-            msg.text = '!!tgservice chat_add_user_link'
-            msg.service_type = 'chat_add_user_link'
+            msg.added = msg.from
         else
-            msg.text = '!!tgservice chat_add_user'
-            msg.service_type = 'chat_add_user'
+            msg.added = msg.new_chat_member
         end
     elseif msg.new_chat_participant then
+        msg.adder = msg.from
         if msg.from.id == msg.new_chat_participant.id then
-            msg.text = '!!tgservice chat_add_user_link'
-            msg.service_type = 'chat_add_user_link'
+            msg.added = msg.from
         else
-            msg.text = '!!tgservice chat_add_user'
-            msg.service_type = 'chat_add_user'
-        end
-        -- del_user
-    elseif msg.remover and msg.removed then
-        if msg.remover.id == msg.removed.id then
-            msg.text = '!!tgservice chat_del_user_leave'
-            msg.service_type = 'chat_del_user_leave'
-        else
-            msg.text = '!!tgservice chat_del_user'
-            msg.service_type = 'chat_del_user'
+            msg.added = msg.new_chat_participant
         end
     elseif msg.left_chat_member then
+        msg.remover = msg.from
         if msg.from.id == msg.left_chat_member.id then
-            msg.text = '!!tgservice chat_del_user_leave'
-            msg.service_type = 'chat_del_user_leave'
+            msg.removed = msg.from
         else
-            msg.text = '!!tgservice chat_del_user'
-            msg.service_type = 'chat_del_user'
+            msg.removed = msg.left_chat_member
         end
     elseif msg.left_chat_participant then
+        msg.remover = msg.from
         if msg.from.id == msg.left_chat_participant.id then
-            msg.text = '!!tgservice chat_del_user_leave'
-            msg.service_type = 'chat_del_user_leave'
+            msg.removed = msg.from
         else
-            msg.text = '!!tgservice chat_del_user'
-            msg.service_type = 'chat_del_user'
+            msg.removed = msg.left_chat_participant
         end
     elseif msg.migrate_from_chat_id then
         msg.text = '!!tgservice migrated_from'
@@ -572,6 +550,26 @@ function pre_process_service_msg(msg)
     elseif msg.new_chat_title then
         msg.text = '!!tgservice chat_rename'
         msg.service_type = 'chat_rename'
+    end
+    if msg.adder and msg.added then
+        -- add_user
+        if msg.adder.id == msg.added.id then
+            msg.text = '!!tgservice chat_add_user_link'
+            msg.service_type = 'chat_add_user_link'
+        else
+            msg.text = '!!tgservice chat_add_user'
+            msg.service_type = 'chat_add_user'
+        end
+    end
+    if msg.remover and msg.removed then
+        -- del_user
+        if msg.remover.id == msg.removed.id then
+            msg.text = '!!tgservice chat_del_user_leave'
+            msg.service_type = 'chat_del_user_leave'
+        else
+            msg.text = '!!tgservice chat_del_user'
+            msg.service_type = 'chat_del_user'
+        end
     end
     msg.service = true
     if msg.reply then
@@ -709,6 +707,7 @@ function print_msg(msg)
     end
     if msg.service then
         -- white action reset red name reset
+
         if msg.service_type == 'chat_del_user' then
             print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. clr.reset
         elseif msg.service_type == 'chat_del_user_leave' then
