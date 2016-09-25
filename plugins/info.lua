@@ -136,7 +136,7 @@ local function run(msg, matches)
             return get_reverse_rank(msg.chat.id, msg.from.id)
         end
     end
-    if matches[1]:lower() == 'ishere' and matches[2] then
+    if matches[1]:lower() == 'ishere' then
         mystat('/ishere')
         if msg.reply then
             if matches[2] then
