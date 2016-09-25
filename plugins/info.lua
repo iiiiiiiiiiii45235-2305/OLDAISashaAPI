@@ -201,9 +201,11 @@ local function run(msg, matches)
             if is_mod(msg) then
                 if string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2])
-                    if obj.result then
-                        obj = obj.result
-                        return get_object_info(obj, msg.chat.id, msg.lang)
+                    if type(obj) == 'table' then
+                        if obj.result then
+                            obj = obj.result
+                            return get_object_info(obj, msg.chat.id, msg.lang)
+                        end
                     end
                 else
                     local obj = resolveUsername(matches[2]:gsub('@', ''))
@@ -226,9 +228,11 @@ local function run(msg, matches)
                 return langs[msg.lang].noLinkAvailable
             end
             local obj = getChat(matches[2])
-            if obj.result then
-                obj = obj.result
-                return obj.title .. '\n' .. group_link
+            if type(obj) == 'table' then
+                if obj.result then
+                    obj = obj.result
+                    return obj.title .. '\n' .. group_link
+                end
             end
         else
             return langs[msg.lang].require_admin

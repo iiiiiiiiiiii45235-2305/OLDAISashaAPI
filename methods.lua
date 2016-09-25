@@ -147,61 +147,63 @@ end
 function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
     -- print(text)
     local obj = getChat(chat_id)
-    if obj.result then
-        local text_max = 4096
-        local text_len = string.len(text)
-        local num_msg = math.ceil(text_len / text_max)
-        local url = BASE_URL ..
-        '/sendMessage?chat_id=' .. chat_id ..
-        '&disable_web_page_preview=true'
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        if use_markdown then
-            url = url .. '&parse_mode=Markdown'
-        end
-        if not send_sound then
-            url = url .. '&disable_notification=true'
-            -- messages are silent by default
-        end
-
-        if num_msg <= 1 then
-            url = url .. '&text=' .. URL.escape(text)
-
-            local res, code = sendRequest(url)
-
-            if not res and code then
-                -- if the request failed and a code is returned (not 403 and 429)
-                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                    savelog('send_msg', code .. '\n' .. text)
-                end
+    if type(obj) == 'table' then
+        if obj.result then
+            local text_max = 4096
+            local text_len = string.len(text)
+            local num_msg = math.ceil(text_len / text_max)
+            local url = BASE_URL ..
+            '/sendMessage?chat_id=' .. chat_id ..
+            '&disable_web_page_preview=true'
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-            obj = obj.result
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-            print(print_msg(sent_msg))
-        else
-            local my_text = string.sub(text, 1, 4096)
-            local rest = string.sub(text, 4096, text_len)
-            url = url .. '&text=' .. URL.escape(my_text)
-
-            local res, code = sendRequest(url)
-
-            if not res and code then
-                -- if the request failed and a code is returned (not 403 and 429)
-                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                    savelog('send_msg', code .. '\n' .. text)
-                end
+            if use_markdown then
+                url = url .. '&parse_mode=Markdown'
             end
-            obj = obj.result
-            local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-            print(print_msg(sent_msg))
-            res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
-        end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
 
-        return res, code
-        -- return false, and the code
+            if num_msg <= 1 then
+                url = url .. '&text=' .. URL.escape(text)
+
+                local res, code = sendRequest(url)
+
+                if not res and code then
+                    -- if the request failed and a code is returned (not 403 and 429)
+                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                        savelog('send_msg', code .. '\n' .. text)
+                    end
+                end
+                obj = obj.result
+                local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                print(print_msg(sent_msg))
+            else
+                local my_text = string.sub(text, 1, 4096)
+                local rest = string.sub(text, 4096, text_len)
+                url = url .. '&text=' .. URL.escape(my_text)
+
+                local res, code = sendRequest(url)
+
+                if not res and code then
+                    -- if the request failed and a code is returned (not 403 and 429)
+                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                        savelog('send_msg', code .. '\n' .. text)
+                    end
+                end
+                obj = obj.result
+                local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                print(print_msg(sent_msg))
+                res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+            end
+
+            return res, code
+            -- return false, and the code
+        end
     end
 end
 
@@ -243,15 +245,17 @@ end
 function forwardMessage(chat_id, from_chat_id, message_id)
     local obj_from = getChat(from_chat_id)
     local obj_to = getChat(chat_id)
-    if obj_from.result and obj_to.result then
-        local url = BASE_URL ..
-        '/forwardMessage?chat_id=' .. chat_id ..
-        '&from_chat_id=' .. from_chat_id ..
-        '&message_id=' .. message_id
-        obj_to = obj_to.result
-        local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
+    if type(obj_from) == 'table' and type(obj_to) == 'table' then
+        if obj_from.result and obj_to.result then
+            local url = BASE_URL ..
+            '/forwardMessage?chat_id=' .. chat_id ..
+            '&from_chat_id=' .. from_chat_id ..
+            '&message_id=' .. message_id
+            obj_to = obj_to.result
+            local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
+        end
     end
 end
 
@@ -321,20 +325,22 @@ end
 
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendLocation?chat_id=' .. chat_id ..
-        '&latitude=' .. latitude ..
-        '&longitude=' .. longitude
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendLocation?chat_id=' .. chat_id ..
+            '&latitude=' .. latitude ..
+            '&longitude=' .. longitude
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'geo' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'geo' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
@@ -342,109 +348,121 @@ end
 
 function sendPhotoId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendPhoto?chat_id=' .. chat_id ..
-        '&photo=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendPhoto?chat_id=' .. chat_id ..
+            '&photo=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
 function sendStickerId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendSticker?chat_id=' .. chat_id ..
-        '&sticker=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendSticker?chat_id=' .. chat_id ..
+            '&sticker=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
 function sendVoiceId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendVoice?chat_id=' .. chat_id ..
-        '&voice=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendVoice?chat_id=' .. chat_id ..
+            '&voice=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
 function sendAudioId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendAudio?chat_id=' .. chat_id ..
-        '&audio=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendAudio?chat_id=' .. chat_id ..
+            '&audio=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
 function sendVideoId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendVideo?chat_id=' .. chat_id ..
-        '&video=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendVideo?chat_id=' .. chat_id ..
+            '&video=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
 function sendDocumentId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL ..
-        '/sendDocument?chat_id=' .. chat_id ..
-        '&document=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL ..
+            '/sendDocument?chat_id=' .. chat_id ..
+            '&document=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+            print(print_msg(sent_msg))
+            return sendRequest(url)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
-        print(print_msg(sent_msg))
-        return sendRequest(url)
     end
 end
 
@@ -457,124 +475,136 @@ end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL .. '/sendPhoto'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL .. '/sendPhoto'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if caption then
+                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+            print(print_msg(sent_msg))
+            return curlRequest(curl_command)
         end
-        if caption then
-            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-        end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
-        print(print_msg(sent_msg))
-        return curlRequest(curl_command)
     end
 end
 
 function sendSticker(chat_id, sticker, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL .. '/sendSticker'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL .. '/sendSticker'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+            print(print_msg(sent_msg))
+            return curlRequest(curl_command)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
-        print(print_msg(sent_msg))
-        return curlRequest(curl_command)
     end
 end
 
 function sendVoice(chat_id, voice, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL .. '/sendVoice'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL .. '/sendVoice'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+            print(print_msg(sent_msg))
+            return curlRequest(curl_command)
         end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
-        print(print_msg(sent_msg))
-        return curlRequest(curl_command)
     end
 end
 
 function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, title)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL .. '/sendAudio'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL .. '/sendAudio'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            if performer then
+                curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
+            end
+            if title then
+                curl_command = curl_command .. ' -F "title=' .. title .. '"'
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+            print(print_msg(sent_msg))
+            return curlRequest(curl_command)
         end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        if performer then
-            curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
-        end
-        if title then
-            curl_command = curl_command .. ' -F "title=' .. title .. '"'
-        end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
-        print(print_msg(sent_msg))
-        return curlRequest(curl_command)
     end
 end
 
 function sendVideo(chat_id, video, reply_to_message_id, duration, performer, title)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL .. '/sendVideo'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL .. '/sendVideo'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if caption then
+                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+            print(print_msg(sent_msg))
+            return curlRequest(curl_command)
         end
-        if caption then
-            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-        end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
-        print(print_msg(sent_msg))
-        return curlRequest(curl_command)
     end
 end
 
 function sendDocument(chat_id, document, reply_to_message_id)
     local obj = getChat(chat_id)
-    if obj.result then
-        local url = BASE_URL .. '/sendDocument'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+    if type(obj) == 'table' then
+        if obj.result then
+            local url = BASE_URL .. '/sendDocument'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            obj = obj.result
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+            print(print_msg(sent_msg))
+            return curlRequest(curl_command)
         end
-        obj = obj.result
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
-        print(print_msg(sent_msg))
-        return curlRequest(curl_command)
     end
 end
 
@@ -612,36 +642,38 @@ function kickUser(executer, target, chat_id)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
-    if obj_chat.result and obj_remover.result and obj_removed.result then
-        if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
-            -- try to kick
-            local res, code = kickChatMember(target, chat_id)
+    if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
+        if obj_chat.result and obj_remover.result and obj_removed.result then
+            if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
+                -- try to kick
+                local res, code = kickChatMember(target, chat_id)
 
-            if res then
-                -- if the user has been kicked, then...
-                savelog(chat_id, "[" .. executer .. "] kicked user " .. target)
-                redis:hincrby('bot:general', 'kick', 1)
-                -- general: save how many kicks
-                -- unban
-                unbanChatMember(target, chat_id)
-                obj_chat = obj_chat.result
-                obj_remover = obj_remover.result
-                obj_removed = obj_removed.result
-                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
-                print(print_msg(sent_msg))
-                return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                if res then
+                    -- if the user has been kicked, then...
+                    savelog(chat_id, "[" .. executer .. "] kicked user " .. target)
+                    redis:hincrby('bot:general', 'kick', 1)
+                    -- general: save how many kicks
+                    -- unban
+                    unbanChatMember(target, chat_id)
+                    obj_chat = obj_chat.result
+                    obj_remover = obj_remover.result
+                    obj_removed = obj_removed.result
+                    local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
+                    print(print_msg(sent_msg))
+                    return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                else
+                    local motivation = code2text(code, get_lang(chat_id))
+                    return res, motivation
+                end
             else
-                local motivation = code2text(code, get_lang(chat_id))
-                return res, motivation
-            end
-        else
-            if isWhitelisted(target) then
-                savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
-                --
-                return langs[get_lang(chat_id)].cantKickWhitelisted
-            else
-                savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " require higher rank")
-                return langs[get_lang(chat_id)].require_rank
+                if isWhitelisted(target) then
+                    savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
+                    --
+                    return langs[get_lang(chat_id)].cantKickWhitelisted
+                else
+                    savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " require higher rank")
+                    return langs[get_lang(chat_id)].require_rank
+                end
             end
         end
     end
@@ -652,28 +684,29 @@ function banUser(executer, target, chat_id)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
-    if obj_chat.result and obj_remover.result and obj_removed.result then
-        if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
-            -- try to kick. "code" is already specific
-            local res, code = kickChatMember(target, chat_id)
+    if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
+        if obj_chat.result and obj_remover.result and obj_removed.result then
+            if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
+                -- try to kick. "code" is already specific
+                local res, code = kickChatMember(target, chat_id)
 
-            if res then
-                -- if the user has been kicked, then...
-                savelog(chat_id, "[" .. executer .. "] banned user " .. target)
-                redis:hincrby('bot:general', 'ban', 1)
-                -- general: save how many kicks
-                local hash = 'banned:' .. chat_id
-                redis:sadd(hash, tostring(target))
-                obj_chat = obj_chat.result
-                obj_remover = obj_remover.result
-                obj_removed = obj_removed.result
-                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
-                print(print_msg(sent_msg))
-                return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
-                -- return res and not the text
-            else
-                --- else, the user haven't been kicked
-                --[[if code == 106 then --if trying to ban an user that is not in the group, add it to the prevban list. The user will be banned as soon as he join. Return true if the user is a new entry
+                if res then
+                    -- if the user has been kicked, then...
+                    savelog(chat_id, "[" .. executer .. "] banned user " .. target)
+                    redis:hincrby('bot:general', 'ban', 1)
+                    -- general: save how many kicks
+                    local hash = 'banned:' .. chat_id
+                    redis:sadd(hash, tostring(target))
+                    obj_chat = obj_chat.result
+                    obj_remover = obj_remover.result
+                    obj_removed = obj_removed.result
+                    local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
+                    print(print_msg(sent_msg))
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                    -- return res and not the text
+                else
+                    --- else, the user haven't been kicked
+                    --[[if code == 106 then --if trying to ban an user that is not in the group, add it to the prevban list. The user will be banned as soon as he join. Return true if the user is a new entry
 			local db_res = redis:sadd('chat:'..chat_id..':prevban', target)
 			if db_res == 1 then --if not already added, then return an error and the motivation
 				return false, make_text(langs[ln].banhammer.already_banned_normal, target)
@@ -681,22 +714,23 @@ function banUser(executer, target, chat_id)
 				return true
 			end
 		end]]
-                -- else, if the user has not been banned because of different errors from the error [106], then...
-                if code == 106 then
-                    local hash = 'banned:' .. chat_id
-                    redis:sadd(hash, tostring(target))
+                    -- else, if the user has not been banned because of different errors from the error [106], then...
+                    if code == 106 then
+                        local hash = 'banned:' .. chat_id
+                        redis:sadd(hash, tostring(target))
+                    end
+                    local text = code2text(code, get_lang(chat_id))
+                    return res, text
+                    -- return the motivation too
                 end
-                local text = code2text(code, get_lang(chat_id))
-                return res, text
-                -- return the motivation too
-            end
-        else
-            if isWhitelisted(target) then
-                savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
-                return langs[get_lang(chat_id)].cantKickWhitelisted
             else
-                savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
-                return langs[get_lang(chat_id)].require_rank
+                if isWhitelisted(target) then
+                    savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
+                    return langs[get_lang(chat_id)].cantKickWhitelisted
+                else
+                    savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
+                    return langs[get_lang(chat_id)].require_rank
+                end
             end
         end
     end
