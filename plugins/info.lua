@@ -267,17 +267,18 @@ return {
     patterns =
     {
         "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ll][Ii][Nn][Kk]) (%-?%d+)$",
+        "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee])$",
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) (.*)$",
-        "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk])$",
-        "^[#!/]([Ii][Nn][Ff][Oo]) (.*)$",
+        "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk]) (.*)$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
+        "^[#!/]([Ii][Nn][Ff][Oo]) (.*)$",
         -- grouplink
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
         "^([Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
         -- getrank
-        "^([Rr][Aa][Nn][Gg][Oo]) (.*)$",
         "^([Rr][Aa][Nn][Gg][Oo])$",
+        "^([Rr][Aa][Nn][Gg][Oo]) (.*)$",
         -- info
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo]) (.*)$",
@@ -290,7 +291,7 @@ return {
         "USER",
         "#getrank|rango [<id>|<username>|<reply>]",
         "(#info|[sasha] info)",
-        "#ishere <id>|<username>",
+        "#ishere <id>|<username>|<reply>|from",
         "MOD",
         "(#info|[sasha] info) <id>|<username>|<reply>|from",
         "ADMIN",
