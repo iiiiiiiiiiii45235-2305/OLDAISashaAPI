@@ -716,8 +716,10 @@ function on_msg_receive(msg)
     msg = pre_process_service_msg(msg)
     msg = adjust_msg(msg)
     print_msg(msg)
-    if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
-        msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
+    if msg.text then
+        if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
+            msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
+        end
     end
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
