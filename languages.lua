@@ -263,6 +263,7 @@ return {
         massacre = 'Massacro => X',
 
         -- bot.lua --
+        startMessage = 'Ciao, io sono la versione API di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
         botOn = 'Sono tornata. 😏',
         botOff = 'Nulla da fare qui. 🚀',
 
@@ -1114,6 +1115,7 @@ return {
         massacre = 'Massacre => X',
 
         -- bot.lua --
+        startMessage = 'Hi, I\'m the API version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
         botOn = 'I\'m back. 😏',
         botOff = 'Nothing to do here. 🚀',
 

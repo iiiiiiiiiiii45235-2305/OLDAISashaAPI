@@ -35,6 +35,9 @@ local function disable_channel(chat_id, to_id)
 end
 
 local function run(msg, matches)
+    if matches[1]:lower() == '/start' then
+        return langs[msg.lang].startMessage
+    end
     if is_owner(msg) then
         if not string.match(matches[1], '^%-?%d+$') then
             if matches[1]:lower() == 'on' then
@@ -66,6 +69,7 @@ return {
     description = "BOT",
     patterns =
     {
+        "^(/[Ss][Tt][Aa][Rr][Tt])",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn])",
         "^[#!/][Bb][Oo][Tt] ([Oo][Ff][Ff])",
         "^[#!/][Bb][Oo][Tt] (%-?%d+) ([Oo][Nn])",
