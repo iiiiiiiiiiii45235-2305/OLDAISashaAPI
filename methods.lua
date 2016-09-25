@@ -149,60 +149,64 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if obj.result then
-            local text_max = 4096
-            local text_len = string.len(text)
-            local num_msg = math.ceil(text_len / text_max)
-            local url = BASE_URL ..
-            '/sendMessage?chat_id=' .. chat_id ..
-            '&disable_web_page_preview=true'
-            local reply = false
-            if reply_to_message_id then
-                url = url .. '&reply_to_message_id=' .. reply_to_message_id
-                reply = true
-            end
-            if use_markdown then
-                url = url .. '&parse_mode=Markdown'
-            end
-            if not send_sound then
-                url = url .. '&disable_notification=true'
-                -- messages are silent by default
-            end
-
-            if num_msg <= 1 then
-                url = url .. '&text=' .. URL.escape(text)
-
-                local res, code = sendRequest(url)
-
-                if not res and code then
-                    -- if the request failed and a code is returned (not 403 and 429)
-                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                        savelog('send_msg', code .. '\n' .. text)
+            if text then
+                if text ~= '' then
+                    local text_max = 4096
+                    local text_len = string.len(text)
+                    local num_msg = math.ceil(text_len / text_max)
+                    local url = BASE_URL ..
+                    '/sendMessage?chat_id=' .. chat_id ..
+                    '&disable_web_page_preview=true'
+                    local reply = false
+                    if reply_to_message_id then
+                        url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                        reply = true
                     end
-                end
-                obj = obj.result
-                local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-                print(print_msg(sent_msg))
-            else
-                local my_text = string.sub(text, 1, 4096)
-                local rest = string.sub(text, 4096, text_len)
-                url = url .. '&text=' .. URL.escape(my_text)
-
-                local res, code = sendRequest(url)
-
-                if not res and code then
-                    -- if the request failed and a code is returned (not 403 and 429)
-                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                        savelog('send_msg', code .. '\n' .. text)
+                    if use_markdown then
+                        url = url .. '&parse_mode=Markdown'
                     end
-                end
-                obj = obj.result
-                local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-                print(print_msg(sent_msg))
-                res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
-            end
+                    if not send_sound then
+                        url = url .. '&disable_notification=true'
+                        -- messages are silent by default
+                    end
 
-            return res, code
-            -- return false, and the code
+                    if num_msg <= 1 then
+                        url = url .. '&text=' .. URL.escape(text)
+
+                        local res, code = sendRequest(url)
+
+                        if not res and code then
+                            -- if the request failed and a code is returned (not 403 and 429)
+                            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                savelog('send_msg', code .. '\n' .. text)
+                            end
+                        end
+                        obj = obj.result
+                        local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                        print(print_msg(sent_msg))
+                    else
+                        local my_text = string.sub(text, 1, 4096)
+                        local rest = string.sub(text, 4096, text_len)
+                        url = url .. '&text=' .. URL.escape(my_text)
+
+                        local res, code = sendRequest(url)
+
+                        if not res and code then
+                            -- if the request failed and a code is returned (not 403 and 429)
+                            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                savelog('send_msg', code .. '\n' .. text)
+                            end
+                        end
+                        obj = obj.result
+                        local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                        print(print_msg(sent_msg))
+                        res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+                    end
+
+                    return res, code
+                    -- return false, and the code
+                end
+            end
         end
     end
 end
