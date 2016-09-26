@@ -1,5 +1,4 @@
-local helpers = require "OAuth.helpers"
-
+local helpers =(loadfile "./libs/helpers.lua")()
 local base = 'https://screenshotmachine.com/'
 local url = base .. 'processor.php'
 
