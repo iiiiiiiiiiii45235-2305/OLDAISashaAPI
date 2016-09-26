@@ -227,40 +227,40 @@ function bot_init()
 end
 
 function update_redis_cron()
-    if redis:get('last_redis_cron') then
-        if redis:get('last_redis_cron') ~= os.date('%M') then
+    if redis:get('api:last_redis_cron') then
+        if redis:get('api:last_redis_cron') ~= os.date('%M') then
             local value = os.date('%M')
-            redis:set('last_redis_cron', value)
+            redis:set('api:last_redis_cron', value)
         end
-        last_redis_cron = redis:get('last_redis_cron')
+        last_redis_cron = redis:get('api:last_redis_cron')
     else
         local value = os.date('%M')
-        redis:set('last_redis_cron', value)
-        last_redis_cron = redis:get('last_redis_cron')
+        redis:set('api:last_redis_cron', value)
+        last_redis_cron = redis:get('api:last_redis_cron')
     end
 
-    if redis:get('last_redis_db_cron') then
-        if redis:get('last_redis_db_cron') ~= os.date('%H') then
+    if redis:get('api:last_redis_db_cron') then
+        if redis:get('api:last_redis_db_cron') ~= os.date('%H') then
             local value = os.date('%H')
-            redis:set('last_redis_db_cron', value)
+            redis:set('api:last_redis_db_cron', value)
         end
-        last_redis_db_cron = redis:get('last_redis_db_cron')
+        last_redis_db_cron = redis:get('api:last_redis_db_cron')
     else
         local value = os.date('%H')
-        redis:set('last_redis_db_cron', value)
-        last_redis_db_cron = redis:get('last_redis_db_cron')
+        redis:set('api:last_redis_db_cron', value)
+        last_redis_db_cron = redis:get('api:last_redis_db_cron')
     end
 
-    if redis:get('last_redis_administrator_cron') then
-        if redis:get('last_redis_administrator_cron') ~= os.date('%d') then
+    if redis:get('api:last_redis_administrator_cron') then
+        if redis:get('api:last_redis_administrator_cron') ~= os.date('%d') then
             local value = os.date('%d')
-            redis:set('last_redis_administrator_cron', value)
+            redis:set('api:last_redis_administrator_cron', value)
         end
-        last_redis_administrator_cron = redis:get('last_redis_administrator_cron')
+        last_redis_administrator_cron = redis:get('api:last_redis_administrator_cron')
     else
         local value = os.date('%d')
-        redis:set('last_redis_administrator_cron', value)
-        last_redis_administrator_cron = redis:get('last_redis_administrator_cron')
+        redis:set('api:last_redis_administrator_cron', value)
+        last_redis_administrator_cron = redis:get('api:last_redis_administrator_cron')
     end
 end
 
