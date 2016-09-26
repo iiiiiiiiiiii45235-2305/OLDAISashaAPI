@@ -4,8 +4,8 @@ local function run(msg, matches)
             mystat('/commandsstats')
             local text = langs[msg.lang].botStats
             local hash = 'commands:stats'
-            local names = db:hkeys(hash)
-            local num = db:hvals(hash)
+            local names = redis:hkeys(hash)
+            local num = redis:hvals(hash)
             for i = 1, #names do
                 text = text .. '- ' .. names[i] .. ': ' .. num[i] .. '\n'
             end

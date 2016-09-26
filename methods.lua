@@ -933,7 +933,7 @@ function resolveUsername(username)
         return obj
     else
         local hash = 'bot:usernames'
-        local stored = db:hget(hash, username)
+        local stored = redis:hget(hash, username)
         if stored then
             local obj = getChat(stored)
             if obj.result then
