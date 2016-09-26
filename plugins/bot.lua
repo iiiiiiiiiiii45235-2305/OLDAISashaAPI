@@ -35,7 +35,7 @@ local function disable_channel(chat_id, to_id)
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == '/start' then
+    if matches[1]:lower() == '/start' and msg.bot then
         return langs[msg.lang].startMessage
     end
     if is_owner(msg) then
