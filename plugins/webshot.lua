@@ -35,11 +35,11 @@ local function get_webshot_url(param, psize)
 end
 
 local function run(msg, matches)
-    if is_momod(msg) then
+    if is_mod(msg) then
         local size = 'X'
         if matches[2] then
             if matches[2]:lower() == 'fmob' or matches[2]:lower() == 'f' then
-                if is_admin1(msg) then
+                if is_admin(msg) then
                     size = matches[2]
                 else
                     return langs[msg.lang].require_admin
