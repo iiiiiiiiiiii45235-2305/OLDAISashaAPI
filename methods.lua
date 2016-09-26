@@ -719,7 +719,7 @@ end
 -- Download the image and send to receiver, it will be deleted.
 -- cb_function and extra are optionals callback
 function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id)
-    local file_path = tempDownloadFile(url, false)
+    local file_path = tempDownloadFile(url_to_download, false)
     if not file_path then
         -- Error
         sendMessage(chat_id, langs[get_lang(chat_id)].errorImageDownload)
