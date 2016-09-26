@@ -11,7 +11,7 @@ function run(msg, matches)
 
     specdate = specdate .. '*\n'
 
-    local jstr, res = https.request(url)
+    local jstr, res = HTTPS.request(url)
     if res ~= 200 then
         return langs[msg.lang].opsError
     end
