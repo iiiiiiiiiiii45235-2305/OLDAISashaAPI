@@ -246,6 +246,25 @@ function sendLog(text, markdown)
     end
 end
 
+function resolveChannelSupergroupsUsernames(username)
+    local url = PWR_URL .. '/getChat?chat_id=' .. username
+    local dat, code = HTTPS.request(url)
+
+    if not dat then
+        return false, code
+    end
+
+    local tab = JSON.decode(dat)
+
+    if not tab then
+        return false
+    else
+        if tab.ok then
+            return tab.result
+        end
+    end
+end
+
 function forwardMessage(chat_id, from_chat_id, message_id)
     local obj_from = getChat(from_chat_id)
     local obj_to = getChat(chat_id)
@@ -620,22 +639,94 @@ function sendDocument_SUDOERS(document)
     end
 end
 
-function resolveChannelSupergroupsUsernames(username)
-    local url = PWR_URL .. '/getChat?chat_id=' .. username
-    local dat, code = HTTPS.request(url)
+----------------------------From url functions---------------------------------
+function getHttpFileName(url, headers)
+    -- Eg: foo.var
+    local file_name = url:match("[^%w]+([%.%w]+)$")
+    -- Any delimited alphanumeric on the url
+    file_name = file_name or url:match("[^%w]+(%w+)[^%w]+$")
+    -- Random name, hope content-type works
+    file_name = file_name or str:random(5)
 
-    if not dat then
-        return false, code
+    local content_type = headers["content-type"]
+
+    local extension = nil
+    if content_type then
+        extension = mimetype.get_mime_extension(content_type)
+    end
+    if extension then
+        file_name = file_name .. "." .. extension
     end
 
-    local tab = JSON.decode(dat)
+    local disposition = headers["content-disposition"]
+    if disposition then
+        -- attachment; filename=CodeCogsEqn.png
+        file_name = disposition:match('filename=([^;]+)') or file_name
+    end
 
-    if not tab then
-        return false
+    return file_name
+end
+
+-- Callback to remove a file
+function removeTempFile(file_path)
+    if file_path ~= nil then
+        os.remove(file_path)
+        print("Deleted: " .. file_path)
+    end
+end
+
+--  Saves file to /tmp/. If file_name isn't provided,
+-- will get the text after the last "/" for filename
+-- and content-type for extension
+function tempDownloadFile(url, file_name)
+    print("url to download: " .. url)
+
+    local respbody = { }
+    local options = {
+        url = url,
+        sink = ltn12.sink.table(respbody),
+        redirect = true
+    }
+
+    -- nil, code, headers, status
+    local response = nil
+
+    if url:starts('https') then
+        options.redirect = false
+        response = { HTTPS.request(options) }
     else
-        if tab.ok then
-            return tab.result
-        end
+        response = { http.request(options) }
+    end
+
+    local code = response[2]
+    local headers = response[3]
+    local status = response[4]
+
+    if code ~= 200 then return nil end
+
+    file_name = file_name or getHttpFileName(url, headers)
+
+    local file_path = "data/tmp/" .. file_name
+    print("Saved to: " .. file_path)
+
+    file = io.open(file_path, "w+")
+    file:write(table.concat(respbody))
+    file:close()
+
+    return file_path
+end
+
+-- Download the image and send to receiver, it will be deleted.
+-- cb_function and extra are optionals callback
+function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id)
+    local file_path = tempDownloadFile(url, false)
+    if not file_path then
+        -- Error
+        sendMessage(chat_id, langs[get_lang(chat_id)].errorImageDownload)
+    else
+        print("File path: " .. file_path)
+        sendPhoto(chat_id, file_path, caption, reply_to_message_id)
+        removeTempFile(file_path)
     end
 end
 

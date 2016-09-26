@@ -584,6 +584,12 @@ return {
         pluginEnabledAgain = ' nuovamente abilitato.',
         pluginsReloaded = '💊 Plugins ricaricati.',
 
+        -- pokedex.lua --
+        noPoke = 'Nessun pokémon trovato.',
+        pokeName = 'Nome: ',
+        pokeWeight = 'Peso: ',
+        pokeHeight = 'Altezza: ',
+
         -- set.lua --
         saved = ' salvato.',
         gSaved = ' variabile globale salvata.',
@@ -660,6 +666,17 @@ return {
             '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
         },
 
+        apod =
+        {
+            '🅿️ APOD',
+            'Plugin per l\'Astronomy Picture of the Day.',
+            'USER',
+            '#apod|#astro [<date>]: Sasha manda l\'APOD.',
+            '(#apod|#astro)hd [<date>]: Sasha manda l\'APOD in HD.',
+            '(#apod|#astro)text [<date>]: Sasha manda la spiegazione dell\'APOD.',
+            'Se c\'è <date> ed è nel formato AAAA-MM-GG l\'APOD è di <date>.',
+        },
+
         banhammer =
         {
             '🅿️ BANHAMMER',
@@ -715,6 +732,14 @@ return {
             '#addrecord channel <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il canale specificato.',
             '#uploaddb: Sasha manda il database.',
             '#replacedb <reply>: Sasha sostituisce il database.',
+        },
+
+        dogify =
+        {
+            '🅿️ DOGIFY',
+            'Plugin per la creazione di immagini col doge.',
+            'USER',
+            '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha crea un\'immagine col doge e le parole specificate.',
         },
 
         fakecommand =
@@ -938,6 +963,26 @@ return {
             '(#reload|[sasha] ricarica): Sasha ricarica tutti i plugins.',
         },
 
+        pokedex =
+        {
+            '🅿️ POKEDEX',
+            'Plugin per ottenere informazioni su un pokémon.',
+            'USER',
+            '#pokedex|#pokemon <name>|<id>: Sasha cerca il pokémon specificato e ne invia le informazioni.',
+        },
+
+        qr =
+        {
+            '🅿️ QR',
+            'Plugin per creare QR Code.',
+            'USER',
+            '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha crea il QR Code di <text>, se specificato colora il QR Code.',
+            'I colori possono essere specificati come segue:',
+            'Testo => red|green|blue|purple|black|white|gray.',
+            'Notazione Esadecimale => ("a56729" è marrone).',
+            'Notazione Decimale => ("255-192-203" è rosa).',
+        },
+
         reactions =
         {
             '🅿️ REACTIONS',
@@ -963,6 +1008,14 @@ return {
             '(#cancel|[sasha] annulla): Sasha annulla un #setmedia.',
             'ADMIN',
             '#setglobal <var_name> <text>: Sasha salva globalmente <text> come risposta a <var_name>.',
+        },
+
+        shout =
+        {
+            '🅿️ SHOUT',
+            'Plugin per urlare delle parole.',
+            'USER',
+            '(#shout|[sasha] grida|[sasha] urla) <text>: Sasha "urla" <text>.',
         },
 
         stats =
@@ -993,6 +1046,14 @@ return {
             '(#reloadstrings|[sasha] aggiorna stringhe): Sasha aggiorna le stringhe di testo.',
         },
 
+        tex =
+        {
+            '🅿️ TEX',
+            'Plugin per generare equazioni.',
+            'USER',
+            '(#tex|[sasha] equazione) <equation>: Sasha converte <equation> in immagine.',
+        },
+
         tgcli_to_api_migration =
         {
             '🅿️ TGCLI_TO_API_MIGRATION',
@@ -1013,6 +1074,14 @@ return {
             '#unsetglobal <var_name>: Sasha elimina globalmente <var_name>.',
         },
 
+        urbandictionary =
+        {
+            '🅿️ URBANDICTIONARY',
+            'Plugin per interagire con l\'Urban Dictionary.',
+            'USER',
+            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha mostra la definizione di <text> dall\'Urban Dictionary.',
+        },
+
         warn =
         {
             '🅿️ WARN',
@@ -1024,6 +1093,26 @@ return {
             '(#warn|[sasha] avverti) <id>|<username>|<reply>|from: Sasha avverte l\'utente.',
             '#unwarn <id>|<username>|<reply>|from: Sasha diminuisce di uno gli avvertimenti dell\'utente.',
             '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from: Sasha azzera gli avvertimenti dell\'utente.',
+        },
+
+        webshot =
+        {
+            '🅿️ WEBSHOT',
+            'Plugin per fare screenshots di siti.',
+            'MOD',
+            '(#webshot|[sasha] webshotta) <url> [<size>]: Sasha esegue uno screenshot di <url> e lo invia, se <size> è specificata di quella dimensione.',
+            'La dimensione può essere:',
+            'T: (120 x 90px)',
+            'S: (200 x 150px)',
+            'E: (320 x 240px)',
+            'N: (400 x 300px)',
+            'M: (640 x 480px)',
+            'L: (800 x 600px)',
+            'X: (1024 x 768px)',
+            'Nmob: (480 x 800px)',
+            'ADMIN',
+            'F: Pagina intera (può essere un processo molto lungo)',
+            'Fmob: Pagina intera (può essere un processo lungo)',
         },
 
         whitelist =
@@ -1437,6 +1526,12 @@ return {
         pluginEnabledAgain = ' enabled on chat again.',
         pluginsReloaded = '💊 Plugins reloaded.',
 
+        -- pokedex.lua --
+        noPoke = 'No pokémon found.',
+        pokeName = 'Name: ',
+        pokeWeight = 'Weight: ',
+        pokeHeight = 'Height: ',
+
         -- set.lua --
         saved = ' saved.',
         gSaved = ' global variable saved.',
@@ -1513,6 +1608,17 @@ return {
             '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
         },
 
+        apod =
+        {
+            '🅿️ APOD',
+            'Plugin for the Astronomy Picture of the Day.',
+            'USER',
+            '#apod|astro [<date>]: Sasha sends APOD.',
+            '(#apod|#astro)hd [<date>]: Sasha sends APOD in HD.',
+            '(#apod|#astro)text [<date>]: Sasha sends explanation of the APOD.',
+            'If <date> is specified and it\'s in this format AAAA-MM-GG the APOD refers to <date>.',
+        },
+
         banhammer =
         {
             '🅿️ BANHAMMER',
@@ -1568,6 +1674,14 @@ return {
             '#addrecord channel <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha manually adds specified channel to the database.',
             '#uploaddb: Sasha uploads the database.',
             '#replacedb <reply>: Sasha replaces the database.',
+        },
+
+        dogify =
+        {
+            '🅿️ DOGIFY',
+            'Plugin to create picture with doge.',
+            'USER',
+            '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha creates a pic with doge and specified words.',
         },
 
         fakecommand =
@@ -1791,6 +1905,26 @@ return {
             '(#reload|[sasha] ricarica): Sasha reloads all plugins.',
         },
 
+        pokedex =
+        {
+            '🅿️ POKEDEX',
+            'Plugin to obtain info on pokémons.',
+            'USER',
+            '#pokedex|#pokemon <name>|<id>: Sasha searches specified pokemon and sends its info.',
+        },
+
+        qr =
+        {
+            '🅿️ QR',
+            'Plugin to create QR Codes.',
+            'USER',
+            '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha creates QR Code of <text>, if specified it colors QR Code.',
+            'Colors can be specified as follows:',
+            'Text => red|green|blue|purple|black|white|gray.',
+            'Hexadecimal => ("a56729" è marrone).',
+            'Decimal => ("255-192-203" è rosa).',
+        },
+
         reactions =
         {
             '🅿️ REACTIONS',
@@ -1816,6 +1950,14 @@ return {
             '(#cancel|[sasha] annulla): Sasha cancels #setmedia.',
             'ADMIN',
             '#setglobal <var_name> <text>: Sasha globally saves <text> as answer to <var_name>.',
+        },
+
+        shout =
+        {
+            '🅿️ SHOUT',
+            'Plugin to shout words.',
+            'USER',
+            '(#shout|[sasha] grida|[sasha] urla) <text>: Sasha "shouts" <text>.',
         },
 
         stats =
@@ -1846,6 +1988,14 @@ return {
             '(#reloadstrings|[sasha] aggiorna stringhe): Sasha updates strings.',
         },
 
+        tex =
+        {
+            '🅿️ TEX',
+            'Plugin to create equations.',
+            'USER',
+            '(#tex|[sasha] equazione) <equation>: Sasha converts <equation> in image.',
+        },
+
         tgcli_to_api_migration =
         {
             '🅿️ TGCLI_TO_API_MIGRATION',
@@ -1866,6 +2016,14 @@ return {
             '#unsetglobal <var_name>: Sasha globally deletes <var_name>.',
         },
 
+        urbandictionary =
+        {
+            '🅿️ URBANDICTIONARY',
+            'Plugin for the interaction with the Urban Dictionary.',
+            'USER',
+            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha searches <text> in the Urban Dictionary.',
+        },
+
         warn =
         {
             '🅿️ WARN',
@@ -1877,6 +2035,26 @@ return {
             '(#warn|[sasha] avverti) <id>|<username>|<reply>|from: Sasha warns specified user.',
             '#unwarn <id>|<username>|<reply>|from: Sasha removes one warn from specified user.',
             '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from: Sasha removes all warns from specified user.',
+        },
+
+        webshot =
+        {
+            '🅿️ WEBSHOT',
+            'Plugin to make screenshots of websites.',
+            'MOD',
+            '(#webshot|[sasha] webshotta) <url> [<size>]: Sasha does a screenshot of <url> and sends it, if <size> is specified it sends of that dimension.',
+            'Size can be:',
+            'T: (120 x 90px)',
+            'S: (200 x 150px)',
+            'E: (320 x 240px)',
+            'N: (400 x 300px)',
+            'M: (640 x 480px)',
+            'L: (800 x 600px)',
+            'X: (1024 x 768px)',
+            'Nmob: (480 x 800px)',
+            'ADMIN',
+            'F: Full page (can be a very long process)',
+            'Fmob: Full page (can be a long process)',
         },
 
         whitelist =
