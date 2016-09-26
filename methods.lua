@@ -726,7 +726,6 @@ function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id
     else
         print("File path: " .. file_path)
         sendPhoto(chat_id, file_path, caption, reply_to_message_id)
-        removeTempFile(file_path)
     end
 end
 
