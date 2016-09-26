@@ -9,7 +9,6 @@ mimetype =(loadfile "./libs/mimetype.lua")()
 redis =(loadfile "./libs/redis.lua")()
 JSON =(loadfile "./libs/dkjson.lua")()
 langs = dofile("languages.lua")
-db = Redis.connect('127.0.0.1', 6379)
 
 http.TIMEOUT = 10
 
