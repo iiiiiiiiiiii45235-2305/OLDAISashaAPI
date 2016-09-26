@@ -3,6 +3,9 @@ clr = require "term.colors"
 last_cron = os.date('%M')
 last_db_cron = os.date('%H')
 last_administrator_cron = os.date('%d')
+last_redis_cron = ''
+last_redis_db_cron = ''
+last_redis_administrator_cron = ''
 
 -- Save the content of config to config.lua
 function save_config()
@@ -221,6 +224,32 @@ function bot_init()
     -- the time of the last cron job,
     is_started = true
     -- whether the bot should be running or not.
+end
+
+function update_redis_cron()
+    if redis:get('last_redis_cron') then
+        last_redis_cron = redis:hget('last_redis_cron')
+    else
+        local value = os.date('%M')
+        redis:set('last_redis_cron', value)
+        last_redis_cron = value
+    end
+
+    if redis:get('last_redis_db_cron') then
+        last_redis_db_cron = redis:hget('last_redis_db_cron')
+    else
+        local value = os.date('%H')
+        redis:set('last_redis_db_cron', value)
+        last_redis_db_cron = value
+    end
+
+    if redis:get('last_redis_administrator_cron') then
+        last_redis_administrator_cron = redis:hget('last_redis_administrator_cron')
+    else
+        local value = os.date('%d')
+        redis:set('last_redis_administrator_cron', value)
+        last_redis_administrator_cron = value
+    end
 end
 
 function adjust_bot(tab)
@@ -775,46 +804,69 @@ end
 
 -- Call and postpone execution for cron plugins
 function cron_plugins()
-    if last_cron ~= os.date('%M') then
+    if last_cron ~= last_redis_cron then
         -- Run cron jobs every minute.
-        last_cron = os.date('%M')
+        last_cron = last_redis_cron
         for name, plugin in ipairs(plugins) do
-            if name ~= 'database' and name ~= 'administrator' then
-                if plugin.cron then
-                    -- Call each plugin's cron function, if it has one.
-                    local res, err = pcall( function() plugin.cron() end)
-                    if not res then
-                        sendLog('An #error occurred.\n' .. err)
-                        return
-                    end
+            if plugin.cron then
+                -- Call each plugin's cron function, if it has one.
+                local res, err = pcall( function() plugin.cron() end)
+                if not res then
+                    return sendLog('An #error occurred.\n' .. err)
                 end
             end
         end
     end
 end
 
-function cron_administrator()
-    if last_administrator_cron ~= os.date('%d') then
-        -- Run cron jobs every minute.
-        last_administrator_cron = os.date('%d')
-        for name, plugin in pairs(plugins) do
-            -- Only plugins with cron function
-            if name == 'administrator' then
-                plugin.cron()
-            end
-        end
+function cron_database()
+    if last_db_cron ~= last_redis_db_cron then
+        -- Run cron jobs every hour.
+        last_db_cron = last_redis_db_cron
+        print('SAVING USERS/GROUPS DATABASE')
+        save_data(config.database.db, database)
     end
 end
 
-function cron_database()
-    if last_db_cron ~= os.date('%H') then
-        -- Run cron jobs every minute.
-        last_db_cron = os.date('%H')
-        for name, plugin in pairs(plugins) do
-            -- Only plugins with cron function
-            if name == 'database' then
-                plugin.cron()
+function cron_administrator()
+    if last_administrator_cron ~= last_redis_administrator_cron then
+        -- Run cron jobs every day.
+        last_administrator_cron = last_redis_administrator_cron
+
+        -- deletes all files in tmp folder
+        io.popen('rm \'/home/pi/AISashaAPI/data/tmp/*\''):read("*all")
+
+        -- save database
+        save_data(config.database.db, database)
+
+        -- send database
+        if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
+            sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
+        end
+
+        -- do backup
+        local time = os.time()
+        local log = io.popen('cd "/home/pi/BACKUPS/" && tar -zcvf backupAISashaBot' .. time .. '.tar.gz /home/pi/AISashaAPI --exclude=/home/pi/AISashaAPI/.git'):read('*all')
+        local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
+        file:write(log)
+        file:flush()
+        file:close()
+        sendMessage_SUDOERS(langs[msg.lang].autoSendBackupDb)
+
+        -- send last backup
+        local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
+        local backups = { }
+        if files then
+            for k, v in pairsByKeys(files) do
+                if string.match(v, '^backupAISashaBot%d+%.tar%.gz$') then
+                    backups[string.match(v, '%d+')] = v
+                end
             end
+            local last_backup = ''
+            for k, v in pairsByKeys(backups) do
+                last_backup = v
+            end
+            sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
         end
     end
 end
@@ -843,6 +895,7 @@ while is_started do
     else
         print(clr.red .. 'Connection error' .. clr.reset)
     end
+    update_redis_cron()
     cron_plugins()
     cron_database()
     cron_administrator()

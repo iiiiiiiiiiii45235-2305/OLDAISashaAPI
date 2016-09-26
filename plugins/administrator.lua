@@ -155,42 +155,6 @@ local function run(msg, matches)
     end
 end
 
-local function cron()
-    -- send database and last backup
-    -- save database
-    save_data(config.database.db, database)
-
-    -- do backup
-    local time = os.time()
-    local log = io.popen('cd "/home/pi/BACKUPS/" && tar -zcvf backupAISashaBot' .. time .. '.tar.gz /home/pi/AISashaAPI --exclude=/home/pi/AISashaAPI/.git'):read('*all')
-    local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
-    file:write(log)
-    file:flush()
-    file:close()
-    sendMessage_SUDOERS(langs[msg.lang].autoSendBackupDb)
-
-    -- send database
-    if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
-        sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
-    end
-
-    -- send last backup
-    local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
-    local backups = { }
-    if files then
-        for k, v in pairsByKeys(files) do
-            if string.match(v, '^backupAISashaBot%d+%.tar%.gz$') then
-                backups[string.match(v, '%d+')] = v
-            end
-        end
-        local last_backup = ''
-        for k, v in pairsByKeys(backups) do
-            last_backup = v
-        end
-        sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
-    end
-end
-
 return {
     description = "ADMINISTRATOR",
     patterns =
@@ -225,7 +189,6 @@ return {
         -- uploadbackup
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Aa] [Bb][Aa][Cc][Kk][Uu][Pp])$",
     },
-    cron = cron,
     run = run,
     min_rank = 3,
     syntax =
