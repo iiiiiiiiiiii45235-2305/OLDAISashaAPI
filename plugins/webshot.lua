@@ -25,7 +25,7 @@ local function get_webshot_url(param, psize)
 
     request_constructor.url = url .. "?" .. helpers.url_encode_arguments(arguments)
 
-    local ok, response_code, response_headers, response_status_line = https.request(request_constructor)
+    local ok, response_code, response_headers, response_status_line = HTTPS.request(request_constructor)
     if not ok or response_code ~= 200 then
         return nil
     end
