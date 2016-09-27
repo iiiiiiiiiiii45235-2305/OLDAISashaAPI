@@ -66,7 +66,26 @@ local function check_msg(msg)
         local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
         if is_link_msg and lock_link == "yes" and not is_bot then
             local data = load_data(config.moderation.data)
-            if not string.find(msg.text, data[msg.chat.id].settings.set_link) then
+            local group_link = nil
+            if data[msg.chat.id] then
+                if data[msg.chat.id].settings then
+                    if data[msg.chat.id].settings.set_link then
+                        group_link = data[msg.chat.id].settings.set_link
+                    end
+                end
+            end
+            if group_link then
+                if not string.find(msg.text, data[msg.chat.id].settings.set_link) then
+                    warn_user(bot.id, msg.from.id, msg.chat.id)
+                    if strict == "yes" then
+                        banUser(bot.id, msg.from.id, msg.chat.id)
+                    end
+                    if msg.chat.type == 'group' then
+                        banUser(bot.id, msg.from.id, msg.chat.id)
+                    end
+                    msg = clean_msg(msg)
+                end
+            else
                 warn_user(bot.id, msg.from.id, msg.chat.id)
                 if strict == "yes" then
                     banUser(bot.id, msg.from.id, msg.chat.id)
@@ -109,7 +128,26 @@ local function check_msg(msg)
             -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
             if is_link_caption and lock_link == "yes" then
                 local data = load_data(config.moderation.data)
-                if not string.find(msg.text, data[msg.chat.id].settings.set_link) then
+                local group_link = nil
+                if data[msg.chat.id] then
+                    if data[msg.chat.id].settings then
+                        if data[msg.chat.id].settings.set_link then
+                            group_link = data[msg.chat.id].settings.set_link
+                        end
+                    end
+                end
+                if group_link then
+                    if not string.find(msg.caption, data[msg.chat.id].settings.set_link) then
+                        warn_user(bot.id, msg.from.id, msg.chat.id)
+                        if strict == "yes" then
+                            banUser(bot.id, msg.from.id, msg.chat.id)
+                        end
+                        if msg.chat.type == 'group' then
+                            banUser(bot.id, msg.from.id, msg.chat.id)
+                        end
+                        msg = clean_msg(msg)
+                    end
+                else
                     warn_user(bot.id, msg.from.id, msg.chat.id)
                     if strict == "yes" then
                         banUser(bot.id, msg.from.id, msg.chat.id)
