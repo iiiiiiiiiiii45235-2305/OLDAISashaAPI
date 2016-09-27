@@ -640,7 +640,7 @@ function msg_valid(msg)
         return false
     end
 
-    if msg.edited then
+    if msg.edit_date then
         -- Edited messages
         if msg.date < os.time() -20 then
             -- Message sent more than 20 seconds ago
