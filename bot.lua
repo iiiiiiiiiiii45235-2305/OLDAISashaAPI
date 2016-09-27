@@ -758,31 +758,31 @@ function print_msg(msg)
     local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
     local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
     if msg.edited then
-        print_text = print_text .. clr.white .. '[edited] ' .. clr.reset
+        print_text = print_text .. clr.blue .. '[edited] ' .. clr.reset
     end
     if msg.forward then
-        print_text = print_text .. clr.white .. '[forward] ' .. clr.reset
+        print_text = print_text .. clr.blue .. '[forward] ' .. clr.reset
     end
     if msg.reply then
-        print_text = print_text .. clr.white .. '[reply] ' .. clr.reset
+        print_text = print_text .. clr.blue .. '[reply] ' .. clr.reset
     end
     if msg.media then
-        print_text = print_text .. clr.white .. '[' ..(msg.media_type or 'unsupported media') .. '] ' .. clr.reset
+        print_text = print_text .. clr.blue .. '[' ..(msg.media_type or 'unsupported media') .. '] ' .. clr.reset
         if msg.caption then
-            print_text = print_text .. clr.white .. msg.caption .. clr.reset
+            print_text = print_text .. clr.blue .. msg.caption .. clr.reset
         end
     end
     if msg.service then
         if msg.service_type == 'chat_del_user' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
         elseif msg.service_type == 'chat_del_user_leave' then
-            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' left the chat ' .. clr.reset
+            print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
         elseif msg.service_type == 'chat_add_user' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
         elseif msg.service_type == 'chat_add_user_link' then
-            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.white .. ' joined chat by invite link ' .. clr.reset
+            print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
         else
-            print_text = print_text .. clr.white .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
+            print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
         end
     end
     if msg.text then
