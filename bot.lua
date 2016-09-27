@@ -640,10 +640,18 @@ function msg_valid(msg)
         return false
     end
 
-    -- Before bot was started more or less
     if msg.date < os.time() -5 then
-        print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
-        return false
+        -- Before bot was started more or less
+        if msg.edited and msg.edit_date then
+            if msg.date < os.time() -20 or msg.edit_date < os.time() -5 then
+                -- Message sent more than 20 seconds ago or edited more than 5 seconds ago
+                print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
+                return false
+            end
+        else
+            print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
+            return false
+        end
     end
 
     if isChatDisabled(msg.chat.id) and not is_owner(msg) then
