@@ -210,7 +210,6 @@ local function run(msg, matches)
                     old_usernames = old_usernames,
                 }
                 save_data(config.database.db, database)
-                --
                 return langs[msg.lang].supergroupManuallyAdded
             elseif matches[2]:lower() == 'channel' then
                 local id = t[1]
@@ -237,7 +236,6 @@ local function run(msg, matches)
                     old_usernames = old_usernames,
                 }
                 save_data(config.database.db, database)
-                --
                 return langs[msg.lang].channelManuallyAdded
             end
         end
@@ -247,7 +245,6 @@ local function run(msg, matches)
             if database[tostring(matches[2])] then
                 database[tostring(matches[2])] = nil
                 save_data(config.database.db, database)
-                --
                 return langs[msg.lang].recordDeleted
             else
                 return matches[2] .. langs[msg.lang].notFound
@@ -277,7 +274,6 @@ local function run(msg, matches)
                         database = load_data(config.database.db)
                         return langs[msg.lang].databaseDownloaded
                     else
-                        --
                         return langs[msg.lang].needJson
                     end
                 else
@@ -309,23 +305,11 @@ local function save_to_db(msg)
         if msg.chat.type == 'channel' then
             db_channel(msg.chat)
         end
-        if msg.new_chat_participant then
-            db_user(msg.new_chat_participant)
-        end
-        if msg.new_chat_member then
-            db_user(msg.new_chat_member)
-        end
         if msg.adder then
             db_user(msg.adder)
         end
         if msg.added then
             db_user(msg.added)
-        end
-        if msg.left_chat_participant then
-            db_user(msg.left_chat_participant)
-        end
-        if msg.left_chat_member then
-            db_user(msg.left_chat_member)
         end
         if msg.remover then
             db_user(msg.remover)

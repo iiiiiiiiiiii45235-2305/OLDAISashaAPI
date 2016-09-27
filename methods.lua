@@ -183,7 +183,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                         end
                         obj = obj.result
                         local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-                        print(print_msg(sent_msg))
+                        print_msg(sent_msg)
                     else
                         local my_text = string.sub(text, 1, 4096)
                         local rest = string.sub(text, 4096, text_len)
@@ -199,7 +199,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                         end
                         obj = obj.result
                         local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-                        print(print_msg(sent_msg))
+                        print_msg(sent_msg)
                         res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
                     end
 
@@ -222,15 +222,6 @@ end
 
 function sendReply(msg, text, markd, send_sound)
     return sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
-end
-
-function sendAdmin(text, markdown)
-    for v, user in pairs(config.sudo_users) do
-        if user ~= bot.id then
-            -- print(text)
-            sendMessage(user, text, markdown)
-        end
-    end
 end
 
 function sendLog(text, markdown)
@@ -276,7 +267,7 @@ function forwardMessage(chat_id, from_chat_id, message_id)
             '&message_id=' .. message_id
             obj_to = obj_to.result
             local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -361,7 +352,7 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'geo' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -383,7 +374,7 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -403,7 +394,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -423,7 +414,7 @@ function sendVoiceId(chat_id, file_id, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -443,7 +434,7 @@ function sendAudioId(chat_id, file_id, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -463,7 +454,7 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -483,7 +474,7 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return sendRequest(url)
         end
     end
@@ -512,7 +503,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return curlRequest(curl_command)
         end
     end
@@ -531,7 +522,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return curlRequest(curl_command)
         end
     end
@@ -553,7 +544,7 @@ function sendVoice(chat_id, voice, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return curlRequest(curl_command)
         end
     end
@@ -581,7 +572,7 @@ function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, tit
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return curlRequest(curl_command)
         end
     end
@@ -606,7 +597,7 @@ function sendVideo(chat_id, video, reply_to_message_id, duration, performer, tit
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return curlRequest(curl_command)
         end
     end
@@ -625,7 +616,7 @@ function sendDocument(chat_id, document, reply_to_message_id)
             end
             obj = obj.result
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
-            print(print_msg(sent_msg))
+            print_msg(sent_msg)
             return curlRequest(curl_command)
         end
     end
@@ -766,16 +757,14 @@ function kickUser(executer, target, chat_id)
                     obj_remover = obj_remover.result
                     obj_removed = obj_removed.result
                     local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
-                    print(print_msg(sent_msg))
+                    print_msg(sent_msg)
                     return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
                 else
-                    local motivation = code2text(code, get_lang(chat_id))
-                    return res, motivation
+                    return code2text(code, get_lang(chat_id))
                 end
             else
                 if isWhitelisted(target) then
                     savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
-                    --
                     return langs[get_lang(chat_id)].cantKickWhitelisted
                 else
                     savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " require higher rank")
@@ -808,27 +797,14 @@ function banUser(executer, target, chat_id)
                     obj_remover = obj_remover.result
                     obj_removed = obj_removed.result
                     local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
-                    print(print_msg(sent_msg))
+                    print_msg(sent_msg)
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
-                    -- return res and not the text
                 else
-                    --- else, the user haven't been kicked
-                    --[[if code == 106 then --if trying to ban an user that is not in the group, add it to the prevban list. The user will be banned as soon as he join. Return true if the user is a new entry
-			local db_res = redis:sadd('chat:'..chat_id..':prevban', target)
-			if db_res == 1 then --if not already added, then return an error and the motivation
-				return false, make_text(langs[ln].banhammer.already_banned_normal, target)
-			else
-				return true
-			end
-		end]]
-                    -- else, if the user has not been banned because of different errors from the error [106], then...
                     if code == 106 then
                         local hash = 'banned:' .. chat_id
                         redis:sadd(hash, tostring(target))
                     end
-                    local text = code2text(code, get_lang(chat_id))
-                    return res, text
-                    -- return the motivation too
+                    return code2text(code, get_lang(chat_id))
                 end
             else
                 if isWhitelisted(target) then

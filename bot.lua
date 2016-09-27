@@ -212,7 +212,7 @@ function bot_init()
 
     print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
     redis:hincrby('bot:general', 'starts', 1)
-    sendAdmin('*Bot started!*\n_' .. os.date('On %A, %d %B %Y\nAt %X') .. '_\n' .. tot_plugins .. ' plugins loaded', true)
+    sendMessage_SUDOERS('*Bot started!*\n_' .. os.date('On %A, %d %B %Y\nAt %X') .. '_\n' .. tot_plugins .. ' plugins loaded', true)
 
     -- Generate a random seed and "pop" the first random number. :)
     math.randomseed(os.time())
@@ -762,7 +762,6 @@ function print_msg(msg)
         end
     end
     if msg.service then
-        -- white action reset red name reset
         if msg.service_type == 'chat_del_user' then
             print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.white .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
         elseif msg.service_type == 'chat_del_user_leave' then
@@ -788,7 +787,7 @@ function on_msg_receive(msg)
         return
     end
     if not msg then
-        sendAdmin('A loop without msg!')
+        sendMessage_SUDOERS('A loop without msg!')
         return
     end
     collect_stats(msg)

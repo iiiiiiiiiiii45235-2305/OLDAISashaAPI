@@ -261,6 +261,7 @@ return {
         -- banhammer.lua --
         noUsernameFound = 'Non trovo nessun utente con quell\'username.',
         massacre = 'Massacro => X',
+        cantKickWhitelisted = 'Non posso rimuovere un utente in whitelist.',
 
         -- bot.lua --
         startMessage = 'Ciao, io sono la versione API di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
@@ -272,6 +273,10 @@ return {
         dataLeaked = 'Data leaked.',
         userManuallyAdded = 'Utente aggiunto manualmente al database.',
         groupManuallyAdded = 'Gruppo aggiunto manualmente al database.',
+        supergroupManuallyAdded = 'Supergruppo aggiunto manualmente al database.',
+        channelManuallyAdded = 'Canale aggiunto manualmente al database.',
+        recordDeleted = 'Record eliminato.',
+        needJson = 'Mi serve un file json.',
         errorUserOrGroup = 'Solo gruppi o utenti.',
         userDeleted = 'Utente eliminato dal database.',
         groupDeleted = 'Gruppo eliminato dal database.',
@@ -1191,6 +1196,7 @@ return {
         -- banhammer.lua --
         noUsernameFound = 'Can\'t find a user with that username.',
         massacre = 'Massacre => X',
+        cantKickWhitelisted = 'Can\'t kick a whitelisted user.',
 
         -- bot.lua --
         startMessage = 'Hi, I\'m the API version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
@@ -1202,6 +1208,10 @@ return {
         dataLeaked = 'Data leaked.',
         userManuallyAdded = 'User manually added to the database.',
         groupManuallyAdded = 'Group manually added to the database.',
+        supergroupManuallyAdded = 'Supergroup manually added to the database.',
+        channelManuallyAdded = 'Channel manually added to the database.',
+        recordDeleted = 'Record deleted.',
+        needJson = 'I need a json file.',
         errorUserOrGroup = 'Just groups or users.',
         userDeleted = 'User deleted from database.',
         groupDeleted = 'Group deleted from database.',
