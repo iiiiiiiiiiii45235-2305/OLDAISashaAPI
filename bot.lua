@@ -640,7 +640,7 @@ function msg_valid(msg)
         return false
     end
 
-    if msg.edit_date then
+    if msg.edited then
         -- Edited messages
         if msg.date < os.time() -20 then
             -- Message sent more than 20 seconds ago
@@ -757,6 +757,9 @@ function print_msg(msg)
     local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
     local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
     local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
+    if msg.edited then
+        print_text = print_text .. clr.white .. '[edited] ' .. clr.reset
+    end
     if msg.forward then
         print_text = print_text .. clr.white .. '[forward] ' .. clr.reset
     end
@@ -902,8 +905,8 @@ while is_started do
             last_update = msg.update_id
             if msg.message--[[ or msg.callback_query ]]or msg.edited_message then
                 if msg.edited_message then
-                    msg.edited = true
                     msg.message = msg.edited_message
+                    msg.edited = true
                     msg.edited_message = nil
                 end
                 on_msg_receive(msg.message)
