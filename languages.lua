@@ -213,6 +213,8 @@ return {
         receiver = 'Ricevente: ',
         msgText = 'Testo del messaggio: ',
         groupToSupergroup = 'Notifica di servizio: migrazione del gruppo eseguita con successo.',
+        loopWithoutMessage = '*Ciclo senza messaggio.*',
+        botStarted = '*Bot avviato!*\n_X_\nY plugins caricati.',
 
         -- utils.lua --
         errorFileDownload = 'Errore nel download dell\'immagine.',
@@ -246,7 +248,7 @@ return {
         backupDone = 'Backup eseguito, ti invio il log in privato.',
         backupSent = 'Ti sto inviando il backup.',
         backupMissing = 'Backup mancante.',
-        autoSendBackupDb = 'Ti sto inviando il backup automatico.',
+        autoSendBackupDb = '*Ti sto inviando il backup automatico.*',
         botStats = 'Statistiche bot: ',
         botRestarted = 'Bot riavviato.',
         botStopped = 'Bot spento.',
@@ -283,7 +285,7 @@ return {
         databaseDownloaded = 'Database scaricato\n',
         databaseSent = 'Ti sto inviando il database.',
         databaseMissing = 'Database mancante.',
-        databaseFuckedUp = 'Errore, crash durante il salvataggio del database, ripristinarlo al più presto.',
+        databaseFuckedUp = '*Errore, crash durante il salvataggio del database, ripristinarlo al più presto.*',
 
         -- fakecommand.lua --
         fakecommandYouTried = 'Ci hai provato pezzente, non eseguirai un comando che richiede un rango superiore al tuo.',
@@ -1144,6 +1146,8 @@ return {
         receiver = 'Receiver: ',
         msgText = 'Message: ',
         groupToSupergroup = 'Service notification: group migration executed with success.',
+        loopWithoutMessage = '*A loop without message.*',
+        botStarted = '*Bot started!*\n_X_\nY plugins loaded.',
 
         -- utils.lua --
         errorFileDownload = 'Error downloading the picture.',
@@ -1181,7 +1185,7 @@ return {
         backupDone = 'Backup finished, I\'m sending you the log.',
         backupSent = 'I\'m sending you the backup.',
         backupMissing = 'Backup missing.',
-        autoSendBackupDb = 'I\'m sending you the automatic backup.',
+        autoSendBackupDb = '*I\'m sending you the automatic backup.*',
         botStats = 'Bot\'s stats: ',
         botRestarted = 'Bot reloaded.',
         botStopped = 'Bot stopped.',
@@ -1218,7 +1222,7 @@ return {
         databaseDownloaded = 'Database downloaded\n',
         databaseSent = 'I\'m sending you the database.',
         databaseMissing = 'Database missing.',
-        databaseFuckedUp = 'Error, crash while saving database, restore it as soon as possible.',
+        databaseFuckedUp = '*Error, crash while saving database, restore it as soon as possible.*',
 
         -- fakecommand.lua --
         fakecommandYouTried = 'You tried asshole, you won\'t execute a command that requires a rank higher than yours.',

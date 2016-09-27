@@ -420,11 +420,6 @@ local function pre_process(msg)
     end
     -- banned user is talking !
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        -- if not data['groups'][tostring(msg.chat.id)] and not is_realm(msg) then
-        -- Check if this group is one of my groups or not
-        -- chat_del_user('chat#id'..msg.chat.id,'user#id'..bot.id,ok_cb,false)
-        -- return
-        -- end
         if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
             -- Check it with redis
             print('Banned user talking!')

@@ -212,7 +212,7 @@ function bot_init()
 
     print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
     redis:hincrby('bot:general', 'starts', 1)
-    sendMessage_SUDOERS('*Bot started!*\n_' .. os.date('On %A, %d %B %Y\nAt %X') .. '_\n' .. tot_plugins .. ' plugins loaded', true)
+    sendMessage_SUDOERS(string.gsub(string.gsub(langs['en'].botStarted, 'Y', tot_plugins), 'X', os.date('On %A, %d %B %Y\nAt %X')), true)
 
     -- Generate a random seed and "pop" the first random number. :)
     math.randomseed(os.time())
@@ -693,7 +693,6 @@ local function is_plugin_disabled_on_chat(plugin_name, chat_id)
             if disabled_plugin == plugin_name and disabled then
                 local warning = 'Plugin ' .. disabled_plugin .. ' is disabled on this chat'
                 print(warning)
-                -- send_msg(chat_id, warning, ok_cb, false)
                 return true
             end
         end
@@ -787,7 +786,7 @@ function on_msg_receive(msg)
         return
     end
     if not msg then
-        sendMessage_SUDOERS('A loop without msg!')
+        sendMessage_SUDOERS(langs['en'].loopWithoutMessage, true)
         return
     end
     collect_stats(msg)
@@ -808,9 +807,6 @@ function on_msg_receive(msg)
             match_plugins(msg)
         end
     end
-end
-
-function ok_cb(extra, success, result)
 end
 
 -- Call and postpone execution for cron plugins
@@ -862,7 +858,7 @@ function cron_administrator()
         file:write(log)
         file:flush()
         file:close()
-        sendMessage_SUDOERS(langs[msg.lang].autoSendBackupDb)
+        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, true)
 
         -- send last backup
         local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')

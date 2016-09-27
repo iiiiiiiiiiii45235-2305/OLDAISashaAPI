@@ -256,7 +256,7 @@ local function run(msg, matches)
             print('SAVING USERS/GROUPS DATABASE')
             save_data(config.database.db, database)
             if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
-                sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json', ok_cb, false)
+                sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
                 return langs[msg.lang].databaseSent
             else
                 return langs[msg.lang].databaseMissing
@@ -332,7 +332,7 @@ local function save_to_db(msg)
             msg.reply_to_message = save_to_db(msg.reply_to_message)
         end
     else
-        sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp)
+        sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp, true)
         local f = io.open(config.database.db, 'w+')
         f:write('{}')
         f:close()

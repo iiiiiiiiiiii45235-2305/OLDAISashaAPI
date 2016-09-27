@@ -1436,8 +1436,6 @@ local function run(msg, matches)
                 print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added SuperGroup")
                 superadd(msg)
-                set_mutes(msg.chat.id)
-                channel_set_admin(get_receiver(msg), 'user#id' .. msg.from.id, ok_cb, false)
             else
                 return langs[msg.lang].require_admin
             end

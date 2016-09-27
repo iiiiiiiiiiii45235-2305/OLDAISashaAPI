@@ -211,11 +211,10 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
     end
 end
 
-function sendMessage_SUDOERS(text)
+function sendMessage_SUDOERS(text, use_markdown)
     for v, user in pairs(config.sudo_users) do
         if user ~= bot.id then
-            -- print(text)
-            sendMessage(user, text)
+            sendMessage(user, text, use_markdown, false, true)
         end
     end
 end
