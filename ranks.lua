@@ -34,7 +34,7 @@ function get_rank(user_id, chat_id)
     else
         -- if get_rank in private check the higher rank of the user in all groups
         if tonumber(bot.id) ~= tonumber(user_id) then
-            if not is_sudo(user_id) then
+            if not is_sudo2(user_id) then
                 if not is_admin2(user_id) then
                     local higher_rank = rank_table["USER"]
                     local data = load_data(config.moderation.data)
