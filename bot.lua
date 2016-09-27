@@ -640,15 +640,16 @@ function msg_valid(msg)
         return false
     end
 
-    if msg.date < os.time() -5 then
-        -- Before bot was started more or less
-        if msg.edited and msg.edit_date then
-            if msg.date < os.time() -20 or msg.edit_date < os.time() -5 then
-                -- Message sent more than 20 seconds ago or edited more than 5 seconds ago
-                print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
-                return false
-            end
-        else
+    if msg.edited then
+        -- Edited messages
+        if msg.date < os.time() -20 then
+            -- Message sent more than 20 seconds ago
+            print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
+            return false
+        end
+    else
+        if msg.date < os.time() -5 then
+            -- Before bot was started more or less
             print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
             return false
         end
