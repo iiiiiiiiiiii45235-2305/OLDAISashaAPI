@@ -11,7 +11,7 @@ end
 local function warn_user(executer, target, chat_id)
     if compare_ranks(executer, target, chat_id) then
         local lang = get_lang(chat_id)
-        local warn_chat = string.match(get_warn(chat_id), "%d+")
+        local warn_chat = string.match(get_warn(chat_id), "%d+") or 3
         redis:incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis:get(chat_id .. ':warn:' .. target)
         if not hashonredis then
