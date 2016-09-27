@@ -906,7 +906,7 @@ while is_started do
             if msg.message--[[ or msg.callback_query ]]or msg.edited_message then
                 if msg.edited_message then
                     msg.message = msg.edited_message
-                    msg.edited = true
+                    msg.message.edited = true
                     msg.edited_message = nil
                 end
                 on_msg_receive(msg.message)
