@@ -215,7 +215,7 @@ return {
         groupToSupergroup = 'Notifica di servizio: migrazione del gruppo eseguita con successo.',
 
         -- utils.lua --
-        errorImageDownload = 'Errore nel download dell\'immagine.',
+        errorFileDownload = 'Errore nel download dell\'immagine.',
         banListStart = 'Lista ban:\n\n',
         gbanListStart = 'Lista ban globali:\n\n',
         mutedUsersStart = 'Utenti muti di:',
@@ -1141,7 +1141,7 @@ return {
         groupToSupergroup = 'Service notification: group migration executed with success.',
 
         -- utils.lua --
-        errorImageDownload = 'Error downloading the picture.',
+        errorFileDownload = 'Error downloading the picture.',
         banListStart = 'Banlist:\n\n',
         gbanListStart = 'GBanlist:\n\n',
         mutedUsersStart = 'Muted users of:',

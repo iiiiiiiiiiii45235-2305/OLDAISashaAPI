@@ -32,14 +32,6 @@ function save_data(filename, data)
     f:close()
 end
 
-function fix_group_id(chat_id)
-    return tonumber(tostring('-' .. tostring(chat_id)))
-end
-
-function fix_supergroup_channel_id(chat_id)
-    return tonumber(tostring('-100' .. tostring(chat_id)))
-end
-
 function get_word(s, i)
     -- get the indexed word in a string
 
@@ -252,240 +244,6 @@ function get_date(timestamp)
     return os.date('%d/%m/%y')
 end
 
-function res_user(username)
-    local hash = 'bot:usernames'
-    local stored = redis:hget(hash, username)
-    if not stored then
-        return false
-    else
-        return stored
-    end
-end
-
-function res_user_group(username, chat_id)
-    username = username:lower()
-    local hash = 'bot:usernames:' .. chat_id
-    local stored = redis:hget(hash, username)
-    if stored then
-        return stored
-    else
-        hash = 'bot:usernames'
-        stored = redis:hget(hash, username)
-        if stored then
-            return stored
-        else
-            return false
-        end
-    end
-end
-
-function get_media_type(msg)
-    if msg.photo then
-        return 'photo'
-    elseif msg.video then
-        return 'video'
-    elseif msg.audio then
-        return 'audio'
-    elseif msg.voice then
-        return 'voice'
-    elseif msg.document then
-        if msg.document.mime_type == 'video/mp4' then
-            return 'gif'
-        else
-            return 'document'
-        end
-    elseif msg.sticker then
-        return 'sticker'
-    elseif msg.contact then
-        return 'contact'
-    elseif msg.location then
-        return 'geo'
-    end
-    return false
-end
-
-function group_table(chat_id)
-    local group = {
-        id = chat_id
-    }
-
-    local redis = {
-        hgetall =
-        {
-            mods = 'chat:' .. chat_id .. ':mod',
-            owner = 'chat:' .. chat_id .. ':owner',
-            settings = 'chat:' .. chat_id .. ':settings',
-            mediasettings = 'chat:' .. chat_id .. ':media',
-            flood = 'chat:' .. chat_id .. ':flood',
-            extra = 'chat:' .. chat_id .. ':extra',
-            welcome = 'chat:' .. chat_id .. ':welcome'
-        },
-        get =
-        {
-            about = 'chat:' .. chat_id .. ':about',
-            rules = 'chat:' .. chat_id .. ':rules'
-        },
-        smembers =
-        {
-            admblock = 'chat:' .. chat_id .. ':reportblocked'
-        }
-    }
-
-    for k, v in pairs(redis.hgetall) do
-        local tab = redis:hgetall(v)
-        group[k] = tab
-    end
-    for k, v in pairs(redis.get) do
-        local tab = redis:get(v)
-        group[k] = tab
-    end
-    for k, v in pairs(redis.smembers) do
-        local tab = redis:smembers(v)
-        group[k] = tab
-    end
-
-    return group
-end
-
-voice_updated = 0
-voice_succ = 0
-
-function give_result(res)
-    -- doesn't handle a nil "res"
-    if res == 1 then
-        voice_succ = voice_succ + 1
-        return ' done (res: 1)'
-    else
-        voice_updated = voice_updated + 1
-        return ' updated (res: 0)'
-    end
-end
-
-function migrate_table(t, hash)
-    if not next(t) then
-        return '[empty table]\n'
-    end
-    local txt = ''
-    for k, v in pairs(t) do
-        txt = txt .. k .. ' (' .. v .. ') [migration:'
-        local res = redis:hset(hash, k, v)
-        txt = txt .. give_result(res) .. ']\n'
-    end
-    return txt
-end
-
-function div()
-    print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-    print('XXXXXXXXXXXXXXXXXX BREAK XXXXXXXXXXXXXXXXXXX')
-    print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-end
-
-function getname(msg)
-    local name = msg.from.first_name
-    if msg.from.username then name = name .. ' (@' .. msg.from.username .. ')' end
-    return name
-end
-
-function bash(str)
-    local cmd = io.popen(str)
-    local result = cmd:read('*all')
-    cmd:close()
-    return result
-end
-
-function change_one_header(id)
-    voice_succ = 0
-    voice_updated = 0
-    logtxt = ''
-    logtxt = logtxt .. '\n-----------------------------------------------------\nGROUP ID: ' .. id .. '\n'
-    print('Group:', id)
-    -- first: print this, once the for is done, print logtxt
-
-    logtxt = logtxt .. '---> PORTING MODS...\n'
-    local mods = redis:hgetall('bot:' .. id .. ':mod')
-    logtxt = logtxt .. migrate_table(mods, 'chat:' .. id .. ':mod')
-
-    logtxt = logtxt .. '---> PORTING OWNER...\n'
-    local owner_id = redis:hkeys('bot:' .. id .. ':owner')
-    local owner_name = redis:hvals('bot:' .. id .. ':owner')
-    if not next(owner_id) or not next(owner_name) then
-        logtxt = logtxt .. 'No owner!\n'
-    else
-        logtxt = logtxt .. 'Owner info: ' .. owner_id[1] .. ', ' .. owner_name[1] .. ' [migration:'
-        local res = redis:hset('chat:' .. id .. ':owner', owner_id[1], owner_name[1])
-        logtxt = logtxt .. give_result(res) .. '\n'
-    end
-
-    logtxt = logtxt .. '---> PORTING MEDIA SETTINGS...\n'
-    local media = redis:hgetall('media:' .. id)
-    logtxt = logtxt .. migrate_table(media, 'chat:' .. id .. ':media')
-
-    logtxt = logtxt .. '---> PORTING ABOUT...\n'
-    local about = redis:get('bot:' .. id .. ':about')
-    if not about then
-        logtxt = logtxt .. 'No about!\n'
-    else
-        logtxt = logtxt .. 'About found! [migration:'
-        local res = redis:set('chat:' .. id .. ':about', about)
-        logtxt = logtxt .. give_result(res) .. ']\n'
-    end
-
-    logtxt = logtxt .. '---> PORTING RULES...\n'
-    local rules = redis:get('bot:' .. id .. ':rules')
-    if not rules then
-        logtxt = logtxt .. 'No rules!\n'
-    else
-        logtxt = logtxt .. 'Rules found!  [migration:'
-        local res = redis:set('chat:' .. id .. ':rules', rules)
-        logtxt = logtxt .. give_result(res) .. ']\n'
-    end
-
-    logtxt = logtxt .. '---> PORTING EXTRA...\n'
-    local extra = redis:hgetall('extra:' .. id)
-    logtxt = logtxt .. migrate_table(extra, 'chat:' .. id .. ':extra')
-    print('\n\n\n')
-    logtxt = 'Successful: ' .. voice_succ .. '\nUpdated: ' .. voice_updated .. '\n\n' .. logtxt
-    print(logtxt)
-    local log_path = "./logs/changehashes" .. id .. ".txt"
-    file = io.open(log_path, "w")
-    file:write(logtxt)
-    file:close()
-    for v, user in pairs(config.sudo_users) do
-        if user ~= bot.id then
-            -- print(text)
-            sendDocument(user, log_path)
-        end
-    end
-end
-
-function change_extra_header(id)
-    voice_succ = 0
-    voice_updated = 0
-    logtxt = ''
-    logtxt = logtxt .. '\n-----------------------------------------------------\nGROUP ID: ' .. id .. '\n'
-    print('Group:', id)
-    -- first: print this, once the for is done, print logtxt
-
-    logtxt = logtxt .. '---> PORTING EXTRA...\n'
-    local extra = redis:hgetall('extra:' .. id)
-    logtxt = logtxt .. migrate_table(extra, 'chat:' .. id .. ':extra')
-
-    print('\n\n\n')
-
-    logtxt = 'Successful: ' .. voice_succ .. '\nUpdated: ' .. voice_updated .. '\n\n' .. logtxt
-    print(logtxt)
-    local log_path = "./logs/changehashesEXTRA" .. id .. ".txt"
-    file = io.open(log_path, "w")
-    file:write(logtxt)
-    file:close()
-    for v, user in pairs(config.sudo_users) do
-        if user ~= bot.id then
-            -- print(text)
-            sendDocument(user, log_path)
-        end
-    end
-end
-
 function download_to_file(url, file_path)
     -- https://github.com/yagop/telegram-bot/blob/master/bot/utils.lua
     -- print("url to download: "..url)
@@ -519,87 +277,10 @@ function telegram_file_link(res)
 end
 
 ----------------------- specific cross-plugins functions---------------------
-
-function initGroup(chat_id)
-
-    -- default settings
-    hash = 'chat:' .. chat_id .. ':settings'
-    -- disabled for users:yes / disabled for users:no
-    redis:hset(hash, 'Rules', 'no')
-    redis:hset(hash, 'About', 'no')
-    redis:hset(hash, 'Modlist', 'no')
-    redis:hset(hash, 'Report', 'yes')
-    redis:hset(hash, 'Welcome', 'no')
-    redis:hset(hash, 'Extra', 'no')
-    redis:hset(hash, 'Flood', 'no')
-
-    -- flood
-    hash = 'chat:' .. chat_id .. ':flood'
-    redis:hset(hash, 'MaxFlood', 5)
-    redis:hset(hash, 'ActionFlood', 'kick')
-
-    -- char
-    hash = 'chat:' .. chat_id .. ':char'
-    redis:hset(hash, 'Arab', 'allowed')
-    redis:hset(hash, 'Rtl', 'allowed')
-
-    -- warn
-    redis:set('chat:' .. chat_id .. ':max', 3)
-    redis:set('chat:' .. chat_id .. ':warntype', 'ban')
-
-    -- set media values
-    hash = 'chat:' .. chat_id .. ':media'
-    for i = 1, #config.media_list do
-        redis:hset(hash, config.media_list[i], 'allowed')
-    end
-
-    -- set the default welcome type
-    hash = 'chat:' .. chat_id .. ':welcome'
-    redis:hset(hash, 'type', 'composed')
-    redis:hset(hash, 'content', 'no')
-
-    -- save group id
-    redis:sadd('bot:groupsid', chat_id)
-
-    -- save stats
-    hash = 'bot:general'
-    local num = redis:hincrby(hash, 'groups', 1)
-    print('Stats saved', 'Groups: ' .. num)
-end
-
-function addBanList(chat_id, user_id, nick, why)
-    local hash = 'chat:' .. chat_id .. ':bannedlist'
-    local res, is_id_added = set(hash, user_id, 'nick', nick)
-    if why and not(why == '') then
-        set(hash, user_id, 'why', why)
-    end
-    return is_id_added
-end
-
-function remBanList(chat_id, user_id)
-    if not chat_id or not user_id then return false end
-    local hash = 'chat:' .. chat_id .. ':bannedlist'
-    local res, des = rem(hash, user_id)
-    return res
-end
-
 function getUserStatus(chat_id, user_id)
     local res = getChatMember(chat_id, user_id)
     if res then
         return res.result.status
-    else
-        return false
-    end
-end
-
-function saveBan(user_id, motivation)
-    local hash = 'ban:' .. user_id
-    return redis:hincrby(hash, motivation, 1)
-end
-
-function is_info_message_key(key)
-    if key == 'Modlist' or key == 'Rules' or key == 'About' or key == 'Extra' then
-        return true
     else
         return false
     end
@@ -662,26 +343,6 @@ function serialize_to_file(data, file, uglify)
     end
     file:write(serialized)
     file:close()
-end
-
--- Send document to user and delete it when finished.
--- cb_function and extra are optionals callback
-function _send_document(receiver, file_path, cb_function, extra)
-    local extra = {
-        file_path = file_path,
-        cb_function = cb_function or ok_cb,
-        extra = extra or false
-    }
-    -- Call to remove with optional callback
-    send_document(receiver, file_path, rmtmp_cb, extra)
-end
-
--- Download the image and send to receiver, it will be deleted.
--- cb_function and extra are optionals callback
-function send_document_from_url(receiver, url, cb_function, extra)
-    local file_path = download_to_file_tmp(url, false)
-    print("File path: " .. file_path)
-    _send_document(receiver, file_path, cb_function, extra)
 end
 
 -- Parameters in ?a=1&b=2 style
@@ -749,16 +410,16 @@ function is_super_group(msg)
     end
 end
 
-function is_channel_disabled(receiver)
+function isChatDisabled(chat_id)
     if not config.disabled_channels then
         return false
     end
 
-    if config.disabled_channels[receiver] == nil then
+    if config.disabled_channels[chat_id] == nil then
         return false
     end
 
-    return config.disabled_channels[receiver]
+    return config.disabled_channels[chat_id]
 end
 
 -- Returns a table with matches or nil
@@ -830,51 +491,6 @@ function pairsByKeys(t, f)
     return iter
 end
 -- End Table Sort
-
--- Check if this chat is a group or not
-function is_our_group(msg)
-    local var = false
-    local data = load_data(config.moderation.data)
-    local groups = 'groups'
-    local chat = msg.chat.tg_cli_id
-    if data[tostring(groups)] then
-        if data[tostring(groups)][tostring(chat)] then
-            if msg.chat.type == 'group' then
-                var = true
-            end
-        end
-        return var
-    end
-end
-
-function is_our_super_group(msg)
-    local var = false
-    local data = load_data(config.moderation.data)
-    local groups = 'groups'
-    local chat = msg.chat.tg_cli_id
-    if data[tostring(groups)] then
-        if data[tostring(groups)][tostring(chat)] then
-            if msg.chat.type == 'supergroup' then
-                var = true
-            end
-            return var
-        end
-    end
-end
-
-function is_our_log_group(msg)
-    local var = false
-    local data = load_data(config.moderation.data)
-    local GBan_log = 'GBan_log'
-    if data[tostring(GBan_log)] then
-        if data[tostring(GBan_log)][tostring(msg.chat.tg_cli_id)] then
-            if msg.chat.type == 'supergroup' then
-                var = true
-            end
-            return var
-        end
-    end
-end
 
 function get_lang(chat_id)
     local lang = redis:get('lang:' .. chat_id)

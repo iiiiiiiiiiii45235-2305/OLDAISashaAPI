@@ -722,10 +722,23 @@ function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id
     local file_path = tempDownloadFile(url_to_download, false)
     if not file_path then
         -- Error
-        sendMessage(chat_id, langs[get_lang(chat_id)].errorImageDownload)
+        sendMessage(chat_id, langs[get_lang(chat_id)].errorFileDownload)
     else
         print("File path: " .. file_path)
         sendPhoto(chat_id, file_path, caption, reply_to_message_id)
+    end
+end
+
+-- Download the document and send to receiver, it will be deleted.
+-- cb_function and extra are optionals callback
+function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
+    local file_path = tempDownloadFile(url_to_download, false)
+    if not file_path then
+        -- Error
+        sendMessage(chat_id, langs[get_lang(chat_id)].errorFileDownload)
+    else
+        print("File path: " .. file_path)
+        sendDocument(chat_id, file_path, reply_to_message_id)
     end
 end
 
