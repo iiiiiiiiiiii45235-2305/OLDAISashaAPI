@@ -67,15 +67,15 @@ local function check_msg(msg)
         if is_link_msg and lock_link == "yes" and not is_bot then
             local data = load_data(config.moderation.data)
             local group_link = nil
-            if data[msg.chat.id] then
-                if data[msg.chat.id].settings then
-                    if data[msg.chat.id].settings.set_link then
-                        group_link = data[msg.chat.id].settings.set_link
+            if data[tostring(msg.chat.id)] then
+                if data[tostring(msg.chat.id)].settings then
+                    if data[tostring(msg.chat.id)].settings.set_link then
+                        group_link = data[tostring(msg.chat.id)].settings.set_link
                     end
                 end
             end
             if group_link then
-                if not string.find(msg.text, data[msg.chat.id].settings.set_link) then
+                if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
                     warn_user(bot.id, msg.from.id, msg.chat.id)
                     if strict == "yes" then
                         banUser(bot.id, msg.from.id, msg.chat.id)
@@ -129,15 +129,15 @@ local function check_msg(msg)
             if is_link_caption and lock_link == "yes" then
                 local data = load_data(config.moderation.data)
                 local group_link = nil
-                if data[msg.chat.id] then
-                    if data[msg.chat.id].settings then
-                        if data[msg.chat.id].settings.set_link then
-                            group_link = data[msg.chat.id].settings.set_link
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].settings then
+                        if data[tostring(msg.chat.id)].settings.set_link then
+                            group_link = data[tostring(msg.chat.id)].settings.set_link
                         end
                     end
                 end
                 if group_link then
-                    if not string.find(msg.caption, data[msg.chat.id].settings.set_link) then
+                    if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
                         warn_user(bot.id, msg.from.id, msg.chat.id)
                         if strict == "yes" then
                             banUser(bot.id, msg.from.id, msg.chat.id)
