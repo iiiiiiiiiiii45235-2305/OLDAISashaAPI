@@ -46,7 +46,47 @@ local function clean_msg(msg)
     return msg
 end
 
-local function check_msg(msg)
+local function check_msg(msg, settings)
+    local lock_arabic = 'no'
+    local lock_rtl = 'no'
+    local lock_tgservice = 'no'
+    local lock_link = 'no'
+    local lock_member = 'no'
+    local lock_spam = 'no'
+    local lock_sticker = 'no'
+    local lock_contacts = 'no'
+    local strict = 'no'
+    local group_link = nil
+    if settings.lock_arabic then
+        lock_arabic = settings.lock_arabic
+    end
+    if settings.lock_rtl then
+        lock_rtl = settings.lock_rtl
+    end
+    if settings.lock_tgservice then
+        lock_tgservice = settings.lock_tgservice
+    end
+    if settings.lock_link then
+        lock_link = settings.lock_link
+    end
+    if settings.lock_member then
+        lock_member = settings.lock_member
+    end
+    if settings.lock_spam then
+        lock_spam = settings.lock_spam
+    end
+    if settings.lock_sticker then
+        lock_sticker = settings.lock_sticker
+    end
+    if settings.lock_contacts then
+        lock_contacts = settings.lock_contacts
+    end
+    if settings.strict then
+        strict = settings.strict
+    end
+    if settings.set_link then
+        group_link = settings.set_link
+    end
     if msg.text then
         -- msg.text checks
         local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
@@ -65,15 +105,6 @@ local function check_msg(msg)
         -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
         local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
         if is_link_msg and lock_link == "yes" and not is_bot then
-            local data = load_data(config.moderation.data)
-            local group_link = nil
-            if data[tostring(msg.chat.id)] then
-                if data[tostring(msg.chat.id)].settings then
-                    if data[tostring(msg.chat.id)].settings.set_link then
-                        group_link = data[tostring(msg.chat.id)].settings.set_link
-                    end
-                end
-            end
             if group_link then
                 if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
                     warn_user(bot.id, msg.from.id, msg.chat.id)
@@ -127,15 +158,6 @@ local function check_msg(msg)
             local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
             -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
             if is_link_caption and lock_link == "yes" then
-                local data = load_data(config.moderation.data)
-                local group_link = nil
-                if data[tostring(msg.chat.id)] then
-                    if data[tostring(msg.chat.id)].settings then
-                        if data[tostring(msg.chat.id)].settings.set_link then
-                            group_link = data[tostring(msg.chat.id)].settings.set_link
-                        end
-                    end
-                end
                 if group_link then
                     if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
                         warn_user(bot.id, msg.from.id, msg.chat.id)
@@ -270,61 +292,19 @@ end
 local function pre_process(msg)
     -- Begin 'RondoMsgChecks' text checks by @rondoozle
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if msg and not redis:sismember('whitelist', msg.from.id) then
+        if msg and not isWhitelisted(msg.from.id) and not is_mod(msg) then
             -- if regular user
             local data = load_data(config.moderation.data)
-            if data[tostring(msg.chat.id)] and data[tostring(msg.chat.id)]['settings'] then
-                settings = data[tostring(msg.chat.id)]['settings']
-            else
+            local settings = nil
+            if data[tostring(msg.chat.id)] then
+                if data[tostring(msg.chat.id)]['settings'] then
+                    settings = data[tostring(msg.chat.id)]['settings']
+                end
+            end
+            if not settings then
                 return msg
-            end
-            if settings.lock_arabic then
-                lock_arabic = settings.lock_arabic
             else
-                lock_arabic = 'no'
-            end
-            if settings.lock_rtl then
-                lock_rtl = settings.lock_rtl
-            else
-                lock_rtl = 'no'
-            end
-            if settings.lock_tgservice then
-                lock_tgservice = settings.lock_tgservice
-            else
-                lock_tgservice = 'no'
-            end
-            if settings.lock_link then
-                lock_link = settings.lock_link
-            else
-                lock_link = 'no'
-            end
-            if settings.lock_member then
-                lock_member = settings.lock_member
-            else
-                lock_member = 'no'
-            end
-            if settings.lock_spam then
-                lock_spam = settings.lock_spam
-            else
-                lock_spam = 'no'
-            end
-            if settings.lock_sticker then
-                lock_sticker = settings.lock_sticker
-            else
-                lock_sticker = 'no'
-            end
-            if settings.lock_contacts then
-                lock_contacts = settings.lock_contacts
-            else
-                lock_contacts = 'no'
-            end
-            if settings.strict then
-                strict = settings.strict
-            else
-                strict = 'no'
-            end
-            if not is_mod(msg) then
-                local tmp = check_msg(msg)
+                local tmp = check_msg(msg, settings)
                 if tmp then
                     msg = tmp
                 end
