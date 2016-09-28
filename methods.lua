@@ -727,9 +727,9 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
 end
 
 -- *** END API FUNCTIONS ***
-function sudoInChat(chat_id, user_id)
+function sudoInChat(chat_id)
     for v, user in pairs(config.sudo_users) do
-        local member = getChatMember(chat_id, user_id)
+        local member = getChatMember(chat_id, user)
         if member then
             if member.status == 'creator' or member.status == 'administrator' or member.status == 'member' then
                 return true

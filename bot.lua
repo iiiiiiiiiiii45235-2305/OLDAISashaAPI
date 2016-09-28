@@ -637,7 +637,7 @@ end
 function msg_valid(msg)
     if not msg.bot then
         if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
-            if not sudoInChat(msg.chat.id, msg.from.id) then
+            if not sudoInChat(msg.chat.id) then
                 print(clr.yellow .. 'Not valid: no sudo in chat, bot leaves' .. clr.reset)
                 sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
                 leaveChat(msg.chat.id)
