@@ -730,8 +730,8 @@ end
 function sudoInChat(chat_id)
     for v, user in pairs(config.sudo_users) do
         local member = getChatMember(chat_id, user)
-        if member then
-            if member.status == 'creator' or member.status == 'administrator' or member.status == 'member' then
+        if member.ok and member.result then
+            if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
                 return true
             end
         end
