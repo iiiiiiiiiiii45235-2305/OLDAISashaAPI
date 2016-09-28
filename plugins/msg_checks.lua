@@ -22,7 +22,7 @@ local function warn_user(executer, target, chat_id)
         if tonumber(warn_chat) ~= 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
-                kickUser(executer, target, chat_id)
+                banUser(executer, target, chat_id)
             end
             sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
         end
@@ -44,6 +44,16 @@ local function clean_msg(msg)
         end
     end
     return msg
+end
+
+local function action(msg, strict)
+    warn_user(bot.id, msg.from.id, msg.chat.id)
+    if strict == "yes" then
+        banUser(bot.id, msg.from.id, msg.chat.id)
+    end
+    if msg.chat.type == 'group' then
+        banUser(bot.id, msg.from.id, msg.chat.id)
+    end
 end
 
 local function check_msg(msg, settings)
@@ -92,13 +102,7 @@ local function check_msg(msg, settings)
         local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
         local _nl, real_digits = string.gsub(msg.text, '%d', '')
         if lock_spam == "yes" and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
-            warn_user(bot.id, msg.from.id, msg.chat.id)
-            if strict == "yes" then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
+            action(msg, strict)
             msg = clean_msg(msg)
         end
         local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
@@ -107,47 +111,23 @@ local function check_msg(msg, settings)
         if is_link_msg and lock_link == "yes" and not is_bot then
             if group_link then
                 if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
-                    warn_user(bot.id, msg.from.id, msg.chat.id)
-                    if strict == "yes" then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
-                    end
-                    if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
-                    end
+                    action(msg, strict)
                     msg = clean_msg(msg)
                 end
             else
-                warn_user(bot.id, msg.from.id, msg.chat.id)
-                if strict == "yes" then
-                    banUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                if msg.chat.type == 'group' then
-                    banUser(bot.id, msg.from.id, msg.chat.id)
-                end
+                action(msg, strict)
                 msg = clean_msg(msg)
             end
         end
         local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
         if is_squig_msg and lock_arabic == "yes" then
-            warn_user(bot.id, msg.from.id, msg.chat.id)
-            if strict == "yes" then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
+            action(msg, strict)
             msg = clean_msg(msg)
         end
         local print_name = msg.from.print_name
         local is_rtl = print_name:match("‮") or msg.text:match("‮")
         if is_rtl and lock_rtl == "yes" then
-            warn_user(bot.id, msg.from.id, msg.chat.id)
-            if strict == "yes" then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
+            action(msg, strict)
             msg = clean_msg(msg)
         end
     end
@@ -160,56 +140,26 @@ local function check_msg(msg, settings)
             if is_link_caption and lock_link == "yes" then
                 if group_link then
                     if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
-                        warn_user(bot.id, msg.from.id, msg.chat.id)
-                        if strict == "yes" then
-                            banUser(bot.id, msg.from.id, msg.chat.id)
-                        end
-                        if msg.chat.type == 'group' then
-                            banUser(bot.id, msg.from.id, msg.chat.id)
-                        end
+                        action(msg, strict)
                         msg = clean_msg(msg)
                     end
                 else
-                    warn_user(bot.id, msg.from.id, msg.chat.id)
-                    if strict == "yes" then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
-                    end
-                    if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
-                    end
+                    action(msg, strict)
                     msg = clean_msg(msg)
                 end
             end
             local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
             if is_squig_caption and lock_arabic == "yes" then
-                warn_user(bot.id, msg.from.id, msg.chat.id)
-                if strict == "yes" then
-                    banUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                if msg.chat.type == 'group' then
-                    banUser(bot.id, msg.from.id, msg.chat.id)
-                end
+                action(msg, strict)
                 msg = clean_msg(msg)
             end
         end
         if lock_sticker == "yes" and msg.sticker then
-            warn_user(bot.id, msg.from.id, msg.chat.id)
-            if strict == "yes" then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
+            action(msg, strict)
             msg = clean_msg(msg)
         end
         if lock_contacts == "yes" and msg.contact then
-            warn_user(bot.id, msg.from.id, msg.chat.id)
-            if strict == "yes" then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
-            if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
-            end
+            action(msg, strict)
             msg = clean_msg(msg)
         end
     end
