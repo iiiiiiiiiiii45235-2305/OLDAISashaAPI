@@ -685,6 +685,7 @@ local function get_admins(chat_id)
         for i, admin in pairs(list.result) do
             text = text ..(admin.user.username or admin.user.first_name) .. ' [' .. admin.user.id .. ']\n'
         end
+        return text
     end
 end
 
