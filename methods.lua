@@ -213,9 +213,7 @@ end
 
 function sendMessage_SUDOERS(text, use_markdown)
     for v, user in pairs(config.sudo_users) do
-        if user ~= bot.id then
-            sendMessage(user, text, use_markdown, false, true)
-        end
+        sendMessage(user, text, use_markdown, false, true)
     end
 end
 
@@ -228,10 +226,8 @@ function sendLog(text, markdown)
         return sendMessage(config.log_chat, text, markdown)
     else
         for v, user in pairs(config.sudo_users) do
-            if user ~= bot.id then
-                -- print(text)
-                sendMessage(user, text, markdown)
-            end
+            -- print(text)
+            sendMessage(user, text, markdown)
         end
     end
 end
@@ -623,9 +619,7 @@ end
 
 function sendDocument_SUDOERS(document)
     for v, user in pairs(config.sudo_users) do
-        if user ~= bot.id then
-            sendDocument(user, document)
-        end
+        sendDocument(user, document)
     end
 end
 
@@ -733,6 +727,17 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
 end
 
 -- *** END API FUNCTIONS ***
+function sudoInChat(chat_id, user_id)
+    for v, user in pairs(config.sudo_users) do
+        local member = getChatMember(chat_id, user_id)
+        if member then
+            if member.status == 'creator' or member.status == 'administrator' or member.status == 'member' then
+                return true
+            end
+        end
+    end
+    return false
+end
 
 -- call this to kick
 function kickUser(executer, target, chat_id)
