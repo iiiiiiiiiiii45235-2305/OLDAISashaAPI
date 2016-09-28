@@ -77,68 +77,76 @@ local function get_rules(chat_id)
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == 'getwelcome' then
-        mystat('/getwelcome')
-        return get_welcome(msg.chat.id)
-    end
-    if matches[1]:lower() == 'getgoodbye' then
-        mystat('/getgoodbye')
-        return get_goodbye(msg.chat.id)
-    end
-    if matches[1]:lower() == 'setwelcome' and is_mod(msg) then
-        mystat('/setwelcome')
-        return set_welcome(msg.chat.id, matches[2])
-    end
-    if matches[1]:lower() == 'setgoodbye' and is_mod(msg) then
-        mystat('/setgoodbye')
-        return set_goodbye(msg.chat.id, matches[2])
-    end
-    if matches[1]:lower() == 'unsetwelcome' and is_mod(msg) then
-        mystat('/unsetwelcome')
-        return unset_welcome(msg.chat.id)
-    end
-    if matches[1]:lower() == 'unsetgoodbye' and is_mod(msg) then
-        mystat('/unsetgoodbye')
-        return unset_goodbye(msg.chat.id)
-    end
-    if matches[1]:lower() == 'setmemberswelcome' and is_mod(msg) then
-        mystat('/setmemberswelcome')
-        local text = set_memberswelcome(msg.chat.id, matches[2])
-        if matches[2] == '0' then
-            return langs[msg.lang].neverWelcome
-        else
-            return text
+    if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
+        sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+    else
+        if matches[1]:lower() == 'getwelcome' then
+            mystat('/getwelcome')
+            return get_welcome(msg.chat.id)
         end
-    end
-    if matches[1]:lower() == 'getmemberswelcome' and is_mod(msg) then
-        mystat('/getmemberswelcome')
-        return get_memberswelcome(msg.chat.id)
+        if matches[1]:lower() == 'getgoodbye' then
+            mystat('/getgoodbye')
+            return get_goodbye(msg.chat.id)
+        end
+        if matches[1]:lower() == 'setwelcome' and is_mod(msg) then
+            mystat('/setwelcome')
+            return set_welcome(msg.chat.id, matches[2])
+        end
+        if matches[1]:lower() == 'setgoodbye' and is_mod(msg) then
+            mystat('/setgoodbye')
+            return set_goodbye(msg.chat.id, matches[2])
+        end
+        if matches[1]:lower() == 'unsetwelcome' and is_mod(msg) then
+            mystat('/unsetwelcome')
+            return unset_welcome(msg.chat.id)
+        end
+        if matches[1]:lower() == 'unsetgoodbye' and is_mod(msg) then
+            mystat('/unsetgoodbye')
+            return unset_goodbye(msg.chat.id)
+        end
+        if matches[1]:lower() == 'setmemberswelcome' and is_mod(msg) then
+            mystat('/setmemberswelcome')
+            local text = set_memberswelcome(msg.chat.id, matches[2])
+            if matches[2] == '0' then
+                return langs[msg.lang].neverWelcome
+            else
+                return text
+            end
+        end
+        if matches[1]:lower() == 'getmemberswelcome' and is_mod(msg) then
+            mystat('/getmemberswelcome')
+            return get_memberswelcome(msg.chat.id)
+        end
     end
 end
 
 local function pre_process(msg)
     if msg.service then
-        if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
-            local hash
-            if msg.chat.type == 'supergroup' then
-                hash = 'channel:welcome' .. msg.chat.id
-            end
-            if msg.chat.type == 'group' then
-                hash = 'chat:welcome' .. msg.chat.id
-            end
-            redis:incr(hash)
-            local hashonredis = redis:get(hash)
-            if hashonredis then
-                if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                    sendMessage(msg.chat.id, get_welcome(msg.chat.id) .. '\n' .. get_rules(msg.chat.id))
-                    redis:getset(hash, 0)
+        if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
+            sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+        else
+            if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
+                local hash
+                if msg.chat.type == 'supergroup' then
+                    hash = 'channel:welcome' .. msg.chat.id
                 end
-            else
-                redis:set(hash, 0)
+                if msg.chat.type == 'group' then
+                    hash = 'chat:welcome' .. msg.chat.id
+                end
+                redis:incr(hash)
+                local hashonredis = redis:get(hash)
+                if hashonredis then
+                    if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
+                        sendMessage(msg.chat.id, get_welcome(msg.chat.id) .. '\n' .. get_rules(msg.chat.id))
+                        redis:getset(hash, 0)
+                    end
+                else
+                    redis:set(hash, 0)
+                end
             end
-        end
-        if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
-            sendMessage(msg.chat.id, get_goodbye(msg.chat.id) .. ' ' .. msg.removed.print_name:gsub('_', ' '))
+            if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
+                sendMessage(msg.chat.id, get_goodbye(msg.chat.id) .. ' ' .. msg.removed.print_name:gsub('_', ' '))
+            end
         end
     end
     return msg
