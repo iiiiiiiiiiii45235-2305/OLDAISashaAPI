@@ -1826,7 +1826,7 @@ local function pre_process(msg)
     if msg.service then
         if is_realm(msg) then
             if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_user_link' then
-                if msg.added.id ~= 149998353 then
+                if msg.added.id ~= bot.userVersion then
                     -- if not admin and not bot then
                     if not is_admin(msg) then
                         kickUser(bot.id, msg.added.id, msg.chat.id)

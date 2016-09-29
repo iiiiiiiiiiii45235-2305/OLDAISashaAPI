@@ -206,6 +206,7 @@ function bot_init()
         bot = getMe()
     end
     bot = bot.result
+    bot.userVersion = 149998353
 
     local tot_plugins = load_plugins()
     load_database()
@@ -646,7 +647,7 @@ function msg_valid(msg)
         end
     end
 
-    if tostring(msg.from.id) == '149998353' then
+    if msg.from.id == bot.userVersion then
         print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
         return false
     end

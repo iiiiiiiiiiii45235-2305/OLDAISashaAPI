@@ -66,8 +66,16 @@ function getChatMembersCount(chat_id)
 end
 
 function getChatMember(chat_id, user_id)
-    local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
-    return sendRequest(url)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        if obj.result then
+            obj = obj.result
+            if obj.type ~= 'private' then
+                local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+                return sendRequest(url)
+            end
+        end
+    end
 end
 
 function getFile(file_id)
@@ -741,6 +749,18 @@ function sudoInChat(chat_id)
     return false
 end
 
+function userVersionInChat(chat_id)
+    local member = getChatMember(chat_id, bot.userVersion)
+    if type(member) == 'table' then
+        if member.ok and member.result then
+            if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 -- call this to kick
 function kickUser(executer, target, chat_id)
     local obj_chat = getChat(chat_id)
@@ -919,6 +939,150 @@ function isWhitelisted(user_id)
     local hash = 'whitelist'
     local whitelisted = redis:sismember(hash, user_id)
     return whitelisted or false
+end
+
+function setMutes(chat_id)
+    local lang = get_lang(chat_id)
+    local data = load_data(config.moderation.data)
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audios"] = false, ["contacts"] = false, ["documents"] = false, ["gifs"] = false, ["photo"] = false, ["positions"] = false, ["stickers"] = false, ["texts"] = false, ["videos"] = false }
+            save_data(config.moderation.data, data)
+            --
+            return langs[lang].mutesSet
+        end
+    end
+end
+
+function hasMutes(chat_id)
+    local data = load_data(config.moderation.data)
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings.mutes then
+            return true
+        end
+    end
+    if setMutes(chat_id) then
+        return true
+    else
+        return false
+    end
+end
+
+function isMuted(chat_id, msg_type)
+    local data = load_data(config.moderation.data)
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            if hasMutes(chat_id) then
+                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
+                    return data[tostring(chat_id)].settings.mutes[msg_type:lower()]
+                end
+            end
+        end
+    end
+    return false
+end
+
+function mute(chat_id, msg_type)
+    local lang = get_lang(chat_id)
+    local data = load_data(config.moderation.data)
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            if hasMutes(chat_id) then
+                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
+                    if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
+                        --
+                        return msg_type:lower() .. langs[lang].alreadyMuted
+                    else
+                        data[tostring(chat_id)].settings.mutes[msg_type:lower()] = true
+                        save_data(config.moderation.data, data)
+                        --
+                        return msg_type:lower() .. langs[lang].muted
+                    end
+                else
+                    --
+                    return langs[lang].noSuchMuteType
+                end
+            end
+        end
+    end
+end
+
+function unmute(chat_id, msg_type)
+    local lang = get_lang(chat_id)
+    local data = load_data(config.moderation.data)
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            if hasMutes(chat_id) then
+                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
+                    if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
+                        data[tostring(chat_id)].settings.mutes[msg_type:lower()] = false
+                        save_data(config.moderation.data, data)
+                        --
+                        return msg_type:lower() .. langs[lang].unmuted
+                    else
+                        --
+                        return msg_type:lower() .. langs[lang].alreadyUnmuted
+                    end
+                else
+                    --
+                    return langs[lang].noSuchMuteType
+                end
+            end
+        end
+    end
+end
+
+function muteUser(chat_id, user_id)
+    local hash = 'mute_user:' .. chat_id
+    redis:sadd(hash, user_id)
+end
+
+function isMutedUser(chat_id, user_id)
+    local hash = 'mute_user:' .. chat_id
+    local muted = redis:sismember(hash, user_id)
+    return muted or false
+end
+
+function unmuteUser(chat_id, user_id)
+    local hash = 'mute_user:' .. chat_id
+    redis:srem(hash, user_id)
+end
+
+-- Returns chat_id mute list
+function mutesList(chat_id)
+    local lang = get_lang(chat_id)
+    local data = load_data(config.moderation.data)
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            if hasMutes(chat_id) then
+                local text = langs[lang].mutedTypesStart .. chat_id .. "\n\n"
+                for k, v in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
+                    text = text .. langs[lang].mute .. v .. "\n"
+                end
+                text = text .. langs[lang].strictrules .. data[tostring(chat_id)].settings.strict
+                return text
+            end
+        end
+    end
+end
+
+-- Returns chat_id user mute list
+function mutedUserList(chat_id)
+    local lang = get_lang(chat_id)
+    local hash = 'mute_user:' .. chat_id
+    local list = redis:smembers(hash)
+    local text = langs[lang].mutedUsersStart .. chat_id .. "\n\n"
+    for k, v in pairsByKeys(list) do
+        local user_info = redis:hgetall('user:' .. v)
+        if user_info and user_info.print_name then
+            local print_name = string.gsub(user_info.print_name, "_", " ")
+            local print_name = string.gsub(print_name, "?", "")
+            text = text .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+        else
+            text = text .. k .. " - [ " .. v .. " ]\n"
+        end
+    end
+    return text
 end
 
 function resolveUsername(username)
