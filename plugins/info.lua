@@ -39,7 +39,7 @@ local function get_object_info(obj, chat_id)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
-            if string.find(tostring(chat_id), '-') then
+            if chat_id ~= bot.id then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
                     if chat_member.result then
@@ -256,10 +256,10 @@ local function pre_process(msg)
         if get_rank(msg.from.id, bot.id) > 0 then
             -- if moderator in some group or higher
             if msg.forward_from then
-                sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id))
+                sendMessage(msg.chat.id, get_object_info(msg.forward_from, bot.id))
             end
             if msg.forward_from_chat then
-                sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id))
+                sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, bot.id))
             end
         end
     end
