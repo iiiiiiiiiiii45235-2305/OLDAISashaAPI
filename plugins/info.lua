@@ -19,7 +19,8 @@ local function get_reverse_rank(chat_id, user_id)
     return langs[lang].rank .. reverse_rank_table[rank + 1]
 end
 
-local function get_object_info(obj, chat_id, lang)
+local function get_object_info(obj, chat_id)
+    local lang = get_lang(chat_id)
     if obj then
         local text = langs[lang].infoWord
         if obj.type == 'private' then
@@ -38,12 +39,14 @@ local function get_object_info(obj, chat_id, lang)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
-            local chat_member = getChatMember(chat_id, obj.id)
-            if type(chat_member) == 'table' then
-                if chat_member.result then
-                    chat_member = chat_member.result
-                    if chat_member.status then
-                        otherinfo = otherinfo .. chat_member.status:upper()
+            if string.find(tostring(chat_id), '-') then
+                local chat_member = getChatMember(chat_id, obj.id)
+                if type(chat_member) == 'table' then
+                    if chat_member.result then
+                        chat_member = chat_member.result
+                        if chat_member.status then
+                            otherinfo = otherinfo .. chat_member.status:upper()
+                        end
                     end
                 end
             end
@@ -177,9 +180,9 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                return get_object_info(msg.reply_to_message.forward_from, msg.chat.id, msg.lang)
+                                return get_object_info(msg.reply_to_message.forward_from, msg.chat.id)
                             else
-                                return get_object_info(msg.reply_to_message.forward_from_chat, msg.chat.id, msg.lang)
+                                return get_object_info(msg.reply_to_message.forward_from_chat, msg.chat.id)
                             end
                         else
                             return langs[msg.lang].errorNoForward
@@ -188,18 +191,18 @@ local function run(msg, matches)
                 else
                     if msg.reply_to_message.service then
                         if msg.reply_to_message.service_type == 'chat_add_user' then
-                            return get_object_info(msg.reply_to_message.adder, msg.chat.id, msg.lang) .. '\n\n' .. get_object_info(msg.reply_to_message.added, msg.chat.id, msg.lang)
+                            return get_object_info(msg.reply_to_message.adder, msg.chat.id) .. '\n\n' .. get_object_info(msg.reply_to_message.added, msg.chat.id)
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            return get_object_info(msg.reply_to_message.remover, msg.chat.id, msg.lang) .. '\n\n' .. get_object_info(msg.reply_to_message.removed, msg.chat.id, msg.lang)
+                            return get_object_info(msg.reply_to_message.remover, msg.chat.id) .. '\n\n' .. get_object_info(msg.reply_to_message.removed, msg.chat.id)
                         elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
-                            return get_object_info(msg.reply_to_message.added, msg.chat.id, msg.lang)
+                            return get_object_info(msg.reply_to_message.added, msg.chat.id)
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
-                            return get_object_info(msg.reply_to_message.removed, msg.chat.id, msg.lang)
+                            return get_object_info(msg.reply_to_message.removed, msg.chat.id)
                         else
-                            return get_object_info(msg.reply_to_message.from, msg.chat.id, msg.lang)
+                            return get_object_info(msg.reply_to_message.from, msg.chat.id)
                         end
                     else
-                        return get_object_info(msg.reply_to_message.from, msg.chat.id, msg.lang)
+                        return get_object_info(msg.reply_to_message.from, msg.chat.id)
                     end
                 end
             else
@@ -212,18 +215,18 @@ local function run(msg, matches)
                     if type(obj) == 'table' then
                         if obj.result then
                             obj = obj.result
-                            return get_object_info(obj, msg.chat.id, msg.lang)
+                            return get_object_info(obj, msg.chat.id)
                         end
                     end
                 else
                     local obj = resolveUsername(matches[2]:gsub('@', ''))
-                    return get_object_info(obj, msg.chat.id, msg.lang)
+                    return get_object_info(obj, msg.chat.id)
                 end
             else
                 return langs[msg.lang].require_mod
             end
         else
-            return get_object_info(msg.from, msg.chat.id, msg.lang) .. '\n\n' .. get_object_info(msg.bot or msg.chat, msg.chat.id, msg.lang)
+            return get_object_info(msg.from, msg.chat.id) .. '\n\n' .. get_object_info(msg.bot or msg.chat, msg.chat.id)
         end
         return
     end
@@ -253,9 +256,10 @@ local function pre_process(msg)
         if get_rank(msg.from.id, bot.id) > 0 then
             -- if moderator in some group or higher
             if msg.forward_from then
-                sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id, msg.lang))
-            elseif msg.forward_from_chat then
-                sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id, msg.lang))
+                sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id))
+            end
+            if msg.forward_from_chat then
+                sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id))
             end
         end
     end
