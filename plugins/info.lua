@@ -39,14 +39,19 @@ local function get_object_info(obj, chat_id)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
-            print(string.find(tostring(chat_id), '-'))
-            if string.find(tostring(chat_id), '-') then
-                local chat_member = getChatMember(chat_id, obj.id)
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper()
+            local obj = getChat(matches[2])
+            if type(obj) == 'table' then
+                if obj.result then
+                    obj = obj.result
+                    if obj.type ~= 'private' then
+                        local chat_member = getChatMember(chat_id, obj.id)
+                        if type(chat_member) == 'table' then
+                            if chat_member.result then
+                                chat_member = chat_member.result
+                                if chat_member.status then
+                                    otherinfo = otherinfo .. chat_member.status:upper()
+                                end
+                            end
                         end
                     end
                 end
