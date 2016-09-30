@@ -197,7 +197,7 @@ local function check_msg(msg, settings)
         if msg.adder and msg.added then
             if msg.adder.id == msg.added.id then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 and lock_group_spam == 'yes' then
+                if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 and lock_spam then
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
@@ -232,7 +232,7 @@ local function check_msg(msg, settings)
                     msg = clean_msg(msg)
                 end
             elseif msg.adder.id ~= msg.added.id then
-                if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_group_spam == 'yes' then
+                if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_spam then
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
