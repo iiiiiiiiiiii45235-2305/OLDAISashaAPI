@@ -65,25 +65,14 @@ function getChatMembersCount(chat_id)
     return sendRequest(url)
 end
 
-function realGetChatMember(chat_id, user_id)
-    local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
-    return sendRequest(url)
-end
-
 function getChatMember(chat_id, user_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if obj.result then
             obj = obj.result
             if obj.type ~= 'private' then
-                local obj_bot_in_chat = realGetChatMember(chat_id, bot.id)
-                if type(obj_bot_in_chat) == 'table' then
-                    if obj_bot_in_chat.status then
-                        if obj_bot_in_chat.status == 'administrator' or obj_bot_in_chat.status == 'member' then
-                            return realGetChatMember(chat_id, user_id)
-                        end
-                    end
-                end
+                local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+                return sendRequest(url)
             end
         end
     end

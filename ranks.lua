@@ -41,8 +41,8 @@ function get_rank(user_id, chat_id)
                     if data['groups'] then
                         -- if there are any groups check for everyone of them the rank of the user and choose the higher one
                         for id_string in pairs(data['groups']) do
-                            if not is_owner2(user_id, id_string) then
-                                if not is_mod2(user_id, id_string) then
+                            if not is_owner2(user_id, id_string, true) then
+                                if not is_mod2(user_id, id_string, true) then
                                     -- user
                                     if higher_rank < rank_table["USER"] then
                                         higher_rank = rank_table["USER"]
@@ -107,17 +107,19 @@ function is_mod(msg)
     local user_id = msg.from.id
     local chat_id = msg.chat.id
 
-    local res = getChatMember(chat_id, user_id)
-    if type(res) == 'table' then
-        if res.result then
-            local status = res.result.status
-            if status == 'administrator' then
-                -- mod
-                var = true
-            end
-            if status == 'creator' then
-                -- owner
-                var = true
+    if not check_local then
+        local res = getChatMember(chat_id, user_id)
+        if type(res) == 'table' then
+            if res.result then
+                local status = res.result.status
+                if status == 'administrator' then
+                    -- mod
+                    var = true
+                end
+                if status == 'creator' then
+                    -- owner
+                    var = true
+                end
             end
         end
     end
@@ -161,21 +163,23 @@ function is_mod(msg)
     return var
 end
 
-function is_mod2(user_id, chat_id)
+function is_mod2(user_id, chat_id, check_local)
     local var = false
     local data = load_data(config.moderation.data)
 
-    local res = getChatMember(chat_id, user_id)
-    if type(res) == 'table' then
-        if res.result then
-            local status = res.result.status
-            if status == 'administrator' then
-                -- mod
-                var = true
-            end
-            if status == 'creator' then
-                -- owner
-                var = true
+    if not check_local then
+        local res = getChatMember(chat_id, user_id)
+        if type(res) == 'table' then
+            if res.result then
+                local status = res.result.status
+                if status == 'administrator' then
+                    -- mod
+                    var = true
+                end
+                if status == 'creator' then
+                    -- owner
+                    var = true
+                end
             end
         end
     end
@@ -225,13 +229,15 @@ function is_owner(msg)
     local user_id = msg.from.id
     local chat_id = msg.chat.id
 
-    local res = getChatMember(chat_id, user_id)
-    if type(res) == 'table' then
-        if res.result then
-            local status = res.result.status
-            if status == 'creator' then
-                -- owner
-                var = true
+    if not check_local then
+        local res = getChatMember(chat_id, user_id)
+        if type(res) == 'table' then
+            if res.result then
+                local status = res.result.status
+                if status == 'creator' then
+                    -- owner
+                    var = true
+                end
             end
         end
     end
@@ -270,13 +276,15 @@ function is_owner2(user_id, chat_id)
     local var = false
     local data = load_data(config.moderation.data)
 
-    local res = getChatMember(chat_id, user_id)
-    if type(res) == 'table' then
-        if res.result then
-            local status = res.result.status
-            if status == 'creator' then
-                -- owner
-                var = true
+    if not check_local then
+        local res = getChatMember(chat_id, user_id)
+        if type(res) == 'table' then
+            if res.result then
+                local status = res.result.status
+                if status == 'creator' then
+                    -- owner
+                    var = true
+                end
             end
         end
     end
