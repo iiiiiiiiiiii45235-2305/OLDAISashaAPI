@@ -548,7 +548,7 @@ local function showSettings(target, lang)
             langs[lang].arabicLock .. tostring(settings.lock_arabic) ..
             langs[lang].floodLock .. tostring(settings.flood) ..
             langs[lang].floodSensibility .. tostring(settings.flood_max) ..
-            langs[lang].leaveLock .. tostring(settings.leave_ban) ..
+            langs[lang].leaveLock .. tostring(settings.lock_leave) ..
             langs[lang].linksLock .. tostring(settings.lock_link) ..
             langs[lang].membersLock .. tostring(settings.lock_member) ..
             langs[lang].spamLock .. tostring(settings.lock_spam) ..

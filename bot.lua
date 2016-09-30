@@ -69,7 +69,6 @@ function create_config()
             'strings',
             'tgcli_to_api_migration',
             'unset',
-            'warn',
             'whitelist',
         },
         disabled_plugin_on_chat = { },
