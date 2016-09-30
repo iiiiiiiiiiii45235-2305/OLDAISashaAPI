@@ -914,7 +914,7 @@ local function run(msg, matches)
                     end
                     print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added SuperGroup")
-                    addSuperGroup(msg)
+                    return addSuperGroup(msg)
                 end
             else
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] attempted to add group [ " .. msg.chat.id .. " ]")
@@ -956,7 +956,7 @@ local function run(msg, matches)
                     end
                     mystat('/rem')
                     print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")
-                    remSuperGroup(msg)
+                    return remSuperGroup(msg)
                 end
             else
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] attempted to remove group [ " .. msg.chat.id .. " ]")
