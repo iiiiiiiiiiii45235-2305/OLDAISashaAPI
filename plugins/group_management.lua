@@ -1204,11 +1204,11 @@ local function run(msg, matches)
                                         if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
                                             if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
                                                 unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
-                                                savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
+                                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
                                                 return matches[2] .. langs[msg.lang].muteUserRemove
                                             else
                                                 muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
-                                                savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
+                                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
                                                 return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserAdd
                                             end
                                         else
@@ -1226,11 +1226,11 @@ local function run(msg, matches)
                             if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                                 if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
                                     unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
-                                    savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
                                     return matches[2] .. langs[msg.lang].muteUserRemove
                                 else
                                     muteUser(msg.chat.id, msg.reply_to_message.from.id)
-                                    savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
                                     return msg.reply_to_message.from.id .. langs[msg.lang].muteUserAdd
                                 end
                             else
@@ -1243,11 +1243,11 @@ local function run(msg, matches)
                         if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
                             if isMutedUser(msg.chat.id, matches[2]) then
                                 unmuteUser(msg.chat.id, matches[2])
-                                savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
                                 return matches[2] .. langs[msg.lang].muteUserRemove
                             else
                                 muteUser(msg.chat.id, matches[2])
-                                savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
                                 return matches[2] .. langs[msg.lang].muteUserAdd
                             end
                         else
@@ -1261,13 +1261,11 @@ local function run(msg, matches)
                                 if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
                                     if isMutedUser(msg.chat.id, obj_user.id) then
                                         unmuteUser(msg.chat.id, obj_user.id)
-                                        savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
-                                        --
+                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
                                         return matches[2] .. langs[msg.lang].muteUserRemove
                                     else
                                         muteUser(msg.chat.id, obj_user.id)
-                                        savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
-                                        --
+                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
                                         return obj_user.id .. langs[msg.lang].muteUserAdd
                                     end
                                 else
@@ -1284,7 +1282,7 @@ local function run(msg, matches)
             if matches[1]:lower() == "muteslist" or matches[1]:lower() == "lista muti" then
                 if is_mod(msg) then
                     mystat('/muteslist')
-                    savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     return mutesList(msg.chat.id)
                 else
                     return langs[msg.lang].require_mod
@@ -1293,7 +1291,7 @@ local function run(msg, matches)
             if matches[1]:lower() == "mutelist" or matches[1]:lower() == "lista utenti muti" then
                 if is_mod(msg) then
                     mystat('/mutelist')
-                    savelog(msg.chat.id, name_log .. " [" .. msg.from.id .. "] requested SuperGroup mutelist")
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup mutelist")
                     return mutedUserList(msg.chat.id)
                 else
                     return langs[msg.lang].require_mod

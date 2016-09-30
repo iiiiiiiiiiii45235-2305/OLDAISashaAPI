@@ -223,6 +223,7 @@ return {
         mutedUsersStart = 'Utenti muti di: ',
         mutedTypesStart = 'Muti di: ',
         mute = 'Muto ',
+        mutesSet = 'Muti impostati.',
         noAutoKick = 'Non puoi rimuoverti da solo.',
         noAutoBan = 'Non puoi bannarti da solo.',
 
@@ -347,6 +348,10 @@ return {
         settingLocked = 'Blocco attivato.',
         settingAlreadyUnlocked = 'Blocco già disattivato.',
         settingUnlocked = 'Blocco disattivato.',
+        alreadyMuted = ' già silenziato.',
+        muted = ' silenziato.',
+        alreadyUnmuted = ' già desilenziato.',
+        unmuted = ' desilenziato.',
         arabicLock = '\nBlocco arabo: ',
         floodLock = '\nBlocco flood: ',
         floodSensibility = '\nSensibilità flood: ',
@@ -357,6 +362,7 @@ return {
         spamLock = '\nBlocco spam: ',
         strictrules = '\nPugno di ferro: ',
         warnSensibility = '\nAvvertimenti massimi: ',
+        noSuchMuteType = 'Nessun muto applicabile sulla variabile specificata.',
         -- ex common --
         newDescription = 'Nuova descrizione:\n',
         noDescription = 'Nessuna descrizione disponibile.',
@@ -468,6 +474,8 @@ return {
         errorChangeUsername = 'Errore nell\'impostare l\'username.\nPotrebbe già essere in uso.\n\nPuoi usare lettere numeri e l\'underscore.\nLunghezza minima 5 caratteri.',
         usernameCleaned = 'Username gruppo pulito.',
         errorCleanedUsername = 'Errore nel tentativo di pulire l\'username.',
+        muteUserAdd = 'Utente.',
+        muteUserRemove = '.',
 
         -- info.lua --
         infoWord = 'INFO',
@@ -1086,6 +1094,7 @@ return {
         mutedUsersStart = 'Muted users of: ',
         mutedTypesStart = 'Mutes of: ',
         mute = 'Mute ',
+        mutesSet = 'Mutes set.',
         alreadyEnabled = ' already enabled.',
         enabled = ' enabled.',
         alreadyDisabled = ' already disabled.',
@@ -1214,6 +1223,10 @@ return {
         settingLocked = 'Setting locked.',
         settingAlreadyUnlocked = 'Setting already unlocked.',
         settingUnlocked = 'Setting unlocked.',
+        alreadyMuted = ' already muted.',
+        muted = ' muted.',
+        alreadyUnmuted = ' already unmuted.',
+        unmuted = ' unmuted.',
         arabicLock = '\nLock arabic: ',
         floodLock = '\nLock flood: ',
         floodSensibility = '\nFlood sensibility: ',
@@ -1224,6 +1237,7 @@ return {
         spamLock = '\nLock spam: ',
         strictrules = '\nStrict rules: ',
         warnSensibility = '\nMax warns: ',
+        noSuchMuteType = 'No mute applicable to the specified variable.',
         -- ex common --
         newDescription = 'New description:\n',
         noDescription = 'No description available.',
