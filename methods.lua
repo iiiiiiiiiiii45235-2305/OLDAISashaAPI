@@ -1143,7 +1143,7 @@ function mutesList(chat_id)
             if hasMutes(chat_id) then
                 local text = langs[lang].mutedTypesStart .. chat_id .. "\n\n"
                 for k, v in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-                    text = text .. langs[lang].mute .. tostring(v) .. "\n"
+                    text = text .. langs[lang].mute .. k .. ' ' .. tostring(v) .. "\n"
                 end
                 text = text .. langs[lang].strictrules .. tostring(data[tostring(chat_id)].settings.strict)
                 return text
