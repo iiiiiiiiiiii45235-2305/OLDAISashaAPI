@@ -939,8 +939,8 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'rem' and not matches[2] then
             if is_admin(msg) then
-                if not is_group(msg) then
-                    return langs[msg.lang].errorNotGroup
+                if is_realm(msg) then
+                    return langs[msg.lang].errorRealm
                 end
                 if msg.chat.type == 'group' then
                     if not is_group(msg) then
