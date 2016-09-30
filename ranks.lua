@@ -101,7 +101,7 @@ function is_bot_admin(chat_id)
     return false
 end
 
-function is_mod(msg)
+function is_mod(msg, check_local)
     local var = false
     local data = load_data(config.moderation.data)
     local user_id = msg.from.id
@@ -223,7 +223,7 @@ function is_mod2(user_id, chat_id, check_local)
     return var
 end
 
-function is_owner(msg)
+function is_owner(msg, check_local)
     local var = false
     local data = load_data(config.moderation.data)
     local user_id = msg.from.id
@@ -272,7 +272,7 @@ function is_owner(msg)
     return var
 end
 
-function is_owner2(user_id, chat_id)
+function is_owner2(user_id, chat_id, check_local)
     local var = false
     local data = load_data(config.moderation.data)
 
