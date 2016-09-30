@@ -354,7 +354,7 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
                 reply = true
             end
             obj = obj.result
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'geo' }
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
             print_msg(sent_msg)
             return sendRequest(url)
         end
@@ -754,7 +754,7 @@ function userVersionInChat(chat_id)
     if type(member) == 'table' then
         if member.ok and member.result then
             if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
-                return true
+                return true, status
             end
         end
     end
@@ -941,12 +941,105 @@ function isWhitelisted(user_id)
     return whitelisted or false
 end
 
+function setWarn(user_id, chat_id, value)
+    local data = load_data(config.moderation.data)
+    local lang = get_lang(chat_id)
+    if tonumber(value) < 0 or tonumber(value) > 10 then
+        return langs[lang].errorWarnRange
+    end
+    local warn_max = value
+    data[tostring(chat_id)].settings.warn_max = warn_max
+    save_data(config.moderation.data, data)
+    savelog(chat_id, " [" .. user_id .. "] set warn to [" .. value .. "]")
+    return langs[lang].warnSet .. value
+end
+
+function getWarn(chat_id)
+    local data = load_data(config.moderation.data)
+    local lang = get_lang(chat_id)
+    local warn_max = data[tostring(chat_id)].settings.warn_max
+    if not warn_max then
+        return langs[lang].noWarnSet
+    end
+    return langs[lang].warnSet .. warn_max
+end
+
+function getUserWarns(user_id, chat_id)
+    local lang = get_lang(chat_id)
+    local hashonredis = redis:get(chat_id .. ':warn:' .. user_id)
+    local warn_msg = langs[lang].yourWarnings
+    local warn_chat = string.match(getWarn(chat_id), "%d+")
+
+    if hashonredis then
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
+        sendMessage(chat_id, warn_msg)
+    else
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0')
+        sendMessage(chat_id, warn_msg)
+    end
+end
+
+function warnUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        local lang = get_lang(chat_id)
+        local warn_chat = string.match(getWarn(chat_id), "%d+")
+        redis:incr(chat_id .. ':warn:' .. target)
+        local hashonredis = redis:get(chat_id .. ':warn:' .. target)
+        if not hashonredis then
+            redis:set(chat_id .. ':warn:' .. target, 1)
+            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', '1'))
+            hashonredis = 1
+        end
+        if tonumber(warn_chat) ~= 0 then
+            if tonumber(hashonredis) >= tonumber(warn_chat) then
+                redis:getset(chat_id .. ':warn:' .. target, 0)
+                banUser(executer, target, chat_id)
+            end
+            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
+        end
+        savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
+    else
+        sendMessage(chat_id, langs[lang].require_rank)
+        savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " N")
+    end
+end
+
+function unwarnUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        local lang = get_lang(chat_id)
+        local warns = redis:get(chat_id .. ':warn:' .. target)
+        if tonumber(warns) <= 0 then
+            redis:set(chat_id .. ':warn:' .. target, 0)
+            sendMessage(chat_id, langs[lang].alreadyZeroWarnings)
+        else
+            redis:set(chat_id .. ':warn:' .. target, warns - 1)
+            sendMessage(chat_id, langs[lang].unwarned)
+        end
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
+    else
+        sendMessage(chat_id, langs[lang].require_rank)
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " N")
+    end
+end
+
+function unwarnallUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        local lang = get_lang(chat_id)
+        redis:set(chat_id .. ':warn:' .. target, 0)
+        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
+        sendMessage(chat_id, langs[lang].zeroWarnings)
+    else
+        sendMessage(chat_id, langs[lang].require_rank)
+        savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")
+    end
+end
+
 function setMutes(chat_id)
     local lang = get_lang(chat_id)
     local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audios"] = false, ["contacts"] = false, ["documents"] = false, ["gifs"] = false, ["photo"] = false, ["positions"] = false, ["stickers"] = false, ["texts"] = false, ["videos"] = false }
+            data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audio"] = false, ["contact"] = false, ["document"] = false, ["gif"] = false, ["location"] = false, ["photo"] = false, ["sticker"] = false, ["text"] = false, ["tgservice"] = false, ["video"] = false, ["voice"] = false }
             save_data(config.moderation.data, data)
             --
             return langs[lang].mutesSet
@@ -1055,6 +1148,7 @@ function mutesList(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
             if hasMutes(chat_id) then
+                --
                 local text = langs[lang].mutedTypesStart .. chat_id .. "\n\n"
                 for k, v in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
                     text = text .. langs[lang].mute .. v .. "\n"
@@ -1071,6 +1165,7 @@ function mutedUserList(chat_id)
     local lang = get_lang(chat_id)
     local hash = 'mute_user:' .. chat_id
     local list = redis:smembers(hash)
+    --
     local text = langs[lang].mutedUsersStart .. chat_id .. "\n\n"
     for k, v in pairsByKeys(list) do
         local user_info = redis:hgetall('user:' .. v)
@@ -1101,6 +1196,18 @@ function resolveUsername(username)
             end
         else
             return false
+        end
+    end
+end
+
+-- makes user version delete message
+function deleteMessage(msg)
+    local flag, status = userVersionInChat(msg.chat.id)
+    if flag then
+        if status == 'creator' or status == 'administrator' then
+            if is_super_group(msg) then
+                sendReply(msg, '@aisasha !del')
+            end
         end
     end
 end

@@ -38,21 +38,177 @@ local function run(msg, matches)
     if msg.service then
         return
     end
-    if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
-        mystat('/kickme')
-        -- /kickme
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
-            -- Save to logs
-            return kickUser(bot.id, msg.from.id, msg.chat.id)
-        else
-            return langs[msg.lang].useYourGroups
-        end
-    end
-    if is_mod(msg) then
-        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
-            mystat('/kick')
+    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+        if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
+            mystat('/kickme')
+            -- /kickme
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
+                -- Save to logs
+                return kickUser(bot.id, msg.from.id, msg.chat.id)
+            else
+                return langs[msg.lang].useYourGroups
+            end
+        end
+        if matches[1]:lower() == 'getuserwarns' or matches[1]:lower() == 'sasha ottieni avvertimenti' or matches[1]:lower() == 'ottieni avvertimenti' then
+            if is_mod(msg) then
+                if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
+                    return langs[msg.lang].noWarnSet
+                else
+                    mystat('/getuserwarns')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return getUserWarns(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            end
+                        else
+                            return getUserWarns(msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return getUserWarns(matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return getUserWarns(obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'warn' or matches[1]:lower() == 'sasha avverti' or matches[1]:lower() == 'avverti' then
+            if is_mod(msg) then
+                if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
+                    return langs[msg.lang].noWarnSet
+                else
+                    mystat('/warn')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return warnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            end
+                        else
+                            return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return warnUser(msg.from.id, matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'unwarn' then
+            if is_mod(msg) then
+                if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
+                    return langs[msg.lang].noWarnSet
+                else
+                    mystat('/unwarn')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return unwarnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            end
+                        else
+                            return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return unwarnUser(msg.from.id, matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'unwarnall' or matches[1]:lower() == 'sasha azzera avvertimenti' or matches[1]:lower() == 'azzera avvertimenti' then
+            if is_mod(msg) then
+                if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
+                    return langs[msg.lang].noWarnSet
+                else
+                    mystat('/unwarnall')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return unwarnallUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            end
+                        else
+                            return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                        end
+                    end
+                    if string.match(matches[2], '^%d+$') then
+                        return unwarnallUser(msg.from.id, matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        end
+                    end
+                    return
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
+            if is_mod(msg) then
+                mystat('/kick')
                 -- /kick
                 if msg.reply then
                     if matches[2] then
@@ -93,12 +249,12 @@ local function run(msg, matches)
                 end
                 return
             else
-                return langs[msg.lang].useYourGroups
+                return langs[msg.lang].require_mod
             end
         end
         if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'esplodi' or matches[1]:lower() == 'kaboom' then
-            mystat('/ban')
-            if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if is_mod(msg) then
+                mystat('/ban')
                 -- /ban
                 if msg.reply then
                     if matches[2] then
@@ -139,12 +295,12 @@ local function run(msg, matches)
                 end
                 return
             else
-                return langs[msg.lang].useYourGroups
+                return langs[msg.lang].require_mod
             end
         end
         if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sasha compila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' or matches[1]:lower() == 'compila' then
-            mystat('/unban')
-            if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if is_mod(msg) then
+                mystat('/unban')
                 -- /unban
                 if msg.reply then
                     if matches[2] then
@@ -185,160 +341,169 @@ local function run(msg, matches)
                 end
                 return
             else
-                return langs[msg.lang].useYourGroups
+                return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban" then
-            mystat('/banlist')
-            -- /banlist
-            if matches[2] and is_admin(msg) then
-                return banList(matches[2])
+        if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
+            if is_mod(msg) then
+                mystat('/banlist')
+                return banList(msg.chat.id)
             else
-                if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                    return banList(msg.chat.id)
-                else
-                    return langs[msg.lang].useYourGroups
-                end
+                return langs[msg.lang].require_mod
             end
         end
-        if is_owner(msg) then
-            if matches[1]:lower() == 'kickinactive' then
+        if matches[1]:lower() == 'kickinactive' then
+            if is_owner(msg) then
                 mystat('/kickinactive')
                 -- /kickinactive
                 local num = matches[2] or 0
                 return kickinactive(msg.chat.id, tonumber(num), msg.lang)
+            else
+                return langs[msg.lang].require_owner
             end
+        end
+        if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
             if is_admin(msg) then
-                if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
-                    mystat('/gban')
-                    -- /gban
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        gbanUser(msg.reply_to_message.forward_from.id)
-                                        return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].gbanned
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
+                mystat('/gban')
+                -- /gban
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    gbanUser(msg.reply_to_message.forward_from.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].gbanned
                                 else
-                                    return langs[msg.lang].errorNoForward
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
+                            else
+                                return langs[msg.lang].errorNoForward
                             end
-                        else
-                            if msg.reply_to_message.service then
-                                if msg.reply_to_message.service_type == 'chat_add_user' then
-                                    gbanUser(msg.reply_to_message.added.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].gbanned
-                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                    gbanUser(msg.reply_to_message.removed.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].gbanned
-                                else
-                                    gbanUser(msg.reply_to_message.from.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
-                                end
+                        end
+                    else
+                        if msg.reply_to_message.service then
+                            if msg.reply_to_message.service_type == 'chat_add_user' then
+                                gbanUser(msg.reply_to_message.added.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].gbanned
+                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                gbanUser(msg.reply_to_message.removed.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].gbanned
                             else
                                 gbanUser(msg.reply_to_message.from.id)
                                 return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                             end
-                        end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        gbanUser(matches[2])
-                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                gbanUser(obj_user.id)
-                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
-                            end
-                        end
-                    end
-                    return
-                end
-                if matches[1]:lower() == 'ungban' or matches[1]:lower() == 'sasha supersbanna' or matches[1]:lower() == 'supersbanna' then
-                    mystat('/ungban')
-                    -- /ungban
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        ungbanUser(msg.reply_to_message.forward_from.id)
-                                        return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].ungbanned
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
-                                else
-                                    return langs[msg.lang].errorNoForward
-                                end
-                            end
                         else
-                            if msg.reply_to_message.service then
-                                if msg.reply_to_message.service_type == 'chat_add_user' then
-                                    ungbanUser(msg.reply_to_message.added.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].ungbanned
-                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                    ungbanUser(msg.reply_to_message.removed.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].ungbanned
-                                else
-                                    ungbanUser(msg.reply_to_message.from.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
-                                end
-                            else
-                                ungbanUser(msg.reply_to_message.from.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
-                            end
+                            gbanUser(msg.reply_to_message.from.id)
+                            return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                         end
                     end
-                    if string.match(matches[2], '^%d+$') then
-                        ungbanUser(matches[2])
-                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                ungbanUser(obj_user.id)
-                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
-                            end
-                        end
-                    end
-                    return
                 end
-                if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
-                    mystat('/gbanlist')
-                    -- /gbanlist
-                    local hash = 'gbanned'
-                    local list = redis:smembers(hash)
-                    local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
-                    for k, v in pairs(list) do
-                        local user_info = redis:hgetall('user:' .. v)
-                        if user_info and user_info.print_name then
-                            local print_name = string.gsub(user_info.print_name, "_", " ")
-                            local print_name = string.gsub(print_name, "?", "")
-                            gbanlist = gbanlist .. k .. " - " .. print_name .. " [" .. v .. "]\n"
-                        else
-                            gbanlist = gbanlist .. k .. " - " .. v .. "\n"
+                if string.match(matches[2], '^%d+$') then
+                    gbanUser(matches[2])
+                    return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            gbanUser(obj_user.id)
+                            return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
                         end
                     end
-                    local file = io.open("./groups/gbanlist.txt", "w")
-                    file:write(gbanlist)
-                    file:flush()
-                    file:close()
-                    return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
-                    -- return sendMessage(msg.chat.id, gbanlist)
                 end
                 return
             else
                 return langs[msg.lang].require_admin
             end
-        else
-            return langs[msg.lang].require_owner
+        end
+        if matches[1]:lower() == 'ungban' or matches[1]:lower() == 'sasha supersbanna' or matches[1]:lower() == 'supersbanna' then
+            if is_admin(msg) then
+                mystat('/ungban')
+                -- /ungban
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    ungbanUser(msg.reply_to_message.forward_from.id)
+                                    return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].ungbanned
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        if msg.reply_to_message.service then
+                            if msg.reply_to_message.service_type == 'chat_add_user' then
+                                ungbanUser(msg.reply_to_message.added.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].ungbanned
+                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                ungbanUser(msg.reply_to_message.removed.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].ungbanned
+                            else
+                                ungbanUser(msg.reply_to_message.from.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
+                            end
+                        else
+                            ungbanUser(msg.reply_to_message.from.id)
+                            return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
+                        end
+                    end
+                end
+                if string.match(matches[2], '^%d+$') then
+                    ungbanUser(matches[2])
+                    return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            ungbanUser(obj_user.id)
+                            return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_admin
+            end
         end
     else
-        return langs[msg.lang].require_mod
+        if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and matches[2] then
+            if is_admin(msg) then
+                mystat('/banlist <group_id>')
+                return banList(matches[2])
+            else
+                return langs[msg.lang].require_admin
+            end
+        end
+        if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
+            if is_admin(msg) then
+                mystat('/gbanlist')
+                -- /gbanlist
+                local hash = 'gbanned'
+                local list = redis:smembers(hash)
+                local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
+                for k, v in pairs(list) do
+                    local user_info = redis:hgetall('user:' .. v)
+                    if user_info and user_info.print_name then
+                        local print_name = string.gsub(user_info.print_name, "_", " ")
+                        local print_name = string.gsub(print_name, "?", "")
+                        gbanlist = gbanlist .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+                    else
+                        gbanlist = gbanlist .. k .. " - " .. v .. "\n"
+                    end
+                end
+                local file = io.open("./groups/gbanlist.txt", "w")
+                file:write(gbanlist)
+                file:flush()
+                file:close()
+                return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
+                -- return sendMessage(msg.chat.id, gbanlist)
+            else
+                return langs[msg.lang].require_admin
+            end
+        end
     end
 end
 
@@ -398,21 +563,6 @@ local function pre_process(msg)
                         end
                     end
                 end
-                if data[tostring(msg.chat.id)] then
-                    if data[tostring(msg.chat.id)]['settings'] then
-                        if data[tostring(msg.chat.id)]['settings']['lock_bots'] then
-                            bots_protection = data[tostring(msg.chat.id)]['settings']['lock_bots']
-                        end
-                    end
-                end
-                if msg.added.username then
-                    if string.sub(msg.added.username:lower(), -3) == 'bot' and not is_mod(msg) and bots_protection == "yes" then
-                        --- Will kick bots added by normal users
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
-                        -- Save to logs
-                        kickUser(bot.id, msg.added.id, msg.chat.id)
-                    end
-                end
             end
             -- No further checks
             return msg
@@ -436,6 +586,14 @@ return {
     description = "BANHAMMER",
     patterns =
     {
+        "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) (.*)$",
+        "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
+        "^[#!/]([Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) (.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
         "^[#!/]([Kk][Ii][Cc][Kk]) (.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk])$",
@@ -452,6 +610,21 @@ return {
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn]) (.*)$",
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn])$",
         "^[#!/]([Gg][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+        -- getuserwarns
+        "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        -- warn
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
+        "^([Aa][Vv][Vv][Ee][Rr][Tt][Ii]) (.*)$",
+        "^([Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
+        -- unwarnall
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
         -- kickme
         "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii][Mm][Ii])",
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Pp][Ll][Oo][Dd][Ii][Mm][Ii])",
@@ -518,6 +691,10 @@ return {
         "USER",
         "(#kickme|sasha (uccidimi|esplodimi|sparami|decompilami|bannami))",
         "MOD",
+        "(#getuserwarns|[sasha] ottieni avvertimenti) <id>|<username>|<reply>|from",
+        "(#warn|[sasha] avverti) <id>|<username>|<reply>|from",
+        "#unwarn <id>|<username>|<reply>|from",
+        "(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from",
         "(#kick|spara|[sasha] uccidi) <id>|<username>|<reply>|from",
         "(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from",
         "(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from",

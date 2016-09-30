@@ -1,38 +1,3 @@
-local function get_warn(chat_id)
-    local data = load_data(config.moderation.data)
-    local lang = get_lang(chat_id)
-    local warn_max = data[tostring(chat_id)]['settings']['warn_max']
-    if not warn_max then
-        return langs[lang].noWarnSet
-    end
-    return langs[lang].warnSet .. warn_max
-end
-
-local function warn_user(executer, target, chat_id)
-    if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
-        local warn_chat = string.match(get_warn(chat_id), "%d+") or 3
-        redis:incr(chat_id .. ':warn:' .. target)
-        local hashonredis = redis:get(chat_id .. ':warn:' .. target)
-        if not hashonredis then
-            redis:set(chat_id .. ':warn:' .. target, 1)
-            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', '1'))
-            hashonredis = 1
-        end
-        if tonumber(warn_chat) ~= 0 then
-            if tonumber(hashonredis) >= tonumber(warn_chat) then
-                redis:getset(chat_id .. ':warn:' .. target, 0)
-                banUser(executer, target, chat_id)
-            end
-            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
-        end
-        savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
-    else
-        sendMessage(chat_id, langs[lang].require_rank)
-        savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " N")
-    end
-end
-
 local function clean_msg(msg)
     -- clean msg but returns it
     if msg.text then
@@ -47,8 +12,9 @@ local function clean_msg(msg)
 end
 
 local function action(msg, strict)
-    warn_user(bot.id, msg.from.id, msg.chat.id)
-    if strict == "yes" then
+    deleteMessage(msg)
+    warnUser(bot.id, msg.from.id, msg.chat.id)
+    if strict then
         banUser(bot.id, msg.from.id, msg.chat.id)
     end
     if msg.chat.type == 'group' then
@@ -57,119 +23,183 @@ local function action(msg, strict)
 end
 
 local function check_msg(msg, settings)
-    local lock_arabic = 'no'
-    local lock_rtl = 'no'
-    local lock_tgservice = 'no'
-    local lock_link = 'no'
-    local lock_member = 'no'
-    local lock_spam = 'no'
-    local lock_sticker = 'no'
-    local lock_contacts = 'no'
-    local strict = 'no'
+    local lock_arabic = settings.lock_arabic
+    local lock_link = settings.lock_link
     local group_link = nil
-    if settings.lock_arabic then
-        lock_arabic = settings.lock_arabic
-    end
-    if settings.lock_rtl then
-        lock_rtl = settings.lock_rtl
-    end
-    if settings.lock_tgservice then
-        lock_tgservice = settings.lock_tgservice
-    end
-    if settings.lock_link then
-        lock_link = settings.lock_link
-    end
-    if settings.lock_member then
-        lock_member = settings.lock_member
-    end
-    if settings.lock_spam then
-        lock_spam = settings.lock_spam
-    end
-    if settings.lock_sticker then
-        lock_sticker = settings.lock_sticker
-    end
-    if settings.lock_contacts then
-        lock_contacts = settings.lock_contacts
-    end
-    if settings.strict then
-        strict = settings.strict
-    end
     if settings.set_link then
         group_link = settings.set_link
     end
-    if msg.text then
-        -- msg.text checks
-        local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-        local _nl, real_digits = string.gsub(msg.text, '%d', '')
-        if lock_spam == "yes" and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
-            action(msg, strict)
+    local lock_member = settings.lock_member
+    local lock_rtl = settings.lock_rtl
+    local lock_spam = settings.lock_spam
+    local strict = settings.strict
+
+    local mute_all = isMuted(msg.chat.id, 'all')
+    local mute_audio = isMuted(msg.chat.id, 'audio')
+    local mute_contact = isMuted(msg.chat.id, 'contact')
+    local mute_document = isMuted(msg.chat.id, 'document')
+    local mute_gif = isMuted(msg.chat.id, 'gif')
+    local mute_location = isMuted(msg.chat.id, 'location')
+    local mute_photo = isMuted(msg.chat.id, 'photo')
+    local mute_sticker = isMuted(msg.chat.id, 'sticker')
+    local mute_text = isMuted(msg.chat.id, 'text')
+    local mute_tgservice = isMuted(msg.chat.id, 'tgservice')
+    local mute_video = isMuted(msg.chat.id, 'video')
+    local mute_voice = isMuted(msg.chat.id, 'voice')
+
+    if not msg.service then
+        if isMutedUser(msg.chat.id, msg.from.id) then
+            deleteMessage(msg)
+            if msg.chat.type == 'group' then
+                banUser(bot.id, msg.from.id, msg.chat.id)
+            end
             msg = clean_msg(msg)
+            return msg
         end
-        local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-        -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-        local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-        if is_link_msg and lock_link == "yes" and not is_bot then
-            if group_link then
-                if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
+        if mute_all then
+            deleteMessage(msg)
+            if msg.chat.type == 'group' then
+                banUser(bot.id, msg.from.id, msg.chat.id)
+            end
+            msg = clean_msg(msg)
+            return msg
+        end
+        if not msg.media then
+            if msg.text then
+                if mute_text then
                     action(msg, strict)
                     msg = clean_msg(msg)
                 end
-            else
-                action(msg, strict)
-                msg = clean_msg(msg)
-            end
-        end
-        local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
-        if is_squig_msg and lock_arabic == "yes" then
-            action(msg, strict)
-            msg = clean_msg(msg)
-        end
-        local print_name = msg.from.print_name
-        local is_rtl = print_name:match("‮") or msg.text:match("‮")
-        if is_rtl and lock_rtl == "yes" then
-            action(msg, strict)
-            msg = clean_msg(msg)
-        end
-    end
-    if msg.media then
-        -- msg.media checks
-        if msg.caption then
-            -- msg.caption checks
-            local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-            -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-            if is_link_caption and lock_link == "yes" then
-                if group_link then
-                    if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
+                -- msg.text checks
+                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
+                local _nl, real_digits = string.gsub(msg.text, '%d', '')
+                if lock_spam and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                end
+                local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
+                -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
+                local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
+                if is_link_msg and lock_link and not is_bot then
+                    if group_link then
+                        if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
+                            action(msg, strict)
+                            msg = clean_msg(msg)
+                        end
+                    else
                         action(msg, strict)
                         msg = clean_msg(msg)
                     end
-                else
+                end
+                local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
+                if is_squig_msg and lock_arabic then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                end
+                local print_name = msg.from.print_name
+                local is_rtl = print_name:match("‮") or msg.text:match("‮")
+                if is_rtl and lock_rtl then
                     action(msg, strict)
                     msg = clean_msg(msg)
                 end
             end
-            local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
-            if is_squig_caption and lock_arabic == "yes" then
-                action(msg, strict)
-                msg = clean_msg(msg)
+        else
+            -- msg.media checks
+            if msg.caption then
+                -- msg.caption checks
+                local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
+                -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
+                if is_link_caption and lock_link then
+                    if group_link then
+                        if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
+                            action(msg, strict)
+                            msg = clean_msg(msg)
+                        end
+                    else
+                        action(msg, strict)
+                        msg = clean_msg(msg)
+                    end
+                end
+                local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
+                if is_squig_caption and lock_arabic then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                end
+                local print_name = msg.from.print_name
+                local is_rtl = print_name:match("‮") or msg.caption:match("‮")
+                if is_rtl and lock_rtl then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                end
+            end
+            if msg.media_type == 'audio' then
+                if mute_audio then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'contact' then
+                if mute_contact then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'document' then
+                if mute_document then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'gif' then
+                if mute_gif then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'location' then
+                if mute_location then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'photo' then
+                if mute_photo then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'sticker' then
+                if mute_sticker then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'video' then
+                if mute_video then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
+            elseif msg.media_type == 'voice' then
+                if mute_voice then
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return msg
+                end
             end
         end
-        if lock_sticker == "yes" and msg.sticker then
-            action(msg, strict)
+    else
+        if mute_tgservice then
+            deleteMessage(msg)
             msg = clean_msg(msg)
+            return msg
         end
-        if lock_contacts == "yes" and msg.contact then
-            action(msg, strict)
-            msg = clean_msg(msg)
-        end
-    end
-    if msg.service then
-        -- msg.service checks
         if msg.adder and msg.added then
             if msg.adder.id == msg.added.id then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 and lock_group_spam == 'yes' then
-                    if strict == "yes" then
+                    deleteMessage(msg)
+                    if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
@@ -181,8 +211,9 @@ local function check_msg(msg, settings)
                 end
                 local print_name = msg.from.print_name
                 local is_rtl_name = print_name:match("‮")
-                if is_rtl_name and lock_rtl == "yes" then
-                    if strict == "yes" then
+                if is_rtl_name and lock_rtl then
+                    deleteMessage(msg)
+                    if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
@@ -191,7 +222,8 @@ local function check_msg(msg, settings)
                     end
                     msg = clean_msg(msg)
                 end
-                if lock_member == 'yes' then
+                if lock_member then
+                    deleteMessage(msg)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#lockmember)")
                     banUser(bot.id, msg.from.id, msg.chat.id)
                     if msg.chat.type == 'group' then
@@ -200,8 +232,9 @@ local function check_msg(msg, settings)
                     msg = clean_msg(msg)
                 end
             elseif msg.adder.id ~= msg.added.id then
-                if string.len(msg.added.print_name) > 70 and lock_group_spam == 'yes' then
-                    if strict == "yes" then
+                if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_group_spam == 'yes' then
+                    deleteMessage(msg)
+                    if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
@@ -213,8 +246,9 @@ local function check_msg(msg, settings)
                 end
                 local print_name = msg.added.print_name
                 local is_rtl_name = print_name:match("‮")
-                if is_rtl_name and lock_rtl == "yes" then
-                    if strict == "yes" then
+                if is_rtl_name and lock_rtl then
+                    deleteMessage(msg)
+                    if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
@@ -223,7 +257,8 @@ local function check_msg(msg, settings)
                     end
                     msg = clean_msg(msg)
                 end
-                if msg.chat.type == 'supergroup' and lock_member == 'yes' then
+                if msg.chat.type == 'supergroup' and lock_member then
+                    deleteMessage(msg)
                     warn_user(bot.id, msg.adder.id, msg.chat.id)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
                     banUser(bot.id, msg.added.id, msg.chat.id)
@@ -247,8 +282,8 @@ local function pre_process(msg)
             local data = load_data(config.moderation.data)
             local settings = nil
             if data[tostring(msg.chat.id)] then
-                if data[tostring(msg.chat.id)]['settings'] then
-                    settings = data[tostring(msg.chat.id)]['settings']
+                if data[tostring(msg.chat.id)].settings then
+                    settings = data[tostring(msg.chat.id)].settings
                 end
             end
             if not settings then
@@ -274,3 +309,4 @@ return {
 }
 -- End msg_checks.lua
 -- By @Rondoozle
+-- Modified by @EricSolinas for API

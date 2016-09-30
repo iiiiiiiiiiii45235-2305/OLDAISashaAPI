@@ -57,6 +57,20 @@ local function api_set_value(msg, name, value)
         return name .. langs[msg.lang].saved
     end
 end
+-- not used
+local function convert_yes_no_true_false(value)
+    if value then
+        if value == 'yes' then
+            return true
+        elseif value == 'no' then
+            return false
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'migrate' then
@@ -126,9 +140,34 @@ local function run(msg, matches)
                             new_moderation_data[tostring('-100' .. id_string)].group_type = old_moderation_data[id_string].group_type
                             new_moderation_data[tostring('-100' .. id_string)].moderators = old_moderation_data[id_string].moderators
                             new_moderation_data[tostring('-100' .. id_string)].rules = old_moderation_data[id_string].rules
-                            new_moderation_data[tostring('-100' .. id_string)].description = old_moderation_data[id_string].description
                             new_moderation_data[tostring('-100' .. id_string)].set_owner = old_moderation_data[id_string].set_owner
-                            new_moderation_data[tostring('-100' .. id_string)].settings = old_moderation_data[id_string].settings
+                            new_moderation_data[tostring('-100' .. id_string)].settings = {
+                                flood = true,
+                                flood_max = 5,
+                                lock_arabic = false,
+                                lock_leave = false,
+                                lock_link = false,
+                                lock_member = false,
+                                lock_rtl = false,
+                                lock_spam = false,
+                                mutes =
+                                {
+                                    all = false,
+                                    audio = false,
+                                    contact = false,
+                                    document = false,
+                                    gif = false,
+                                    location = false,
+                                    photo = false,
+                                    sticker = false,
+                                    text = false,
+                                    tgservice = false,
+                                    video = false,
+                                    voice = false,
+                                },
+                                strict = false,
+                                warn_max = 3,
+                            }
                             new_moderation_data[tostring('-100' .. id_string)].welcome = old_moderation_data[id_string].welcome
                             new_moderation_data[tostring('-100' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers
                             new_moderation_data[tostring('-100' .. id_string)].goodbye = old_moderation_data[id_string].goodbye
@@ -138,9 +177,34 @@ local function run(msg, matches)
                             new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
                             new_moderation_data[tostring('-' .. id_string)].moderators = old_moderation_data[id_string].moderators
                             new_moderation_data[tostring('-' .. id_string)].rules = old_moderation_data[id_string].rules
-                            new_moderation_data[tostring('-' .. id_string)].description = old_moderation_data[id_string].description
                             new_moderation_data[tostring('-' .. id_string)].set_owner = old_moderation_data[id_string].set_owner
-                            new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                            new_moderation_data[tostring('-' .. id_string)].settings = {
+                                flood = true,
+                                flood_max = 5,
+                                lock_arabic = false,
+                                lock_leave = false,
+                                lock_link = false,
+                                lock_member = false,
+                                lock_rtl = false,
+                                lock_spam = false,
+                                mutes =
+                                {
+                                    all = false,
+                                    audio = false,
+                                    contact = false,
+                                    document = false,
+                                    gif = false,
+                                    location = false,
+                                    photo = false,
+                                    sticker = false,
+                                    text = false,
+                                    tgservice = false,
+                                    video = false,
+                                    voice = false,
+                                },
+                                strict = false,
+                                warn_max = 3,
+                            }
                             new_moderation_data[tostring('-' .. id_string)].welcome = old_moderation_data[id_string].welcome
                             new_moderation_data[tostring('-' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers
                             new_moderation_data[tostring('-' .. id_string)].goodbye = old_moderation_data[id_string].goodbye

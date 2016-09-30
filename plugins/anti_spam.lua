@@ -47,7 +47,7 @@ local function pre_process(msg)
     local data = load_data(config.moderation.data)
     if data[tostring(msg.chat.id)] then
         -- Check if flood is on or off
-        if data[tostring(msg.chat.id)]['settings']['flood'] == 'no' then
+        if data[tostring(msg.chat.id)].settings.flood then
             return msg
         end
     end
@@ -59,8 +59,8 @@ local function pre_process(msg)
         local data = load_data(config.moderation.data)
         local NUM_MSG_MAX = 5
         if data[tostring(msg.chat.id)] then
-            if data[tostring(msg.chat.id)]['settings']['flood_msg_max'] then
-                NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)]['settings']['flood_msg_max'])
+            if data[tostring(msg.chat.id)].settings.flood_max then
+                NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
                 -- Obtain group flood sensitivity
             end
         end

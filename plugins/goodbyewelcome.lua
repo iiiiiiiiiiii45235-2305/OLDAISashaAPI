@@ -77,9 +77,7 @@ local function get_rules(chat_id)
 end
 
 local function run(msg, matches)
-    if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
-        return langs[msg.lang].notMyGroup
-    else
+    if is_realm(msg) or is_group(msg) or is_super_group(msg) then
         if matches[1]:lower() == 'getwelcome' then
             mystat('/getwelcome')
             return get_welcome(msg.chat.id)
@@ -122,9 +120,7 @@ end
 
 local function pre_process(msg)
     if msg.service then
-        if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
-            sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
-        else
+        if is_realm(msg) or is_group(msg) or is_super_group(msg) then
             if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
                 local hash
                 if msg.chat.type == 'supergroup' then
