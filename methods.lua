@@ -71,8 +71,15 @@ function getChatMember(chat_id, user_id)
         if obj.result then
             obj = obj.result
             if obj.type ~= 'private' then
-                local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
-                return sendRequest(url)
+                local obj_bot_in_chat = getChatMember(chat_id, bot.id)
+                if type(obj_bot_in_chat) == 'table' then
+                    if obj_bot_in_chat.status then
+                        if obj_bot_in_chat.status == 'administrator' or obj_bot_in_chat.status == 'member' then
+                            local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+                            return sendRequest(url)
+                        end
+                    end
+                end
             end
         end
     end
