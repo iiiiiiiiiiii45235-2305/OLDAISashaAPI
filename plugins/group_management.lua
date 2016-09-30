@@ -191,7 +191,7 @@ local function addGroup(msg)
         if data[tostring(msg.chat.id)] then
             for i, admin in pairs(list.result) do
                 if admin.status == 'administrator' then
-                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id .. admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id ..(admin.user.username or(admin.user.first_name ..(admin.user.last_name or ''))))
                 end
             end
         end
@@ -354,7 +354,7 @@ local function addSuperGroup(msg)
         if data[tostring(msg.chat.id)] then
             for i, admin in pairs(list.result) do
                 if admin.status == 'administrator' then
-                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id .. admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id ..(admin.user.username or(admin.user.first_name ..(admin.user.last_name or ''))))
                 end
             end
         end
