@@ -545,15 +545,15 @@ local function showSettings(target, lang)
         if data[tostring(target)]['settings'] then
             local settings = data[tostring(target)]['settings']
             local text = langs[lang].groupSettings ..
-            langs[lang].arabicLock .. settings.lock_arabic ..
-            langs[lang].floodLock .. settings.flood ..
-            langs[lang].floodSensibility .. settings.flood_max ..
-            langs[lang].leaveLock .. settings.leave_ban ..
-            langs[lang].linksLock .. settings.lock_link ..
-            langs[lang].membersLock .. settings.lock_member ..
-            langs[lang].spamLock .. settings.lock_spam ..
-            langs[lang].strictrules .. settings.strict ..
-            langs[lang].warnSensibility .. settings.warn_max
+            langs[lang].arabicLock .. tostring(settings.lock_arabic) ..
+            langs[lang].floodLock .. tostring(settings.flood) ..
+            langs[lang].floodSensibility .. tostring(settings.flood_max) ..
+            langs[lang].leaveLock .. tostring(settings.leave_ban) ..
+            langs[lang].linksLock .. tostring(settings.lock_link) ..
+            langs[lang].membersLock .. tostring(settings.lock_member) ..
+            langs[lang].spamLock .. tostring(settings.lock_spam) ..
+            langs[lang].strictrules .. tostring(settings.strict) ..
+            langs[lang].warnSensibility .. tostring(settings.warn_max)
             return text
         end
     end
