@@ -2,7 +2,7 @@ rank_table = { ["USER"] = 0, ["MOD"] = 1, ["OWNER"] = 2, ["ADMIN"] = 3, ["SUDO"]
 reverse_rank_table = { "USER", "MOD", "OWNER", "ADMIN", "SUDO", "BOT" }
 
 function get_rank(user_id, chat_id)
-    if tonumber(chat_id) ~= tonumber(bot.id) then
+    if tonumber(chat_id) ~= tonumber(user_id) then
         -- if get_rank in a group check only in that group
         if tonumber(bot.id) ~= tonumber(user_id) then
             if not is_sudo2(user_id) then
