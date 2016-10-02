@@ -7,6 +7,8 @@ last_redis_cron = ''
 last_redis_db_cron = ''
 last_redis_administrator_cron = ''
 
+sudoers = { }
+
 -- Save the content of config to config.lua
 function save_config()
     serialize_to_file(config, './config.lua', false)
@@ -217,6 +219,16 @@ function bot_init()
     -- Generate a random seed and "pop" the first random number. :)
     math.randomseed(os.time())
     math.random()
+
+    for v, user in pairs(config.sudo_users) do
+        local obj_user = getChat(user)
+        if type(obj_user) == 'table' then
+            if obj_user.result then
+                obj_user = obj_user.result
+                table.insert(sudoers, obj_user)
+            end
+        end
+    end
 
     last_update = last_update or 0
     -- Set loop variables: Update offset,
