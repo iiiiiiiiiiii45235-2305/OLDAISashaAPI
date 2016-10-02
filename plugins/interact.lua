@@ -5,7 +5,7 @@ local function run(msg, matches)
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2], true)
             else
-                return matches[2]
+                return sendMessage(msg.chat.id, matches[2], true)
             end
         else
             return langs[msg.lang].require_mod
