@@ -49,7 +49,7 @@ local function check_msg(msg, settings)
 
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
-            deleteMessage(msg)
+            -- deleteMessage(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
@@ -57,7 +57,7 @@ local function check_msg(msg, settings)
             return msg
         end
         if mute_all then
-            deleteMessage(msg)
+            -- deleteMessage(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
             end
@@ -190,7 +190,7 @@ local function check_msg(msg, settings)
         end
     else
         if mute_tgservice then
-            deleteMessage(msg)
+            -- deleteMessage(msg)
             msg = clean_msg(msg)
             return msg
         end
@@ -198,7 +198,7 @@ local function check_msg(msg, settings)
             if msg.adder.id == msg.added.id then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 and lock_spam then
-                    deleteMessage(msg)
+                    -- deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
                         banUser(bot.id, msg.from.id, msg.chat.id)
@@ -212,7 +212,7 @@ local function check_msg(msg, settings)
                 local print_name = msg.from.print_name
                 local is_rtl_name = print_name:match("‮")
                 if is_rtl_name and lock_rtl then
-                    deleteMessage(msg)
+                    -- deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
                         banUser(bot.id, msg.from.id, msg.chat.id)
@@ -223,7 +223,7 @@ local function check_msg(msg, settings)
                     msg = clean_msg(msg)
                 end
                 if lock_member then
-                    deleteMessage(msg)
+                    -- deleteMessage(msg)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#lockmember)")
                     banUser(bot.id, msg.from.id, msg.chat.id)
                     if msg.chat.type == 'group' then
@@ -233,7 +233,7 @@ local function check_msg(msg, settings)
                 end
             elseif msg.adder.id ~= msg.added.id then
                 if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_spam then
-                    deleteMessage(msg)
+                    -- deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
                         banUser(bot.id, msg.added.id, msg.chat.id)
@@ -247,7 +247,7 @@ local function check_msg(msg, settings)
                 local print_name = msg.added.print_name
                 local is_rtl_name = print_name:match("‮")
                 if is_rtl_name and lock_rtl then
-                    deleteMessage(msg)
+                    -- deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
                         banUser(bot.id, msg.added.id, msg.chat.id)
@@ -258,7 +258,7 @@ local function check_msg(msg, settings)
                     msg = clean_msg(msg)
                 end
                 if msg.chat.type == 'supergroup' and lock_member then
-                    deleteMessage(msg)
+                    -- deleteMessage(msg)
                     warn_user(bot.id, msg.adder.id, msg.chat.id)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
                     banUser(bot.id, msg.added.id, msg.chat.id)
