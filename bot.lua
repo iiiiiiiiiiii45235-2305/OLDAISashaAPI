@@ -319,8 +319,6 @@ end
 function adjust_msg(msg)
     -- sender print_name and tg_cli_id
     msg.from = adjust_user(msg.from)
-    msg.from.is_mod = is_mod(msg)
-    msg.from.is_owner = is_owner(msg)
 
     if msg.new_chat_participant then
         msg.new_chat_participant = adjust_user(msg.new_chat_participant)
@@ -680,11 +678,6 @@ function msg_valid(msg)
         end
     end
 
-    if isChatDisabled(msg.chat.id) and not msg.from.is_owner then
-        print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
-        return false
-    end
-
     if isBlocked(msg.from.id) and msg.chat.type == 'private' then
         print(clr.yellow .. 'Not valid: user blocked' .. clr.reset)
         return false
@@ -693,6 +686,14 @@ function msg_valid(msg)
     if msg.chat.id == config.vardump_chat then
         sendMessage(msg.chat.id, vardumptext(msg))
         print(clr.yellow .. 'Not valid: vardump chat' .. clr.reset)
+        return false
+    end
+
+    msg.from.is_mod = is_mod(msg)
+    msg.from.is_owner = is_owner(msg)
+
+    if isChatDisabled(msg.chat.id) and not msg.from.is_owner then
+        print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
         return false
     end
 
