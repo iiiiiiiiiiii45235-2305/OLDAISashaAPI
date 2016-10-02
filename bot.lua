@@ -319,6 +319,8 @@ end
 function adjust_msg(msg)
     -- sender print_name and tg_cli_id
     msg.from = adjust_user(msg.from)
+    msg.from.is_mod = is_mod(msg)
+    msg.from.is_owner = is_owner(msg)
 
     if msg.new_chat_participant then
         msg.new_chat_participant = adjust_user(msg.new_chat_participant)

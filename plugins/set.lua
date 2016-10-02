@@ -92,7 +92,7 @@ local function pre_process(msg)
         if hash then
             local name = redis:hget(hash, 'waiting')
             if name then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     if msg.media then
                         local file_id = ''
                         if msg.media_type == 'photo' then

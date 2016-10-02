@@ -68,7 +68,7 @@ local function pre_process(msg)
         if msgs > max_msg then
             local user = msg.from.id
             -- Ignore mods,owner and admins
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 return msg
             end
             -- Ignore whitelisted
@@ -108,7 +108,7 @@ local function pre_process(msg)
             local gbanspamonredis = redis:get(gbanspam)
             -- Check if user has spammed is group more than 4 times
             if gbanspamonredis then
-                if tonumber(gbanspamonredis) == 4 and not is_owner(msg) then
+                if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
                     -- Global ban that user
                     banall_user(msg.from.id)
                     local gbanspam = 'gban:spam' .. msg.from.id

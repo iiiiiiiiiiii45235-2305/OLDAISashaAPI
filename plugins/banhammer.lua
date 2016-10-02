@@ -539,7 +539,7 @@ local function pre_process(msg)
             -- Check if banned user joins chat
             if msg.service_type == 'chat_add_user' then
                 print('Checking invited user ' .. msg.added.id)
-                if isBanned(msg.added.id, msg.chat.id) and not is_mod2(msg.from.id, msg.chat.id) or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
+                if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
                     -- Check it with redis
                     print('User is banned!')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
@@ -550,11 +550,11 @@ local function pre_process(msg)
                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                     local banaddredis = redis:get(banhash)
                     if banaddredis then
-                        if tonumber(banaddredis) >= 4 and not is_owner(msg) then
+                        if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
                             kickUser(bot.id, msg.from.id, msg.chat.id)
                             -- Kick user who adds ban ppl more than 3 times
                         end
-                        if tonumber(banaddredis) >= 8 and not is_owner(msg) then
+                        if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
                             banUser(bot.id, msg.from.id, msg.chat.id)
                             -- Ban user who adds ban ppl more than 7 times
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
