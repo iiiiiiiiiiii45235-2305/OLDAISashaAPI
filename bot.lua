@@ -825,10 +825,13 @@ function on_msg_receive(msg)
         end
     end
     if msg_valid(msg) then
-        msg = pre_process_msg(msg)
-        if msg then
-            match_plugins(msg)
-        end
+        co = coroutine.create( function()
+            msg = pre_process_msg(msg)
+            if msg then
+                match_plugins(msg)
+            end
+        end )
+        coroutine.resume(co)
     end
 end
 
