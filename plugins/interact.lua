@@ -1,9 +1,9 @@
 local function run(msg, matches)
     if (matches[1]:lower() == 'echo' or matches[1]:lower() == 'sasha ripeti') and matches[2] then
-        mystat('/echo')
         if is_mod(msg) then
+            mystat('/echo')
             if msg.reply then
-                return sendReply(msg, matches[2])
+                return sendReply(msg.reply_to_message, matches[2])
             else
                 return matches[2]
             end
