@@ -928,7 +928,7 @@ while is_started do
                     on_msg_receive(msg.message)
                 end )
                 table.insert(threads, co)
-                local n = table.getn(threads)
+                local n = #threads
                 if n ~= 0 then
                     -- no more threads to run
                     for i = 1, n do
