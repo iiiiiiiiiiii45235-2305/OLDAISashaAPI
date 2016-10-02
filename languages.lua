@@ -516,6 +516,7 @@ return {
         -- likecounter.lua --
         forwardingLike = 'L\'inoltro dei messaggi per i like non è consentito.',
         likesdbCreated = 'Database likecounter creato.',
+        likesLeaderboard = 'Classifica like\n',
 
         -- me.lua --
         meString = 'Hai mandato W (X%) messaggi e questa chat ne ha Z.',
@@ -1390,6 +1391,7 @@ return {
         -- likecounter.lua --
         forwardingLike = 'Forwarding for likes is not allowed.',
         likesdbCreated = 'Likecounter database created.',
+        likesLeaderboard = 'Likes leaderboard\n',
 
         -- me.lua --
         meString = 'You have sent W (X%) messages and this chat has Z messages.',
