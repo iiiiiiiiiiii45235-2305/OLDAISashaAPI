@@ -12,7 +12,7 @@ local function clean_msg(msg)
 end
 
 local function action(msg, strict)
-    deleteMessage(msg)
+    -- deleteMessage(msg)
     warnUser(bot.id, msg.from.id, msg.chat.id)
     if strict then
         banUser(bot.id, msg.from.id, msg.chat.id)
