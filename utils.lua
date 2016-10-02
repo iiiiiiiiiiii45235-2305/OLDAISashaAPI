@@ -427,9 +427,9 @@ function match_pattern(pattern, text, lower_case)
     if text then
         local matches = { }
         if lower_case then
-            matches = { string.match(text:lower(), pattern) }
+            matches = { string.match(text:lower(), pattern) or string.match(text:lower():gsub('@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]', ''), pattern) }
         else
-            matches = { string.match(text, pattern) }
+            matches = { string.match(text, pattern) or string.match(text:gsub('@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]', ''), pattern) }
         end
         if next(matches) then
             return matches
