@@ -69,6 +69,7 @@ local function check_msg(msg, settings)
                 if mute_text then
                     action(msg, strict)
                     msg = clean_msg(msg)
+                    return msg
                 end
                 -- msg.text checks
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
@@ -76,6 +77,7 @@ local function check_msg(msg, settings)
                 if lock_spam and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
                     action(msg, strict)
                     msg = clean_msg(msg)
+                    return msg
                 end
                 local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
                 -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
@@ -85,22 +87,26 @@ local function check_msg(msg, settings)
                         if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
                             action(msg, strict)
                             msg = clean_msg(msg)
+                            return msg
                         end
                     else
                         action(msg, strict)
                         msg = clean_msg(msg)
+                        return msg
                     end
                 end
                 local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
                 if is_squig_msg and lock_arabic then
                     action(msg, strict)
                     msg = clean_msg(msg)
+                    return msg
                 end
                 local print_name = msg.from.print_name
                 local is_rtl = print_name:match("‮") or msg.text:match("‮")
                 if is_rtl and lock_rtl then
                     action(msg, strict)
                     msg = clean_msg(msg)
+                    return msg
                 end
             end
         else
@@ -114,22 +120,26 @@ local function check_msg(msg, settings)
                         if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
                             action(msg, strict)
                             msg = clean_msg(msg)
+                            return msg
                         end
                     else
                         action(msg, strict)
                         msg = clean_msg(msg)
+                        return msg
                     end
                 end
                 local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
                 if is_squig_caption and lock_arabic then
                     action(msg, strict)
                     msg = clean_msg(msg)
+                    return msg
                 end
                 local print_name = msg.from.print_name
                 local is_rtl = print_name:match("‮") or msg.caption:match("‮")
                 if is_rtl and lock_rtl then
                     action(msg, strict)
                     msg = clean_msg(msg)
+                    return msg
                 end
             end
             if msg.media_type == 'audio' then
@@ -208,6 +218,7 @@ local function check_msg(msg, settings)
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
                     msg = clean_msg(msg)
+                    return msg
                 end
                 local print_name = msg.from.print_name
                 local is_rtl_name = print_name:match("‮")
@@ -221,6 +232,7 @@ local function check_msg(msg, settings)
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
                     msg = clean_msg(msg)
+                    return msg
                 end
                 if lock_member then
                     -- deleteMessage(msg)
@@ -230,6 +242,7 @@ local function check_msg(msg, settings)
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
                     msg = clean_msg(msg)
+                    return msg
                 end
             elseif msg.adder.id ~= msg.added.id then
                 if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_spam then
@@ -243,6 +256,7 @@ local function check_msg(msg, settings)
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
                     msg = clean_msg(msg)
+                    return msg
                 end
                 local print_name = msg.added.print_name
                 local is_rtl_name = print_name:match("‮")
@@ -256,6 +270,7 @@ local function check_msg(msg, settings)
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
                     msg = clean_msg(msg)
+                    return msg
                 end
                 if msg.chat.type == 'supergroup' and lock_member then
                     -- deleteMessage(msg)
@@ -266,6 +281,7 @@ local function check_msg(msg, settings)
                         banUser(bot.id, msg.added.id, msg.chat.id)
                     end
                     msg = clean_msg(msg)
+                    return msg
                 end
             end
         end
