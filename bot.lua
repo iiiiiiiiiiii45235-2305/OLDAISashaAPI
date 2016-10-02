@@ -931,6 +931,10 @@ while is_started do
         else
             print(clr.red .. 'Connection error' .. clr.reset)
         end
+        update_redis_cron()
+        cron_plugins()
+        cron_database()
+        cron_administrator()
     end )
     table.insert(threads, co)
     local n = #threads
@@ -945,10 +949,6 @@ while is_started do
             end
         end
     end
-    update_redis_cron()
-    cron_plugins()
-    cron_database()
-    cron_administrator()
 end
 
 print(clr.white .. 'Halted.' .. clr.reset)
