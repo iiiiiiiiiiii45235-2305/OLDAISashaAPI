@@ -904,6 +904,8 @@ end
 ---------WHEN THE BOT IS STARTED FROM THE TERMINAL, THIS IS THE FIRST FUNCTION HE FOUNDS
 
 bot_init() -- Actually start the script. Run the bot_init function.
+-- list of all live threads
+threads = { }    
 
 while is_started do
     -- Start a loop while the bot should be running.
@@ -920,11 +922,24 @@ while is_started do
                     msg.message.edited = true
                     msg.edited_message = nil
                 end
-                -- this is what slow down the whole process of receiving messages
-                local co = coroutine.create( function()
+                -- processing messages slow down the whole process of receiving
+                local co = coroutine.create(
+                function()
                     on_msg_receive(msg.message)
                 end )
-                coroutine.resume(co)
+                table.insert(threads, co)
+                local n = table.getn(threads)
+                if n ~= 0 then
+                    -- no more threads to run
+                    for i = 1, n do
+                        local status, res = coroutine.resume(threads[i])
+                        if not res then
+                            -- thread finished its task?
+                            table.remove(threads, i)
+                            break
+                        end
+                    end
+                end
             end
         end
     else
