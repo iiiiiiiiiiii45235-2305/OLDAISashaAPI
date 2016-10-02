@@ -812,27 +812,27 @@ function on_msg_receive(msg)
         sendMessage_SUDOERS(langs['en'].loopWithoutMessage, true)
         return
     end
-    collect_stats(msg)
-    msg = pre_process_reply(msg)
-    msg = pre_process_forward(msg)
-    msg = pre_process_media_msg(msg)
-    msg = pre_process_service_msg(msg)
-    msg = adjust_msg(msg)
-    print_msg(msg)
-    if msg.text then
-        if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
-            msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
+    co = coroutine.create( function()
+        collect_stats(msg)
+        msg = pre_process_reply(msg)
+        msg = pre_process_forward(msg)
+        msg = pre_process_media_msg(msg)
+        msg = pre_process_service_msg(msg)
+        msg = adjust_msg(msg)
+        print_msg(msg)
+        if msg.text then
+            if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
+                msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
+            end
         end
-    end
-    if msg_valid(msg) then
-        co = coroutine.create( function()
+        if msg_valid(msg) then
             msg = pre_process_msg(msg)
             if msg then
                 match_plugins(msg)
             end
-        end )
-        coroutine.resume(co)
-    end
+        end
+    end )
+    coroutine.resume(co)
 end
 
 -- Call and postpone execution for cron plugins
