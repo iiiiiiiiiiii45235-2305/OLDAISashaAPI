@@ -680,7 +680,7 @@ function msg_valid(msg)
         end
     end
 
-    if isChatDisabled(msg.chat.id) and not is_owner(msg) then
+    if isChatDisabled(msg.chat.id) and not msg.from.is_owner then
         print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
         return false
     end
