@@ -652,11 +652,12 @@ local function get_tg_rank(msg)
         if res.result then
             local status = res.result.status
             if status == 'administrator' or is_mod(msg, true) then
-                msg.from.is_mod = true
                 -- mod
+                msg.from.is_mod = true
             end
             if status == 'creator' or is_owner(msg, true) then
                 -- owner
+                msg.from.is_mod = true
                 msg.from.is_owner = true
             end
         end
