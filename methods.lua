@@ -754,7 +754,7 @@ function userVersionInChat(chat_id)
     if type(member) == 'table' then
         if member.ok and member.result then
             if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
-                return true, status
+                return true, member.result.status
             end
         end
     end
