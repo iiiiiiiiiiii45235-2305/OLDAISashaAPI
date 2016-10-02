@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if (matches[1]:lower() == 'markdownecho' or matches[1]:lower() == 'sasha markdown ripeti') and matches[2] then
-        if is_mod(msg) then
+        if msg.from.is_mod then
             mystat('/markdownecho')
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2], true)
@@ -12,7 +12,7 @@ local function run(msg, matches)
         end
     end
     if (matches[1]:lower() == 'echo' or matches[1]:lower() == 'sasha ripeti') and matches[2] then
-        if is_mod(msg) then
+        if msg.from.is_mod then
             mystat('/echo')
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])

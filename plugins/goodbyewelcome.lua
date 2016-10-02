@@ -86,23 +86,23 @@ local function run(msg, matches)
             mystat('/getgoodbye')
             return get_goodbye(msg.chat.id)
         end
-        if matches[1]:lower() == 'setwelcome' and is_mod(msg) then
+        if matches[1]:lower() == 'setwelcome' and msg.from.is_mod then
             mystat('/setwelcome')
             return set_welcome(msg.chat.id, matches[2])
         end
-        if matches[1]:lower() == 'setgoodbye' and is_mod(msg) then
+        if matches[1]:lower() == 'setgoodbye' and msg.from.is_mod then
             mystat('/setgoodbye')
             return set_goodbye(msg.chat.id, matches[2])
         end
-        if matches[1]:lower() == 'unsetwelcome' and is_mod(msg) then
+        if matches[1]:lower() == 'unsetwelcome' and msg.from.is_mod then
             mystat('/unsetwelcome')
             return unset_welcome(msg.chat.id)
         end
-        if matches[1]:lower() == 'unsetgoodbye' and is_mod(msg) then
+        if matches[1]:lower() == 'unsetgoodbye' and msg.from.is_mod then
             mystat('/unsetgoodbye')
             return unset_goodbye(msg.chat.id)
         end
-        if matches[1]:lower() == 'setmemberswelcome' and is_mod(msg) then
+        if matches[1]:lower() == 'setmemberswelcome' and msg.from.is_mod then
             mystat('/setmemberswelcome')
             local text = set_memberswelcome(msg.chat.id, matches[2])
             if matches[2] == '0' then
@@ -111,7 +111,7 @@ local function run(msg, matches)
                 return text
             end
         end
-        if matches[1]:lower() == 'getmemberswelcome' and is_mod(msg) then
+        if matches[1]:lower() == 'getmemberswelcome' and msg.from.is_mod then
             mystat('/getmemberswelcome')
             return get_memberswelcome(msg.chat.id)
         end

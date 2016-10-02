@@ -1,6 +1,6 @@
 local function run(msg, matches)
     mystat('/reactions')
-    if is_mod(msg) then
+    if msg.from.is_mod then
         return sendChatAction(msg.chat.id, matches[1]:lower())
     else
         return langs[msg.lang].require_mod

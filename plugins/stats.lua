@@ -114,7 +114,7 @@ local function run(msg, matches)
     if matches[1]:lower() == "stats" or matches[1]:lower() == "messages" then
         if not matches[2] then
             mystat('/stats')
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
                     return sendMessage(msg.chat.id, chat_stats2(msg.chat.id, msg.lang))
@@ -137,7 +137,7 @@ local function run(msg, matches)
     elseif matches[1]:lower() == "statslist" or matches[1]:lower() == "messageslist" then
         if not matches[2] then
             mystat('/statslist')
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
                     chat_stats(msg.chat.id, msg.lang)
@@ -162,7 +162,7 @@ local function run(msg, matches)
     elseif matches[1]:lower() == "cleanstats" or matches[1]:lower() == "cleanmessages" then
         if not matches[2] then
             mystat('/cleanstats')
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned group stats ")
                     clean_chat_stats(msg.chat.id)

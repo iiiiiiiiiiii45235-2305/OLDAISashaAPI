@@ -97,7 +97,7 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'exportgroupsets' then
         mystat('/exportgroupsets')
-        if is_owner(msg) then
+        if msg.from.is_owner then
             if list_variables(msg, false) then
                 local tab = list_variables(msg, false):split('\n')
                 local newtab = { }
@@ -137,7 +137,7 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'enableglobal' then
         mystat('/enableglobal')
-        if is_owner(msg) then
+        if msg.from.is_owner then
             redis:del(msg.chat.id .. ':gvariables')
             return langs[msg.lang].globalEnable
         else
@@ -147,7 +147,7 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'disableglobal' then
         mystat('/disableglobal')
-        if is_owner(msg) then
+        if msg.from.is_owner then
             redis:set(msg.chat.id .. ':gvariables', true)
             return langs[msg.lang].globalDisable
         else

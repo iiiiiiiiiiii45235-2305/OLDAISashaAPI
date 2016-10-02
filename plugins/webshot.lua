@@ -35,7 +35,7 @@ local function get_webshot_url(param, psize)
 end
 
 local function run(msg, matches)
-    if is_mod(msg) then
+    if msg.from.is_mod then
         local size = 'X'
         if matches[2] then
             if matches[2]:lower() == 'fmob' or matches[2]:lower() == 'f' then

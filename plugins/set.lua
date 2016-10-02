@@ -49,7 +49,7 @@ end
 local function run(msg, matches)
     if matches[1]:lower() == 'cancel' or matches[1]:lower() == 'sasha annulla' or matches[1]:lower() == 'annulla' then
         mystat('/cancel')
-        if is_mod(msg) then
+        if msg.from.is_mod then
             local hash = get_variables_hash(msg, false)
             redis:hdel(hash, 'waiting')
             return langs[msg.lang].cancelled
@@ -60,7 +60,7 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'setmedia' or matches[1]:lower() == 'sasha setta media' or matches[1]:lower() == 'setta media' then
         mystat('/setmedia')
-        if is_mod(msg) then
+        if msg.from.is_mod then
             return set_media(msg, string.sub(matches[2]:lower(), 1, 50))
         else
             return langs[msg.lang].require_mod
@@ -69,7 +69,7 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'set' or matches[1]:lower() == 'sasha setta' or matches[1]:lower() == 'setta' then
         mystat('/set')
-        if is_mod(msg) then
+        if msg.from.is_mod then
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
         else
             return langs[msg.lang].require_mod

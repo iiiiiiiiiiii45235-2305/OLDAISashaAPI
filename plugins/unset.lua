@@ -37,7 +37,7 @@ end
 local function run(msg, matches)
     if matches[1]:lower() == 'unset' or matches[1]:lower() == 'sasha unsetta' or matches[1]:lower() == 'unsetta' then
         mystat('/unset')
-        if is_mod(msg) then
+        if msg.from.is_mod then
             return unset_var(msg, string.sub(matches[2], 1, 50), false)
         else
             return langs[msg.lang].require_mod

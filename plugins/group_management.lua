@@ -622,7 +622,7 @@ end
 local function run(msg, matches)
     local data = load_data(config.moderation.data)
     if matches[1]:lower() == 'type' then
-        if is_mod(msg) then
+        if msg.from.is_mod then
             mystat('/type')
             if data[tostring(msg.chat.id)] then
                 if not data[tostring(msg.chat.id)]['group_type'] then
@@ -643,7 +643,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'log' then
-        if is_owner(msg) then
+        if msg.from.is_owner then
             mystat('/log')
             savelog(msg.chat.id, "log file created by owner/admin")
             return sendDocument(msg.chat.id, "./groups/logs/" .. msg.chat.id .. "log.txt")
@@ -988,7 +988,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == 'sasha imposta regole' then
                 mystat('/setrules')
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     data[tostring(msg.chat.id)].rules = matches[2]
                     save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] has changed group rules to [" .. matches[2] .. "]")
@@ -998,7 +998,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'setflood' then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 200 then
                         return langs[msg.lang].errorFloodRange
                     end
@@ -1016,7 +1016,7 @@ local function run(msg, matches)
                 return getWarn(msg.chat.id)
             end
             if matches[1]:lower() == 'setwarn' and matches[2] then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     mystat('/setwarn')
                     local txt = setWarn(msg.from.id, msg.chat.id, matches[2])
                     if matches[2] == '0' then
@@ -1029,7 +1029,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca' then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     local flag = false
                     if matches[2]:lower() == 'arabic' then
                         flag = true
@@ -1064,7 +1064,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca' then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     local flag = false
                     if matches[2]:lower() == 'arabic' then
                         flag = true
@@ -1099,7 +1099,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'mute' or matches[1]:lower() == 'silenzia' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     local flag = false
                     if matches[2]:lower() == 'all' then
                         flag = true
@@ -1146,7 +1146,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'unmute' or matches[1]:lower() == 'ripristina' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     local flag = false
                     if matches[2]:lower() == 'all' then
                         flag = true
@@ -1193,7 +1193,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == "muteuser" or matches[1]:lower() == 'voce' then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     mystat('/muteuser')
                     if msg.reply then
                         if matches[2] then
@@ -1280,7 +1280,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == "muteslist" or matches[1]:lower() == "lista muti" then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     mystat('/muteslist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     return mutesList(msg.chat.id)
@@ -1289,7 +1289,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == "mutelist" or matches[1]:lower() == "lista utenti muti" then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     mystat('/mutelist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup mutelist")
                     return mutedUserList(msg.chat.id)
@@ -1298,7 +1298,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'settings' then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     mystat('/settings')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                     return showSettings(msg.chat.id, msg.lang)
@@ -1307,7 +1307,7 @@ local function run(msg, matches)
                 end
             end
             if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/setlink')
                     data[tostring(msg.chat.id)].settings.set_link = matches[2]
                     save_data(config.moderation.data, data)
@@ -1317,7 +1317,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'unsetlink' or matches[1]:lower() == "sasha elimina link" then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/unsetlink')
                     data[tostring(msg.chat.id)].settings.set_link = nil
                     save_data(config.moderation.data, data)
@@ -1327,7 +1327,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'link' or matches[1]:lower() == 'sasha link' then
-                if is_mod(msg) then
+                if msg.from.is_mod then
                     mystat('/link')
                     local group_link = data[tostring(msg.chat.id)].settings.set_link
                     if not group_link then
@@ -1341,7 +1341,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
                 mystat('/getadmins')
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup Admins list")
                     return getAdmins(msg.chat.id)
                 else
@@ -1358,7 +1358,7 @@ local function run(msg, matches)
                 return langs[msg.lang].ownerIs .. group_owner
             end
             if matches[1]:lower() == 'setowner' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/setowner')
                     if msg.reply then
                         if matches[2] then
@@ -1409,7 +1409,7 @@ local function run(msg, matches)
                 return modList(msg)
             end
             if matches[1]:lower() == 'promote' or matches[1]:lower() == 'sasha promuovi' or matches[1]:lower() == 'promuovi' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/promote')
                     if msg.reply then
                         if matches[2] then
@@ -1454,7 +1454,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'demote' or matches[1]:lower() == 'sasha degrada' or matches[1]:lower() == 'degrada' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/demote')
                     if msg.reply then
                         if matches[2] then
@@ -1499,7 +1499,7 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'clean' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     if matches[2]:lower() == 'modlist' then
                         if next(data[tostring(msg.chat.id)].moderators) == nil then
                             -- fix way

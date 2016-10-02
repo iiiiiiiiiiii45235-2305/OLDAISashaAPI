@@ -4,7 +4,7 @@ local function run(msg, matches)
         if msg.chat.type == 'private' then
             redis:set('lang:' .. msg.chat.id, matches[2]:lower())
             return langs[matches[2]:lower()].langSet
-        elseif is_owner(msg) then
+        elseif msg.from.is_owner then
             redis:set('lang:' .. msg.chat.id, matches[2]:lower())
             return langs[matches[2]:lower()].langSet
         else

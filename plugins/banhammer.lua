@@ -51,7 +51,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'getuserwarns' or matches[1]:lower() == 'sasha ottieni avvertimenti' or matches[1]:lower() == 'ottieni avvertimenti' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
                 else
@@ -90,7 +90,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'warn' or matches[1]:lower() == 'sasha avverti' or matches[1]:lower() == 'avverti' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
                 else
@@ -129,7 +129,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'unwarn' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
                 else
@@ -168,7 +168,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'unwarnall' or matches[1]:lower() == 'sasha azzera avvertimenti' or matches[1]:lower() == 'azzera avvertimenti' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
                 else
@@ -207,7 +207,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 mystat('/kick')
                 -- /kick
                 if msg.reply then
@@ -253,7 +253,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'esplodi' or matches[1]:lower() == 'kaboom' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 mystat('/ban')
                 -- /ban
                 if msg.reply then
@@ -299,7 +299,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sasha compila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' or matches[1]:lower() == 'compila' then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 mystat('/unban')
                 -- /unban
                 if msg.reply then
@@ -345,7 +345,7 @@ local function run(msg, matches)
             end
         end
         if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 mystat('/banlist')
                 return banList(msg.chat.id)
             else
@@ -353,7 +353,7 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'kickinactive' then
-            if is_owner(msg) then
+            if msg.from.is_owner then
                 mystat('/kickinactive')
                 -- /kickinactive
                 local num = matches[2] or 0

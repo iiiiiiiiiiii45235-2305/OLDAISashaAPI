@@ -38,7 +38,7 @@ local function run(msg, matches)
     if matches[1]:lower() == '/start' and msg.bot then
         return langs[msg.lang].startMessage
     end
-    if is_owner(msg) then
+    if msg.from.is_owner then
         if not string.match(matches[1], '^%-?%d+$') then
             if matches[1]:lower() == 'on' then
                 mystat('/bot on')

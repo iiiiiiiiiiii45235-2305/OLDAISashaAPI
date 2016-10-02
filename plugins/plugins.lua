@@ -152,7 +152,7 @@ local function run(msg, matches)
         -- Re-enable a plugin for this chat
         if (matches[1]:lower() == 'enable' or matches[1]:lower() == 'sasha abilita' or matches[1]:lower() == 'sasha attiva' or matches[1]:lower() == 'abilita' or matches[1]:lower() == 'attiva') and matches[3]:lower() == 'chat' then
             mystat('/enable <plugin> chat')
-            if is_owner(msg) then
+            if msg.from.is_owner then
                 print("enable " .. matches[2] .. ' on this chat')
                 return reenable_plugin_on_chat(msg.chat.id, matches[2])
             else
@@ -163,7 +163,7 @@ local function run(msg, matches)
         -- Disable a plugin on a chat
         if (matches[1]:lower() == 'disable' or matches[1]:lower() == 'sasha disabilita' or matches[1]:lower() == 'sasha disattiva' or matches[1]:lower() == 'disabilita' or matches[1]:lower() == 'disattiva') and matches[3]:lower() == 'chat' then
             mystat('/disable plugin chat')
-            if is_owner(msg) then
+            if msg.from.is_owner then
                 if check_plugin(matches[2]) then
                     return langs[msg.lang].systemPlugin
                 end
@@ -178,7 +178,7 @@ local function run(msg, matches)
     -- Show the available plugins
     if matches[1]:lower() == '#plugins' or matches[1]:lower() == '!plugins' or matches[1]:lower() == '/plugins' or matches[1]:lower() == 'sasha lista plugins' or matches[1]:lower() == 'lista plugins' then
         mystat('/plugins')
-        if is_owner(msg) then
+        if msg.from.is_owner then
             return list_plugins()
         else
             return langs[msg.lang].require_owner
@@ -188,7 +188,7 @@ local function run(msg, matches)
     -- Show on chat disabled plugin
     if matches[1]:lower() == 'disabledlist' or matches[1]:lower() == 'sasha lista disabilitati' or matches[1]:lower() == 'sasha lista disattivati' or matches[1]:lower() == 'lista disabilitati' or matches[1]:lower() == 'lista disattivati' then
         mystat('/disabledlist')
-        if is_owner(msg) then
+        if msg.from.is_owner then
             return list_disabled_plugin_on_chat(msg.chat.id)
         else
             return langs[msg.lang].require_owner

@@ -175,7 +175,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'info' or matches[1]:lower() == 'sasha info' then
         mystat('/info')
         if msg.reply then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if matches[2] then
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
@@ -209,7 +209,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         elseif matches[2] then
-            if is_mod(msg) then
+            if msg.from.is_mod then
                 if string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2])
                     if type(obj) == 'table' then

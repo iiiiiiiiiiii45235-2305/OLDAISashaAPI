@@ -14,7 +14,7 @@ end
 
 local function run(msg, matches)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if is_mod(msg) then
+        if msg.from.is_mod then
             if matches[1]:lower() == 'startflame' or matches[1]:lower() == 'sasha flamma' or matches[1]:lower() == 'flamma' then
                 mystat('/startflame')
                 if msg.reply then
