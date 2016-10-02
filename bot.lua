@@ -720,10 +720,15 @@ end
 
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
-    for name, plugin in pairsByKeys(plugins) do
+    msg = plugins.anti_spam.pre_process(msg)
+    msg = plugins.msg_checks.pre_process(msg)
+    msg = plugins.onservice.pre_process(msg)
+    for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
-            print(clr.white .. 'Preprocess', name)
-            msg = plugin.pre_process(msg)
+            if plugins.description ~= 'ANTI_SPAM' and plugins.description ~= 'MSG_CHECKS' and plugins.description ~= 'ONSERVICE' then
+                print(clr.white .. 'Preprocess', name)
+                msg = plugin.pre_process(msg)
+            end
         end
     end
     return msg
