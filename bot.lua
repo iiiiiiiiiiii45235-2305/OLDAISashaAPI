@@ -812,7 +812,7 @@ function on_msg_receive(msg)
         sendMessage_SUDOERS(langs['en'].loopWithoutMessage, true)
         return
     end
-    co = coroutine.create( function()
+    local co = coroutine.create( function()
         collect_stats(msg)
         msg = pre_process_reply(msg)
         msg = pre_process_forward(msg)
