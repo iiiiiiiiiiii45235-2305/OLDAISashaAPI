@@ -721,11 +721,14 @@ end
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
     msg = plugins.anti_spam.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'anti_spam')
     msg = plugins.msg_checks.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.onservice.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'onservice')
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
-            if plugins.description ~= 'ANTI_SPAM' and plugins.description ~= 'MSG_CHECKS' and plugins.description ~= 'ONSERVICE' then
+            if plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
                 print(clr.white .. 'Preprocess', name)
                 msg = plugin.pre_process(msg)
             end
