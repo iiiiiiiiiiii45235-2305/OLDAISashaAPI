@@ -646,6 +646,24 @@ function pre_process_service_msg(msg)
     return msg
 end
 
+local function get_tg_rank(msg)
+    local res = getChatMember(msg.chat.id, msg.from.id)
+    if type(res) == 'table' then
+        if res.result then
+            local status = res.result.status
+            if status == 'administrator' or is_mod(msg, true) then
+                msg.from.is_mod = true
+                -- mod
+            end
+            if status == 'creator' or is_owner(msg, true) then
+                -- owner
+                msg.from.is_owner = true
+            end
+        end
+    end
+    return msg
+end
+
 function msg_valid(msg)
     if not msg.bot then
         if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
@@ -689,8 +707,7 @@ function msg_valid(msg)
         return false
     end
 
-    msg.from.is_mod = is_mod(msg)
-    msg.from.is_owner = is_owner(msg)
+    msg = get_tg_rank(msg)
 
     if isChatDisabled(msg.chat.id) and not msg.from.is_owner then
         print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
