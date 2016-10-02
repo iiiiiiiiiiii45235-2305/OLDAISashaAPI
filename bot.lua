@@ -720,7 +720,7 @@ end
 
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
-    for name, plugin in pairs(plugins) do
+    for name, plugin in pairsByKeys(plugins) do
         if plugin.pre_process and msg then
             print(clr.white .. 'Preprocess', name)
             msg = plugin.pre_process(msg)
