@@ -1,4 +1,16 @@
 local function run(msg, matches)
+    if (matches[1]:lower() == 'markdownecho' or matches[1]:lower() == 'sasha markdown ripeti') and matches[2] then
+        if is_mod(msg) then
+            mystat('/markdownecho')
+            if msg.reply then
+                return sendReply(msg.reply_to_message, matches[2], true)
+            else
+                return matches[2]
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
     if (matches[1]:lower() == 'echo' or matches[1]:lower() == 'sasha ripeti') and matches[2] then
         if is_mod(msg) then
             mystat('/echo')
@@ -36,8 +48,10 @@ return {
     patterns =
     {
         "^[#!/]([Ee][Cc][Hh][Oo]) +(.+)$",
+        "^[#!/]([Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Cc][Hh][Oo]) +(.+)$",
         -- echo
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Pp][Ee][Tt][Ii]) +(.+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn] [Rr][Ii][Pp][Ee][Tt][Ii]) +(.+)$",
         -- react
         "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Ee] [Vv][Aa]%?)$",
         "^([Ss][Aa][Ss][Hh][Aa])(.*%?)$",
