@@ -176,22 +176,22 @@ local function pre_process(msg)
             if answer then
                 if string.match(answer, '^photo') then
                     answer = answer:gsub('^photo', '')
-                    sendPhotoId(msg.chat.id, answer)
+                    sendPhotoId(msg.chat.id, answer, msg.message_id)
                 elseif string.match(answer, '^video') then
                     answer = answer:gsub('^video', '')
-                    sendVideoId(msg.chat.id, answer)
+                    sendVideoId(msg.chat.id, answer, msg.message_id)
                 elseif string.match(answer, '^audio') then
                     answer = answer:gsub('^audio', '')
-                    sendAudioId(msg.chat.id, answer)
+                    sendAudioId(msg.chat.id, answer, false, msg.message_id)
                 elseif string.match(answer, '^voice') then
                     answer = answer:gsub('^voice', '')
-                    sendVoiceId(msg.chat.id, answer)
+                    sendVoiceId(msg.chat.id, answer, false, msg.message_id)
                 elseif string.match(answer, '^document') then
                     answer = answer:gsub('^document', '')
-                    sendDocumentId(msg.chat.id, answer)
+                    sendDocumentId(msg.chat.id, answer, msg.message_id)
                 elseif string.match(answer, '^sticker') then
                     answer = answer:gsub('^sticker', '')
-                    sendStickerId(msg.chat.id, answer)
+                    sendStickerId(msg.chat.id, answer, msg.message_id)
                 else
                     sendReply(msg, answer)
                 end

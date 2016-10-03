@@ -403,13 +403,18 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
     end
 end
 
-function sendVoiceId(chat_id, file_id, reply_to_message_id)
+function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if obj.result then
             local url = BASE_URL ..
             '/sendVoice?chat_id=' .. chat_id ..
             '&voice=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
+            end
             local reply = false
             if reply_to_message_id then
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -423,13 +428,18 @@ function sendVoiceId(chat_id, file_id, reply_to_message_id)
     end
 end
 
-function sendAudioId(chat_id, file_id, reply_to_message_id)
+function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if obj.result then
             local url = BASE_URL ..
             '/sendAudio?chat_id=' .. chat_id ..
             '&audio=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
+            end
             local reply = false
             if reply_to_message_id then
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -531,12 +541,17 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
     end
 end
 
-function sendVoice(chat_id, voice, reply_to_message_id)
+function sendVoice(chat_id, voice, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if obj.result then
             local url = BASE_URL .. '/sendVoice'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. ' -F "caption=' .. caption .. '"'
+                end
+            end
             local reply = false
             if reply_to_message_id then
                 curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
@@ -553,12 +568,17 @@ function sendVoice(chat_id, voice, reply_to_message_id)
     end
 end
 
-function sendAudio(chat_id, audio, reply_to_message_id, duration, performer, title)
+function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if obj.result then
             local url = BASE_URL .. '/sendAudio'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. ' -F "caption=' .. caption .. '"'
+                end
+            end
             local reply = false
             if reply_to_message_id then
                 curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
