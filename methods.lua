@@ -6,35 +6,53 @@ local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
+requests = { }
+curls = { }
 
 function sendRequest(url)
-    -- print(url)
-    local dat, code = HTTPS.request(url)
+    local co = coroutine.create(
+    function()
+        -- print(url)
+        local dat, code = HTTPS.request(url)
 
-    if not dat then
-        return false, code
-    end
-
-    local tab = JSON.decode(dat)
-
-    if code ~= 200 then
-        if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
-        -- 403: bot blocked, 429: spam limit ...send a message to the admin, return the code
-        if code == 400 then code = getCode(tab.description) end
-        -- error code 400 is general: try to specify
-        redis:hincrby('bot:errors', code, 1)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
+        if not dat then
+            return false, code
         end
-        return false, code
-    end
 
-    -- actually, this rarely happens
-    if not tab.ok then
-        return false, tab.description
-    end
+        local tab = JSON.decode(dat)
 
-    return tab
+        if code ~= 200 then
+            if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
+            -- 403: bot blocked, 429: spam limit ...send a message to the admin, return the code
+            if code == 400 then code = getCode(tab.description) end
+            -- error code 400 is general: try to specify
+            redis:hincrby('bot:errors', code, 1)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
+            end
+            return false, code
+        end
+
+        -- actually, this rarely happens
+        if not tab.ok then
+            return false, tab.description
+        end
+
+        return tab
+    end )
+    table.insert(requests, co)
+    local n = #requests
+    if n ~= 0 then
+        -- no more requests to run
+        for i = 1, n do
+            local status, res = coroutine.resume(requests[i])
+            if not res then
+                -- thread finished its task?
+                table.remove(requests, i)
+                break
+            end
+        end
+    end
 end
 
 function getMe()
@@ -496,8 +514,24 @@ end
 ----------------------------To curl--------------------------------------------
 
 function curlRequest(curl_command)
-    -- Use at your own risk. Will not check for success.
-    io.popen(curl_command)
+    local co = coroutine.create(
+    function()
+        -- Use at your own risk. Will not check for success.
+        io.popen(curl_command)
+    end )
+    table.insert(curls, co)
+    local n = #curls
+    if n ~= 0 then
+        -- no more curl_commands to run
+        for i = 1, n do
+            local status, res = coroutine.resume(curls[i])
+            if not res then
+                -- thread finished its task?
+                table.remove(curls, i)
+                break
+            end
+        end
+    end
 end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
