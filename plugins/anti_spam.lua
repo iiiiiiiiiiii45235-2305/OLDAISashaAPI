@@ -75,7 +75,6 @@ local function pre_process(msg)
             if redis:sismember('whitelist', msg.from.id) then
                 return msg
             end
-            local receiver = get_receiver(msg)
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
                 print(msgs)
@@ -110,7 +109,7 @@ local function pre_process(msg)
             if gbanspamonredis then
                 if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
                     -- Global ban that user
-                    banall_user(msg.from.id)
+                    gbanUser(msg.from.id)
                     local gbanspam = 'gban:spam' .. msg.from.id
                     -- reset the counter
                     redis:set(gbanspam, 0)
