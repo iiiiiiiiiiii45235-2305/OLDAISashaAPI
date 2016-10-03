@@ -945,31 +945,51 @@ end
 ---------WHEN THE BOT IS STARTED FROM THE TERMINAL, THIS IS THE FIRST FUNCTION HE FOUNDS
 
 bot_init() -- Actually start the script. Run the bot_init function.
+-- list of all live threads
+threads = { }    
 
 while is_started do
-    local res = getUpdates(last_update + 1)
-    -- Get the latest updates!
-    if res then
-        -- printvardump(res)
-        for i, msg in ipairs(res.result) do
-            -- Go through every new message.
-            last_update = msg.update_id
-            if msg.message--[[ or msg.callback_query ]]or msg.edited_message then
-                if msg.edited_message then
-                    msg.message = msg.edited_message
-                    msg.message.edited = true
-                    msg.edited_message = nil
+    -- Start a loop while the bot should be running.
+    -- processing messages slow down the whole process of receiving
+    local co = coroutine.create(
+    function()
+        local res = getUpdates(last_update + 1)
+        -- Get the latest updates!
+        if res then
+            -- printvardump(res)
+            for i, msg in ipairs(res.result) do
+                -- Go through every new message.
+                last_update = msg.update_id
+                if msg.message--[[ or msg.callback_query ]]or msg.edited_message then
+                    if msg.edited_message then
+                        msg.message = msg.edited_message
+                        msg.message.edited = true
+                        msg.edited_message = nil
+                    end
+                    on_msg_receive(msg.message)
                 end
-                on_msg_receive(msg.message)
+            end
+        else
+            print(clr.red .. 'Connection error' .. clr.reset)
+        end
+        update_redis_cron()
+        cron_plugins()
+        cron_database()
+        cron_administrator()
+    end )
+    table.insert(threads, co)
+    local n = #threads
+    if n ~= 0 then
+        -- no more threads to run
+        for i = 1, n do
+            local status, res = coroutine.resume(threads[i])
+            if not res then
+                -- thread finished its task?
+                table.remove(threads, i)
+                break
             end
         end
-    else
-        print(clr.red .. 'Connection error' .. clr.reset)
     end
-    update_redis_cron()
-    cron_plugins()
-    cron_database()
-    cron_administrator()
 end
 
 print(clr.white .. 'Halted.' .. clr.reset)
