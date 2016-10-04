@@ -686,6 +686,9 @@ function msg_valid(msg)
         -- Edited messages
         if msg.date < os.time() -20 then
             -- Message sent more than 20 seconds ago
+            msg = get_tg_rank(msg)
+            plugins.msg_checks.pre_process(msg)
+            print(clr.white .. 'Preprocess edited message', 'msg_checks')
             print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
             return false
         end
