@@ -51,7 +51,7 @@ local function run(msg, matches)
         local find = get_webshot_url(matches[1], size)
         if find then
             local imgurl = base .. find
-            return sendPhotoFromUrl(msg.chat.id, imgurl)
+            return sendPhotoId(msg.chat.id, imgurl)
         end
     else
         return langs[msg.lang].require_mod

@@ -5,7 +5,7 @@ local function run(msg, matches)
     local urlm = "https?://[%%%w-_%.%?%.:/%+=&]+"
 
     if string.match(url, urlm) == url then
-        return sendPhotoFromUrl(msg.chat.id, url)
+        return sendPhotoId(msg.chat.id, url)
     else
         return langs[msg.lang].opsError
     end
