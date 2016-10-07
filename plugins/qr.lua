@@ -46,7 +46,7 @@ local function run(msg, matches)
     end
 
     if #response > 0 then
-        return sendPhotoId(msg.chat.id, url)
+        return sendPhotoId(msg.chat.id, URL.unescape(url))
     end
     return langs[msg.lang].opsError
 end
