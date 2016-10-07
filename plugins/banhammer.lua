@@ -521,7 +521,6 @@ local function clean_msg(msg)
 end
 
 local function pre_process(msg)
-    local data = load_data(config.moderation.data)
     -- SERVICE MESSAGE
     if msg.service then
         if msg.service_type then

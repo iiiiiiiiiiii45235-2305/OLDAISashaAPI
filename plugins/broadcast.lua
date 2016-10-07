@@ -11,7 +11,6 @@
         mystat('/broadcast')
         if is_sudo(msg) then
             -- Only sudo!
-            local data = load_data(config.moderation.data)
             for k, v in pairs(data['groups']) do
                 sendMessage(v, matches[2])
             end

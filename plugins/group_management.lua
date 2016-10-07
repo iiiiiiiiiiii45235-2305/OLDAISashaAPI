@@ -5,13 +5,11 @@ group_type = ''
 -- INPM
 local function allChats(msg)
     i = 1
-    local data = load_data(config.moderation.data)
-    local groups = 'groups'
-    if not data[tostring(groups)] then
+    if not data['groups'] then
         return langs[msg.lang].noGroups
     end
     local message = langs[msg.lang].groupsJoin
-    for k, v in pairsByKeys(data[tostring(groups)]) do
+    for k, v in pairsByKeys(data['groups']) do
         local group_id = v
         if data[tostring(group_id)] then
             settings = data[tostring(group_id)]['settings']
@@ -33,12 +31,11 @@ local function allChats(msg)
     end
 
     i = 1
-    local realms = 'realms'
-    if not data[tostring(realms)] then
+    if not data['realms'] then
         return langs[msg.lang].noRealms
     end
     message = message .. '\n\n' .. langs[msg.lang].realmsJoin
-    for k, v in pairsByKeys(data[tostring(realms)]) do
+    for k, v in pairsByKeys(data['realms']) do
         local realm_id = v
         if data[tostring(realm_id)] then
             settings = data[tostring(realm_id)]['settings']
@@ -67,7 +64,6 @@ end
 
 -- INREALM
 local function groupsList(msg)
-    local data = load_data(config.moderation.data)
     if not data.groups then
         return langs[msg.lang].noGroups
     end
@@ -101,7 +97,6 @@ local function groupsList(msg)
 end
 
 local function realmsList(msg)
-    local data = load_data(config.moderation.data)
     if not data.realms then
         return langs[msg.lang].noRealms
     end
@@ -135,7 +130,6 @@ local function addGroup(msg)
     if is_group(msg) then
         return langs[msg.lang].groupAlreadyAdded
     end
-    local data = load_data(config.moderation.data)
     local list = getChatAdministrators(msg.chat.id)
     if list then
         for i, admin in pairs(list.result) do
@@ -200,7 +194,6 @@ local function addGroup(msg)
 end
 
 local function remGroup(msg)
-    local data = load_data(config.moderation.data)
     if not is_group(msg) then
         return langs[msg.lang].groupNotAdded
     end
@@ -217,7 +210,6 @@ local function remGroup(msg)
 end
 
 local function addRealm(msg)
-    local data = load_data(config.moderation.data)
     if is_realm(msg) then
         return langs[msg.lang].realmAlreadyAdded
     end
@@ -278,7 +270,6 @@ local function addRealm(msg)
 end
 
 local function remRealm(msg)
-    local data = load_data(config.moderation.data)
     if not is_realm(msg) then
         return langs[msg.lang].realmNotAdded
     end
@@ -295,7 +286,6 @@ local function remRealm(msg)
 end
 
 local function addSuperGroup(msg)
-    local data = load_data(config.moderation.data)
     if is_super_group(msg) then
         return langs[msg.lang].supergroupAlreadyAdded
     end
@@ -363,7 +353,6 @@ local function addSuperGroup(msg)
 end
 
 local function remSuperGroup(msg)
-    local data = load_data(config.moderation.data)
     if not is_super_group(msg) then
         return langs[msg.lang].groupNotAdded
     end
@@ -383,7 +372,6 @@ end
 -- begin RANKS MANAGEMENT
 local function promoteAdmin(user, chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if not data.admins then
         data.admins = { }
         save_data(config.moderation.data, data)
@@ -398,7 +386,6 @@ end
 
 local function demoteAdmin(user, chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if not data.admins then
         data.admins = { }
         save_data(config.moderation.data, data)
@@ -413,7 +400,6 @@ end
 
 local function botAdminsList(chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if not data.admins then
         data.admins = { }
         save_data(config.moderation.data, data)
@@ -426,7 +412,6 @@ local function botAdminsList(chat_id)
 end
 
 local function setOwner(user, chat_id)
-    local data = load_data(config.moderation.data)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)]['set_owner'] = tostring(user.id)
     save_data(config.moderation.data, data)
@@ -446,7 +431,6 @@ end
 
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if not data[tostring(chat_id)] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
@@ -460,7 +444,6 @@ end
 
 local function demoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if not data[tostring(chat_id)] then
         return sendMessage(chat_id, langs[lang].groupNotAdded)
     end
@@ -473,9 +456,7 @@ local function demoteMod(chat_id, user)
 end
 
 local function modList(msg)
-    local data = load_data(config.moderation.data)
-    local groups = "groups"
-    if not data[tostring(groups)][tostring(msg.chat.id)] then
+    if not data['groups'][tostring(msg.chat.id)] then
         return langs[msg.lang].groupNotAdded
     end
     -- determine if table is empty
@@ -514,8 +495,6 @@ local function contactMods(msg)
         end
     end
 
-    local data = load_data(config.moderation.data)
-
     -- owner
     local owner = data[tostring(msg.chat.id)]['set_owner']
     if owner then
@@ -540,7 +519,6 @@ end
 -- end RANKS MANAGEMENT
 
 local function showSettings(target, lang)
-    local data = load_data(config.moderation.data)
     if data[tostring(target)] then
         if data[tostring(target)]['settings'] then
             local settings = data[tostring(target)]['settings']
@@ -620,7 +598,6 @@ end
 -- end LOCK/UNLOCK FUNCTIONS
 
 local function run(msg, matches)
-    local data = load_data(config.moderation.data)
     if msg.service then
         if is_realm(msg) then
             if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_user_link' then

@@ -2,7 +2,6 @@
     if msg.service then
         if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
             local leave_ban = false
-            local data = load_data(config.moderation.data)
             if data[tostring(msg.chat.id)] then
                 if data[tostring(msg.chat.id)].settings then
                     if data[tostring(msg.chat.id)].settings.lock_leave then

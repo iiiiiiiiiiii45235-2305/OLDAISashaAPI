@@ -4,8 +4,8 @@ local function get_sprite(path)
     local url = "http://pokeapi.co/" .. path
     print(url)
     local b, c = http.request(url)
-    local data = json:decode(b)
-    local image = data.image
+    local jsondata = json:decode(b)
+    local image = jsondata.image
     return image
 end
 

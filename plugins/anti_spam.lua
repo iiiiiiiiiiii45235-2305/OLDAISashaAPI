@@ -43,8 +43,6 @@ local function pre_process(msg)
     local hash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
     redis:incr(hash)
 
-    -- Load moderation data
-    local data = load_data(config.moderation.data)
     if data[tostring(msg.chat.id)] then
         -- Check if flood is on or off
         if data[tostring(msg.chat.id)].settings.flood then
@@ -56,7 +54,6 @@ local function pre_process(msg)
     if msg.from.type == 'user' then
         local hash = 'user:' .. msg.from.id .. ':msgs'
         local msgs = tonumber(redis:get(hash) or 0)
-        local data = load_data(config.moderation.data)
         local NUM_MSG_MAX = 5
         if data[tostring(msg.chat.id)] then
             if data[tostring(msg.chat.id)].settings.flood_max then

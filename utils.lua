@@ -20,9 +20,9 @@ function load_data(filename)
     end
     local s = f:read('*all')
     f:close()
-    local data = JSON.decode(s)
+    local decodeddata = JSON.decode(s)
 
-    return data
+    return decodeddata
 end
 
 function save_data(filename, data)
@@ -368,11 +368,9 @@ end
 
 function is_realm(msg)
     local var = false
-    local realms = 'realms'
-    local data = load_data(config.moderation.data)
     local chat = msg.chat.id
-    if data[tostring(realms)] then
-        if data[tostring(realms)][tostring(chat)] then
+    if data['realms'] then
+        if data['realms'][tostring(chat)] then
             var = true
         end
         return var
@@ -382,11 +380,9 @@ end
 -- Check if this chat is a group or not
 function is_group(msg)
     local var = false
-    local data = load_data(config.moderation.data)
-    local groups = 'groups'
     local chat = msg.chat.id
-    if data[tostring(groups)] then
-        if data[tostring(groups)][tostring(chat)] then
+    if data['groups'] then
+        if data['groups'][tostring(chat)] then
             if msg.chat.type == 'group' then
                 var = true
             end
@@ -397,11 +393,9 @@ end
 
 function is_super_group(msg)
     local var = false
-    local data = load_data(config.moderation.data)
-    local groups = 'groups'
     local chat = msg.chat.id
-    if data[tostring(groups)] then
-        if data[tostring(groups)][tostring(chat)] then
+    if data['groups'] then
+        if data['groups'][tostring(chat)] then
             if msg.chat.type == 'supergroup' then
                 var = true
             end

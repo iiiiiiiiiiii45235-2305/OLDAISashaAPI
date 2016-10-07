@@ -233,7 +233,6 @@ local function run(msg, matches)
     if matches[1]:lower() == 'grouplink' or matches[1]:lower() == 'sasha link gruppo' or matches[1]:lower() == 'link gruppo' and matches[2] then
         mystat('/grouplink')
         if is_admin(msg) then
-            local data = load_data(config.moderation.data)
             local group_link = data[tostring(matches[2])]['settings']['set_link']
             if not group_link then
                 return langs[msg.lang].noLinkAvailable

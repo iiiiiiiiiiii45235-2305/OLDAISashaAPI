@@ -182,16 +182,12 @@ function load_plugins()
     return index
 end
 
-function load_database()
-    print(clr.white .. 'Loading database.json' .. clr.reset)
-    database = load_data(config.database.db)
-end
-
 function bot_init()
     config = { }
     bot = nil
     plugins = { }
     database = nil
+    data = nil
 
     config = load_config()
     if config.bot_api_key == '' then
@@ -210,7 +206,11 @@ function bot_init()
     bot.userVersion = 149998353
 
     local tot_plugins = load_plugins()
-    load_database()
+    print(clr.white .. 'Loading database.json' .. clr.reset)
+    database = load_data(config.database.db)
+
+    print(clr.white .. 'Loading moderation.json' .. clr.reset)
+    data = load_data(config.moderation.data)
 
     print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
     redis:hincrby('bot:general', 'starts', 1)
@@ -514,7 +514,6 @@ function migrate_to_supergroup(msg)
         return false
     end
 
-    local data = load_data(config.moderation.data)
     data[tostring(new)] = data[tostring(old)]
     data[tostring(old)] = nil
     data['groups'][tostring(new)] = tonumber(new)
@@ -536,32 +535,31 @@ function migrate_to_supergroup(msg)
     end
 
     -- migrate likes from likecounterdb.json
-    local data = load_data(config.likecounter.db)
-    if data then
-        for id_string in pairs(data) do
+    local likedata = load_data(config.likecounter.db)
+    if likedata then
+        for id_string in pairs(likedata) do
             -- if there are any groups check for everyone of them to find the one requesting migration, if found migrate
             if id_string == tostring(old) then
-                data[tostring(new)] = data[id_string]
-                data[id_string] = nil
+                likedata[tostring(new)] = likedata[id_string]
+                likedata[id_string] = nil
             end
         end
     end
-    save_data(config.likecounter.db, data)
+    save_data(config.likecounter.db, likedata)
 
     -- migrate database from database.json
-    local data = load_data(config.database.db)
-    if data then
-        for id_string in pairs(data) do
+    if database then
+        for id_string in pairs(database) do
             -- if there are any groups move their data from cli to api db
             if id_string == tostring(old) then
-                data[tostring(new)] = data[tostring(old)]
-                data[tostring(new)].old_usernames = 'NOUSER'
-                data[tostring(new)].username = 'NOUSER'
-                data[tostring(old)] = nil
+                database[tostring(new)] = database[tostring(old)]
+                database[tostring(new)].old_usernames = 'NOUSER'
+                database[tostring(new)].username = 'NOUSER'
+                database[tostring(old)] = nil
             end
         end
     end
-    save_data(config.database.db, data)
+    save_data(config.database.db, database)
     sendMessage(new, langs[get_lang(old)].groupToSupergroup)
 end
 

@@ -295,7 +295,6 @@ local function pre_process(msg)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if msg and not isWhitelisted(msg.from.id) and not msg.from.is_mod then
             -- if regular user
-            local data = load_data(config.moderation.data)
             local settings = nil
             if data[tostring(msg.chat.id)] then
                 if data[tostring(msg.chat.id)].settings then

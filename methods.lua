@@ -962,7 +962,6 @@ function isWhitelisted(user_id)
 end
 
 function setWarn(user_id, chat_id, value)
-    local data = load_data(config.moderation.data)
     local lang = get_lang(chat_id)
     if tonumber(value) < 0 or tonumber(value) > 10 then
         return langs[lang].errorWarnRange
@@ -975,7 +974,6 @@ function setWarn(user_id, chat_id, value)
 end
 
 function getWarn(chat_id)
-    local data = load_data(config.moderation.data)
     local lang = get_lang(chat_id)
     local warn_max = data[tostring(chat_id)].settings.warn_max
     if not warn_max then
@@ -1056,7 +1054,6 @@ end
 
 function setMutes(chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
             data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audio"] = false, ["contact"] = false, ["document"] = false, ["gif"] = false, ["location"] = false, ["photo"] = false, ["sticker"] = false, ["text"] = false, ["tgservice"] = false, ["video"] = false, ["voice"] = false }
@@ -1067,7 +1064,6 @@ function setMutes(chat_id)
 end
 
 function hasMutes(chat_id)
-    local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings.mutes then
             return true
@@ -1081,7 +1077,6 @@ function hasMutes(chat_id)
 end
 
 function isMuted(chat_id, msg_type)
-    local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
             if hasMutes(chat_id) then
@@ -1096,7 +1091,6 @@ end
 
 function mute(chat_id, msg_type)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
             if hasMutes(chat_id) then
@@ -1118,7 +1112,6 @@ end
 
 function unmute(chat_id, msg_type)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
             if hasMutes(chat_id) then
@@ -1157,7 +1150,6 @@ end
 -- Returns chat_id mute list
 function mutesList(chat_id)
     local lang = get_lang(chat_id)
-    local data = load_data(config.moderation.data)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
             if hasMutes(chat_id) then
