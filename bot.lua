@@ -647,7 +647,8 @@ function pre_process_service_msg(msg)
 end
 
 local function get_tg_rank(msg)
-    local res = getChatMember(msg.chat.id, msg.from.id)
+    -- commented because it slows down the whole process of receiving messages
+    --[[local res = getChatMember(msg.chat.id, msg.from.id)
     if type(res) == 'table' then
         if res.result then
             local status = res.result.status
@@ -662,15 +663,15 @@ local function get_tg_rank(msg)
             end
         end
     end
-    if type(msg.from.is_mod) == 'nil' then
-        if is_owner(msg, true) then
-            msg.from.is_mod = true
-            msg.from.is_owner = true
-        end
-        if is_mod(msg, true) then
-            msg.from.is_mod = true
-        end
+    if type(msg.from.is_mod) == 'nil' then]]
+    if is_owner(msg, true) then
+        msg.from.is_mod = true
+        msg.from.is_owner = true
     end
+    if is_mod(msg, true) then
+        msg.from.is_mod = true
+    end
+    -- end
     return msg
 end
 
