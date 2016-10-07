@@ -546,9 +546,6 @@ return {
         -- set.lua --
         saved = ' salvato.',
         gSaved = ' variabile globale salvata.',
-        sendMedia = 'Mandami il media che vuoi salvare (foto, video, audio, nota vocale, documento, sticker).',
-        cancelled = 'Annullato.',
-        nothingToSet = 'Niente da salvare.',
         mediaSaved = 'Media salvato.',
 
         -- stats.lua --
@@ -952,8 +949,7 @@ return {
             'Plugin per salvare cose.',
             'MOD',
             '(#set|[sasha] setta) <var_name> <text>: Sasha salva <text> come risposta a <var_name>.',
-            '(#setmedia|[sasha] setta media) <var_name>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) che le verrà inviato come risposta a <var_name>.',
-            '(#cancel|[sasha] annulla): Sasha annulla un #setmedia.',
+            '(#setmedia|[sasha] setta media) <var_name> <reply>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) in <reply> come risposta a <var_name>.',
             'ADMIN',
             '#setglobal <var_name> <text>: Sasha salva globalmente <text> come risposta a <var_name>.',
         },
@@ -1421,9 +1417,6 @@ return {
         -- set.lua --
         saved = ' saved.',
         gSaved = ' global variable saved.',
-        sendMedia = 'Send me the media you want to save (photo, video, audio, voice note, document, sticker).',
-        cancelled = 'Cancelled.',
-        nothingToSet = 'Nothing to set.',
         mediaSaved = 'Media saved.',
 
         -- stats.lua --
@@ -1827,8 +1820,7 @@ return {
             'Plugin to save things.',
             'MOD',
             '(#set|[sasha] setta) <var_name> <text>: Sasha saves <text> as answer to <var_name>.',
-            '(#setmedia|[sasha] setta media) <var_name>: Sasha saves the media (photo, video, audio, voice note, document, sticker) that will be sent as answer to <var_name>.',
-            '(#cancel|[sasha] annulla): Sasha cancels #setmedia.',
+            '(#setmedia|[sasha] setta media) <var_name>: Sasha saves the media (photo, video, audio, voice note, document, sticker) in <reply> as answer to <var_name>.',
             'ADMIN',
             '#setglobal <var_name> <text>: Sasha globally saves <text> as answer to <var_name>.',
         },

@@ -41,35 +41,52 @@ local function set_media(msg, name)
 
     local hash = get_variables_hash(msg)
     if hash then
-        redis:hset(hash, 'waiting', name)
-        return langs[msg.lang].sendMedia
+        if msg.reply_to_message.media then
+            local file_id = ''
+            if msg.reply_to_message.media_type == 'photo' then
+                local bigger_pic_id = ''
+                local size = 0
+                for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                    if v.file_size > size then
+                        size = v.file_size
+                        bigger_pic_id = v.file_id
+                    end
+                end
+                file_id = bigger_pic_id
+            elseif msg.reply_to_message.media_type == 'video' then
+                file_id = msg.reply_to_message.video.file_id
+            elseif msg.reply_to_message.media_type == 'audio' then
+                file_id = msg.reply_to_message.audio.file_id
+            elseif msg.reply_to_message.media_type == 'voice' then
+                file_id = msg.reply_to_message.voice.file_id
+            elseif msg.reply_to_message.media_type == 'document' then
+                file_id = msg.reply_to_message.document.file_id
+            elseif msg.reply_to_message.media_type == 'sticker' then
+                file_id = msg.reply_to_message.sticker.file_id
+            else
+                sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+            end
+            redis:hset(hash, name, msg.reply_to_message.media_type .. file_id)
+            sendMessage(msg.chat.id, langs[msg.lang].mediaSaved)
+        end
     end
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == 'cancel' or matches[1]:lower() == 'sasha annulla' or matches[1]:lower() == 'annulla' then
-        mystat('/cancel')
-        if msg.from.is_mod then
-            local hash = get_variables_hash(msg, false)
-            redis:hdel(hash, 'waiting')
-            return langs[msg.lang].cancelled
-        else
-            return langs[msg.lang].require_mod
-        end
-    end
-
     if matches[1]:lower() == 'setmedia' or matches[1]:lower() == 'sasha setta media' or matches[1]:lower() == 'setta media' then
-        mystat('/setmedia')
         if msg.from.is_mod then
-            return set_media(msg, string.sub(matches[2]:lower(), 1, 50))
+            mystat('/setmedia')
+            if msg.reply then
+                return set_media(msg, string.sub(matches[2]:lower(), 1, 50))
+            end
         else
             return langs[msg.lang].require_mod
         end
     end
 
     if matches[1]:lower() == 'set' or matches[1]:lower() == 'sasha setta' or matches[1]:lower() == 'setta' then
-        mystat('/set')
         if msg.from.is_mod then
+            mystat('/set')
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
         else
             return langs[msg.lang].require_mod
@@ -77,60 +94,13 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'setglobal' then
-        mystat('/setglobal')
         if is_admin(msg) then
+            mystat('/setglobal')
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
         else
             return langs[msg.lang].require_admin
         end
     end
-end
-
-local function pre_process(msg)
-    if msg.media then
-        local hash = get_variables_hash(msg, false)
-        if hash then
-            local name = redis:hget(hash, 'waiting')
-            if name then
-                if msg.from.is_mod then
-                    if msg.media then
-                        local file_id = ''
-                        if msg.media_type == 'photo' then
-                            local bigger_pic_id = ''
-                            local size = 0
-                            for k, v in pairsByKeys(msg.photo) do
-                                if v.file_size > size then
-                                    size = v.file_size
-                                    bigger_pic_id = v.file_id
-                                end
-                            end
-                            file_id = bigger_pic_id
-                        elseif msg.media_type == 'video' then
-                            file_id = msg.video.file_id
-                        elseif msg.media_type == 'audio' then
-                            file_id = msg.audio.file_id
-                        elseif msg.media_type == 'voice' then
-                            file_id = msg.voice.file_id
-                        elseif msg.media_type == 'document' then
-                            file_id = msg.document.file_id
-                        elseif msg.media_type == 'sticker' then
-                            file_id = msg.sticker.file_id
-                        else
-                            sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
-                        end
-                        redis:hset(hash, name, msg.media_type .. file_id)
-                        redis:hdel(hash, 'waiting')
-                        sendMessage(msg.chat.id, langs[msg.lang].mediaSaved)
-                    end
-                else
-                    sendMessage(msg.chat.id, langs[msg.lang].require_mod)
-                end
-            end
-        else
-            sendMessage(msg.chat.id, langs[msg.lang].nothingToSet)
-        end
-    end
-    return msg
 end
 
 return {
@@ -151,15 +121,13 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
         "^([Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
     },
-    pre_process = pre_process,
     run = run,
     min_rank = 1,
     syntax =
     {
         "MOD",
         "(#set|[sasha] setta) <var_name> <text>",
-        "(#setmedia|[sasha] setta media) <var_name>",
-        "(#cancel|[sasha] annulla)",
+        "(#setmedia|[sasha] setta media) <var_name> <reply>",
         "ADMIN",
         "#setglobal <var_name> <text>",
     },
