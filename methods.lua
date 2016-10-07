@@ -220,8 +220,8 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
 end
 
 function sendMessage_SUDOERS(text, use_markdown)
-    for v, user in pairs(config.sudo_users) do
-        sendMessage(user, text, use_markdown, false, true)
+    for v, user in pairs(sudoers) do
+        sendMessage(user.id, text, use_markdown, false, true)
     end
 end
 
@@ -233,9 +233,9 @@ function sendLog(text, markdown)
     if config.log_chat then
         return sendMessage(config.log_chat, text, markdown)
     else
-        for v, user in pairs(config.sudo_users) do
+        for v, user in pairs(sudoers) do
             -- print(text)
-            sendMessage(user, text, markdown)
+            sendMessage(user.id, text, markdown)
         end
     end
 end
@@ -646,8 +646,8 @@ function sendDocument(chat_id, document, reply_to_message_id)
 end
 
 function sendDocument_SUDOERS(document)
-    for v, user in pairs(config.sudo_users) do
-        sendDocument(user, document)
+    for v, user in pairs(sudoers) do
+        sendDocument(user.id, document)
     end
 end
 
@@ -756,8 +756,8 @@ end
 
 -- *** END API FUNCTIONS ***
 function sudoInChat(chat_id)
-    for v, user in pairs(config.sudo_users) do
-        local member = getChatMember(chat_id, user)
+    for v, user in pairs(sudoers) do
+        local member = getChatMember(chat_id, user.id)
         if type(member) == 'table' then
             if member.ok and member.result then
                 if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then

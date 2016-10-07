@@ -68,7 +68,7 @@ local function pre_process(msg)
                                 text = text .. msg.media.caption
                             end
                         end
-                        sendMessage(user, text)
+                        sendMessage(user.id, text)
                     end
                 end
             end

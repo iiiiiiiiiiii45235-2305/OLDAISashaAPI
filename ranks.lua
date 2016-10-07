@@ -147,8 +147,8 @@ function is_mod(msg, check_local)
         end
     end
 
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end
@@ -206,8 +206,8 @@ function is_mod2(user_id, chat_id, check_local)
         end
     end
 
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end
@@ -254,8 +254,8 @@ function is_owner(msg, check_local)
         end
     end
 
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end
@@ -300,8 +300,8 @@ function is_owner2(user_id, chat_id, check_local)
         end
     end
 
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end
@@ -325,8 +325,8 @@ function is_admin(msg)
         end
     end
 
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end
@@ -348,8 +348,8 @@ function is_admin2(user_id)
             var = true
         end
     end
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end
@@ -365,8 +365,8 @@ end
 function is_sudo(msg)
     local var = false
     -- Check users id in config
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(msg.from.id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(msg.from.id) then
             -- bot sudo
             var = true
         end
@@ -377,8 +377,8 @@ end
 function is_sudo2(user_id)
     local var = false
     -- Check users id in config
-    for v, user in pairs(config.sudo_users) do
-        if tostring(user) == tostring(user_id) then
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
             -- bot sudo
             var = true
         end

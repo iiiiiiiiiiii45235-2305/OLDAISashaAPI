@@ -678,8 +678,8 @@ function msg_valid(msg)
         if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
             -- if not a known group receive messages just from sudo
             local sudoMessage = false
-            for v, user in pairs(config.sudo_users) do
-                if tostring(msg.from.id) == tostring(user) then
+            for v, user in pairs(sudoers) do
+                if tostring(msg.from.id) == tostring(user.id) then
                     sudoMessage = true
                 end
             end
