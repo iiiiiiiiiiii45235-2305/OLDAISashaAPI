@@ -1,4 +1,4 @@
-﻿local function pre_process(msg)
+﻿local function run(msg, matches)
     if msg.service then
         if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
             local leave_ban = false
@@ -12,17 +12,20 @@
             end
             if msg.remover and msg.removed and leave_ban then
                 if not is_mod2(msg.removed.id) then
-                    banUser(bot.id, msg.removed.id, msg.chat.id)
+                    return banUser(bot.id, msg.removed.id, msg.chat.id)
                 end
             end
         end
     end
-    return msg
 end
 
 return {
     description = "LEAVE_BAN",
-    patterns = { },
-    pre_process = pre_process,
+    patterns =
+    {
+        "!!tgservice chat_del_user_leave",
+        "!!tgservice chat_del_user",
+    },
+    run = run,
     min_rank = 5
 }

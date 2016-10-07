@@ -621,6 +621,29 @@ end
 
 local function run(msg, matches)
     local data = load_data(config.moderation.data)
+    if msg.service then
+        if is_realm(msg) then
+            if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_user_link' then
+                if msg.added.id ~= bot.userVersion then
+                    -- if not admin and not bot then
+                    if not is_admin(msg) then
+                        return banUser(bot.id, msg.added.id, msg.chat.id)
+                    end
+                end
+            end
+        end
+        if is_group(msg) then
+            local settings = data[tostring(msg.chat.id)].settings
+            if msg.service_type == 'chat_add_user' then
+                if settings.lock_member and not is_owner2(msg.added.id, msg.chat.id) then
+                    return banUser(bot.id, msg.added.id, msg.chat.id)
+                end
+            end
+            if msg.service_type == 'chat_del_user' then
+                return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.action.user.id)
+            end
+        end
+    end
     if matches[1]:lower() == 'type' then
         if msg.from.is_mod then
             mystat('/type')
@@ -1527,37 +1550,14 @@ local function run(msg, matches)
     end
 end
 
-local function pre_process(msg)
-    if msg.service then
-        if is_realm(msg) then
-            if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_user_link' then
-                if msg.added.id ~= bot.userVersion then
-                    -- if not admin and not bot then
-                    if not is_admin(msg) then
-                        banUser(bot.id, msg.added.id, msg.chat.id)
-                    end
-                end
-            end
-        end
-        if is_group(msg) then
-            local settings = data[tostring(msg.chat.id)].settings
-            if msg.service_type == 'chat_add_user' then
-                if settings.lock_member and not is_owner2(msg.added.id, msg.chat.id) then
-                    banUser(bot.id, msg.added.id, msg.chat.id)
-                end
-            end
-            if msg.service_type == 'chat_del_user' then
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.action.user.id)
-            end
-        end
-    end
-    return msg
-end
-
 return {
     description = "GROUP_MANAGEMENT",
     patterns =
     {
+        "!!tgservice chat_add_user_link",
+        "!!tgservice chat_add_user",
+        "!!tgservice chat_del_user",
+
         -- INPM
         "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss])$",
         "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss][Ll][Ii][Ss][Tt])$",
@@ -1668,7 +1668,6 @@ return {
         -- mutelist
         "^([Ll][Ii][Ss][Tt][Aa] [Uu][Tt][Ee][Nn][Tt][Ii] [Mm][Uu][Tt][Ii])$",
     },
-    pre_process = pre_process,
     run = run,
     min_rank = 0,
     syntax =
