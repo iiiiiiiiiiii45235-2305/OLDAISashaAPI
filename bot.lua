@@ -900,7 +900,6 @@ function on_msg_receive(msg)
         print_msg(msg)
     end
 end
-end
 
 -- Call and postpone execution for cron plugins
 function cron_plugins()
