@@ -212,14 +212,6 @@ function bot_init()
     print(clr.white .. 'Loading moderation.json' .. clr.reset)
     data = load_data(config.moderation.data)
 
-    print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
-    redis:hincrby('bot:general', 'starts', 1)
-    sendMessage_SUDOERS(string.gsub(string.gsub(langs['en'].botStarted, 'Y', tot_plugins), 'X', os.date('On %A, %d %B %Y\nAt %X')), true)
-
-    -- Generate a random seed and "pop" the first random number. :)
-    math.randomseed(os.time())
-    math.random()
-
     for v, user in pairs(config.sudo_users) do
         local obj_user = getChat(user)
         if type(obj_user) == 'table' then
@@ -229,6 +221,14 @@ function bot_init()
             end
         end
     end
+
+    print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
+    redis:hincrby('bot:general', 'starts', 1)
+    sendMessage_SUDOERS(string.gsub(string.gsub(langs['en'].botStarted, 'Y', tot_plugins), 'X', os.date('On %A, %d %B %Y\nAt %X')), true)
+
+    -- Generate a random seed and "pop" the first random number. :)
+    math.randomseed(os.time())
+    math.random()
 
     last_update = last_update or 0
     -- Set loop variables: Update offset,
@@ -883,7 +883,6 @@ function on_msg_receive(msg)
     msg = pre_process_media_msg(msg)
     msg = pre_process_service_msg(msg)
     msg = adjust_msg(msg)
-    print_msg(msg)
     if msg.text then
         if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
@@ -891,9 +890,12 @@ function on_msg_receive(msg)
     end
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
+        print_msg(msg)
         if msg then
             match_plugins(msg)
         end
+    else
+        print_msg(msg)
     end
 end
 
