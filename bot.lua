@@ -785,47 +785,6 @@ local function is_plugin_disabled_on_chat(plugin_name, chat_id)
     return false
 end
 
-function match_plugin(plugin, plugin_name, msg)
-    -- Go over patterns. If one matches it's enough.
-    for k, pattern in pairs(plugin.patterns) do
-        local matches = match_pattern(pattern, msg.text)
-        if matches then
-            print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
-
-            local disabled = is_plugin_disabled_on_chat(plugin_name, msg.chat.id)
-
-            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" then
-                if msg.chat.type == 'private' then
-                    if disabled then
-                        savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
-                    else
-                        savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
-                    end
-                else
-                    if disabled then
-                        savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.chat.print_name:gsub('_', ' ') .. ' [' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
-                    else
-                        savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.chat.print_name:gsub('_', ' ') .. ' [' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
-                    end
-                end
-            end
-
-            if disabled then
-                return nil
-            end
-            -- Function exists
-            if plugin.run then
-                local result = plugin.run(msg, matches)
-                if result then
-                    sendMessage(msg.chat.id, result)
-                end
-            end
-            -- One patterns matches
-            return
-        end
-    end
-end
-
 function print_msg(msg)
     local hour = os.date('%H')
     local minute = os.date('%M')
@@ -868,6 +827,48 @@ function print_msg(msg)
     print(msg.chat.id)
 end
 
+function match_plugin(plugin, plugin_name, msg)
+    -- Go over patterns. If one matches it's enough.
+    for k, pattern in pairs(plugin.patterns) do
+        local matches = match_pattern(pattern, msg.text)
+        if matches then
+            print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
+            print_msg(msg)
+
+            local disabled = is_plugin_disabled_on_chat(plugin_name, msg.chat.id)
+
+            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" then
+                if msg.chat.type == 'private' then
+                    if disabled then
+                        savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                    else
+                        savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
+                    end
+                else
+                    if disabled then
+                        savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.chat.print_name:gsub('_', ' ') .. ' [' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                    else
+                        savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.chat.print_name:gsub('_', ' ') .. ' [' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
+                    end
+                end
+            end
+
+            if disabled then
+                return nil
+            end
+            -- Function exists
+            if plugin.run then
+                local result = plugin.run(msg, matches)
+                if result then
+                    sendMessage(msg.chat.id, result)
+                end
+            end
+            -- One patterns matches
+            return
+        end
+    end
+end
+
 -- This function is called when tg receive a msg
 function on_msg_receive(msg)
     if not is_started then
@@ -891,7 +892,6 @@ function on_msg_receive(msg)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
-            print_msg(msg)
             match_plugins(msg)
         else
             print_msg(msg)
