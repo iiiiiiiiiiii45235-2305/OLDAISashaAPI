@@ -319,24 +319,11 @@ end
 function adjust_msg(msg)
     -- sender print_name and tg_cli_id
     msg.from = adjust_user(msg.from)
-
-    if msg.new_chat_participant then
-        msg.new_chat_participant = adjust_user(msg.new_chat_participant)
-    end
-    if msg.new_chat_member then
-        msg.new_chat_member = adjust_user(msg.new_chat_member)
-    end
     if msg.adder then
         msg.adder = adjust_user(msg.adder)
     end
     if msg.added then
         msg.added = adjust_user(msg.added)
-    end
-    if msg.left_chat_participant then
-        msg.left_chat_participant = adjust_user(msg.left_chat_participant)
-    end
-    if msg.left_chat_member then
-        msg.left_chat_member = adjust_user(msg.left_chat_member)
     end
     if msg.remover then
         msg.remover = adjust_user(msg.remover)
@@ -626,6 +613,8 @@ function pre_process_service_msg(msg)
             msg.text = '!!tgservice chat_add_user'
             msg.service_type = 'chat_add_user'
         end
+        msg.new_chat_member = nil
+        msg.new_chat_participant = nil
     end
     if msg.remover and msg.removed then
         msg.service = true
@@ -637,6 +626,8 @@ function pre_process_service_msg(msg)
             msg.text = '!!tgservice chat_del_user'
             msg.service_type = 'chat_del_user'
         end
+        msg.left_chat_member = nil
+        msg.left_chat_participant = nil
     end
     if msg.reply then
         pre_process_service_msg(msg.reply_to_message)
