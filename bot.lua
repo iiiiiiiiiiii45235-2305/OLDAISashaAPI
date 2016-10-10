@@ -727,7 +727,7 @@ function msg_valid(msg)
     end
 
     if msg.chat.id == config.vardump_chat then
-        sendMessage(msg.chat.id, vardumptext(msg))
+        sendMessage(msg.chat.id, 'AFTER ADJUST\n' .. vardumptext(msg))
         print(clr.yellow .. 'Not valid: vardump chat' .. clr.reset)
         return false
     end
@@ -880,6 +880,9 @@ function on_msg_receive(msg)
     if not msg then
         sendMessage_SUDOERS(langs['en'].loopWithoutMessage, true)
         return
+    end
+    if msg.chat.id == config.vardump_chat then
+        sendMessage(msg.chat.id, 'BEFORE ADJUST\n' .. vardumptext(msg))
     end
     collect_stats(msg)
     msg = pre_process_reply(msg)
