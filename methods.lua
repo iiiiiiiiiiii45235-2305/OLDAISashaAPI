@@ -770,7 +770,7 @@ function sudoInChat(chat_id)
 end
 
 function userVersionInChat(chat_id)
-    local member = getChatMember(chat_id, bot.userVersion)
+    local member = getChatMember(chat_id, bot.userVersion.id)
     if type(member) == 'table' then
         if member.ok and member.result then
             if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
@@ -1209,7 +1209,7 @@ function deleteMessage(msg)
     if flag then
         if status == 'creator' or status == 'administrator' then
             if is_super_group(msg) then
-                sendReply(msg, '@aisasha !del')
+                sendReply(msg,(bot.userVersion.username or '') .. ' !del')
             end
         end
     end

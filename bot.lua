@@ -203,7 +203,13 @@ function bot_init()
         bot = getMe()
     end
     bot = bot.result
-    bot.userVersion = 149998353
+    local obj = getChat(149998353)
+    if type(obj) == 'table' then
+        if obj.result then
+            obj = obj.result
+            bot.userVersion = obj
+        end
+    end
 
     local tot_plugins = load_plugins()
     print(clr.white .. 'Loading database.json' .. clr.reset)
@@ -689,7 +695,7 @@ function msg_valid(msg)
         end
     end
 
-    if msg.from.id == bot.userVersion then
+    if msg.from.id == bot.userVersion.id then
         print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
         return false
     end
