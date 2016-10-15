@@ -291,7 +291,7 @@ end
 local function save_to_db(msg)
     if database then
         if msg.from.type == 'private' then
-            db_user(msg.from)
+            db_user(msg.from, msg.chat.id)
         end
         if msg.from.type == 'channel' then
             db_channel(msg.from)
@@ -306,22 +306,28 @@ local function save_to_db(msg)
             db_channel(msg.chat)
         end
         if msg.adder then
-            db_user(msg.adder)
+            db_user(msg.adder, msg.chat.id)
         end
         if msg.added then
-            db_user(msg.added)
+            db_user(msg.added, msg.chat.id)
         end
         if msg.remover then
-            db_user(msg.remover)
+            db_user(msg.remover, msg.chat.id)
         end
         if msg.removed then
-            db_user(msg.removed)
+            db_user(msg.remove, msg.chat.id)
+        end
+
+        if msg.entities then
+            if msg.entities.user then
+                db_user(msg.entities.user, msg.chat.id)
+            end
         end
 
         -- if forward save forward
         if msg.forward then
             if msg.forward_from then
-                db_user(msg.forward_from)
+                db_user(msg.forward_from, msg.chat.id)
             elseif msg.forward_from_chat then
                 db_channel(msg.forward_from_chat)
             end
