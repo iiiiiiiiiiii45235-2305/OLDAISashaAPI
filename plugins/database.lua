@@ -136,13 +136,56 @@ local function run(msg, matches)
             return sendReply(msg, langs[msg.lang].dbCreated)
         end
 
-        if (matches[1]:lower() == 'search' or matches[1]:lower() == 'sasha cerca' or matches[1]:lower() == 'cerca') and matches[2] then
+        if matches[1]:lower() == 'search' or matches[1]:lower() == 'sasha cerca' or matches[1]:lower() == 'cerca' then
             mystat('/search')
-            if database[tostring(matches[2])] then
-                return sendMessage(msg.chat.id, serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false }))
-            else
-                return matches[2] .. langs[msg.lang].notFound
+            if msg.reply then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                if database[tostring(msg.reply_to_message.forward_from.id)] then
+                                    return sendMessage(msg.chat.id, serpent.block(database[tostring(msg.reply_to_message.forward_from.id)], { sortkeys = false, comment = false }))
+                                else
+                                    return matches[2] .. langs[msg.lang].notFound
+                                end
+                            elseif msg.reply_to_message.forward_from_chat then
+                                if database[tostring(msg.reply_to_message.forward_from_chat.id)] then
+                                    return sendMessage(msg.chat.id, serpent.block(database[tostring(msg.reply_to_message.forward_from_chat.id)], { sortkeys = false, comment = false }))
+                                else
+                                    return matches[2] .. langs[msg.lang].notFound
+                                end
+                            end
+                        else
+                            return langs[msg.lang].errorNoForward
+                        end
+                    end
+                else
+                    if database[tostring(msg.reply_to_message.from.id)] then
+                        return sendMessage(msg.chat.id, serpent.block(database[tostring(msg.reply_to_message.from.id)], { sortkeys = false, comment = false }))
+                    else
+                        return matches[2] .. langs[msg.lang].notFound
+                    end
+                end
             end
+            if string.match(matches[2], '^%d+$') then
+                if database[tostring(matches[2])] then
+                    return sendMessage(msg.chat.id, serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false }))
+                else
+                    return matches[2] .. langs[msg.lang].notFound
+                end
+            else
+                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                if obj_user then
+                    if obj_user.type == 'private' then
+                        if database[tostring(obj_user.id)] then
+                            return sendMessage(msg.chat.id, serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false }))
+                        else
+                            return matches[2] .. langs[msg.lang].notFound
+                        end
+                    end
+                end
+            end
+            return
         end
 
         if matches[1]:lower() == 'addrecord' and matches[2] and matches[3] then
@@ -291,7 +334,7 @@ end
 local function save_to_db(msg)
     if database then
         if msg.from.type == 'private' then
-            db_user(msg.from)
+            db_user(msg.from, msg.chat.id)
         end
         if msg.from.type == 'channel' then
             db_channel(msg.from)
@@ -306,22 +349,28 @@ local function save_to_db(msg)
             db_channel(msg.chat)
         end
         if msg.adder then
-            db_user(msg.adder)
+            db_user(msg.adder, msg.chat.id)
         end
         if msg.added then
-            db_user(msg.added)
+            db_user(msg.added, msg.chat.id)
         end
         if msg.remover then
-            db_user(msg.remover)
+            db_user(msg.remover, msg.chat.id)
         end
         if msg.removed then
-            db_user(msg.removed)
+            db_user(msg.remove, msg.chat.id)
+        end
+
+        if msg.entities then
+            if msg.entities.user then
+                db_user(msg.entities.user, msg.chat.id)
+            end
         end
 
         -- if forward save forward
         if msg.forward then
             if msg.forward_from then
-                db_user(msg.forward_from)
+                db_user(msg.forward_from, msg.chat.id)
             elseif msg.forward_from_chat then
                 db_channel(msg.forward_from_chat)
             end
@@ -372,7 +421,7 @@ return {
         "SUDO",
         "#createdatabase",
         "(#dodatabase|sasha esegui database)",
-        "(#search|[sasha] cerca) <id>",
+        "(#search|[sasha] cerca) <id>|<username>|<reply>|from",
         "(#delete|[sasha] elimina) <id>",
         "#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<groups_ids_separated_by_space>",
         "#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>",

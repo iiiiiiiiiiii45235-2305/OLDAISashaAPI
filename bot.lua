@@ -203,7 +203,13 @@ function bot_init()
         bot = getMe()
     end
     bot = bot.result
-    bot.userVersion = 149998353
+    local obj = getChat(149998353)
+    if type(obj) == 'table' then
+        if obj.result then
+            obj = obj.result
+            bot.userVersion = obj
+        end
+    end
 
     local tot_plugins = load_plugins()
     print(clr.white .. 'Loading database.json' .. clr.reset)
@@ -689,7 +695,7 @@ function msg_valid(msg)
         end
     end
 
-    if msg.from.id == bot.userVersion then
+    if msg.from.id == bot.userVersion.id then
         print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
         return false
     end
@@ -926,6 +932,8 @@ function cron_administrator()
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
 
+        -- AISASHAAPI
+
         -- deletes all files in tmp folder
         io.popen('rm \'/home/pi/AISashaAPI/data/tmp/*\''):read("*all")
 
@@ -960,6 +968,38 @@ function cron_administrator()
                 last_backup = v
             end
             sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
+        end
+
+        -- AISASHAEXP
+
+        -- send database
+        if io.popen('find /home/pi/AISashaExp/data/database.json'):read("*all") ~= '' then
+            sendDocument_SUDOERS('/home/pi/AISashaExp/data/database.json')
+        end
+
+        -- do backup
+        local time = os.time()
+        local log = io.popen('cd "/home/pi/BACKUPS/" && tar -zcvf backupAISasha' .. time .. '.tar.gz /home/pi/AISashaExp --exclude=/home/pi/AISashaExp/.git --exclude=/home/pi/AISashaExp/.luarocks --exclude=/home/pi/AISashaExp/patches --exclude=/home/pi/AISashaExp/tg'):read('*all')
+        local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
+        file:write(log)
+        file:flush()
+        file:close()
+        sendMessage_SUDOERS(langs['en'].autoSendBackupDb)
+
+        -- send last backup
+        local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
+        local backups = { }
+        if files then
+            for k, v in pairsByKeys(files) do
+                if string.match(v, '^backupAISasha%d+%.tar%.gz$') then
+                    backups[string.match(v, '%d+')] = v
+                end
+            end
+            local last_backup = ''
+            for k, v in pairsByKeys(backups) do
+                last_backup = v
+            end
+            sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup, ok_cb, false)
         end
     end
 end

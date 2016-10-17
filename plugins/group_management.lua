@@ -601,7 +601,7 @@ local function run(msg, matches)
     if msg.service then
         if is_realm(msg) then
             if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_user_link' then
-                if msg.added.id ~= bot.userVersion then
+                if msg.added.id ~= bot.userVersion.id then
                     -- if not admin and not bot then
                     if not is_admin(msg) then
                         return banUser(bot.id, msg.added.id, msg.chat.id)
