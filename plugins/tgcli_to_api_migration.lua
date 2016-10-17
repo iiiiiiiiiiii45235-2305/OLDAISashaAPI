@@ -196,10 +196,9 @@ local function run(msg, matches)
                                 new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
                                 new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
                                 migrated = true
-                            else
-                                if not migrated then
-                                    return langs[msg.lang].unknownGroupType .. id_string
-                                end
+                            end
+                            if not migrated then
+                                return langs[msg.lang].unknownGroupType .. id_string
                             end
                         else
                             return langs[msg.lang].unknownGroupType .. id_string
