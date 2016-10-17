@@ -87,7 +87,7 @@ local function run(msg, matches)
                     new_moderation_data['groups'] = { }
                 end
                 for id_string in pairs(old_moderation_data['groups']) do
-                    if id_string == msg.chat.tg_cli_id then
+                    if id_string == tostring(msg.chat.tg_cli_id) then
                         if old_moderation_data[id_string] then
                             if new_moderation_data[id_string] then
                                 return langs[msg.lang].migrationAlreadyExecuted
@@ -188,7 +188,7 @@ local function run(msg, matches)
                 end
                 for id_string in pairs(old_moderation_data['realms']) do
                     if old_moderation_data[id_string] then
-                        if id_string == msg.chat.tg_cli_id then
+                        if id_string == tostring(msg.chat.tg_cli_id) then
                             if old_moderation_data[id_string].group_type == 'Realm' then
                                 new_moderation_data['realms'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
                                 new_moderation_data[tostring(msg.chat.id)] = { }
