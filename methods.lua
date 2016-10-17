@@ -820,6 +820,25 @@ function kickUser(executer, target, chat_id)
         end
     end
 end
+function preBanUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
+        -- try to kick. "code" is already specific
+        savelog(chat_id, "[" .. executer .. "] banned user " .. target)
+        redis:hincrby('bot:general', 'ban', 1)
+        -- general: save how many kicks
+        local hash = 'banned:' .. chat_id
+        redis:sadd(hash, tostring(target))
+        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+    else
+        if isWhitelisted(target) then
+            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
+            return langs[get_lang(chat_id)].cantKickWhitelisted
+        else
+            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
+            return langs[get_lang(chat_id)].require_rank
+        end
+    end
+end
 
 -- call this to ban
 function banUser(executer, target, chat_id)
