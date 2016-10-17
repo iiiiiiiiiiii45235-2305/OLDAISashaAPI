@@ -74,7 +74,7 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'migrate' then
-        if msg.is_owner then
+        if msg.from.is_owner then
             mystat('/migrate')
             -- migrate group from moderation.json
             local old_moderation_path = '/home/pi/AISashaExp/data/moderation.json'
