@@ -117,7 +117,8 @@ function run(msg, matches)
             end
             return sendMessage(msg.chat.id, action)
         else
-            return redis:set('api:folder', '')
+            redis:set('api:folder', '')
+            return langs[msg.lang].youAreHere .. BASE_FOLDER
         end
     else
         return langs[msg.lang].require_sudo
