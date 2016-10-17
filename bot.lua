@@ -822,8 +822,8 @@ function print_msg(msg)
         if msg.text then
             print_text = print_text .. clr.blue .. msg.text .. clr.reset
         end
-        print(print_text)
         print(msg.chat.id)
+        print(print_text)
     end
 end
 
