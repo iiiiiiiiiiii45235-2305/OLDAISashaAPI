@@ -125,112 +125,6 @@ local function run(msg, matches)
     if matches[1]:lower() == 'sudomigrate' then
         mystat('/sudomigrate')
         if is_sudo(msg) then
-            -- migrate groups from moderation.json
-            local old_moderation_path = '/home/pi/AISashaExp/data/moderation.json'
-            local new_moderation_path = '/home/pi/AISashaAPI/data/moderation.json'
-            local old_moderation_data = load_data(old_moderation_path)
-            local new_moderation_data = load_data(new_moderation_path)
-            if old_moderation_data['groups'] then
-                new_moderation_data['groups'] = { }
-                for id_string in pairs(old_moderation_data['groups']) do
-                    if old_moderation_data[id_string] then
-                        if old_moderation_data[id_string].group_type == 'SuperGroup' then
-                            new_moderation_data['groups'][tostring('-100' .. id_string)] = tonumber('-100' .. id_string)
-                            new_moderation_data[tostring('-100' .. id_string)] = { }
-                            new_moderation_data[tostring('-100' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                            new_moderation_data[tostring('-100' .. id_string)].moderators = old_moderation_data[id_string].moderators
-                            new_moderation_data[tostring('-100' .. id_string)].rules = old_moderation_data[id_string].rules
-                            new_moderation_data[tostring('-100' .. id_string)].set_owner = old_moderation_data[id_string].set_owner
-                            new_moderation_data[tostring('-100' .. id_string)].settings = {
-                                flood = true,
-                                flood_max = 5,
-                                lock_arabic = false,
-                                lock_leave = false,
-                                lock_link = false,
-                                lock_member = false,
-                                lock_rtl = false,
-                                lock_spam = false,
-                                mutes =
-                                {
-                                    all = false,
-                                    audio = false,
-                                    contact = false,
-                                    document = false,
-                                    gif = false,
-                                    location = false,
-                                    photo = false,
-                                    sticker = false,
-                                    text = false,
-                                    tgservice = false,
-                                    video = false,
-                                    voice = false,
-                                },
-                                strict = false,
-                                warn_max = 3,
-                            }
-                            new_moderation_data[tostring('-100' .. id_string)].welcome = old_moderation_data[id_string].welcome
-                            new_moderation_data[tostring('-100' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers
-                            new_moderation_data[tostring('-100' .. id_string)].goodbye = old_moderation_data[id_string].goodbye
-                        elseif old_moderation_data[id_string].group_type == 'Group' then
-                            new_moderation_data['groups'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
-                            new_moderation_data[tostring('-' .. id_string)] = { }
-                            new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                            new_moderation_data[tostring('-' .. id_string)].moderators = old_moderation_data[id_string].moderators
-                            new_moderation_data[tostring('-' .. id_string)].rules = old_moderation_data[id_string].rules
-                            new_moderation_data[tostring('-' .. id_string)].set_owner = old_moderation_data[id_string].set_owner
-                            new_moderation_data[tostring('-' .. id_string)].settings = {
-                                flood = true,
-                                flood_max = 5,
-                                lock_arabic = false,
-                                lock_leave = false,
-                                lock_link = false,
-                                lock_member = false,
-                                lock_rtl = false,
-                                lock_spam = false,
-                                mutes =
-                                {
-                                    all = false,
-                                    audio = false,
-                                    contact = false,
-                                    document = false,
-                                    gif = false,
-                                    location = false,
-                                    photo = false,
-                                    sticker = false,
-                                    text = false,
-                                    tgservice = false,
-                                    video = false,
-                                    voice = false,
-                                },
-                                strict = false,
-                                warn_max = 3,
-                            }
-                            new_moderation_data[tostring('-' .. id_string)].welcome = old_moderation_data[id_string].welcome
-                            new_moderation_data[tostring('-' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers
-                            new_moderation_data[tostring('-' .. id_string)].goodbye = old_moderation_data[id_string].goodbye
-                        else
-                            -- error unknown group type .. id_string
-                        end
-                    else
-                        -- error no group data found
-                    end
-                end
-            end
-            if old_moderation_data['realms'] then
-                new_moderation_data['realms'] = { }
-                for id_string in pairs(old_moderation_data['realms']) do
-                    if old_moderation_data[id_string] then
-                        new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
-                        new_moderation_data[tostring('-' .. id_string)] = { }
-                        new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                        new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
-                    else
-                        -- error no group data found
-                    end
-                end
-            end
-            save_data(new_moderation_path, new_moderation_data)
-
             -- migrate database from database.json
             local old_database_path = '/home/pi/AISashaExp/data/database.json'
             local new_database_path = '/home/pi/AISashaAPI/data/database.json'
@@ -276,6 +170,8 @@ local function run(msg, matches)
                 end
             end
             save_data(new_database_path, new_database_data)
+        else
+            return langs[msg.lang].require_sudo
         end
     end
     return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
