@@ -86,7 +86,7 @@ local function run(msg, matches)
                     new_moderation_data['groups'] = { }
                 end
                 for id_string in pairs(old_moderation_data['groups']) do
-                    if id_string == tostring(msg.chat.id):gsub('^-100', '') then
+                    if id_string == msg.chat.tg_cli_id then
                         if old_moderation_data[id_string] then
                             if new_moderation_data[id_string] then
                                 return langs[msg.lang].migrationAlreadyExecuted
@@ -174,19 +174,24 @@ local function run(msg, matches)
                         else
                             return langs[msg.lang].noGroupDataAvailable
                         end
-                    elseif id_string == tostring(msg.chat.id):gsub('^-', '') then
                     end
                 end
             end
             if old_moderation_data['realms'] then
-                new_moderation_data['realms'] = { }
+                if not new_moderation_data['realms'] then
+                    new_moderation_data['realms'] = { }
+                end
                 for id_string in pairs(old_moderation_data['realms']) do
                     if old_moderation_data[id_string] then
-                        new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
-                        new_moderation_data[tostring('-' .. id_string)] = { }
-                        new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                        new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
-                        new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                        if id_string == tostring(msg.chat.id):gsub('^-', '') then
+                            new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
+                            new_moderation_data[tostring('-' .. id_string)] = { }
+                            new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
+                            new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
+                            new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                        else
+                            return langs[msg.lang].unknownGroupType .. id_string
+                        end
                     else
                         return langs[msg.lang].noGroupDataAvailable
                     end
