@@ -74,8 +74,8 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'migrate' then
-        mystat('/migrate')
-        if is_owner then
+        if msg.is_owner then
+            mystat('/migrate')
             -- migrate group from moderation.json
             local old_moderation_path = '/home/pi/AISashaExp/data/moderation.json'
             local new_moderation_path = '/home/pi/AISashaAPI/data/moderation.json'
@@ -241,8 +241,8 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'sudomigrate' then
-        mystat('/sudomigrate')
         if is_sudo(msg) then
+            mystat('/sudomigrate')
             -- migrate database from database.json
             local old_database_path = '/home/pi/AISashaExp/data/database.json'
             local new_database_path = '/home/pi/AISashaAPI/data/database.json'
