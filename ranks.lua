@@ -1,14 +1,14 @@
 rank_table = { ["USER"] = 0, ["MOD"] = 1, ["OWNER"] = 2, ["ADMIN"] = 3, ["SUDO"] = 4, ["BOT"] = 5 }
 reverse_rank_table = { "USER", "MOD", "OWNER", "ADMIN", "SUDO", "BOT" }
 
-function get_rank(user_id, chat_id)
+function get_rank(user_id, chat_id, check_local)
     if tonumber(user_id) ~= tonumber(chat_id) then
         -- if get_rank in a group check only in that group
         if tonumber(bot.id) ~= tonumber(user_id) then
             if not is_sudo2(user_id) then
                 if not is_admin2(user_id) then
-                    if not is_owner2(user_id, chat_id) then
-                        if not is_mod2(user_id, chat_id) then
+                    if not is_owner2(user_id, chat_id, check_local) then
+                        if not is_mod2(user_id, chat_id, check_local) then
                             -- user
                             return rank_table["USER"]
                         else
@@ -40,8 +40,8 @@ function get_rank(user_id, chat_id)
                     if data['groups'] then
                         -- if there are any groups check for everyone of them the rank of the user and choose the higher one
                         for id_string in pairs(data['groups']) do
-                            if not is_owner2(user_id, id_string, true) then
-                                if not is_mod2(user_id, id_string, true) then
+                            if not is_owner2(user_id, id_string, check_local) then
+                                if not is_mod2(user_id, id_string, check_local) then
                                     -- user
                                     if higher_rank < rank_table["USER"] then
                                         higher_rank = rank_table["USER"]
@@ -76,9 +76,9 @@ function get_rank(user_id, chat_id)
     end
 end
 
-function compare_ranks(executer, target, chat_id)
-    local executer_rank = get_rank(executer, chat_id)
-    local target_rank = get_rank(target, chat_id)
+function compare_ranks(executer, target, chat_id, check_local)
+    local executer_rank = get_rank(executer, chat_id, check_local)
+    local target_rank = get_rank(target, chat_id, check_local)
     if executer_rank > target_rank then
         return true
     elseif executer_rank <= target_rank then

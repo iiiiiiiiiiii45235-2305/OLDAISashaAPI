@@ -821,7 +821,7 @@ function kickUser(executer, target, chat_id)
     end
 end
 function preBanUser(executer, target, chat_id)
-    if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
+    if compare_ranks(executer, target, chat_id, true) and not isWhitelisted(target) then
         -- try to kick. "code" is already specific
         savelog(chat_id, "[" .. executer .. "] banned user " .. target)
         redis:hincrby('bot:general', 'ban', 1)
