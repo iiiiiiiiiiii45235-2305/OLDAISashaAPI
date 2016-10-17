@@ -64,84 +64,83 @@ local function check_msg(msg, settings)
             msg = clean_msg(msg)
             return msg
         end
-        if not msg.media then
-            if msg.text then
-                if mute_text then
-                    action(msg, strict)
-                    msg = clean_msg(msg)
-                    return msg
-                end
-                -- msg.text checks
-                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                local _nl, real_digits = string.gsub(msg.text, '%d', '')
-                if lock_spam and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
-                    action(msg, strict)
-                    msg = clean_msg(msg)
-                    return msg
-                end
-                local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-                -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-                local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-                if is_link_msg and lock_link and not is_bot then
-                    if group_link then
-                        if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
-                            action(msg, strict)
-                            msg = clean_msg(msg)
-                            return msg
-                        end
-                    else
+        if msg.text then
+            if mute_text then
+                action(msg, strict)
+                msg = clean_msg(msg)
+                return msg
+            end
+            -- msg.text checks
+            local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
+            local _nl, real_digits = string.gsub(msg.text, '%d', '')
+            if lock_spam and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+                action(msg, strict)
+                msg = clean_msg(msg)
+                return msg
+            end
+            local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
+            -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
+            local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
+            if is_link_msg and lock_link and not is_bot then
+                if group_link then
+                    if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
                         action(msg, strict)
                         msg = clean_msg(msg)
                         return msg
                     end
-                end
-                local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
-                if is_squig_msg and lock_arabic then
-                    action(msg, strict)
-                    msg = clean_msg(msg)
-                    return msg
-                end
-                local print_name = msg.from.print_name
-                local is_rtl = print_name:match("‮") or msg.text:match("‮")
-                if is_rtl and lock_rtl then
+                else
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             end
-        else
-            -- msg.media checks
-            if msg.caption then
-                -- msg.caption checks
-                local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
-                -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-                if is_link_caption and lock_link then
-                    if group_link then
-                        if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
-                            action(msg, strict)
-                            msg = clean_msg(msg)
-                            return msg
-                        end
-                    else
+            local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
+            if is_squig_msg and lock_arabic then
+                action(msg, strict)
+                msg = clean_msg(msg)
+                return msg
+            end
+            local print_name = msg.from.print_name
+            local is_rtl = print_name:match("‮") or msg.text:match("‮")
+            if is_rtl and lock_rtl then
+                action(msg, strict)
+                msg = clean_msg(msg)
+                return msg
+            end
+        end
+        -- msg.media checks
+        if msg.caption then
+            -- msg.caption checks
+            local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/")
+            -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
+            if is_link_caption and lock_link then
+                if group_link then
+                    if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
                         action(msg, strict)
                         msg = clean_msg(msg)
                         return msg
                     end
-                end
-                local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
-                if is_squig_caption and lock_arabic then
-                    action(msg, strict)
-                    msg = clean_msg(msg)
-                    return msg
-                end
-                local print_name = msg.from.print_name
-                local is_rtl = print_name:match("‮") or msg.caption:match("‮")
-                if is_rtl and lock_rtl then
+                else
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             end
+            local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
+            if is_squig_caption and lock_arabic then
+                action(msg, strict)
+                msg = clean_msg(msg)
+                return msg
+            end
+            local print_name = msg.from.print_name
+            local is_rtl = print_name:match("‮") or msg.caption:match("‮")
+            if is_rtl and lock_rtl then
+                action(msg, strict)
+                msg = clean_msg(msg)
+                return msg
+            end
+        end
+        if msg.media_type then
             if msg.media_type == 'audio' then
                 if mute_audio then
                     action(msg, strict)
