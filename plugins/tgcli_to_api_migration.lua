@@ -94,15 +94,15 @@ local function run(msg, matches)
                                     return langs[msg.lang].migrationAlreadyExecuted
                                 else
                                     if old_moderation_data[id_string].group_type == 'SuperGroup' then
-                                        new_moderation_data['groups'][tostring('-100' .. id_string)] = tonumber('-100' .. id_string)
-                                        new_moderation_data[tostring('-100' .. id_string)] = { }
-                                        new_moderation_data[tostring('-100' .. id_string)].goodbye = old_moderation_data[id_string].goodbye or ''
-                                        new_moderation_data[tostring('-100' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                                        new_moderation_data[tostring('-100' .. id_string)].moderators = old_moderation_data[id_string].moderators
-                                        new_moderation_data[tostring('-100' .. id_string)].rules = old_moderation_data[id_string].rules
-                                        new_moderation_data[tostring('-100' .. id_string)].set_name = msg.chat.print_name
-                                        new_moderation_data[tostring('-100' .. id_string)].set_owner = old_moderation_data[id_string].set_owner
-                                        new_moderation_data[tostring('-100' .. id_string)].settings = {
+                                        new_moderation_data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
+                                        new_moderation_data[tostring(msg.chat.id)] = { }
+                                        new_moderation_data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
+                                        new_moderation_data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
+                                        new_moderation_data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
+                                        new_moderation_data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
+                                        new_moderation_data[tostring(msg.chat.id)].set_name = msg.chat.print_name
+                                        new_moderation_data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
+                                        new_moderation_data[tostring(msg.chat.id)].settings = {
                                             flood = true,
                                             flood_max = 5,
                                             lock_arabic = false,
@@ -129,20 +129,20 @@ local function run(msg, matches)
                                             strict = false,
                                             warn_max = 3,
                                         }
-                                        new_moderation_data[tostring('-100' .. id_string)].welcome = old_moderation_data[id_string].welcome or ''
-                                        new_moderation_data[tostring('-100' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
+                                        new_moderation_data[tostring(msg.chat.id)].welcome = old_moderation_data[id_string].welcome or ''
+                                        new_moderation_data[tostring(msg.chat.id)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
                                         migrated = true
                                     end
                                     if old_moderation_data[id_string].group_type == 'Group' then
-                                        new_moderation_data['groups'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
-                                        new_moderation_data[tostring('-' .. id_string)] = { }
-                                        new_moderation_data[tostring('-' .. id_string)].goodbye = old_moderation_data[id_string].goodbye or ''
-                                        new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                                        new_moderation_data[tostring('-' .. id_string)].moderators = old_moderation_data[id_string].moderators
-                                        new_moderation_data[tostring('-' .. id_string)].rules = old_moderation_data[id_string].rules
-                                        new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
-                                        new_moderation_data[tostring('-' .. id_string)].set_owner = old_moderation_data[id_string].set_owner
-                                        new_moderation_data[tostring('-' .. id_string)].settings = {
+                                        new_moderation_data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
+                                        new_moderation_data[tostring(msg.chat.id)] = { }
+                                        new_moderation_data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
+                                        new_moderation_data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
+                                        new_moderation_data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
+                                        new_moderation_data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
+                                        new_moderation_data[tostring(msg.chat.id)].set_name = msg.chat.print_name
+                                        new_moderation_data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
+                                        new_moderation_data[tostring(msg.chat.id)].settings = {
                                             flood = true,
                                             flood_max = 5,
                                             lock_arabic = false,
@@ -169,8 +169,8 @@ local function run(msg, matches)
                                             strict = false,
                                             warn_max = 3,
                                         }
-                                        new_moderation_data[tostring('-' .. id_string)].welcome = old_moderation_data[id_string].welcome or ''
-                                        new_moderation_data[tostring('-' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
+                                        new_moderation_data[tostring(msg.chat.id)].welcome = old_moderation_data[id_string].welcome or ''
+                                        new_moderation_data[tostring(msg.chat.id)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
                                         migrated = true
                                     end
                                     if not migrated then
@@ -193,11 +193,11 @@ local function run(msg, matches)
                         if old_moderation_data[id_string] then
                             if id_string == msg.chat.tg_cli_id then
                                 if old_moderation_data[id_string].group_type == 'Realm' then
-                                    new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
-                                    new_moderation_data[tostring('-' .. id_string)] = { }
-                                    new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                                    new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
-                                    new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                                    new_moderation_data['realms'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
+                                    new_moderation_data[tostring(msg.chat.id)] = { }
+                                    new_moderation_data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
+                                    new_moderation_data[tostring(msg.chat.id)].set_name = msg.chat.print_name
+                                    new_moderation_data[tostring(msg.chat.id)].settings = old_moderation_data[id_string].settings
                                     migrated = true
                                 end
                                 if not migrated then
