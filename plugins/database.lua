@@ -399,7 +399,7 @@ return {
     {
         "^[#!/]([Cc][Rr][Ee][Aa][Tt][Ee][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
         "^[#!/]([Dd][Oo][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
-        "^[#!/]([Ss][Ee][Aa][Rr][Cc][Hh]) (%-?%d+)$",
+        "^[#!/]([Ss][Ee][Aa][Rr][Cc][Hh]) (.*)$",
         "^[#!/]([Aa][Dd][Dd][Rr][Ee][Cc][Oo][Rr][Dd]) ([^%s]+) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ee][Tt][Ee]) (%-?%d+)$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Dd][Bb])$",
@@ -407,8 +407,8 @@ return {
         -- dodatabase
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
         -- search
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa]) (%-?%d+)$",
-        "^([Cc][Ee][Rr][Cc][Aa]) (%-?%d+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa]) (.*)$",
+        "^([Cc][Ee][Rr][Cc][Aa]) (.*)$",
         -- delete
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa]) (%-?%d+)$",
         "^([Ee][Ll][Ii][Mm][Ii][Nn][Aa]) (%-?%d+)$",
