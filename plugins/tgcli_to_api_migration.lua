@@ -183,12 +183,16 @@ local function run(msg, matches)
                 end
                 for id_string in pairs(old_moderation_data['realms']) do
                     if old_moderation_data[id_string] then
-                        if id_string == tostring(msg.chat.id):gsub('^-', '') then
-                            new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
-                            new_moderation_data[tostring('-' .. id_string)] = { }
-                            new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
-                            new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
-                            new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                        if id_string == msg.chat.tg_cli_id then
+                            if old_moderation_data[id_string].group_type == 'Realm' then
+                                new_moderation_data['realms'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
+                                new_moderation_data[tostring('-' .. id_string)] = { }
+                                new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
+                                new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
+                                new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                            else
+                                return langs[msg.lang].unknownGroupType .. id_string
+                            end
                         else
                             return langs[msg.lang].unknownGroupType .. id_string
                         end
