@@ -252,6 +252,8 @@ local function run(msg, matches)
                 end
             end
             save_data(new_likecounter_path, new_likecounter_data)
+            database = load_data(config.database.db)
+            data = load_data(config.moderation.data)
             return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
         else
             return langs[msg.lang].require_owner
