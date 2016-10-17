@@ -560,6 +560,10 @@ return {
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = 'Migrazione completata.',
+        migrationAlreadyExecuted = 'Migrazione del gruppo già effettuata.',
+        unknownGroupType = 'Errore, tipo di gruppo sconosciuto, ID: ',
+        noUserDataAvailable = 'Nessun dato dell\'utente disponibile.',
+        noGroupDataAvailable = 'Nessun dato del gruppo disponibile.',
 
         -- unset.lua --
         deleted = ' eliminato.',
@@ -1431,6 +1435,10 @@ return {
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = 'Migration completed.',
+        migrationAlreadyExecuted = 'Group migration already executed.',
+        unknownGroupType = 'Error, unknown group type, ID: ',
+        noUserDataAvailable = 'No available data for the user.',
+        noGroupDataAvailable = 'No available data for the group.',
 
         -- unset.lua --
         deleted = ' deleted.',
