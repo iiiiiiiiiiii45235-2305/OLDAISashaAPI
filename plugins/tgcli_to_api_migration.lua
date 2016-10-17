@@ -76,6 +76,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'migrate' then
         if msg.from.is_owner then
             mystat('/migrate')
+            local migrated = false
             -- migrate group from moderation.json
             local old_moderation_path = '/home/pi/AISashaExp/data/moderation.json'
             local new_moderation_path = '/home/pi/AISashaAPI/data/moderation.json'
@@ -129,7 +130,9 @@ local function run(msg, matches)
                                     }
                                     new_moderation_data[tostring('-100' .. id_string)].welcome = old_moderation_data[id_string].welcome or ''
                                     new_moderation_data[tostring('-100' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
-                                elseif old_moderation_data[id_string].group_type == 'Group' then
+                                    migrated = true
+                                end
+                                if old_moderation_data[id_string].group_type == 'Group' then
                                     new_moderation_data['groups'][tostring('-' .. id_string)] = tonumber('-' .. id_string)
                                     new_moderation_data[tostring('-' .. id_string)] = { }
                                     new_moderation_data[tostring('-' .. id_string)].goodbye = old_moderation_data[id_string].goodbye or ''
@@ -167,7 +170,9 @@ local function run(msg, matches)
                                     }
                                     new_moderation_data[tostring('-' .. id_string)].welcome = old_moderation_data[id_string].welcome or ''
                                     new_moderation_data[tostring('-' .. id_string)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
-                                else
+                                    migrated = true
+                                end
+                                if not migrated then
                                     return langs[msg.lang].unknownGroupType .. id_string
                                 end
                             end
@@ -190,8 +195,11 @@ local function run(msg, matches)
                                 new_moderation_data[tostring('-' .. id_string)].group_type = old_moderation_data[id_string].group_type
                                 new_moderation_data[tostring('-' .. id_string)].set_name = msg.chat.print_name
                                 new_moderation_data[tostring('-' .. id_string)].settings = old_moderation_data[id_string].settings
+                                migrated = true
                             else
-                                return langs[msg.lang].unknownGroupType .. id_string
+                                if not migrated then
+                                    return langs[msg.lang].unknownGroupType .. id_string
+                                end
                             end
                         else
                             return langs[msg.lang].unknownGroupType .. id_string
