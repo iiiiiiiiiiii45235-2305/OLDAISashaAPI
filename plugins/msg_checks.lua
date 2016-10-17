@@ -273,7 +273,7 @@ local function check_msg(msg, settings)
                 end
                 if msg.chat.type == 'supergroup' and lock_member then
                     -- deleteMessage(msg)
-                    warn_user(bot.id, msg.adder.id, msg.chat.id)
+                    warnUser(bot.id, msg.adder.id, msg.chat.id)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
                     banUser(bot.id, msg.added.id, msg.chat.id)
                     if msg.chat.type == 'group' then
