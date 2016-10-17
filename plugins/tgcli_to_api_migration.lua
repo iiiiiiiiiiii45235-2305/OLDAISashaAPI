@@ -200,8 +200,6 @@ local function run(msg, matches)
                             if not migrated then
                                 return langs[msg.lang].unknownGroupType .. id_string
                             end
-                        else
-                            return langs[msg.lang].unknownGroupType .. id_string
                         end
                     else
                         return langs[msg.lang].noGroupDataAvailable
