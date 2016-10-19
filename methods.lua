@@ -38,7 +38,7 @@ function sendRequest(url)
 
         return tab
     end )
-    local status, res = coroutine.resume(threads[i])
+    local status, res = coroutine.resume(co)
     return res
 end
 
