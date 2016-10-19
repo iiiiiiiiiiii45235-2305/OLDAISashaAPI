@@ -9,32 +9,37 @@ end
 
 function sendRequest(url)
     -- print(url)
-    local dat, code = HTTPS.request(url)
+    local co = coroutine.create(
+    function()
+        local dat, code = HTTPS.request(url)
 
-    if not dat then
-        return false, code
-    end
-
-    local tab = JSON.decode(dat)
-
-    if code ~= 200 then
-        if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
-        -- 403: bot blocked, 429: spam limit ...send a message to the admin, return the code
-        if code == 400 then code = getCode(tab.description) end
-        -- error code 400 is general: try to specify
-        redis:hincrby('bot:errors', code, 1)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
+        if not dat then
+            return false, code
         end
-        return false, code
-    end
 
-    -- actually, this rarely happens
-    if not tab.ok then
-        return false, tab.description
-    end
+        local tab = JSON.decode(dat)
 
-    return tab
+        if code ~= 200 then
+            if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
+            -- 403: bot blocked, 429: spam limit ...send a message to the admin, return the code
+            if code == 400 then code = getCode(tab.description) end
+            -- error code 400 is general: try to specify
+            redis:hincrby('bot:errors', code, 1)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
+            end
+            return false, code
+        end
+
+        -- actually, this rarely happens
+        if not tab.ok then
+            return false, tab.description
+        end
+
+        return tab
+    end )
+    local status, res = coroutine.resume(threads[i])
+    return res
 end
 
 function getMe()
