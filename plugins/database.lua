@@ -136,8 +136,8 @@ local function run(msg, matches)
             return sendReply(msg, langs[msg.lang].dbCreated)
         end
 
-        if matches[1]:lower() == 'search' or matches[1]:lower() == 'sasha cerca' or matches[1]:lower() == 'cerca' then
-            mystat('/search')
+        if matches[1]:lower() == 'dbsearch' or matches[1]:lower() == 'sasha cerca db' or matches[1]:lower() == 'cerca db' then
+            mystat('/dbsearch')
             if msg.reply then
                 if matches[2] then
                     if matches[2]:lower() == 'from' then
@@ -283,7 +283,7 @@ local function run(msg, matches)
             end
         end
 
-        if (matches[1]:lower() == 'delete' or matches[1]:lower() == 'sasha elimina' or matches[1]:lower() == 'elimina') and matches[2] then
+        if (matches[1]:lower() == 'dbdelete' or matches[1]:lower() == 'sasha elimina db' or matches[1]:lower() == 'elimina db') and matches[2] then
             mystat('/delete')
             if database[tostring(matches[2])] then
                 database[tostring(matches[2])] = nil
@@ -399,19 +399,19 @@ return {
     {
         "^[#!/]([Cc][Rr][Ee][Aa][Tt][Ee][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
         "^[#!/]([Dd][Oo][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
-        "^[#!/]([Ss][Ee][Aa][Rr][Cc][Hh]) (.*)$",
+        "^[#!/]([Dd][Bb][Ss][Ee][Aa][Rr][Cc][Hh]) (.*)$",
         "^[#!/]([Aa][Dd][Dd][Rr][Ee][Cc][Oo][Rr][Dd]) ([^%s]+) (.*)$",
-        "^[#!/]([Dd][Ee][Ll][Ee][Tt][Ee]) (%-?%d+)$",
+        "^[#!/]([Dd][Bb][Dd][Ee][Ll][Ee][Tt][Ee]) (%-?%d+)$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Dd][Bb])$",
         "^[#!/]([Rr][Ee][Pp][Ll][Aa][Cc][Ee][Dd][Bb])$",
         -- dodatabase
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
-        -- search
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa]) (.*)$",
-        "^([Cc][Ee][Rr][Cc][Aa]) (.*)$",
-        -- delete
-        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa]) (%-?%d+)$",
-        "^([Ee][Ll][Ii][Mm][Ii][Nn][Aa]) (%-?%d+)$",
+        -- dbsearch
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) (.*)$",
+        "^([Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) (.*)$",
+        -- dbdelete
+        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Dd][Bb]) (%-?%d+)$",
+        "^([Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Dd][Bb]) (%-?%d+)$",
     },
     run = run,
     pre_process = pre_process,
@@ -421,8 +421,8 @@ return {
         "SUDO",
         "#createdatabase",
         "(#dodatabase|sasha esegui database)",
-        "(#search|[sasha] cerca) <id>|<username>|<reply>|from",
-        "(#delete|[sasha] elimina) <id>",
+        "(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from",
+        "(#dbdelete|[sasha] elimina db) <id>",
         "#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<groups_ids_separated_by_space>",
         "#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>",
         "#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]",
