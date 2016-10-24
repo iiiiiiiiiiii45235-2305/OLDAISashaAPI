@@ -890,13 +890,18 @@ function banUser(executer, target, chat_id)
 end
 
 -- call this to unban
-function unbanUser(target, chat_id)
-    savelog(chat_id, "[" .. target .. "] unbanned")
-    local hash = 'banned:' .. chat_id
-    redis:srem(hash, tostring(target))
-    -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
-    local res, code = unbanChatMember(target, chat_id)
-    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+function unbanUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        savelog(chat_id, "[" .. target .. "] unbanned")
+        local hash = 'banned:' .. chat_id
+        redis:srem(hash, tostring(target))
+        -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
+        local res, code = unbanChatMember(target, chat_id)
+        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+    else
+        savelog(chat_id, "[" .. executer .. "] tried to unban user " .. target .. " require higher rank")
+        return langs[get_lang(chat_id)].require_rank
+    end
 end
 
 -- Check if user_id is banned in chat_id or not
