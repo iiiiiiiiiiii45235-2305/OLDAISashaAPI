@@ -474,8 +474,6 @@ return {
         errorChangeUsername = 'Errore nell\'impostare l\'username.\nPotrebbe già essere in uso.\n\nPuoi usare lettere numeri e l\'underscore.\nLunghezza minima 5 caratteri.',
         usernameCleaned = 'Username gruppo pulito.',
         errorCleanedUsername = 'Errore nel tentativo di pulire l\'username.',
-        muteUserAdd = 'Utente.',
-        muteUserRemove = '.',
 
         -- info.lua --
         infoWord = 'INFO',

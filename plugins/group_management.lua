@@ -1207,7 +1207,7 @@ local function run(msg, matches)
                                             if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
                                                 unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
-                                                return matches[2] .. langs[msg.lang].muteUserRemove
+                                                return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserRemove
                                             else
                                                 muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
@@ -1229,7 +1229,7 @@ local function run(msg, matches)
                                 if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
                                     unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
-                                    return matches[2] .. langs[msg.lang].muteUserRemove
+                                    return msg.reply_to_message.from.id .. langs[msg.lang].muteUserRemove
                                 else
                                     muteUser(msg.chat.id, msg.reply_to_message.from.id)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
@@ -1264,7 +1264,7 @@ local function run(msg, matches)
                                     if isMutedUser(msg.chat.id, obj_user.id) then
                                         unmuteUser(msg.chat.id, obj_user.id)
                                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
-                                        return matches[2] .. langs[msg.lang].muteUserRemove
+                                        return obj_user.id .. langs[msg.lang].muteUserRemove
                                     else
                                         muteUser(msg.chat.id, obj_user.id)
                                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
