@@ -23,7 +23,7 @@ local function kickinactive(chat_id, num, lang)
     local users = redis:smembers(hash)
 
     for i = 1, #users do
-        if tonumber(users[i]) ~= tonumber(bot.id) and not is_momod2(users[i], chat_id) then
+        if tonumber(users[i]) ~= tonumber(bot.id) and not is_mod2(users[i], chat_id, true) then
             local msgs = user_msgs(users[i], chat_id)
             if tonumber(msgs) < tonumber(num) then
                 kickUser(bot.id, users[i], chat_id)
