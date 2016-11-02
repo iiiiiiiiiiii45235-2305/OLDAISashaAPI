@@ -358,7 +358,7 @@ local function save_to_db(msg)
             db_user(msg.remover, msg.chat.id)
         end
         if msg.removed then
-            db_user(msg.remove, msg.chat.id)
+            db_user(msg.removed, msg.chat.id)
         end
 
         if msg.entities then
