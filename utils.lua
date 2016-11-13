@@ -176,7 +176,7 @@ function create_folder(name)
 end
 
 function savelog(group, logtxt)
-    local text =(os.date("[ %c ]=>  " .. logtxt .. "\n \n"))
+    local text =(os.date("[ %c ]=>  " .. logtxt:gsub('%', 'percentage') .. "\n \n"))
     local file = io.open("./groups/logs/" .. group .. "log.txt", "a")
 
     file:write(text)
