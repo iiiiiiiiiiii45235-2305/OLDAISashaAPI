@@ -1040,7 +1040,15 @@ function warnUser(executer, target, chat_id)
         if tonumber(warn_chat) ~= 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
-                banUser(executer, target, chat_id)
+                savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
+                if data[tostring(chat_id)] then
+                    if data[tostring(chat_id)].settings then
+                        if data[tostring(chat_id)].settings.strict then
+                            return banUser(executer, target, chat_id)
+                        end
+                    end
+                end
+                return kickUser(executer, target, chat_id)
             end
             sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
         end
