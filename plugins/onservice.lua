@@ -5,10 +5,12 @@ local function run(msg, matches)
         if is_admin(msg) then
             if not matches[2] then
                 sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
-                return leaveChat(msg.chat.id)
+                leaveChat(msg.chat.id)
+                return
             else
                 sendMessage(matches[2], langs[msg.lang].notMyGroup)
-                return leaveChat(matches[2])
+                leaveChat(matches[2])
+                return
             end
         else
             return langs[msg.lang].require_admin
