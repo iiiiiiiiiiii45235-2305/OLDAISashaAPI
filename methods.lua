@@ -6,7 +6,6 @@ if not config.bot_api_key then
 end
 
 -- *** START API FUNCTIONS ***
-
 function sendRequest(url)
     -- print(url)
     local co = coroutine.create(
@@ -741,11 +740,9 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
         sendDocument(chat_id, file_path, reply_to_message_id)
     end
 end
-
 -- *** END API FUNCTIONS ***
 
 -- *** START PWRTELEGRAM API FUNCTIONS ***
-
 function resolveChannelSupergroupsUsernames(username)
     local url = PWR_URL .. '/getChat?chat_id=' .. username
     local dat, code = HTTPS.request(url)
@@ -764,34 +761,7 @@ function resolveChannelSupergroupsUsernames(username)
         end
     end
 end
-
-function deleteMessage(msg)
-    local msg_to_delete = msg.message_id
-    if msg.reply then
-        msg_to_delete = msg.reply_to_message.message_id
-    end
-
-    local url = PWR_URL .. '/deleteMessage?chat_id=' .. msg.chat.id ..
-    '&message_id=' .. msg_to_delete
-    local dat, code = HTTPS.request(url)
-
-    if not dat then
-        return false, code
-    end
-
-    local tab = JSON.decode(dat)
-
-    if not tab then
-        return false
-    else
-        if tab.ok then
-            return
-            -- tab.result
-        end
-    end
-end
-
--- *** END API FUNCTIONS ***
+-- *** END PWRTELEGRAM API FUNCTIONS ***
 
 function sudoInChat(chat_id)
     for v, user in pairs(sudoers) do
