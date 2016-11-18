@@ -1290,6 +1290,15 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
+            if matches[1]:lower() == "del" then
+                if msg.from.is_mod then
+                    mystat('/del')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
+                    return deleteMessage(msg)
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if matches[1]:lower() == "mutelist" or matches[1]:lower() == "lista utenti muti" then
                 if msg.from.is_mod then
                     mystat('/mutelist')
@@ -1565,6 +1574,7 @@ return {
         "^[#!/]([Rr][Ee][Mm]) ([Rr][Ee][Aa][Ll][Mm])$",
 
         -- SUPERGROUP
+        "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
         -- getadmins
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",

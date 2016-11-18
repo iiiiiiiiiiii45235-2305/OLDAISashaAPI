@@ -1,11 +1,11 @@
--- *** START API FUNCTIONS ***
-
 local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
 local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
 if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
+
+-- *** START API FUNCTIONS ***
 
 function sendRequest(url)
     -- print(url)
@@ -243,25 +243,6 @@ function sendLog(text, markdown)
         for v, user in pairs(sudoers) do
             -- print(text)
             sendMessage(user.id, text, markdown)
-        end
-    end
-end
-
-function resolveChannelSupergroupsUsernames(username)
-    local url = PWR_URL .. '/getChat?chat_id=' .. username
-    local dat, code = HTTPS.request(url)
-
-    if not dat then
-        return false, code
-    end
-
-    local tab = JSON.decode(dat)
-
-    if not tab then
-        return false
-    else
-        if tab.ok then
-            return tab.result
         end
     end
 end
@@ -762,6 +743,56 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
 end
 
 -- *** END API FUNCTIONS ***
+
+-- *** START PWRTELEGRAM API FUNCTIONS ***
+
+function resolveChannelSupergroupsUsernames(username)
+    local url = PWR_URL .. '/getChat?chat_id=' .. username
+    local dat, code = HTTPS.request(url)
+
+    if not dat then
+        return false, code
+    end
+
+    local tab = JSON.decode(dat)
+
+    if not tab then
+        return false
+    else
+        if tab.ok then
+            return tab.result
+        end
+    end
+end
+
+function deleteMessage(msg)
+    local msg_to_delete = msg.message_id
+    if msg.reply then
+        msg_to_delete = msg.reply_to_message.message_id
+    end
+
+    local url = PWR_URL .. '/deleteMessage?chat_id=' .. msg.chat.id ..
+    '&message_id=' .. msg_to_delete
+    local dat, code = HTTPS.request(url)
+
+    if not dat then
+        return false, code
+    end
+
+    local tab = JSON.decode(dat)
+
+    if not tab then
+        return false
+    else
+        if tab.ok then
+            return
+            -- tab.result
+        end
+    end
+end
+
+-- *** END API FUNCTIONS ***
+
 function sudoInChat(chat_id)
     for v, user in pairs(sudoers) do
         local member = getChatMember(chat_id, user.id)
@@ -1243,6 +1274,7 @@ function resolveUsername(username)
 end
 
 -- makes user version delete message
+--[[
 function deleteMessage(msg)
     local flag, status = userVersionInChat(msg.chat.id)
     if flag then
@@ -1253,3 +1285,4 @@ function deleteMessage(msg)
         end
     end
 end
+]]
