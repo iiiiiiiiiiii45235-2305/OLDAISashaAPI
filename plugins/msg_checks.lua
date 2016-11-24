@@ -84,7 +84,7 @@ local function check_msg(msg, settings)
             local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
             if is_link_msg and lock_link and not is_bot then
                 if group_link then
-                    if not string.find(msg.text, data[tostring(msg.chat.id)].settings.set_link) then
+                    if not string.find(msg.text:lower(), group_link:lower()) then
                         action(msg, strict)
                         msg = clean_msg(msg)
                         return msg
@@ -109,7 +109,6 @@ local function check_msg(msg, settings)
                 return msg
             end
         end
-        -- msg.media checks
         if msg.caption then
             -- msg.caption checks
             local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
@@ -117,7 +116,7 @@ local function check_msg(msg, settings)
             -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
             if is_link_caption and lock_link then
                 if group_link then
-                    if not string.find(msg.caption, data[tostring(msg.chat.id)].settings.set_link) then
+                    if not string.find(msg.caption:lower(), group_link:lower()) then
                         action(msg, strict)
                         msg = clean_msg(msg)
                         return msg
@@ -142,6 +141,7 @@ local function check_msg(msg, settings)
                 return msg
             end
         end
+        -- msg.media checks
         if msg.media_type then
             if msg.media_type == 'audio' then
                 if mute_audio then
