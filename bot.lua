@@ -1014,19 +1014,25 @@ while is_started do
     -- Get the latest updates!
     if res then
         -- printvardump(res)
-        for i, msg in ipairs(res.result) do
-            -- Go through every new message.
-            if last_update < msg.update_id then
-                last_update = msg.update_id
-            end
-            if msg.message--[[ or msg.callback_query ]]or msg.edited_message then
+        if res.result then
+            for i, msg in ipairs(res.result) do
+                -- Go through every new message.
+                if last_update < msg.update_id then
+                    last_update = msg.update_id
+                end
                 if msg.edited_message then
                     msg.message = msg.edited_message
                     msg.message.edited = true
                     msg.edited_message = nil
                 end
-                on_msg_receive(msg.message)
+                if msg.message--[[ or msg.callback_query ]] then
+                    on_msg_receive(msg.message)
+                else
+                    print(clr.red .. 'No message available in this update' .. clr.reset)
+                end
             end
+        else
+            print(clr.red .. 'No update available' .. clr.reset)
         end
     else
         print(clr.red .. 'Connection error' .. clr.reset)
