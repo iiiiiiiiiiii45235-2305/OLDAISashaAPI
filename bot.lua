@@ -1028,11 +1028,11 @@ while is_started do
                 if msg.message--[[ or msg.callback_query ]] then
                     on_msg_receive(msg.message)
                 else
-                    print(clr.red .. 'No message available in this update' .. clr.reset)
+                    print(clr.red .. 'No message available in this update\n' .. vardumptext(res) .. clr.reset)
                 end
             end
         else
-            print(clr.red .. 'No update available' .. clr.reset)
+            print(clr.red .. 'No update available\n' .. vardumptext(res) .. clr.reset)
         end
     else
         print(clr.red .. 'Connection error' .. clr.reset)
