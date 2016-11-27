@@ -323,6 +323,7 @@ end
 -- adjust message for cli plugins
 -- recursive to simplify code
 function adjust_msg(msg)
+    print('adjust msg' .. math.random())
     -- sender print_name and tg_cli_id
     msg.from = adjust_user(msg.from)
     if msg.adder then
@@ -428,7 +429,9 @@ local function pre_process_reply(msg)
     return msg
 end
 
+-- recursive to simplify code
 local function pre_process_forward(msg)
+    print('preprocess forward' .. math.random())
     if msg.forward_from or msg.forward_from_chat then
         msg.forward = true
     end
@@ -440,6 +443,7 @@ end
 
 -- recursive to simplify code
 function pre_process_media_msg(msg)
+    print('preprocess media' .. math.random())
     msg.media = false
     if msg.audio then
         msg.media = true
@@ -558,6 +562,7 @@ end
 
 -- recursive to simplify code
 function pre_process_service_msg(msg)
+    print('preprocess service' .. math.random())
     msg.service = false
     if msg.group_chat_created then
         msg.service = true

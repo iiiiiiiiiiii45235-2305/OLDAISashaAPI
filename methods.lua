@@ -1,9 +1,9 @@
-local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
-local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
-
 if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
+
+local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
+local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
 -- *** START API FUNCTIONS ***
 function sendRequest(url)
@@ -42,6 +42,7 @@ function getMe()
 end
 
 function getUpdates(offset)
+    print('getting updates' .. math.random())
     local url = BASE_URL .. '/getUpdates?timeout=20'
     if offset then
         url = url .. '&offset=' .. offset
