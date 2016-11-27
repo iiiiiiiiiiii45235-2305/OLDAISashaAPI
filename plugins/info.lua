@@ -230,6 +230,10 @@ local function run(msg, matches)
         end
         return
     end
+    if matches[1]:lower() == 'whoami' then
+        mystat('/whoami')
+        return get_object_info(msg.from, msg.chat.id)
+    end
     if matches[1]:lower() == 'grouplink' or matches[1]:lower() == 'sasha link gruppo' or matches[1]:lower() == 'link gruppo' and matches[2] then
         mystat('/grouplink')
         if is_admin(msg) then
@@ -274,6 +278,7 @@ return {
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk])$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk]) (.*)$",
+        "^[#!/]([Ww][Hh][Oo][Aa][Mm][Ii])$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) (.*)$",
         -- grouplink
@@ -293,6 +298,7 @@ return {
     {
         "USER",
         "#getrank|rango [<id>|<username>|<reply>]",
+        "#whoami",
         "(#info|[sasha] info)",
         "#ishere <id>|<username>|<reply>|from",
         "MOD",
