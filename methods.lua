@@ -5,36 +5,46 @@ end
 local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
 local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
+local curl_context = curl.easy { verbose = false }
+
+local function performRequest(url)
+    local data = { }
+
+    -- if multithreading is made, this request must be in critical section
+    local c = curl_context:setopt_url(url):setopt_writefunction(table.insert, data):perform()
+
+    return table.concat(data), c:getinfo_response_code()
+end
+
 -- *** START API FUNCTIONS ***
 function sendRequest(url)
-    print(url)
-    local dat, code = HTTPS.request(url)
-
-    printvardump(dat)
-    printvardump(code)
-
-    if not dat then
-        return false, code
-    end
-
+    local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
 
-    printvardump(tab)
-
-    if code ~= 200 then
-        if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
-        -- 403: bot blocked, 429: spam limit ...send a message to the admin, return the code
-        if code == 400 then code = getCode(tab.description) end
-        -- error code 400 is general: try to specify
-        redis:hincrby('bot:errors', code, 1)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
-        end
-        return false, code
+    if not tab then
+        print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
+        print(clr.yellow .. 'Data:' .. clr.reset, dat)
+        error('Incorrect response')
     end
 
-    -- actually, this rarely happens
+    if code ~= 200 then
+
+        if code == 400 then
+            -- error code 400 is general: try to specify
+            code = getCode(tab.description)
+        end
+
+        print(clr.red .. code, tab.description .. clr.reset)
+        db:hincrby('bot:errors', code, 1)
+
+        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+            sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
+        end
+        return false, code, tab.description
+    end
+
     if not tab.ok then
+        sendLog('Not tab.ok' .. vardumptext(tab))
         return false, tab.description
     end
 
