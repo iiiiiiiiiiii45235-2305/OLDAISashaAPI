@@ -10,11 +10,16 @@ function sendRequest(url)
     -- print(url)
     local dat, code = HTTPS.request(url)
 
+    printvardump(dat)
+    printvardump(code)
+
     if not dat then
         return false, code
     end
 
     local tab = JSON.decode(dat)
+
+    printvardump(tab)
 
     if code ~= 200 then
         if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
@@ -42,7 +47,7 @@ function getMe()
 end
 
 function getUpdates(offset)
-    print('getting updates' .. math.random())
+    print('start getting updates' .. math.random())
     local url = BASE_URL .. '/getUpdates?timeout=20'
     if offset then
         url = url .. '&offset=' .. offset

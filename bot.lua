@@ -746,12 +746,12 @@ end
 
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
-    msg = plugins.anti_spam.pre_process(msg)
     print(clr.white .. 'Preprocess', 'anti_spam')
-    msg = plugins.msg_checks.pre_process(msg)
+    msg = plugins.anti_spam.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
-    msg = plugins.onservice.pre_process(msg)
+    msg = plugins.msg_checks.pre_process(msg)
     print(clr.white .. 'Preprocess', 'onservice')
+    msg = plugins.onservice.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
             if plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
@@ -908,9 +908,6 @@ end
 
 -- Call and postpone execution for cron plugins
 function cron_plugins()
-    print('start plugins cron')
-    printvardump(last_cron)
-    printvardump(last_redis_cron)
     if last_cron ~= last_redis_cron then
         -- Run cron jobs every minute.
         last_cron = last_redis_cron
@@ -924,26 +921,18 @@ function cron_plugins()
             end
         end
     end
-    print('end plugins cron')
 end
 
 function cron_database()
-    print('start database cron')
-    printvardump(last_db_cron)
-    printvardump(last_redis_db_cron)
     if last_db_cron ~= last_redis_db_cron then
         -- Run cron jobs every hour.
         last_db_cron = last_redis_db_cron
         print('SAVING USERS/GROUPS DATABASE')
         save_data(config.database.db, database)
     end
-    print('end database cron')
 end
 
 function cron_administrator()
-    print('start administrator cron')
-    printvardump(last_administrator_cron)
-    printvardump(last_redis_administrator_cron)
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
@@ -1018,7 +1007,6 @@ function cron_administrator()
             sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
         end
     end
-    print('end administrator cron')
 end
 
 ---------WHEN THE BOT IS STARTED FROM THE TERMINAL, THIS IS THE FIRST FUNCTION HE FOUNDS
