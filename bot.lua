@@ -431,7 +431,6 @@ end
 
 -- recursive to simplify code
 local function pre_process_forward(msg)
-    print('preprocess forward' .. math.random())
     if msg.forward_from or msg.forward_from_chat then
         msg.forward = true
     end
@@ -443,7 +442,6 @@ end
 
 -- recursive to simplify code
 function pre_process_media_msg(msg)
-    print('preprocess media' .. math.random())
     msg.media = false
     if msg.audio then
         msg.media = true

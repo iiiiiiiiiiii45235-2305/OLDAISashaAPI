@@ -7,7 +7,7 @@ local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
 -- *** START API FUNCTIONS ***
 function sendRequest(url)
-    -- print(url)
+    print(url)
     local dat, code = HTTPS.request(url)
 
     printvardump(dat)
