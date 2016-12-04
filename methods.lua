@@ -1041,8 +1041,8 @@ function getUserWarns(user_id, chat_id)
 end
 
 function warnUser(executer, target, chat_id)
+    local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
         local warn_chat = string.match(getWarn(chat_id), "%d+")
         redis:incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis:get(chat_id .. ':warn:' .. target)
@@ -1074,8 +1074,8 @@ function warnUser(executer, target, chat_id)
 end
 
 function unwarnUser(executer, target, chat_id)
+    local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
         local warns = redis:get(chat_id .. ':warn:' .. target)
         if tonumber(warns) <= 0 then
             redis:set(chat_id .. ':warn:' .. target, 0)
@@ -1092,8 +1092,8 @@ function unwarnUser(executer, target, chat_id)
 end
 
 function unwarnallUser(executer, target, chat_id)
+    local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
         sendMessage(chat_id, langs[lang].zeroWarnings)
