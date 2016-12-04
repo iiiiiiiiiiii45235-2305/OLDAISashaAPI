@@ -128,14 +128,15 @@ local function run(msg, matches)
                     else
                         return like(likedata, msg.chat.id, msg.reply_to_message.from.id)
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    return like(likedata, msg.chat.id, matches[2])
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return like(likedata, msg.chat.id, obj_user.id)
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        return like(likedata, msg.chat.id, matches[2])
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return like(likedata, msg.chat.id, obj_user.id)
+                            end
                         end
                     end
                 end
@@ -158,14 +159,15 @@ local function run(msg, matches)
                     else
                         return dislike(likedata, msg.chat.id, msg.reply_to_message.from.id)
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    return dislike(likedata, msg.chat.id, matches[2])
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return dislike(likedata, msg.chat.id, obj_user.id)
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        return dislike(likedata, msg.chat.id, matches[2])
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return dislike(likedata, msg.chat.id, obj_user.id)
+                            end
                         end
                     end
                 end

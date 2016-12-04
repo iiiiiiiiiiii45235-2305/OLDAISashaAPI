@@ -36,13 +36,15 @@ local function run(msg, matches)
                 else
                     return blockUser(msg.reply_to_message.from.id, msg.lang)
                 end
-            elseif string.match(matches[2], '^%d+$') then
-                return blockUser(matches[2], msg.lang)
-            else
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                if obj_user then
-                    if obj_user.type == 'private' then
-                        return blockUser(obj_user.id, msg.lang)
+            elseif matches[2] then
+                if string.match(matches[2], '^%d+$') then
+                    return blockUser(matches[2], msg.lang)
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return blockUser(obj_user.id, msg.lang)
+                        end
                     end
                 end
             end
@@ -68,13 +70,15 @@ local function run(msg, matches)
                 else
                     return unblockUser(msg.reply_to_message.from.id, msg.lang)
                 end
-            elseif string.match(matches[2], '^%d+$') then
-                return unblockUser(matches[2], msg.lang)
-            else
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                if obj_user then
-                    if obj_user.type == 'private' then
-                        return unblockUser(obj_user.id, msg.lang)
+            elseif matches[2] then
+                if string.match(matches[2], '^%d+$') then
+                    return unblockUser(matches[2], msg.lang)
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return unblockUser(obj_user.id, msg.lang)
+                        end
                     end
                 end
             end

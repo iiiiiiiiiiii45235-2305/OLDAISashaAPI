@@ -714,7 +714,7 @@ function msg_valid(msg)
             return false
         end
     else
-        if msg.date < os.time() -15 then
+        if msg.date < os.time() -5 then
             -- Before bot was started more or less
             print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
             return false
