@@ -1260,7 +1260,12 @@ function deleteMessage(msg)
     if flag then
         if status == 'creator' or status == 'administrator' then
             if is_super_group(msg) then
-                sendReply(msg,(bot.userVersion.username or '') .. ' !del')
+                if bot.userVersion.username then
+                    if msg.reply then
+                        sendReply(msg.reply_to_message, '@' .. bot.userVersion.username .. ' !del')
+                    end
+                    sendReply(msg, '@' .. bot.userVersion.username .. ' !del')
+                end
             end
         end
     end
