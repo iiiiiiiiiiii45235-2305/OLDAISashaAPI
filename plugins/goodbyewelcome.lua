@@ -169,6 +169,8 @@ local function run(msg, matches)
                 mystat('/getmemberswelcome')
                 return get_memberswelcome(msg.chat.id)
             end
+        else
+            return langs[msg.lang].require_mod
         end
     end
 end
