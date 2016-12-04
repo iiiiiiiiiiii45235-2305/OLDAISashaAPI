@@ -76,43 +76,49 @@ local function get_rules(chat_id)
 end
 
 local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
+    local data = load_data(_config.moderation.data)
     if string.find(goodbyewelcome, '$chatid') then
-        goodbyewelcome:gsub('$chatid', chat.id)
+        goodbyewelcome = goodbyewelcome:gsub('$chatid', chat.id)
     end
     if string.find(goodbyewelcome, '$chatname') then
-        goodbyewelcome:gsub('$chatname', chat.title)
+        goodbyewelcome = goodbyewelcome:gsub('$chatname', chat.title)
     end
     if string.find(goodbyewelcome, '$chatusername') then
         if chat.username then
-            goodbyewelcome:gsub('$chatusername', '@' .. chat.username)
+            goodbyewelcome = goodbyewelcome:gsub('$chatusername', '@' .. chat.username)
         else
-            goodbyewelcome:gsub('$chatusername', chat.title)
+            goodbyewelcome = goodbyewelcome:gsub('$chatusername', chat.title)
         end
     end
     if string.find(goodbyewelcome, '$rules') then
-        goodbyewelcome:gsub('$rules', get_rules(chat.id))
+        goodbyewelcome = goodbyewelcome:gsub('$rules', get_rules(chat.id))
     end
     if string.find(goodbyewelcome, '$userid') then
-        goodbyewelcome:gsub('$userid', user.id)
+        goodbyewelcome = goodbyewelcome:gsub('$userid', user.id)
     end
     if string.find(goodbyewelcome, '$firstname') then
-        goodbyewelcome:gsub('$firstname', user.first_name)
+        goodbyewelcome = goodbyewelcome:gsub('$firstname', user.first_name)
     end
     if string.find(goodbyewelcome, '$lastname') then
         if user.last_name then
-            goodbyewelcome:gsub('$lastname', user.last_name)
+            goodbyewelcome = goodbyewelcome:gsub('$lastname', user.last_name)
         end
     end
     if string.find(goodbyewelcome, '$printname') then
-        goodbyewelcome:gsub('$printname', user.print_name:gsub('_', ' '))
+        user.print_name = user.first_name
+        if user.last_name then
+            user.print_name = user.print_name .. ' ' .. user.last_name
+        end
+        goodbyewelcome = goodbyewelcome:gsub('$printname', user.print_name)
     end
     if string.find(goodbyewelcome, '$username') then
         if user.username then
-            goodbyewelcome:gsub('$username', '@' .. user.username)
+            goodbyewelcome = goodbyewelcome:gsub('$username', '@' .. user.username)
         else
-            goodbyewelcome:gsub('$username', user.first_name)
+            goodbyewelcome = goodbyewelcome:gsub('$username', user.first_name)
         end
     end
+    return goodbyewelcome
 end
 
 local function run(msg, matches)
