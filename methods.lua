@@ -1255,7 +1255,6 @@ function resolveUsername(username)
 end
 
 -- makes user version delete message
---[[
 function deleteMessage(msg)
     local flag, status = userVersionInChat(msg.chat.id)
     if flag then
@@ -1266,4 +1265,3 @@ function deleteMessage(msg)
         end
     end
 end
-]]
