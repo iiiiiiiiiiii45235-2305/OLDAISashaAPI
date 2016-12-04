@@ -128,11 +128,11 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'previewwelcome' then
                 mystat('/previewwelcome')
-                return adjust_goodbyewelcome(get_welcome(msg.to.id), msg.to, preview_user)
+                return adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, preview_user)
             end
             if matches[1]:lower() == 'previewgoodbye' then
                 mystat('/previewgoodbye')
-                return adjust_goodbyewelcome(get_goodbye(msg.to.id), msg.to, preview_user)
+                return adjust_goodbyewelcome(get_goodbye(msg.chat.id), msg.chat, preview_user)
             end
             if matches[1]:lower() == 'setwelcome' then
                 mystat('/setwelcome')
