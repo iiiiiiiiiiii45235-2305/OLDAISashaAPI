@@ -90,7 +90,7 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
         end
     end
     if string.find(goodbyewelcome, '$rules') then
-        goodbyewelcome:gsub('$rules', get_rules(chat_id))
+        goodbyewelcome:gsub('$rules', get_rules(chat.id))
     end
     if string.find(goodbyewelcome, '$userid') then
         goodbyewelcome:gsub('$userid', user.id)
