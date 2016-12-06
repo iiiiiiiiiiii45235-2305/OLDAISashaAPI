@@ -35,7 +35,7 @@ function sendRequest(url)
         end
 
         print(clr.red .. code, tab.description .. clr.reset)
-        db:hincrby('bot:errors', code, 1)
+        redis:hincrby('bot:errors', code, 1)
 
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
             sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
