@@ -903,8 +903,10 @@ function on_msg_receive(msg)
         if msg then
             match_plugins(msg)
         end
+        print_msg(msg_to_print)
+    else
+        print_msg(msg)
     end
-    print_msg(msg_to_print)
 end
 
 -- Call and postpone execution for cron plugins
