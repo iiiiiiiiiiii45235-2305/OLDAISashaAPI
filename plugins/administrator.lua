@@ -11,6 +11,10 @@ local function run(msg, matches)
             end
             return sendMessage(msg.chat.id, text)
         end
+        if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
+            io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
+            return langs[msg.lang].cliReboot
+        end
         if matches[1]:lower() == "pm" or matches[1]:lower() == "sasha messaggia" then
             mystat('/pm')
             sendMessage(matches[2], matches[3])
@@ -178,6 +182,7 @@ return {
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]([Cc][Hh][Ee][Cc][Kk][Ss][Pp][Ee][Ee][Dd])$",
+        "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
@@ -192,6 +197,8 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Bb][Aa][Cc][Kk][Uu][Pp])$",
         -- uploadbackup
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Aa] [Bb][Aa][Cc][Kk][Uu][Pp])$",
+        -- rebootapi
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Aa][Vv][Ii][Aa] [Cc][Ll][Ii])$",
     },
     run = run,
     min_rank = 3,
@@ -204,6 +211,7 @@ return {
         "#checkspeed",
         "#vardump [<reply>]",
         "#commandsstats",
+        "(#rebootcli|sasha riavvia cli)",
         "SUDO",
         "#botrestart",
         "#redissave",

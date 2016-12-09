@@ -254,6 +254,7 @@ return {
         botRestarted = 'Bot riavviato.',
         botStopped = 'Bot spento.',
         redisDbSaved = 'Database redis salvato.',
+        cliReboot = 'AISasha Ucciso.',
 
         -- anti_spam.lua --
         blockedForSpam = ' bloccato (SPAM).',
@@ -609,6 +610,7 @@ return {
             '#checkspeed: Sasha calcola la velocità con cui processa i messaggi.',
             '#vardump [<reply>]: Sasha esegue il vardump del messaggio specificato.',
             '#commandsstats: Sasha manda gli stats di tutti i comandi.',
+            '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
             'SUDO',
             '#botstop: Sasha si stoppa.',
             '#botrestart: Sasha si riavvia.',
@@ -1131,6 +1133,7 @@ return {
         botRestarted = 'Bot reloaded.',
         botStopped = 'Bot stopped.',
         redisDbSaved = 'Redis db saved.',
+        cliReboot = 'AISasha Killed.',
 
         -- anti_spam.lua --
         blockedForSpam = ' blocked (SPAM).',
@@ -1487,6 +1490,7 @@ return {
             '#checkspeed: Sasha calculates how much time she needs to process messages.',
             '#vardump [<reply>]: Sasha sends vardump of specified message.',
             '#commandsstats: Sasha sends commands stats.',
+            '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
             'SUDO',
             '#botstop: Sasha stops.',
             '#botrestart: Sasha restarts.',
