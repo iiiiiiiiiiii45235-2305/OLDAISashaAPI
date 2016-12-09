@@ -896,12 +896,13 @@ function on_msg_receive(msg)
         end
     end
     if msg_valid(msg) then
+        msg_to_print = msg
         msg = pre_process_msg(msg)
         if msg then
             match_plugins(msg)
         end
     end
-    print_msg(msg)
+    print_msg(msg_to_print)
 end
 
 -- Call and postpone execution for cron plugins
