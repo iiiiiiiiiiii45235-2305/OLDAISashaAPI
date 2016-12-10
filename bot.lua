@@ -838,7 +838,6 @@ function match_plugin(plugin, plugin_name, msg)
         local matches = match_pattern(pattern, msg.text)
         if matches then
             print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
-            print_msg(msg)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.chat.id)
 
@@ -897,13 +896,12 @@ function on_msg_receive(msg)
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
         end
     end
+    print_msg(msg)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
             match_plugins(msg)
         end
-    else
-        print_msg(msg)
     end
 end
 
