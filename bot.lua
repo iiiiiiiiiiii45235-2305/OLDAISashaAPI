@@ -323,7 +323,6 @@ end
 -- adjust message for cli plugins
 -- recursive to simplify code
 function adjust_msg(msg)
-    print('adjust msg' .. math.random())
     -- sender print_name and tg_cli_id
     msg.from = adjust_user(msg.from)
     if msg.adder then
@@ -560,7 +559,6 @@ end
 
 -- recursive to simplify code
 function pre_process_service_msg(msg)
-    print('preprocess service' .. math.random())
     msg.service = false
     if msg.group_chat_created then
         msg.service = true
