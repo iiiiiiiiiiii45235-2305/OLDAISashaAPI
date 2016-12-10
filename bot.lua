@@ -823,9 +823,7 @@ function print_msg(msg)
                     print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
                 end
             end
-            if msg.text_to_print then
-                print_text = print_text .. clr.blue .. msg.text_to_print .. clr.reset
-            elseif msg.text then
+            if msg.text then
                 print_text = print_text .. clr.blue .. msg.text .. clr.reset
             end
             print(msg.chat.id)
@@ -894,7 +892,6 @@ function on_msg_receive(msg)
     msg = pre_process_media_msg(msg)
     msg = pre_process_service_msg(msg)
     msg = adjust_msg(msg)
-    msg.text_to_print = msg.text or nil
     if msg.text then
         if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
