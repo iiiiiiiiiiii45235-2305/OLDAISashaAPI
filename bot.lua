@@ -785,7 +785,7 @@ local function is_plugin_disabled_on_chat(plugin_name, chat_id)
     return false
 end
 
-function print_msg(msg)
+function print_msg(msg, dont_print)
     if msg then
         if not msg.printed then
             msg.printed = true
@@ -826,8 +826,11 @@ function print_msg(msg)
             if msg.text then
                 print_text = print_text .. clr.blue .. msg.text .. clr.reset
             end
-            print(msg.chat.id)
-            print(print_text)
+            if not dont_print then
+                print(msg.chat.id)
+                print(print_text)
+            end
+            return print_text
         end
     end
 end
@@ -896,13 +899,15 @@ function on_msg_receive(msg)
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
         end
     end
-    print_msg(msg)
+    local print_text = print_msg(msg, true)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
             match_plugins(msg)
         end
     end
+    print(msg.chat.id)
+    print(print_text)
 end
 
 -- Call and postpone execution for cron plugins
