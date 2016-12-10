@@ -57,7 +57,7 @@ function getMe()
 end
 
 function getUpdates(offset)
-    print('start getting updates ' .. os.time('%c'))
+    print('start getting updates ' .. os.date('%c'))
     local url = BASE_URL .. '/getUpdates?timeout=20'
     if offset then
         url = url .. '&offset=' .. offset
