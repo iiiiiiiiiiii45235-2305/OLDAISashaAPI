@@ -90,7 +90,13 @@ local function pre_process(msg)
             if kicktable[msg.from.id] == true then
                 return
             end
-            warnUser(bot.id, msg.from.id, msg.chat.id)
+            if string.match(getWarn(chat_id), "%d+") then
+                warnUser(bot.id, msg.from.id, msg.chat.id)
+            elseif not strict then
+                kickUser(bot.id, msg.from.id, msg.chat.id)
+            else
+                banUser(bot.id, msg.from.id, msg.chat.id)
+            end
             local username = msg.from.username
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 if msg.from.username then
