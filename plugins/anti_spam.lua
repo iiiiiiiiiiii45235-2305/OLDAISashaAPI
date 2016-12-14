@@ -55,10 +55,14 @@ local function pre_process(msg)
         local hash = 'user:' .. msg.from.id .. ':msgs'
         local msgs = tonumber(redis:get(hash) or 0)
         local NUM_MSG_MAX = 5
+        local strict = false
         if data[tostring(msg.chat.id)] then
             if data[tostring(msg.chat.id)].settings.flood_max then
                 NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
                 -- Obtain group flood sensitivity
+            end
+            if data[tostring(msg.chat.id)].settings.strict then
+                strict = settings.strict
             end
         end
         local max_msg = NUM_MSG_MAX * 1
@@ -86,7 +90,7 @@ local function pre_process(msg)
             if kicktable[msg.from.id] == true then
                 return
             end
-            banUser(bot.id, msg.from.id, msg.chat.id)
+            warnUser(bot.id, msg.from.id, msg.chat.id)
             local username = msg.from.username
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 if msg.from.username then
