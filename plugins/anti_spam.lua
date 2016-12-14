@@ -45,7 +45,7 @@ local function pre_process(msg)
 
     if data[tostring(msg.chat.id)] then
         -- Check if flood is on or off
-        if data[tostring(msg.chat.id)].settings.flood then
+        if not data[tostring(msg.chat.id)].settings.flood then
             return msg
         end
     end
