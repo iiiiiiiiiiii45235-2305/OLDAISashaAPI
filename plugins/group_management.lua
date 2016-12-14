@@ -187,9 +187,10 @@ local function addGroup(msg)
         if data[tostring(msg.chat.id)] then
             for i, admin in pairs(list.result) do
                 if admin.status == 'administrator' then
-                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id ..(admin.user.username or(admin.user.first_name ..(admin.user.last_name or ''))))
+                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
                 end
             end
+            save_data(config.moderation.data, data)
         end
         return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
     end
@@ -346,9 +347,10 @@ local function addSuperGroup(msg)
         if data[tostring(msg.chat.id)] then
             for i, admin in pairs(list.result) do
                 if admin.status == 'administrator' then
-                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id ..(admin.user.username or(admin.user.first_name ..(admin.user.last_name or ''))))
+                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
                 end
             end
+            save_data(config.moderation.data, data)
         end
         return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
     end
