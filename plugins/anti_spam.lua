@@ -1,7 +1,7 @@
 -- An empty table for solving multiple kicking problem(thanks to @topkecleon)
 kicktable = { }
 
-local TIME_CHECK = 5
+local TIME_CHECK = 2
 -- seconds
 -- Save stats, ban user
 local function pre_process(msg)
