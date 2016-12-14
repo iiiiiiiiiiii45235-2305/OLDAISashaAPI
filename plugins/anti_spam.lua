@@ -114,7 +114,6 @@ local function pre_process(msg)
                 else
                     username = "---"
                 end
-                local print_name = user_print_name(msg.from):gsub("‮", "")
                 -- Send this to that chat
                 sendMessage(msg.chat.id, langs[msg.lang].user .. "[ " .. msg.from.print_name .. " ]" .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
                 gban_text = langs[msg.lang].user .. "[ " .. msg.from.print_name .. " ] ( @" .. username .. " )" .. msg.from.id .. langs[msg.lang].gbannedFrom "( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
