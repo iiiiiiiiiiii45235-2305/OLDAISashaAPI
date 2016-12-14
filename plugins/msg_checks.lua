@@ -292,28 +292,30 @@ end
 
 -- Begin pre_process function
 local function pre_process(msg)
-    -- Begin 'RondoMsgChecks' text checks by @rondoozle
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if msg and not isWhitelisted(msg.from.id) and not msg.from.is_mod then
-            -- if regular user
-            local settings = nil
-            if data[tostring(msg.chat.id)] then
-                if data[tostring(msg.chat.id)].settings then
-                    settings = data[tostring(msg.chat.id)].settings
+    if msg then
+        -- Begin 'RondoMsgChecks' text checks by @rondoozle
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if msg and not isWhitelisted(msg.from.id) and not msg.from.is_mod then
+                -- if regular user
+                local settings = nil
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].settings then
+                        settings = data[tostring(msg.chat.id)].settings
+                    end
                 end
-            end
-            if not settings then
-                return msg
-            else
-                local tmp = check_msg(msg, settings)
-                if tmp then
-                    msg = tmp
+                if not settings then
+                    return msg
+                else
+                    local tmp = check_msg(msg, settings)
+                    if tmp then
+                        msg = tmp
+                    end
                 end
             end
         end
+        -- End 'RondoMsgChecks' text checks by @Rondoozle
+        return msg
     end
-    -- End 'RondoMsgChecks' text checks by @Rondoozle
-    return msg
 end
 -- End pre_process function
 
