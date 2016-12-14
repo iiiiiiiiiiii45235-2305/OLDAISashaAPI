@@ -530,64 +530,66 @@ local function clean_msg(msg)
 end
 
 local function pre_process(msg)
-    -- SERVICE MESSAGE
-    if msg.service then
-        if msg.service_type then
-            -- Check if banned user joins chat by link
-            if msg.service_type == 'chat_add_user_link' then
-                print('Checking invited user ' .. msg.from.id)
-                if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
-                    -- Check it with redis
-                    print('User is banned!')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
-                    -- Save to logs
-                    banUser(bot.id, msg.from.id, msg.chat.id)
+    if msg then
+        -- SERVICE MESSAGE
+        if msg.service then
+            if msg.service_type then
+                -- Check if banned user joins chat by link
+                if msg.service_type == 'chat_add_user_link' then
+                    print('Checking invited user ' .. msg.from.id)
+                    if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
+                        -- Check it with redis
+                        print('User is banned!')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
+                        -- Save to logs
+                        banUser(bot.id, msg.from.id, msg.chat.id)
+                    end
                 end
-            end
-            -- Check if banned user joins chat
-            if msg.service_type == 'chat_add_user' then
-                print('Checking invited user ' .. msg.added.id)
-                if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
-                    -- Check it with redis
-                    print('User is banned!')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
-                    -- Save to logs
-                    kickUser(bot.id, user_id, msg.chat.id)
-                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                    redis:incr(banhash)
-                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                    local banaddredis = redis:get(banhash)
-                    if banaddredis then
-                        if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
-                            kickUser(bot.id, msg.from.id, msg.chat.id)
-                            -- Kick user who adds ban ppl more than 3 times
-                        end
-                        if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                            banUser(bot.id, msg.from.id, msg.chat.id)
-                            -- Ban user who adds ban ppl more than 7 times
-                            local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                            redis:set(banhash, 0)
-                            -- Reset the Counter
+                -- Check if banned user joins chat
+                if msg.service_type == 'chat_add_user' then
+                    print('Checking invited user ' .. msg.added.id)
+                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
+                        -- Check it with redis
+                        print('User is banned!')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
+                        -- Save to logs
+                        kickUser(bot.id, user_id, msg.chat.id)
+                        local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                        redis:incr(banhash)
+                        local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                        local banaddredis = redis:get(banhash)
+                        if banaddredis then
+                            if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
+                                kickUser(bot.id, msg.from.id, msg.chat.id)
+                                -- Kick user who adds ban ppl more than 3 times
+                            end
+                            if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
+                                banUser(bot.id, msg.from.id, msg.chat.id)
+                                -- Ban user who adds ban ppl more than 7 times
+                                local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                                redis:set(banhash, 0)
+                                -- Reset the Counter
+                            end
                         end
                     end
                 end
+                -- No further checks
+                return msg
             end
-            -- No further checks
-            return msg
         end
-    end
-    -- banned user is talking !
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
-            -- Check it with redis
-            print('Banned user talking!')
-            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
-            -- Save to logs
-            kickUser(bot.id, msg.from.id, msg.chat.id)
-            msg = clean_msg(msg)
+        -- banned user is talking !
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
+                -- Check it with redis
+                print('Banned user talking!')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
+                -- Save to logs
+                kickUser(bot.id, msg.from.id, msg.chat.id)
+                msg = clean_msg(msg)
+            end
         end
+        return msg
     end
-    return msg
 end
 
 return {

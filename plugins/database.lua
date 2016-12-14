@@ -390,7 +390,9 @@ local function save_to_db(msg)
 end
 
 local function pre_process(msg)
-    return save_to_db(msg)
+    if msg then
+        return save_to_db(msg)
+    end
 end
 
 return {

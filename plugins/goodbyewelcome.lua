@@ -175,33 +175,35 @@ local function run(msg, matches)
 end
 
 local function pre_process(msg)
-    if msg.service then
-        if is_realm(msg) or is_group(msg) or is_super_group(msg) then
-            if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
-                local hash
-                if msg.chat.type == 'supergroup' then
-                    hash = 'channel:welcome' .. msg.chat.id
-                end
-                if msg.chat.type == 'group' then
-                    hash = 'chat:welcome' .. msg.chat.id
-                end
-                redis:incr(hash)
-                local hashonredis = redis:get(hash)
-                if hashonredis then
-                    if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                        sendMessage(msg.chat.id, adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, msg.added))
-                        redis:getset(hash, 0)
+    if msg then
+        if msg.service then
+            if is_realm(msg) or is_group(msg) or is_super_group(msg) then
+                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
+                    local hash
+                    if msg.chat.type == 'supergroup' then
+                        hash = 'channel:welcome' .. msg.chat.id
                     end
-                else
-                    redis:set(hash, 0)
+                    if msg.chat.type == 'group' then
+                        hash = 'chat:welcome' .. msg.chat.id
+                    end
+                    redis:incr(hash)
+                    local hashonredis = redis:get(hash)
+                    if hashonredis then
+                        if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
+                            sendMessage(msg.chat.id, adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, msg.added))
+                            redis:getset(hash, 0)
+                        end
+                    else
+                        redis:set(hash, 0)
+                    end
                 end
-            end
-            if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
-                sendMessage(msg.chat.id, adjust_goodbyewelcome(get_goodbye(msg.chat.id), msg.chat, msg.removed))
+                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
+                    sendMessage(msg.chat.id, adjust_goodbyewelcome(get_goodbye(msg.chat.id), msg.chat, msg.removed))
+                end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {

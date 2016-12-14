@@ -96,24 +96,26 @@ local function run(msg, matches)
 end
 
 local function pre_process(msg)
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        local hash = 'flame:' .. msg.chat.id
-        local tokick = 'tokick:' .. msg.chat.id
-        if tostring(msg.from.id) == tostring(redis:get(tokick)) then
-            redis:incr(hash)
-            local hashonredis = redis:get(hash)
-            if hashonredis then
-                sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])
-                if tonumber(hashonredis) == #langs.phrases.flame then
-                    local user_id = redis:get(tokick)
-                    kickUser(bot.id, user_id, msg.chat.id)
-                    redis:del(hash)
-                    redis:del(tokick)
+    if msg then
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            local hash = 'flame:' .. msg.chat.id
+            local tokick = 'tokick:' .. msg.chat.id
+            if tostring(msg.from.id) == tostring(redis:get(tokick)) then
+                redis:incr(hash)
+                local hashonredis = redis:get(hash)
+                if hashonredis then
+                    sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])
+                    if tonumber(hashonredis) == #langs.phrases.flame then
+                        local user_id = redis:get(tokick)
+                        kickUser(bot.id, user_id, msg.chat.id)
+                        redis:del(hash)
+                        redis:del(tokick)
+                    end
                 end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {

@@ -19,17 +19,19 @@ local function run(msg, matches)
 end
 
 local function pre_process(msg)
-    if msg.service then
-        if msg.service_type == 'chat_add_user' then
-            if tostring(msg.added.id) == tostring(bot.id) then
-                if not is_admin(msg) then
-                    sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
-                    leaveChat(msg.chat.id)
+    if msg then
+        if msg.service then
+            if msg.service_type == 'chat_add_user' then
+                if tostring(msg.added.id) == tostring(bot.id) then
+                    if not is_admin(msg) then
+                        sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+                        leaveChat(msg.chat.id)
+                    end
                 end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {
