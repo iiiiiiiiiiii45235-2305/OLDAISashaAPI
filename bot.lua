@@ -898,13 +898,14 @@ function on_msg_receive(msg)
         end
     end
     local print_text = print_msg(msg, true)
+    local chat_id = msg.chat.id
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
             match_plugins(msg)
         end
     end
-    print(msg.chat.id)
+    print(chat_id)
     print(print_text)
 end
 
