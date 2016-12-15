@@ -88,10 +88,16 @@ local function pre_process(msg)
                 end
             end
             if kicktable[msg.from.id] == true then
-                if msgs < max_msg then
-                    kicktable[msg.from.id] = false
+                local member = getChatMember(msg.chat.id, msg.from.id)
+                if type(member) == 'table' then
+                    if member.ok and member.result then
+                        if member.result.status == 'left' or member.result.status == 'kicked' then
+                            return
+                        else
+                            kicktable[msg.from.id] = false
+                        end
+                    end
                 end
-                return
             end
             if string.match(getWarn(msg.chat.id), "%d+") then
                 local result = warnUser(bot.id, msg.from.id, msg.chat.id)
