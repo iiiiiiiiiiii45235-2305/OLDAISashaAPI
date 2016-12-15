@@ -1,3 +1,4 @@
+-- recursive to simplify code
 local function check_tag(msg, user_id, user)
     if msg.entities then
         -- check if there's a mention
@@ -36,7 +37,16 @@ local function check_tag(msg, user_id, user)
             end
         end
     end
-    return false
+    local tagged = false
+    -- if forward check forward
+    if msg.forward then
+        if msg.forward_from then
+            tagged = check_tag(msg.forward_from, user_id, user)
+        elseif msg.forward_from_chat then
+            tagged = check_tag(msg.forward_from_chat, user_id, user)
+        end
+    end
+    return tagged
 end
 
 -- send message to sudoers when tagged
