@@ -8,6 +8,9 @@ local function pre_process(msg)
     if msg then
         -- Ignore service msg
         if msg.service then
+            if msg.added then
+                kicktable[msg.added.id] = false
+            end
             return msg
         end
 
@@ -101,6 +104,9 @@ local function pre_process(msg)
             end
             if string.match(getWarn(msg.chat.id), "%d+") then
                 local result = warnUser(bot.id, msg.from.id, msg.chat.id)
+                if not result then
+                    kickUser(bot.id, msg.from.id, msg.chat.id)
+                end
             elseif not strict then
                 kickUser(bot.id, msg.from.id, msg.chat.id)
             else
