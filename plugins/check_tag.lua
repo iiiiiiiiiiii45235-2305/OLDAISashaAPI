@@ -55,8 +55,13 @@ local function pre_process(msg)
         -- exclude private chats with bot
         if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') then
             for v, user in pairs(sudoers) do
-                -- exclude bot tags, autotags and tags of API version
-                if tonumber(msg.from.id) ~= tonumber(bot.id) and tonumber(msg.from.id) ~= tonumber(user.id) and tonumber(msg.from.id) ~= 202256859 then
+                -- exclude autotags and tags of tg-cli version
+                if tonumber(msg.from.id) ~= tonumber(user.id) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
+                    print('in')
+                    print(check_tag(msg, user.id, user))
+                    printvardump(user)
+                    print(msg.forward_from.text or '')
+                    print(msg.text or '')
                     if check_tag(msg, user.id, user) then
                         if msg.reply then
                             forwardMessage(user.id, msg.chat.id, msg.reply_to_message.message_id)
