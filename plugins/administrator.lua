@@ -11,14 +11,18 @@ local function run(msg, matches)
             end
             return sendMessage(msg.chat.id, text)
         end
-        if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
-            io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
-            return langs[msg.lang].cliReboot
-        end
         if matches[1]:lower() == "pm" or matches[1]:lower() == "sasha messaggia" then
             mystat('/pm')
             sendMessage(matches[2], matches[3])
             return langs[msg.lang].pmSent
+        end
+        if matches[1]:lower() == "ping" then
+            mystat('/ping')
+            return 'Pong'
+        end
+        if matches[1]:lower() == "laststart" then
+            mystat('/laststart')
+            return start_time
         end
         if matches[1]:lower() == "block" or matches[1]:lower() == "sasha blocca" then
             mystat('/block')
@@ -97,6 +101,10 @@ local function run(msg, matches)
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
         end
         if is_sudo(msg) then
+            if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
+                io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
+                return langs[msg.lang].cliReboot
+            end
             if matches[1] == 'botrestart' then
                 mystat('/botrestart')
                 redis:bgsave()
@@ -183,6 +191,8 @@ return {
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]([Cc][Hh][Ee][Cc][Kk][Ss][Pp][Ee][Ee][Dd])$",
         "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
+        "^[#!/]([Pp][Ii][Nn][Gg])$",
+        "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
@@ -211,13 +221,15 @@ return {
         "#checkspeed",
         "#vardump [<reply>]",
         "#commandsstats",
-        "(#rebootcli|sasha riavvia cli)",
+        "#ping",
+        "#laststart",
         "SUDO",
         "#botrestart",
         "#redissave",
         "(#sync_gbans|sasha sincronizza superban)",
         "(#backup|sasha esegui backup)",
         "(#uploadbackup|sasha invia backup)",
+        "(#rebootcli|sasha riavvia cli)",
     },
 }
 -- By @imandaneshi :)

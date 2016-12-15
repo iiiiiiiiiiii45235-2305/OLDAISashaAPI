@@ -242,6 +242,7 @@ function bot_init()
     -- the time of the last cron job,
     is_started = true
     -- whether the bot should be running or not.
+    start_time = os.date('%c')
 end
 
 function update_redis_cron()

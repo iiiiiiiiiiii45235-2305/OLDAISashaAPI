@@ -610,7 +610,8 @@ return {
             '#checkspeed: Sasha calcola la velocità con cui processa i messaggi.',
             '#vardump [<reply>]: Sasha esegue il vardump del messaggio specificato.',
             '#commandsstats: Sasha manda gli stats di tutti i comandi.',
-            '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
+            '#ping: Sasha risponde con "Pong".',
+            '#laststart: Sasha manda la data dell\'avvio.',
             'SUDO',
             '#botstop: Sasha si stoppa.',
             '#botrestart: Sasha si riavvia.',
@@ -618,6 +619,7 @@ return {
             '(#sync_gbans|sasha sincronizza superban): Sasha sincronizza la lista dei superban con quella offerta da TeleSeed.',
             '(#backup|sasha esegui backup): Sasha esegue un backup di se stessa e invia il log al richiedente.',
             '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
+            '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
         },
 
         banhammer =
@@ -1490,7 +1492,8 @@ return {
             '#checkspeed: Sasha calculates how much time she needs to process messages.',
             '#vardump [<reply>]: Sasha sends vardump of specified message.',
             '#commandsstats: Sasha sends commands stats.',
-            '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
+            '#ping: Sasha answers with "Pong".',
+            '#laststart: Sasha sends last start date.',
             'SUDO',
             '#botstop: Sasha stops.',
             '#botrestart: Sasha restarts.',
@@ -1498,6 +1501,7 @@ return {
             '(#sync_gbans|sasha sincronizza superban): Sasha syncs gbans list with the one offered by TeleSeed.',
             '(#backup|sasha esegui backup): Sasha makes a backup of herself and sends log to the sender.',
             '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
+            '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
         },
 
         banhammer =
