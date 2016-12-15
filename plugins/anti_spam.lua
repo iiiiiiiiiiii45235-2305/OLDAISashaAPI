@@ -90,7 +90,7 @@ local function pre_process(msg)
             if kicktable[msg.from.id] == true then
                 return
             end
-            if string.match(getWarn(chat_id), "%d+") then
+            if string.match(getWarn(msg.chat.id), "%d+") then
                 warnUser(bot.id, msg.from.id, msg.chat.id)
             elseif not strict then
                 kickUser(bot.id, msg.from.id, msg.chat.id)
