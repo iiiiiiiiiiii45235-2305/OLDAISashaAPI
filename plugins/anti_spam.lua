@@ -87,11 +87,14 @@ local function pre_process(msg)
                     blockUser(msg.from.id, msg.lang)
                 end
             end
-            --[[if kicktable[msg.from.id] == true then
+            if kicktable[msg.from.id] == true then
+                if msgs < max_msg then
+                    kicktable[msg.from.id] = false
+                end
                 return
-            end]]
+            end
             if string.match(getWarn(msg.chat.id), "%d+") then
-                warnUser(bot.id, msg.from.id, msg.chat.id)
+                local result = warnUser(bot.id, msg.from.id, msg.chat.id)
             elseif not strict then
                 kickUser(bot.id, msg.from.id, msg.chat.id)
             else
