@@ -57,13 +57,6 @@ local function pre_process(msg)
             for v, user in pairs(sudoers) do
                 -- exclude autotags and tags of tg-cli version
                 if tonumber(msg.from.id) ~= tonumber(user.id) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
-                    print('in')
-                    print(check_tag(msg, user.id, user))
-                    printvardump(user)
-                    if msg.forward_from then
-                        print(msg.forward_from.text or '')
-                    end
-                    print(msg.text or '')
                     if check_tag(msg, user.id, user) then
                         if msg.reply then
                             forwardMessage(user.id, msg.chat.id, msg.reply_to_message.message_id)
