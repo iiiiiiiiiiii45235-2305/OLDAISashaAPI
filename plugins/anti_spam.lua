@@ -76,9 +76,9 @@ local function pre_process(msg)
             if redis:sismember('whitelist', msg.from.id) then
                 return msg
             end
+            print(msgs)
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
-                print(msgs)
                 if msgs >= max_msg then
                     print("Pass2")
                     -- Block user if spammed in private
