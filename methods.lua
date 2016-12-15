@@ -1043,6 +1043,14 @@ end
 function warnUser(executer, target, chat_id)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
+        local strict = false
+        if data[tostring(chat_id)] then
+            if data[tostring(chat_id)].settings then
+                if data[tostring(chat_id)].settings.strict then
+                    strict = true
+                end
+            end
+        end
         local warn_chat = string.match(getWarn(chat_id), "%d+")
         redis:incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis:get(chat_id .. ':warn:' .. target)
@@ -1055,16 +1063,17 @@ function warnUser(executer, target, chat_id)
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
-                if data[tostring(chat_id)] then
-                    if data[tostring(chat_id)].settings then
-                        if data[tostring(chat_id)].settings.strict then
-                            return banUser(executer, target, chat_id)
-                        end
-                    end
+                if strict then
+                    return banUser(executer, target, chat_id)
                 end
                 return kickUser(executer, target, chat_id)
             end
             sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
+        else
+            if strict then
+                return banUser(executer, target, chat_id)
+            end
+            return kickUser(executer, target, chat_id)
         end
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
     else
