@@ -60,7 +60,9 @@ local function pre_process(msg)
                     print('in')
                     print(check_tag(msg, user.id, user))
                     printvardump(user)
-                    print(msg.forward_from.text or '')
+                    if msg.forward_from then
+                        print(msg.forward_from.text or '')
+                    end
                     print(msg.text or '')
                     if check_tag(msg, user.id, user) then
                         if msg.reply then
