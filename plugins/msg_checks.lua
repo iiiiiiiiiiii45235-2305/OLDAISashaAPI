@@ -49,6 +49,7 @@ local function check_msg(msg, settings)
 
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
+            print('muted user')
             deleteMessage(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
@@ -57,6 +58,7 @@ local function check_msg(msg, settings)
             return msg
         end
         if mute_all then
+            print('all muted')
             deleteMessage(msg)
             if msg.chat.type == 'group' then
                 banUser(bot.id, msg.from.id, msg.chat.id)
@@ -66,6 +68,7 @@ local function check_msg(msg, settings)
         end
         if msg.text then
             if mute_text then
+                print('text muted')
                 action(msg, strict)
                 msg = clean_msg(msg)
                 return msg
@@ -74,6 +77,7 @@ local function check_msg(msg, settings)
             local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
             local _nl, real_digits = string.gsub(msg.text, '%d', '')
             if lock_spam and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+                print('spam found')
                 action(msg, strict)
                 msg = clean_msg(msg)
                 return msg
@@ -85,11 +89,13 @@ local function check_msg(msg, settings)
             if is_link_msg and lock_link and not is_bot then
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
+                        print('link found')
                         action(msg, strict)
                         msg = clean_msg(msg)
                         return msg
                     end
                 else
+                    print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
@@ -97,6 +103,7 @@ local function check_msg(msg, settings)
             end
             local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
             if is_squig_msg and lock_arabic then
+                print('arabic found')
                 action(msg, strict)
                 msg = clean_msg(msg)
                 return msg
@@ -104,6 +111,7 @@ local function check_msg(msg, settings)
             local print_name = msg.from.print_name
             local is_rtl = print_name:match("‮") or msg.text:match("‮")
             if is_rtl and lock_rtl then
+                print('rtl found')
                 action(msg, strict)
                 msg = clean_msg(msg)
                 return msg
@@ -117,11 +125,13 @@ local function check_msg(msg, settings)
             if is_link_caption and lock_link then
                 if group_link then
                     if not string.find(msg.caption:lower(), group_link:lower()) then
+                        print('link found')
                         action(msg, strict)
                         msg = clean_msg(msg)
                         return msg
                     end
                 else
+                    print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
@@ -129,6 +139,7 @@ local function check_msg(msg, settings)
             end
             local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
             if is_squig_caption and lock_arabic then
+                print('arabic found')
                 action(msg, strict)
                 msg = clean_msg(msg)
                 return msg
@@ -136,6 +147,7 @@ local function check_msg(msg, settings)
             local print_name = msg.from.print_name
             local is_rtl = print_name:match("‮") or msg.caption:match("‮")
             if is_rtl and lock_rtl then
+                print('rtl found')
                 action(msg, strict)
                 msg = clean_msg(msg)
                 return msg
@@ -145,54 +157,63 @@ local function check_msg(msg, settings)
         if msg.media_type then
             if msg.media_type == 'audio' then
                 if mute_audio then
+                    print('audio muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'contact' then
                 if mute_contact then
+                    print('contact muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'document' then
                 if mute_document then
+                    print('document muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'gif' then
                 if mute_gif then
+                    print('gif muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'location' then
                 if mute_location then
+                    print('location muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'photo' then
                 if mute_photo then
+                    print('photo muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'sticker' then
                 if mute_sticker then
+                    print('sticker muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'video' then
                 if mute_video then
+                    print('video muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
                 end
             elseif msg.media_type == 'voice' then
                 if mute_voice then
+                    print('voice muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return msg
@@ -201,6 +222,7 @@ local function check_msg(msg, settings)
         end
     else
         if mute_tgservice then
+            print('tgservice muted')
             deleteMessage(msg)
             msg = clean_msg(msg)
             return msg
@@ -209,6 +231,7 @@ local function check_msg(msg, settings)
             if msg.adder.id == msg.added.id then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 and lock_spam then
+                    print('name spam found')
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
@@ -224,6 +247,7 @@ local function check_msg(msg, settings)
                 local print_name = msg.from.print_name
                 local is_rtl_name = print_name:match("‮")
                 if is_rtl_name and lock_rtl then
+                    print('rtl name found')
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
@@ -236,6 +260,7 @@ local function check_msg(msg, settings)
                     return msg
                 end
                 if lock_member then
+                    print('member locked')
                     deleteMessage(msg)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#lockmember)")
                     banUser(bot.id, msg.from.id, msg.chat.id)
@@ -247,6 +272,7 @@ local function check_msg(msg, settings)
                 end
             elseif msg.adder.id ~= msg.added.id then
                 if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_spam then
+                    print('name spam found')
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
@@ -262,6 +288,7 @@ local function check_msg(msg, settings)
                 local print_name = msg.added.print_name
                 local is_rtl_name = print_name:match("‮")
                 if is_rtl_name and lock_rtl then
+                    print('rtl name found')
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
@@ -274,6 +301,7 @@ local function check_msg(msg, settings)
                     return msg
                 end
                 if msg.chat.type == 'supergroup' and lock_member then
+                    print('member locked')
                     deleteMessage(msg)
                     warnUser(bot.id, msg.adder.id, msg.chat.id)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
