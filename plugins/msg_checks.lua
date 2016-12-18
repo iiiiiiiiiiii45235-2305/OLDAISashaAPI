@@ -76,7 +76,7 @@ local function check_msg(msg, settings)
             -- msg.text checks
             local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
             local _nl, real_digits = string.gsub(msg.text, '%d', '')
-            if lock_spam and string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+            if lock_spam and(string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000) then
                 print('spam found')
                 action(msg, strict)
                 msg = clean_msg(msg)
@@ -230,7 +230,7 @@ local function check_msg(msg, settings)
         if msg.adder and msg.added then
             if msg.adder.id == msg.added.id then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 and lock_spam then
+                if lock_spam and(string.len(msg.from.print_name) > 70 or ctrl_chars > 40) then
                     print('name spam found')
                     deleteMessage(msg)
                     if strict then
@@ -271,7 +271,7 @@ local function check_msg(msg, settings)
                     return msg
                 end
             elseif msg.adder.id ~= msg.added.id then
-                if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 and lock_spam then
+                if lock_spam and(string.len(msg.added.print_name) > 70 or ctrl_chars > 40) then
                     print('name spam found')
                     deleteMessage(msg)
                     if strict then
