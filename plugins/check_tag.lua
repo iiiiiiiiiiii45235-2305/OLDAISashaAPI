@@ -73,8 +73,8 @@ local function pre_process(msg)
                 end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {
