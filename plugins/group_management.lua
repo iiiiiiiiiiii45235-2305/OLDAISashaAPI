@@ -12,19 +12,20 @@ local function allChats(msg)
     for k, v in pairsByKeys(data['groups']) do
         local group_id = v
         if data[tostring(group_id)] then
-            settings = data[tostring(group_id)]['settings']
-        end
-        for m, n in pairsByKeys(settings) do
-            if m == 'set_name' then
-                name = n:gsub("", "")
-                chat_name = name:gsub("?", "")
-                group_name_id = name .. '\n(ID: ' .. group_id .. ')\n'
-                if name:match("[\216-\219][\128-\191]") then
-                    group_info = i .. '. \n' .. group_name_id
-                else
-                    group_info = i .. '. ' .. group_name_id
+            for m, n in pairsByKeys(data[tostring(group_id)]) do
+                if type(m) == 'string' then
+                    if m == 'set_name' then
+                        name = n:gsub("", "")
+                        chat_name = name:gsub("?", "")
+                        group_name_id = name .. '\n(ID: ' .. group_id .. ')\n'
+                        if name:match("[\216-\219][\128-\191]") then
+                            group_info = i .. '. \n' .. group_name_id
+                        else
+                            group_info = i .. '. ' .. group_name_id
+                        end
+                        i = i + 1
+                    end
                 end
-                i = i + 1
             end
         end
         message = message .. group_info
@@ -38,19 +39,20 @@ local function allChats(msg)
     for k, v in pairsByKeys(data['realms']) do
         local realm_id = v
         if data[tostring(realm_id)] then
-            settings = data[tostring(realm_id)]['settings']
-        end
-        for m, n in pairsByKeys(settings) do
-            if m == 'set_name' then
-                name = n:gsub("", "")
-                chat_name = name:gsub("?", "")
-                realm_name_id = name .. '\n(ID: ' .. realm_id .. ')\n'
-                if name:match("[\216-\219][\128-\191]") then
-                    realm_info = i .. '. \n' .. realm_name_id
-                else
-                    realm_info = i .. '. ' .. realm_name_id
+            for m, n in pairsByKeys(data[tostring(group_id)]) do
+                if type(m) == 'string' then
+                    if m == 'set_name' then
+                        name = n:gsub("", "")
+                        chat_name = name:gsub("?", "")
+                        realm_name_id = name .. '\n(ID: ' .. realm_id .. ')\n'
+                        if name:match("[\216-\219][\128-\191]") then
+                            realm_info = i .. '. \n' .. realm_name_id
+                        else
+                            realm_info = i .. '. ' .. realm_name_id
+                        end
+                        i = i + 1
+                    end
                 end
-                i = i + 1
             end
         end
         message = message .. realm_info
@@ -185,9 +187,10 @@ local function addGroup(msg)
         if data[tostring(msg.chat.id)] then
             for i, admin in pairs(list.result) do
                 if admin.status == 'administrator' then
-                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id ..(admin.user.username or(admin.user.first_name ..(admin.user.last_name or ''))))
+                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
                 end
             end
+            save_data(config.moderation.data, data)
         end
         return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
     end
@@ -344,9 +347,10 @@ local function addSuperGroup(msg)
         if data[tostring(msg.chat.id)] then
             for i, admin in pairs(list.result) do
                 if admin.status == 'administrator' then
-                    table.insert(data[tostring(msg.chat.id)].moderators, admin.user.id ..(admin.user.username or(admin.user.first_name ..(admin.user.last_name or ''))))
+                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
                 end
             end
+            save_data(config.moderation.data, data)
         end
         return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
     end
@@ -1205,7 +1209,7 @@ local function run(msg, matches)
                                             if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
                                                 unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
-                                                return matches[2] .. langs[msg.lang].muteUserRemove
+                                                return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserRemove
                                             else
                                                 muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
@@ -1227,7 +1231,7 @@ local function run(msg, matches)
                                 if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
                                     unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
-                                    return matches[2] .. langs[msg.lang].muteUserRemove
+                                    return msg.reply_to_message.from.id .. langs[msg.lang].muteUserRemove
                                 else
                                     muteUser(msg.chat.id, msg.reply_to_message.from.id)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
@@ -1237,39 +1241,40 @@ local function run(msg, matches)
                                 return langs[msg.lang].require_rank
                             end
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        -- ignore higher or same rank
-                        if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
-                            if isMutedUser(msg.chat.id, matches[2]) then
-                                unmuteUser(msg.chat.id, matches[2])
-                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
-                                return matches[2] .. langs[msg.lang].muteUserRemove
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            -- ignore higher or same rank
+                            if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
+                                if isMutedUser(msg.chat.id, matches[2]) then
+                                    unmuteUser(msg.chat.id, matches[2])
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
+                                    return matches[2] .. langs[msg.lang].muteUserRemove
+                                else
+                                    muteUser(msg.chat.id, matches[2])
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
+                                    return matches[2] .. langs[msg.lang].muteUserAdd
+                                end
                             else
-                                muteUser(msg.chat.id, matches[2])
-                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
-                                return matches[2] .. langs[msg.lang].muteUserAdd
+                                return langs[msg.lang].require_rank
                             end
                         else
-                            return langs[msg.lang].require_rank
-                        end
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                -- ignore higher or same rank
-                                if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
-                                    if isMutedUser(msg.chat.id, obj_user.id) then
-                                        unmuteUser(msg.chat.id, obj_user.id)
-                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
-                                        return matches[2] .. langs[msg.lang].muteUserRemove
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    -- ignore higher or same rank
+                                    if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
+                                        if isMutedUser(msg.chat.id, obj_user.id) then
+                                            unmuteUser(msg.chat.id, obj_user.id)
+                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
+                                            return obj_user.id .. langs[msg.lang].muteUserRemove
+                                        else
+                                            muteUser(msg.chat.id, obj_user.id)
+                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
+                                            return obj_user.id .. langs[msg.lang].muteUserAdd
+                                        end
                                     else
-                                        muteUser(msg.chat.id, obj_user.id)
-                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
-                                        return obj_user.id .. langs[msg.lang].muteUserAdd
+                                        return langs[msg.lang].require_rank
                                     end
-                                else
-                                    return langs[msg.lang].require_rank
                                 end
                             end
                         end
@@ -1284,6 +1289,15 @@ local function run(msg, matches)
                     mystat('/muteslist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     return mutesList(msg.chat.id)
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == "del" then
+                if msg.from.is_mod then
+                    mystat('/del')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
+                    return deleteMessage(msg)
                 else
                     return langs[msg.lang].require_mod
                 end
@@ -1376,25 +1390,26 @@ local function run(msg, matches)
                         else
                             return setOwner(msg.reply_to_message.from, msg.chat.id)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
-                        local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user.result then
-                                obj_user = obj_user.result
-                                if obj_user then
-                                    if obj_user.type == 'private' then
-                                        return setOwner(obj_user, msg.chat.id)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
+                            local obj_user = getChat(matches[2])
+                            if type(obj_user) == 'table' then
+                                if obj_user.result then
+                                    obj_user = obj_user.result
+                                    if obj_user then
+                                        if obj_user.type == 'private' then
+                                            return setOwner(obj_user, msg.chat.id)
+                                        end
                                     end
                                 end
                             end
-                        end
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return setOwner(obj_user, msg.chat.id)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return setOwner(obj_user, msg.chat.id)
+                                end
                             end
                         end
                     end
@@ -1427,24 +1442,25 @@ local function run(msg, matches)
                         else
                             return promoteMod(msg.chat.id, msg.reply_to_message.from)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user.result then
-                                obj_user = obj_user.result
-                                if obj_user then
-                                    if obj_user.type == 'private' then
-                                        return promoteMod(msg.chat.id, obj_user)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            local obj_user = getChat(matches[2])
+                            if type(obj_user) == 'table' then
+                                if obj_user.result then
+                                    obj_user = obj_user.result
+                                    if obj_user then
+                                        if obj_user.type == 'private' then
+                                            return promoteMod(msg.chat.id, obj_user)
+                                        end
                                     end
                                 end
                             end
-                        end
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return promoteMod(msg.chat.id, obj_user)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return promoteMod(msg.chat.id, obj_user)
+                                end
                             end
                         end
                     end
@@ -1472,24 +1488,25 @@ local function run(msg, matches)
                         else
                             return demoteMod(msg.chat.id, msg.reply_to_message.from)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user.result then
-                                obj_user = obj_user.result
-                                if obj_user then
-                                    if obj_user.type == 'private' then
-                                        return demoteMod(msg.chat.id, obj_user)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            local obj_user = getChat(matches[2])
+                            if type(obj_user) == 'table' then
+                                if obj_user.result then
+                                    obj_user = obj_user.result
+                                    if obj_user then
+                                        if obj_user.type == 'private' then
+                                            return demoteMod(msg.chat.id, obj_user)
+                                        end
                                     end
                                 end
                             end
-                        end
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return demoteMod(msg.chat.id, obj_user)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return demoteMod(msg.chat.id, obj_user)
+                                end
                             end
                         end
                     end
@@ -1563,6 +1580,7 @@ return {
         "^[#!/]([Rr][Ee][Mm]) ([Rr][Ee][Aa][Ll][Mm])$",
 
         -- SUPERGROUP
+        "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
         -- getadmins
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
@@ -1590,6 +1608,8 @@ return {
         "^[#!/]([Mm][Uu][Tt][Ee]) (.*)",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
+        "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
+        "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
@@ -1631,6 +1651,8 @@ return {
         -- setlink
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         -- unsetlink
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Ll][Ii][Nn][Kk])$",
         -- mute

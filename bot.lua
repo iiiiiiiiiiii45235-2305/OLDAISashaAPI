@@ -242,6 +242,7 @@ function bot_init()
     -- the time of the last cron job,
     is_started = true
     -- whether the bot should be running or not.
+    start_time = os.date('%c')
 end
 
 function update_redis_cron()
@@ -428,6 +429,7 @@ local function pre_process_reply(msg)
     return msg
 end
 
+-- recursive to simplify code
 local function pre_process_forward(msg)
     if msg.forward_from or msg.forward_from_chat then
         msg.forward = true
@@ -711,7 +713,7 @@ function msg_valid(msg)
             return false
         end
     else
-        if msg.date < os.time() -15 then
+        if msg.date < os.time() -5 then
             -- Before bot was started more or less
             print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
             return false
@@ -741,12 +743,12 @@ end
 
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
-    msg = plugins.anti_spam.pre_process(msg)
     print(clr.white .. 'Preprocess', 'anti_spam')
-    msg = plugins.msg_checks.pre_process(msg)
+    msg = plugins.anti_spam.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
-    msg = plugins.onservice.pre_process(msg)
+    msg = plugins.msg_checks.pre_process(msg)
     print(clr.white .. 'Preprocess', 'onservice')
+    msg = plugins.onservice.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
             if plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
@@ -782,48 +784,53 @@ local function is_plugin_disabled_on_chat(plugin_name, chat_id)
     return false
 end
 
-function print_msg(msg)
-    if not msg.printed then
-        msg.printed = true
-        local hour = os.date('%H')
-        local minute = os.date('%M')
-        local second = os.date('%S')
-        local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
-        local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
-        local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
-        if msg.edited then
-            print_text = print_text .. clr.blue .. '[edited] ' .. clr.reset
-        end
-        if msg.forward then
-            print_text = print_text .. clr.blue .. '[forward] ' .. clr.reset
-        end
-        if msg.reply then
-            print_text = print_text .. clr.blue .. '[reply] ' .. clr.reset
-        end
-        if msg.media then
-            print_text = print_text .. clr.blue .. '[' ..(msg.media_type or 'unsupported media') .. '] ' .. clr.reset
-            if msg.caption then
-                print_text = print_text .. clr.blue .. msg.caption .. clr.reset
+function print_msg(msg, dont_print)
+    if msg then
+        if not msg.printed then
+            msg.printed = true
+            local hour = os.date('%H')
+            local minute = os.date('%M')
+            local second = os.date('%S')
+            local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
+            local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
+            local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
+            if msg.edited then
+                print_text = print_text .. clr.blue .. '[edited] ' .. clr.reset
             end
-        end
-        if msg.service then
-            if msg.service_type == 'chat_del_user' then
-                print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
-            elseif msg.service_type == 'chat_del_user_leave' then
-                print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
-            elseif msg.service_type == 'chat_add_user' then
-                print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
-            elseif msg.service_type == 'chat_add_user_link' then
-                print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
-            else
-                print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
+            if msg.forward then
+                print_text = print_text .. clr.blue .. '[forward] ' .. clr.reset
             end
+            if msg.reply then
+                print_text = print_text .. clr.blue .. '[reply] ' .. clr.reset
+            end
+            if msg.media then
+                print_text = print_text .. clr.blue .. '[' ..(msg.media_type or 'unsupported media') .. '] ' .. clr.reset
+                if msg.caption then
+                    print_text = print_text .. clr.blue .. msg.caption .. clr.reset
+                end
+            end
+            if msg.service then
+                if msg.service_type == 'chat_del_user' then
+                    print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..(msg.removed.first_name ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
+                elseif msg.service_type == 'chat_del_user_leave' then
+                    print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
+                elseif msg.service_type == 'chat_add_user' then
+                    print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
+                elseif msg.service_type == 'chat_add_user_link' then
+                    print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
+                else
+                    print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
+                end
+            end
+            if msg.text then
+                print_text = print_text .. clr.blue .. msg.text .. clr.reset
+            end
+            if not dont_print then
+                print(msg.chat.id)
+                print(print_text)
+            end
+            return print_text
         end
-        if msg.text then
-            print_text = print_text .. clr.blue .. msg.text .. clr.reset
-        end
-        print(print_text)
-        print(msg.chat.id)
     end
 end
 
@@ -833,7 +840,6 @@ function match_plugin(plugin, plugin_name, msg)
         local matches = match_pattern(pattern, msg.text)
         if matches then
             print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
-            print_msg(msg)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.chat.id)
 
@@ -892,13 +898,16 @@ function on_msg_receive(msg)
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
         end
     end
+    local print_text = print_msg(msg, true)
+    local chat_id = msg.chat.id
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
             match_plugins(msg)
         end
     end
-    print_msg(msg)
+    print(chat_id)
+    print(print_text)
 end
 
 -- Call and postpone execution for cron plugins
@@ -970,21 +979,21 @@ function cron_administrator()
             sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
         end
 
-        -- AISASHAEXP
+        -- AISASHA
 
         -- send database
-        if io.popen('find /home/pi/AISashaExp/data/database.json'):read("*all") ~= '' then
-            sendDocument_SUDOERS('/home/pi/AISashaExp/data/database.json')
+        if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
+            sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
         end
 
         -- do backup
         local time = os.time()
-        local log = io.popen('cd "/home/pi/BACKUPS/" && tar -zcvf backupAISasha' .. time .. '.tar.gz /home/pi/AISashaExp --exclude=/home/pi/AISashaExp/.git --exclude=/home/pi/AISashaExp/.luarocks --exclude=/home/pi/AISashaExp/patches --exclude=/home/pi/AISashaExp/tg'):read('*all')
+        local log = io.popen('cd "/home/pi/BACKUPS/" && tar -zcvf backupAISasha' .. time .. '.tar.gz /home/pi/AISasha --exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.luarocks --exclude=/home/pi/AISasha/patches --exclude=/home/pi/AISasha/tg'):read('*all')
         local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
         file:write(log)
         file:flush()
         file:close()
-        sendMessage_SUDOERS(langs['en'].autoSendBackupDb)
+        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, true)
 
         -- send last backup
         local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
@@ -999,7 +1008,7 @@ function cron_administrator()
             for k, v in pairsByKeys(backups) do
                 last_backup = v
             end
-            sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup, ok_cb, false)
+            sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
         end
     end
 end
@@ -1007,51 +1016,34 @@ end
 ---------WHEN THE BOT IS STARTED FROM THE TERMINAL, THIS IS THE FIRST FUNCTION HE FOUNDS
 
 bot_init() -- Actually start the script. Run the bot_init function.
--- list of all live threads
-threads = { }    
 
 while is_started do
     -- Start a loop while the bot should be running.
-    -- processing messages slow down the whole process of receiving
-    local co = coroutine.create(
-    function()
-        local res = getUpdates(last_update + 1)
-        -- Get the latest updates!
-        if res then
-            -- printvardump(res)
-            for i, msg in ipairs(res.result) do
-                -- Go through every new message.
+    local res = getUpdates(last_update + 1)
+    -- Get the latest updates!
+    if res then
+        -- printvardump(res)
+        for i, msg in ipairs(res.result) do
+            -- Go through every new message.
+            if last_update < msg.update_id then
                 last_update = msg.update_id
-                if msg.message--[[ or msg.callback_query ]]or msg.edited_message then
-                    if msg.edited_message then
-                        msg.message = msg.edited_message
-                        msg.message.edited = true
-                        msg.edited_message = nil
-                    end
-                    on_msg_receive(msg.message)
-                end
             end
-        else
-            print(clr.red .. 'Connection error' .. clr.reset)
-        end
-        update_redis_cron()
-        cron_plugins()
-        cron_database()
-        cron_administrator()
-    end )
-    table.insert(threads, co)
-    local n = #threads
-    if n ~= 0 then
-        -- no more threads to run
-        for i = 1, n do
-            local status, res = coroutine.resume(threads[i])
-            if not res then
-                -- thread finished its task?
-                table.remove(threads, i)
-                break
+            if msg.edited_message then
+                msg.message = msg.edited_message
+                msg.message.edited = true
+                msg.edited_message = nil
+            end
+            if msg.message--[[ or msg.callback_query ]] then
+                on_msg_receive(msg.message)
             end
         end
+    else
+        print(clr.red .. 'Connection error' .. clr.reset)
     end
+    update_redis_cron()
+    cron_plugins()
+    cron_database()
+    cron_administrator()
 end
 
 print(clr.white .. 'Halted.' .. clr.reset)

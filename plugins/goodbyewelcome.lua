@@ -1,3 +1,11 @@
+preview_user = {
+    id = '1234567890',
+    first_name = 'FIRST_NAME',
+    last_name = 'LAST_NAME',
+    username = '@USERNAME',
+    print_name = 'FIRST_NAME LAST_NAME'
+}
+
 local function set_welcome(chat_id, welcome)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)]['welcome'] = welcome
@@ -67,76 +75,135 @@ local function get_rules(chat_id)
     return rules
 end
 
+local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
+    if string.find(goodbyewelcome, '$chatid') then
+        goodbyewelcome = goodbyewelcome:gsub('$chatid', chat.id)
+    end
+    if string.find(goodbyewelcome, '$chatname') then
+        goodbyewelcome = goodbyewelcome:gsub('$chatname', chat.title)
+    end
+    if string.find(goodbyewelcome, '$chatusername') then
+        if chat.username then
+            goodbyewelcome = goodbyewelcome:gsub('$chatusername', '@' .. chat.username)
+        else
+            goodbyewelcome = goodbyewelcome:gsub('$chatusername', 'NO CHAT USERNAME')
+        end
+    end
+    if string.find(goodbyewelcome, '$rules') then
+        goodbyewelcome = goodbyewelcome:gsub('$rules', get_rules(chat.id))
+    end
+    if string.find(goodbyewelcome, '$userid') then
+        goodbyewelcome = goodbyewelcome:gsub('$userid', user.id)
+    end
+    if string.find(goodbyewelcome, '$firstname') then
+        goodbyewelcome = goodbyewelcome:gsub('$firstname', user.first_name)
+    end
+    if string.find(goodbyewelcome, '$lastname') then
+        if user.last_name then
+            goodbyewelcome = goodbyewelcome:gsub('$lastname', user.last_name)
+        end
+    end
+    if string.find(goodbyewelcome, '$printname') then
+        user.print_name = user.first_name
+        if user.last_name then
+            user.print_name = user.print_name .. ' ' .. user.last_name
+        end
+        goodbyewelcome = goodbyewelcome:gsub('$printname', user.print_name)
+    end
+    if string.find(goodbyewelcome, '$username') then
+        if user.username then
+            goodbyewelcome = goodbyewelcome:gsub('$username', '@' .. user.username)
+        else
+            goodbyewelcome = goodbyewelcome:gsub('$username', 'NO USERNAME')
+        end
+    end
+    return goodbyewelcome
+end
+
 local function run(msg, matches)
     if is_realm(msg) or is_group(msg) or is_super_group(msg) then
-        if matches[1]:lower() == 'getwelcome' then
-            mystat('/getwelcome')
-            return get_welcome(msg.chat.id)
-        end
-        if matches[1]:lower() == 'getgoodbye' then
-            mystat('/getgoodbye')
-            return get_goodbye(msg.chat.id)
-        end
-        if matches[1]:lower() == 'setwelcome' and msg.from.is_mod then
-            mystat('/setwelcome')
-            return set_welcome(msg.chat.id, matches[2])
-        end
-        if matches[1]:lower() == 'setgoodbye' and msg.from.is_mod then
-            mystat('/setgoodbye')
-            return set_goodbye(msg.chat.id, matches[2])
-        end
-        if matches[1]:lower() == 'unsetwelcome' and msg.from.is_mod then
-            mystat('/unsetwelcome')
-            return unset_welcome(msg.chat.id)
-        end
-        if matches[1]:lower() == 'unsetgoodbye' and msg.from.is_mod then
-            mystat('/unsetgoodbye')
-            return unset_goodbye(msg.chat.id)
-        end
-        if matches[1]:lower() == 'setmemberswelcome' and msg.from.is_mod then
-            mystat('/setmemberswelcome')
-            local text = set_memberswelcome(msg.chat.id, matches[2])
-            if matches[2] == '0' then
-                return langs[msg.lang].neverWelcome
-            else
-                return text
+        if msg.from.is_mod then
+            if matches[1]:lower() == 'getwelcome' then
+                mystat('/getwelcome')
+                return get_welcome(msg.chat.id)
             end
-        end
-        if matches[1]:lower() == 'getmemberswelcome' and msg.from.is_mod then
-            mystat('/getmemberswelcome')
-            return get_memberswelcome(msg.chat.id)
+            if matches[1]:lower() == 'getgoodbye' then
+                mystat('/getgoodbye')
+                return get_goodbye(msg.chat.id)
+            end
+            if matches[1]:lower() == 'previewwelcome' then
+                mystat('/previewwelcome')
+                return adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, preview_user)
+            end
+            if matches[1]:lower() == 'previewgoodbye' then
+                mystat('/previewgoodbye')
+                return adjust_goodbyewelcome(get_goodbye(msg.chat.id), msg.chat, preview_user)
+            end
+            if matches[1]:lower() == 'setwelcome' then
+                mystat('/setwelcome')
+                return set_welcome(msg.chat.id, matches[2])
+            end
+            if matches[1]:lower() == 'setgoodbye' then
+                mystat('/setgoodbye')
+                return set_goodbye(msg.chat.id, matches[2])
+            end
+            if matches[1]:lower() == 'unsetwelcome' then
+                mystat('/unsetwelcome')
+                return unset_welcome(msg.chat.id)
+            end
+            if matches[1]:lower() == 'unsetgoodbye' then
+                mystat('/unsetgoodbye')
+                return unset_goodbye(msg.chat.id)
+            end
+            if matches[1]:lower() == 'setmemberswelcome' then
+                mystat('/setmemberswelcome')
+                local text = set_memberswelcome(msg.chat.id, matches[2])
+                if matches[2] == '0' then
+                    return langs[msg.lang].neverWelcome
+                else
+                    return text
+                end
+            end
+            if matches[1]:lower() == 'getmemberswelcome' then
+                mystat('/getmemberswelcome')
+                return get_memberswelcome(msg.chat.id)
+            end
+        else
+            return langs[msg.lang].require_mod
         end
     end
 end
 
 local function pre_process(msg)
-    if msg.service then
-        if is_realm(msg) or is_group(msg) or is_super_group(msg) then
-            if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
-                local hash
-                if msg.chat.type == 'supergroup' then
-                    hash = 'channel:welcome' .. msg.chat.id
-                end
-                if msg.chat.type == 'group' then
-                    hash = 'chat:welcome' .. msg.chat.id
-                end
-                redis:incr(hash)
-                local hashonredis = redis:get(hash)
-                if hashonredis then
-                    if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                        sendMessage(msg.chat.id, get_welcome(msg.chat.id) .. '\n' .. get_rules(msg.chat.id))
-                        redis:getset(hash, 0)
+    if msg then
+        if msg.service then
+            if is_realm(msg) or is_group(msg) or is_super_group(msg) then
+                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
+                    local hash
+                    if msg.chat.type == 'supergroup' then
+                        hash = 'channel:welcome' .. msg.chat.id
                     end
-                else
-                    redis:set(hash, 0)
+                    if msg.chat.type == 'group' then
+                        hash = 'chat:welcome' .. msg.chat.id
+                    end
+                    redis:incr(hash)
+                    local hashonredis = redis:get(hash)
+                    if hashonredis then
+                        if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
+                            sendMessage(msg.chat.id, adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, msg.added))
+                            redis:getset(hash, 0)
+                        end
+                    else
+                        redis:set(hash, 0)
+                    end
                 end
-            end
-            if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
-                sendMessage(msg.chat.id, get_goodbye(msg.chat.id) .. ' ' .. msg.removed.print_name:gsub('_', ' '))
+                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
+                    sendMessage(msg.chat.id, adjust_goodbyewelcome(get_goodbye(msg.chat.id), msg.chat, msg.removed))
+                end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {
@@ -146,8 +213,10 @@ return {
         "^[#!/]([Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
+        "^[#!/]([Pp][Rr][Ee][Vv][Ii][Ee][Ww][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
         "^[#!/]([Ss][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
+        "^[#!/]([Pp][Rr][Ee][Vv][Ii][Ee][Ww][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Mm][Bb][Ee][Rr][Ss][Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Mm][Ee][Mm][Bb][Ee][Rr][Ss][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
@@ -157,15 +226,16 @@ return {
     min_rank = 0,
     syntax =
     {
-        "USER",
-        "#getwelcome: Sasha manda il benvenuto.",
-        "#getgoodbye: Sasha manda l'addio.",
         "MOD",
-        "#setwelcome <text>: Sasha imposta <text> come benvenuto.",
-        "#setgoodbye <text>: Sasha imposta <text> come addio.",
-        "#unsetwelcome: Sasha elimina il benvenuto",
-        "#unsetgoodbye: Sasha elimina l'addio",
-        "#setmemberswelcome <value>: Sasha dopo <value> membri manderà il benvenuto con le regole, se zero il benvenuto non verrà più mandato.",
-        "#getmemberswelcome: Sasha manda il numero di membri entrati dopo i quali invia il benvenuto.",
+        "#getwelcome",
+        "#getgoodbye",
+        "#previewwelcome",
+        "#previewgoodbye",
+        "#setwelcome <text>",
+        "#setgoodbye <text>",
+        "#unsetwelcome",
+        "#unsetgoodbye",
+        "#setmemberswelcome <value>",
+        "#getmemberswelcome",
     },
 }

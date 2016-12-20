@@ -1,3 +1,4 @@
+-- recursive to simplify code
 local function check_tag(msg, user_id, user)
     if msg.entities then
         -- check if there's a mention
@@ -8,36 +9,44 @@ local function check_tag(msg, user_id, user)
         end
     end
 
+    -- check if first name is in message
+    if msg.text then
+        if string.find(msg.text, user.first_name) then
+            return true
+        end
+    end
+    if msg.media then
+        if msg.caption then
+            if string.find(msg.caption, user.first_name) then
+                return true
+            end
+        end
+    end
     if user.username then
         -- check if username is in message
         if msg.text then
-            if string.find(msg.text:lower(), user.username:lower()) or string.find(msg.text, user.first_name) then
+            if string.find(msg.text:lower(), user.username:lower()) then
                 return true
             end
         end
         if msg.media then
             if msg.caption then
-                if string.find(msg.caption:lower(), user.username:lower()) or string.find(msg.caption, user.first_name) then
-                    return true
-                end
-            end
-        end
-    else
-        -- check if first name is in message
-        if msg.text then
-            if string.find(msg.text, user.first_name) then
-                return true
-            end
-        end
-        if msg.media then
-            if msg.caption then
-                if string.find(msg.caption, user.first_name) then
+                if string.find(msg.caption:lower(), user.username:lower()) then
                     return true
                 end
             end
         end
     end
-    return false
+    local tagged = false
+    -- if forward check forward
+    if msg.forward then
+        if msg.forward_from then
+            tagged = check_tag(msg.forward_from, user_id, user)
+        elseif msg.forward_from_chat then
+            tagged = check_tag(msg.forward_from_chat, user_id, user)
+        end
+    end
+    return tagged
 end
 
 -- send message to sudoers when tagged
@@ -46,8 +55,8 @@ local function pre_process(msg)
         -- exclude private chats with bot
         if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') then
             for v, user in pairs(sudoers) do
-                -- exclude bot tags, autotags and tags of API version
-                if tonumber(msg.from.id) ~= tonumber(bot.id) and tonumber(msg.from.id) ~= tonumber(user.id) and tonumber(msg.from.id) ~= 202256859 then
+                -- exclude autotags and tags of tg-cli version
+                if tonumber(msg.from.id) ~= tonumber(user.id) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
                     if check_tag(msg, user.id, user) then
                         if msg.reply then
                             forwardMessage(user.id, msg.chat.id, msg.reply_to_message.message_id)

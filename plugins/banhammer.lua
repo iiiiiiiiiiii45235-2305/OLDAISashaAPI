@@ -23,7 +23,7 @@ local function kickinactive(chat_id, num, lang)
     local users = redis:smembers(hash)
 
     for i = 1, #users do
-        if tonumber(users[i]) ~= tonumber(bot.id) and not is_momod2(users[i], chat_id) then
+        if tonumber(users[i]) ~= tonumber(bot.id) and not is_mod2(users[i], chat_id, true) then
             local msgs = user_msgs(users[i], chat_id)
             if tonumber(msgs) < tonumber(num) then
                 kickUser(bot.id, users[i], chat_id)
@@ -72,14 +72,15 @@ local function run(msg, matches)
                         else
                             return getUserWarns(msg.reply_to_message.from.id, msg.chat.id)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        return getUserWarns(matches[2], msg.chat.id)
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return getUserWarns(obj_user.id, msg.chat.id)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            return getUserWarns(matches[2], msg.chat.id)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return getUserWarns(obj_user.id, msg.chat.id)
+                                end
                             end
                         end
                     end
@@ -111,14 +112,15 @@ local function run(msg, matches)
                         else
                             return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        return warnUser(msg.from.id, matches[2], msg.chat.id)
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            return warnUser(msg.from.id, matches[2], msg.chat.id)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
                             end
                         end
                     end
@@ -150,14 +152,15 @@ local function run(msg, matches)
                         else
                             return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        return unwarnUser(msg.from.id, matches[2], msg.chat.id)
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            return unwarnUser(msg.from.id, matches[2], msg.chat.id)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
                             end
                         end
                     end
@@ -189,14 +192,15 @@ local function run(msg, matches)
                         else
                             return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
-                    end
-                    if string.match(matches[2], '^%d+$') then
-                        return unwarnallUser(msg.from.id, matches[2], msg.chat.id)
-                    else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                        if obj_user then
-                            if obj_user.type == 'private' then
-                                return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                    elseif matches[2] then
+                        if string.match(matches[2], '^%d+$') then
+                            return unwarnallUser(msg.from.id, matches[2], msg.chat.id)
+                        else
+                            local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                            if obj_user then
+                                if obj_user.type == 'private' then
+                                    return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
                             end
                         end
                     end
@@ -236,14 +240,15 @@ local function run(msg, matches)
                             return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    return kickUser(msg.from.id, matches[2], msg.chat.id)
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        return kickUser(msg.from.id, matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
                         end
                     end
                 end
@@ -282,14 +287,15 @@ local function run(msg, matches)
                             return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    return banUser(msg.from.id, matches[2], msg.chat.id)
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return banUser(msg.from.id, obj_user.id, msg.chat.id)
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        return banUser(msg.from.id, matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return banUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
                         end
                     end
                 end
@@ -307,7 +313,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return unbanUser(msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -318,24 +324,25 @@ local function run(msg, matches)
                     else
                         if msg.reply_to_message.service then
                             if msg.reply_to_message.service_type == 'chat_add_user' then
-                                return unbanUser(msg.reply_to_message.added.id, msg.chat.id)
+                                return unbanUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return unbanUser(msg.reply_to_message.removed.id, msg.chat.id)
+                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
                             else
-                                return unbanUser(msg.reply_to_message.from.id, msg.chat.id)
+                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                             end
                         else
-                            return unbanUser(msg.reply_to_message.from.id, msg.chat.id)
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                         end
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    return unbanUser(matches[2], msg.chat.id)
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            return unbanUser(obj_user.id, msg.chat.id)
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        return unbanUser(msg.from.id, matches[2], msg.chat.id)
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
                         end
                     end
                 end
@@ -397,16 +404,17 @@ local function run(msg, matches)
                             return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                         end
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    gbanUser(matches[2])
-                    return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            gbanUser(obj_user.id)
-                            return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        gbanUser(matches[2])
+                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                gbanUser(obj_user.id)
+                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
+                            end
                         end
                     end
                 end
@@ -450,16 +458,17 @@ local function run(msg, matches)
                             return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
                         end
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                    ungbanUser(matches[2])
-                    return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
-                else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                    if obj_user then
-                        if obj_user.type == 'private' then
-                            ungbanUser(obj_user.id)
-                            return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
+                elseif matches[2] then
+                    if string.match(matches[2], '^%d+$') then
+                        ungbanUser(matches[2])
+                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
+                    else
+                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                ungbanUser(obj_user.id)
+                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
+                            end
                         end
                     end
                 end
@@ -521,64 +530,66 @@ local function clean_msg(msg)
 end
 
 local function pre_process(msg)
-    -- SERVICE MESSAGE
-    if msg.service then
-        if msg.service_type then
-            -- Check if banned user joins chat by link
-            if msg.service_type == 'chat_add_user_link' then
-                print('Checking invited user ' .. msg.from.id)
-                if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
-                    -- Check it with redis
-                    print('User is banned!')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
-                    -- Save to logs
-                    banUser(bot.id, msg.from.id, msg.chat.id)
+    if msg then
+        -- SERVICE MESSAGE
+        if msg.service then
+            if msg.service_type then
+                -- Check if banned user joins chat by link
+                if msg.service_type == 'chat_add_user_link' then
+                    print('Checking invited user ' .. msg.from.id)
+                    if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
+                        -- Check it with redis
+                        print('User is banned!')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
+                        -- Save to logs
+                        banUser(bot.id, msg.from.id, msg.chat.id)
+                    end
                 end
-            end
-            -- Check if banned user joins chat
-            if msg.service_type == 'chat_add_user' then
-                print('Checking invited user ' .. msg.added.id)
-                if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
-                    -- Check it with redis
-                    print('User is banned!')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
-                    -- Save to logs
-                    kickUser(bot.id, user_id, msg.chat.id)
-                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                    redis:incr(banhash)
-                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                    local banaddredis = redis:get(banhash)
-                    if banaddredis then
-                        if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
-                            kickUser(bot.id, msg.from.id, msg.chat.id)
-                            -- Kick user who adds ban ppl more than 3 times
-                        end
-                        if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                            banUser(bot.id, msg.from.id, msg.chat.id)
-                            -- Ban user who adds ban ppl more than 7 times
-                            local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                            redis:set(banhash, 0)
-                            -- Reset the Counter
+                -- Check if banned user joins chat
+                if msg.service_type == 'chat_add_user' then
+                    print('Checking invited user ' .. msg.added.id)
+                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
+                        -- Check it with redis
+                        print('User is banned!')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
+                        -- Save to logs
+                        kickUser(bot.id, user_id, msg.chat.id)
+                        local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                        redis:incr(banhash)
+                        local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                        local banaddredis = redis:get(banhash)
+                        if banaddredis then
+                            if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
+                                kickUser(bot.id, msg.from.id, msg.chat.id)
+                                -- Kick user who adds ban ppl more than 3 times
+                            end
+                            if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
+                                banUser(bot.id, msg.from.id, msg.chat.id)
+                                -- Ban user who adds ban ppl more than 7 times
+                                local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                                redis:set(banhash, 0)
+                                -- Reset the Counter
+                            end
                         end
                     end
                 end
+                -- No further checks
+                return msg
             end
-            -- No further checks
-            return msg
         end
-    end
-    -- banned user is talking !
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
-            -- Check it with redis
-            print('Banned user talking!')
-            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
-            -- Save to logs
-            kickUser(bot.id, msg.from.id, msg.chat.id)
-            msg = clean_msg(msg)
+        -- banned user is talking !
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
+                -- Check it with redis
+                print('Banned user talking!')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
+                -- Save to logs
+                kickUser(bot.id, msg.from.id, msg.chat.id)
+                msg = clean_msg(msg)
+            end
         end
+        return msg
     end
-    return msg
 end
 
 return {

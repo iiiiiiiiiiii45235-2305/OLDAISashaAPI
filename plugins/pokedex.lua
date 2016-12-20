@@ -52,6 +52,6 @@ return {
     syntax =
     {
         "USER",
-        "#pokedex|#pokemon <name>|<id>: Sasha cerca il pokémon specificato e ne invia le informazioni.",
+        "#pokedex|#pokemon <name>|<id>",
     },
 }

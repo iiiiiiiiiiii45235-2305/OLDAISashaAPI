@@ -254,6 +254,7 @@ return {
         botRestarted = 'Bot riavviato.',
         botStopped = 'Bot spento.',
         redisDbSaved = 'Database redis salvato.',
+        cliReboot = 'AISasha Ucciso.',
 
         -- anti_spam.lua --
         blockedForSpam = ' bloccato (SPAM).',
@@ -474,8 +475,6 @@ return {
         errorChangeUsername = 'Errore nell\'impostare l\'username.\nPotrebbe già essere in uso.\n\nPuoi usare lettere numeri e l\'underscore.\nLunghezza minima 5 caratteri.',
         usernameCleaned = 'Username gruppo pulito.',
         errorCleanedUsername = 'Errore nel tentativo di pulire l\'username.',
-        muteUserAdd = 'Utente.',
-        muteUserRemove = '.',
 
         -- info.lua --
         infoWord = 'INFO',
@@ -560,6 +559,10 @@ return {
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = 'Migrazione completata.',
+        migrationAlreadyExecuted = 'Migrazione del gruppo già effettuata.',
+        unknownGroupType = 'Errore, tipo di gruppo sconosciuto, ID: ',
+        noUserDataAvailable = 'Nessun dato dell\'utente disponibile.',
+        noGroupDataAvailable = 'Nessun dato del gruppo disponibile.',
 
         -- unset.lua --
         deleted = ' eliminato.',
@@ -607,6 +610,8 @@ return {
             '#checkspeed: Sasha calcola la velocità con cui processa i messaggi.',
             '#vardump [<reply>]: Sasha esegue il vardump del messaggio specificato.',
             '#commandsstats: Sasha manda gli stats di tutti i comandi.',
+            '#ping: Sasha risponde con "Pong".',
+            '#laststart: Sasha manda la data dell\'avvio.',
             'SUDO',
             '#botstop: Sasha si stoppa.',
             '#botrestart: Sasha si riavvia.',
@@ -614,6 +619,7 @@ return {
             '(#sync_gbans|sasha sincronizza superban): Sasha sincronizza la lista dei superban con quella offerta da TeleSeed.',
             '(#backup|sasha esegui backup): Sasha esegue un backup di se stessa e invia il log al richiedente.',
             '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
+            '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
         },
 
         banhammer =
@@ -667,8 +673,8 @@ return {
             'SUDO',
             '#createdatabase: Sasha crea il database.',
             '(#dodatabase|sasha esegui database): Sasha salva i dati di tutti gli utenti del gruppo e i dati del gruppo.',
-            '(#search|[sasha] cerca) <id>|<username>|<reply>|from: Sasha cerca l\'utente specificato nel database.',
-            '(#delete|[sasha] elimina) <id>: Sasha elimina <id> dal database.',
+            '(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from: Sasha cerca l\'utente specificato nel database.',
+            '(#dbdelete|[sasha] elimina db) <id>: Sasha elimina <id> dal database.',
             '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha aggiunge manualmente al database l\'utente specificato.',
             '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>: Sasha aggiunge manualmente al database il gruppo specificato.',
             '#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il supergruppo specificato.',
@@ -751,10 +757,12 @@ return {
         {
             '🅿️ GOODBYEWELCOME',
             'Plugin per il benvenuto e l\'addio dei membri.',
-            'USER',
+            'MOD',
+            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l\'addio: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username',
             '#getwelcome: Sasha manda il benvenuto.',
             '#getgoodbye: Sasha manda l\'addio.',
-            'MOD',
+            '#previewwelcome: Sasha manda l\'esempio di benvenuto.',
+            '#previewgoodbye: Sasha manda l\'esempio di addio.',
             '#setwelcome <text>: Sasha imposta <text> come benvenuto.',
             '#setgoodbye <text>: Sasha imposta <text> come addio.',
             '#unsetwelcome: Sasha rimuove il benvenuto.',
@@ -839,6 +847,7 @@ return {
             'Plugin per ottenere informazioni.',
             'USER',
             '#getrank|rango [<id>|<username>|<reply>]: Sasha manda il rank dell\'utente.',
+            '#whoami: Sasha manda le informazioni dell\'utente.',
             '(#info|[sasha] info): Sasha manda le info dell\'utente e della chat o di se stessa',
             '#ishere <id>|<username>|<reply>|from: Sasha dice se l\'utente specificato è presente nel gruppo.',
             'MOD',
@@ -1126,6 +1135,7 @@ return {
         botRestarted = 'Bot reloaded.',
         botStopped = 'Bot stopped.',
         redisDbSaved = 'Redis db saved.',
+        cliReboot = 'AISasha Killed.',
 
         -- anti_spam.lua --
         blockedForSpam = ' blocked (SPAM).',
@@ -1431,6 +1441,10 @@ return {
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = 'Migration completed.',
+        migrationAlreadyExecuted = 'Group migration already executed.',
+        unknownGroupType = 'Error, unknown group type, ID: ',
+        noUserDataAvailable = 'No available data for the user.',
+        noGroupDataAvailable = 'No available data for the group.',
 
         -- unset.lua --
         deleted = ' deleted.',
@@ -1478,6 +1492,8 @@ return {
             '#checkspeed: Sasha calculates how much time she needs to process messages.',
             '#vardump [<reply>]: Sasha sends vardump of specified message.',
             '#commandsstats: Sasha sends commands stats.',
+            '#ping: Sasha answers with "Pong".',
+            '#laststart: Sasha sends last start date.',
             'SUDO',
             '#botstop: Sasha stops.',
             '#botrestart: Sasha restarts.',
@@ -1485,6 +1501,7 @@ return {
             '(#sync_gbans|sasha sincronizza superban): Sasha syncs gbans list with the one offered by TeleSeed.',
             '(#backup|sasha esegui backup): Sasha makes a backup of herself and sends log to the sender.',
             '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
+            '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
         },
 
         banhammer =
@@ -1538,8 +1555,8 @@ return {
             'SUDO',
             '#createdatabase: Sasha creates the database.',
             '(#dodatabase|sasha esegui database): Sasha saves all info of all users of group and group info.',
-            '(#search|[sasha] cerca) <id>|<username>|<reply>|from: Sasha searches for the specified user in the database.',
-            '(#delete|[sasha] elimina) <id>: Sasha deleted <id> from the database.',
+            '(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from: Sasha searches for the specified user in the database.',
+            '(#dbdelete|[sasha] elimina db) <id>: Sasha deleted <id> from the database.',
             '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha manually adds specified user to the database.',
             '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>: Sasha manually adds specified group to the database.',
             '#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha manually adds specified supergroup to the database.',
@@ -1622,10 +1639,12 @@ return {
         {
             '🅿️ GOODBYEWELCOME',
             'Plugin for welcome and goodbye.',
-            'USER',
+            'MOD',
+            'There are some markers that will be replaced when goodbye/welcome is sent: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username',
             '#getwelcome: Sasha sends welcome.',
             '#getgoodbye: Sasha sends goodbye.',
-            'MOD',
+            '#previewwelcome: Sasha sends welcome sample.',
+            '#previewgoodbye: Sasha sends goodbye sample.',
             '#setwelcome <text>: Sasha sets <text> as welcome.',
             '#setgoodbye <text>: Sasha sets <text> as goodbye.',
             '#unsetwelcome: Sasha removes welcome.',
@@ -1710,6 +1729,7 @@ return {
             'Plugin to obtain info.',
             'USER',
             '#getrank|rango [<id>|<username>|<reply>]: Sasha sends rank of specified user.',
+            '#whoami: Sasha sends user\'s info.',
             '(#info|[sasha] info): Sasha sends user\'s info and chat\'s info or her info.',
             '#ishere <id>|<username>|<reply>|from: Sasha says if the specified user is in the group.',
             'MOD',

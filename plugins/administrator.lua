@@ -16,6 +16,14 @@ local function run(msg, matches)
             sendMessage(matches[2], matches[3])
             return langs[msg.lang].pmSent
         end
+        if matches[1]:lower() == "ping" then
+            mystat('/ping')
+            return 'Pong'
+        end
+        if matches[1]:lower() == "laststart" then
+            mystat('/laststart')
+            return start_time
+        end
         if matches[1]:lower() == "block" or matches[1]:lower() == "sasha blocca" then
             mystat('/block')
             if msg.reply then
@@ -36,13 +44,15 @@ local function run(msg, matches)
                 else
                     return blockUser(msg.reply_to_message.from.id, msg.lang)
                 end
-            elseif string.match(matches[2], '^%d+$') then
-                return blockUser(matches[2], msg.lang)
-            else
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                if obj_user then
-                    if obj_user.type == 'private' then
-                        return blockUser(obj_user.id, msg.lang)
+            elseif matches[2] then
+                if string.match(matches[2], '^%d+$') then
+                    return blockUser(matches[2], msg.lang)
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return blockUser(obj_user.id, msg.lang)
+                        end
                     end
                 end
             end
@@ -68,13 +78,15 @@ local function run(msg, matches)
                 else
                     return unblockUser(msg.reply_to_message.from.id, msg.lang)
                 end
-            elseif string.match(matches[2], '^%d+$') then
-                return unblockUser(matches[2], msg.lang)
-            else
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                if obj_user then
-                    if obj_user.type == 'private' then
-                        return unblockUser(obj_user.id, msg.lang)
+            elseif matches[2] then
+                if string.match(matches[2], '^%d+$') then
+                    return unblockUser(matches[2], msg.lang)
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return unblockUser(obj_user.id, msg.lang)
+                        end
                     end
                 end
             end
@@ -89,6 +101,10 @@ local function run(msg, matches)
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
         end
         if is_sudo(msg) then
+            if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
+                io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
+                return langs[msg.lang].cliReboot
+            end
             if matches[1] == 'botrestart' then
                 mystat('/botrestart')
                 redis:bgsave()
@@ -174,6 +190,9 @@ return {
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]([Cc][Hh][Ee][Cc][Kk][Ss][Pp][Ee][Ee][Dd])$",
+        "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
+        "^[#!/]([Pp][Ii][Nn][Gg])$",
+        "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
@@ -188,6 +207,8 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Bb][Aa][Cc][Kk][Uu][Pp])$",
         -- uploadbackup
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Aa] [Bb][Aa][Cc][Kk][Uu][Pp])$",
+        -- rebootapi
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Aa][Vv][Ii][Aa] [Cc][Ll][Ii])$",
     },
     run = run,
     min_rank = 3,
@@ -200,12 +221,15 @@ return {
         "#checkspeed",
         "#vardump [<reply>]",
         "#commandsstats",
+        "#ping",
+        "#laststart",
         "SUDO",
         "#botrestart",
         "#redissave",
         "(#sync_gbans|sasha sincronizza superban)",
         "(#backup|sasha esegui backup)",
         "(#uploadbackup|sasha invia backup)",
+        "(#rebootcli|sasha riavvia cli)",
     },
 }
 -- By @imandaneshi :)

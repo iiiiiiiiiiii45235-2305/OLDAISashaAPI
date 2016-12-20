@@ -29,34 +29,34 @@ local function run(msg, matches)
                 else
                     return whitelist_user(msg.reply_to_message.from.id, msg.lang)
                 end
-            end
-        elseif matches[2] then
-            mystat('/whitelist <user>')
-            if string.match(matches[2], '^%d+$') then
-                return whitelist_user(matches[2], msg.lang)
-            else
-                local obj_user = resolveUsername(matches[2]:gsub('@', ''))
-                if obj_user then
-                    if obj_user.type == 'private' then
-                        return whitelist_user(obj_user.id, msg.lang)
+            elseif matches[2] then
+                mystat('/whitelist <user>')
+                if string.match(matches[2], '^%d+$') then
+                    return whitelist_user(matches[2], msg.lang)
+                else
+                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'private' then
+                            return whitelist_user(obj_user.id, msg.lang)
+                        end
                     end
                 end
-            end
-            return
-        else
-            mystat('/whitelist')
-            local list = redis:smembers('whitelist')
-            local text = langs[msg.lang].whitelistStart
-            for k, v in pairs(list) do
-                local user_info = redis:hgetall('user:' .. v)
-                if user_info and user_info.print_name then
-                    local print_name = string.gsub(user_info.print_name, "_", " ")
-                    text = text .. k .. " - " .. print_name .. " [" .. v .. "]\n"
-                else
-                    text = text .. k .. " - " .. v .. "\n"
+                return
+            else
+                mystat('/whitelist')
+                local list = redis:smembers('whitelist')
+                local text = langs[msg.lang].whitelistStart
+                for k, v in pairs(list) do
+                    local user_info = redis:hgetall('user:' .. v)
+                    if user_info and user_info.print_name then
+                        local print_name = string.gsub(user_info.print_name, "_", " ")
+                        text = text .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+                    else
+                        text = text .. k .. " - " .. v .. "\n"
+                    end
                 end
+                return text
             end
-            return text
         end
 
         if matches[1]:lower() == "clean whitelist" and is_admin(msg) then

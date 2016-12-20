@@ -1,36 +1,50 @@
--- *** START API FUNCTIONS ***
-
-local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
-local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
-
 if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
 
+local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
+local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
+
+local curl_context = curl.easy { verbose = false }
+
+local function performRequest(url)
+    local data = { }
+
+    -- if multithreading is made, this request must be in critical section
+    local c = curl_context:setopt_url(url):setopt_writefunction(table.insert, data):perform()
+
+    return table.concat(data), c:getinfo_response_code()
+end
+
+-- *** START API FUNCTIONS ***
 function sendRequest(url)
-    -- print(url)
-    local dat, code = HTTPS.request(url)
-
-    if not dat then
-        return false, code
-    end
-
+    local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
 
-    if code ~= 200 then
-        if tab and tab.description then print(clr.onwhite .. clr.red .. code, tab.description .. clr.reset) end
-        -- 403: bot blocked, 429: spam limit ...send a message to the admin, return the code
-        if code == 400 then code = getCode(tab.description) end
-        -- error code 400 is general: try to specify
-        redis:hincrby('bot:errors', code, 1)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vardumptext(dat) .. '\n' .. code)
-        end
-        return false, code
+    if not tab then
+        print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
+        print(clr.yellow .. 'Data:' .. clr.reset, dat)
+        error('Incorrect response')
     end
 
-    -- actually, this rarely happens
+    if code ~= 200 then
+
+        if code == 400 then
+            -- error code 400 is general: try to specify
+            code = getCode(tab.description)
+        end
+
+        print(clr.red .. code, tab.description .. clr.reset)
+        redis:hincrby('bot:errors', code, 1)
+
+        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+            sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
+        end
+        return false, code, tab.description
+    end
+
     if not tab.ok then
+        sendLog('Not tab.ok' .. vardumptext(tab))
         return false, tab.description
     end
 
@@ -158,61 +172,63 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
     if type(obj) == 'table' then
         if obj.result then
             if text then
-                if text ~= '' then
-                    local text_max = 4096
-                    local text_len = string.len(text)
-                    local num_msg = math.ceil(text_len / text_max)
-                    local url = BASE_URL ..
-                    '/sendMessage?chat_id=' .. chat_id ..
-                    '&disable_web_page_preview=true'
-                    local reply = false
-                    if reply_to_message_id then
-                        url = url .. '&reply_to_message_id=' .. reply_to_message_id
-                        reply = true
-                    end
-                    if use_markdown then
-                        url = url .. '&parse_mode=Markdown'
-                    end
-                    if not send_sound then
-                        url = url .. '&disable_notification=true'
-                        -- messages are silent by default
-                    end
-
-                    if num_msg <= 1 then
-                        url = url .. '&text=' .. URL.escape(text)
-
-                        local res, code = sendRequest(url)
-
-                        if not res and code then
-                            -- if the request failed and a code is returned (not 403 and 429)
-                            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                savelog('send_msg', code .. '\n' .. text)
-                            end
+                if type(text) ~= 'table' then
+                    if text ~= '' then
+                        local text_max = 4096
+                        local text_len = string.len(text)
+                        local num_msg = math.ceil(text_len / text_max)
+                        local url = BASE_URL ..
+                        '/sendMessage?chat_id=' .. chat_id ..
+                        '&disable_web_page_preview=true'
+                        local reply = false
+                        if reply_to_message_id then
+                            url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                            reply = true
                         end
-                        obj = obj.result
-                        local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-                        print_msg(sent_msg)
-                    else
-                        local my_text = string.sub(text, 1, 4096)
-                        local rest = string.sub(text, 4096, text_len)
-                        url = url .. '&text=' .. URL.escape(my_text)
-
-                        local res, code = sendRequest(url)
-
-                        if not res and code then
-                            -- if the request failed and a code is returned (not 403 and 429)
-                            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                savelog('send_msg', code .. '\n' .. text)
-                            end
+                        if use_markdown then
+                            url = url .. '&parse_mode=Markdown'
                         end
-                        obj = obj.result
-                        local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-                        print_msg(sent_msg)
-                        res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
-                    end
+                        if not send_sound then
+                            url = url .. '&disable_notification=true'
+                            -- messages are silent by default
+                        end
 
-                    return res, code
-                    -- return false, and the code
+                        if num_msg <= 1 then
+                            url = url .. '&text=' .. URL.escape(text)
+
+                            local res, code = sendRequest(url)
+
+                            if not res and code then
+                                -- if the request failed and a code is returned (not 403 and 429)
+                                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                    savelog('send_msg', code .. '\n' .. text)
+                                end
+                            end
+                            obj = obj.result
+                            local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                            print_msg(sent_msg)
+                        else
+                            local my_text = string.sub(text, 1, 4096)
+                            local rest = string.sub(text, 4096, text_len)
+                            url = url .. '&text=' .. URL.escape(my_text)
+
+                            local res, code = sendRequest(url)
+
+                            if not res and code then
+                                -- if the request failed and a code is returned (not 403 and 429)
+                                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                    savelog('send_msg', code .. '\n' .. text)
+                                end
+                            end
+                            obj = obj.result
+                            local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                            print_msg(sent_msg)
+                            res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+                        end
+
+                        return res, code
+                        -- return false, and the code
+                    end
                 end
             end
         end
@@ -236,25 +252,6 @@ function sendLog(text, markdown)
         for v, user in pairs(sudoers) do
             -- print(text)
             sendMessage(user.id, text, markdown)
-        end
-    end
-end
-
-function resolveChannelSupergroupsUsernames(username)
-    local url = PWR_URL .. '/getChat?chat_id=' .. username
-    local dat, code = HTTPS.request(url)
-
-    if not dat then
-        return false, code
-    end
-
-    local tab = JSON.decode(dat)
-
-    if not tab then
-        return false
-    else
-        if tab.ok then
-            return tab.result
         end
     end
 end
@@ -753,8 +750,29 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
         sendDocument(chat_id, file_path, reply_to_message_id)
     end
 end
-
 -- *** END API FUNCTIONS ***
+
+-- *** START PWRTELEGRAM API FUNCTIONS ***
+function resolveChannelSupergroupsUsernames(username)
+    local url = PWR_URL .. '/getChat?chat_id=' .. username
+    local dat, code = HTTPS.request(url)
+
+    if not dat then
+        return false, code
+    end
+
+    local tab = JSON.decode(dat)
+
+    if not tab then
+        return false
+    else
+        if tab.ok then
+            return tab.result
+        end
+    end
+end
+-- *** END PWRTELEGRAM API FUNCTIONS ***
+
 function sudoInChat(chat_id)
     for v, user in pairs(sudoers) do
         local member = getChatMember(chat_id, user.id)
@@ -820,6 +838,25 @@ function kickUser(executer, target, chat_id)
         end
     end
 end
+function preBanUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id, true) and not isWhitelisted(target) then
+        -- try to kick. "code" is already specific
+        savelog(chat_id, "[" .. executer .. "] banned user " .. target)
+        redis:hincrby('bot:general', 'ban', 1)
+        -- general: save how many kicks
+        local hash = 'banned:' .. chat_id
+        redis:sadd(hash, tostring(target))
+        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+    else
+        if isWhitelisted(target) then
+            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
+            return langs[get_lang(chat_id)].cantKickWhitelisted
+        else
+            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
+            return langs[get_lang(chat_id)].require_rank
+        end
+    end
+end
 
 -- call this to ban
 function banUser(executer, target, chat_id)
@@ -866,13 +903,18 @@ function banUser(executer, target, chat_id)
 end
 
 -- call this to unban
-function unbanUser(target, chat_id)
-    savelog(chat_id, "[" .. target .. "] unbanned")
-    local hash = 'banned:' .. chat_id
-    redis:srem(hash, tostring(target))
-    -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
-    local res, code = unbanChatMember(target, chat_id)
-    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+function unbanUser(executer, target, chat_id)
+    if compare_ranks(executer, target, chat_id) then
+        savelog(chat_id, "[" .. target .. "] unbanned")
+        local hash = 'banned:' .. chat_id
+        redis:srem(hash, tostring(target))
+        -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
+        local res, code = unbanChatMember(target, chat_id)
+        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+    else
+        savelog(chat_id, "[" .. executer .. "] tried to unban user " .. target .. " require higher rank")
+        return langs[get_lang(chat_id)].require_rank
+    end
 end
 
 -- Check if user_id is banned in chat_id or not
@@ -998,8 +1040,16 @@ function getUserWarns(user_id, chat_id)
 end
 
 function warnUser(executer, target, chat_id)
+    local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
+        local strict = false
+        if data[tostring(chat_id)] then
+            if data[tostring(chat_id)].settings then
+                if data[tostring(chat_id)].settings.strict then
+                    strict = true
+                end
+            end
+        end
         local warn_chat = string.match(getWarn(chat_id), "%d+")
         redis:incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis:get(chat_id .. ':warn:' .. target)
@@ -1011,9 +1061,12 @@ function warnUser(executer, target, chat_id)
         if tonumber(warn_chat) ~= 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
-                banUser(executer, target, chat_id)
+                savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
+                return banUser(executer, target, chat_id)
             end
             sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
+        else
+            return banUser(executer, target, chat_id)
         end
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
     else
@@ -1023,8 +1076,8 @@ function warnUser(executer, target, chat_id)
 end
 
 function unwarnUser(executer, target, chat_id)
+    local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
         local warns = redis:get(chat_id .. ':warn:' .. target)
         if tonumber(warns) <= 0 then
             redis:set(chat_id .. ':warn:' .. target, 0)
@@ -1041,8 +1094,8 @@ function unwarnUser(executer, target, chat_id)
 end
 
 function unwarnallUser(executer, target, chat_id)
+    local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local lang = get_lang(chat_id)
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
         sendMessage(chat_id, langs[lang].zeroWarnings)
@@ -1209,7 +1262,12 @@ function deleteMessage(msg)
     if flag then
         if status == 'creator' or status == 'administrator' then
             if is_super_group(msg) then
-                sendReply(msg,(bot.userVersion.username or '') .. ' !del')
+                if bot.userVersion.username then
+                    if msg.reply then
+                        sendReply(msg.reply_to_message, '@' .. bot.userVersion.username .. ' !del')
+                    end
+                    sendReply(msg, '@' .. bot.userVersion.username .. ' !del')
+                end
             end
         end
     end

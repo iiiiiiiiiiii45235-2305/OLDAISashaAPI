@@ -157,48 +157,50 @@ local function run(msg, matches)
 end
 
 local function pre_process(msg)
-    local vars = list_variables(msg, true)
-    if vars ~= nil then
-        local t = vars:split('\n')
-        for i, word in pairs(t) do
-            local answer = check_word(msg, word:lower())
-            if answer then
-                sendReply(msg, answer)
-            end
-        end
-    end
-
-    local vars = list_variables(msg, false)
-    if vars ~= nil then
-        local t = vars:split('\n')
-        for i, word in pairs(t) do
-            local answer = check_word(msg, word:lower())
-            if answer then
-                if string.match(answer, '^photo') then
-                    answer = answer:gsub('^photo', '')
-                    sendPhotoId(msg.chat.id, answer, msg.message_id)
-                elseif string.match(answer, '^video') then
-                    answer = answer:gsub('^video', '')
-                    sendVideoId(msg.chat.id, answer, msg.message_id)
-                elseif string.match(answer, '^audio') then
-                    answer = answer:gsub('^audio', '')
-                    sendAudioId(msg.chat.id, answer, false, msg.message_id)
-                elseif string.match(answer, '^voice') then
-                    answer = answer:gsub('^voice', '')
-                    sendVoiceId(msg.chat.id, answer, false, msg.message_id)
-                elseif string.match(answer, '^document') then
-                    answer = answer:gsub('^document', '')
-                    sendDocumentId(msg.chat.id, answer, msg.message_id)
-                elseif string.match(answer, '^sticker') then
-                    answer = answer:gsub('^sticker', '')
-                    sendStickerId(msg.chat.id, answer, msg.message_id)
-                else
+    if msg then
+        local vars = list_variables(msg, true)
+        if vars ~= nil then
+            local t = vars:split('\n')
+            for i, word in pairs(t) do
+                local answer = check_word(msg, word:lower())
+                if answer then
                     sendReply(msg, answer)
                 end
             end
         end
+
+        local vars = list_variables(msg, false)
+        if vars ~= nil then
+            local t = vars:split('\n')
+            for i, word in pairs(t) do
+                local answer = check_word(msg, word:lower())
+                if answer then
+                    if string.match(answer, '^photo') then
+                        answer = answer:gsub('^photo', '')
+                        sendPhotoId(msg.chat.id, answer, msg.message_id)
+                    elseif string.match(answer, '^video') then
+                        answer = answer:gsub('^video', '')
+                        sendVideoId(msg.chat.id, answer, msg.message_id)
+                    elseif string.match(answer, '^audio') then
+                        answer = answer:gsub('^audio', '')
+                        sendAudioId(msg.chat.id, answer, false, msg.message_id)
+                    elseif string.match(answer, '^voice') then
+                        answer = answer:gsub('^voice', '')
+                        sendVoiceId(msg.chat.id, answer, false, msg.message_id)
+                    elseif string.match(answer, '^document') then
+                        answer = answer:gsub('^document', '')
+                        sendDocumentId(msg.chat.id, answer, msg.message_id)
+                    elseif string.match(answer, '^sticker') then
+                        answer = answer:gsub('^sticker', '')
+                        sendStickerId(msg.chat.id, answer, msg.message_id)
+                    else
+                        sendReply(msg, answer)
+                    end
+                end
+            end
+        end
+        return msg
     end
-    return msg
 end
 
 return {

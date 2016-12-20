@@ -230,6 +230,10 @@ local function run(msg, matches)
         end
         return
     end
+    if matches[1]:lower() == 'whoami' then
+        mystat('/whoami')
+        return get_object_info(msg.from, msg.chat.id)
+    end
     if matches[1]:lower() == 'grouplink' or matches[1]:lower() == 'sasha link gruppo' or matches[1]:lower() == 'link gruppo' and matches[2] then
         mystat('/grouplink')
         if is_admin(msg) then
@@ -251,18 +255,20 @@ local function run(msg, matches)
 end
 
 local function pre_process(msg)
-    if msg.chat.type == 'private' and msg.forward then
-        if get_rank(msg.from.id, msg.chat.id) > 0 then
-            -- if moderator in some group or higher
-            if msg.forward_from then
-                sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id))
-            end
-            if msg.forward_from_chat then
-                sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id))
+    if msg then
+        if msg.chat.type == 'private' and msg.forward then
+            if get_rank(msg.from.id, msg.chat.id, true) > 0 then
+                -- if moderator in some group or higher
+                if msg.forward_from then
+                    sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id))
+                end
+                if msg.forward_from_chat then
+                    sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id))
+                end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {
@@ -274,6 +280,7 @@ return {
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk])$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk]) (.*)$",
+        "^[#!/]([Ww][Hh][Oo][Aa][Mm][Ii])$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) (.*)$",
         -- grouplink
@@ -293,6 +300,7 @@ return {
     {
         "USER",
         "#getrank|rango [<id>|<username>|<reply>]",
+        "#whoami",
         "(#info|[sasha] info)",
         "#ishere <id>|<username>|<reply>|from",
         "MOD",

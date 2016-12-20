@@ -2,6 +2,7 @@ URL = require "socket.url"
 http = require "socket.http"
 HTTPS = require "ssl.https"
 ltn12 = require "ltn12"
+curl = require('cURL')
 
 serpent =(loadfile "./libs/serpent.lua")()
 json =(loadfile "./libs/JSON.lua")()
@@ -175,6 +176,18 @@ function create_folder(name)
     cmd:close()
 end
 
+function savelog(group, logtxt)
+    local ok, err = pcall( function()
+        local text =(os.date("[ %c ]=>  " .. logtxt .. "\n \n"))
+        local file = io.open("./groups/logs/" .. group .. "log.txt", "a")
+
+        file:write(text)
+        file:close()
+    end )
+end
+
+--[[
+-- savelog of groupbutler
 function savelog(action, arg1, arg2, arg3, arg4)
     if action == 'send_msg' then
         local text = os.date('[%A, %d %B %Y at %X]') .. '\n' .. arg1 .. '\n\n'
@@ -205,6 +218,7 @@ function savelog(action, arg1, arg2, arg3, arg4)
         end
     end
 end
+]]
 
 function clone_table(t)
     -- doing "table1 = table2" in lua = create a pointer to table2

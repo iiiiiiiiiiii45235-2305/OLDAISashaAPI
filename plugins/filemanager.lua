@@ -3,7 +3,7 @@ local BASE_FOLDER = "/"
 
 function run(msg, matches)
     if is_sudo(msg) then
-        local folder = redis:get('folder')
+        local folder = redis:get('api:folder')
         if folder then
             if matches[1]:lower() == 'folder' then
                 mystat('/folder')
@@ -12,10 +12,10 @@ function run(msg, matches)
             if matches[1]:lower() == 'cd' then
                 mystat('/cd')
                 if not matches[2] then
-                    redis:set('folder', '')
+                    redis:set('api:folder', '')
                     return langs[msg.lang].backHomeFolder .. BASE_FOLDER
                 else
-                    redis:set('folder', matches[2])
+                    redis:set('api:folder', matches[2])
                     return langs[msg.lang].youAreHere .. BASE_FOLDER .. matches[2]
                 end
             end
@@ -117,7 +117,8 @@ function run(msg, matches)
             end
             return sendMessage(msg.chat.id, action)
         else
-            return redis:set('folder', '')
+            redis:set('api:folder', '')
+            return langs[msg.lang].youAreHere .. BASE_FOLDER
         end
     else
         return langs[msg.lang].require_sudo
