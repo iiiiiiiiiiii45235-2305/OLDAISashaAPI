@@ -45,7 +45,7 @@ local function get_object_info(obj, chat_id)
                     if chat_member.result then
                         chat_member = chat_member.result
                         if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper()
+                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
                         end
                     end
                 end
