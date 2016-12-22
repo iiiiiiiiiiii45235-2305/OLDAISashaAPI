@@ -149,6 +149,7 @@ local function addGroup(msg)
                         flood = true,
                         flood_max = 5,
                         lock_arabic = false,
+                        lock_bots = false,
                         lock_leave = false,
                         lock_link = false,
                         lock_member = false,
@@ -233,6 +234,7 @@ local function addRealm(msg)
                         flood = true,
                         flood_max = 5,
                         lock_arabic = false,
+                        lock_bots = false,
                         lock_leave = false,
                         lock_link = false,
                         lock_member = false,
@@ -309,6 +311,7 @@ local function addSuperGroup(msg)
                         flood = true,
                         flood_max = 5,
                         lock_arabic = false,
+                        lock_bots = false,
                         lock_leave = false,
                         lock_link = false,
                         lock_member = false,
@@ -547,6 +550,9 @@ local function adjustSettingType(setting_type)
     if setting_type == 'arabic' then
         setting_type = 'lock_arabic'
     end
+    if setting_type == 'bot' then
+        setting_type = 'lock_bots'
+    end
     if setting_type == 'flood' then
         setting_type = 'flood'
     end
@@ -583,6 +589,10 @@ function lockSetting(data, target, setting_type)
             save_data(config.moderation.data, data)
             return langs[lang].settingLocked
         end
+    else
+        data[tostring(target)].settings[tostring(setting_type)] = true
+        save_data(config.moderation.data, data)
+        return langs[lang].settingLocked
     end
 end
 
@@ -598,6 +608,10 @@ function unlockSetting(data, target, setting_type)
         else
             return langs[lang].settingAlreadyUnlocked
         end
+    else
+        data[tostring(target)].settings[tostring(setting_type)] = false
+        save_data(config.moderation.data, data)
+        return langs[lang].settingUnlocked
     end
 end
 -- end LOCK/UNLOCK FUNCTIONS
@@ -802,6 +816,9 @@ local function run(msg, matches)
                 if matches[3]:lower() == 'arabic' then
                     flag = true
                 end
+                if matches[3]:lower() == 'bot' then
+                    flag = true
+                end
                 if matches[3]:lower() == 'flood' then
                     flag = true
                 end
@@ -835,6 +852,9 @@ local function run(msg, matches)
             if is_admin(msg) then
                 local flag = false
                 if matches[3]:lower() == 'arabic' then
+                    flag = true
+                end
+                if matches[3]:lower() == 'bot' then
                     flag = true
                 end
                 if matches[3]:lower() == 'flood' then
@@ -1039,6 +1059,9 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'arabic' then
                         flag = true
                     end
+                    if matches[2]:lower() == 'bot' then
+                        flag = true
+                    end
                     if matches[2]:lower() == 'flood' then
                         flag = true
                     end
@@ -1072,6 +1095,9 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     local flag = false
                     if matches[2]:lower() == 'arabic' then
+                        flag = true
+                    end
+                    if matches[2]:lower() == 'bot' then
                         flag = true
                     end
                     if matches[2]:lower() == 'flood' then
@@ -1688,8 +1714,8 @@ return {
         "#muteuser|voce <id>|<username>|<reply>|from",
         "(#muteslist|lista muti)",
         "(#mutelist|lista utenti muti)",
-        "(#lock|[sasha] blocca) arabic|flood|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) arabic|flood|leave|link|member|rtl|spam|strict",
+        "(#lock|[sasha] blocca) arabic|bot|flood|leave|link|member|rtl|spam|strict",
+        "(#unlock|[sasha] sblocca) arabic|bot|flood|leave|link|member|rtl|spam|strict",
         "OWNER",
         "#log",
         "(#getadmins|[sasha] lista admin)",
@@ -1713,8 +1739,8 @@ return {
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
-        "(#lock|[sasha] blocca) <group_id> arabic|flood|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) <group_id> arabic|flood|leave|link|member|rtl|spam|strict",
+        "(#lock|[sasha] blocca) <group_id> arabic|bot|flood|leave|link|member|rtl|spam|strict",
+        "(#unlock|[sasha] sblocca) <group_id> arabic|bot|flood|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
         "#type",
         "#rem <group_id>",

@@ -553,7 +553,7 @@ local function pre_process(msg)
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
                         -- Save to logs
-                        kickUser(bot.id, user_id, msg.chat.id)
+                        banUser(bot.id, msg.added.id, msg.chat.id)
                         local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                         redis:incr(banhash)
                         local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
@@ -572,6 +572,26 @@ local function pre_process(msg)
                             end
                         end
                     end
+                    local bots_protection = false
+                    if data[tostring(msg.chat.id)] then
+                        if data[tostring(msg.chat.id)].settings then
+                            if data[tostring(msg.chat.id)].settings.lock_bots then
+                                bots_protection = data[tostring(msg.chat.id)].settings.lock_bots
+                            end
+                        end
+                    end
+                    if msg.added.username then
+                        if bots_protection then
+                            if not msg.from.is_mod then
+                                if string.sub(msg.added.username:lower(), -3) == 'bot' then
+                                    --- Will kick bots added by normal users
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
+                                    -- Save to logs
+                                    banUser(bot.id, msg.added.id, msg.chat.id)
+                                end
+                            end
+                        end
+                    end
                 end
                 -- No further checks
                 return msg
@@ -584,7 +604,7 @@ local function pre_process(msg)
                 print('Banned user talking!')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs
-                kickUser(bot.id, msg.from.id, msg.chat.id)
+                banUser(bot.id, msg.from.id, msg.chat.id)
                 msg = clean_msg(msg)
             end
         end
