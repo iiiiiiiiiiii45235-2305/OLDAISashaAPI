@@ -533,6 +533,7 @@ local function showSettings(target, lang)
             langs[lang].leaveLock .. tostring(settings.lock_leave) ..
             langs[lang].linksLock .. tostring(settings.lock_link) ..
             langs[lang].membersLock .. tostring(settings.lock_member) ..
+            langs[lang].rtlLock .. tostring(settings.lock_rtl) ..
             langs[lang].spamLock .. tostring(settings.lock_spam) ..
             langs[lang].strictrules .. tostring(settings.strict) ..
             langs[lang].warnSensibility .. tostring(settings.warn_max)
