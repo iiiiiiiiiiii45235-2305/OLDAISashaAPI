@@ -366,6 +366,7 @@ return {
         warnSensibility = '\nAvvertimenti massimi: ',
         noSuchMuteType = 'Nessun muto applicabile sulla variabile specificata.',
         -- ex common --
+        groupInfoUpdated = 'Nome gruppo e moderatori aggiornati.',
         newDescription = 'Nuova descrizione:\n',
         noDescription = 'Nessuna descrizione disponibile.',
         description = 'Descrizione chat: ',
@@ -785,6 +786,7 @@ return {
             '#admins [<reply>|<text>]: Sasha contatta gli admin',
             'MOD',
             '#type: Sasha mostra il tipo del gruppo.',
+            '#updategroupinfo: Sasha aggiorna nome e moderatori del gruppo.',
             '(#setrules|sasha imposta regole) <text>: Sasha imposta <text> come regole.',
             '#setwarn <value>: Sasha imposta gli avvertimenti massimi a <value>, se zero gli avvertimenti non funzioneranno più.',
             '#settings: Sasha mostra le impostazioni del gruppo.',
@@ -1248,6 +1250,7 @@ return {
         warnSensibility = '\nMax warns: ',
         noSuchMuteType = 'No mute applicable to the specified variable.',
         -- ex common --
+        groupInfoUpdated = 'Group name and mods updated.',
         newDescription = 'New description:\n',
         noDescription = 'No description available.',
         description = 'Chat description: ',
@@ -1668,6 +1671,7 @@ return {
             '#admins [<reply>|<text>]: Sasha contacts admins',
             'MOD',
             '#type: Sasha sends group type.',
+            '#updategroupinfo: Sasha updates group name and mods.',
             '(#setrules|sasha imposta regole) <text>: Sasha changes group\'s rules with <text>.',
             '#setwarn <value>: Sasha sets max warns to <value>, if zero warns will not work.',
             '#settings: Sasha sends group settings.',

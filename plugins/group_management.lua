@@ -134,66 +134,68 @@ local function addGroup(msg)
     end
     local list = getChatAdministrators(msg.chat.id)
     if list then
-        for i, admin in pairs(list.result) do
-            if admin.status == 'creator' then
-                -- Group configuration
-                data[tostring(msg.chat.id)] = {
-                    goodbye = "",
-                    group_type = 'Group',
-                    moderators = { },
-                    rules = "",
-                    set_name = string.gsub(msg.chat.print_name,'_',' '),
-                    set_owner = tostring(admin.user.id),
-                    settings =
-                    {
-                        flood = true,
-                        flood_max = 5,
-                        lock_arabic = false,
-                        lock_bots = false,
-                        lock_leave = false,
-                        lock_link = false,
-                        lock_member = false,
-                        lock_rtl = false,
-                        lock_spam = false,
-                        mutes =
+        if list.result then
+            for i, admin in pairs(list.result) do
+                if admin.status == 'creator' then
+                    -- Group configuration
+                    data[tostring(msg.chat.id)] = {
+                        goodbye = "",
+                        group_type = 'Group',
+                        moderators = { },
+                        rules = "",
+                        set_name = string.gsub(msg.chat.print_name,'_',' '),
+                        set_owner = tostring(admin.user.id),
+                        settings =
                         {
-                            all = false,
-                            audio = false,
-                            contact = false,
-                            document = false,
-                            gif = false,
-                            location = false,
-                            photo = false,
-                            sticker = false,
-                            text = false,
-                            tgservice = false,
-                            video = false,
-                            voice = false,
+                            flood = true,
+                            flood_max = 5,
+                            lock_arabic = false,
+                            lock_bots = false,
+                            lock_leave = false,
+                            lock_link = false,
+                            lock_member = false,
+                            lock_rtl = false,
+                            lock_spam = false,
+                            mutes =
+                            {
+                                all = false,
+                                audio = false,
+                                contact = false,
+                                document = false,
+                                gif = false,
+                                location = false,
+                                photo = false,
+                                sticker = false,
+                                text = false,
+                                tgservice = false,
+                                video = false,
+                                voice = false,
+                            },
+                            strict = false,
+                            warn_max = 3,
                         },
-                        strict = false,
-                        warn_max = 3,
-                    },
-                    welcome = "",
-                    welcomemembers = 0,
-                }
-                save_data(config.moderation.data, data)
-                if not data['groups'] then
-                    data['groups'] = { }
+                        welcome = "",
+                        welcomemembers = 0,
+                    }
+                    save_data(config.moderation.data, data)
+                    if not data['groups'] then
+                        data['groups'] = { }
+                        save_data(config.moderation.data, data)
+                    end
+                    data['groups'][tostring(msg.chat.id)] = msg.chat.id
                     save_data(config.moderation.data, data)
                 end
-                data['groups'][tostring(msg.chat.id)] = msg.chat.id
+            end
+            if data[tostring(msg.chat.id)] then
+                for i, admin in pairs(list.result) do
+                    if admin.status == 'creator' or admin.status == 'administrator' then
+                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                    end
+                end
                 save_data(config.moderation.data, data)
             end
+            return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
         end
-        if data[tostring(msg.chat.id)] then
-            for i, admin in pairs(list.result) do
-                if admin.status == 'administrator' then
-                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
-                end
-            end
-            save_data(config.moderation.data, data)
-        end
-        return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
     end
 end
 
@@ -219,56 +221,58 @@ local function addRealm(msg)
     end
     local list = getChatAdministrators(msg.chat.id)
     if list then
-        for i, admin in pairs(list.result) do
-            if admin.status == 'creator' then
-                -- Realm configuration
-                data[tostring(msg.chat.id)] = {
-                    goodbye = "",
-                    group_type = 'Realm',
-                    moderators = { },
-                    rules = "",
-                    set_name = string.gsub(msg.chat.print_name,'_',' '),
-                    set_owner = tostring(admin.user.id),
-                    settings =
-                    {
-                        flood = true,
-                        flood_max = 5,
-                        lock_arabic = false,
-                        lock_bots = false,
-                        lock_leave = false,
-                        lock_link = false,
-                        lock_member = false,
-                        lock_rtl = false,
-                        lock_spam = false,
-                        mutes =
+        if list.result then
+            for i, admin in pairs(list.result) do
+                if admin.status == 'creator' then
+                    -- Realm configuration
+                    data[tostring(msg.chat.id)] = {
+                        goodbye = "",
+                        group_type = 'Realm',
+                        moderators = { },
+                        rules = "",
+                        set_name = string.gsub(msg.chat.print_name,'_',' '),
+                        set_owner = tostring(admin.user.id),
+                        settings =
                         {
-                            all = false,
-                            audio = false,
-                            contact = false,
-                            document = false,
-                            gif = false,
-                            location = false,
-                            photo = false,
-                            sticker = false,
-                            text = false,
-                            tgservice = false,
-                            video = false,
-                            voice = false,
+                            flood = true,
+                            flood_max = 5,
+                            lock_arabic = false,
+                            lock_bots = false,
+                            lock_leave = false,
+                            lock_link = false,
+                            lock_member = false,
+                            lock_rtl = false,
+                            lock_spam = false,
+                            mutes =
+                            {
+                                all = false,
+                                audio = false,
+                                contact = false,
+                                document = false,
+                                gif = false,
+                                location = false,
+                                photo = false,
+                                sticker = false,
+                                text = false,
+                                tgservice = false,
+                                video = false,
+                                voice = false,
+                            },
+                            strict = false,
+                            warn_max = 3,
                         },
-                        strict = false,
-                        warn_max = 3,
-                    },
-                    welcome = "",
-                    welcomemembers = 0,
-                }
-                save_data(config.moderation.data, data)
-                if not data['realms'] then
-                    data['realms'] = { }
+                        welcome = "",
+                        welcomemembers = 0,
+                    }
                     save_data(config.moderation.data, data)
+                    if not data['realms'] then
+                        data['realms'] = { }
+                        save_data(config.moderation.data, data)
+                    end
+                    data['realms'][tostring(msg.chat.id)] = msg.chat.id
+                    save_data(config.moderation.data, data)
+                    return sendMessage(msg.chat.id, langs[msg.lang].realmAdded)
                 end
-                data['realms'][tostring(msg.chat.id)] = msg.chat.id
-                save_data(config.moderation.data, data)
-                return sendMessage(msg.chat.id, langs[msg.lang].realmAdded)
             end
         end
     end
@@ -296,66 +300,68 @@ local function addSuperGroup(msg)
     end
     local list = getChatAdministrators(msg.chat.id)
     if list then
-        for i, admin in pairs(list.result) do
-            if admin.status == 'creator' then
-                -- SuperGroup configuration
-                data[tostring(msg.chat.id)] = {
-                    goodbye = "",
-                    group_type = 'SuperGroup',
-                    moderators = { },
-                    rules = "",
-                    set_name = string.gsub(msg.chat.print_name,'_',' '),
-                    set_owner = tostring(admin.user.id),
-                    settings =
-                    {
-                        flood = true,
-                        flood_max = 5,
-                        lock_arabic = false,
-                        lock_bots = false,
-                        lock_leave = false,
-                        lock_link = false,
-                        lock_member = false,
-                        lock_rtl = false,
-                        lock_spam = false,
-                        mutes =
+        if list.result then
+            for i, admin in pairs(list.result) do
+                if admin.status == 'creator' then
+                    -- SuperGroup configuration
+                    data[tostring(msg.chat.id)] = {
+                        goodbye = "",
+                        group_type = 'SuperGroup',
+                        moderators = { },
+                        rules = "",
+                        set_name = string.gsub(msg.chat.print_name,'_',' '),
+                        set_owner = tostring(admin.user.id),
+                        settings =
                         {
-                            all = false,
-                            audio = false,
-                            contact = false,
-                            document = false,
-                            gif = false,
-                            location = false,
-                            photo = false,
-                            sticker = false,
-                            text = false,
-                            tgservice = false,
-                            video = false,
-                            voice = false,
+                            flood = true,
+                            flood_max = 5,
+                            lock_arabic = false,
+                            lock_bots = false,
+                            lock_leave = false,
+                            lock_link = false,
+                            lock_member = false,
+                            lock_rtl = false,
+                            lock_spam = false,
+                            mutes =
+                            {
+                                all = false,
+                                audio = false,
+                                contact = false,
+                                document = false,
+                                gif = false,
+                                location = false,
+                                photo = false,
+                                sticker = false,
+                                text = false,
+                                tgservice = false,
+                                video = false,
+                                voice = false,
+                            },
+                            strict = false,
+                            warn_max = 3,
                         },
-                        strict = false,
-                        warn_max = 3,
-                    },
-                    welcome = "",
-                    welcomemembers = 0,
-                }
-                save_data(config.moderation.data, data)
-                if not data['groups'] then
-                    data['groups'] = { }
+                        welcome = "",
+                        welcomemembers = 0,
+                    }
+                    save_data(config.moderation.data, data)
+                    if not data['groups'] then
+                        data['groups'] = { }
+                        save_data(config.moderation.data, data)
+                    end
+                    data['groups'][tostring(msg.chat.id)] = msg.chat.id
                     save_data(config.moderation.data, data)
                 end
-                data['groups'][tostring(msg.chat.id)] = msg.chat.id
+            end
+            if data[tostring(msg.chat.id)] then
+                for i, admin in pairs(list.result) do
+                    if admin.status == 'administrator' then
+                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                    end
+                end
                 save_data(config.moderation.data, data)
             end
+            return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
         end
-        if data[tostring(msg.chat.id)] then
-            for i, admin in pairs(list.result) do
-                if admin.status == 'administrator' then
-                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
-                end
-            end
-            save_data(config.moderation.data, data)
-        end
-        return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
     end
 end
 
@@ -1012,6 +1018,26 @@ local function run(msg, matches)
                 end
                 return langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules']
             end
+            if matches[1]:lower() == 'updategroupinfo' then
+                if msg.from.is_mod then
+                    mystat('/upgradegroupinfo')
+                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                    local list = getChatAdministrators(msg.chat.id)
+                    if list then
+                        if list.result then
+                            for i, admin in pairs(list.result) do
+                                if admin.status == 'creator' or admin.status == 'administrator' then
+                                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                                end
+                            end
+                        end
+                    end
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].groupInfoUpdated
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == 'sasha imposta regole' then
                 mystat('/setrules')
                 if msg.from.is_mod then
@@ -1640,6 +1666,7 @@ return {
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ll][Ii][Nn][Kk])$",
+        "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee][Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])",
         "^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
         "^[#!/]([Oo][Ww][Nn][Ee][Rr])$",
@@ -1707,6 +1734,7 @@ return {
         "#admins [<reply>|<text>]",
         "MOD",
         "#type",
+        "#updategroupinfo",
         "(#setrules|sasha imposta regole) <text>",
         "#setwarn <value>",
         "#setflood <value>",
