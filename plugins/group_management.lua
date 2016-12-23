@@ -39,7 +39,7 @@ local function allChats(msg)
     for k, v in pairsByKeys(data['realms']) do
         local realm_id = v
         if data[tostring(realm_id)] then
-            for m, n in pairsByKeys(data[tostring(group_id)]) do
+            for m, n in pairsByKeys(data[tostring(realm_id)]) do
                 if type(m) == 'string' then
                     if m == 'set_name' then
                         name = n:gsub("", "")
