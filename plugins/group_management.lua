@@ -189,7 +189,9 @@ local function addGroup(msg)
             if data[tostring(msg.chat.id)] then
                 for i, admin in pairs(list.result) do
                     if admin.status == 'creator' or admin.status == 'administrator' then
-                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                        if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
+                            data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                        end
                     end
                 end
                 save_data(config.moderation.data, data)
@@ -354,8 +356,10 @@ local function addSuperGroup(msg)
             end
             if data[tostring(msg.chat.id)] then
                 for i, admin in pairs(list.result) do
-                    if admin.status == 'administrator' then
-                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                    if admin.status == 'creator' or admin.status == 'administrator' then
+                        if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
+                            data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                        end
                     end
                 end
                 save_data(config.moderation.data, data)
@@ -1027,7 +1031,9 @@ local function run(msg, matches)
                         if list.result then
                             for i, admin in pairs(list.result) do
                                 if admin.status == 'creator' or admin.status == 'administrator' then
-                                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                                    if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
+                                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                                    end
                                 end
                             end
                         end
