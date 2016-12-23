@@ -531,6 +531,7 @@ local function showSettings(target, lang)
             local settings = data[tostring(target)]['settings']
             local text = langs[lang].groupSettings ..
             langs[lang].arabicLock .. tostring(settings.lock_arabic) ..
+            langs[lang].botsLock .. tostring(settings.lock_bots) ..
             langs[lang].floodLock .. tostring(settings.flood) ..
             langs[lang].floodSensibility .. tostring(settings.flood_max) ..
             langs[lang].leaveLock .. tostring(settings.lock_leave) ..
