@@ -91,11 +91,11 @@ local function check_msg(msg, settings)
                 local link_found = false
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
-                        print('group link not found')
                         link_found = true
                     else
                         local test_this = msg.text:lower()
-                        test_this:gsub(group_link:lower(), '')
+                        print(test_this)
+                        string.gsub(test_this, group_link:lower(), '')
                         print(test_this)
                         local is_now_link_msg = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
                         test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
