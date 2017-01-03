@@ -94,6 +94,8 @@ local function check_msg(msg, settings)
                         link_found = true
                     else
                         local test_this = msg.text:lower()
+                        print('group_link', group_link:lower())
+                        print(' ')
                         print(test_this)
                         string.gsub(test_this, group_link:lower(), '')
                         print(test_this)
