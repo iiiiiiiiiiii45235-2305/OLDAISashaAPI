@@ -91,21 +91,19 @@ local function check_msg(msg, settings)
                 local link_found = false
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
-                        print('gplink not fonud')
                         link_found = true
                     else
-                        print('gp link found')
-                        msg.text:lower():gsub(group_link:lower(), '')
-                        print(msg.text:lower())
-                        local is_now_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
-                        msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
-                        or msg.text:match("[Tt].[Mm][Ee]/")
+                        local test_this = msg.text:lower()
+                        test_this = test_this:gsub(group_link:lower(), '')
+                        print(test_this)
+                        local is_now_link_msg = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
+                        test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
+                        or test_this:match("[Tt].[Mm][Ee]/")
                         if is_now_link_msg then
                             link_found = true
                         end
                     end
                 else
-                    print('no group link')
                     link_found = true
                 end
                 if link_found then
