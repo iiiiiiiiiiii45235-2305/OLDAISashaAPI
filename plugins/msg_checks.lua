@@ -1,3 +1,29 @@
+local function test_text(text, group_link)
+    text = text:gsub(group_link:lower(), '')
+    local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
+    text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Dd][Oo][Gg]/")
+    or text:match("[Tt]%.[Mm][Ee]/")
+    if is_now_link then
+        return true
+    end
+    return false
+end
+
+local function test_bot(text)
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[%w_]+?[Ss][Tt][Aa][Rr][Tt]=", '')
+    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[%w_]+?[Ss][Tt][Aa][Rr][Tt]=", '')
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/[%w_]+?[Ss][Tt][Aa][Rr][Tt]=", '')
+    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Dd][Oo][Gg]/[%w_]+?[Ss][Tt][Aa][Rr][Tt]=", '')
+    text = text:gsub("[Tt]%.[Mm][Ee]/[%w_]+?[Ss][Tt][Aa][Rr][Tt]=", '')
+    local is_now_bot = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
+    text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Dd][Oo][Gg]/")
+    or text:match("[Tt]%.[Mm][Ee]/")
+    if not is_now_bot then
+        return true
+    end
+    return false
+end
+
 local function clean_msg(msg)
     -- clean msg but returns it
     if msg.text then
@@ -82,23 +108,23 @@ local function check_msg(msg, settings)
                 msg = clean_msg(msg)
                 return msg
             end
-            local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
-            msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
-            or msg.text:match("[Tt].[Mm][Ee]/")
+            local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
+            msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm]%.[Dd][Oo][Gg]/")
+            or msg.text:match("[Tt]%.[Mm][Ee]/")
             -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-            local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-            if is_link_msg and lock_link and not is_bot then
+            if is_link_msg and lock_link then
                 local link_found = false
+                local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
+                if is_bot then
+                    if test_bot(msg.text:lower()) then
+                        link_found = true
+                    end
+                end
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
                         link_found = true
                     else
-                        local test_this = msg.text:lower()
-                        test_this = test_this:gsub(group_link:lower(), '')
-                        local is_now_link_msg = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
-                        test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
-                        or test_this:match("[Tt].[Mm][Ee]/")
-                        if is_now_link_msg then
+                        if test_text(msg.text:lower(), group_link:lower()) then
                             link_found = true
                         end
                     end
@@ -130,23 +156,23 @@ local function check_msg(msg, settings)
         end
         if msg.caption then
             -- msg.caption checks
-            local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
-            msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
-            or msg.caption:match("[Tt].[Mm][Ee]/")
+            local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
+            msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm]%.[Dd][Oo][Gg]/")
+            or msg.caption:match("[Tt]%.[Mm][Ee]/")
             -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-            local is_bot = msg.caption:match("?[Ss][Tt][Aa][Rr][Tt]=")
-            if is_link_caption and lock_link and not is_bot then
+            if is_link_caption and lock_link then
                 local link_found = false
+                local is_bot = msg.caption:match("?[Ss][Tt][Aa][Rr][Tt]=")
+                if is_bot then
+                    if test_bot(msg.caption:lower()) then
+                        link_found = true
+                    end
+                end
                 if group_link then
                     if not string.find(msg.caption:lower(), group_link:lower()) then
                         link_found = true
                     else
-                        local test_this = msg.caption:lower()
-                        test_this = test_this:gsub(group_link:lower(), '')
-                        local is_now_link_caption = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
-                        test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
-                        or test_this:match("[Tt].[Mm][Ee]/")
-                        if is_now_link_caption then
+                        if test_text(msg.caption:lower(), group_link:lower()) then
                             link_found = true
                         end
                     end
