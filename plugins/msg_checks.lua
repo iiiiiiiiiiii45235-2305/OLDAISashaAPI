@@ -88,14 +88,24 @@ local function check_msg(msg, settings)
             -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
             local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
             if is_link_msg and lock_link and not is_bot then
+                local link_found = false
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
-                        print('link found')
-                        action(msg, strict)
-                        msg = clean_msg(msg)
-                        return msg
+                        link_found = true
+                    else
+                        local test_this = msg.text:lower()
+                        test_this:gsub(group_link:lower(), '')
+                        local is_now_link_msg = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
+                        test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
+                        or test_this:match("[Tt].[Mm][Ee]/")
+                        if is_now_link_msg then
+                            link_found = true
+                        end
                     end
                 else
+                    link_found = true
+                end
+                if link_found then
                     print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
@@ -124,15 +134,26 @@ local function check_msg(msg, settings)
             msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
             or msg.caption:match("[Tt].[Mm][Ee]/")
             -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-            if is_link_caption and lock_link then
+            local is_bot = msg.caption:match("?[Ss][Tt][Aa][Rr][Tt]=")
+            if is_link_caption and lock_link and not is_bot then
+                local link_found = false
                 if group_link then
                     if not string.find(msg.caption:lower(), group_link:lower()) then
-                        print('link found')
-                        action(msg, strict)
-                        msg = clean_msg(msg)
-                        return msg
+                        link_found = true
+                    else
+                        local test_this = msg.caption:lower()
+                        test_this:gsub(group_link:lower(), '')
+                        local is_now_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
+                        msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
+                        or msg.caption:match("[Tt].[Mm][Ee]/")
+                        if is_now_link_caption then
+                            link_found = true
+                        end
                     end
                 else
+                    link_found = true
+                end
+                if link_found then
                     print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
