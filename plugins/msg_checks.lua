@@ -91,9 +91,11 @@ local function check_msg(msg, settings)
                 local link_found = false
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
+                        print('gplink not fonud')
                         link_found = true
                     else
-                        string.gsub(msg.text:lower(), group_link:lower(), '')
+                        print('gp link found')
+                        msg.text:lower():gsub(group_link:lower(), '')
                         print(msg.text:lower())
                         local is_now_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
                         msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
@@ -103,6 +105,7 @@ local function check_msg(msg, settings)
                         end
                     end
                 else
+                    print('no group link')
                     link_found = true
                 end
                 if link_found then
