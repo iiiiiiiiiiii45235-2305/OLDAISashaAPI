@@ -91,6 +91,7 @@ local function check_msg(msg, settings)
                 local link_found = false
                 if group_link then
                     if not string.find(msg.text:lower(), group_link:lower()) then
+                        print('group link not found')
                         link_found = true
                     else
                         local test_this = msg.text:lower()
