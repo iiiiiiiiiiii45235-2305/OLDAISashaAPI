@@ -95,6 +95,7 @@ local function check_msg(msg, settings)
                     else
                         local test_this = msg.text:lower()
                         test_this:gsub(group_link:lower(), '')
+                        print(test_this)
                         local is_now_link_msg = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
                         test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
                         or test_this:match("[Tt].[Mm][Ee]/")
