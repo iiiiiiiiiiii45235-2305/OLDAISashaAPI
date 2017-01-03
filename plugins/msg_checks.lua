@@ -95,7 +95,6 @@ local function check_msg(msg, settings)
                     else
                         local test_this = msg.text:lower()
                         test_this = test_this:gsub(group_link:lower(), '')
-                        print(test_this)
                         local is_now_link_msg = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
                         test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
                         or test_this:match("[Tt].[Mm][Ee]/")
@@ -143,10 +142,10 @@ local function check_msg(msg, settings)
                         link_found = true
                     else
                         local test_this = msg.caption:lower()
-                        test_this:gsub(group_link:lower(), '')
-                        local is_now_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
-                        msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
-                        or msg.caption:match("[Tt].[Mm][Ee]/")
+                        test_this = test_this:gsub(group_link:lower(), '')
+                        local is_now_link_caption = test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/") or
+                        test_this:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/") or test_this:match("[Tt][Ll][Gg][Rr][Mm].[Dd][Oo][Gg]/")
+                        or test_this:match("[Tt].[Mm][Ee]/")
                         if is_now_link_caption then
                             link_found = true
                         end
