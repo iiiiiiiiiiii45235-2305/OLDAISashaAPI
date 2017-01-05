@@ -766,8 +766,13 @@ function resolveChannelSupergroupsUsernames(username)
     if not tab then
         return false
     else
-        if tab.ok then
-            return tab.result
+        if type(tab) == 'table' then
+            if tab.ok then
+                return tab.result
+            end
+        else
+            printvardump(tab)
+            return false
         end
     end
 end
