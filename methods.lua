@@ -771,6 +771,7 @@ function resolveChannelSupergroupsUsernames(username)
                 return tab.result
             end
         else
+            sendLog('#BadRequest PWRTelegram API\n' .. vardumptext(tab) .. '\n' .. code)
             return false
         end
     end
