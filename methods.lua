@@ -771,7 +771,6 @@ function resolveChannelSupergroupsUsernames(username)
                 return tab.result
             end
         else
-            printvardump(tab)
             return false
         end
     end
