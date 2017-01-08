@@ -711,7 +711,9 @@ function tempDownloadFile(url, file_name)
     local headers = response[3]
     local status = response[4]
 
-    if code ~= 200 then return nil end
+    if code ~= 200 then
+        return
+    end
 
     file_name = file_name or getHttpFileName(url, headers)
 
@@ -763,13 +765,16 @@ function resolveChannelSupergroupsUsernames(username)
 
     local tab = JSON.decode(dat)
 
-    if not tab then
-        return false
-    else
-        if tab.ok then
-            return tab.result
+    if code ~= 200 then
+        if not tab then
+            return false
+        else
+            sendLog('#BadRequest PWRTelegram API\n' .. vardumptext(tab) .. '\n' .. code)
+            return false
         end
     end
+
+    return tab.result
 end
 -- *** END PWRTELEGRAM API FUNCTIONS ***
 
@@ -1239,7 +1244,15 @@ end
 function resolveUsername(username)
     username = '@' .. username:lower()
     local obj = resolveChannelSupergroupsUsernames(username)
+    local ok = false
+
     if obj then
+        if type(obj) == 'table' then
+            ok = true
+        end
+    end
+
+    if ok then
         return obj
     else
         local hash = 'bot:usernames'
