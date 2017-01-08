@@ -3,10 +3,9 @@ local function get_msgs_user_chat(user_id, chat_id)
     local user_info = { }
     local uhash = 'user:' .. user_id
     local user = redis:hgetall(uhash)
-    printvardump(user)
     local um_hash = 'msgs:' .. user_id .. ':' .. chat_id
     user_info.msgs = tonumber(redis:get(um_hash) or 0)
-    user_info.name = user.first_name ..(user.last_name or '') .. ' [' .. user_id .. ']'
+    user_info.name =(user.print_name or '') .. ' [' .. user_id .. ']'
     user_info.id = user_id
     return user_info
 end
