@@ -220,6 +220,7 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
         mystat('/syntax <command>')
+        matches[2] = matches[2]:gsub('[#!/]', '')
         local cmd_find = false
         local text = ''
         for name, plugin in pairsByKeys(plugins) do
