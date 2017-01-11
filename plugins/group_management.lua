@@ -817,6 +817,7 @@ local function run(msg, matches)
                     end
                     return langs[msg.lang].realmListCreated
                 end
+                return
             else
                 return langs[msg.lang].require_admin
             end
@@ -855,6 +856,7 @@ local function run(msg, matches)
                     mystat('/lock <group_id> ' .. matches[3]:lower())
                     return lockSetting(data, matches[2], matches[3]:lower())
                 end
+                return
             else
                 return langs[msg.lang].require_admin
             end
@@ -893,6 +895,7 @@ local function run(msg, matches)
                     mystat('/unlock <group_id> ' .. matches[3]:lower())
                     return unlockSetting(data, matches[2], matches[3]:lower())
                 end
+                return
             else
                 return langs[msg.lang].require_admin
             end
@@ -1120,6 +1123,7 @@ local function run(msg, matches)
                         mystat('/lock ' .. matches[2]:lower())
                         return lockSetting(data, msg.chat.id, matches[2]:lower())
                     end
+                    return
                 else
                     return langs[msg.lang].require_mod
                 end
@@ -1158,6 +1162,7 @@ local function run(msg, matches)
                         mystat('/unlock ' .. matches[2]:lower())
                         return unlockSetting(data, msg.chat.id, matches[2]:lower())
                     end
+                    return
                 else
                     return langs[msg.lang].require_mod
                 end
@@ -1205,6 +1210,7 @@ local function run(msg, matches)
                         mystat('/mute ' .. matches[2]:lower())
                         return mute(msg.chat.id, matches[2]:lower())
                     end
+                    return
                 else
                     return langs[msg.lang].require_owner
                 end
@@ -1252,6 +1258,7 @@ local function run(msg, matches)
                         mystat('/unmute ' .. matches[2]:lower())
                         return unmute(msg.chat.id, matches[2]:lower())
                     end
+                    return
                 else
                     return langs[msg.lang].require_owner
                 end
@@ -1414,8 +1421,8 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
-                mystat('/getadmins')
                 if msg.from.is_owner then
+                    mystat('/getadmins')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup Admins list")
                     return getAdmins(msg.chat.id)
                 else
@@ -1596,6 +1603,7 @@ local function run(msg, matches)
                         save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned rules")
                     end
+                    return
                 else
                     return langs[msg.lang].require_owner
                 end
