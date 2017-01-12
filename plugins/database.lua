@@ -1,7 +1,6 @@
 local function db_user(user, chat_id)
     if user.print_name then
         if database[tostring(user.id)] then
-            print('already registered user')
             if database[tostring(user.id)]['groups'] then
                 if not database[tostring(user.id)]['groups'][tostring(chat_id)] then
                     database[tostring(user.id)]['groups'][tostring(chat_id)] = tonumber(chat_id)
@@ -41,7 +40,6 @@ end
 
 local function db_group(group)
     if database[tostring(group.id)] then
-        print('already registered group')
         if database[tostring(group.id)]['print_name'] ~= group.print_name:gsub("_", " ") then
             database[tostring(group.id)]['print_name'] = group.print_name:gsub("_", " ")
             database[tostring(group.id)]['old_print_names'] = database[tostring(group.id)]['old_print_names'] .. ' ### ' .. group.print_name:gsub("_", " ")
@@ -59,7 +57,6 @@ end
 
 local function db_supergroup(supergroup)
     if database[tostring(supergroup.id)] then
-        print('already registered supergroup')
         if database[tostring(supergroup.id)]['print_name'] ~= supergroup.print_name:gsub("_", " ") then
             database[tostring(supergroup.id)]['print_name'] = supergroup.print_name:gsub("_", " ")
             database[tostring(supergroup.id)]['old_print_names'] = database[tostring(supergroup.id)]['old_print_names'] .. ' ### ' .. supergroup.print_name:gsub("_", " ")
@@ -93,7 +90,6 @@ end
 
 local function db_channel(channel)
     if database[tostring(channel.id)] then
-        print('already registered channel')
         if database[tostring(channel.id)]['print_name'] ~= channel.print_name:gsub("_", " ") then
             database[tostring(channel.id)]['print_name'] = channel.print_name:gsub("_", " ")
             database[tostring(channel.id)]['old_print_names'] = database[tostring(channel.id)]['old_print_names'] .. ' ### ' .. channel.print_name:gsub("_", " ")
