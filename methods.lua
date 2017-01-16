@@ -1246,6 +1246,7 @@ function resolveUsername(username)
     local obj = resolveChannelSupergroupsUsernames(username)
     local ok = false
 
+    printvardump(obj)
     if obj then
         if type(obj) == 'table' then
             ok = true
