@@ -84,7 +84,7 @@ function getChatMember(chat_id, user_id)
     if type(obj) == 'table' then
         if obj.result then
             obj = obj.result
-            if obj.type ~= 'private' then
+            if obj.type ~= 'private' or obj.type == 'user' then
                 local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
                 return sendRequest(url)
             end
@@ -1246,7 +1246,6 @@ function resolveUsername(username)
     local obj = resolveChannelSupergroupsUsernames(username)
     local ok = false
 
-    printvardump(obj)
     if obj then
         if type(obj) == 'table' then
             ok = true

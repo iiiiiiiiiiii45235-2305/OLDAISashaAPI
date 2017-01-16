@@ -23,7 +23,7 @@ local function get_object_info(obj, chat_id)
     local lang = get_lang(chat_id)
     if obj then
         local text = langs[lang].infoWord
-        if obj.type == 'private' then
+        if obj.type == 'private' or obj.type == 'user' then
             text = text .. langs[lang].chatType .. langs[lang].userWord
             if obj.first_name then
                 text = text .. langs[lang].name .. obj.first_name
