@@ -23,7 +23,45 @@ local function get_object_info(obj, chat_id)
     local lang = get_lang(chat_id)
     if obj then
         local text = langs[lang].infoWord
-        if obj.type == 'private' or obj.type == 'user' then
+        if obj.type == 'bot' then
+            text = text .. langs[lang].chatType .. langs[lang].botWord
+            if obj.first_name then
+                text = text .. langs[lang].name .. obj.first_name
+            end
+            if obj.last_name then
+                text = text .. langs[lang].surname .. obj.last_name
+            end
+            if obj.username then
+                text = text .. langs[lang].username .. '@' .. obj.username
+            end
+            text = text .. langs[lang].date .. os.date('%c')
+            local otherinfo = langs[lang].otherInfo
+            if obj.id ~= bot.id then
+                local chat_member = getChatMember(chat_id, obj.id)
+                if type(chat_member) == 'table' then
+                    if chat_member.result then
+                        chat_member = chat_member.result
+                        if chat_member.status then
+                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                        end
+                    end
+                end
+            end
+            if redis:sismember('whitelist', obj.id) then
+                otherinfo = otherinfo .. 'WHITELISTED '
+            end
+            if isGbanned(obj.id) then
+                otherinfo = otherinfo .. 'GBANNED '
+            end
+            if isBanned(obj.id, chat_id) then
+                otherinfo = otherinfo .. 'BANNED '
+            end
+            if otherinfo == langs[lang].otherInfo then
+                otherinfo = otherinfo .. langs[lang].noOtherInfo
+            end
+            text = text .. otherinfo ..
+            langs[lang].long_id .. obj.id
+        elseif obj.type == 'private' or obj.type == 'user' then
             text = text .. langs[lang].chatType .. langs[lang].userWord
             if obj.first_name then
                 text = text .. langs[lang].name .. obj.first_name
