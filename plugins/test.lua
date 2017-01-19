@@ -79,7 +79,7 @@ local ESEMPIO = {
             access_hash = - 8.7723268163288e+18,
             first_name = "Mr",
             id = 159788990,
-            last_name = "\U0001f308Simona\U0001f308",
+            last_name = "Simona",
             restricted = false,
             status =
             {
