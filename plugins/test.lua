@@ -250,9 +250,6 @@ end
 
 local function run(msg, matches)
     if is_sudo(msg) then
-        if matches[1]:lower() == 'getchat' then
-            return vardumptext(resolveChat(matches[2]))
-        end
         if matches[1]:lower() == 'pwr' then
             pwr_get_chat = true
         end
@@ -264,7 +261,7 @@ local function run(msg, matches)
         if is_momod(msg) then
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
-            for k, v in pairsByKeys(result) do
+            for k, v in pairsByKeys(participants) do
                 text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id
                 i = i + 1
             end
