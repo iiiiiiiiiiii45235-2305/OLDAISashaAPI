@@ -102,14 +102,17 @@ local function run(msg, matches)
         end
         if is_sudo(msg) then
             if matches[1]:lower() == 'pwr' then
+                mystat('/pwr')
                 pwr_get_chat = true
                 return langs[msg.lang].ok
             end
             if matches[1]:lower() == 'api' then
+                mystat('/api')
                 pwr_get_chat = false
                 return langs[msg.lang].ok
             end
             if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
+                mystat('/rebootcli')
                 io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
                 return langs[msg.lang].cliReboot
             end

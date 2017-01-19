@@ -274,6 +274,22 @@ local function run(msg, matches)
         end
         return
     end
+    if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
+        if msg.from.is_mod then
+            mystat('/members')
+            local participants = getChatParticipants(msg.chat.id)
+            local text = langs[msg.lang].membersOf .. msg.chat.title .. ' ' .. msg.chat.id .. '\n'
+            for k, v in pairsByKeys(participants) do
+                if v.user then
+                    v = v.user
+                    text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
+                end
+            end
+            return text
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
     if matches[1]:lower() == 'whoami' then
         mystat('/whoami')
         return get_object_info(msg.from, msg.chat.id)
@@ -333,6 +349,10 @@ return {
         -- info
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo]) (.*)$",
+        -- who
+        "^[#!/]([Mm][Ee][Mm][Bb][Ee][Rr][Ss])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Mm][Ee][Mm][Bb][Rr][Ii])$",
+        "^([Ll][Ii][Ss][Tt][Aa] [Mm][Ee][Mm][Bb][Rr][Ii])$",
     },
     run = run,
     pre_process = pre_process,
@@ -346,6 +366,7 @@ return {
         "#ishere <id>|<username>|<reply>|from",
         "MOD",
         "(#info|[sasha] info) <id>|<username>|<reply>|from",
+        "(#who|#members|[sasha] lista membri)",
         "ADMIN",
         "(#grouplink|[sasha] link gruppo) <group_id>",
     },
