@@ -699,9 +699,11 @@ function msg_valid(msg)
         end
     end
 
-    if msg.from.id == bot.userVersion.id then
-        print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
-        return false
+    if bot.userVersion then
+        if msg.from.id == bot.userVersion.id then
+            print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
+            return false
+        end
     end
 
     if msg.edited then
