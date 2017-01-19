@@ -745,7 +745,7 @@ function getChat(id_or_username)
         if not ok then
             obj = nil
             local hash = 'bot:usernames'
-            local stored = redis:hget(hash, username)
+            local stored = redis:hget(hash, id_or_username)
             if stored then
                 obj = APIgetChat(stored)
                 if obj.result then
