@@ -262,9 +262,10 @@ local function run(msg, matches)
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
             for k, v in pairsByKeys(participants) do
-                text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id
+                text = text .. i ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
                 i = i + 1
             end
+            return text
         else
             return langs[msg.lang].require_mod
         end
