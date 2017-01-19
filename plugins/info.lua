@@ -283,9 +283,11 @@ local function run(msg, matches)
                 for k, v in pairsByKeys(participants) do
                     if v.user then
                         v = v.user
-                        text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
+                        text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' | ' ..(v.username or 'NOUSER') .. ' | ' .. v.id .. '\n'
                     end
                 end
+                -- remove rtl
+                text = text:gsub("‮", "")
                 return text
             else
                 return langs[msg.lang].require_mod
