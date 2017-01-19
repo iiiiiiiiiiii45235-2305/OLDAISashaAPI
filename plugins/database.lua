@@ -170,7 +170,7 @@ local function run(msg, matches)
                     return matches[2] .. langs[msg.lang].notFound
                 end
             else
-                local obj_user = getChat(matches[2]:gsub('@', ''))
+                local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                 if obj_user then
                     if obj_user.type == 'private' then
                         if database[tostring(obj_user.id)] then
