@@ -260,10 +260,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2])
                     if type(obj) == 'table' then
-                        if obj.result then
-                            obj = obj.result
-                            return get_object_info(obj, msg.chat.id)
-                        end
+                        return get_object_info(obj, msg.chat.id)
                     end
                 else
                     local obj = resolveChat(matches[2]:gsub('@', ''))
@@ -290,10 +287,7 @@ local function run(msg, matches)
             end
             local obj = getChat(matches[2])
             if type(obj) == 'table' then
-                if obj.result then
-                    obj = obj.result
-                    return obj.title .. '\n' .. group_link
-                end
+                return obj.title .. '\n' .. group_link
             end
         else
             return langs[msg.lang].require_admin

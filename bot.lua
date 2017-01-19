@@ -207,10 +207,7 @@ function bot_init()
     bot = bot.result
     local obj = getChat(149998353)
     if type(obj) == 'table' then
-        if obj.result then
-            obj = obj.result
-            bot.userVersion = obj
-        end
+        bot.userVersion = obj
     end
 
     local tot_plugins = load_plugins()
@@ -223,10 +220,7 @@ function bot_init()
     for v, user in pairs(config.sudo_users) do
         local obj_user = getChat(user)
         if type(obj_user) == 'table' then
-            if obj_user.result then
-                obj_user = obj_user.result
-                table.insert(sudoers, obj_user)
-            end
+            table.insert(sudoers, obj_user)
         end
     end
 

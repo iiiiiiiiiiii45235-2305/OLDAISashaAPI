@@ -735,12 +735,9 @@ local function run(msg, matches)
                 elseif string.match(matches[2], '^%d+$') then
                     local obj_user = getChat(matches[2])
                     if type(obj_user) == 'table' then
-                        if obj_user.result then
-                            obj_user = obj_user.result
-                            if obj_user then
-                                if obj_user.type == 'private' then
-                                    return promoteAdmin(obj_user, msg.chat.id)
-                                end
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return promoteAdmin(obj_user, msg.chat.id)
                             end
                         end
                     end
@@ -765,12 +762,9 @@ local function run(msg, matches)
                 elseif string.match(matches[2], '^%d+$') then
                     local obj_user = getChat(matches[2])
                     if type(obj_user) == 'table' then
-                        if obj_user.result then
-                            obj_user = obj_user.result
-                            if obj_user then
-                                if obj_user.type == 'private' then
-                                    return demoteAdmin(obj_user, msg.chat.id)
-                                end
+                        if obj_user then
+                            if obj_user.type == 'private' then
+                                return demoteAdmin(obj_user, msg.chat.id)
                             end
                         end
                     end
@@ -1462,12 +1456,9 @@ local function run(msg, matches)
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
-                                if obj_user.result then
-                                    obj_user = obj_user.result
-                                    if obj_user then
-                                        if obj_user.type == 'private' then
-                                            return setOwner(obj_user, msg.chat.id)
-                                        end
+                                if obj_user then
+                                    if obj_user.type == 'private' then
+                                        return setOwner(obj_user, msg.chat.id)
                                     end
                                 end
                             end
@@ -1513,12 +1504,9 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
-                                if obj_user.result then
-                                    obj_user = obj_user.result
-                                    if obj_user then
-                                        if obj_user.type == 'private' then
-                                            return promoteMod(msg.chat.id, obj_user)
-                                        end
+                                if obj_user then
+                                    if obj_user.type == 'private' then
+                                        return promoteMod(msg.chat.id, obj_user)
                                     end
                                 end
                             end
@@ -1559,12 +1547,9 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
-                                if obj_user.result then
-                                    obj_user = obj_user.result
-                                    if obj_user then
-                                        if obj_user.type == 'private' then
-                                            return demoteMod(msg.chat.id, obj_user)
-                                        end
+                                if obj_user then
+                                    if obj_user.type == 'private' then
+                                        return demoteMod(msg.chat.id, obj_user)
                                     end
                                 end
                             end
