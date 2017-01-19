@@ -780,9 +780,9 @@ end
 
 function getChat(id_or_username)
     if pwr_get_chat then
-        resolveChat(id_or_username)
+        return resolveChat(id_or_username)
     else
-        APIgetChat(id_or_username)
+        return APIgetChat(id_or_username)
     end
 end
 
