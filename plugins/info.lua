@@ -77,7 +77,6 @@ local function get_object_info(obj, chat_id)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
-            print(text)
             if obj.id ~= bot.id then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
@@ -249,15 +248,13 @@ local function run(msg, matches)
             end
         elseif matches[2] then
             if msg.from.is_mod then
-                printvardump(msg)
                 if msg.entities then
-                    print('in')
-                    if msg.entities.type == 'text_mention' then
-                        print('iiin')
-                        local obj = msg.entities.user
-                        obj.type = 'private'
-                        print('mention')
-                        return get_object_info(obj, msg.chat.id)
+                    if msg.entities[0] then
+                        if msg.entities[0].type == 'text_mention' then
+                            local obj = msg.entities[0].user
+                            obj.type = 'private'
+                            return get_object_info(obj, msg.chat.id)
+                        end
                     end
                 elseif string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2])
