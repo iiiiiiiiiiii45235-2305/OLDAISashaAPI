@@ -259,6 +259,7 @@ local function run(msg, matches)
         if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
+            printvardump(participants)
             for k, v in pairsByKeys(participants) do
                 printvardump(k)
                 printvardump(v)
