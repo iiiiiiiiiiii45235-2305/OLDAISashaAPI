@@ -116,7 +116,7 @@ local ESEMPIO = {
         user =
         {
             access_hash = - 8.2934067955326e+18,
-            first_name = "Always\U0001f496 (83 11)",
+            first_name = "Always",
             id = 165005704,
             restricted = false,
             status =
