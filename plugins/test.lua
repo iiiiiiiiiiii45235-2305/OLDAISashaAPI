@@ -134,7 +134,7 @@ local ESEMPIO = {
         user =
         {
             access_hash = 6.395878427014e+17,
-            first_name = "MrF(Killu\U0001f577\ufe0f\U0001f577\ufe0f)",
+            first_name = "MrF(Killu)",
             id = 33302924,
             last_name = "                                                                                                                                                                                                                                                               ",
             restricted = false,
@@ -180,7 +180,7 @@ local ESEMPIO = {
         user =
         {
             access_hash = - 1.1729859909386e+18,
-            first_name = "Lollo\u270c\U0001f60f",
+            first_name = "Lollo",
             id = 155159899,
             restricted = false,
             status =
