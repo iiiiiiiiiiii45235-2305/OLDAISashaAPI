@@ -132,7 +132,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return like(likedata, msg.chat.id, matches[2])
                     else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveChat(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return like(likedata, msg.chat.id, obj_user.id)
@@ -163,7 +163,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return dislike(likedata, msg.chat.id, matches[2])
                     else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveChat(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return dislike(likedata, msg.chat.id, obj_user.id)

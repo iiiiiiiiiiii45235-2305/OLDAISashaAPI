@@ -34,7 +34,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return whitelist_user(matches[2], msg.lang)
                 else
-                    local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                    local obj_user = resolveChat(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return whitelist_user(obj_user.id, msg.lang)

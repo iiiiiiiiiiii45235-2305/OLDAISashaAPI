@@ -37,7 +37,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return flame_user(msg.from.id, matches[2], msg.chat.id)
                     else
-                        local obj_user = resolveUsername(matches[2]:gsub('@', ''))
+                        local obj_user = resolveChat(matches[2]:gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'private' then
                                 return flame_user(msg.from.id, obj_user.id, msg.chat.id)

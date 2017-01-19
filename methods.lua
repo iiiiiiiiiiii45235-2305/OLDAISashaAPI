@@ -64,7 +64,7 @@ function getUpdates(offset)
     return sendRequest(url)
 end
 
-function getChat(chat_id)
+function APIgetChat(id_or_username)
     local url = BASE_URL .. '/getChat?chat_id=' .. chat_id
     return sendRequest(url)
 end
@@ -755,8 +755,8 @@ end
 -- *** END API FUNCTIONS ***
 
 -- *** START PWRTELEGRAM API FUNCTIONS ***
-function resolveChannelSupergroupsUsernames(username)
-    local url = PWR_URL .. '/getChat?chat_id=' .. username
+function resolveChat(id_or_username)
+    local url = PWR_URL .. '/getChat?chat_id=' .. id_or_username
     local dat, code = HTTPS.request(url)
 
     if not dat then
@@ -777,6 +777,21 @@ function resolveChannelSupergroupsUsernames(username)
     return tab.result
 end
 -- *** END PWRTELEGRAM API FUNCTIONS ***
+
+function getChat(id_or_username)
+    if pwr_get_chat then
+        resolveChat(id_or_username)
+    else
+        APIgetChat(id_or_username)
+    end
+end
+
+function getChatParticipants(chat_id)
+    local obj = resolveChat(chat_id)
+    if obj.participants then
+        return obj.participants
+    end
+end
 
 function sudoInChat(chat_id)
     for v, user in pairs(sudoers) do
@@ -1241,9 +1256,9 @@ function mutedUserList(chat_id)
     return text
 end
 
-function resolveUsername(username)
+--[[function resolveUsername(username)
     username = '@' .. username:lower()
-    local obj = resolveChannelSupergroupsUsernames(username)
+    local obj = resolveChat(username) -- ex resolveChannelSupergroupsUsernames
     local ok = false
 
     if obj then
@@ -1267,7 +1282,7 @@ function resolveUsername(username)
             return false
         end
     end
-end
+end]]
 
 -- makes user version delete message
 function deleteMessage(msg)
