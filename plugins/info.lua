@@ -340,6 +340,7 @@ return {
         "^[#!/]([Ww][Hh][Oo][Aa][Mm][Ii])$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) (.*)$",
+        "^[#!/]([Ww][Hh][Oo])$",
         -- grouplink
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
         "^([Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
