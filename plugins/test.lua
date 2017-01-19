@@ -260,7 +260,10 @@ local function run(msg, matches)
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
             for k, v in pairsByKeys(participants) do
-                text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
+                if v.user then
+                    v = v.user
+                    text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
+                end
             end
             return text
         end
