@@ -1,5 +1,7 @@
 local function run(msg, matches)
-    printvardump(resolveChannelSupergroupsUsernames(matches[1]))
+    if is_sudo(msg) then
+        return vardumptext(resolveChannelSupergroupsUsernames(matches[1]))
+    end
 end
 
 return {
