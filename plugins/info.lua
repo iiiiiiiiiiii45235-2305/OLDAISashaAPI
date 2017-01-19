@@ -275,19 +275,21 @@ local function run(msg, matches)
         return
     end
     if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
-        if msg.from.is_mod then
-            mystat('/members')
-            local participants = getChatParticipants(msg.chat.id)
-            local text = langs[msg.lang].membersOf .. msg.chat.title .. ' ' .. msg.chat.id .. '\n'
-            for k, v in pairsByKeys(participants) do
-                if v.user then
-                    v = v.user
-                    text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if msg.from.is_mod then
+                mystat('/members')
+                local participants = getChatParticipants(msg.chat.id)
+                local text = langs[msg.lang].membersOf .. msg.chat.title .. ' ' .. msg.chat.id .. '\n'
+                for k, v in pairsByKeys(participants) do
+                    if v.user then
+                        v = v.user
+                        text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
+                    end
                 end
+                return text
+            else
+                return langs[msg.lang].require_mod
             end
-            return text
-        else
-            return langs[msg.lang].require_mod
         end
     end
     if matches[1]:lower() == 'whoami' then
