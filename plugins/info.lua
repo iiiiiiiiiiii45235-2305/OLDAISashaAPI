@@ -248,6 +248,12 @@ local function run(msg, matches)
             end
         elseif matches[2] then
             if msg.from.is_mod then
+                if msg.entities then
+                    if msg.entities.type == 'text_mention' then
+                        msg.entities.user.type = 'private'
+                        return get_object_info(msg.entities.user, msg.chat.id)
+                    end
+                end
                 if string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2])
                     if type(obj) == 'table' then
