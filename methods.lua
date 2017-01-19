@@ -169,6 +169,7 @@ end
 function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
     -- print(text)
     local obj = getChat(chat_id)
+    printvardump(obj)
     if type(obj) == 'table' then
         if obj.result then
             if text then

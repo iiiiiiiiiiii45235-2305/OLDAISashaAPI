@@ -251,7 +251,7 @@ end
 local function run(msg, matches)
     if is_sudo(msg) then
         if matches[1]:lower() == 'getchat' then
-            return vardumptext(resolveChannelSupergroupsUsernames(matches[2]))
+            return vardumptext(resolveChat(matches[2]))
         end
         if matches[1]:lower() == 'pwr' then
             pwr_get_chat = true
