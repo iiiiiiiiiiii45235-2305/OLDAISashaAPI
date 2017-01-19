@@ -256,18 +256,13 @@ local function run(msg, matches)
         if matches[1]:lower() == 'api' then
             pwr_get_chat = false
         end
-    end
-    if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
-        if is_momod(msg) then
+        if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
             for k, v in pairsByKeys(participants) do
-                text = text .. i ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
-                i = i + 1
+                text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
             end
             return text
-        else
-            return langs[msg.lang].require_mod
         end
     end
 end
