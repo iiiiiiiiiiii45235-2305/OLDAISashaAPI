@@ -256,7 +256,8 @@ local function run(msg, matches)
                             return get_object_info(obj, msg.chat.id)
                         end
                     end
-                elseif string.match(matches[2], '^%-?%d+$') then
+                end
+                if string.match(matches[2], '^%-?%d+$') then
                     local obj = getChat(matches[2])
                     if type(obj) == 'table' then
                         if obj.result then
