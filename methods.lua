@@ -65,7 +65,7 @@ function getUpdates(offset)
 end
 
 function APIgetChat(id_or_username)
-    local url = BASE_URL .. '/getChat?chat_id=' .. chat_id
+    local url = BASE_URL .. '/getChat?chat_id=' .. id_or_username
     return sendRequest(url)
 end
 
