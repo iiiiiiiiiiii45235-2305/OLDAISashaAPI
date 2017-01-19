@@ -259,10 +259,7 @@ local function run(msg, matches)
         if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
-            printvardump(participants)
             for k, v in pairsByKeys(participants) do
-                printvardump(k)
-                printvardump(v)
                 if v.user then
                     v = v.user
                     text = text ..(v.first_name or 'NONAME') ..(v.last_name or '') .. ' ' ..(v.username or 'NOUSER') .. ' ' .. v.id .. '\n'
@@ -280,6 +277,7 @@ return {
         "^[#!/]([Gg][Ee][Tt][Cc][Hh][Aa][Tt]) (.*)",
         "^[#!/]([Pp][Ww][Rr])",
         "^[#!/]([Aa][Pp][Ii])",
+        "^[#!/]([Ww][Hh][Oo])",
     },
     run = run,
     min_rank = 4,
