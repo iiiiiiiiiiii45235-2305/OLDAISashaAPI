@@ -77,6 +77,7 @@ local function get_object_info(obj, chat_id)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
+            print(text)
             if obj.id ~= bot.id then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
@@ -105,7 +106,6 @@ local function get_object_info(obj, chat_id)
             end
             text = text .. otherinfo ..
             langs[lang].long_id .. obj.id
-            print(text)
         elseif obj.type == 'group' then
             text = text .. langs[lang].chatType .. langs[lang].groupWord
             if obj.title then
@@ -253,6 +253,7 @@ local function run(msg, matches)
                     if msg.entities.type == 'text_mention' then
                         local obj = msg.entities.user
                         obj.type = 'private'
+                        print('mention')
                         return get_object_info(obj, msg.chat.id)
                     end
                 elseif string.match(matches[2], '^%-?%d+$') then
