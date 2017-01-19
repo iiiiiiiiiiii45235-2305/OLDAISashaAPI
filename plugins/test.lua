@@ -1,5 +1,5 @@
 local function run(msg, matches)
-    return vardumptext(resolveChannelSupergroupsUsernames(matches[1]))
+    printvardump(resolveChannelSupergroupsUsernames(matches[1]))
 end
 
 return {
