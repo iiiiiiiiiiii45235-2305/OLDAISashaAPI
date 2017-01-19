@@ -105,6 +105,7 @@ local function get_object_info(obj, chat_id)
             end
             text = text .. otherinfo ..
             langs[lang].long_id .. obj.id
+            print(text)
         elseif obj.type == 'group' then
             text = text .. langs[lang].chatType .. langs[lang].groupWord
             if obj.title then
