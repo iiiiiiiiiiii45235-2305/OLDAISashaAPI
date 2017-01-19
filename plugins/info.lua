@@ -249,9 +249,9 @@ local function run(msg, matches)
         elseif matches[2] then
             if msg.from.is_mod then
                 if msg.entities then
-                    if msg.entities[0] then
-                        if msg.entities[0].type == 'text_mention' then
-                            local obj = msg.entities[0].user
+                    if msg.entities[1] then
+                        if msg.entities[1].type == 'text_mention' then
+                            local obj = msg.entities[1].user
                             obj.type = 'private'
                             return get_object_info(obj, msg.chat.id)
                         end
