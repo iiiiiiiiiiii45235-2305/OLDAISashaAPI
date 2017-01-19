@@ -250,12 +250,6 @@ end
 
 local function run(msg, matches)
     if is_sudo(msg) then
-        if matches[1]:lower() == 'pwr' then
-            pwr_get_chat = true
-        end
-        if matches[1]:lower() == 'api' then
-            pwr_get_chat = false
-        end
         if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
             local participants = getChatParticipants(msg.chat.id)
             local text = "PROVA\n"
@@ -275,8 +269,6 @@ return {
     patterns =
     {
         "^[#!/]([Gg][Ee][Tt][Cc][Hh][Aa][Tt]) (.*)",
-        "^[#!/]([Pp][Ww][Rr])",
-        "^[#!/]([Aa][Pp][Ii])",
         "^[#!/]([Ww][Hh][Oo])",
     },
     run = run,

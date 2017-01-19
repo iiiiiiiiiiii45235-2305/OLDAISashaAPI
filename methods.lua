@@ -734,10 +734,23 @@ function getChat(id_or_username)
     if pwr_get_chat then
         obj = resolveChat(id_or_username)
     else
+        local ok = false
         obj = APIgetChat(id_or_username)
         if type(obj) == 'table' then
             if obj.result then
                 obj = obj.result
+                ok = true
+            end
+        end
+        if not ok then
+            obj = nil
+            local hash = 'bot:usernames'
+            local stored = redis:hget(hash, username)
+            if stored then
+                obj = APIgetChat(stored)
+                if obj.result then
+                    obj = obj.result
+                end
             end
         end
     end

@@ -255,6 +255,7 @@ return {
         botStopped = 'Bot spento.',
         redisDbSaved = 'Database redis salvato.',
         cliReboot = 'AISasha Ucciso.',
+        ok = 'Ok.',
 
         -- anti_spam.lua --
         blockedForSpam = ' bloccato (SPAM).',
@@ -623,6 +624,8 @@ return {
             '(#backup|sasha esegui backup): Sasha esegue un backup di se stessa e invia il log al richiedente.',
             '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
             '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
+            '#pwr: Sasha usa le API di PWRTelegram.',
+            '#api: Sasha usa le API di Telegram.',
         },
 
         banhammer =
@@ -1140,6 +1143,7 @@ return {
         botStopped = 'Bot stopped.',
         redisDbSaved = 'Redis db saved.',
         cliReboot = 'AISasha Killed.',
+        ok = 'Ok.',
 
         -- anti_spam.lua --
         blockedForSpam = ' blocked (SPAM).',
@@ -1509,6 +1513,8 @@ return {
             '(#backup|sasha esegui backup): Sasha makes a backup of herself and sends log to the sender.',
             '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
             '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
+            '#pwr: Sasha uses PWRTelegram API.',
+            '#api: Sasha uses Telegram API.',
         },
 
         banhammer =
