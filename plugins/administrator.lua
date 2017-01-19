@@ -48,7 +48,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return blockUser(matches[2], msg.lang)
                 else
-                    local obj_user = resolveChat(matches[2]:gsub('@', ''))
+                    local obj_user = getChat(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return blockUser(obj_user.id, msg.lang)
@@ -82,7 +82,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return unblockUser(matches[2], msg.lang)
                 else
-                    local obj_user = resolveChat(matches[2]:gsub('@', ''))
+                    local obj_user = getChat(matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
                             return unblockUser(obj_user.id, msg.lang)
