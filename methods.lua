@@ -735,8 +735,10 @@ function getChat(id_or_username)
         obj = resolveChat(id_or_username)
     else
         obj = APIgetChat(id_or_username)
-        if obj.result then
-            obj = obj.result
+        if type(obj) == 'table' then
+            if obj.result then
+                obj = obj.result
+            end
         end
     end
     return obj
