@@ -165,7 +165,7 @@ end
 
 function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
     -- print(text)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         if text then
             if type(text) ~= 'table' then
@@ -250,8 +250,8 @@ function sendLog(text, markdown)
 end
 
 function forwardMessage(chat_id, from_chat_id, message_id)
-    local obj_from = getChat(from_chat_id)
-    local obj_to = getChat(chat_id)
+    local obj_from = getChat(from_chat_id, true)
+    local obj_to = getChat(chat_id, true)
     if type(obj_from) == 'table' and type(obj_to) == 'table' then
         local url = BASE_URL ..
         '/forwardMessage?chat_id=' .. chat_id ..
@@ -328,7 +328,7 @@ function sendChatAction(chat_id, action)
 end
 
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendLocation?chat_id=' .. chat_id ..
@@ -348,7 +348,7 @@ end
 ----------------------------By Id-----------------------------------------
 
 function sendPhotoId(chat_id, file_id, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendPhoto?chat_id=' .. chat_id ..
@@ -365,7 +365,7 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
 end
 
 function sendStickerId(chat_id, file_id, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendSticker?chat_id=' .. chat_id ..
@@ -382,7 +382,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
 end
 
 function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendVoice?chat_id=' .. chat_id ..
@@ -404,7 +404,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendAudio?chat_id=' .. chat_id ..
@@ -426,7 +426,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendVideoId(chat_id, file_id, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendVideo?chat_id=' .. chat_id ..
@@ -443,7 +443,7 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
 end
 
 function sendDocumentId(chat_id, file_id, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendDocument?chat_id=' .. chat_id ..
@@ -467,7 +467,7 @@ function curlRequest(curl_command)
 end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendPhoto'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
@@ -486,7 +486,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
 end
 
 function sendSticker(chat_id, sticker, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendSticker'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
@@ -502,7 +502,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
 end
 
 function sendVoice(chat_id, voice, caption, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendVoice'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
@@ -526,7 +526,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
 end
 
 function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendAudio'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
@@ -556,7 +556,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
 end
 
 function sendVideo(chat_id, video, reply_to_message_id, duration, performer, title)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendVideo'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
@@ -578,7 +578,7 @@ function sendVideo(chat_id, video, reply_to_message_id, duration, performer, tit
 end
 
 function sendDocument(chat_id, document, reply_to_message_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendDocument'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
@@ -729,9 +729,9 @@ function resolveChat(id_or_username)
 end
 -- *** END PWRTELEGRAM API FUNCTIONS ***
 
-function getChat(id_or_username)
+function getChat(id_or_username, force_api)
     local obj = nil
-    if pwr_get_chat then
+    if pwr_get_chat and not force_api then
         obj = resolveChat(id_or_username)
     else
         local ok = false
@@ -792,9 +792,9 @@ end
 
 -- call this to kick
 function kickUser(executer, target, chat_id)
-    local obj_chat = getChat(chat_id)
-    local obj_remover = getChat(executer)
-    local obj_removed = getChat(target)
+    local obj_chat = getChat(chat_id, true)
+    local obj_remover = getChat(executer, true)
+    local obj_removed = getChat(target, true)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
         if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
             -- try to kick
@@ -846,9 +846,9 @@ end
 
 -- call this to ban
 function banUser(executer, target, chat_id)
-    local obj_chat = getChat(chat_id)
-    local obj_remover = getChat(executer)
-    local obj_removed = getChat(target)
+    local obj_chat = getChat(chat_id, true)
+    local obj_remover = getChat(executer, true)
+    local obj_removed = getChat(target, true)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
         if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
             -- try to kick. "code" is already specific

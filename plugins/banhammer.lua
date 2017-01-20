@@ -277,7 +277,7 @@ local function run(msg, matches)
                         unlocker = unlocker + 1
                     end
                 end
-                return id .. ' ' .. langs[msg.lang].kicked
+                return id .. langs[msg.lang].kicked
             else
                 return langs[msg.lang].require_mod
             end
