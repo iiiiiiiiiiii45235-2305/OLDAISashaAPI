@@ -265,7 +265,7 @@ local function run(msg, matches)
                 while not kickable do
                     id = participants[math.random(#participants)].user.id
                     print(id)
-                    if tonumber(id) ~= tonumber(bot.id) and not is_mod2(id, msg.chat.id, true) and not is_whitelisted(id) then
+                    if tonumber(id) ~= tonumber(bot.id) and not is_mod2(id, msg.chat.id, true) and not isWhitelisted(id) then
                         kickable = true
                         kickUser(msg.from.id, id, msg.chat.id)
                     else
