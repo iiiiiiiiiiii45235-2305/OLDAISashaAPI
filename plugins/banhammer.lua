@@ -17,21 +17,22 @@ local function get_msgs_chat(chat_id)
     return msgs
 end
 
-local function kickinactive(chat_id, num, lang)
-    local kicked = 0
-    local hash = 'chat:' .. chat_id .. ':users'
-    local users = redis:smembers(hash)
-
-    for i = 1, #users do
-        if tonumber(users[i]) ~= tonumber(bot.id) and not is_mod2(users[i], chat_id, true) then
-            local msgs = user_msgs(users[i], chat_id)
-            if tonumber(msgs) < tonumber(num) then
-                kickUser(bot.id, users[i], chat_id)
-                kicked = kicked + 1
+local function kickinactive(executer, chat_id, num)
+    local lang = get_lang(chat_id)
+    local participants = getChatParticipants(chat_id)
+    for k, v in pairs(participants) do
+        if v.user then
+            v = v.user
+            if tonumber(v.id) ~= tonumber(bot.id) and not is_mod2(v.id, chat_id, true) then
+                local user_info = user_msgs(v.id, chat_id)
+                if tonumber(user_info) < tonumber(num) then
+                    kickUser(executer, v.id, chat_id)
+                    kicked = kicked + 1
+                end
             end
         end
     end
-    sendMessage(chat_id, langs[lang].massacre:gsub('X', kicked))
+    return langs[lang].massacre:gsub('X', kicked)
 end
 
 local function run(msg, matches)
@@ -41,7 +42,6 @@ local function run(msg, matches)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
             mystat('/kickme')
-            -- /kickme
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
                 -- Save to logs
@@ -213,7 +213,6 @@ local function run(msg, matches)
         if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
             if msg.from.is_mod then
                 mystat('/kick')
-                -- /kick
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -257,10 +256,79 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
+        if matches[1]:lower() == 'kickrandom' then
+            if msg.from.is_mod then
+                mystat('/kickrandom')
+                local kickable = false
+                local id
+                local participants = getChatParticipants(msg.chat.id)
+                while not kickable do
+                    id = participants[math.random(#participants)].user.id
+                    print(id)
+                    if tonumber(id) ~= tonumber(bot.id) and not is_mod2(id, msg.chat.id, true) and not is_whitelisted(id) then
+                        kickable = true
+                        kickUser(msg.from.id, id, msg.chat.id)
+                    else
+                        print('403')
+                    end
+                end
+                return '?? ' .. id .. ' ' .. langs[msg.lang].kicked
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'kickdeleted' then
+            if msg.from.is_mod then
+                mystat('/kickdeleted')
+                local kicked = 0
+                local participants = getChatParticipants(msg.chat.id)
+                for k, v in pairs(participants) do
+                    if v.user then
+                        v = v.user
+                        if not v.first_name then
+                            if v.id then
+                                kickUser(msg.from.id, v.id, msg.chat.id)
+                                kicked = kicked + 1
+                            end
+                        end
+                    end
+                end
+                return langs[msg.lang].massacre:gsub('X', kicked)
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'kickinactive' then
+            if msg.from.is_owner then
+                mystat('/kickinactive')
+                local num = matches[2] or 0
+                return kickinactive(msg.from.id, msg.chat.id, tonumber(num))
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'kicknouser' then
+            if msg.from.is_owner then
+                mystat('/kicknouser')
+                local kicked = 0
+                local participants = getChatParticipants(msg.chat.id)
+                for k, v in pairs(participants) do
+                    if v.user then
+                        v = v.user
+                        if not v.username then
+                            kickUser(msg.from.id, v.id, msg.chat.id)
+                            kicked = kicked + 1
+                        end
+                    end
+                end
+                return langs[msg.lang].massacre:gsub('X', kicked)
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
         if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'esplodi' or matches[1]:lower() == 'kaboom' then
             if msg.from.is_mod then
                 mystat('/ban')
-                -- /ban
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -307,7 +375,6 @@ local function run(msg, matches)
         if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sasha compila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' or matches[1]:lower() == 'compila' then
             if msg.from.is_mod then
                 mystat('/unban')
-                -- /unban
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -359,20 +426,9 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'kickinactive' then
-            if msg.from.is_owner then
-                mystat('/kickinactive')
-                -- /kickinactive
-                local num = matches[2] or 0
-                return kickinactive(msg.chat.id, tonumber(num), msg.lang)
-            else
-                return langs[msg.lang].require_owner
-            end
-        end
         if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
             if is_admin(msg) then
                 mystat('/gban')
-                -- /gban
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -426,7 +482,6 @@ local function run(msg, matches)
         if matches[1]:lower() == 'ungban' or matches[1]:lower() == 'sasha supersbanna' or matches[1]:lower() == 'supersbanna' then
             if is_admin(msg) then
                 mystat('/ungban')
-                -- /ungban
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -489,7 +544,6 @@ local function run(msg, matches)
         if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
             if is_admin(msg) then
                 mystat('/gbanlist')
-                -- /gbanlist
                 local hash = 'gbanned'
                 local list = redis:smembers(hash)
                 local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart

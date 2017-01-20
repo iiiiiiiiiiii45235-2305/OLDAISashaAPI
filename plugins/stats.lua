@@ -33,6 +33,52 @@ local function clean_chat_stats(chat_id)
     redis:set(hash, 0)
 end
 
+local function real_chat_stats(chat_id)
+    local lang = get_lang(chat_id)
+    local chattotal = 0
+    local hash = 'chat:' .. chat_id .. ':users'
+    local users = redis:smembers(hash)
+    local users_info = { }
+    local participants = getChatParticipants(chat_id)
+
+    -- Get total messages
+    for k, v in pairs(participants) do
+        if v.user then
+            v = v.user
+            chattotal = chattotal + tonumber(redis:get('msgs:' .. v.id .. ':' .. chat_id) or 0)
+        end
+    end
+
+    -- Get user info
+    for k, v in pairs(participants) do
+        if v.user then
+            v = v.user
+            if tonumber(v.id) ~= tonumber(bot.id) then
+                local user_id = v.id
+                local user_info = get_msgs_user_chat(user_id, chat_id)
+                local percentage =(user_info.msgs * 100) / chattotal
+                user_info.percentage = string.format('%d', percentage)
+                table.insert(users_info, user_info)
+            end
+        end
+    end
+
+    -- Sort users by msgs number
+    table.sort(users_info, function(a, b)
+        if a.msgs and b.msgs then
+            return a.msgs > b.msgs
+        end
+    end )
+
+    local text = langs[lang].usersInChat .. langs[lang].totalChatMessages .. chattotal .. '\n'
+    for kuser, user in pairs(users_info) do
+        text = text .. user.name .. ' = ' .. user.msgs .. ' (' .. user.percentage .. '%)\n'
+    end
+    -- remove rtl
+    text = text:gsub("?", "")
+    return text
+end
+
 local function chat_stats(chat_id, lang)
     -- Users on chat
     local hash = 'channel:' .. chat_id .. ':users'
@@ -117,7 +163,7 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    return sendMessage(msg.chat.id, chat_stats2(msg.chat.id, msg.lang))
+                    return sendMessage(msg.chat.id, real_chat_stats(msg.chat.id, msg.lang))
                 end
             else
                 return langs[msg.lang].require_mod
