@@ -262,7 +262,11 @@ local function run(msg, matches)
                 local kickable = false
                 local id
                 local participants = getChatParticipants(msg.chat.id)
+                local unlocker = 0
                 while not kickable do
+                    if unlocker == 100 then
+                        return langs[msg.lang].badLuck
+                    end
                     id = participants[math.random(#participants)].user.id
                     print(id)
                     if tonumber(id) ~= tonumber(bot.id) and not is_mod2(id, msg.chat.id, true) and not isWhitelisted(id) then
@@ -270,9 +274,10 @@ local function run(msg, matches)
                         kickUser(msg.from.id, id, msg.chat.id)
                     else
                         print('403')
+                        unlocker = unlocker + 1
                     end
                 end
-                return '?? ' .. id .. ' ' .. langs[msg.lang].kicked
+                return id .. ' ' .. langs[msg.lang].kicked
             else
                 return langs[msg.lang].require_mod
             end
