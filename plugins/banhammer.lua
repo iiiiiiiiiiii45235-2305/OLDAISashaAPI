@@ -20,6 +20,7 @@ end
 local function kickinactive(executer, chat_id, num)
     local lang = get_lang(chat_id)
     local participants = getChatParticipants(chat_id)
+    local kicked = 0
     for k, v in pairs(participants) do
         if v.user then
             v = v.user
