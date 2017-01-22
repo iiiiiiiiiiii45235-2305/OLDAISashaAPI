@@ -1008,6 +1008,10 @@ function cron_administrator()
             end
             sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
         end
+
+        -- sync time
+        local sync_time = io.popen('sudo ntpdate pool.ntp.org'):read('*all')
+        sendMessage_SUDOERS(sync_time)
     end
 end
 
