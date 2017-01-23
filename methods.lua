@@ -740,7 +740,12 @@ function getChat(id_or_username, force_api)
     local ok = false
     if not ok then
         local hash = 'bot:usernames'
-        local stored = redis:hget(hash, id_or_username:lower())
+        local stored = nil
+        if type(id_or_username) == 'string' then
+            stored = redis:hget(hash, id_or_username:lower())
+        else
+            stored = redis:hget(hash, id_or_username)
+        end
         if stored then
             obj = APIgetChat(stored)
             if type(obj) == 'table' then
