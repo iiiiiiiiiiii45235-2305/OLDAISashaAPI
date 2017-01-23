@@ -725,7 +725,7 @@ function resolveChat(id_or_username)
         end
     end
 
-    return tab.result
+    return tab
 end
 -- *** END PWRTELEGRAM API FUNCTIONS ***
 
@@ -740,7 +740,6 @@ function getChat(id_or_username, force_api)
     local ok = false
     if not ok then
         obj = APIgetChat(id_or_username)
-        printvardump(obj)
         if type(obj) == 'table' then
             if obj.result then
                 obj = obj.result
@@ -753,7 +752,6 @@ function getChat(id_or_username, force_api)
         local stored = redis:hget(hash, id_or_username:lower())
         if stored then
             obj = APIgetChat(stored)
-            printvardump(obj)
             if type(obj) == 'table' then
                 if obj.result then
                     obj = obj.result
@@ -764,7 +762,6 @@ function getChat(id_or_username, force_api)
     end
     if not ok then
         obj = resolveChat(id_or_username)
-        printvardump(obj)
         if type(obj) == 'table' then
             if obj.result then
                 obj = obj.result
