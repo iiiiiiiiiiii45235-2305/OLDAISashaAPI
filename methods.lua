@@ -731,10 +731,14 @@ end
 
 function getChat(id_or_username, force_api)
     local obj = nil
-    if pwr_get_chat and not force_api then
+    --[[if pwr_get_chat and not force_api then
         obj = resolveChat(id_or_username)
-    else
-        local ok = false
+        if obj.result then
+            obj = obj.result
+        end
+    else]]
+    local ok = false
+    if not ok then
         obj = APIgetChat(id_or_username)
         if type(obj) == 'table' then
             if obj.result then
@@ -742,19 +746,34 @@ function getChat(id_or_username, force_api)
                 ok = true
             end
         end
-        if not ok then
-            obj = nil
-            local hash = 'bot:usernames'
-            local stored = redis:hget(hash, id_or_username:lower())
-            if stored then
-                obj = APIgetChat(stored)
+    end
+    if not ok then
+        local hash = 'bot:usernames'
+        local stored = redis:hget(hash, id_or_username:lower())
+        if stored then
+            obj = APIgetChat(stored)
+            if type(obj) == 'table' then
                 if obj.result then
                     obj = obj.result
+                    ok = true
                 end
             end
         end
     end
-    return obj
+    if not ok then
+        obj = resolveChat(id_or_username)
+        if type(obj) == 'table' then
+            if obj.result then
+                obj = obj.result
+                ok = true
+            end
+        end
+    end
+    -- end
+    if ok then
+        return obj
+    end
+    return nil
 end
 
 function getChatParticipants(chat_id)
@@ -1223,8 +1242,11 @@ end
     local ok = false
 
     if obj then
-        if type(obj) == 'table' then
-            ok = true
+        if obj.result then
+            obj = obj.result
+            if type(obj) == 'table' then
+                ok = true
+            end
         end
     end
 
