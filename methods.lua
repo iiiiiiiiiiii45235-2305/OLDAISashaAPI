@@ -80,7 +80,7 @@ function getChatMembersCount(chat_id)
 end
 
 function getChatMember(chat_id, user_id)
-    local obj = getChat(chat_id)
+    local obj = getChat(chat_id, true)
     if type(obj) == 'table' then
         if obj.type ~= 'bot' and obj.type ~= 'private' and obj.type ~= 'user' then
             local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
