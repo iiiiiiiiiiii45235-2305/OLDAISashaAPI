@@ -16,6 +16,21 @@ local function performRequest(url)
     return table.concat(data), c:getinfo_response_code()
 end
 
+function saveUsername(obj, chat_id)
+    if obj then
+        if type(obj) == 'table' then
+            if obj.username then
+                redis:hset('bot:usernames', '@' .. obj.username:lower(), obj.id)
+                if obj.type ~= 'bot' and obj.type ~= 'private' and obj.type ~= 'user' then
+                    if chat_id then
+                        redis:hset('bot:usernames:' .. chat_id, '@' .. obj.username:lower(), obj.id)
+                    end
+                end
+            end
+        end
+    end
+end
+
 -- *** START API FUNCTIONS ***
 function sendRequest(url)
     local dat, code = performRequest(url)
@@ -752,6 +767,7 @@ function getChat(id_or_username, force_api)
                 if obj.result then
                     obj = obj.result
                     ok = true
+                    saveUsername(obj)
                 end
             end
         end
@@ -771,6 +787,7 @@ function getChat(id_or_username, force_api)
             if obj.result then
                 obj = obj.result
                 ok = true
+                saveUsername(obj)
             end
         end
     end

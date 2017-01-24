@@ -380,14 +380,10 @@ local function collect_stats(msg)
     redis:hincrby('bot:general', 'messages', 1)
 
     -- for resolve username
-    if msg.from and msg.from.username then
-        redis:hset('bot:usernames', '@' .. msg.from.username:lower(), msg.from.id)
-        redis:hset('bot:usernames:' .. msg.chat.id, '@' .. msg.from.username:lower(), msg.from.id)
-    end
-    if msg.forward_from and msg.forward_from.username then
-        redis:hset('bot:usernames', '@' .. msg.forward_from.username:lower(), msg.forward_from.id)
-        redis:hset('bot:usernames:' .. msg.chat.id, '@' .. msg.forward_from.username:lower(), msg.forward_from.id)
-    end
+    saveUsername(msg.from, msg.chat.id)
+    saveUsername(msg.chat)
+    saveUsername(msg.forward_from)
+    saveUsername(msg.forward_from_chat)
 
     -- group stats
     if not(msg.chat.type == 'private') then
