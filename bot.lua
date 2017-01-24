@@ -382,6 +382,7 @@ local function collect_stats(msg)
     -- for resolve username
     saveUsername(msg.from, msg.chat.id)
     saveUsername(msg.chat)
+    saveUsername(msg.reply_to_message, msg.chat.id)
     saveUsername(msg.forward_from)
     saveUsername(msg.forward_from_chat)
 
