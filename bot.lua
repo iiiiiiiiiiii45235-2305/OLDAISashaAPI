@@ -383,6 +383,10 @@ local function collect_stats(msg)
     saveUsername(msg.from, msg.chat.id)
     saveUsername(msg.chat)
     saveUsername(msg.reply_to_message, msg.chat.id)
+    saveUsername(msg.added, msg.chat.id)
+    saveUsername(msg.adder, msg.chat.id)
+    saveUsername(msg.removed, msg.chat.id)
+    saveUsername(msg.remover, msg.chat.id)
     saveUsername(msg.forward_from)
     saveUsername(msg.forward_from_chat)
 
@@ -888,6 +892,7 @@ function on_msg_receive(msg)
     msg = pre_process_media_msg(msg)
     msg = pre_process_service_msg(msg)
     msg = adjust_msg(msg)
+    collect_stats(msg)
     if msg.text then
         if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
