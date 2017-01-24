@@ -800,8 +800,13 @@ end
 
 function getChatParticipants(chat_id)
     local obj = resolveChat(chat_id)
-    if obj.participants then
-        return obj.participants
+    if type(obj) == 'table' then
+        if obj.result then
+            obj = obj.result
+            if obj.participants then
+                return obj.participants
+            end
+        end
     end
 end
 
