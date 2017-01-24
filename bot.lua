@@ -1012,8 +1012,8 @@ function cron_administrator()
         end
 
         -- sync time
-        local sync_time = io.popen('sudo ntpdate pool.ntp.org'):read('*all')
-        sendMessage_SUDOERS(sync_time)
+        -- local sync_time = io.popen('sudo ntpdate pool.ntp.org'):read('*all')
+        -- sendMessage_SUDOERS(sync_time)
     end
 end
 
