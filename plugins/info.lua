@@ -30,7 +30,7 @@ local function get_object_info(obj, chat_id)
                     if database[tostring(obj.id)] then
                         return sendMessage(chat_id, serpent.block(database[tostring(obj.id)], { sortkeys = false, comment = false }))
                     else
-                        text = text .. '$Deleted Account$'
+                        text = text .. '\n$Deleted Account$'
                     end
                 else
                     text = text .. langs[lang].name .. obj.first_name
@@ -76,7 +76,7 @@ local function get_object_info(obj, chat_id)
                     if database[tostring(obj.id)] then
                         return sendMessage(chat_id, serpent.block(database[tostring(obj.id)], { sortkeys = false, comment = false }))
                     else
-                        text = text .. '$Deleted Account$'
+                        text = text .. '\n$Deleted Account$'
                     end
                 else
                     text = text .. langs[lang].name .. obj.first_name
