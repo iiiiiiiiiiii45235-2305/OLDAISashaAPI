@@ -1,10 +1,11 @@
 local function run(msg, matches)
-    if is_admin(msg) then
-        if config.log_chat then
+    if config.log_chat then
+        if is_admin(msg) then
             if msg.reply then
                 forwardMessage(config.log_chat, msg.chat.id, msg.reply_to_message.message_id)
             end
             sendLog(msg.text)
+            sendReply(msg, langs[msg.lang].ok)
         end
     end
 end

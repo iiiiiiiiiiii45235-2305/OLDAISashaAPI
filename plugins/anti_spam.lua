@@ -117,10 +117,10 @@ local function pre_process(msg)
                 if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                     if msg.from.username then
                         savelog(msg.chat.id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
-                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. "[" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
+                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
                     else
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
-                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. "[" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
+                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
                     end
                 end
                 -- incr it on redis
@@ -142,8 +142,8 @@ local function pre_process(msg)
                             username = "---"
                         end
                         -- Send this to that chat
-                        sendMessage(msg.chat.id, langs[msg.lang].user .. "[ " .. msg.from.print_name .. " ]" .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
-                        gban_text = langs[msg.lang].user .. "[ " .. msg.from.print_name .. " ] ( @" .. username .. " )" .. msg.from.id .. langs[msg.lang].gbannedFrom .. "( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
+                        sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
+                        gban_text = langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
                         -- send it to log group/channel
                         sendLog(gban_text)
                     end

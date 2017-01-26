@@ -250,17 +250,14 @@ function sendMessage_SUDOERS(text, use_markdown)
 end
 
 function sendReply(msg, text, markd, send_sound)
-    return sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
+    sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
 end
 
 function sendLog(text, markdown)
     if config.log_chat then
-        return sendMessage(config.log_chat, text, markdown)
+        sendMessage(config.log_chat, text, markdown)
     else
-        for v, user in pairs(sudoers) do
-            -- print(text)
-            sendMessage(user.id, text, markdown)
-        end
+        sendMessage_SUDOERS(text, markdown)
     end
 end
 

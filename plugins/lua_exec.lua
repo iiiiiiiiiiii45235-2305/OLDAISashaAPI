@@ -1,7 +1,7 @@
 local function run(msg, matches)
     mystat('/lua <command>')
     if is_sudo(msg) then
-        local output = loadstring(matches[1])()
+        local output = loadstring('return ' .. matches[1])()
         if not output then
             output = langs[msg.lang].doneNoOutput
         else
