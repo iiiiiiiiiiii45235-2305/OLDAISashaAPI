@@ -25,7 +25,13 @@ local function get_object_info(obj, chat_id)
         local text = langs[lang].infoWord
         if obj.type == 'bot' then
             text = text .. langs[lang].chatType .. langs[lang].botWord
-            if obj.first_name then
+            if not obj.first_name then
+                if database[tostring(obj.id)] then
+                    return sendMessage(msg.chat.id, serpent.block(database[tostring(obj.id)], { sortkeys = false, comment = false }))
+                else
+                    text = text .. '$Deleted Account$'
+                end
+            else
                 text = text .. langs[lang].name .. obj.first_name
             end
             if obj.last_name then
@@ -63,7 +69,13 @@ local function get_object_info(obj, chat_id)
             langs[lang].long_id .. obj.id
         elseif obj.type == 'private' or obj.type == 'user' then
             text = text .. langs[lang].chatType .. langs[lang].userWord
-            if obj.first_name then
+            if not obj.first_name then
+                if database[tostring(obj.id)] then
+                    return sendMessage(msg.chat.id, serpent.block(database[tostring(obj.id)], { sortkeys = false, comment = false }))
+                else
+                    text = text .. '$Deleted Account$'
+                end
+            else
                 text = text .. langs[lang].name .. obj.first_name
             end
             if obj.last_name then

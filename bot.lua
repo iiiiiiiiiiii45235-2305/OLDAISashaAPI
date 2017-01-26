@@ -810,7 +810,7 @@ function print_msg(msg, dont_print)
             end
             if msg.service then
                 if msg.service_type == 'chat_del_user' then
-                    print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..((msg.removed.first_name or 'Deleted Account') ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
+                    print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..((msg.removed.first_name or '$Deleted Account$') ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
                 elseif msg.service_type == 'chat_del_user_leave' then
                     print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
                 elseif msg.service_type == 'chat_add_user' then
