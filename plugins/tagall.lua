@@ -1,29 +1,3 @@
-local function tagall_chat(extra, success, result)
-    local chat_id = extra.chat_id
-    local text = extra.msg_text .. "\n"
-    for k, v in pairs(result.members) do
-        if v.username then
-            if v.username ~= 'AISasha' and string.sub(v.username:lower(), -3) ~= 'bot' then
-                text = text .. "@" .. v.username .. " "
-            end
-        end
-    end
-    return send_large_msg('chat#id' .. chat_id, text, ok_cb, true)
-end
-
-local function tagall_channel(extra, success, result)
-    local chat_id = extra.chat_id
-    local text = extra.msg_text .. "\n"
-    for k, v in pairs(result) do
-        if v.username then
-            if v.username ~= 'AISasha' and string.sub(v.username:lower(), -3) ~= 'bot' then
-                text = text .. "@" .. v.username .. " "
-            end
-        end
-    end
-    return send_large_msg('channel#id' .. chat_id, text, ok_cb, true)
-end
-
 local function run(msg, matches)
     if is_owner(msg) then
         mystat('/tagall <text>')
