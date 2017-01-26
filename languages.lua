@@ -1029,6 +1029,14 @@ return {
             '#sudomigrate: Sasha migra i database e i set globali.',
         },
 
+        todo =
+        {
+            '🅿️ TODO',
+            'Plugin per inviare nella chat di LOG i todo.',
+            'ADMIN',
+            '#todo <text> [<reply>]: Sasha invia <text> e l\'eventuale <reply> nella chat di LOG.',
+        },
+
         unset =
         {
             '🅿️ UNSET',
@@ -1921,6 +1929,14 @@ return {
             '#migrate: Sasha migrates group settings, bans, variables set and likes.',
             'SUDO',
             '#sudomigrate: Sasha migrates databases and global sets.',
+        },
+
+        todo =
+        {
+            '🅿️ TODO',
+            'Plugin to send todos in the LOG chat.',
+            'ADMIN',
+            '#todo <text> [<reply>]: Sasha sends <text> and <reply> if present in the LOG chat.',
         },
 
         unset =
