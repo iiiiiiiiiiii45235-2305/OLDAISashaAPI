@@ -741,7 +741,7 @@ local function run(msg, matches)
                             end
                         end
                     end
-                else
+                elseif string.match(matches[2], '^[^%s]+$') then
                     local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
@@ -768,7 +768,7 @@ local function run(msg, matches)
                             end
                         end
                     end
-                else
+                elseif string.match(matches[2], '^[^%s]+$') then
                     local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'private' then
@@ -1318,7 +1318,7 @@ local function run(msg, matches)
                             else
                                 return langs[msg.lang].require_rank
                             end
-                        else
+                        elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
                                 if obj_user.type == 'private' then
@@ -1462,7 +1462,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                        else
+                        elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
                                 if obj_user.type == 'private' then
@@ -1510,7 +1510,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                        else
+                        elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
                                 if obj_user.type == 'private' then
@@ -1553,7 +1553,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                        else
+                        elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
                                 if obj_user.type == 'private' then
