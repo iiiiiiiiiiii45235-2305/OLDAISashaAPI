@@ -275,6 +275,20 @@ function forwardMessage(chat_id, from_chat_id, message_id)
     end
 end
 
+function forwardMessage_SUDOERS(from_chat_id, message_id)
+    for v, user in pairs(sudoers) do
+        forwardMessage(user.id, from_chat_id, message_id)
+    end
+end
+
+function forwardLog(from_chat_id, message_id)
+    if config.log_chat then
+        forwardMessage(config.log_chat, from_chat_id, message_id)
+    else
+        forwardMessage_SUDOERS(from_chat_id, message_id)
+    end
+end
+
 function sendKeyboard(chat_id, text, keyboard, markdown)
     local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
     if markdown then

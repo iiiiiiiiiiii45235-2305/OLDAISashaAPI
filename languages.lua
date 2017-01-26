@@ -1011,6 +1011,14 @@ return {
             '(#reloadstrings|[sasha] aggiorna stringhe): Sasha aggiorna le stringhe di testo.',
         },
 
+        tagall =
+        {
+            '🅿️ TAGALL',
+            'Plugin per taggare tutti i membri.',
+            'OWNER',
+            '(#tagall|sasha tagga tutti) <text>: Sasha scrive <text> e tagga tutti i membri del gruppo.',
+        },
+
         tex =
         {
             '🅿️ TEX',
@@ -1911,6 +1919,14 @@ return {
             '(#setlang|lingua) (it|en): Sasha sets the language she has to talk in this group.',
             'SUDO',
             '(#reloadstrings|[sasha] aggiorna stringhe): Sasha updates strings.',
+        },
+
+        tagall =
+        {
+            '🅿️ TAGALL',
+            'Plugin to tag all users.',
+            'OWNER',
+            '(#tagall|sasha tagga tutti) <text>: Sasha writes <text> tags all group\'s members.',
         },
 
         tex =
