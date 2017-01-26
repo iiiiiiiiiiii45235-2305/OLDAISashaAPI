@@ -151,6 +151,7 @@ local function addGroup(msg)
                             flood_max = 5,
                             lock_arabic = false,
                             lock_bots = false,
+                            lock_group_link = true,
                             lock_leave = false,
                             lock_link = false,
                             lock_member = false,
@@ -240,6 +241,7 @@ local function addRealm(msg)
                             flood_max = 5,
                             lock_arabic = false,
                             lock_bots = false,
+                            lock_group_link = true,
                             lock_leave = false,
                             lock_link = false,
                             lock_member = false,
@@ -319,6 +321,7 @@ local function addSuperGroup(msg)
                             flood_max = 5,
                             lock_arabic = false,
                             lock_bots = false,
+                            lock_group_link = true,
                             lock_leave = false,
                             lock_link = false,
                             lock_member = false,
@@ -544,6 +547,7 @@ local function showSettings(target, lang)
             langs[lang].botsLock .. tostring(settings.lock_bots) ..
             langs[lang].floodLock .. tostring(settings.flood) ..
             langs[lang].floodSensibility .. tostring(settings.flood_max) ..
+            langs[lang].grouplinkLock .. tostring(settings.lock_group_link) ..
             langs[lang].leaveLock .. tostring(settings.lock_leave) ..
             langs[lang].linksLock .. tostring(settings.lock_link) ..
             langs[lang].membersLock .. tostring(settings.lock_member) ..
@@ -566,6 +570,9 @@ local function adjustSettingType(setting_type)
     end
     if setting_type == 'flood' then
         setting_type = 'flood'
+    end
+    if setting_type == 'grouplink' then
+        setting_type = 'lock_group_link'
     end
     if setting_type == 'leave' then
         setting_type = 'lock_leave'
@@ -625,7 +632,81 @@ function unlockSetting(data, target, setting_type)
         return langs[lang].settingUnlocked
     end
 end
+
+local function checkMatchesLockUnlock(txt)
+    if txt:lower() == 'arabic' then
+        return true
+    end
+    if txt:lower() == 'bot' then
+        return true
+    end
+    if txt:lower() == 'flood' then
+        return true
+    end
+    if txt:lower() == 'grouplink' then
+        return true
+    end
+    if txt:lower() == 'leave' then
+        return true
+    end
+    if txt:lower() == 'link' then
+        return true
+    end
+    if txt:lower() == 'member' then
+        return true
+    end
+    if txt:lower() == 'rtl' then
+        return true
+    end
+    if txt:lower() == 'spam' then
+        return true
+    end
+    if txt:lower() == 'strict' then
+        return true
+    end
+    return false
+end
 -- end LOCK/UNLOCK FUNCTIONS
+
+local function checkMatchesMuteUnmute(txt)
+    if txt:lower() == 'all' then
+        return true
+    end
+    if txt:lower() == 'audio' then
+        return true
+    end
+    if txt:lower() == 'contact' then
+        return true
+    end
+    if txt:lower() == 'document' then
+        return true
+    end
+    if txt:lower() == 'gif' then
+        return true
+    end
+    if txt:lower() == 'location' then
+        return true
+    end
+    if txt:lower() == 'photo' then
+        return true
+    end
+    if txt:lower() == 'sticker' then
+        return true
+    end
+    if txt:lower() == 'text' then
+        return true
+    end
+    if txt:lower() == 'tgservice' then
+        return true
+    end
+    if txt:lower() == 'video' then
+        return true
+    end
+    if txt:lower() == 'voice' then
+        return true
+    end
+    return false
+end
 
 local function run(msg, matches)
     if msg.service then
@@ -818,35 +899,7 @@ local function run(msg, matches)
         end
         if (matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca') and matches[2] and matches[3] then
             if is_admin(msg) then
-                local flag = false
-                if matches[3]:lower() == 'arabic' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'bot' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'flood' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'leave' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'link' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'member' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'rtl' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'spam' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'strict' then
-                    flag = true
-                end
-                if flag then
+                if checkMatchesLockUnlock(matches[3]) then
                     mystat('/lock <group_id> ' .. matches[3]:lower())
                     return lockSetting(data, matches[2], matches[3]:lower())
                 end
@@ -857,35 +910,7 @@ local function run(msg, matches)
         end
         if (matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca') and matches[2] and matches[3] then
             if is_admin(msg) then
-                local flag = false
-                if matches[3]:lower() == 'arabic' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'bot' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'flood' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'leave' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'link' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'member' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'rtl' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'spam' then
-                    flag = true
-                end
-                if matches[3]:lower() == 'strict' then
-                    flag = true
-                end
-                if flag then
+                if checkMatchesLockUnlock(matches[3]) then
                     mystat('/unlock <group_id> ' .. matches[3]:lower())
                     return unlockSetting(data, matches[2], matches[3]:lower())
                 end
@@ -1085,35 +1110,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca' then
                 if msg.from.is_mod then
-                    local flag = false
-                    if matches[2]:lower() == 'arabic' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'bot' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'flood' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'leave' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'link' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'member' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'rtl' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'spam' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'strict' then
-                        flag = true
-                    end
-                    if flag then
+                    if checkMatchesLockUnlock(matches[2]) then
                         mystat('/lock ' .. matches[2]:lower())
                         return lockSetting(data, msg.chat.id, matches[2]:lower())
                     end
@@ -1124,35 +1121,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca' then
                 if msg.from.is_mod then
-                    local flag = false
-                    if matches[2]:lower() == 'arabic' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'bot' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'flood' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'leave' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'link' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'member' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'rtl' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'spam' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'strict' then
-                        flag = true
-                    end
-                    if flag then
+                    if checkMatchesLockUnlock(matches[2]) then
                         mystat('/unlock ' .. matches[2]:lower())
                         return unlockSetting(data, msg.chat.id, matches[2]:lower())
                     end
@@ -1163,44 +1132,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'mute' or matches[1]:lower() == 'silenzia' then
                 if msg.from.is_owner then
-                    local flag = false
-                    if matches[2]:lower() == 'all' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'audio' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'contact' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'document' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'gif' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'location' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'photo' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'sticker' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'text' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'tgservice' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'video' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'voice' then
-                        flag = true
-                    end
-                    if flag then
+                    if checkMatchesMuteUnmute(matches[2]) then
                         mystat('/mute ' .. matches[2]:lower())
                         return mute(msg.chat.id, matches[2]:lower())
                     end
@@ -1211,44 +1143,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'unmute' or matches[1]:lower() == 'ripristina' then
                 if msg.from.is_owner then
-                    local flag = false
-                    if matches[2]:lower() == 'all' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'audio' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'contact' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'document' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'gif' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'location' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'photo' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'sticker' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'text' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'tgservice' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'video' then
-                        flag = true
-                    end
-                    if matches[2]:lower() == 'voice' then
-                        flag = true
-                    end
-                    if flag then
+                    if checkMatchesMuteUnmute(matches[2]) then
                         mystat('/unmute ' .. matches[2]:lower())
                         return unmute(msg.chat.id, matches[2]:lower())
                     end
@@ -1402,16 +1297,21 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'link' or matches[1]:lower() == 'sasha link' then
-                if msg.from.is_mod then
-                    mystat('/link')
-                    local group_link = data[tostring(msg.chat.id)].settings.set_link
-                    if not group_link then
-                        return langs[msg.lang].sendMeLink
+                mystat('/link')
+                if data[tostring(msg.chat.id)].settings.set_link then
+                    if data[tostring(msg.chat.id)].settings.lock_group_link then
+                        if msg.from.is_mod then
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
+                            return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                        else
+                            return langs[msg.lang].require_mod
+                        end
+                    else
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
+                        return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                     end
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. group_link .. "]")
-                    return msg.chat.title .. '\n' .. group_link
                 else
-                    return langs[msg.lang].require_mod
+                    return langs[msg.lang].sendMeLink
                 end
             end
             if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
@@ -1742,8 +1642,8 @@ return {
         "#muteuser|voce <id>|<username>|<reply>|from",
         "(#muteslist|lista muti)",
         "(#mutelist|lista utenti muti)",
-        "(#lock|[sasha] blocca) arabic|bot|flood|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) arabic|bot|flood|leave|link|member|rtl|spam|strict",
+        "(#lock|[sasha] blocca) arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "(#unlock|[sasha] sblocca) arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
         "OWNER",
         "#log",
         "(#getadmins|[sasha] lista admin)",
@@ -1767,8 +1667,8 @@ return {
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
-        "(#lock|[sasha] blocca) <group_id> arabic|bot|flood|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) <group_id> arabic|bot|flood|leave|link|member|rtl|spam|strict",
+        "(#lock|[sasha] blocca) <group_id> arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "(#unlock|[sasha] sblocca) <group_id> arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
         "#type",
         "#rem <group_id>",
