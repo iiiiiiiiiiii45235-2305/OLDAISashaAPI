@@ -291,6 +291,11 @@ return {
         databaseMissing = 'Database mancante.',
         databaseFuckedUp = '*Errore, crash durante il salvataggio del database, ripristinarlo al più presto.*',
 
+        -- delword.lua --
+        delwordList = 'Lista censure:\n',
+        delwordAdded = 'Censura aggiunta su ',
+        delwordRemoved = 'Censura rimossa da ',
+
         -- fakecommand.lua --
         fakecommandYouTried = 'Ci hai provato pezzente, non eseguirai un comando che richiede un rango superiore al tuo.',
 
@@ -693,6 +698,16 @@ return {
             '#replacedb <reply>: Sasha sostituisce il database.',
         },
 
+        delword =
+        {
+            '🅿️ DELWORD',
+            'Plugin per la censura delle parole.',
+            'USER',
+            '(#dellist|[sasha] lista censura): Sasha manda una lista di parole o pattern censurati.',
+            'OWNER',
+            '(#delword|[sasha] censura) <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata nei supergruppi Sasha eliminerà il messaggio mentre nei gruppi rimuoverà il membro.',
+        },
+
         dogify =
         {
             '🅿️ DOGIFY',
@@ -1019,6 +1034,13 @@ return {
             '(#tagall|sasha tagga tutti) <text>: Sasha scrive <text> e tagga tutti i membri del gruppo.',
         },
 
+        tagalert =
+        {
+            '🅿️ TAGALERT',
+            'Plugin per non perdere più un tag.',
+            'USER',
+        },
+
         tex =
         {
             '🅿️ TEX',
@@ -1199,6 +1221,11 @@ return {
         databaseSent = 'I\'m sending you the database.',
         databaseMissing = 'Database missing.',
         databaseFuckedUp = '*Error, crash while saving database, restore it as soon as possible.*',
+
+        -- delword.lua --
+        delwordList = 'Censorship list:\n',
+        delwordAdded = 'Censorship added on ',
+        delwordRemoved = 'Censorship removed from ',
 
         -- fakecommand.lua --
         fakecommandYouTried = 'You tried asshole, you won\'t execute a command that requires a rank higher than yours.',
@@ -1611,6 +1638,16 @@ return {
             '(#dogify|[sasha] doge) <your/words/with/slashes>: Sasha creates a pic with doge and specified words.',
         },
 
+        delword =
+        {
+            '🅿️ DELWORD',
+            'Plugin for the management of censorships.',
+            'USER',
+            '(#dellist|[sasha] lista censura): Sasha sends a list of censored words or patterns.',
+            'OWNER',
+            '(#delword|[sasha] censura) <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it in supergroups the message is deleted and in normal groups the user is kicked.',
+        },
+
         fakecommand =
         {
             '🅿️ FAKECOMMAND',
@@ -1927,6 +1964,13 @@ return {
             'Plugin to tag all users.',
             'OWNER',
             '(#tagall|sasha tagga tutti) <text>: Sasha writes <text> tags all group\'s members.',
+        },
+
+        tagalert =
+        {
+            '🅿️ TAGALERT',
+            'Plugin for not missing tags anymore.',
+            'USER',
         },
 
         tex =
