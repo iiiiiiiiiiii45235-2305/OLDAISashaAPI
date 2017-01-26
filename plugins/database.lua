@@ -132,6 +132,22 @@ local function run(msg, matches)
             return sendReply(msg, langs[msg.lang].dbCreated)
         end
 
+        if matches[1]:lower() == 'dodatabase' or matches[1]:lower() == 'sasha esegui database' then
+            mystat('/dodatabase')
+            local participants = getChatParticipants(msg.chat.id)
+            for k, v in pairs(participants) do
+                if v.user then
+                    v = v.user
+                    if v.first_name then
+                        v.print_name = v.first_name ..(v.last_name or '')
+                        db_user(v, msg.chat.id)
+                    end
+                end
+            end
+            save_data(config.database.db, database)
+            return langs[msg.lang].dataLeaked
+        end
+
         if matches[1]:lower() == 'dbsearch' or matches[1]:lower() == 'sasha cerca db' or matches[1]:lower() == 'cerca db' then
             mystat('/dbsearch')
             if msg.reply then
