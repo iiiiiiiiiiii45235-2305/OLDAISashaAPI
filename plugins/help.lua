@@ -97,7 +97,7 @@ local function help_all(chat, rank)
 end
 
 -- Get command syntax for that plugin
-local function plugin_syntax(var, chat, rank)
+local function plugin_syntax(var, chat, rank, filter)
     local lang = get_lang(chat)
     local plugin = ''
     if tonumber(var) then
@@ -142,7 +142,13 @@ local function plugin_syntax(var, chat, rank)
                     end
                 end
                 if help_permission then
-                    text = text .. plugin.syntax[i] .. '\n'
+                    if filter then
+                        if string.find(v, matches[2]:lower()) then
+                            text = text .. plugin.syntax[i] .. '\n'
+                        end
+                    else
+                        text = text .. plugin.syntax[i] .. '\n'
+                    end
                 end
             end
         end
@@ -221,18 +227,7 @@ local function run(msg, matches)
     if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
-        local cmd_find = false
-        local text = ''
-        for name, plugin in pairsByKeys(plugins) do
-            if plugin.syntax then
-                for k, v in pairsByKeys(plugin.syntax) do
-                    if string.find(v, matches[2]:lower()) then
-                        cmd_find = true
-                        text = text .. v .. '\n'
-                    end
-                end
-            end
-        end
+        local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id), matches[2])
         if not cmd_find then
             return sendMessage(msg.chat.id, langs[msg.lang].commandNotFound)
         else
