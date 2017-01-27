@@ -152,7 +152,11 @@ local function plugin_syntax(var, chat, rank, filter)
                 end
             end
         end
-        return text .. '\n'
+        if filter then
+            return text
+        else
+            return text .. '\n'
+        end
     else
         return ''
     end
