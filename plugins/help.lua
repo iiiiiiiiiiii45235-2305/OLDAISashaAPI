@@ -143,7 +143,7 @@ local function plugin_syntax(var, chat, rank, filter)
                 end
                 if help_permission then
                     if filter then
-                        if string.find(v, filter) then
+                        if string.find(plugin.syntax[i], filter) then
                             text = text .. plugin.syntax[i] .. '\n'
                         end
                     else
