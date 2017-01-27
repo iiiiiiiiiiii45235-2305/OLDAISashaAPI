@@ -919,12 +919,23 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == 'settings' and data[tostring(matches[2])].settings then
-            if is_admin(msg) then
-                mystat('/settings <group_id>')
-                return showSettings(matches[2], msg.lang)
+        if matches[1]:lower() == 'settings' then
+            if matches[2] then
+                if data[tostring(matches[2])].settings then
+                    if is_admin(msg) then
+                        mystat('/settings <group_id>')
+                        return showSettings(matches[2], msg.lang)
+                    else
+                        return langs[msg.lang].require_admin
+                    end
+                end
             else
-                return langs[msg.lang].require_admin
+                if msg.from.is_mod then
+                    mystat('/settings')
+                    return showSettings(msg.chat.id, msg.lang)
+                else
+                    return langs[msg.lang].require_mod
+                end
             end
         end
         if matches[1]:lower() == 'setgprules' and matches[2] and matches[3] then
