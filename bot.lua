@@ -706,10 +706,10 @@ function msg_valid(msg)
         if msg.date < os.time() -20 then
             -- Message sent more than 20 seconds ago
             msg = get_tg_rank(msg)
-            plugins.msg_checks.pre_process(msg)
-            print(clr.white .. 'Preprocess edited message', 'msg_checks')
-            plugins.delword.pre_process(msg)
             print(clr.white .. 'Preprocess edited message', 'delword')
+            msg = plugins.delword.pre_process(msg)
+            print(clr.white .. 'Preprocess edited message', 'msg_checks')
+            msg = plugins.msg_checks.pre_process(msg)
             print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
             return false
         end
@@ -746,13 +746,15 @@ end
 function pre_process_msg(msg)
     print(clr.white .. 'Preprocess', 'anti_spam')
     msg = plugins.anti_spam.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'delword')
+    msg = plugins.delword.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.msg_checks.pre_process(msg)
     print(clr.white .. 'Preprocess', 'onservice')
     msg = plugins.onservice.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
-            if plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
+            if plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'DELWORD' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
                 print(clr.white .. 'Preprocess', name)
                 msg = plugin.pre_process(msg)
             end
