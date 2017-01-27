@@ -47,6 +47,19 @@ local function run(msg, matches)
     end
 end
 
+local function clean_msg(msg)
+    -- clean msg but returns it
+    if msg.text then
+        msg.text = ''
+    end
+    if msg.media then
+        if msg.caption then
+            msg.caption = ''
+        end
+    end
+    return msg
+end
+
 local function pre_process(msg, matches)
     if not msg.from.is_mod then
         local found = false
@@ -78,15 +91,7 @@ local function pre_process(msg, matches)
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
                     -- clean msg but returns it
-                    if msg.text then
-                        msg.text = ''
-                    end
-                    if msg.media then
-                        if msg.caption then
-                            msg.caption = ''
-                        end
-                    end
-                    return msg
+                    return clean_msg(msg)
                 end
             end
         end
