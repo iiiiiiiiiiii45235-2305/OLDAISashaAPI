@@ -705,7 +705,7 @@ return {
             'Plugin per la censura delle parole.',
             'USER',
             '(#dellist|[sasha] lista censura): Sasha manda una lista di parole o pattern censurati.',
-            'OWNER',
+            'MOD',
             '(#delword|[sasha] censura) <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata nei supergruppi Sasha eliminerà il messaggio mentre nei gruppi rimuoverà il membro.',
         },
 
@@ -1646,7 +1646,7 @@ return {
             'Plugin for the management of censorships.',
             'USER',
             '(#dellist|[sasha] lista censura): Sasha sends a list of censored words or patterns.',
-            'OWNER',
+            'MOD',
             '(#delword|[sasha] censura) <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it in supergroups the message is deleted and in normal groups the user is kicked.',
         },
 
