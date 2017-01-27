@@ -863,12 +863,14 @@ function match_plugin(plugin, plugin_name, msg)
             end
             -- Function exists
             if plugin.run then
-                local result, err = pcall( function() plugin.run(msg, matches) end)
-                printvardump(result)
-                if not result then
+                local res, err = pcall( function()
+                    local result = plugin.run(msg, matches)
+                    if result then
+                        sendMessage(msg.chat.id, result)
+                    end
+                end )
+                if not res then
                     sendLog('An #error occurred.\n' .. err)
-                else
-                    sendMessage(msg.chat.id, result)
                 end
             end
             -- One patterns matches
