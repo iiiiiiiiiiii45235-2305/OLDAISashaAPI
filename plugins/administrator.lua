@@ -24,7 +24,7 @@ local function run(msg, matches)
             mystat('/laststart')
             return start_time
         end
-        if matches[1]:lower() == "block" or matches[1]:lower() == "sasha blocca" then
+        if matches[1]:lower() == "block" or matches[1]:lower() == "sasha blocca pm" then
             mystat('/block')
             if msg.reply then
                 if matches[2] then
@@ -58,7 +58,7 @@ local function run(msg, matches)
             end
             return
         end
-        if matches[1]:lower() == "unblock" or matches[1]:lower() == "sasha sblocca" then
+        if matches[1]:lower() == "unblock" or matches[1]:lower() == "sasha sblocca pm" then
             mystat('/unblock')
             if msg.reply then
                 if matches[2] then
@@ -187,10 +187,10 @@ return {
     patterns =
     {
         "^[#!/]([Pp][Mm]) (%-?%d+) (.*)$",
-        "^[#!/]([Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
-        "^[#!/]([Bb][Ll][Oo][Cc][Kk])$",
-        "^[#!/]([Uu][Nn][Bb][Ll][Oo][Cc][Kk]) (.*)$",
-        "^[#!/]([Bb][Ll][Oo][Cc][Kk]) (.*)$",
+        "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
+        "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk])$",
+        "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk]) (.*)$",
+        "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk]) (.*)$",
         "^[#!/]([Ss][Yy][Nn][Cc]_[Gg][Bb][Aa][Nn][Ss])$",
         -- sync your global bans with seed
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
@@ -209,11 +209,11 @@ return {
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) (.*)$",
         -- block
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) (.*)$",
         -- sync_gbans
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Cc][Rr][Oo][Nn][Ii][Zz][Zz][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
         -- backup
@@ -229,8 +229,8 @@ return {
     {
         "ADMIN",
         "(#pm|sasha messaggia) <id> <msg>",
-        "(#block|sasha blocca) <id>|<username>|<reply>|from",
-        "(#unblock|sasha sblocca) <id>|<username>|<reply>|from",
+        "(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from",
+        "(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from",
         "#checkspeed",
         "#vardump [<reply>]",
         "#commandsstats",
