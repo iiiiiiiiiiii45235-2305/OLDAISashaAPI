@@ -228,7 +228,7 @@ local function run(msg, matches)
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
         local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id), matches[2])
-        if not cmd_find then
+        if text ~= '' then
             return sendMessage(msg.chat.id, langs[msg.lang].commandNotFound)
         else
             return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. text)
