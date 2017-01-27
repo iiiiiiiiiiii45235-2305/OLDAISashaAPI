@@ -57,6 +57,48 @@ local function api_set_value(msg, name, value)
         return name .. langs[msg.lang].saved
     end
 end
+local function cli_get_censorships_hash(msg)
+    if msg.to.type == 'channel' then
+        return 'channel:' .. msg.to.id .. ':censorships'
+    end
+    if msg.to.type == 'chat' then
+        return 'chat:' .. msg.to.id .. ':censorships'
+    end
+    return false
+end
+local function cli_list_censorships(msg)
+    local hash = cli_get_censorships_hash(msg)
+
+    if hash then
+        local names = redis:hkeys(hash)
+        local text = ''
+        for i = 1, #names do
+            text = text .. names[i] .. '\n'
+        end
+        return text
+    end
+end
+local function api_get_censorships_hash(msg)
+    if msg.to.type == 'supergroup' then
+        return 'supergroup:' .. msg.to.id .. ':censorships'
+    end
+    if msg.to.type == 'group' then
+        return 'group:' .. msg.to.id .. ':censorships'
+    end
+    return false
+end
+local function api_setunset_delword(msg, var_name)
+    local hash = api_get_censorships_hash(msg)
+    if hash then
+        if redis:hget(hash, var_name) then
+            redis:hdel(hash, var_name)
+            return langs[msg.lang].delwordRemoved .. var_name
+        else
+            redis:hset(hash, var_name, true)
+            return langs[msg.lang].delwordAdded .. var_name
+        end
+    end
+end
 -- not used
 local function convert_yes_no_true_false(value)
     if value then
@@ -219,6 +261,17 @@ local function run(msg, matches)
                     if answer then
                         api_set_value(msg, word:lower(), answer)
                     end
+                end
+            end
+
+            -- migrate censorships
+            local vars = cli_list_censorships(msg)
+            if vars ~= nil then
+                local t = vars:split('\n')
+                local i = 0
+                for k, word in pairs(t) do
+                    i = i + 1
+                    api_setunset_delword(msg, word:lower())
                 end
             end
 
