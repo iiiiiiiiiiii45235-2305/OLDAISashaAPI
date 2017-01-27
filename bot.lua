@@ -708,6 +708,8 @@ function msg_valid(msg)
             msg = get_tg_rank(msg)
             plugins.msg_checks.pre_process(msg)
             print(clr.white .. 'Preprocess edited message', 'msg_checks')
+            plugins.delword.pre_process(msg)
+            print(clr.white .. 'Preprocess edited message', 'delword')
             print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
             return false
         end
