@@ -864,6 +864,7 @@ function match_plugin(plugin, plugin_name, msg)
             -- Function exists
             if plugin.run then
                 local result, err = pcall( function() plugin.run(msg, matches) end)
+                printvardump(result)
                 if not result then
                     sendLog('An #error occurred.\n' .. err)
                 else
