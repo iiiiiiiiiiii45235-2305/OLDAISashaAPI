@@ -1,9 +1,9 @@
 local function get_censorships_hash(msg)
-    if msg.to.type == 'supergroup' then
-        return 'supergroup:' .. msg.to.id .. ':censorships'
+    if msg.chat.type == 'supergroup' then
+        return 'supergroup:' .. msg.chat.id .. ':censorships'
     end
-    if msg.to.type == 'group' then
-        return 'group:' .. msg.to.id .. ':censorships'
+    if msg.chat.type == 'group' then
+        return 'group:' .. msg.chat.id .. ':censorships'
     end
     return false
 end
@@ -74,7 +74,7 @@ local function pre_process(msg, matches)
                 end
                 if found then
                     deleteMessage(msg)
-                    if msg.to.type == 'group' then
+                    if msg.chat.type == 'group' then
                         banUser(bot.id, msg.from.id, msg.chat.id)
                     end
                     -- clean msg but returns it
