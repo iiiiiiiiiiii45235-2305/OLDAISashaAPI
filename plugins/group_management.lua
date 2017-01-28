@@ -817,7 +817,7 @@ local function run(msg, matches)
                     local obj_user = getChat(matches[2])
                     if type(obj_user) == 'table' then
                         if obj_user then
-                            if obj_user.type == 'private' or obj_user.type == 'user' then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return promoteAdmin(obj_user, msg.chat.id)
                             end
                         end
@@ -825,7 +825,7 @@ local function run(msg, matches)
                 elseif string.match(matches[2], '^[^%s]+$') then
                     local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                     if obj_user then
-                        if obj_user.type == 'private' or obj_user.type == 'user' then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return promoteAdmin(obj_user, msg.chat.id)
                         end
                     end
@@ -844,7 +844,7 @@ local function run(msg, matches)
                     local obj_user = getChat(matches[2])
                     if type(obj_user) == 'table' then
                         if obj_user then
-                            if obj_user.type == 'private' or obj_user.type == 'user' then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return demoteAdmin(obj_user, msg.chat.id)
                             end
                         end
@@ -852,7 +852,7 @@ local function run(msg, matches)
                 elseif string.match(matches[2], '^[^%s]+$') then
                     local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                     if obj_user then
-                        if obj_user.type == 'private' or obj_user.type == 'user' then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return demoteAdmin(obj_user, msg.chat.id)
                         end
                     end
@@ -1227,7 +1227,7 @@ local function run(msg, matches)
                         elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
-                                if obj_user.type == 'private' or obj_user.type == 'user' then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     -- ignore higher or same rank
                                     if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
                                         if isMutedUser(msg.chat.id, obj_user.id) then
@@ -1368,7 +1368,7 @@ local function run(msg, matches)
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
                                 if obj_user then
-                                    if obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return setOwner(obj_user, msg.chat.id)
                                     end
                                 end
@@ -1376,7 +1376,7 @@ local function run(msg, matches)
                         elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
-                                if obj_user.type == 'private' or obj_user.type == 'user' then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return setOwner(obj_user, msg.chat.id)
                                 end
                             end
@@ -1416,7 +1416,7 @@ local function run(msg, matches)
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
                                 if obj_user then
-                                    if obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return promoteMod(msg.chat.id, obj_user)
                                     end
                                 end
@@ -1424,7 +1424,7 @@ local function run(msg, matches)
                         elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
-                                if obj_user.type == 'private' or obj_user.type == 'user' then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return promoteMod(msg.chat.id, obj_user)
                                 end
                             end
@@ -1459,7 +1459,7 @@ local function run(msg, matches)
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
                                 if obj_user then
-                                    if obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return demoteMod(msg.chat.id, obj_user)
                                     end
                                 end
@@ -1467,7 +1467,7 @@ local function run(msg, matches)
                         elseif string.match(matches[2], '^[^%s]+$') then
                             local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                             if obj_user then
-                                if obj_user.type == 'private' or obj_user.type == 'user' then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return demoteMod(msg.chat.id, obj_user)
                                 end
                             end

@@ -50,7 +50,7 @@ local function run(msg, matches)
                 elseif string.match(matches[2], '^[^%s]+$') then
                     local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                     if obj_user then
-                        if obj_user.type == 'private' or obj_user.type == 'user' then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return blockUser(obj_user.id, msg.lang)
                         end
                     end
@@ -84,7 +84,7 @@ local function run(msg, matches)
                 elseif string.match(matches[2], '^[^%s]+$') then
                     local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                     if obj_user then
-                        if obj_user.type == 'private' or obj_user.type == 'user' then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return unblockUser(obj_user.id, msg.lang)
                         end
                     end

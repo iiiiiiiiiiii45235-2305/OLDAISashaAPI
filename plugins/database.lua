@@ -188,7 +188,7 @@ local function run(msg, matches)
             else
                 local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
                 if obj_user then
-                    if obj_user.type == 'private' or obj_user.type == 'user' then
+                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         if database[tostring(obj_user.id)] then
                             return sendMessage(msg.chat.id, serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false }))
                         else
