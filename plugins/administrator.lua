@@ -24,7 +24,7 @@ local function run(msg, matches)
             mystat('/laststart')
             return start_time
         end
-        if matches[1]:lower() == "block" or matches[1]:lower() == "sasha blocca pm" then
+        if matches[1]:lower() == "pmblock" or matches[1]:lower() == "sasha blocca pm" then
             mystat('/block')
             if msg.reply then
                 if matches[2] then
@@ -58,7 +58,7 @@ local function run(msg, matches)
             end
             return
         end
-        if matches[1]:lower() == "unblock" or matches[1]:lower() == "sasha sblocca pm" then
+        if matches[1]:lower() == "pmunblock" or matches[1]:lower() == "sasha sblocca pm" then
             mystat('/unblock')
             if msg.reply then
                 if matches[2] then

@@ -202,9 +202,13 @@ function bot_init()
 
     while not bot do
         -- Get bot info and retry if unable to connect.
-        bot = getMe()
+        local obj = getMe()
+        if obj then
+            if obj.result then
+                bot = obj.result
+            end
+        end
     end
-    bot = bot.result
     local obj = getChat(149998353)
     if type(obj) == 'table' then
         bot.userVersion = obj
