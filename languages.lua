@@ -785,7 +785,7 @@ return {
             '🅿️ GOODBYEWELCOME',
             'Plugin per il benvenuto e l\'addio dei membri.',
             'MOD',
-            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l\'addio: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username',
+            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l\'addio: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
             '#getwelcome: Sasha manda il benvenuto.',
             '#getgoodbye: Sasha manda l\'addio.',
             '#previewwelcome: Sasha manda l\'esempio di benvenuto.',
@@ -987,10 +987,11 @@ return {
             'Plugin per salvare cose.',
             'MOD',
             'Per settare una frase usare "_" al posto di " ".',
-            '(#set|[sasha] setta) <var_name> <text>: Sasha salva <text> come risposta a <var_name>.',
-            '(#setmedia|[sasha] setta media) <var_name> <reply>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) in <reply> come risposta a <var_name>.',
+            'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
+            '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha salva <text> come risposta a <var_name>|<pattern>.',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) in <reply> come risposta a <var_name>|<pattern>.',
             'ADMIN',
-            '#setglobal <var_name> <text>: Sasha salva globalmente <text> come risposta a <var_name>.',
+            '#setglobal <var_name>|<pattern> <text>: Sasha salva globalmente <text> come risposta a <var_name>|<pattern>.',
         },
 
         shout =
@@ -1075,9 +1076,10 @@ return {
             '🅿️ UNSET',
             'Plugin per eliminare cose salvate con SET.',
             'MOD',
-            '(#unset|[sasha] unsetta) <var_name>: Sasha elimina <var_name>.',
+            'Per unsettare una frase usare "_" al posto di " ".',
+            '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha elimina <var_name>|<pattern>.',
             'ADMIN',
-            '#unsetglobal <var_name>: Sasha elimina globalmente <var_name>.',
+            '#unsetglobal <var_name>|<pattern>: Sasha elimina globalmente <var_name>|<pattern>.',
         },
 
         urbandictionary =
@@ -1720,7 +1722,7 @@ return {
             '🅿️ GOODBYEWELCOME',
             'Plugin for welcome and goodbye.',
             'MOD',
-            'There are some markers that will be replaced when goodbye/welcome is sent: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username',
+            'There are some markers that will be replaced when goodbye/welcome is sent: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
             '#getwelcome: Sasha sends welcome.',
             '#getgoodbye: Sasha sends goodbye.',
             '#previewwelcome: Sasha sends welcome sample.',
@@ -1922,10 +1924,11 @@ return {
             'Plugin to save things.',
             'MOD',
             'To set a phrase use "_" instead of " ".',
-            '(#set|[sasha] setta) <var_name> <text>: Sasha saves <text> as answer to <var_name>.',
-            '(#setmedia|[sasha] setta media) <var_name>: Sasha saves the media (photo, video, audio, voice note, document, sticker) in <reply> as answer to <var_name>.',
+            'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
+            '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha saves <text> as answer to <var_name>|<pattern>.',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern>: Sasha saves the media (photo, video, audio, voice note, document, sticker) in <reply> as answer to <var_name>|<pattern>.',
             'ADMIN',
-            '#setglobal <var_name> <text>: Sasha globally saves <text> as answer to <var_name>.',
+            '#setglobal <var_name>|<pattern> <text>: Sasha globally saves <text> as answer to <var_name>|<pattern>.',
         },
 
         shout =
@@ -2010,9 +2013,10 @@ return {
             '🅿️ UNSET',
             'Plugin to delete things saved with SET.',
             'MOD',
-            '(#unset|[sasha] unsetta) <var_name>: Sasha deletes <var_name>.',
+            'To unset a phrase use "_" instead of " ".',
+            '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha deletes <var_name>|<pattern>.',
             'ADMIN',
-            '#unsetglobal <var_name>: Sasha globally deletes <var_name>.',
+            '#unsetglobal <var_name>|<pattern>: Sasha globally deletes <var_name>|<pattern>.',
         },
 
         urbandictionary =
