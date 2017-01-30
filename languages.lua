@@ -282,6 +282,7 @@ return {
         tagalertNicknameSet = 'Nickname alternativo impostato.',
         tagalertNicknameUnset = 'Nickname alternativo eliminato.',
         tagalertRegistrationNeeded = 'Registrazione a tagalert necessaria.',
+        tagalertAlreadyRegistered = 'Utente già registrato.',
 
         -- database.lua --
         dbCreated = 'Database creato.',
@@ -1241,6 +1242,7 @@ return {
         tagalertNicknameSet = 'Alternative nickname set.',
         tagalertNicknameUnset = 'Alternative nickname unset.',
         tagalertRegistrationNeeded = 'Tagalert registration needed.',
+        tagalertAlreadyRegistered = 'User already registered.',
 
         -- database.lua --
         dbCreated = 'Database created.',
