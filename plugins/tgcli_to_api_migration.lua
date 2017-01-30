@@ -58,11 +58,11 @@ local function api_set_value(msg, name, value)
     end
 end
 local function cli_get_censorships_hash(msg)
-    if msg.to.type == 'channel' then
-        return 'channel:' .. msg.to.id .. ':censorships'
+    if msg.chat.type == 'channel' then
+        return 'channel:' .. msg.chat.id .. ':censorships'
     end
-    if msg.to.type == 'chat' then
-        return 'chat:' .. msg.to.id .. ':censorships'
+    if msg.chat.type == 'chat' then
+        return 'chat:' .. msg.chat.id .. ':censorships'
     end
     return false
 end
