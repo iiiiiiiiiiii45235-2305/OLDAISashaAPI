@@ -79,11 +79,11 @@ local function cli_list_censorships(msg)
     end
 end
 local function api_get_censorships_hash(msg)
-    if msg.to.type == 'supergroup' then
-        return 'supergroup:' .. msg.to.id .. ':censorships'
+    if msg.chat.type == 'supergroup' then
+        return 'supergroup:' .. msg.chat.id .. ':censorships'
     end
-    if msg.to.type == 'group' then
-        return 'group:' .. msg.to.id .. ':censorships'
+    if msg.chat.type == 'group' then
+        return 'group:' .. msg.chat.id .. ':censorships'
     end
     return false
 end
