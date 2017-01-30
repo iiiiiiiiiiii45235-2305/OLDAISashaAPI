@@ -277,7 +277,7 @@ return {
         -- check_tag.lua --
         tagalertGroupEnabled = 'Tagalert abilitato su questo gruppo.',
         tagalertGroupDisabled = 'Tagalert disabilitato su questo gruppo.',
-        tagalertUserRegistered = 'Registrazione a tagalert effettuata.',
+        tagalertUserRegistered = 'Registrazione a tagalert effettuata, assicurati di aver cliccato su START nella mia chat.',
         tagalertUserUnregistered = 'Deregistrazione a tagalert effettuata.',
         tagalertNicknameSet = 'Nickname alternativo impostato.',
         tagalertNicknameUnset = 'Nickname alternativo eliminato.',
@@ -1238,7 +1238,7 @@ return {
         -- check_tag.lua --
         tagalertGroupEnabled = 'Tagalert enabled on this group.',
         tagalertGroupDisabled = 'Tagalert disabled on this group.',
-        tagalertUserRegistered = 'Registration to tagalert completed.',
+        tagalertUserRegistered = 'Registration to tagalert completed, be sure to click the big START in my chat.',
         tagalertUserUnregistered = 'Unregistration to tagalert completed.',
         tagalertNicknameSet = 'Alternative nickname set.',
         tagalertNicknameUnset = 'Alternative nickname unset.',
