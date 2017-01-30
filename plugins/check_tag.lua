@@ -78,20 +78,20 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'registertagalert' then
-    if msg.chat.type == 'private' then
-        if not redis:hget('tagalert:usernames', msg.from.id) then
-            mystat('/registertagalert')
-            if msg.from.username then
-                redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+        if msg.chat.type == 'private' then
+            if not redis:hget('tagalert:usernames', msg.from.id) then
+                mystat('/registertagalert')
+                if msg.from.username then
+                    redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+                else
+                    redis:hset('tagalert:usernames', msg.from.id, true)
+                end
+                return langs[msg.lang].tagalertUserRegistered
             else
-                redis:hset('tagalert:usernames', msg.from.id, true)
+                return langs[msg.lang].tagalertAlreadyRegistered
             end
-            return langs[msg.lang].tagalertUserRegistered
         else
-            return langs[msg.lang].tagalertAlreadyRegistered
-        end
-        else
-        return langs[msg.lang].require_private
+            return langs[msg.lang].require_private
         end
     end
 
