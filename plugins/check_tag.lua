@@ -80,7 +80,11 @@ local function run(msg, matches)
     if matches[1]:lower() == 'registertagalert' then
         if not redis:hget('tagalert:usernames', msg.from.id) then
             mystat('/registertagalert')
-            redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower() or true)
+            if msg.from.username then
+                redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+            else
+                redis:hset('tagalert:usernames', msg.from.id, true)
+            end
             return langs[msg.lang].tagalertUserRegistered
         else
             return langs[msg.lang].tagalertAlreadyRegistered
