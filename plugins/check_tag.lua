@@ -78,6 +78,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'registertagalert' then
+    if msg.chat.type == 'private' then
         if not redis:hget('tagalert:usernames', msg.from.id) then
             mystat('/registertagalert')
             if msg.from.username then
@@ -88,6 +89,9 @@ local function run(msg, matches)
             return langs[msg.lang].tagalertUserRegistered
         else
             return langs[msg.lang].tagalertAlreadyRegistered
+        end
+        else
+        return langs[msg.lang].require_private
         end
     end
 

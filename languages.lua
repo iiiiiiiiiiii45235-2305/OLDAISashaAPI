@@ -196,6 +196,7 @@ return {
         require_owner = '🚫 Questo comando richiede privilegi da owner o superiori.',
         require_mod = '🚫 Questo comando richiede privilegi da moderatore o superiori.',
         require_rank = '🚫 Non puoi eseguire questo comando su qualcuno che ha privilegi superiori o uguali ai tuoi!',
+        require_private = '🚫 Questo comando deve essere dato in privato.',
         errorTryAgain = 'Errore, prova di nuovo.',
         opsError = 'Ops, errore.',
         useYourGroups = 'Usalo nei tuoi gruppi!',
@@ -277,7 +278,7 @@ return {
         -- check_tag.lua --
         tagalertGroupEnabled = 'Tagalert abilitato su questo gruppo.',
         tagalertGroupDisabled = 'Tagalert disabilitato su questo gruppo.',
-        tagalertUserRegistered = 'Registrazione a tagalert effettuata, assicurati di aver cliccato su START nella mia chat.',
+        tagalertUserRegistered = 'Registrazione a tagalert effettuata.',
         tagalertUserUnregistered = 'Deregistrazione a tagalert effettuata.',
         tagalertNicknameSet = 'Nickname alternativo impostato.',
         tagalertNicknameUnset = 'Nickname alternativo eliminato.',
@@ -697,6 +698,7 @@ return {
         {
             '🅿️ CHECK_TAG',
             'Plugin per mandare le notifiche di tags e mentions (NOTIFICHE ABILITATE ANCHE PER GLI UTENTI ESTERNI AL GRUPPO).',
+            'AVVIA IL BOT IN PRIVATO O NON POTRA\' MANDARTI MESSAGGI.',
             'USER',
             '#registertagalert: Sasha ti registra al tagalert, se non hai un username controllerà solo le mentions.',
             '#unregistertagalert: Sasha elimina la tua registrazione.',
@@ -1153,6 +1155,7 @@ return {
         require_owner = '🚫 This plugin requires owner privileges or higher.',
         require_mod = '🚫 This plugin requires mod privileges or higher.',
         require_rank = '🚫 You can\'t do this to someone who\'s higher than you or at your same rank!',
+        require_private = '🚫 This command needs to be executed in private.',
         errorTryAgain = 'Error, try again.',
         opsError = 'Ops, error.',
         useYourGroups = 'Use it in your groups!',
@@ -1238,7 +1241,7 @@ return {
         -- check_tag.lua --
         tagalertGroupEnabled = 'Tagalert enabled on this group.',
         tagalertGroupDisabled = 'Tagalert disabled on this group.',
-        tagalertUserRegistered = 'Registration to tagalert completed, be sure to click the big START in my chat.',
+        tagalertUserRegistered = 'Registration to tagalert completed.',
         tagalertUserUnregistered = 'Unregistration to tagalert completed.',
         tagalertNicknameSet = 'Alternative nickname set.',
         tagalertNicknameUnset = 'Alternative nickname unset.',
@@ -1659,6 +1662,7 @@ return {
         {
             '🅿️ CHECK_TAG',
             'Plugin to send tags and mentions notifications (NOTIFICATIONS ARE ENABLED ALSO FOR USERS NOT IN THIS GROUP).',
+            'START THE BOT IN PRIVATE OR IT WILL NOT SEND MESSAGES TO YOU.',
             'USER',
             '#registertagalert: Sasha registers you to the tagalert, if you haven\'t got an username you will be notified just for mentions.',
             '#unregistertagalert: Sasha deletes your registration.',
