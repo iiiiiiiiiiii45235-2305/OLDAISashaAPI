@@ -274,6 +274,15 @@ return {
         botOn = 'Sono tornata. 😏',
         botOff = 'Nulla da fare qui. 🚀',
 
+        -- check_tag.lua --
+        tagalertGroupEnabled = 'Tagalert abilitato su questo gruppo.',
+        tagalertGroupDisabled = 'Tagalert disabilitato su questo gruppo.',
+        tagalertUserRegistered = 'Registrazione a tagalert effettuata.',
+        tagalertUserUnregistered = 'Deregistrazione a tagalert effettuata.',
+        tagalertNicknameSet = 'Nickname alternativo impostato.',
+        tagalertNicknameUnset = 'Nickname alternativo eliminato.',
+        tagalertRegistrationNeeded = 'Registrazione a tagalert necessaria.',
+
         -- database.lua --
         dbCreated = 'Database creato.',
         dataLeaked = 'Data leaked.',
@@ -680,6 +689,20 @@ return {
             '#br <group_id> <text>: Sasha invia <text> a <group_id>.',
             'SUDO',
             '#broadcast <text>: Sasha invia <text> a tutti i gruppi.',
+        },
+
+        check_tag =
+        {
+            '🅿️ CHECK_TAG',
+            'Plugin per mandare le notifiche di tags e mentions (NOTIFICHE ABILITATE ANCHE PER GLI UTENTI ESTERNI AL GRUPPO).',
+            'USER',
+            '#registertagalert: Sasha ti registra al tagalert, se non hai un username controllerà solo le mentions.',
+            '#unregistertagalert: Sasha elimina la tua registrazione.',
+            '#setnickname <nickname>: Sasha imposta <nickname> come alternativa all\'username/mention.',
+            '#unsetnickname: Sasha elimina il tuo nickname (rimani registrato).',
+            'OWNER',
+            '#enabletagalert: Sasha abilita la funzione per il gruppo (disabilitata per default).',
+            '#disabletagalert: Sasha disabilita la funzione per il gruppo.',
         },
 
         database =
@@ -1210,6 +1233,15 @@ return {
         botOn = 'I\'m back. 😏',
         botOff = 'Nothing to do here. 🚀',
 
+        -- check_tag.lua --
+        tagalertGroupEnabled = 'Tagalert enabled on this group.',
+        tagalertGroupDisabled = 'Tagalert disabled on this group.',
+        tagalertUserRegistered = 'Registration to tagalert completed.',
+        tagalertUserUnregistered = 'Unregistration to tagalert completed.',
+        tagalertNicknameSet = 'Alternative nickname set.',
+        tagalertNicknameUnset = 'Alternative nickname unset.',
+        tagalertRegistrationNeeded = 'Tagalert registration needed.',
+
         -- database.lua --
         dbCreated = 'Database created.',
         dataLeaked = 'Data leaked.',
@@ -1617,6 +1649,20 @@ return {
             '#br <group_id> <text>: Sasha sends <text> to <group_id>.',
             'SUDO',
             '#broadcast <text>: Sasha sends <text> to all groups.',
+        },
+
+        check_tag =
+        {
+            '🅿️ CHECK_TAG',
+            'Plugin to send tags and mentions notifications (NOTIFICATIONS ARE ENABLED ALSO FOR USERS NOT IN THIS GROUP).',
+            'USER',
+            '#registertagalert: Sasha registers you to the tagalert, if you haven\'t got an username you will be notified just for mentions.',
+            '#unregistertagalert: Sasha deletes your registration.',
+            '#setnickname <nickname>: Sasha sets <nickname> as an alternative to username/mention.',
+            '#unsetnickname: Sasha deletes your nickname (registration not affected).',
+            'OWNER',
+            '#enabletagalert: Sasha enables the function for this group (disabled by default).',
+            '#disabletagalert: Sasha disables the function for this group.',
         },
 
         database =

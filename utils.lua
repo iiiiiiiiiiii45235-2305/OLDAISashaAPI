@@ -508,3 +508,15 @@ function get_lang(chat_id)
     end
     return lang
 end
+
+function id_to_cli(obj)
+    if obj.type then
+        if obj.type == 'bot' or obj.type == 'private' or obj.type == 'user' then
+            return tonumber(obj.id)
+        elseif obj.type == 'group' then
+            return tonumber(tostring(obj.id:gsub('-', '')))
+        elseif obj.type == 'supergroup' or obj.type == 'channel' then
+            return tonumber(tostring(obj.id:gsub('-100', '')))
+        end
+    end
+end
