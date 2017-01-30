@@ -9,7 +9,7 @@ local function run(msg, matches)
                 output = vardumptext(output)
             end
         end
-        return output
+        return tostring(output)
     else
         return langs[msg.lang].require_sudo
     end
