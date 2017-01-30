@@ -100,9 +100,13 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'setnickname' and matches[2] then
         if redis:hget('tagalert:usernames', msg.from.id) then
-            mystat('/setnickname')
-            redis:hset('tagalert:nicknames', msg.from.id, matches[2]:lower())
-            return langs[msg.lang].tagalertNicknameSet
+            if string.len(matches[2]) >= 3 then
+                mystat('/setnickname')
+                redis:hset('tagalert:nicknames', msg.from.id, matches[2]:lower())
+                return langs[msg.lang].tagalertNicknameSet
+            else
+                return langs[msg.lang].tagalertNicknameTooShort
+            end
         else
             return langs[msg.lang].tagalertRegistrationNeeded
         end
