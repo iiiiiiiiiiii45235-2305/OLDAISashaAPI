@@ -58,11 +58,16 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'enabletagalert' then
+        print('in')
         if msg.from.is_owner then
+            print('in owner')
             mystat('/enabletagalert')
+            print('stat')
             redis:set('tagalert:' .. tostring(msg.chat.id), true)
+            print('redis')
             return langs[msg.lang].tagalertGroupEnabled
         else
+            print('error')
             return langs[msg.lang].require_owner
         end
     end
@@ -78,8 +83,11 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'registertagalert' then
+        print('in')
         mystat('/registertagalert')
+        print('stat')
         redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower() or true)
+        print('redis')
         return langs[msg.lang].tagalertUserRegistered
     end
 
