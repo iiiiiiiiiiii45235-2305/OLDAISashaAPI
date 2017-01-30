@@ -58,8 +58,8 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'enabletagalert' then
-        mystat('/enabletagalert')
         if msg.from.is_owner then
+            mystat('/enabletagalert')
             redis:set('tagalert:' .. msg.chat.id, true)
             return langs[msg.lang].tagalertGroupEnabled
         else
@@ -68,8 +68,8 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'disabletagalert' then
-        mystat('/disabletagalert')
         if msg.from.is_owner then
+            mystat('/disabletagalert')
             redis:del('tagalert:' .. msg.chat.id)
             return langs[msg.lang].tagalertGroupDisabled
         else
@@ -141,13 +141,13 @@ local function pre_process(msg)
                             if msg.reply then
                                 forwardMessage(user.id, msg.chat.id, msg.reply_to_message.message_id)
                             end
-                            local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
+                            local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
                             if msg.from.username then
                                 text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
                             else
                                 text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
                             end
-                            text = text .. langs[msg.lang].msgText
+                            text = text .. langs[lang].msgText
 
                             if msg.text then
                                 text = text .. msg.text
@@ -177,13 +177,13 @@ local function pre_process(msg)
                                 if msg.reply then
                                     forwardMessage(usernames[i], msg.chat.id, msg.reply_to_message.message_id)
                                 end
-                                local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
+                                local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
                                 if msg.from.username then
                                     text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
                                 else
                                     text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
                                 end
-                                text = text .. langs[msg.lang].msgText
+                                text = text .. langs[lang].msgText
 
                                 if msg.text then
                                     text = text .. msg.text
@@ -211,13 +211,13 @@ local function pre_process(msg)
                                 if msg.reply then
                                     forwardMessage(nicknames[i], msg.chat.id, msg.reply_to_message.message_id)
                                 end
-                                local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
+                                local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
                                 if msg.from.username then
                                     text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
                                 else
                                     text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
                                 end
-                                text = text .. langs[msg.lang].msgText
+                                text = text .. langs[lang].msgText
 
                                 if msg.text then
                                     text = text .. msg.text
