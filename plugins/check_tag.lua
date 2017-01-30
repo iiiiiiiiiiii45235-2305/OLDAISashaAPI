@@ -60,7 +60,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'enabletagalert' then
         if msg.from.is_owner then
             mystat('/enabletagalert')
-            redis:set('tagalert:' .. msg.chat.id, true)
+            redis:set('tagalert:' .. tostring(msg.chat.id), true)
             return langs[msg.lang].tagalertGroupEnabled
         else
             return langs[msg.lang].require_owner
@@ -70,7 +70,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'disabletagalert' then
         if msg.from.is_owner then
             mystat('/disabletagalert')
-            redis:del('tagalert:' .. msg.chat.id)
+            redis:del('tagalert:' .. tostring(msg.chat.id))
             return langs[msg.lang].tagalertGroupDisabled
         else
             return langs[msg.lang].require_owner
