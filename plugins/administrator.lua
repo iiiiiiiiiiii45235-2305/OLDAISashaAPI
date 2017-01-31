@@ -101,16 +101,6 @@ local function run(msg, matches)
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
         end
         if is_sudo(msg) then
-            if matches[1]:lower() == 'pwr' then
-                mystat('/pwr')
-                pwr_get_chat = true
-                return langs[msg.lang].ok
-            end
-            if matches[1]:lower() == 'api' then
-                mystat('/api')
-                pwr_get_chat = false
-                return langs[msg.lang].ok
-            end
             if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
                 mystat('/rebootcli')
                 io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
@@ -204,8 +194,6 @@ return {
         "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
-        "^[#!/]([Pp][Ww][Rr])$",
-        "^[#!/]([Aa][Pp][Ii])$",
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
@@ -243,8 +231,6 @@ return {
         "(#backup|sasha esegui backup)",
         "(#uploadbackup|sasha invia backup)",
         "(#rebootcli|sasha riavvia cli)",
-        "#pwr",
-        "#api",
     },
 }
 -- By @imandaneshi :)
