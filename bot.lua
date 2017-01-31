@@ -9,8 +9,6 @@ last_redis_administrator_cron = ''
 
 sudoers = { }
 
-pwr_get_chat = true
-
 -- Save the content of config to config.lua
 function save_config()
     serialize_to_file(config, './config.lua', false)

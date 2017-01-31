@@ -757,12 +757,6 @@ end
 
 function getChat(id_or_username, force_api)
     local obj = nil
-    --[[if pwr_get_chat and not force_api then
-        obj = resolveChat(id_or_username)
-        if obj.result then
-            obj = obj.result
-        end
-    else]]
     local ok = false
     if not ok then
         local hash = 'bot:usernames'
@@ -802,7 +796,6 @@ function getChat(id_or_username, force_api)
             end
         end
     end
-    -- end
     if ok then
         return obj
     end

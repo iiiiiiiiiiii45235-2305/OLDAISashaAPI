@@ -204,8 +204,8 @@ return {
         "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
-        "^[#!/]([Pp][Ww][Rr])",
-        "^[#!/]([Aa][Pp][Ii])",
+        "^[#!/]([Pp][Ww][Rr])$",
+        "^[#!/]([Aa][Pp][Ii])$",
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
