@@ -151,8 +151,8 @@ local function run(msg, matches)
     if matches[3] then
         -- Re-enable a plugin for this chat
         if (matches[1]:lower() == 'enable' or matches[1]:lower() == 'abilita' or matches[1]:lower() == 'attiva') and matches[3]:lower() == 'chat' then
-            mystat('/enable <plugin> chat')
             if msg.from.is_owner then
+                mystat('/enable <plugin> chat')
                 print("enable " .. matches[2] .. ' on this chat')
                 return reenable_plugin_on_chat(msg.chat.id, matches[2])
             else
@@ -162,8 +162,8 @@ local function run(msg, matches)
 
         -- Disable a plugin on a chat
         if (matches[1]:lower() == 'disable' or matches[1]:lower() == 'disabilita' or matches[1]:lower() == 'disattiva') and matches[3]:lower() == 'chat' then
-            mystat('/disable plugin chat')
             if msg.from.is_owner then
+                mystat('/disable plugin chat')
                 if check_plugin(matches[2]) then
                     return langs[msg.lang].systemPlugin
                 end
@@ -177,8 +177,8 @@ local function run(msg, matches)
 
     -- Show the available plugins
     if matches[1]:lower() == 'plugins' or matches[1]:lower() == 'lista plugins' then
-        mystat('/plugins')
         if msg.from.is_owner then
+            mystat('/plugins')
             return list_plugins()
         else
             return langs[msg.lang].require_owner
@@ -187,8 +187,8 @@ local function run(msg, matches)
 
     -- Show on chat disabled plugin
     if matches[1]:lower() == 'disabledlist' or matches[1]:lower() == 'lista disabilitati' or matches[1]:lower() == 'lista disattivati' then
-        mystat('/disabledlist')
         if msg.from.is_owner then
+            mystat('/disabledlist')
             return list_disabled_plugin_on_chat(msg.chat.id)
         else
             return langs[msg.lang].require_owner
@@ -197,8 +197,8 @@ local function run(msg, matches)
 
     -- Reload all the plugins and strings!
     if matches[1]:lower() == 'reload' or matches[1]:lower() == 'sasha ricarica' or matches[1]:lower() == 'ricarica' then
-        mystat('/reload')
         if is_sudo(msg) then
+            mystat('/reload')
             print(reload_plugins())
             return langs[msg.lang].pluginsReloaded
         else
@@ -208,8 +208,8 @@ local function run(msg, matches)
 
     -- Enable a plugin
     if matches[1]:lower() == 'enable' or matches[1]:lower() == 'abilita' or matches[1]:lower() == 'attiva' then
-        mystat('/enable <plugin>')
         if is_sudo(msg) then
+            mystat('/enable <plugin>')
             print("enable: " .. matches[2])
             return enable_plugin(matches[2], msg.lang)
         else
@@ -219,8 +219,8 @@ local function run(msg, matches)
 
     -- Disable a plugin
     if matches[1]:lower() == 'disable' or matches[1]:lower() == 'disabilita' or matches[1]:lower() == 'disattiva' then
-        mystat('/disable <plugin>')
         if is_sudo(msg) then
+            mystat('/disable <plugin>')
             if check_plugin(matches[2]) then
                 return langs[msg.lang].systemPlugin
             end

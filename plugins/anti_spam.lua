@@ -70,7 +70,7 @@ local function pre_process(msg)
                 end
             end
             local max_msg = NUM_MSG_MAX * 1
-            if msgs > max_msg then
+            if msgs >= max_msg then
                 local user = msg.from.id
                 -- Ignore mods,owner and admins
                 if msg.from.is_mod then
