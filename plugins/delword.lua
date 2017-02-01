@@ -61,42 +61,44 @@ local function clean_msg(msg)
 end
 
 local function pre_process(msg, matches)
-    if not msg.from.is_mod then
-        local found = false
-        local vars = list_censorships(msg)
+    if msg then
+        if not msg.from.is_mod then
+            local found = false
+            local vars = list_censorships(msg)
 
-        if vars ~= nil then
-            local t = vars:split('\n')
-            for i, word in pairs(t) do
-                local temp = word:lower()
-                if msg.text then
-                    if not string.match(msg.text, "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$") then
-                        if string.match(msg.text:lower(), temp) then
-                            found = true
-                        end
-                    end
-                end
-                if msg.media then
-                    if msg.caption then
-                        if not string.match(msg.caption, "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$") then
-                            if string.match(msg.caption:lower(), temp) then
+            if vars ~= nil then
+                local t = vars:split('\n')
+                for i, word in pairs(t) do
+                    local temp = word:lower()
+                    if msg.text then
+                        if not string.match(msg.text, "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$") then
+                            if string.match(msg.text:lower(), temp) then
                                 found = true
                             end
                         end
                     end
-                end
-                if found then
-                    deleteMessage(msg)
-                    if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                    if msg.media then
+                        if msg.caption then
+                            if not string.match(msg.caption, "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$") then
+                                if string.match(msg.caption:lower(), temp) then
+                                    found = true
+                                end
+                            end
+                        end
                     end
-                    -- clean msg but returns it
-                    return clean_msg(msg)
+                    if found then
+                        deleteMessage(msg)
+                        if msg.chat.type == 'group' then
+                            banUser(bot.id, msg.from.id, msg.chat.id)
+                        end
+                        -- clean msg but returns it
+                        return clean_msg(msg)
+                    end
                 end
             end
         end
+        return msg
     end
-    return msg
 end
 
 return {
