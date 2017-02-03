@@ -880,7 +880,7 @@ function match_plugin(plugin, plugin_name, msg)
                     end
                 end )
                 if not res then
-                    sendLog('An #error occurred.\n' .. err)
+                    sendLog('An #error occurred.\n' .. err .. '\n' .. vardumptext(msg))
                 end
             end
             -- One patterns matches
