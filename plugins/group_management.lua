@@ -728,7 +728,7 @@ local function run(msg, matches)
                 end
             end
             if msg.service_type == 'chat_del_user' then
-                return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.action.user.id)
+                return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.removed.id)
             end
         end
     end
