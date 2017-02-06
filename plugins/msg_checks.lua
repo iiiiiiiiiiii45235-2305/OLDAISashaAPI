@@ -38,12 +38,12 @@ end
 
 local function action(msg, strict)
     deleteMessage(msg)
-    sendReply(msg, warnUser(bot.id, msg.from.id, msg.chat.id))
+    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id))
     if strict then
-        sendReply(msg, banUser(bot.id, msg.from.id, msg.chat.id))
+        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
     end
     if msg.chat.type == 'group' then
-        sendReply(msg, banUser(bot.id, msg.from.id, msg.chat.id))
+        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
     end
 end
 
