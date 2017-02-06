@@ -108,7 +108,7 @@ local function run(msg, matches)
                 for word, answer in pairs(newtab) do
                     text = text .. '/set ' .. word:gsub(' ', '_') .. ' ' .. answer .. '\nXXXxxxXXX\n'
                 end
-                sendMessage(msg.chat.id, text)
+                return text
             end
         else
             return langs[msg.lang].require_owner
@@ -128,7 +128,7 @@ local function run(msg, matches)
                 for word, answer in pairs(newtab) do
                     text = text .. '/setglobal ' .. word:gsub(' ', '_') .. ' ' .. answer .. '\nXXXxxxXXX\n'
                 end
-                sendMessage(msg.chat.id, text)
+                return text
             end
         else
             return langs[msg.lang].require_admin

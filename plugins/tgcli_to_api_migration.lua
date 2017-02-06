@@ -303,7 +303,7 @@ local function run(msg, matches)
             save_data(new_likecounter_path, new_likecounter_data)
             database = load_data(config.database.db)
             data = load_data(config.moderation.data)
-            return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
+            return langs[msg.lang].migrationCompleted
         else
             return langs[msg.lang].require_owner
         end
@@ -361,7 +361,7 @@ local function run(msg, matches)
             return langs[msg.lang].require_sudo
         end
     end
-    return sendMessage(msg.chat.id, langs[msg.lang].migrationCompleted)
+    return langs[msg.lang].migrationCompleted
 end
 
 return {

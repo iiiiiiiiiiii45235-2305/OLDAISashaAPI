@@ -75,7 +75,7 @@ local function run(msg, matches)
                 local f = io.open(config.likecounter.db, 'w+')
                 f:write('{}')
                 f:close()
-                return sendReply(msg, langs[msg.lang].likesdbCreated)
+                return langs[msg.lang].likesdbCreated
             else
                 return langs[msg.lang].require_sudo
             end
@@ -92,23 +92,23 @@ local function run(msg, matches)
             mystat('/addlikes')
             likedata[tostring(msg.chat.id)][matches[2]] = tonumber(likedata[tostring(msg.chat.id)][matches[2]] + matches[3])
             save_data(config.likecounter.db, likedata)
-            return sendReply(msg, langs[msg.lang].cheating)
+            return langs[msg.lang].cheating
         end
 
         if matches[1]:lower() == 'remlikes' and matches[2] and matches[3] and is_sudo(msg) then
             mystat('/remlikes')
             likedata[tostring(msg.chat.id)][matches[2]] = tonumber(likedata[tostring(msg.chat.id)][matches[2]] - matches[3])
             save_data(config.likecounter.db, likedata)
-            return sendReply(msg, langs[msg.lang].cheating)
+            return langs[msg.lang].cheating
         end
 
         if (matches[1]:lower() == 'likes') then
             mystat('/likes')
-            return sendMessage(msg.chat.id, likes_leaderboard(likedata[tostring(msg.chat.id)], msg.lang))
+            return likes_leaderboard(likedata[tostring(msg.chat.id)], msg.lang)
         end
 
         if msg.fwd_from then
-            return sendReply(msg, langs[msg.lang].forwardingLike)
+            return langs[msg.lang].forwardingLike
         else
             if matches[1]:lower() == 'like' or matches[1]:lower() == '1up' then
                 mystat('/like')

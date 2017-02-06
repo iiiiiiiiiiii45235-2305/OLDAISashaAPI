@@ -17,7 +17,7 @@ local function run(msg, matches)
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])
             else
-                return matches[2]
+                return sendMessage(msg.chat.id, matches[2])
             end
         else
             return langs[msg.lang].require_mod
@@ -26,20 +26,20 @@ local function run(msg, matches)
     -- interact
     mystat('/interact')
     if matches[1]:lower() == 'sasha come va?' then
-        return sendReply(msg, langs.phrases.interact.howareyou[math.random(#langs.phrases.interact.howareyou)])
+        return langs.phrases.interact.howareyou[math.random(#langs.phrases.interact.howareyou)]
     end
     if matches[1]:lower() == 'sasha' and string.match(matches[2], '.*%?') then
         local rnd = math.random(0, 2)
         if rnd == 0 then
-            return sendReply(msg, langs.phrases.interact.no[math.random(#langs.phrases.interact.no)])
+            return langs.phrases.interact.no[math.random(#langs.phrases.interact.no)]
         elseif rnd == 1 then
-            return sendReply(msg, langs.phrases.interact.idontknow[math.random(#langs.phrases.interact.idontknow)])
+            return langs.phrases.interact.idontknow[math.random(#langs.phrases.interact.idontknow)]
         elseif rnd == 2 then
-            return sendReply(msg, langs.phrases.interact.yes[math.random(#langs.phrases.interact.yes)])
+            return langs.phrases.interact.yes[math.random(#langs.phrases.interact.yes)]
         end
     end
     if matches[1]:lower() == 'sasha ti amo' or matches[1]:lower() == 'ti amo sasha' then
-        return sendReply(msg, langs.phrases.interact.iloveyou[math.random(#langs.phrases.interact.iloveyou)])
+        return langs.phrases.interact.iloveyou[math.random(#langs.phrases.interact.iloveyou)]
     end
 end
 

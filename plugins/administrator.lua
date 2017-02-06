@@ -9,7 +9,7 @@ local function run(msg, matches)
             for i = 1, #names do
                 text = text .. '- ' .. names[i] .. ': ' .. num[i] .. '\n'
             end
-            return sendMessage(msg.chat.id, text)
+            return text
         end
         if matches[1]:lower() == "pm" or matches[1]:lower() == "sasha messaggia" then
             mystat('/pm')
@@ -94,7 +94,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'vardump' then
             mystat('/vardump')
-            return sendMessage(msg.chat.id, 'VARDUMP (<msg>)\n' .. serpent.block(msg, { sortkeys = false, comment = false }))
+            return 'VARDUMP (<msg>)\n' .. serpent.block(msg, { sortkeys = false, comment = false })
         end
         if matches[1]:lower() == 'checkspeed' then
             mystat('/checkspeed')
@@ -110,24 +110,12 @@ local function run(msg, matches)
                 mystat('/botrestart')
                 redis:bgsave()
                 bot_init(true)
-                return sendReply(msg, langs[msg.lang].botRestarted)
+                return langs[msg.lang].botRestarted
             end
             if matches[1] == 'redissave' then
                 mystat('/redissave')
                 redis:bgsave()
-                return sendMessage(msg.chat.id, langs[msg.lang].redisDbSaved)
-            end
-            if matches[1]:lower() == "sync_gbans" or matches[1]:lower() == "sasha sincronizza lista superban" then
-                mystat('/sync_gbans')
-                local url = "https://seedteam.org/Teleseed/Global_bans.json"
-                local SEED_gbans = HTTPS.request(url)
-                local jdat = json:decode(SEED_gbans)
-                for k, v in pairs(jdat) do
-                    redis:hset('user:' .. v, 'print_name', k)
-                    gbanUser(v)
-                    print(k, v .. " Globally banned")
-                end
-                return langs[msg.lang].gbansSync
+                return langs[msg.lang].redisDbSaved
             end
             if matches[1]:lower() == "backup" or matches[1]:lower() == "sasha esegui backup" then
                 mystat('/backup')

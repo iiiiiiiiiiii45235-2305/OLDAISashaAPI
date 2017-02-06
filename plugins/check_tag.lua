@@ -133,6 +133,7 @@ end
 
 local function pre_process(msg)
     if msg then
+        notified = { }
         -- update usernames
         if redis:hget('tagalert:usernames', msg.from.id) then
             if msg.from.username then
@@ -250,7 +251,6 @@ local function pre_process(msg)
                 end
             end
         end
-        notified = { }
         return msg
     end
 end

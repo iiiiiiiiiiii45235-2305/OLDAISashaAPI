@@ -13,8 +13,7 @@ local function run(msg, matches)
     local chattotal = get_msgs_chat(msg.chat.id)
     local usermsgs = tonumber(redis:get('msgs:' .. msg.from.id .. ':' .. msg.chat.id) or 0)
     local percentage =(usermsgs * 100) / chattotal
-    local me = string.gsub(string.gsub(string.gsub(langs[msg.lang].meString, 'W', tostring(usermsgs)), 'X', string.format('%d', percentage)), 'Z', tostring(chattotal))
-    return sendMessage(msg.chat.id, me)
+    return string.gsub(string.gsub(string.gsub(langs[msg.lang].meString, 'W', tostring(usermsgs)), 'X', string.format('%d', percentage)), 'Z', tostring(chattotal))
 end
 
 return {

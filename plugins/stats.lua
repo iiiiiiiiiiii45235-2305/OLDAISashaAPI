@@ -163,7 +163,7 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    return sendMessage(msg.chat.id, real_chat_stats(msg.chat.id, msg.lang))
+                    return real_chat_stats(msg.chat.id, msg.lang)
                 end
             else
                 return langs[msg.lang].require_mod
@@ -173,7 +173,7 @@ local function run(msg, matches)
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    return sendMessage(msg.chat.id, chat_stats2(matches[3], msg.lang))
+                    return chat_stats2(matches[3], msg.lang)
                 end
             else
                 return langs[msg.lang].require_admin

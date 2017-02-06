@@ -710,10 +710,10 @@ function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id
     local file_path = tempDownloadFile(url_to_download, false)
     if not file_path then
         -- Error
-        sendMessage(chat_id, langs[get_lang(chat_id)].errorFileDownload)
+        return langs[get_lang(chat_id)].errorFileDownload
     else
         print("File path: " .. file_path)
-        sendPhoto(chat_id, file_path, caption, reply_to_message_id)
+        return sendPhoto(chat_id, file_path, caption, reply_to_message_id)
     end
 end
 
@@ -723,7 +723,7 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
     local file_path = tempDownloadFile(url_to_download, false)
     if not file_path then
         -- Error
-        sendMessage(chat_id, langs[get_lang(chat_id)].errorFileDownload)
+        return langs[get_lang(chat_id)].errorFileDownload
     else
         print("File path: " .. file_path)
         sendDocument(chat_id, file_path, reply_to_message_id)
@@ -1063,11 +1063,10 @@ function getUserWarns(user_id, chat_id)
 
     if hashonredis then
         warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
-        sendMessage(chat_id, warn_msg)
     else
         warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0')
-        sendMessage(chat_id, warn_msg)
     end
+    return warn_msg
 end
 
 function warnUser(executer, target, chat_id)
@@ -1095,14 +1094,14 @@ function warnUser(executer, target, chat_id)
                 savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
                 return banUser(executer, target, chat_id)
             end
-            sendMessage(chat_id, string.gsub(langs[lang].warned, 'X', tostring(hashonredis)))
+            return string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
         else
             return banUser(executer, target, chat_id)
         end
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
     else
-        sendMessage(chat_id, langs[lang].require_rank)
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " N")
+        return langs[lang].require_rank
     end
 end
 
@@ -1110,17 +1109,17 @@ function unwarnUser(executer, target, chat_id)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         local warns = redis:get(chat_id .. ':warn:' .. target)
+        savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
         if tonumber(warns) <= 0 then
             redis:set(chat_id .. ':warn:' .. target, 0)
-            sendMessage(chat_id, langs[lang].alreadyZeroWarnings)
+            return langs[lang].alreadyZeroWarnings
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
-            sendMessage(chat_id, langs[lang].unwarned)
+            return langs[lang].unwarned
         end
-        savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
     else
-        sendMessage(chat_id, langs[lang].require_rank)
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " N")
+        return langs[lang].require_rank
     end
 end
 
@@ -1129,10 +1128,10 @@ function unwarnallUser(executer, target, chat_id)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
-        sendMessage(chat_id, langs[lang].zeroWarnings)
+        return langs[lang].zeroWarnings
     else
-        sendMessage(chat_id, langs[lang].require_rank)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")
+        return langs[lang].require_rank
     end
 end
 

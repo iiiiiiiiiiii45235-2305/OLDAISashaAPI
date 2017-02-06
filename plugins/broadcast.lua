@@ -1,19 +1,19 @@
 ﻿local function run(msg, matches)
     if matches[1] == 'br' then
-        mystat('/br')
         if is_admin(msg) then
-            sendMessage(matches[2], matches[3])
+            mystat('/br')
+            return sendMessage(matches[2], matches[3])
         else
             return langs[msg.lang].require_admin
         end
     end
     if matches[1] == 'broadcast' then
-        mystat('/broadcast')
         if is_sudo(msg) then
-            -- Only sudo!
+            mystat('/broadcast')
             for k, v in pairs(data['groups']) do
                 sendMessage(v, matches[2])
             end
+            return
         else
             return langs[msg.lang].require_sudo
         end

@@ -679,7 +679,7 @@ return {
             'OWNER',
             '#bot|sasha on|off: Sasha si attiva|disattiva.',
             'ADMIN',
-            '#bot|sasha <group_id> on|off: Sasha si attiva|disattiva nel gruppo specificato.',
+            '#bot|sasha on|off [<group_id>]: Sasha si attiva|disattiva nel gruppo specificato.',
         },
 
         broadcast =
@@ -1641,7 +1641,7 @@ return {
             'OWNER',
             '#bot|sasha on|off: Sasha goes on|off on the group.',
             'ADMIN',
-            '#bot|sasha <group_id> on|off: Sasha goes on|off on the specified group.',
+            '#bot|sasha on|off [<group_id>]: Sasha goes on|off in the specified group.',
         },
 
         broadcast =

@@ -685,14 +685,6 @@ function msg_valid(msg)
                 print(clr.yellow .. 'Not valid: not sudo message' .. clr.reset)
                 return false
             end
-            -- very slow
-            --[[if not sudoInChat(msg.chat.id) then
-                print(clr.yellow .. 'Not valid: no sudo in chat, bot leaves' .. clr.reset)
-                sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
-                leaveChat(msg.chat.id)
-                return false
-            end
-            ]]
         end
     end
 
@@ -876,7 +868,7 @@ function match_plugin(plugin, plugin_name, msg)
                 local res, err = pcall( function()
                     local result = plugin.run(msg, matches)
                     if result then
-                        sendMessage(msg.chat.id, result)
+                        sendReply(msg, result)
                     end
                 end )
                 if not res then

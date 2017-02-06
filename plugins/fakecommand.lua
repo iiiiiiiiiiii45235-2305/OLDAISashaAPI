@@ -3,9 +3,9 @@
 local function run(msg, matches)
     local rank = get_rank(msg.from.id, msg.chat.id)
     if rank > 0 then
-        mystat('/fakecommand')
         local fakerank = rank_table[matches[1]:upper()]
         if fakerank <= rank then
+            mystat('/fakecommand')
             -- yes
             -- remove "[#!/]<rank> " from message so it's like a normal message
             msg.text = msg.text:gsub('#' .. matches[1] .. ' ', '')

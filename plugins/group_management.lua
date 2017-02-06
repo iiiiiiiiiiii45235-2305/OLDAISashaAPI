@@ -197,7 +197,7 @@ local function addGroup(msg)
                 end
                 save_data(config.moderation.data, data)
             end
-            return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
+            return langs[msg.lang].groupAddedOwner
         end
     end
 end
@@ -215,7 +215,7 @@ local function remGroup(msg)
     end
     data['groups'][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
-    return sendMessage(msg.chat.id, langs[msg.lang].groupRemoved)
+    return langs[msg.lang].groupRemoved
 end
 
 local function addRealm(msg)
@@ -275,7 +275,7 @@ local function addRealm(msg)
                     end
                     data['realms'][tostring(msg.chat.id)] = msg.chat.id
                     save_data(config.moderation.data, data)
-                    return sendMessage(msg.chat.id, langs[msg.lang].realmAdded)
+                    return langs[msg.lang].realmAdded
                 end
             end
         end
@@ -295,7 +295,7 @@ local function remRealm(msg)
     end
     data['realms'][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
-    return sendMessage(msg.chat.id, langs[msg.lang].realmRemoved)
+    return langs[msg.lang].realmRemoved
 end
 
 local function addSuperGroup(msg)
@@ -367,7 +367,7 @@ local function addSuperGroup(msg)
                 end
                 save_data(config.moderation.data, data)
             end
-            return sendMessage(msg.chat.id, langs[msg.lang].groupAddedOwner)
+            return langs[msg.lang].groupAddedOwner
         end
     end
 end
@@ -385,7 +385,7 @@ local function remSuperGroup(msg)
     end
     data['groups'][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
-    return sendMessage(msg.chat.id, langs[msg.lang].supergroupRemoved)
+    return langs[msg.lang].supergroupRemoved
 end
 -- end ADD/REM GROUPS
 
@@ -397,11 +397,11 @@ local function promoteAdmin(user, chat_id)
         save_data(config.moderation.data, data)
     end
     if data.admins[tostring(user.id)] then
-        return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].alreadyAdmin)
+        return(user.username or user.print_name) .. langs[lang].alreadyAdmin
     end
     data.admins[tostring(user.id)] =(user.username or user.print_name)
     save_data(config.moderation.data, data)
-    return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].promoteAdmin)
+    return(user.username or user.print_name) .. langs[lang].promoteAdmin
 end
 
 local function demoteAdmin(user, chat_id)
@@ -411,11 +411,11 @@ local function demoteAdmin(user, chat_id)
         save_data(config.moderation.data, data)
     end
     if not data.admins[tostring(user.id)] then
-        return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].notAdmin)
+        return(user.username or user.print_name) .. langs[lang].notAdmin
     end
     data.admins[tostring(user.id)] = nil
     save_data(config.moderation.data, data)
-    return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].demoteAdmin)
+    return(user.username or user.print_name) .. langs[lang].demoteAdmin
 end
 
 local function botAdminsList(chat_id)
@@ -428,7 +428,7 @@ local function botAdminsList(chat_id)
     for k, v in pairs(data.admins) do
         message = message .. v .. ' - ' .. k .. '\n'
     end
-    return sendMessage(chat_id, message)
+    return message
 end
 
 local function setOwner(user, chat_id)
@@ -452,27 +452,27 @@ end
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
-        return sendMessage(chat_id, langs[lang].groupNotAdded)
+        return langs[lang].groupNotAdded
     end
     if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
-        return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].alreadyMod)
+        return(user.username or user.print_name) .. langs[lang].alreadyMod
     end
     data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name)
     save_data(config.moderation.data, data)
-    return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].promoteMod)
+    return(user.username or user.print_name) .. langs[lang].promoteMod
 end
 
 local function demoteMod(chat_id, user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
-        return sendMessage(chat_id, langs[lang].groupNotAdded)
+        return langs[lang].groupNotAdded
     end
     if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
-        return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].notMod)
+        return(user.username or user.print_name) .. langs[lang].notMod
     end
     data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
     save_data(config.moderation.data, data)
-    return sendMessage(chat_id,(user.username or user.print_name) .. langs[lang].demoteMod)
+    return(user.username or user.print_name) .. langs[lang].demoteMod
 end
 
 local function modList(msg)
@@ -803,7 +803,7 @@ local function run(msg, matches)
                 end
                 data[tostring('groups')][tostring(matches[2])] = nil
                 save_data(config.moderation.data, data)
-                return sendMessage(msg.chat.id, langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed)
+                return langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed
             else
                 return langs[msg.lang].require_admin
             end
@@ -954,7 +954,7 @@ local function run(msg, matches)
                 data[tostring(matches[2])].set_owner = matches[3]
                 save_data(config.moderation.data, data)
                 sendMessage(matches[2], matches[3] .. langs[lang].setOwner)
-                return sendMessage(msg.chat.id, matches[3] .. langs[lang].setOwner)
+                return matches[3] .. langs[lang].setOwner
             else
                 return langs[msg.lang].require_admin
             end
@@ -971,7 +971,7 @@ local function run(msg, matches)
                 if msg.chat.type == 'group' then
                     mystat('/add')
                     if is_group(msg) then
-                        return sendReply(msg, langs[msg.lang].groupAlreadyAdded)
+                        return langs[msg.lang].groupAlreadyAdded
                     end
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added group [ " .. msg.chat.id .. " ]")
                     print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
@@ -979,7 +979,7 @@ local function run(msg, matches)
                 elseif msg.chat.type == 'supergroup' then
                     mystat('/add')
                     if is_super_group(msg) then
-                        return sendReply(msg, langs[msg.lang].supergroupAlreadyAdded)
+                        return langs[msg.lang].supergroupAlreadyAdded
                     end
                     print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added SuperGroup")
@@ -1013,7 +1013,7 @@ local function run(msg, matches)
                 end
                 if msg.chat.type == 'group' then
                     if not is_group(msg) then
-                        return sendReply(msg, langs[msg.lang].groupRemoved)
+                        return langs[msg.lang].groupRemoved
                     end
                     mystat('/rem')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed group [ " .. msg.chat.id .. " ]")
@@ -1021,7 +1021,7 @@ local function run(msg, matches)
                     return remGroup(msg)
                 elseif msg.chat.type == 'supergroup' then
                     if not is_super_group(msg) then
-                        return sendReply(msg, langs[msg.lang].supergroupRemoved)
+                        return langs[msg.lang].supergroupRemoved
                     end
                     mystat('/rem')
                     print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")

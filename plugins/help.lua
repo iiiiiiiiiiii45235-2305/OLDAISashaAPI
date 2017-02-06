@@ -197,24 +197,24 @@ local function run(msg, matches)
             langs[lang].totalMessages .. msgs
             text = text .. '\n🆔: ' .. user.id .. '\n\n'
         end
-        return sendMessage(msg.chat.id, text)
+        return text
     end
 
     table.sort(plugins)
     if matches[1]:lower() == "helpall" or matches[1]:lower() == "sasha aiuto tutto" then
         mystat('/helpall')
-        return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+        return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
     end
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
             mystat('/help')
-            return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
         else
             mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
             if temp ~= nil then
                 if temp ~= '' then
-                    return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. temp)
+                    return langs[msg.lang].helpIntro .. temp
                 else
                     return langs[msg.lang].require_higher
                 end
@@ -226,16 +226,16 @@ local function run(msg, matches)
 
     if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
         mystat('/syntaxall')
-        return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+        return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
     end
     if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
         local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id), matches[2])
         if text == '' then
-            return sendMessage(msg.chat.id, langs[msg.lang].commandNotFound)
+            return langs[msg.lang].commandNotFound
         else
-            return sendMessage(msg.chat.id, langs[msg.lang].helpIntro .. text)
+            return langs[msg.lang].helpIntro .. text
         end
     end
 end

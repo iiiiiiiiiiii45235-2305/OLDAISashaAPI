@@ -54,7 +54,7 @@ function run(msg, matches)
                 file:write(matches[3])
                 file:flush()
                 file:close()
-                sendMessage(msg.chat.id, langs[msg.lang].fileCreatedWithContent:gsub("X", matches[3]))
+                langs[msg.lang].fileCreatedWithContent:gsub("X", matches[3])
             end
             if matches[1]:lower() == 'shell' and matches[2] then
                 mystat('/shell')
@@ -115,7 +115,7 @@ function run(msg, matches)
                     return langs[msg.lang].useQuoteOnFile
                 end
             end
-            return sendMessage(msg.chat.id, action)
+            return action
         else
             redis:set('api:folder', '')
             return langs[msg.lang].youAreHere .. BASE_FOLDER

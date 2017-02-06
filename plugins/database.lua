@@ -129,7 +129,7 @@ local function run(msg, matches)
             f:write('{}')
             f:close()
             database = load_data(config.database.db)
-            return sendReply(msg, langs[msg.lang].dbCreated)
+            return langs[msg.lang].dbCreated
         end
 
         if matches[1]:lower() == 'dodatabase' or matches[1]:lower() == 'sasha esegui database' then
@@ -156,13 +156,13 @@ local function run(msg, matches)
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
                                 if database[tostring(msg.reply_to_message.forward_from.id)] then
-                                    return sendMessage(msg.chat.id, serpent.block(database[tostring(msg.reply_to_message.forward_from.id)], { sortkeys = false, comment = false }))
+                                    return serpent.block(database[tostring(msg.reply_to_message.forward_from.id)], { sortkeys = false, comment = false })
                                 else
                                     return matches[2] .. langs[msg.lang].notFound
                                 end
                             elseif msg.reply_to_message.forward_from_chat then
                                 if database[tostring(msg.reply_to_message.forward_from_chat.id)] then
-                                    return sendMessage(msg.chat.id, serpent.block(database[tostring(msg.reply_to_message.forward_from_chat.id)], { sortkeys = false, comment = false }))
+                                    return serpent.block(database[tostring(msg.reply_to_message.forward_from_chat.id)], { sortkeys = false, comment = false })
                                 else
                                     return matches[2] .. langs[msg.lang].notFound
                                 end
@@ -173,7 +173,7 @@ local function run(msg, matches)
                     end
                 else
                     if database[tostring(msg.reply_to_message.from.id)] then
-                        return sendMessage(msg.chat.id, serpent.block(database[tostring(msg.reply_to_message.from.id)], { sortkeys = false, comment = false }))
+                        return serpent.block(database[tostring(msg.reply_to_message.from.id)], { sortkeys = false, comment = false })
                     else
                         return matches[2] .. langs[msg.lang].notFound
                     end
@@ -181,7 +181,7 @@ local function run(msg, matches)
             end
             if string.match(matches[2], '^%d+$') then
                 if database[tostring(matches[2])] then
-                    return sendMessage(msg.chat.id, serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false }))
+                    return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
                 else
                     return matches[2] .. langs[msg.lang].notFound
                 end
@@ -190,7 +190,7 @@ local function run(msg, matches)
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         if database[tostring(obj_user.id)] then
-                            return sendMessage(msg.chat.id, serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false }))
+                            return serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false })
                         else
                             return matches[2] .. langs[msg.lang].notFound
                         end
