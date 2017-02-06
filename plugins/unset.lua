@@ -38,7 +38,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'unset' or matches[1]:lower() == 'sasha unsetta' or matches[1]:lower() == 'unsetta' then
         mystat('/unset')
         if msg.from.is_mod then
-            return unset_var(msg, string.sub(matches[2], 1, 50), false)
+            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), '_', ''), false)
         else
             return langs[msg.lang].require_mod
         end
@@ -57,11 +57,11 @@ return {
     description = "UNSET",
     patterns =
     {
-        "^[#!/]([Uu][Nn][Ss][Ee][Tt]) ([^%s]+)$",
-        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll]) ([^%s]+)$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt]) (.*)$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll]) (.*)$",
         -- unset
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Nn][Ss][Ee][Tt][Tt][Aa]) ([^%s]+)$",
-        "^([Uu][Nn][Ss][Ee][Tt][Tt][Aa]) ([^%s]+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Nn][Ss][Ee][Tt][Tt][Aa]) (.*)$",
+        "^([Uu][Nn][Ss][Ee][Tt][Tt][Aa]) (.*)$",
     },
     run = run,
     min_rank = 1,
