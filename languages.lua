@@ -227,6 +227,16 @@ return {
         mutesSet = 'Muti impostati.',
         noAutoKick = 'Non puoi rimuoverti da solo.',
         noAutoBan = 'Non puoi bannarti da solo.',
+        errorWarnRange = 'Errore, il range è [0-10].',
+        warnSet = 'Il warn è stato impostato a ',
+        neverWarn = 'Gli avvertimenti non funzioneranno più.',
+        noWarnSet = 'Il warn non è ancora stato impostato.',
+        cantWarnHigher = 'Non puoi avvertire un mod/owner/admin/sudo!',
+        warned = 'X avvertimenti, datti una regolata!',
+        unwarned = '-1 avvertimento, continua così!',
+        alreadyZeroWarnings = 'Già a zero avvertimenti.',
+        zeroWarnings = 'Avvertimenti azzerati.',
+        yourWarnings = 'X avvertimenti su un massimo di Y.',
 
         -- administrator.lua --
         sendNewPic = 'Mandami la nuova foto.',
@@ -590,18 +600,6 @@ return {
         -- unset.lua --
         deleted = ' eliminato.',
         gDeleted = ' variabile globale eliminata.',
-
-        -- warn.lua --
-        errorWarnRange = 'Errore, il range è [0-10].',
-        warnSet = 'Il warn è stato impostato a ',
-        neverWarn = 'Gli avvertimenti non funzioneranno più.',
-        noWarnSet = 'Il warn non è ancora stato impostato.',
-        cantWarnHigher = 'Non puoi avvertire un mod/owner/admin/sudo!',
-        warned = 'X avvertimenti, datti una regolata!',
-        unwarned = '-1 avvertimento, continua così!',
-        alreadyZeroWarnings = 'Già a zero avvertimenti.',
-        zeroWarnings = 'Avvertimenti azzerati.',
-        yourWarnings = 'X avvertimenti su un massimo di Y.',
 
         -- whitelist.lua --
         userBot = 'Utente/Bot ',
@@ -1188,6 +1186,16 @@ return {
         disabled = ' disabled',
         noAutoKick = 'You can\'t kick yourself.',
         noAutoBan = 'You can\'t ban yourself.',
+        errorWarnRange = 'Error, range is [0-10].',
+        warnSet = 'Warn has been set to ',
+        neverWarn = 'Warn will not work anymore.',
+        noWarnSet = 'Warn hasn\t been set yet.',
+        cantWarnHigher = 'You can\'t warn mod/owner/admin/sudo!',
+        warned = 'Warned X times, calm down!',
+        unwarned = 'One warn has been deleted, keep it up!',
+        alreadyZeroWarnings = 'Already zero warnings.',
+        zeroWarnings = 'Warnings removed.',
+        yourWarnings = 'X warnings on Y.',
 
         -- administrator.lua --
         sendNewPic = 'Send me the new picture.',
@@ -1552,18 +1560,6 @@ return {
         -- unset.lua --
         deleted = ' deleted.',
         gDeleted = ' global variable deleted.',
-
-        -- warn.lua --
-        errorWarnRange = 'Error, range is [0-10].',
-        warnSet = 'Warn has been set to ',
-        neverWarn = 'Warn will not work anymore.',
-        noWarnSet = 'Warn hasn\t been set yet.',
-        cantWarnHigher = 'You can\'t warn mod/owner/admin/sudo!',
-        warned = 'Warned X times, calm down!',
-        unwarned = 'One warn has been deleted, keep it up!',
-        alreadyZeroWarnings = 'Already zero warnings.',
-        zeroWarnings = 'Warnings removed.',
-        yourWarnings = 'X warnings on Y.',
 
         -- whitelist.lua --
         userBot = 'User/Bot ',
