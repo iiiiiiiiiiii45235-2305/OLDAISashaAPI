@@ -1078,13 +1078,16 @@ function warnUser(executer, target, chat_id)
         if not hashonredis then
             redis:set(chat_id .. ':warn:' .. target, 1)
             hashonredis = 1
+            print(1)
         end
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
         if tonumber(warn_chat) ~= 0 then
+            print(2)
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 return banUser(executer, target, chat_id)
             end
+            print(3)
             return string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
         else
             return banUser(executer, target, chat_id)
