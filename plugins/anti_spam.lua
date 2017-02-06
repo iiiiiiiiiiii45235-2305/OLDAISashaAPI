@@ -88,7 +88,7 @@ local function pre_process(msg)
                         -- Block user if spammed in private
                         sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
                         savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
-                        blockUser(msg.from.id, msg.lang)
+                        sendMessage(msg.chat.id, blockUser(msg.from.id, msg.lang))
                     end
                 end
                 if kicktable[msg.from.id] == true then
@@ -106,12 +106,12 @@ local function pre_process(msg)
                 if string.match(getWarn(msg.chat.id), "%d+") then
                     local result = warnUser(bot.id, msg.from.id, msg.chat.id)
                     if not result then
-                        kickUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
                     end
                 elseif not strict then
-                    kickUser(bot.id, msg.from.id, msg.chat.id)
+                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
                 else
-                    banUser(bot.id, msg.from.id, msg.chat.id)
+                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                 end
                 local username = msg.from.username
                 if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then

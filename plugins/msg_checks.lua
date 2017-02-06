@@ -77,7 +77,7 @@ local function check_msg(msg, settings)
             print('muted user')
             deleteMessage(msg)
             if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
             end
             msg = clean_msg(msg)
             return msg
@@ -86,7 +86,7 @@ local function check_msg(msg, settings)
             print('all muted')
             deleteMessage(msg)
             if msg.chat.type == 'group' then
-                banUser(bot.id, msg.from.id, msg.chat.id)
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
             end
             msg = clean_msg(msg)
             return msg
@@ -283,11 +283,11 @@ local function check_msg(msg, settings)
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
                     return msg
@@ -299,10 +299,10 @@ local function check_msg(msg, settings)
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
                     return msg
@@ -311,9 +311,9 @@ local function check_msg(msg, settings)
                     print('member locked')
                     deleteMessage(msg)
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#lockmember)")
-                    banUser(bot.id, msg.from.id, msg.chat.id)
+                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
                     return msg
@@ -324,11 +324,11 @@ local function check_msg(msg, settings)
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
-                        banUser(bot.id, msg.added.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
-                        banUser(bot.id, msg.added.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
                     return msg
@@ -340,10 +340,10 @@ local function check_msg(msg, settings)
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
-                        banUser(bot.id, msg.added.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.added.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
                     return msg
@@ -351,11 +351,11 @@ local function check_msg(msg, settings)
                 if msg.chat.type == 'supergroup' and lock_member then
                     print('member locked')
                     deleteMessage(msg)
-                    warnUser(bot.id, msg.adder.id, msg.chat.id)
+                    sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id))
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
-                    banUser(bot.id, msg.added.id, msg.chat.id)
+                    sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     if msg.chat.type == 'group' then
-                        banUser(bot.id, msg.added.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
                     return msg

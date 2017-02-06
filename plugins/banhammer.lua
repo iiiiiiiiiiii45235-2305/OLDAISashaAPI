@@ -602,7 +602,7 @@ local function pre_process(msg)
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
                         -- Save to logs
-                        banUser(bot.id, msg.from.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                 end
                 -- Check if banned user joins chat
@@ -613,18 +613,18 @@ local function pre_process(msg)
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
                         -- Save to logs
-                        banUser(bot.id, msg.added.id, msg.chat.id)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                         local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                         redis:incr(banhash)
                         local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                         local banaddredis = redis:get(banhash)
                         if banaddredis then
                             if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
-                                kickUser(bot.id, msg.from.id, msg.chat.id)
+                                sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
                                 -- Kick user who adds ban ppl more than 3 times
                             end
                             if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                                banUser(bot.id, msg.from.id, msg.chat.id)
+                                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                                 -- Ban user who adds ban ppl more than 7 times
                                 local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                                 redis:set(banhash, 0)
@@ -647,7 +647,7 @@ local function pre_process(msg)
                                     --- Will kick bots added by normal users
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
                                     -- Save to logs
-                                    banUser(bot.id, msg.added.id, msg.chat.id)
+                                    sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                                 end
                             end
                         end
@@ -664,7 +664,7 @@ local function pre_process(msg)
                 print('Banned user talking!')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs
-                banUser(bot.id, msg.from.id, msg.chat.id)
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                 msg = clean_msg(msg)
             end
         end
