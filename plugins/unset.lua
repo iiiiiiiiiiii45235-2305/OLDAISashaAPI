@@ -38,7 +38,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'unset' or matches[1]:lower() == 'sasha unsetta' or matches[1]:lower() == 'unsetta' then
         mystat('/unset')
         if msg.from.is_mod then
-            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), '_', ''):lower(), false)
+            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), '_', ' '):lower(), false)
         else
             return langs[msg.lang].require_mod
         end
@@ -46,7 +46,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'unsetglobal' then
         mystat('/unsetglobal')
         if is_admin(msg) then
-            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), '_', ''):lower(), true)
+            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), '_', ' '):lower(), true)
         else
             return langs[msg.lang].require_admin
         end
