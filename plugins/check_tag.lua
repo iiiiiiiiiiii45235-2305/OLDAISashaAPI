@@ -171,7 +171,7 @@ local function pre_process(msg)
                             end
                             if msg.media then
                                 if msg.caption then
-                                    text = text .. msg.media.caption
+                                    text = text .. msg.caption
                                 end
                             end
                             sendMessage(user.id, text)
@@ -207,7 +207,7 @@ local function pre_process(msg)
                                 end
                                 if msg.media then
                                     if msg.caption then
-                                        text = text .. msg.media.caption
+                                        text = text .. msg.caption
                                     end
                                 end
                                 sendMessage(usernames[i], text)
@@ -241,7 +241,7 @@ local function pre_process(msg)
                                 end
                                 if msg.media then
                                     if msg.caption then
-                                        text = text .. msg.media.caption
+                                        text = text .. msg.caption
                                     end
                                 end
                                 sendMessage(nicknames[i], text)
