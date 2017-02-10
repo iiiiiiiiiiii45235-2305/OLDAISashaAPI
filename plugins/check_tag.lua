@@ -222,29 +222,37 @@ local function pre_process(msg)
                         if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags of tg-cli version
                             if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
-                                local lang = get_lang(nicknames[i])
-                                -- set user as notified to not send multiple notifications
-                                notified[tostring(nicknames[i])] = true
-                                if msg.reply then
-                                    forwardMessage(nicknames[i], msg.chat.id, msg.reply_to_message.message_id)
-                                end
-                                local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
-                                if msg.from.username then
-                                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                                else
-                                    text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-                                end
-                                text = text .. langs[lang].msgText
+                                local obj = getChatMember(msg.chat.id, nicknames[i])
+                                if type(obj) == 'table' then
+                                    if obj.ok and obj.result then
+                                        obj = obj.result
+                                        if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' then
+                                            local lang = get_lang(nicknames[i])
+                                            -- set user as notified to not send multiple notifications
+                                            notified[tostring(nicknames[i])] = true
+                                            if msg.reply then
+                                                forwardMessage(nicknames[i], msg.chat.id, msg.reply_to_message.message_id)
+                                            end
+                                            local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
+                                            if msg.from.username then
+                                                text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+                                            else
+                                                text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
+                                            end
+                                            text = text .. langs[lang].msgText
 
-                                if msg.text then
-                                    text = text .. msg.text
-                                end
-                                if msg.media then
-                                    if msg.caption then
-                                        text = text .. msg.caption
+                                            if msg.text then
+                                                text = text .. msg.text
+                                            end
+                                            if msg.media then
+                                                if msg.caption then
+                                                    text = text .. msg.caption
+                                                end
+                                            end
+                                            sendMessage(nicknames[i], text)
+                                        end
                                     end
                                 end
-                                sendMessage(nicknames[i], text)
                             end
                         end
                     end
