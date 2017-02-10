@@ -95,12 +95,17 @@ function getChatMembersCount(chat_id)
 end
 
 function getChatMember(chat_id, user_id)
-    local obj = getChat(chat_id)
-    if type(obj) == 'table' then
-        if obj.type ~= 'bot' and obj.type ~= 'private' and obj.type ~= 'user' then
-            local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
-            return sendRequest(url)
+    if not string.match(user_id, '^%*%d') then
+        local obj = getChat(chat_id)
+        if type(obj) == 'table' then
+            if obj.type ~= 'bot' and obj.type ~= 'private' and obj.type ~= 'user' then
+                local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+                return sendRequest(url)
+            end
         end
+    else
+        local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
+        return fake_user
     end
 end
 
@@ -802,7 +807,7 @@ function getChat(id_or_username)
         end
         return nil
     else
-        local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username }
+        local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username, type = 'fake' }
         return fake_user
     end
 end

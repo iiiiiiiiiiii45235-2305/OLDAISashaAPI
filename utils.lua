@@ -249,7 +249,7 @@ function remove_duplicates(t)
 
         return k_table
     end
-end		
+end
 
 function get_date(timestamp)
     if not timestamp then
