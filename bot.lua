@@ -190,6 +190,12 @@ function bot_init()
     data = nil
 
     config = load_config()
+    local file = io.open('bot_api_key.txt', "r")
+    if file then
+        -- read all contents of file into a string
+        config.bot_api_key = file:read()
+        file:close()
+    end
     if config.bot_api_key == '' then
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return

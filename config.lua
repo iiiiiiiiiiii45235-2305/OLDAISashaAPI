@@ -1,5 +1,4 @@
 return {
-    bot_api_key = '',
     log_chat = - 1001043389864,
     vardump_chat = - 167065200,
     channel = '@AISashaChannel',
@@ -11,7 +10,6 @@ return {
         'anti_spam',
         'msg_checks',
         'onservice',
-        -- THIS HAVE TO BE THE FIRST THREE: IF AN USER IS SPAMMING/IS BLOCKED, THE BOT WON'T GO THROUGH PLUGINS
         'administrator',
         'banhammer',
         'bot',
