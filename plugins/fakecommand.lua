@@ -8,7 +8,7 @@ local function run(msg, matches)
             -- yes
             mystat('/fakecommand')
             -- remove "[#!/]<rank> " from message so it's like a normal message
-            copied_msg = msg
+            local copied_msg = msg
             copied_msg.text = copied_msg.text:gsub('#' .. matches[1] .. ' ', '')
             copied_msg.text = copied_msg.text:gsub('!' .. matches[1] .. ' ', '')
             copied_msg.text = copied_msg.text:gsub('/' .. matches[1] .. ' ', '')
