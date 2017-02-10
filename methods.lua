@@ -801,6 +801,8 @@ function getChat(id_or_username)
             return obj
         end
         return nil
+    else
+        return { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username }
     end
 end
 
