@@ -756,7 +756,7 @@ end
 -- *** END PWRTELEGRAM API FUNCTIONS ***
 
 function getChat(id_or_username)
-    if not string.match(id_or_username, '^%*.*') then
+    if not string.match(id_or_username, '^%*%d') then
         local obj = nil
         local ok = false
         if not ok then
