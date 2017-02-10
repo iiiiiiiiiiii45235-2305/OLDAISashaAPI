@@ -756,18 +756,39 @@ end
 -- *** END PWRTELEGRAM API FUNCTIONS ***
 
 function getChat(id_or_username)
-    local obj = nil
-    local ok = false
-    if not ok then
-        local hash = 'bot:usernames'
-        local stored = nil
-        if type(id_or_username) == 'string' then
-            stored = redis:hget(hash, id_or_username:lower())
-        else
-            stored = redis:hget(hash, id_or_username)
+    if not string.match(id_or_username, '^%*.*') then
+        local obj = nil
+        local ok = false
+        if not ok then
+            local hash = 'bot:usernames'
+            local stored = nil
+            if type(id_or_username) == 'string' then
+                stored = redis:hget(hash, id_or_username:lower())
+            else
+                stored = redis:hget(hash, id_or_username)
+            end
+            if stored then
+                obj = APIgetChat(stored)
+                if type(obj) == 'table' then
+                    if obj.result then
+                        obj = obj.result
+                        ok = true
+                        saveUsername(obj)
+                    end
+                end
+            end
         end
-        if stored then
-            obj = APIgetChat(stored)
+        if not ok then
+            obj = APIgetChat(id_or_username)
+            if type(obj) == 'table' then
+                if obj.result then
+                    obj = obj.result
+                    ok = true
+                end
+            end
+        end
+        if not ok then
+            obj = resolveChat(id_or_username)
             if type(obj) == 'table' then
                 if obj.result then
                     obj = obj.result
@@ -776,30 +797,11 @@ function getChat(id_or_username)
                 end
             end
         end
-    end
-    if not ok then
-        obj = APIgetChat(id_or_username)
-        if type(obj) == 'table' then
-            if obj.result then
-                obj = obj.result
-                ok = true
-            end
+        if ok then
+            return obj
         end
+        return nil
     end
-    if not ok then
-        obj = resolveChat(id_or_username)
-        if type(obj) == 'table' then
-            if obj.result then
-                obj = obj.result
-                ok = true
-                saveUsername(obj)
-            end
-        end
-    end
-    if ok then
-        return obj
-    end
-    return nil
 end
 
 function getChatParticipants(chat_id)
@@ -1331,13 +1333,13 @@ function print_msg(msg, dont_print)
             end
             if msg.service then
                 if msg.service_type == 'chat_del_user' then
-                    print_text = print_text .. clr.red ..((msg.remover.first_name or msg.remover.id) ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..((msg.removed.first_name or '$Deleted Account$') ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
+                    print_text = print_text .. clr.red ..((msg.remover.first_name or 'FAKECOMMAND') ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..((msg.removed.first_name or '$Deleted Account$') ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
                 elseif msg.service_type == 'chat_del_user_leave' then
-                    print_text = print_text .. clr.red ..((msg.remover.first_name or msg.remover.id) ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
+                    print_text = print_text .. clr.red ..((msg.remover.first_name or 'FAKECOMMAND') ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
                 elseif msg.service_type == 'chat_add_user' then
-                    print_text = print_text .. clr.red ..((msg.adder.first_name or msg.adder.id) ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
+                    print_text = print_text .. clr.red ..((msg.adder.first_name or 'FAKECOMMAND') ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
                 elseif msg.service_type == 'chat_add_user_link' then
-                    print_text = print_text .. clr.red ..((msg.adder.first_name or msg.adder.id) ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
+                    print_text = print_text .. clr.red ..((msg.adder.first_name or 'FAKECOMMAND') ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
                 else
                     print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
                 end
