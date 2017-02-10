@@ -802,7 +802,8 @@ function getChat(id_or_username)
         end
         return nil
     else
-        return { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username }
+        local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username }
+        return fake_user
     end
 end
 
@@ -1335,13 +1336,13 @@ function print_msg(msg, dont_print)
             end
             if msg.service then
                 if msg.service_type == 'chat_del_user' then
-                    print_text = print_text .. clr.red ..((msg.remover.first_name or 'FAKECOMMAND') ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..((msg.removed.first_name or '$Deleted Account$') ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
+                    print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' deleted user ' .. clr.reset .. clr.red ..((msg.removed.first_name or '$Deleted Account$') ..(msg.removed.last_name or '')) .. ' ' .. clr.reset
                 elseif msg.service_type == 'chat_del_user_leave' then
-                    print_text = print_text .. clr.red ..((msg.remover.first_name or 'FAKECOMMAND') ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
+                    print_text = print_text .. clr.red ..(msg.remover.first_name ..(msg.remover.last_name or '')) .. clr.reset .. clr.blue .. ' left the chat ' .. clr.reset
                 elseif msg.service_type == 'chat_add_user' then
-                    print_text = print_text .. clr.red ..((msg.adder.first_name or 'FAKECOMMAND') ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
+                    print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' added user ' .. clr.reset .. clr.red ..(msg.added.first_name ..(msg.added.last_name or '')) .. ' ' .. clr.reset
                 elseif msg.service_type == 'chat_add_user_link' then
-                    print_text = print_text .. clr.red ..((msg.adder.first_name or 'FAKECOMMAND') ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
+                    print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
                 else
                     print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
                 end
