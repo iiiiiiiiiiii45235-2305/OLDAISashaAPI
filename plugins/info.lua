@@ -182,7 +182,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return get_reverse_rank(msg.chat.id, matches[2])
             else
-                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
+                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return get_reverse_rank(msg.chat.id, obj_user.id)
@@ -217,7 +217,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
-                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
+                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return is_here(msg.chat.id, obj_user.id)
@@ -279,7 +279,7 @@ local function run(msg, matches)
                         return get_object_info(obj, msg.chat.id)
                     end
                 else
-                    local obj = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
+                    local obj = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
                     return get_object_info(obj, msg.chat.id)
                 end
             else
