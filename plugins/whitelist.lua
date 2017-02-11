@@ -33,8 +33,8 @@ local function run(msg, matches)
                 mystat('/whitelist <user>')
                 if string.match(matches[2], '^%d+$') then
                     return whitelist_user(matches[2], msg.lang)
-                elseif string.match(matches[2], '^[^%s]+$') then
-                    local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
+                else
+                    local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return whitelist_user(obj_user.id, msg.lang)

@@ -131,8 +131,8 @@ local function run(msg, matches)
                 elseif matches[2] then
                     if string.match(matches[2], '^%d+$') then
                         return like(likedata, msg.chat.id, matches[2])
-                    elseif string.match(matches[2], '^[^%s]+$') then
-                        local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
+                    else
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return like(likedata, msg.chat.id, obj_user.id)
@@ -162,8 +162,8 @@ local function run(msg, matches)
                 elseif matches[2] then
                     if string.match(matches[2], '^%d+$') then
                         return dislike(likedata, msg.chat.id, matches[2])
-                    elseif string.match(matches[2], '^[^%s]+$') then
-                        local obj_user = getChat('@' .. matches[2]:gsub('@', ''))
+                    else
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return dislike(likedata, msg.chat.id, obj_user.id)
