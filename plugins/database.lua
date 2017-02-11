@@ -178,21 +178,22 @@ local function run(msg, matches)
                         return matches[2] .. langs[msg.lang].notFound
                     end
                 end
-            end
-            if string.match(matches[2], '^%d+$') then
-                if database[tostring(matches[2])] then
-                    return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
+            elseif matches[2] then
+                if string.match(matches[2], '^%d+$') then
+                    if database[tostring(matches[2])] then
+                        return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
+                    else
+                        return matches[2] .. langs[msg.lang].notFound
+                    end
                 else
-                    return matches[2] .. langs[msg.lang].notFound
-                end
-            else
-                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
-                if obj_user then
-                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                        if database[tostring(obj_user.id)] then
-                            return serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false })
-                        else
-                            return matches[2] .. langs[msg.lang].notFound
+                    local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+$'):gsub('@', ''))
+                    if obj_user then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                            if database[tostring(obj_user.id)] then
+                                return serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false })
+                            else
+                                return matches[2] .. langs[msg.lang].notFound
+                            end
                         end
                     end
                 end
