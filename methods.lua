@@ -250,7 +250,9 @@ end
 
 function sendMessage_SUDOERS(text, use_markdown)
     for v, user in pairs(sudoers) do
-        sendMessage(user.id, text, use_markdown, false, true)
+        if user.id ~= bot.userVersion.id then
+            sendMessage(user.id, text, use_markdown, false, true)
+        end
     end
 end
 
@@ -282,7 +284,9 @@ end
 
 function forwardMessage_SUDOERS(from_chat_id, message_id)
     for v, user in pairs(sudoers) do
-        forwardMessage(user.id, from_chat_id, message_id)
+        if user.id ~= bot.userVersion.id then
+            forwardMessage(user.id, from_chat_id, message_id)
+        end
     end
 end
 
@@ -626,7 +630,9 @@ end
 
 function sendDocument_SUDOERS(document)
     for v, user in pairs(sudoers) do
-        sendDocument(user.id, document)
+        if user.id ~= bot.userVersion.id then
+            sendDocument(user.id, document)
+        end
     end
 end
 
@@ -826,11 +832,13 @@ end
 
 function sudoInChat(chat_id)
     for v, user in pairs(sudoers) do
-        local member = getChatMember(chat_id, user.id)
-        if type(member) == 'table' then
-            if member.ok and member.result then
-                if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
-                    return true
+        if user.id ~= bot.userVersion.id then
+            local member = getChatMember(chat_id, user.id)
+            if type(member) == 'table' then
+                if member.ok and member.result then
+                    if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
+                        return true
+                    end
                 end
             end
         end
