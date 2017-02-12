@@ -679,6 +679,13 @@ end
 
 function msg_valid(msg)
     if not msg.bot then
+        if bot.userVersion then
+            if msg.from.id == bot.userVersion.id then
+                print(clr.yellow .. 'Not valid: my user version in a group' .. clr.reset)
+                return false
+            end
+        end
+
         if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
             -- if not a known group receive messages just from sudo
             local sudoMessage = false
@@ -691,13 +698,6 @@ function msg_valid(msg)
                 print(clr.yellow .. 'Not valid: not sudo message' .. clr.reset)
                 return false
             end
-        end
-    end
-
-    if bot.userVersion then
-        if msg.from.id == bot.userVersion.id then
-            print(clr.yellow .. 'Not valid: my user version' .. clr.reset)
-            return false
         end
     end
 
