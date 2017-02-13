@@ -903,6 +903,8 @@ function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
+        -- deletes all previous backups (they're in telegram so no problem)
+        io.popen('rm \'/home/pi/BACKUPS/*\''):read("*all")
 
         -- AISASHAAPI
 
