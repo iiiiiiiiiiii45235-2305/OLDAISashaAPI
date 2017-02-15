@@ -103,22 +103,23 @@ local function pre_process(msg)
                         end
                     end
                 end
+                local text = ''
                 if string.match(getWarn(msg.chat.id), "%d+") then
-                    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id))
-                    kickUser(bot.id, msg.from.id, msg.chat.id)
+                    text = warnUser(bot.id, msg.from.id, msg.chat.id)
+                    text = text .. '\n' .. kickUser(bot.id, msg.from.id, msg.chat.id)
                 elseif not strict then
-                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
+                    text = kickUser(bot.id, msg.from.id, msg.chat.id)
                 else
-                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                    text = banUser(bot.id, msg.from.id, msg.chat.id)
                 end
                 local username = msg.from.username
                 if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                     if msg.from.username then
                         savelog(msg.chat.id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
-                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
+                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)\n" .. text)
                     else
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
-                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)")
+                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)\n" .. text)
                     end
                 end
                 -- incr it on redis
