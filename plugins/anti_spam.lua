@@ -56,7 +56,7 @@ local function pre_process(msg)
 
         if not msg.edited then
             -- Check flood
-            local hash = 'user:' .. msg.from.id .. ':msgs'
+            local hash = 'api:user:' .. msg.from.id .. ':msgs'
             local msgs = tonumber(redis:get(hash) or 0)
             local NUM_MSG_MAX = 5
             local strict = false
