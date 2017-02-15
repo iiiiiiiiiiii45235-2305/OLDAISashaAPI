@@ -105,7 +105,7 @@ local function pre_process(msg)
                 end
                 if string.match(getWarn(msg.chat.id), "%d+") then
                     sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id))
-                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
+                    kickUser(bot.id, msg.from.id, msg.chat.id)
                 elseif not strict then
                     sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
                 else
