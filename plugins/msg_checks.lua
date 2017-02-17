@@ -25,6 +25,7 @@ end
 
 local function clean_msg(msg)
     -- clean msg but returns it
+    msg.cleaned = true
     if msg.text then
         msg.text = ''
     end
@@ -80,7 +81,7 @@ local function check_msg(msg, settings)
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
             end
             msg = clean_msg(msg)
-            return msg
+            return nil
         end
         if mute_all then
             print('all muted')
@@ -89,14 +90,14 @@ local function check_msg(msg, settings)
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
             end
             msg = clean_msg(msg)
-            return msg
+            return nil
         end
         if msg.text then
             if mute_text then
                 print('text muted')
                 action(msg, strict)
                 msg = clean_msg(msg)
-                return msg
+                return nil
             end
             -- msg.text checks
             local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
@@ -105,7 +106,7 @@ local function check_msg(msg, settings)
                 print('spam found')
                 action(msg, strict)
                 msg = clean_msg(msg)
-                return msg
+                return nil
             end
             local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
             msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or msg.text:match("[Tt]%.[Mm][Ee]/")
@@ -134,7 +135,7 @@ local function check_msg(msg, settings)
                     print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             end
             local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
@@ -142,7 +143,7 @@ local function check_msg(msg, settings)
                 print('arabic found')
                 action(msg, strict)
                 msg = clean_msg(msg)
-                return msg
+                return nil
             end
             local print_name = msg.from.print_name
             local is_rtl = print_name:match("‮") or msg.text:match("‮")
@@ -150,7 +151,7 @@ local function check_msg(msg, settings)
                 print('rtl found')
                 action(msg, strict)
                 msg = clean_msg(msg)
-                return msg
+                return nil
             end
         end
         if msg.caption then
@@ -182,7 +183,7 @@ local function check_msg(msg, settings)
                     print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             end
             local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
@@ -190,7 +191,7 @@ local function check_msg(msg, settings)
                 print('arabic found')
                 action(msg, strict)
                 msg = clean_msg(msg)
-                return msg
+                return nil
             end
             local print_name = msg.from.print_name
             local is_rtl = print_name:match("‮") or msg.caption:match("‮")
@@ -198,7 +199,7 @@ local function check_msg(msg, settings)
                 print('rtl found')
                 action(msg, strict)
                 msg = clean_msg(msg)
-                return msg
+                return nil
             end
         end
         -- msg.media checks
@@ -208,63 +209,63 @@ local function check_msg(msg, settings)
                     print('audio muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'contact' then
                 if mute_contact then
                     print('contact muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'document' then
                 if mute_document then
                     print('document muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'gif' then
                 if mute_gif then
                     print('gif muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'location' then
                 if mute_location then
                     print('location muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'photo' then
                 if mute_photo then
                     print('photo muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'sticker' then
                 if mute_sticker then
                     print('sticker muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'video' then
                 if mute_video then
                     print('video muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.media_type == 'voice' then
                 if mute_voice then
                     print('voice muted')
                     action(msg, strict)
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             end
         end
@@ -273,7 +274,7 @@ local function check_msg(msg, settings)
             print('tgservice muted')
             deleteMessage(msg)
             msg = clean_msg(msg)
-            return msg
+            return nil
         end
         if msg.adder and msg.added then
             if msg.adder.id == msg.added.id then
@@ -282,15 +283,15 @@ local function check_msg(msg, settings)
                     print('name spam found')
                     deleteMessage(msg)
                     if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and kicked (#spam name)")
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
                 local print_name = msg.from.print_name
                 local is_rtl_name = print_name:match("‮")
@@ -298,40 +299,37 @@ local function check_msg(msg, settings)
                     print('rtl name found')
                     deleteMessage(msg)
                     if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#RTL char in name)")
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
                 if lock_member then
                     print('member locked')
                     deleteMessage(msg)
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and kicked (#lockmember)")
+                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
                     sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                    if msg.chat.type == 'group' then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                    end
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             elseif msg.adder.id ~= msg.added.id then
                 if lock_spam and(string.len(msg.added.print_name) > 70 or ctrl_chars > 40) then
                     print('name spam found')
                     deleteMessage(msg)
                     if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#spam name) ")
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
                 local print_name = msg.added.print_name
                 local is_rtl_name = print_name:match("‮")
@@ -339,26 +337,23 @@ local function check_msg(msg, settings)
                     print('rtl name found')
                     deleteMessage(msg)
                     if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked (#RTL char in name)")
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#RTL char in name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     if msg.chat.type == 'group' then
                         sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     end
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
-                if msg.chat.type == 'supergroup' and lock_member then
+                if lock_member then
                     print('member locked')
                     deleteMessage(msg)
                     sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id))
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user kicked  (#lockmember)")
+                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned  (#lockmember)")
                     sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
-                    if msg.chat.type == 'group' then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
-                    end
                     msg = clean_msg(msg)
-                    return msg
+                    return nil
                 end
             end
         end

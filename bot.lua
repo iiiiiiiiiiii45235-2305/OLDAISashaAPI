@@ -43,7 +43,6 @@ function create_config()
             'anti_spam',
             'msg_checks',
             'onservice',
-            -- THIS HAVE TO BE THE FIRST THREE: IF AN USER IS SPAMMING/IS BLOCKED, THE BOT WON'T GO THROUGH PLUGINS
             'administrator',
             'banhammer',
             'bot',

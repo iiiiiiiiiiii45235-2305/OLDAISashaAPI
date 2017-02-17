@@ -578,6 +578,7 @@ end
 
 local function clean_msg(msg)
     -- clean msg but returns it
+    msg.cleaned = true
     if msg.text then
         msg.text = ''
     end
@@ -666,6 +667,7 @@ local function pre_process(msg)
                 -- Save to logs
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
                 msg = clean_msg(msg)
+                return nil
             end
         end
         return msg

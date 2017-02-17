@@ -49,6 +49,7 @@ end
 
 local function clean_msg(msg)
     -- clean msg but returns it
+    msg.cleaned = true
     if msg.text then
         msg.text = ''
     end
@@ -60,7 +61,7 @@ local function clean_msg(msg)
     return msg
 end
 
-local function pre_process(msg, matches)
+local function pre_process(msg)
     if msg then
         if not msg.from.is_mod then
             local found = false
@@ -91,8 +92,8 @@ local function pre_process(msg, matches)
                         if msg.chat.type == 'group' then
                             banUser(bot.id, msg.from.id, msg.chat.id)
                         end
-                        -- clean msg but returns it
-                        return clean_msg(msg)
+                        msg = clean_msg(msg)
+                        return nil
                     end
                 end
             end
