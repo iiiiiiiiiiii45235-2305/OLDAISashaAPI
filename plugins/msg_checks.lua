@@ -358,7 +358,9 @@ local function check_msg(msg, settings)
         if msg.remover and msg.removed then
             if lock_leave then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
-                    return banUser(bot.id, msg.removed.id, msg.chat.id)
+                    sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id))
+                    msg = clean_msg(msg)
+                    return nil
                 end
             end
         end
@@ -379,13 +381,8 @@ local function pre_process(msg)
                         settings = data[tostring(msg.chat.id)].settings
                     end
                 end
-                if not settings then
-                    return msg
-                else
-                    local tmp = check_msg(msg, settings)
-                    if tmp then
-                        msg = tmp
-                    end
+                if settings then
+                    return check_msg(msg, settings)
                 end
             end
         end
