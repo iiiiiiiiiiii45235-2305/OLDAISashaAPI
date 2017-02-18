@@ -3,10 +3,7 @@ local function test_text(text, group_link)
     local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
     text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or text:match("[Tt]%.[Mm][Ee]/")
     or text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
-    if is_now_link then
-        return true
-    end
-    return false
+    return is_now_link
 end
 
 local function test_bot(text)
@@ -17,8 +14,39 @@ local function test_bot(text)
     local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
     text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or text:match("[Tt]%.[Mm][Ee]/")
     or text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
-    if is_now_link then
-        return true
+    return is_now_link
+end
+
+local function check_if_link(text, group_link)
+    local is_text_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
+    text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or text:match("[Tt]%.[Mm][Ee]/")
+    or text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
+    -- or text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
+    if is_text_link then
+        local test_more = false
+        local is_bot = text:match("?[Ss][Tt][Aa][Rr][Tt]=")
+        if is_bot then
+            -- if bot link test if removing that there are other links
+            test_more = test_bot(text:lower())
+        else
+            -- if not bot link then test if there are links
+            test_more = true
+        end
+        if test_more then
+            -- if there could be other links check
+            if group_link then
+                if not string.find(text:lower(), group_link:lower()) then
+                    -- if group link but not in text then link
+                    return true
+                else
+                    -- test if removing group link there are other links
+                    return test_text(text:lower(), group_link:lower())
+                end
+            else
+                -- if no group_link then link
+                return true
+            end
+        end
     end
     return false
 end
@@ -100,102 +128,69 @@ local function check_msg(msg, settings)
                 return nil
             end
             -- msg.text checks
-            local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-            local _nl, real_digits = string.gsub(msg.text, '%d', '')
-            if lock_spam and(string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000) then
-                print('spam found')
-                action(msg, strict)
-                msg = clean_msg(msg)
-                return nil
+            if lock_spam then
+                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
+                local _nl, real_digits = string.gsub(msg.text, '%d', '')
+                if string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+                    print('spam found')
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return nil
+                end
             end
-            local is_link_msg = msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or msg.text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
-            msg.text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or msg.text:match("[Tt]%.[Mm][Ee]/")
-            or msg.text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
-            -- or msg.text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-            if is_link_msg and lock_link then
-                local link_found = false
-                local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-                if is_bot then
-                    link_found = test_bot(msg.text:lower())
-                end
-                if link_found then
-                    if group_link then
-                        if not string.find(msg.text:lower(), group_link:lower()) then
-                            link_found = true
-                        else
-                            link_found = test_text(msg.text:lower(), group_link:lower())
-                        end
-                    else
-                        link_found = true
-                    end
-                end
-                if link_found then
+            if lock_link then
+                if check_if_link(msg.text, group_link) then
                     print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return nil
                 end
             end
-            local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
-            if is_squig_msg and lock_arabic then
-                print('arabic found')
-                action(msg, strict)
-                msg = clean_msg(msg)
-                return nil
+            if lock_arabic then
+                local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
+                if is_squig_msg then
+                    print('arabic found')
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return nil
+                end
             end
-            local print_name = msg.from.print_name
-            local is_rtl = print_name:match("‮") or msg.text:match("‮")
-            if is_rtl and lock_rtl then
-                print('rtl found')
-                action(msg, strict)
-                msg = clean_msg(msg)
-                return nil
+            if lock_rtl then
+                local is_rtl = msg.from.print_name:match("‮") or msg.text:match("‮")
+                if is_rtl then
+                    print('rtl found')
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return nil
+                end
             end
         end
         if msg.caption then
-            -- msg.caption checks
-            local is_link_caption = msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/") or msg.caption:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/") or
-            msg.caption:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/") or msg.caption:match("[Tt]%.[Mm][Ee]/")
-            or msg.caption:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
-            -- or msg.caption:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or msg.caption:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or msg.caption:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
-            if is_link_caption and lock_link then
-                local link_found = false
-                local is_bot = msg.caption:match("?[Ss][Tt][Aa][Rr][Tt]=")
-                if is_bot then
-                    link_found = test_bot(msg.caption:lower())
-                end
-                if link_found then
-                    if group_link then
-                        if not string.find(msg.caption:lower(), group_link:lower()) then
-                            link_found = true
-                        else
-                            link_found = test_text(msg.caption:lower(), group_link:lower())
-                        end
-                    else
-                        link_found = true
-                    end
-                end
-                if link_found then
+            if lock_link then
+                if check_if_link(msg.caption, group_link) then
                     print('link found')
                     action(msg, strict)
                     msg = clean_msg(msg)
                     return nil
                 end
             end
-            local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
-            if is_squig_caption and lock_arabic then
-                print('arabic found')
-                action(msg, strict)
-                msg = clean_msg(msg)
-                return nil
+            if lock_arabic then
+                local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
+                if is_squig_caption then
+                    print('arabic found')
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return nil
+                end
             end
-            local print_name = msg.from.print_name
-            local is_rtl = print_name:match("‮") or msg.caption:match("‮")
-            if is_rtl and lock_rtl then
-                print('rtl found')
-                action(msg, strict)
-                msg = clean_msg(msg)
-                return nil
+            if lock_rtl then
+                local is_rtl = msg.from.print_name:match("‮") or msg.caption:match("‮")
+                if is_rtl then
+                    print('rtl found')
+                    action(msg, strict)
+                    msg = clean_msg(msg)
+                    return nil
+                end
             end
         end
         -- msg.media checks
@@ -275,34 +270,37 @@ local function check_msg(msg, settings)
         if msg.adder and msg.added then
             if msg.adder.id == msg.added.id then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                if lock_spam and(string.len(msg.from.print_name) > 70 or ctrl_chars > 40) then
-                    print('name spam found')
-                    deleteMessage(msg)
-                    if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                if lock_spam then
+                    if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
+                        print('name spam found')
+                        deleteMessage(msg)
+                        if strict then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                        end
+                        if msg.chat.type == 'group' then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                        end
+                        msg = clean_msg(msg)
+                        return nil
                     end
-                    if msg.chat.type == 'group' then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                    end
-                    msg = clean_msg(msg)
-                    return nil
                 end
-                local print_name = msg.from.print_name
-                local is_rtl_name = print_name:match("‮")
-                if is_rtl_name and lock_rtl then
-                    print('rtl name found')
-                    deleteMessage(msg)
-                    if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                if lock_rtl then
+                    local is_rtl_name = msg.from.print_name:match("‮")
+                    if is_rtl_name then
+                        print('rtl name found')
+                        deleteMessage(msg)
+                        if strict then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                        end
+                        if msg.chat.type == 'group' then
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                        end
+                        msg = clean_msg(msg)
+                        return nil
                     end
-                    if msg.chat.type == 'group' then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                    end
-                    msg = clean_msg(msg)
-                    return nil
                 end
                 if lock_member then
                     print('member locked')
@@ -313,34 +311,37 @@ local function check_msg(msg, settings)
                     return nil
                 end
             elseif msg.adder.id ~= msg.added.id then
-                if lock_spam and(string.len(msg.added.print_name) > 70 or ctrl_chars > 40) then
-                    print('name spam found')
-                    deleteMessage(msg)
-                    if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                if lock_spam then
+                    if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 then
+                        print('name spam found')
+                        deleteMessage(msg)
+                        if strict then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                        end
+                        if msg.chat.type == 'group' then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                        end
+                        msg = clean_msg(msg)
+                        return nil
                     end
-                    if msg.chat.type == 'group' then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
-                    end
-                    msg = clean_msg(msg)
-                    return nil
                 end
-                local print_name = msg.added.print_name
-                local is_rtl_name = print_name:match("‮")
-                if is_rtl_name and lock_rtl then
-                    print('rtl name found')
-                    deleteMessage(msg)
-                    if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#RTL char in name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                if lock_rtl then
+                    local is_rtl_name = msg.added.print_name:match("‮")
+                    if is_rtl_name then
+                        print('rtl name found')
+                        deleteMessage(msg)
+                        if strict then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#RTL char in name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                        end
+                        if msg.chat.type == 'group' then
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                        end
+                        msg = clean_msg(msg)
+                        return nil
                     end
-                    if msg.chat.type == 'group' then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
-                    end
-                    msg = clean_msg(msg)
-                    return nil
                 end
                 if lock_member then
                     print('member locked')
