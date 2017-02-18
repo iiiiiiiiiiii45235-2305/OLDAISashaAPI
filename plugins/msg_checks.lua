@@ -116,20 +116,18 @@ local function check_msg(msg, settings)
                 local link_found = false
                 local is_bot = msg.text:match("?[Ss][Tt][Aa][Rr][Tt]=")
                 if is_bot then
-                    if test_bot(msg.text:lower()) then
-                        link_found = true
-                    end
+                    link_found = test_bot(msg.text:lower())
                 end
-                if group_link then
-                    if not string.find(msg.text:lower(), group_link:lower()) then
-                        link_found = true
-                    else
-                        if test_text(msg.text:lower(), group_link:lower()) then
+                if link_found then
+                    if group_link then
+                        if not string.find(msg.text:lower(), group_link:lower()) then
                             link_found = true
+                        else
+                            link_found = test_text(msg.text:lower(), group_link:lower())
                         end
+                    else
+                        link_found = true
                     end
-                else
-                    link_found = true
                 end
                 if link_found then
                     print('link found')
@@ -164,20 +162,18 @@ local function check_msg(msg, settings)
                 local link_found = false
                 local is_bot = msg.caption:match("?[Ss][Tt][Aa][Rr][Tt]=")
                 if is_bot then
-                    if test_bot(msg.caption:lower()) then
-                        link_found = true
-                    end
+                    link_found = test_bot(msg.caption:lower())
                 end
-                if group_link then
-                    if not string.find(msg.caption:lower(), group_link:lower()) then
-                        link_found = true
-                    else
-                        if test_text(msg.caption:lower(), group_link:lower()) then
+                if link_found then
+                    if group_link then
+                        if not string.find(msg.caption:lower(), group_link:lower()) then
                             link_found = true
+                        else
+                            link_found = test_text(msg.caption:lower(), group_link:lower())
                         end
+                    else
+                        link_found = true
                     end
-                else
-                    link_found = true
                 end
                 if link_found then
                     print('link found')
