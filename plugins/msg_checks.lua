@@ -78,6 +78,7 @@ end
 
 local function check_msg(msg, settings)
     local lock_arabic = settings.lock_arabic
+    local lock_leave = settings.lock_leave
     local lock_link = settings.lock_link
     local group_link = nil
     if settings.set_link then
@@ -351,6 +352,13 @@ local function check_msg(msg, settings)
                     sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
                     msg = clean_msg(msg)
                     return nil
+                end
+            end
+        end
+        if msg.remover and msg.removed then
+            if lock_leave then
+                if not is_mod2(msg.removed.id, msg.chat.id) then
+                    return banUser(bot.id, msg.removed.id, msg.chat.id)
                 end
             end
         end

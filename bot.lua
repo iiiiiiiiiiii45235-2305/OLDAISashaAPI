@@ -59,7 +59,6 @@ function create_config()
             'help',
             'info',
             'interact',
-            'leave_ban',
             'likecounter',
             'lua_exec',
             'me',
