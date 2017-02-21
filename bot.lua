@@ -79,6 +79,10 @@ function create_config()
         about_text = "AISashaAPI by @EricSolinas based on @GroupButler_bot and @TeleSeed supergroup branch with something taken from @DBTeam.\nThanks guys.",
         log_chat = - 1001043389864,
         vardump_chat = - 167065200,
+        channel = '@AISashaChannel',
+        -- channel username with the '@'
+        help_group = '',
+        -- group link, not username!
         api_errors =
         {
             [101] = 'Not enough rights to kick participant',
