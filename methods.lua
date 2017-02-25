@@ -864,7 +864,11 @@ function kickUser(executer, target, chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
-        if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
+        if isWhitelisted(target) then
+            savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
+            return langs[get_lang(chat_id)].cantKickWhitelisted
+        end
+        if compare_ranks(executer, target, chat_id) then
             -- try to kick
             local res, code = kickChatMember(target, chat_id)
 
@@ -882,18 +886,18 @@ function kickUser(executer, target, chat_id)
                 return code2text(code, get_lang(chat_id))
             end
         else
-            if isWhitelisted(target) then
-                savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
-                return langs[get_lang(chat_id)].cantKickWhitelisted
-            else
-                savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " require higher rank")
-                return langs[get_lang(chat_id)].require_rank
-            end
+            savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " require higher rank")
+            return langs[get_lang(chat_id)].require_rank
         end
     end
 end
+
 function preBanUser(executer, target, chat_id)
-    if compare_ranks(executer, target, chat_id, true) and not isWhitelisted(target) then
+    if isWhitelisted(target) then
+        savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
+        return langs[get_lang(chat_id)].cantKickWhitelisted
+    end
+    if compare_ranks(executer, target, chat_id, true) then
         -- try to kick. "code" is already specific
         savelog(chat_id, "[" .. executer .. "] banned user " .. target)
         redis:hincrby('bot:general', 'ban', 1)
@@ -902,13 +906,8 @@ function preBanUser(executer, target, chat_id)
         redis:sadd(hash, tostring(target))
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
     else
-        if isWhitelisted(target) then
-            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
-            return langs[get_lang(chat_id)].cantKickWhitelisted
-        else
-            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
-            return langs[get_lang(chat_id)].require_rank
-        end
+        savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
+        return langs[get_lang(chat_id)].require_rank
     end
 end
 
@@ -918,7 +917,11 @@ function banUser(executer, target, chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
-        if compare_ranks(executer, target, chat_id) and not isWhitelisted(target) then
+        if isWhitelisted(target) then
+            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
+            return langs[get_lang(chat_id)].cantKickWhitelisted
+        end
+        if compare_ranks(executer, target, chat_id) then
             -- try to kick. "code" is already specific
             local res, code = kickChatMember(target, chat_id)
 
@@ -940,13 +943,8 @@ function banUser(executer, target, chat_id)
                 return code2text(code, get_lang(chat_id))
             end
         else
-            if isWhitelisted(target) then
-                savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
-                return langs[get_lang(chat_id)].cantKickWhitelisted
-            else
-                savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
-                return langs[get_lang(chat_id)].require_rank
-            end
+            savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
+            return langs[get_lang(chat_id)].require_rank
         end
     end
 end
