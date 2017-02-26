@@ -117,13 +117,6 @@ function string:starts(text)
     return text == string.sub(self, 1, string.len(text))
 end
 
-function set_owner(chat_id, user_id, nick)
-    redis:hset('chat:' .. chat_id .. ':mod', user_id, nick)
-    -- mod
-    redis:hset('chat:' .. chat_id .. ':owner', user_id, nick)
-    -- owner
-end
-
 function mystat(cmd)
     redis:hincrby('commands:stats', cmd, 1)
 end
