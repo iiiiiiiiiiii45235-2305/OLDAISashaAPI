@@ -906,12 +906,12 @@ function cron_administrator()
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
         -- deletes all previous backups (they're in telegram so no problem)
-        io.popen('sudo rm -f \'/home/pi/BACKUPS/*\''):read("*all")
+        io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
 
         -- AISASHAAPI
 
         -- deletes all files in tmp folder
-        io.popen('rm -f \'/home/pi/AISashaAPI/data/tmp/*\''):read("*all")
+        io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
 
         -- save database
         save_data(config.database.db, database)
