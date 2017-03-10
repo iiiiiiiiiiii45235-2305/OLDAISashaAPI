@@ -1058,7 +1058,7 @@ return {
             '🅿️ TAGALL',
             'Plugin per taggare tutti i membri.',
             'OWNER',
-            '(#tagall|sasha tagga tutti) <text>: Sasha scrive <text> e tagga tutti i membri del gruppo.',
+            '(#tagall|sasha tagga tutti) <text>|<reply_text>: Sasha scrive <text>|<reply_text> e tagga tutti i membri del gruppo.',
         },
 
         tagalert =
@@ -2018,7 +2018,7 @@ return {
             '🅿️ TAGALL',
             'Plugin to tag all users.',
             'OWNER',
-            '(#tagall|sasha tagga tutti) <text>: Sasha writes <text> tags all group\'s members.',
+            '(#tagall|sasha tagga tutti) <text>|<reply_text>: Sasha writes <text>|<reply_text> tags all group\'s members.',
         },
 
         tagalert =
