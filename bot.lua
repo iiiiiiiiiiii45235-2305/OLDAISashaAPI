@@ -230,7 +230,7 @@ function bot_init()
     for v, user in pairs(config.sudo_users) do
         local obj_user = getChat(user)
         if type(obj_user) == 'table' then
-            table.insert(sudoers, obj_user)
+            sudoers[tostring(obj_user.id)] = obj_user
         end
     end
 
@@ -426,6 +426,12 @@ local function collect_stats(msg)
 
     if msg.cb and msg.from and msg.chat then
         redis:hincrby('chat:' .. msg.chat.id .. ':cb', msg.from.id, 1)
+    end
+end
+
+local function update_sudoers(msg)
+    if sudoers[tostring(msg.from.id)] then
+        sudoers[tostring(msg.from.id)] = msg.from
     end
 end
 
@@ -852,6 +858,7 @@ function on_msg_receive(msg)
         sendMessage(msg.chat.id, 'BEFORE ADJUST\n' .. vardumptext(msg))
     end
     collect_stats(msg)
+    update_sudoers(msg)
     msg = pre_process_reply(msg)
     msg = pre_process_forward(msg)
     msg = pre_process_media_msg(msg)
