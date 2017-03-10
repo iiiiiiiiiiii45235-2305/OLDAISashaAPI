@@ -2,17 +2,17 @@ local function get_variables_hash(msg, global)
     if global then
         return 'gvariables'
     else
-        if msg.chat.type == 'channel' then
-            return 'channel:' .. msg.chat.id .. ':variables'
-        end
-        if msg.chat.type == 'supergroup' then
-            return 'supergroup:' .. msg.chat.id .. ':variables'
+        if msg.chat.type == 'private' then
+            return 'user:' .. msg.from.id .. ':variables'
         end
         if msg.chat.type == 'group' then
             return 'group:' .. msg.chat.id .. ':variables'
         end
-        if msg.chat.type == 'private' then
-            return 'user:' .. msg.from.id .. ':variables'
+        if msg.chat.type == 'supergroup' then
+            return 'supergroup:' .. msg.chat.id .. ':variables'
+        end
+        if msg.chat.type == 'channel' then
+            return 'channel:' .. msg.chat.id .. ':variables'
         end
         return false
     end

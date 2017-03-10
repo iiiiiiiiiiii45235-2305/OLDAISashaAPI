@@ -1,9 +1,9 @@
 local function get_censorships_hash(msg)
-    if msg.chat.type == 'supergroup' then
-        return 'supergroup:' .. msg.chat.id .. ':censorships'
-    end
     if msg.chat.type == 'group' then
         return 'group:' .. msg.chat.id .. ':censorships'
+    end
+    if msg.chat.type == 'supergroup' then
+        return 'supergroup:' .. msg.chat.id .. ':censorships'
     end
     return false
 end

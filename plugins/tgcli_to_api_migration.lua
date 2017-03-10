@@ -1,15 +1,15 @@
 local function cli_get_hash(msg)
-    if msg.chat.type == 'channel' then
-        return 'channel:' .. msg.chat.tg_cli_id .. ':variables'
-    end
-    if msg.chat.type == 'supergroup' then
-        return 'channel:' .. msg.chat.tg_cli_id .. ':variables'
+    if msg.chat.type == 'private' then
+        return 'user:' .. msg.chat.tg_cli_id .. ':variables'
     end
     if msg.chat.type == 'group' then
         return 'chat:' .. msg.chat.tg_cli_id .. ':variables'
     end
-    if msg.chat.type == 'private' then
-        return 'user:' .. msg.chat.tg_cli_id .. ':variables'
+    if msg.chat.type == 'supergroup' then
+        return 'channel:' .. msg.chat.tg_cli_id .. ':variables'
+    end
+    if msg.chat.type == 'channel' then
+        return 'channel:' .. msg.chat.tg_cli_id .. ':variables'
     end
     return false
 end
@@ -33,17 +33,17 @@ local function cli_list_variables(msg)
     end
 end
 local function api_get_hash(msg)
-    if msg.chat.type == 'channel' then
-        return 'channel:' .. msg.chat.id .. ':variables'
-    end
-    if msg.chat.type == 'supergroup' then
-        return 'supergroup:' .. msg.chat.id .. ':variables'
+    if msg.chat.type == 'private' then
+        return 'user:' .. msg.chat.id .. ':variables'
     end
     if msg.chat.type == 'group' then
         return 'group:' .. msg.chat.id .. ':variables'
     end
-    if msg.chat.type == 'private' then
-        return 'user:' .. msg.chat.id .. ':variables'
+    if msg.chat.type == 'supergroup' then
+        return 'supergroup:' .. msg.chat.id .. ':variables'
+    end
+    if msg.chat.type == 'channel' then
+        return 'channel:' .. msg.chat.id .. ':variables'
     end
     return false
 end
@@ -58,11 +58,11 @@ local function api_set_value(msg, name, value)
     end
 end
 local function cli_get_censorships_hash(msg)
-    if msg.chat.type == 'channel' then
-        return 'channel:' .. msg.chat.id .. ':censorships'
-    end
     if msg.chat.type == 'chat' then
         return 'chat:' .. msg.chat.id .. ':censorships'
+    end
+    if msg.chat.type == 'channel' then
+        return 'channel:' .. msg.chat.id .. ':censorships'
     end
     return false
 end
@@ -79,11 +79,11 @@ local function cli_list_censorships(msg)
     end
 end
 local function api_get_censorships_hash(msg)
-    if msg.chat.type == 'supergroup' then
-        return 'supergroup:' .. msg.chat.id .. ':censorships'
-    end
     if msg.chat.type == 'group' then
         return 'group:' .. msg.chat.id .. ':censorships'
+    end
+    if msg.chat.type == 'supergroup' then
+        return 'supergroup:' .. msg.chat.id .. ':censorships'
     end
     return false
 end

@@ -187,11 +187,11 @@ local function pre_process(msg)
             if is_realm(msg) or is_group(msg) or is_super_group(msg) then
                 if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
                     local hash
-                    if msg.chat.type == 'supergroup' then
-                        hash = 'channel:welcome' .. msg.chat.id
-                    end
                     if msg.chat.type == 'group' then
                         hash = 'chat:welcome' .. msg.chat.id
+                    end
+                    if msg.chat.type == 'supergroup' then
+                        hash = 'channel:welcome' .. msg.chat.id
                     end
                     redis:incr(hash)
                     local hashonredis = redis:get(hash)

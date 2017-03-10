@@ -81,7 +81,7 @@ end
 
 local function chat_stats(chat_id, lang)
     -- Users on chat
-    local hash = 'channel:' .. chat_id .. ':users'
+    local hash = 'chat:' .. chat_id .. ':users'
     local users = redis:smembers(hash)
     local users_info = { }
 

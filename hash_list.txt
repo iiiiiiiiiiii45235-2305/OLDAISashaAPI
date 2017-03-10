@@ -1,0 +1,107 @@
+administrator.lua
+	commands:stats
+anti_spam.lua
+	chatmsgs:<chat_id>
+	user:<user_id>
+	chat:<chat_id>:users or chat:<user_id>
+	msgs:<user_id>:<chat_id>
+	api:user:<user_id>:msgs
+	whitelist
+	gban:spam<user_id>
+banhammer.lua
+	user:<user_id>
+	msgs:<user_id>:<chat_id>
+	chatmsgs:<chat_id>
+	gbanned
+	addedbanuser:<chat_id>:<user_id>
+bot.lua
+	bot:general
+	api:last_redis_cron
+	api:last_redis_db_cron
+	api:last_redis_administrator_cron
+	chat:<chat_id>:userlast
+	chat:<chat_id>:userstats
+	chat:<chat_id>:usermedia
+	chat:<chat_id>:totalmsgs
+	user:<user_id>
+	chat:<chat_id>:cb
+	group:<chat_id>:variables
+	supergroup:<chat_id>:variables
+	banned:<chat_id>
+check_tag.lua
+	tagalert:<chat_id>
+	tagalert:usernames
+	tagalert:nicknames
+delword.lua
+	group:<chat_id>:censorships
+	supergroup:<chat_id>:censorships
+filemanager.lua
+	api:folder
+flame.lua
+	flame:<chat_id>
+    tokick:<chat_id>
+get.lua
+	gvariables
+	user:<chat_id>:variables
+	group:<chat_id>:variables
+	supergroup:<chat_id>:variables
+	channel:<chat_id>:variables
+	<chat_id>:gvariables
+goodbyewelcome.lua
+	chat:welcome<chat_id>
+	channel:welcome<chat_id>
+help.lua
+	msgs:<user_id>:<chat_id>
+info.lua
+	whitelist
+	msgs:<user_id>:<chat_id>
+likecounter.lua
+	user:<user_id>
+me.lua
+	chatmsgs:<chat_id>
+	msgs:<user_id>:<chat_id>
+methods.lua
+	bot:errors
+	bot:usernames
+	bot:general
+	banned:<chat_id>
+	gbanned
+	bot:blocked
+	whitelist
+	<chat_id>:warn:<user_id>
+	mute_user:<chat_id>
+	user:<user_id>
+set.lua
+	gvariables
+	user:<chat_id>:variables
+	group:<chat_id>:variables
+	supergroup:<chat_id>:variables
+	channel:<chat_id>:variables
+stats.lua
+	user:<user_id>
+	msgs:<user_id>:<chat_id>
+	chatmsgs:<chat_id>
+	chat:<chat_id>:users
+strings.lua
+	lang:<chat_id>
+tgcli_to_api_migration.lua
+	user:<chat_id>:variables
+	group:<chat_id>:variables
+	supergroup:<chat_id>:variables
+	channel:<chat_id>:variables
+	chat:<chat_id>:censorships
+	channel:<chat_id>:censorships
+	group:<chat_id>:censorships
+	supergroup:<chat_id>:censorships
+	banned:<chat_id>
+unset.lua
+	gvariables
+	user:<chat_id>:variables
+	group:<chat_id>:variables
+	supergroup:<chat_id>:variables
+	channel:<chat_id>:variables
+utils.lua
+	commands:stats
+	lang:<chat_id>
+whitelist.lua
+	whitelist
