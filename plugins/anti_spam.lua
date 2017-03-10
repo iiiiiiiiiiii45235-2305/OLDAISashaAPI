@@ -58,97 +58,99 @@ local function pre_process(msg)
             -- Check flood
             local hash = 'api:user:' .. msg.from.id .. ':msgs'
             local msgs = tonumber(redis:get(hash) or 0)
-            local NUM_MSG_MAX = 5
-            local strict = false
-            if data[tostring(msg.chat.id)] then
-                if data[tostring(msg.chat.id)].settings.flood_max then
-                    NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
-                    -- Obtain group flood sensitivity
+
+            if msg.chat.type == 'private' then
+                local max_msg = 7 * 1
+                print(msgs)
+                if msgs >= max_msg then
+                    print("Pass2")
+                    -- Block user if spammed in private
+                    sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
+                    savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
+                    sendMessage(msg.chat.id, blockUser(msg.from.id, msg.lang))
                 end
-                if data[tostring(msg.chat.id)].settings.strict then
-                    strict = settings.strict
-                end
-            end
-            local max_msg = NUM_MSG_MAX * 1
-            if msgs >= max_msg then
-                local user = msg.from.id
-                -- Ignore mods,owner and admins
-                if msg.from.is_mod then
-                    return msg
-                end
-                -- Ignore whitelisted
-                if redis:sismember('whitelist', msg.from.id) then
-                    return msg
-                end
-                if msg.chat.type == 'private' then
-                    local max_msg = 7 * 1
-                    print(msgs)
-                    if msgs >= max_msg then
-                        print("Pass2")
-                        -- Block user if spammed in private
-                        sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
-                        savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
-                        sendMessage(msg.chat.id, blockUser(msg.from.id, msg.lang))
+            else
+                local NUM_MSG_MAX = 5
+                local strict = false
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].settings.flood_max then
+                        NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
+                        -- Obtain group flood sensitivity
+                    end
+                    if data[tostring(msg.chat.id)].settings.strict then
+                        strict = settings.strict
                     end
                 end
-                if kicktable[msg.from.id] == true then
-                    local member = getChatMember(msg.chat.id, msg.from.id)
-                    if type(member) == 'table' then
-                        if member.ok and member.result then
-                            if member.result.status == 'left' or member.result.status == 'kicked' then
-                                return
-                            else
-                                kicktable[msg.from.id] = false
+                local max_msg = NUM_MSG_MAX * 1
+                if msgs >= max_msg then
+                    local user = msg.from.id
+                    -- Ignore mods,owner and admins
+                    if msg.from.is_mod then
+                        return msg
+                    end
+                    -- Ignore whitelisted
+                    if redis:sismember('whitelist', msg.from.id) then
+                        return msg
+                    end
+                    if kicktable[msg.from.id] == true then
+                        local member = getChatMember(msg.chat.id, msg.from.id)
+                        if type(member) == 'table' then
+                            if member.ok and member.result then
+                                if member.result.status == 'left' or member.result.status == 'kicked' then
+                                    return
+                                else
+                                    kicktable[msg.from.id] = false
+                                end
                             end
                         end
                     end
-                end
-                local text = ''
-                if string.match(getWarn(msg.chat.id), "%d+") then
-                    text = warnUser(bot.id, msg.from.id, msg.chat.id)
-                    text = text .. '\n' .. kickUser(bot.id, msg.from.id, msg.chat.id)
-                elseif not strict then
-                    text = kickUser(bot.id, msg.from.id, msg.chat.id)
-                else
-                    text = banUser(bot.id, msg.from.id, msg.chat.id)
-                end
-                local username = msg.from.username
-                if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                    if msg.from.username then
-                        savelog(msg.chat.id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
-                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)\n" .. text)
+                    local text = ''
+                    if string.match(getWarn(msg.chat.id), "%d+") then
+                        text = warnUser(bot.id, msg.from.id, msg.chat.id)
+                        text = text .. '\n' .. kickUser(bot.id, msg.from.id, msg.chat.id)
+                    elseif not strict then
+                        text = kickUser(bot.id, msg.from.id, msg.chat.id)
                     else
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
-                        sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)\n" .. text)
+                        text = banUser(bot.id, msg.from.id, msg.chat.id)
                     end
-                end
-                -- incr it on redis
-                local gbanspam = 'gban:spam' .. msg.from.id
-                redis:incr(gbanspam)
-                local gbanspam = 'gban:spam' .. msg.from.id
-                local gbanspamonredis = redis:get(gbanspam)
-                -- Check if user has spammed is group more than 4 times
-                if gbanspamonredis then
-                    if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
-                        -- Global ban that user
-                        gbanUser(msg.from.id)
-                        local gbanspam = 'gban:spam' .. msg.from.id
-                        -- reset the counter
-                        redis:set(gbanspam, 0)
-                        if msg.from.username ~= nil then
-                            username = msg.from.username
+                    local username = msg.from.username
+                    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                        if msg.from.username then
+                            savelog(msg.chat.id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
+                            sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. "@" .. msg.from.username .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)\n" .. text)
                         else
-                            username = "---"
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
+                            sendMessage(msg.chat.id, langs[msg.lang].floodNotAdmitted .. langs[msg.lang].name .. msg.from.print_name .. " [" .. msg.from.id .. "]\n" .. langs[msg.lang].statusRemoved .. " (SPAM)\n" .. text)
                         end
-                        -- Send this to that chat
-                        sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
-                        gban_text = langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
-                        -- send it to log group/channel
-                        sendLog(gban_text)
                     end
+                    -- incr it on redis
+                    local gbanspam = 'gban:spam' .. msg.from.id
+                    redis:incr(gbanspam)
+                    local gbanspam = 'gban:spam' .. msg.from.id
+                    local gbanspamonredis = redis:get(gbanspam)
+                    -- Check if user has spammed is group more than 4 times
+                    if gbanspamonredis then
+                        if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
+                            -- Global ban that user
+                            gbanUser(msg.from.id)
+                            local gbanspam = 'gban:spam' .. msg.from.id
+                            -- reset the counter
+                            redis:set(gbanspam, 0)
+                            if msg.from.username ~= nil then
+                                username = msg.from.username
+                            else
+                                username = "---"
+                            end
+                            -- Send this to that chat
+                            sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
+                            gban_text = langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
+                            -- send it to log group/channel
+                            sendLog(gban_text)
+                        end
+                    end
+                    kicktable[msg.from.id] = true
+                    msg = nil
                 end
-                kicktable[msg.from.id] = true
-                msg = nil
             end
             redis:setex(hash, TIME_CHECK, msgs + 1)
         end
