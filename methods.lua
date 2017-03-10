@@ -1065,11 +1065,16 @@ end
 
 function getWarn(chat_id)
     local lang = get_lang(chat_id)
-    local warn_max = data[tostring(chat_id)].settings.warn_max
-    if not warn_max then
-        return langs[lang].noWarnSet
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            local warn_max = data[tostring(chat_id)].settings.warn_max
+            if not warn_max then
+                return langs[lang].noWarnSet
+            end
+            return langs[lang].warnSet .. warn_max
+        end
     end
-    return langs[lang].warnSet .. warn_max
+    return langs[lang].noWarnSet
 end
 
 function getUserWarns(user_id, chat_id)
