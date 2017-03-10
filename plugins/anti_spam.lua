@@ -65,9 +65,10 @@ local function pre_process(msg)
                 if msgs >= max_msg then
                     print("Pass2")
                     -- Block user if spammed in private
+                    blockUser(msg.from.id, msg.lang)
                     sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
+                    sendLog(langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
                     savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
-                    sendMessage(msg.chat.id, blockUser(msg.from.id, msg.lang))
                 end
             else
                 local NUM_MSG_MAX = 5
