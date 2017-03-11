@@ -771,6 +771,17 @@ function getChat(id_or_username)
     if not string.match(id_or_username, '^%*%d') then
         local obj = nil
         local ok = false
+        -- API
+        if not ok then
+            obj = APIgetChat(id_or_username)
+            if type(obj) == 'table' then
+                if obj.result then
+                    obj = obj.result
+                    ok = true
+                end
+            end
+        end
+        -- redis db then API
         if not ok then
             local hash = 'bot:usernames'
             local stored = nil
@@ -790,17 +801,9 @@ function getChat(id_or_username)
                 end
             end
         end
-        if not ok then
-            obj = APIgetChat(id_or_username)
-            if type(obj) == 'table' then
-                if obj.result then
-                    obj = obj.result
-                    ok = true
-                end
-            end
-        end
+        --[[
         -- PWR API
-        --[[if not ok then
+        if not ok then
             obj = resolveChat(id_or_username)
             if type(obj) == 'table' then
                 if obj.result then
@@ -809,7 +812,8 @@ function getChat(id_or_username)
                     saveUsername(obj)
                 end
             end
-        end]]
+        end
+        ]]
         if ok then
             return obj
         end

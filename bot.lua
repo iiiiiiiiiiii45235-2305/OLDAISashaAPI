@@ -857,7 +857,6 @@ function on_msg_receive(msg)
     if msg.chat.id == config.vardump_chat then
         sendMessage(msg.chat.id, 'BEFORE ADJUST\n' .. vardumptext(msg))
     end
-    collect_stats(msg)
     update_sudoers(msg)
     msg = pre_process_reply(msg)
     msg = pre_process_forward(msg)
