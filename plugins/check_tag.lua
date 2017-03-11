@@ -10,46 +10,48 @@ local function check_tag(msg, user_id, user)
         end
     end
 
-    if type(user) == 'table' then
-        -- check if first name is in message
-        if msg.text then
-            if string.find(msg.text, user.first_name) then
-                return true
-            end
-        end
-        if msg.media then
-            if msg.caption then
-                if string.find(msg.caption, user.first_name) then
-                    return true
-                end
-            end
-        end
-        if user.username then
-            -- check if username is in message
+    if user then
+        if type(user) == 'table' then
+            -- check if first name is in message
             if msg.text then
-                if string.find(msg.text:lower(), user.username:lower()) then
+                if string.find(msg.text, user.first_name) then
                     return true
                 end
             end
             if msg.media then
                 if msg.caption then
-                    if string.find(msg.caption:lower(), user.username:lower()) then
+                    if string.find(msg.caption, user.first_name) then
                         return true
                     end
                 end
             end
-        end
-        return false
-    else
-        if msg.text then
-            if string.find(msg.text:lower(), user:lower()) then
-                return true
+            if user.username then
+                -- check if username is in message
+                if msg.text then
+                    if string.find(msg.text:lower(), user.username:lower()) then
+                        return true
+                    end
+                end
+                if msg.media then
+                    if msg.caption then
+                        if string.find(msg.caption:lower(), user.username:lower()) then
+                            return true
+                        end
+                    end
+                end
             end
-        end
-        if msg.media then
-            if msg.caption then
-                if string.find(msg.caption:lower(), user:lower()) then
+            return false
+        else
+            if msg.text then
+                if string.find(msg.text:lower(), user:lower()) then
                     return true
+                end
+            end
+            if msg.media then
+                if msg.caption then
+                    if string.find(msg.caption:lower(), user:lower()) then
+                        return true
+                    end
                 end
             end
         end
@@ -187,7 +189,11 @@ local function pre_process(msg)
                         -- exclude already notified
                         if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags of tg-cli version
-                            if check_tag(msg, usernames[i], redis:hget('tagalert:usernames', usernames[i])) then
+                            local usr = redis:hget('tagalert:usernames', usernames[i])
+                            if usr == 'true' then
+                                usr = nil
+                            end
+                            if check_tag(msg, usernames[i], usr) then
                                 local lang = get_lang(usernames[i])
                                 -- set user as notified to not send multiple notifications
                                 notified[tostring(usernames[i])] = true
