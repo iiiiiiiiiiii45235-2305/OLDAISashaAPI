@@ -51,12 +51,14 @@ local function run(msg, matches)
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
                 -- ignore higher or same rank
-                if compare_ranks(msg.from.id, redis:get(tokick), msg.chat.id) then
-                    redis:del(hash)
-                    redis:del(tokick)
-                    return langs[msg.lang].stopFlame
-                else
-                    return langs[msg.lang].require_rank
+                if redis:get(tokick) then
+                    if compare_ranks(msg.from.id, redis:get(tokick), msg.chat.id) then
+                        redis:del(hash)
+                        redis:del(tokick)
+                        return langs[msg.lang].stopFlame
+                    else
+                        return langs[msg.lang].require_rank
+                    end
                 end
             elseif matches[1]:lower() == 'flameinfo' or matches[1]:lower() == 'sasha info flame' or matches[1]:lower() == 'info flame' then
                 mystat('/flameinfo')
