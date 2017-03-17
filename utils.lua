@@ -503,7 +503,9 @@ function get_lang(chat_id)
 end
 
 function id_to_cli(obj_or_id)
+    printvardump(obj_or_id)
     if type(obj_or_id) == 'table' then
+        print('table')
         local obj = obj_or_id
         if obj.type then
             if obj.type == 'bot' or obj.type == 'private' or obj.type == 'user' then
@@ -515,6 +517,7 @@ function id_to_cli(obj_or_id)
             end
         end
     else
+        print('number or string')
         local id = tostring(obj_or_id)
         local temp = tostring(id:gsub('-100', ''))
         if id == temp then
