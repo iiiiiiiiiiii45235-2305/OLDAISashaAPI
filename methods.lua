@@ -870,7 +870,7 @@ function kickUser(executer, target, chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
-        if isWhitelisted(id_to_cli(obj_chat), target) then
+        if isWhitelisted(obj_id_to_cli(obj_chat), target) then
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
@@ -923,7 +923,7 @@ function banUser(executer, target, chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
-        if isWhitelisted(id_to_cli(obj_chat), target) then
+        if isWhitelisted(obj_id_to_cli(obj_chat), target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
