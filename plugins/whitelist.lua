@@ -18,7 +18,7 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                if whitelist_user(msg.reply_to_message.forward_from.id, msg.lang) then
+                                if whitelist_user(msg.chat.id, msg.reply_to_message.forward_from.id) then
                                     return langs[msg.lang].userBot .. msg.reply_to_message.forward_from.id .. langs[msg.lang].whitelistRemoved
                                 else
                                     return langs[msg.lang].userBot .. msg.reply_to_message.forward_from.id .. langs[msg.lang].whitelistAdded
@@ -31,7 +31,7 @@ local function run(msg, matches)
                         end
                     end
                 else
-                    if whitelist_user(msg.reply_to_message.from.id, msg.lang) then
+                    if whitelist_user(msg.chat.id, msg.reply_to_message.from.id) then
                         return langs[msg.lang].userBot .. msg.reply_to_message.from.id .. langs[msg.lang].whitelistRemoved
                     else
                         return langs[msg.lang].userBot .. msg.reply_to_message.from.id .. langs[msg.lang].whitelistAdded
@@ -44,7 +44,7 @@ local function run(msg, matches)
             if is_owner(msg) then
                 mystat('/whitelist <user>')
                 if string.match(matches[2], '^%d+$') then
-                    if whitelist_user(matches[2], msg.lang) then
+                    if whitelist_user(msg.chat.id, matches[2]) then
                         return langs[msg.lang].userBot .. matches[2] .. langs[msg.lang].whitelistRemoved
                     else
                         return langs[msg.lang].userBot .. matches[2] .. langs[msg.lang].whitelistAdded
@@ -53,7 +53,7 @@ local function run(msg, matches)
                     local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            if whitelist_user(obj_user.id, msg.lang) then
+                            if whitelist_user(msg.chat.id, obj_user.id) then
                                 return langs[msg.lang].userBot .. obj_user.id .. langs[msg.lang].whitelistRemoved
                             else
                                 return langs[msg.lang].userBot .. obj_user.id .. langs[msg.lang].whitelistAdded
