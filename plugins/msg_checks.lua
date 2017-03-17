@@ -373,7 +373,7 @@ local function pre_process(msg)
     if msg then
         -- Begin 'RondoMsgChecks' text checks by @rondoozle
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if not isWhitelisted(chat_id, msg.from.id) and not msg.from.is_mod then
+            if not isWhitelisted(msg.chat.id, msg.from.id) and not msg.from.is_mod then
                 -- if regular user
                 local settings = nil
                 if data[tostring(msg.chat.id)] then

@@ -1049,9 +1049,9 @@ function isBlocked(user_id)
 end
 
 -- Check if user_id is whitelisted or not
-function isWhitelisted(group_id, user_id)
+function isWhitelisted(chat_id, user_id)
     -- Save on redis
-    local hash = 'whitelist:' .. group_id
+    local hash = 'whitelist:' .. chat_id
     local whitelisted = redis:sismember(hash, user_id)
     return whitelisted or false
 end
