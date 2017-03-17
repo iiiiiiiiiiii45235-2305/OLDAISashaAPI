@@ -6,7 +6,7 @@ anti_spam.lua
 	chat:<chat_id>:users or chat:<user_id>
 	msgs:<user_id>:<chat_id>
 	api:user:<user_id>:msgs
-	whitelist
+	whitelist:<tg_cli_group_id>
 	gban:spam<user_id>
 banhammer.lua
 	user:<user_id>
@@ -53,7 +53,7 @@ goodbyewelcome.lua
 help.lua
 	msgs:<user_id>:<chat_id>
 info.lua
-	whitelist
+	whitelist:<tg_cli_group_id>
 	msgs:<user_id>:<chat_id>
 likecounter.lua
 	user:<user_id>
@@ -67,7 +67,7 @@ methods.lua
 	banned:<chat_id>
 	gbanned
 	bot:blocked
-	whitelist
+	whitelist:<tg_cli_group_id>
 	<chat_id>:warn:<user_id>
 	mute_user:<chat_id>
 	user:<user_id>
@@ -104,4 +104,4 @@ utils.lua
 	commands:stats
 	lang:<chat_id>
 whitelist.lua
-	whitelist
+	whitelist:<tg_cli_group_id>
