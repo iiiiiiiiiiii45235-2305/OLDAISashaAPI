@@ -90,7 +90,7 @@ local function pre_process(msg)
                         return msg
                     end
                     -- Ignore whitelisted
-                    if redis:sismember('whitelist', msg.from.id) then
+                    if isWhitelisted(chat_id, msg.from.id) then
                         return msg
                     end
                     if kicktable[msg.from.id] == true then

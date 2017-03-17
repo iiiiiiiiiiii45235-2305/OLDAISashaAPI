@@ -1,6 +1,5 @@
 ﻿local function whitelist_user(group_id, user_id)
-    local is_whitelisted = redis:sismember('whitelist:' .. group_id, user_id)
-    if is_whitelisted then
+    if isWhitelisted(group_id, user_id) then
         redis:srem('whitelist:' .. group_id, user_id)
         return false
     else

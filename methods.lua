@@ -870,7 +870,7 @@ function kickUser(executer, target, chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
-        if isWhitelisted(target) then
+        if isWhitelisted(chat_id, target) then
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
@@ -899,7 +899,7 @@ function kickUser(executer, target, chat_id)
 end
 
 function preBanUser(executer, target, chat_id)
-    if isWhitelisted(target) then
+    if isWhitelisted(chat_id, target) then
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
         return langs[get_lang(chat_id)].cantKickWhitelisted
     end
@@ -923,7 +923,7 @@ function banUser(executer, target, chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
-        if isWhitelisted(target) then
+        if isWhitelisted(chat_id, target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
@@ -1049,9 +1049,9 @@ function isBlocked(user_id)
 end
 
 -- Check if user_id is whitelisted or not
-function isWhitelisted(user_id)
+function isWhitelisted(group_id, user_id)
     -- Save on redis
-    local hash = 'whitelist'
+    local hash = 'whitelist:' .. group_id
     local whitelisted = redis:sismember(hash, user_id)
     return whitelisted or false
 end
