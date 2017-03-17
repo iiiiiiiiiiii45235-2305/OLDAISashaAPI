@@ -58,6 +58,9 @@ local function get_object_info(obj, chat_id)
             if isWhitelisted(id_to_cli(chat_id), obj.id) then
                 otherinfo = otherinfo .. 'WHITELISTED '
             end
+            if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                otherinfo = otherinfo .. 'GBANWHITELISTED '
+            end
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
             end
@@ -106,6 +109,9 @@ local function get_object_info(obj, chat_id)
             end
             if isWhitelisted(id_to_cli(chat_id), obj.id) then
                 otherinfo = otherinfo .. 'WHITELISTED '
+            end
+            if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                otherinfo = otherinfo .. 'GBANWHITELISTED '
             end
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '

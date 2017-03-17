@@ -1056,6 +1056,14 @@ function isWhitelisted(chat_id, user_id)
     return whitelisted or false
 end
 
+-- Check if user_id is gban whitelisted or not
+function isWhitelistedGban(chat_id, user_id)
+    -- Save on redis
+    local hash = 'whitelist:gban:' .. chat_id
+    local whitelisted = redis:sismember(hash, user_id)
+    return whitelisted or false
+end
+
 function setWarn(user_id, chat_id, value)
     local lang = get_lang(chat_id)
     if tonumber(value) < 0 or tonumber(value) > 10 then

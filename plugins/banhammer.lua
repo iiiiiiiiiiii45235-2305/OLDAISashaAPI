@@ -598,7 +598,10 @@ local function pre_process(msg)
                 -- Check if banned user joins chat by link
                 if msg.service_type == 'chat_add_user_link' then
                     print('Checking invited user ' .. msg.from.id)
-                    if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
+                    if isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id) then
+                        return msg
+                    end
+                    if isBanned(msg.from.id, msg.chat.id) or(isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
                         -- Check it with redis
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
@@ -609,7 +612,7 @@ local function pre_process(msg)
                 -- Check if banned user joins chat
                 if msg.service_type == 'chat_add_user' then
                     print('Checking invited user ' .. msg.added.id)
-                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or isGbanned(msg.added.id) and not is_admin2(msg.from.id) then
+                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(msg.added.id) and(not is_admin2(msg.from.id) or not isWhitelistedGban(msg.chat.tg_cli_id, msg.added.id))) then
                         -- Check it with redis
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
@@ -660,7 +663,7 @@ local function pre_process(msg)
         end
         -- banned user is talking !
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if isBanned(msg.from.id, msg.chat.id) or isGbanned(msg.from.id) then
+            if isBanned(msg.from.id, msg.chat.id) or(isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
                 -- Check it with redis
                 print('Banned user talking!')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
