@@ -90,7 +90,7 @@ local function pre_process(msg)
                         return msg
                     end
                     -- Ignore whitelisted
-                    if isWhitelisted(msg.chat.id, msg.from.id) then
+                    if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
                         return msg
                     end
                     if kicktable[msg.from.id] == true then

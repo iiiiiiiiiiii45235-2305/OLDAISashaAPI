@@ -17,7 +17,7 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                if whitelist_user(msg.chat.id, msg.reply_to_message.forward_from.id) then
+                                if whitelist_user(msg.chat.tg_cli_id, msg.reply_to_message.forward_from.id) then
                                     return langs[msg.lang].userBot .. msg.reply_to_message.forward_from.id .. langs[msg.lang].whitelistRemoved
                                 else
                                     return langs[msg.lang].userBot .. msg.reply_to_message.forward_from.id .. langs[msg.lang].whitelistAdded
@@ -30,7 +30,7 @@ local function run(msg, matches)
                         end
                     end
                 else
-                    if whitelist_user(msg.chat.id, msg.reply_to_message.from.id) then
+                    if whitelist_user(msg.chat.tg_cli_id, msg.reply_to_message.from.id) then
                         return langs[msg.lang].userBot .. msg.reply_to_message.from.id .. langs[msg.lang].whitelistRemoved
                     else
                         return langs[msg.lang].userBot .. msg.reply_to_message.from.id .. langs[msg.lang].whitelistAdded
@@ -43,7 +43,7 @@ local function run(msg, matches)
             if is_owner(msg) then
                 mystat('/whitelist <user>')
                 if string.match(matches[2], '^%d+$') then
-                    if whitelist_user(msg.chat.id, matches[2]) then
+                    if whitelist_user(msg.chat.tg_cli_id, matches[2]) then
                         return langs[msg.lang].userBot .. matches[2] .. langs[msg.lang].whitelistRemoved
                     else
                         return langs[msg.lang].userBot .. matches[2] .. langs[msg.lang].whitelistAdded
@@ -52,7 +52,7 @@ local function run(msg, matches)
                     local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            if whitelist_user(msg.chat.id, obj_user.id) then
+                            if whitelist_user(msg.chat.tg_cli_id, obj_user.id) then
                                 return langs[msg.lang].userBot .. obj_user.id .. langs[msg.lang].whitelistRemoved
                             else
                                 return langs[msg.lang].userBot .. obj_user.id .. langs[msg.lang].whitelistAdded
@@ -66,7 +66,7 @@ local function run(msg, matches)
             end
         else
             mystat('/whitelist')
-            local list = redis:smembers('whitelist:' .. msg.chat.id)
+            local list = redis:smembers('whitelist:' .. msg.chat.tg_cli_id)
             local text = langs[msg.lang].whitelistStart .. msg.chat.id .. '\n'
             for k, v in pairs(list) do
                 local user_info = redis:hgetall('user:' .. v)
@@ -84,7 +84,7 @@ local function run(msg, matches)
     if matches[1]:lower() == "clean whitelist" then
         if is_owner(msg) then
             mystat('/clean whitelist')
-            redis:del('whitelist:' .. msg.chat.id)
+            redis:del('whitelist:' .. msg.chat.tg_cli_id)
             return langs[msg.lang].whitelistCleaned
         else
             return langs[msg.lang].require_owner

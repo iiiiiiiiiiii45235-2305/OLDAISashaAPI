@@ -502,14 +502,30 @@ function get_lang(chat_id)
     return lang
 end
 
-function id_to_cli(obj)
-    if obj.type then
-        if obj.type == 'bot' or obj.type == 'private' or obj.type == 'user' then
-            return tonumber(obj.id)
-        elseif obj.type == 'group' then
-            return tonumber(tostring(obj.id:gsub('-', '')))
-        elseif obj.type == 'supergroup' or obj.type == 'channel' then
-            return tonumber(tostring(obj.id:gsub('-100', '')))
+function id_to_cli(obj_or_id)
+    if type(obj_or_id) == 'table' then
+        local obj = obj_or_id
+        if obj.type then
+            if obj.type == 'bot' or obj.type == 'private' or obj.type == 'user' then
+                return tonumber(obj.id)
+            elseif obj.type == 'group' then
+                return tonumber(tostring(obj.id:gsub('-', '')))
+            elseif obj.type == 'supergroup' or obj.type == 'channel' then
+                return tonumber(tostring(obj.id:gsub('-100', '')))
+            end
+        end
+    else
+        local id = tostring(obj_or_id)
+        local temp = tostring(id:gsub('-100', ''))
+        if id == temp then
+            temp = tostring(id:gsub('-', ''))
+            if id == temp then
+                return tonumber(id)
+            else
+                return tonumber(temp)
+            end
+        else
+            return tonumber(temp)
         end
     end
 end
