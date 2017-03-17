@@ -505,11 +505,11 @@ end
 function obj_id_to_cli(obj)
     if obj.type then
         if obj.type == 'bot' or obj.type == 'private' or obj.type == 'user' then
-            return tonumber(obj.id)
+            return tostring(obj.id)
         elseif obj.type == 'group' then
-            return tonumber(tostring(obj.id):gsub('-', ''))
+            return tostring(obj.id):gsub('-', '')
         elseif obj.type == 'supergroup' or obj.type == 'channel' then
-            return tonumber(tostring(obj.id):gsub('-100', ''))
+            return tostring(obj.id):gsub('-100', '')
         end
     end
 end
@@ -519,11 +519,11 @@ function id_to_cli(id)
     if id == temp then
         temp = tostring(id):gsub('-', '')
         if id == temp then
-            return tonumber(id)
+            return tostring(id)
         else
-            return tonumber(temp)
+            return tostring(temp)
         end
     else
-        return tonumber(temp)
+        return tostring(temp)
     end
 end
