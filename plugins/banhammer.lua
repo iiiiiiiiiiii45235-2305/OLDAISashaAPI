@@ -612,7 +612,7 @@ local function pre_process(msg)
                 -- Check if banned user joins chat
                 if msg.service_type == 'chat_add_user' then
                     print('Checking invited user ' .. msg.added.id)
-                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(msg.added.id) and(not is_admin2(msg.from.id) or not isWhitelistedGban(msg.chat.tg_cli_id, msg.added.id))) then
+                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(msg.added.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, msg.added.id))) then
                         -- Check it with redis
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
