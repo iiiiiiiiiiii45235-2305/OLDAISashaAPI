@@ -9,7 +9,7 @@
 end
 
 local function whitegban_user(group_id, user_id, lang)
-    if isWhitelisted(group_id, user_id) then
+    if isWhitelistedGban(group_id, user_id) then
         redis:srem('whitelist:gban:' .. group_id, user_id)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
     else
