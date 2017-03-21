@@ -74,12 +74,14 @@ local function pre_process(msg)
                 local NUM_MSG_MAX = 5
                 local strict = false
                 if data[tostring(msg.chat.id)] then
-                    if data[tostring(msg.chat.id)].settings.flood_max then
-                        NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
-                        -- Obtain group flood sensitivity
-                    end
-                    if data[tostring(msg.chat.id)].settings.strict then
-                        strict = settings.strict
+                    if data[tostring(msg.chat.id)].settings then
+                        if data[tostring(msg.chat.id)].settings.flood_max then
+                            NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
+                            -- Obtain group flood sensitivity
+                        end
+                        if data[tostring(msg.chat.id)].settings.strict then
+                            strict = settings.strict
+                        end
                     end
                 end
                 local max_msg = NUM_MSG_MAX * 1
