@@ -80,7 +80,7 @@ local function pre_process(msg)
                             -- Obtain group flood sensitivity
                         end
                         if data[tostring(msg.chat.id)].settings.strict then
-                            strict = settings.strict
+                            strict = data[tostring(msg.chat.id)].settings.settings.strict
                         end
                     end
                 end
