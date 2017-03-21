@@ -123,9 +123,9 @@ local function check_msg(msg, settings)
         end
         if msg.entities then
             for k, v in pairs(msg.entities) do
-                if msg.entities[k].url then
+                if v.url then
                     if lock_link then
-                        if check_if_link(msg.entities[k].url, group_link) then
+                        if check_if_link(v.url, group_link) then
                             print('link found entities')
                             action(msg, strict)
                             msg = clean_msg(msg)
