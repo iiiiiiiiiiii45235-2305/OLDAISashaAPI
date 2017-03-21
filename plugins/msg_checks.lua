@@ -122,13 +122,15 @@ local function check_msg(msg, settings)
             return nil
         end
         if msg.entities then
-            if lock_link then
-                if msg.entities.url then
-                    if check_if_link(msg.entities.url, group_link) then
-                        print('link found entities')
-                        action(msg, strict)
-                        msg = clean_msg(msg)
-                        return nil
+            for k, v in pairs(msg.entities) do
+                if msg.entities[k].url then
+                    if lock_link then
+                        if check_if_link(msg.entities[k].url, group_link) then
+                            print('link found entities')
+                            action(msg, strict)
+                            msg = clean_msg(msg)
+                            return nil
+                        end
                     end
                 end
             end
