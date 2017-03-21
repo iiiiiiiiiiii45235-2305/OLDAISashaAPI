@@ -565,7 +565,7 @@ local function adjustSettingType(setting_type)
     if setting_type == 'arabic' then
         setting_type = 'lock_arabic'
     end
-    if setting_type == 'bot' then
+    if setting_type == 'bots' then
         setting_type = 'lock_bots'
     end
     if setting_type == 'flood' then
@@ -637,7 +637,7 @@ local function checkMatchesLockUnlock(txt)
     if txt:lower() == 'arabic' then
         return true
     end
-    if txt:lower() == 'bot' then
+    if txt:lower() == 'bots' then
         return true
     end
     if txt:lower() == 'flood' then
@@ -1653,8 +1653,8 @@ return {
         "#muteuser|voce <id>|<username>|<reply>|from",
         "(#muteslist|lista muti)",
         "(#mutelist|lista utenti muti)",
-        "(#lock|[sasha] blocca) arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "OWNER",
         "#log",
         "(#getadmins|[sasha] lista admin)",
@@ -1678,8 +1678,8 @@ return {
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
-        "(#lock|[sasha] blocca) <group_id> arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) <group_id> arabic|bot|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "(#lock|[sasha] blocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "(#unlock|[sasha] sblocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
         "#type",
         "#rem <group_id>",
