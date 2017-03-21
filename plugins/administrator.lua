@@ -106,6 +106,10 @@ local function run(msg, matches)
                 io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
                 return langs[msg.lang].cliReboot
             end
+            if matches[1]:lower() == "update" then
+                mystat('/update')
+                return io.popen('git pull'):read('*all')
+            end
             if matches[1] == 'botrestart' then
                 mystat('/botrestart')
                 redis:bgsave()
@@ -173,7 +177,7 @@ return {
         -- sync your global bans with seed
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Bb][Aa][Cc][Kk][Uu][Pp])$",
-        "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee][Ii][Dd])$",
+        "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
@@ -215,6 +219,7 @@ return {
         "SUDO",
         "#botrestart",
         "#redissave",
+        "#update",
         "(#sync_gbans|sasha sincronizza superban)",
         "(#backup|sasha esegui backup)",
         "(#uploadbackup|sasha invia backup)",
