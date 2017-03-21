@@ -196,7 +196,20 @@ local function check_msg(msg, settings)
         end
         -- msg.media checks
         if msg.media_type then
-            if msg.media_type == 'audio' then
+            if msg.media_type == 'link' then
+                if lock_link then
+                    if msg.entities then
+                        if msg.entities.url then
+                            if check_if_link(msg.entities.url, group_link) then
+                                print('entities link found')
+                                action(msg, strict)
+                                msg = clean_msg(msg)
+                                return nil
+                            end
+                        end
+                    end
+                end
+            elseif msg.media_type == 'audio' then
                 if mute_audio then
                     print('audio muted')
                     action(msg, strict)

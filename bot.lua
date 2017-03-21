@@ -496,7 +496,7 @@ function pre_process_media_msg(msg)
 
     if msg.entities then
         for i, entity in pairs(msg.entities) do
-            if entity.type == 'url' then
+            if entity.type == 'url' or entity.type == 'text_link' then
                 msg.url = true
                 msg.media = true
                 msg.media_type = 'link'
