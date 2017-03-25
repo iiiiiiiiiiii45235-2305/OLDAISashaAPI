@@ -576,7 +576,7 @@ function pre_process_service_msg(msg)
     msg.service = false
     if msg.group_chat_created then
         msg.service = true
-        msg.text = '!!tgservice chat_created'
+        msg.text = '!!tgservice chat_created ' ..(msg.text or '')
         msg.service_type = 'chat_created'
     elseif msg.new_chat_member then
         msg.adder = msg.from
@@ -608,30 +608,30 @@ function pre_process_service_msg(msg)
         end
     elseif msg.migrate_from_chat_id then
         msg.service = true
-        msg.text = '!!tgservice migrated_from'
+        msg.text = '!!tgservice migrated_from ' ..(msg.text or '')
         msg.service_type = 'migrated_from'
         migrate_to_supergroup(msg)
     elseif msg.pinned_message then
         msg.service = true
-        msg.text = '!!tgservice pinned_message'
+        msg.text = '!!tgservice pinned_message ' ..(msg.text or '')
         msg.service_type = 'pinned_message'
     elseif msg.new_chat_photo then
         msg.service = true
-        msg.text = '!!tgservice chat_change_photo'
+        msg.text = '!!tgservice chat_change_photo ' ..(msg.text or '')
         msg.service_type = 'chat_change_photo'
     elseif msg.new_chat_title then
         msg.service = true
-        msg.text = '!!tgservice chat_rename'
+        msg.text = '!!tgservice chat_rename ' ..(msg.text or '')
         msg.service_type = 'chat_rename'
     end
     if msg.adder and msg.added then
         msg.service = true
         -- add_user
         if msg.adder.id == msg.added.id then
-            msg.text = '!!tgservice chat_add_user_link'
+            msg.text = '!!tgservice chat_add_user_link ' ..(msg.text or '')
             msg.service_type = 'chat_add_user_link'
         else
-            msg.text = '!!tgservice chat_add_user'
+            msg.text = '!!tgservice chat_add_user ' ..(msg.text or '')
             msg.service_type = 'chat_add_user'
         end
         msg.new_chat_member = nil
@@ -641,10 +641,10 @@ function pre_process_service_msg(msg)
         msg.service = true
         -- del_user
         if msg.remover.id == msg.removed.id then
-            msg.text = '!!tgservice chat_del_user_leave'
+            msg.text = '!!tgservice chat_del_user_leave ' ..(msg.text or '')
             msg.service_type = 'chat_del_user_leave'
         else
-            msg.text = '!!tgservice chat_del_user'
+            msg.text = '!!tgservice chat_del_user ' ..(msg.text or '')
             msg.service_type = 'chat_del_user'
         end
         msg.left_chat_member = nil
