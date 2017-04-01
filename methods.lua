@@ -40,7 +40,7 @@ function sendRequest(url)
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
             sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
         end
-        return false, code, tab.description
+        return nil, code, tab.description
     end
 
     if not tab.ok then
