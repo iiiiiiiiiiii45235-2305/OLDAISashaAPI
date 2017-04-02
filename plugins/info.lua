@@ -281,13 +281,9 @@ local function run(msg, matches)
                     end
                 end
                 if string.match(matches[2], '^%-?%d+$') then
-                    local obj = getChat(matches[2])
-                    if type(obj) == 'table' then
-                        return get_object_info(obj, msg.chat.id)
-                    end
+                    return get_object_info(getChat(matches[2]), msg.chat.id)
                 else
-                    local obj = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
-                    return get_object_info(obj, msg.chat.id)
+                    return get_object_info(getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '')), msg.chat.id)
                 end
             else
                 return langs[msg.lang].require_mod
