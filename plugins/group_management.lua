@@ -397,11 +397,11 @@ local function promoteAdmin(user, chat_id)
         save_data(config.moderation.data, data)
     end
     if data.admins[tostring(user.id)] then
-        return(user.username or user.print_name) .. langs[lang].alreadyAdmin
+        return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyAdmin
     end
-    data.admins[tostring(user.id)] =(user.username or user.print_name)
+    data.admins[tostring(user.id)] =(user.username or user.print_name or user.first_name)
     save_data(config.moderation.data, data)
-    return(user.username or user.print_name) .. langs[lang].promoteAdmin
+    return(user.username or user.print_name or user.first_name) .. langs[lang].promoteAdmin
 end
 
 local function demoteAdmin(user, chat_id)
@@ -411,11 +411,11 @@ local function demoteAdmin(user, chat_id)
         save_data(config.moderation.data, data)
     end
     if not data.admins[tostring(user.id)] then
-        return(user.username or user.print_name) .. langs[lang].notAdmin
+        return(user.username or user.print_name or user.first_name) .. langs[lang].notAdmin
     end
     data.admins[tostring(user.id)] = nil
     save_data(config.moderation.data, data)
-    return(user.username or user.print_name) .. langs[lang].demoteAdmin
+    return(user.username or user.print_name or user.first_name) .. langs[lang].demoteAdmin
 end
 
 local function botAdminsList(chat_id)
@@ -435,7 +435,7 @@ local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)]['set_owner'] = tostring(user.id)
     save_data(config.moderation.data, data)
-    return(user.username or user.print_name) .. ' [' .. user.id .. ']' .. langs[lang].setOwner
+    return(user.username or user.print_name or user.first_name) .. ' [' .. user.id .. ']' .. langs[lang].setOwner
 end
 
 local function getAdmins(chat_id)
@@ -450,31 +450,29 @@ local function getAdmins(chat_id)
 end
 
 local function promoteMod(chat_id, user)
-    printvardump(user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
         return langs[lang].groupNotAdded
     end
     if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
-        return(user.username or user.print_name) .. langs[lang].alreadyMod
+        return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyMod
     end
-    data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name)
+    data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
     save_data(config.moderation.data, data)
-    return(user.username or user.print_name) .. langs[lang].promoteMod
+    return(user.username or user.print_name or user.first_name) .. langs[lang].promoteMod
 end
 
 local function demoteMod(chat_id, user)
-    printvardump(user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
         return langs[lang].groupNotAdded
     end
     if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
-        return(user.username or user.print_name) .. langs[lang].notMod
+        return(user.username or user.print_name or user.first_name) .. langs[lang].notMod
     end
     data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
     save_data(config.moderation.data, data)
-    return(user.username or user.print_name) .. langs[lang].demoteMod
+    return(user.username or user.print_name or user.first_name) .. langs[lang].demoteMod
 end
 
 local function modList(msg)
