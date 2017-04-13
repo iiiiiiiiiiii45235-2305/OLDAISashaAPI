@@ -1077,6 +1077,28 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
+            if matches[1]:lower() == 'syncmodlist' then
+                if msg.from.is_owner then
+                    mystat('/syncmodlist')
+                    data[tostring(msg.chat.id)].moderators = { }
+                    local list = getChatAdministrators(msg.chat.id)
+                    if list then
+                        if list.result then
+                            for i, admin in pairs(list.result) do
+                                if admin.status == 'creator' or admin.status == 'administrator' then
+                                    if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
+                                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                                    end
+                                end
+                            end
+                        end
+                    end
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].modListSynced
+                else
+                    return langs[msg.lang].require_owner
+                end
+            end
             if matches[1]:lower() == 'setrules' or matches[1]:lower() == 'sasha imposta regole' then
                 mystat('/setrules')
                 if msg.from.is_mod then
@@ -1577,6 +1599,7 @@ return {
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ll][Ii][Nn][Kk])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee][Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])",
+        "^[#!/]([Ss][Yy][Nn][Cc][Mm][Oo][Dd][Ll][Ii][Ss][Tt])",
         "^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
         "^[#!/]([Oo][Ww][Nn][Ee][Rr])$",
@@ -1656,6 +1679,7 @@ return {
         "(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "OWNER",
+        "#syncmodlist",
         "#log",
         "(#getadmins|[sasha] lista admin)",
         "(#setlink|sasha imposta link) <link>",

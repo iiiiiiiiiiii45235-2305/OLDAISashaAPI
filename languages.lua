@@ -432,6 +432,7 @@ return {
         descriptionCleaned = 'Descrizione svuotata.',
         mutelistCleaned = 'Lista muti svuotata.',
         cantContact = 'Se non mi scrive per primo/a non posso contattare ',
+        modListSynced = 'Lista moderatori sincronizzata con quella di telegram.',
         -- ex inpm.lua --
         groupsJoin = 'Gruppi:\nUsa /join <group_id> per entrare\n\n',
         realmsJoin = 'Reami:\nUsa /join <realm_id> per entrare\n\n',
@@ -851,6 +852,7 @@ return {
             '(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict: Sasha blocca l\'opzione specificata.',
             '(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict: Sasha sblocca l\'opzione specificata.',
             'OWNER',
+            '#syncmodlist: Sasha sincronizza la lista dei moderatori con quella di telegram.',
             '#log: Sasha manda un file contenente il log del gruppo/regno.',
             '(#setlink|sasha imposta link) <link>: Sasha imposta <link> come link d\'invito.',
             '(#unsetlink|sasha elimina link): Sasha elimina il link salvato.',
@@ -1400,6 +1402,7 @@ return {
         descriptionCleaned = 'Description cleaned.',
         mutelistCleaned = 'Mute list cleaned.',
         cantContact = 'If (s)he doesn\'t write me first I can\'t contact ',
+        modListSynced = 'Modlist synced with telegram\'s one.',
         -- ex inpm.lua --
         groupsJoin = 'Groups:\nUse /join <group_id> to join\n\n',
         realmsJoin = 'Realm:\nUse /join <realm_id> to join\n\n',
@@ -1821,6 +1824,7 @@ return {
             '(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict: Sasha locks specified parameter.',
             '(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict: Sasha unlocks specified parameter.',
             'OWNER',
+            '#syncmodlist: Sasha syncs the modlist with telegram\'s one.',
             '#log: Sasha sends a file that contains group/realm log.',
             '(#setlink|sasha imposta link) <link>: Sasha saves <link> as group\'s link.',
             '(#unsetlink|sasha elimina link): Sasha deletes the saved link.',
