@@ -396,7 +396,6 @@ return {
         warnSensibility = '\nAvvertimenti massimi: ',
         noSuchMuteType = 'Nessun muto applicabile sulla variabile specificata.',
         -- ex common --
-        groupInfoUpdated = 'Nome gruppo e moderatori aggiornati.',
         newDescription = 'Nuova descrizione:\n',
         noDescription = 'Nessuna descrizione disponibile.',
         description = 'Descrizione chat: ',
@@ -432,6 +431,7 @@ return {
         descriptionCleaned = 'Descrizione svuotata.',
         mutelistCleaned = 'Lista muti svuotata.',
         cantContact = 'Se non mi scrive per primo/a non posso contattare ',
+        groupInfoUpdated = 'Nome gruppo e moderatori aggiornati.',
         modListSynced = 'Lista moderatori sincronizzata con quella di telegram.',
         -- ex inpm.lua --
         groupsJoin = 'Gruppi:\nUsa /join <group_id> per entrare\n\n',
@@ -1367,7 +1367,6 @@ return {
         warnSensibility = '\nMax warns: ',
         noSuchMuteType = 'No mute applicable to the specified variable.',
         -- ex common --
-        groupInfoUpdated = 'Group name and mods updated.',
         newDescription = 'New description:\n',
         noDescription = 'No description available.',
         description = 'Chat description: ',
@@ -1402,6 +1401,7 @@ return {
         descriptionCleaned = 'Description cleaned.',
         mutelistCleaned = 'Mute list cleaned.',
         cantContact = 'If (s)he doesn\'t write me first I can\'t contact ',
+        groupInfoUpdated = 'Group name and mods updated.',
         modListSynced = 'Modlist synced with telegram\'s one.',
         -- ex inpm.lua --
         groupsJoin = 'Groups:\nUse /join <group_id> to join\n\n',
