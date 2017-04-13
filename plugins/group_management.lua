@@ -450,6 +450,7 @@ local function getAdmins(chat_id)
 end
 
 local function promoteMod(chat_id, user)
+    printvardump(user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
         return langs[lang].groupNotAdded
@@ -463,6 +464,7 @@ local function promoteMod(chat_id, user)
 end
 
 local function demoteMod(chat_id, user)
+    printvardump(user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
         return langs[lang].groupNotAdded
