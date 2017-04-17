@@ -586,6 +586,7 @@ function pre_process_service_msg(msg)
         msg.service_type = 'chat_created'
     elseif msg.new_chat_members then
         msg.adder = msg.from
+        msg.added = { }
         for k, v in pairs(msg.new_chat_members) do
             if msg.from.id == v.id then
                 msg.added[k] = msg.from
