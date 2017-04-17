@@ -335,8 +335,8 @@ function adjust_msg(msg)
     if msg.adder then
         msg.adder = adjust_user(msg.adder)
     end
-    if msg.added then
-        msg.added = adjust_user(msg.added)
+    for k, v in pairs(msg.added) do
+        msg.added[k] = adjust_user(v)
     end
     if msg.remover then
         msg.remover = adjust_user(msg.remover)
@@ -393,7 +393,9 @@ local function collect_stats(msg)
     saveUsername(msg.from, msg.chat.id)
     saveUsername(msg.chat)
     saveUsername(msg.reply_to_message, msg.chat.id)
-    saveUsername(msg.added, msg.chat.id)
+    for k, v in pairs(msg.added) do
+        saveUsername(v, msg.chat.id)
+    end
     saveUsername(msg.adder, msg.chat.id)
     saveUsername(msg.removed, msg.chat.id)
     saveUsername(msg.remover, msg.chat.id)
@@ -578,19 +580,14 @@ function pre_process_service_msg(msg)
         msg.service = true
         msg.text = '!!tgservice chat_created ' ..(msg.text or '')
         msg.service_type = 'chat_created'
-    elseif msg.new_chat_member then
+    elseif msg.new_chat_members then
         msg.adder = msg.from
-        if msg.from.id == msg.new_chat_member.id then
-            msg.added = msg.from
-        else
-            msg.added = msg.new_chat_member
-        end
-    elseif msg.new_chat_participant then
-        msg.adder = msg.from
-        if msg.from.id == msg.new_chat_participant.id then
-            msg.added = msg.from
-        else
-            msg.added = msg.new_chat_participant
+        for k, v in pairs(msg.new_chat_members) do
+            if msg.from.id == v.id then
+                msg.added[k] = msg.from
+            else
+                msg.added[k] = v
+            end
         end
     elseif msg.left_chat_member then
         msg.remover = msg.from
@@ -598,13 +595,6 @@ function pre_process_service_msg(msg)
             msg.removed = msg.from
         else
             msg.removed = msg.left_chat_member
-        end
-    elseif msg.left_chat_participant then
-        msg.remover = msg.from
-        if msg.from.id == msg.left_chat_participant.id then
-            msg.removed = msg.from
-        else
-            msg.removed = msg.left_chat_participant
         end
     elseif msg.migrate_from_chat_id then
         msg.service = true
@@ -627,14 +617,20 @@ function pre_process_service_msg(msg)
     if msg.adder and msg.added then
         msg.service = true
         -- add_user
-        if msg.adder.id == msg.added.id then
-            msg.text = '!!tgservice chat_add_user_link ' ..(msg.text or '')
-            msg.service_type = 'chat_add_user_link'
+        if #msg.new_chat_members == 1 then
+            if msg.adder.id == msg.added[1].id then
+                msg.text = '!!tgservice chat_add_user_link ' ..(msg.text or '')
+                msg.service_type = 'chat_add_user_link'
+            else
+                msg.text = '!!tgservice chat_add_user ' ..(msg.text or '')
+                msg.service_type = 'chat_add_user'
+            end
         else
-            msg.text = '!!tgservice chat_add_user ' ..(msg.text or '')
-            msg.service_type = 'chat_add_user'
+            msg.text = '!!tgservice chat_add_users ' ..(msg.text or '')
+            msg.service_type = 'chat_add_users'
         end
         msg.new_chat_member = nil
+        msg.new_chat_members = nil
         msg.new_chat_participant = nil
     end
     if msg.remover and msg.removed then

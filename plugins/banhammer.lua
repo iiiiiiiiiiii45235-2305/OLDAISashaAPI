@@ -77,7 +77,7 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             return getUserWarns(matches[2], msg.chat.id)
                         else
-                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return getUserWarns(obj_user.id, msg.chat.id)
@@ -117,7 +117,7 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             return warnUser(msg.from.id, matches[2], msg.chat.id)
                         else
-                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return warnUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -157,7 +157,7 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             return unwarnUser(msg.from.id, matches[2], msg.chat.id)
                         else
-                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -197,7 +197,7 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             return unwarnallUser(msg.from.id, matches[2], msg.chat.id)
                         else
-                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                            local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -229,8 +229,12 @@ local function run(msg, matches)
                         end
                     else
                         if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' then
-                                return kickUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                local text = kickUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                for k, v in pairs(msg.reply_to_message.added) do
+                                    text = text .. kickUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                end
+                                return text
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                 return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
                             else
@@ -244,7 +248,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return kickUser(msg.from.id, matches[2], msg.chat.id)
                     else
-                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return kickUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -350,8 +354,12 @@ local function run(msg, matches)
                         end
                     else
                         if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' then
-                                return banUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                local text = banUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                for k, v in pairs(msg.reply_to_message.added) do
+                                    text = text .. banUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                end
+                                return text
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                 return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
                             else
@@ -365,7 +373,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return banUser(msg.from.id, matches[2], msg.chat.id)
                     else
-                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return banUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -396,8 +404,12 @@ local function run(msg, matches)
                         end
                     else
                         if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' then
-                                return unbanUser(msg.from.id, msg.reply_to_message.added.id, msg.chat.id)
+                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                local text = unbanUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                for k, v in pairs(msg.reply_to_message.added) do
+                                    text = text .. unbanUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                end
+                                return text
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                 return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
                             else
@@ -411,7 +423,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return unbanUser(msg.from.id, matches[2], msg.chat.id)
                     else
-                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return unbanUser(msg.from.id, obj_user.id, msg.chat.id)
@@ -451,9 +463,14 @@ local function run(msg, matches)
                         end
                     else
                         if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' then
-                                gbanUser(msg.reply_to_message.added.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].gbanned
+                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                gbanUser(msg.reply_to_message.adder.id)
+                                local text = langs[msg.lang].user .. msg.reply_to_message.adder.id .. langs[msg.lang].gbanned '\n'
+                                for k, v in pairs(msg.reply_to_message.added) do
+                                    gbanUser(v.id)
+                                    text = text .. langs[msg.lang].user .. v.id .. langs[msg.lang].gbanned .. '\n'
+                                end
+                                return text
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                 gbanUser(msg.reply_to_message.removed.id)
                                 return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].gbanned
@@ -471,7 +488,7 @@ local function run(msg, matches)
                         gbanUser(matches[2])
                         return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
                     else
-                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 gbanUser(obj_user.id)
@@ -504,9 +521,14 @@ local function run(msg, matches)
                         end
                     else
                         if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' then
-                                ungbanUser(msg.reply_to_message.added.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.added.id .. langs[msg.lang].ungbanned
+                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                ungbanUser(msg.reply_to_message.adder.id)
+                                local text = langs[msg.lang].user .. msg.reply_to_message.adder.id .. langs[msg.lang].ungbanned '\n'
+                                for k, v in pairs(msg.reply_to_message.added) do
+                                    ungbanUser(v.id)
+                                    text = text .. langs[msg.lang].user .. v.id .. langs[msg.lang].ungbanned .. '\n'
+                                end
+                                return text
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                 ungbanUser(msg.reply_to_message.removed.id)
                                 return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].ungbanned
@@ -524,7 +546,7 @@ local function run(msg, matches)
                         ungbanUser(matches[2])
                         return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
                     else
-                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 ungbanUser(obj_user.id)
@@ -595,6 +617,56 @@ local function pre_process(msg)
         -- SERVICE MESSAGE
         if msg.service then
             if msg.service_type then
+                -- Check if banned users joins chat
+                if msg.service_type == 'chat_add_users' then
+                    for k, v in pairs(msg.added) do
+                        print('Checking invited user ' .. v.id)
+                        if isBanned(v.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(v.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, v.id))) then
+                            -- Check it with redis
+                            print('User is banned!')
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. v.id)
+                            -- Save to logs
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
+                            local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                            redis:incr(banhash)
+                            local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                            local banaddredis = redis:get(banhash)
+                            if banaddredis then
+                                if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
+                                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
+                                    -- Kick user who adds ban ppl more than 3 times
+                                end
+                                if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
+                                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                                    -- Ban user who adds ban ppl more than 7 times
+                                    local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
+                                    redis:set(banhash, 0)
+                                    -- Reset the Counter
+                                end
+                            end
+                        end
+                        local bots_protection = false
+                        if data[tostring(msg.chat.id)] then
+                            if data[tostring(msg.chat.id)].settings then
+                                if data[tostring(msg.chat.id)].settings.lock_bots then
+                                    bots_protection = data[tostring(msg.chat.id)].settings.lock_bots
+                                end
+                            end
+                        end
+                        if v.username then
+                            if bots_protection then
+                                if not msg.from.is_mod then
+                                    if string.sub(v.username:lower(), -3) == 'bot' then
+                                        --- Will kick bots added by normal users
+                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
+                                        -- Save to logs
+                                        sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
                 -- Check if banned user joins chat by link
                 if msg.service_type == 'chat_add_user_link' then
                     print('Checking invited user ' .. msg.from.id)
@@ -607,54 +679,6 @@ local function pre_process(msg)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
                         -- Save to logs
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                    end
-                end
-                -- Check if banned user joins chat
-                if msg.service_type == 'chat_add_user' then
-                    print('Checking invited user ' .. msg.added.id)
-                    if isBanned(msg.added.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(msg.added.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, msg.added.id))) then
-                        -- Check it with redis
-                        print('User is banned!')
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. msg.added.id)
-                        -- Save to logs
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
-                        local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                        redis:incr(banhash)
-                        local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                        local banaddredis = redis:get(banhash)
-                        if banaddredis then
-                            if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
-                                sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
-                                -- Kick user who adds ban ppl more than 3 times
-                            end
-                            if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                                -- Ban user who adds ban ppl more than 7 times
-                                local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                                redis:set(banhash, 0)
-                                -- Reset the Counter
-                            end
-                        end
-                    end
-                    local bots_protection = false
-                    if data[tostring(msg.chat.id)] then
-                        if data[tostring(msg.chat.id)].settings then
-                            if data[tostring(msg.chat.id)].settings.lock_bots then
-                                bots_protection = data[tostring(msg.chat.id)].settings.lock_bots
-                            end
-                        end
-                    end
-                    if msg.added.username then
-                        if bots_protection then
-                            if not msg.from.is_mod then
-                                if string.sub(msg.added.username:lower(), -3) == 'bot' then
-                                    --- Will kick bots added by normal users
-                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. msg.added.username)
-                                    -- Save to logs
-                                    sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
-                                end
-                            end
-                        end
                     end
                 end
                 -- No further checks

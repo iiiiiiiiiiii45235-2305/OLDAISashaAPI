@@ -189,7 +189,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return get_reverse_rank(msg.chat.id, matches[2])
             else
-                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return get_reverse_rank(msg.chat.id, obj_user.id)
@@ -224,7 +224,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
-                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return is_here(msg.chat.id, obj_user.id)
@@ -251,12 +251,16 @@ local function run(msg, matches)
                     end
                 else
                     if msg.reply_to_message.service then
-                        if msg.reply_to_message.service_type == 'chat_add_user' then
-                            return get_object_info(msg.reply_to_message.adder, msg.chat.id) .. '\n\n' .. get_object_info(msg.reply_to_message.added, msg.chat.id)
+                        if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                            local text = get_object_info(msg.reply_to_message.adder, msg.chat.id) .. '\n'
+                            for k, v in pairs(msg.reply_to_message.added) do
+                                text = text .. get_object_info(v, msg.chat.id) .. '\n'
+                            end
+                            return text
+                        elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
+                            return get_object_info(msg.reply_to_message.from, msg.chat.id)
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
                             return get_object_info(msg.reply_to_message.remover, msg.chat.id) .. '\n\n' .. get_object_info(msg.reply_to_message.removed, msg.chat.id)
-                        elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
-                            return get_object_info(msg.reply_to_message.added, msg.chat.id)
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
                             return get_object_info(msg.reply_to_message.removed, msg.chat.id)
                         else
@@ -283,7 +287,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%-?%d+$') then
                     return get_object_info(getChat(matches[2]), msg.chat.id)
                 else
-                    return get_object_info(getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '')), msg.chat.id)
+                    return get_object_info(getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''), msg.chat.id)
                 end
             else
                 return langs[msg.lang].require_mod

@@ -185,7 +185,7 @@ local function pre_process(msg)
     if msg then
         if msg.service then
             if is_realm(msg) or is_group(msg) or is_super_group(msg) then
-                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
+                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_users" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
                     local hash
                     if msg.chat.type == 'group' then
                         hash = 'chat:welcome' .. msg.chat.id
@@ -197,7 +197,11 @@ local function pre_process(msg)
                     local hashonredis = redis:get(hash)
                     if hashonredis then
                         if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                            sendMessage(msg.chat.id, adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, msg.added))
+                            local text = ''
+                            for k, v in pairs(msg.added) do
+                                text = text .. adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, v) .. '\n'
+                            end
+                            sendMessage(msg.chat.id, text)
                             redis:getset(hash, 0)
                         end
                     else

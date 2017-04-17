@@ -186,7 +186,7 @@ local function run(msg, matches)
                         return matches[2] .. langs[msg.lang].notFound
                     end
                 else
-                    local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', ''))
+                    local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             if database[tostring(obj_user.id)] then
@@ -364,8 +364,8 @@ local function save_to_db(msg)
         if msg.adder then
             db_user(msg.adder, msg.chat.id)
         end
-        if msg.added then
-            db_user(msg.added, msg.chat.id)
+        for k, v in pairs(msg.added) do
+            db_user(v, msg.chat.id)
         end
         if msg.remover then
             db_user(msg.remover, msg.chat.id)

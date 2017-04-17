@@ -282,78 +282,78 @@ local function check_msg(msg, settings)
             msg = clean_msg(msg)
             return nil
         end
-        if msg.adder and msg.added then
-            if msg.adder.id == msg.added.id then
-                if lock_spam then
-                    local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                    if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
-                        print('name spam found')
-                        deleteMessage(msg)
-                        if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                        end
-                        if msg.chat.type == 'group' then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                        end
-                        msg = clean_msg(msg)
-                        return nil
-                    end
-                end
-                if lock_rtl then
-                    local is_rtl_name = msg.from.print_name:match("‮")
-                    if is_rtl_name then
-                        print('rtl name found')
-                        deleteMessage(msg)
-                        if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                        end
-                        if msg.chat.type == 'group' then
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
-                        end
-                        msg = clean_msg(msg)
-                        return nil
-                    end
-                end
-                if lock_member then
-                    print('member locked')
+        if msg.service_type == 'chat_add_user_link' then
+            if lock_spam then
+                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
+                if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
+                    print('name spam found')
                     deleteMessage(msg)
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
-                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                    if strict then
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                    end
+                    if msg.chat.type == 'group' then
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                    end
                     msg = clean_msg(msg)
                     return nil
                 end
-            elseif msg.adder.id ~= msg.added.id then
+            end
+            if lock_rtl then
+                local is_rtl_name = msg.from.print_name:match("‮")
+                if is_rtl_name then
+                    print('rtl name found')
+                    deleteMessage(msg)
+                    if strict then
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                    end
+                    if msg.chat.type == 'group' then
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                    end
+                    msg = clean_msg(msg)
+                    return nil
+                end
+            end
+            if lock_member then
+                print('member locked')
+                deleteMessage(msg)
+                savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                msg = clean_msg(msg)
+                return nil
+            end
+        elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+            for k, v in pairs(msg.added) do
                 if lock_spam then
                     local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                    if string.len(msg.added.print_name) > 70 or ctrl_chars > 40 then
+                    if string.len(v.print_name) > 70 or ctrl_chars > 40 then
                         print('name spam found')
                         deleteMessage(msg)
                         if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
                         end
                         if msg.chat.type == 'group' then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#spam name) ")
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
                         end
                         msg = clean_msg(msg)
                         return nil
                     end
                 end
                 if lock_rtl then
-                    local is_rtl_name = msg.added.print_name:match("‮")
+                    local is_rtl_name = v.print_name:match("‮")
                     if is_rtl_name then
                         print('rtl name found')
                         deleteMessage(msg)
                         if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned (#RTL char in name)")
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
                         end
                         if msg.chat.type == 'group' then
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
                         end
                         msg = clean_msg(msg)
                         return nil
@@ -363,14 +363,14 @@ local function check_msg(msg, settings)
                     print('member locked')
                     deleteMessage(msg)
                     sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id))
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. msg.added.id .. "]: added user banned  (#lockmember)")
-                    sendMessage(msg.chat.id, banUser(bot.id, msg.added.id, msg.chat.id))
+                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
+                    sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
                     msg = clean_msg(msg)
                     return nil
                 end
             end
         end
-        if msg.remover and msg.removed then
+        if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
             if lock_leave then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
                     sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id))
