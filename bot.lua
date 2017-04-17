@@ -335,8 +335,10 @@ function adjust_msg(msg)
     if msg.adder then
         msg.adder = adjust_user(msg.adder)
     end
-    for k, v in pairs(msg.added) do
-        msg.added[k] = adjust_user(v)
+    if msg.added then
+        for k, v in pairs(msg.added) do
+            msg.added[k] = adjust_user(v)
+        end
     end
     if msg.remover then
         msg.remover = adjust_user(msg.remover)
@@ -393,8 +395,10 @@ local function collect_stats(msg)
     saveUsername(msg.from, msg.chat.id)
     saveUsername(msg.chat)
     saveUsername(msg.reply_to_message, msg.chat.id)
-    for k, v in pairs(msg.added) do
-        saveUsername(v, msg.chat.id)
+    if msg.added then
+        for k, v in pairs(msg.added) do
+            saveUsername(v, msg.chat.id)
+        end
     end
     saveUsername(msg.adder, msg.chat.id)
     saveUsername(msg.removed, msg.chat.id)

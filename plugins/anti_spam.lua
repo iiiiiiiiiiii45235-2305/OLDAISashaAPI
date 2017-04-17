@@ -8,10 +8,12 @@ local function pre_process(msg)
     if msg then
         -- Ignore service msg
         if msg.service then
-            for k, v in pairs(msg.added) do
-                kicktable[v.id] = false
+            if msg.added then
+                for k, v in pairs(msg.added) do
+                    kicktable[v.id] = false
+                end
+                return msg
             end
-            return msg
         end
 
         -- Save chat's total messages

@@ -364,8 +364,10 @@ local function save_to_db(msg)
         if msg.adder then
             db_user(msg.adder, msg.chat.id)
         end
-        for k, v in pairs(msg.added) do
-            db_user(v, msg.chat.id)
+        if msg.added then
+            for k, v in pairs(msg.added) do
+                db_user(v, msg.chat.id)
+            end
         end
         if msg.remover then
             db_user(msg.remover, msg.chat.id)
