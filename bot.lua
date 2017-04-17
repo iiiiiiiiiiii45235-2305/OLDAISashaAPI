@@ -594,6 +594,14 @@ function pre_process_service_msg(msg)
                 msg.added[k] = v
             end
         end
+    elseif msg.new_chat_member then
+        msg.adder = msg.from
+        msg.added = { }
+        if msg.from.id == msg.new_chat_member.id then
+            msg.added[1] = msg.from
+        else
+            msg.added[1] = msg.new_chat_member
+        end
     elseif msg.left_chat_member then
         msg.remover = msg.from
         if msg.from.id == msg.left_chat_member.id then
