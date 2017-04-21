@@ -554,6 +554,27 @@ return {
         -- me.lua --
         meString = 'Hai mandato W (X%) messaggi e questa chat ne ha Z.',
 
+        -- msg_checks.lua --
+        reasonMutedUser = '\nUtente muto.',
+        reasonMutedAll = '\nMuto globale abilitato.',
+        reasonMutedAudio = '\nMuto audio abilitato.',
+        reasonMutedContacts = '\nMuto contatti abilitato.',
+        reasonMutedDocuments = '\nMuto documenti abilitato.',
+        reasonMutedGifs = '\nMuto gifs abilitato.',
+        reasonMutedLocations = '\nMuto posizioni abilitato.',
+        reasonMutedPhoto = '\nMuto foto abilitato.',
+        reasonMutedStickers = '\nMuto stickers abilitato.',
+        reasonMutedText = '\nMuto testo abilitato.',
+        reasonMutedVideo = '\nMuto video abilitato.',
+        reasonMutedVoicenotes = '\nMuto note vocali abilitato.',
+        reasonLockArabic = '\nBlocco arabo abilitato.',
+        reasonLockLeave = '\nBlocco abbandono abilitato.',
+        reasonLockLink = '\nBlocco link abilitato.',
+        reasonLockLinkEntities = '\nBlocco link abilitato (link nascosto).',
+        reasonLockMembers = '\nBlocco membri abilitato.',
+        reasonLockRTL = '\nBlocco RTL abilitato.',
+        reasonLockSpam = '\nBlocco spam abilitato.',
+
         -- onservice.lua --
         notMyGroup = 'Questo non è un mio gruppo, addio.',
 
@@ -1525,6 +1546,27 @@ return {
 
         -- me.lua --
         meString = 'You have sent W (X%) messages and this chat has Z messages.',
+
+        -- msg_checks.lua --
+        reasonMutedUser = '\nMuted user.',
+        reasonMutedAll = '\nMute all enabled.',
+        reasonMutedAudio = '\nMute audio enabled.',
+        reasonMutedContacts = '\nMute contacts enabled.',
+        reasonMutedDocuments = '\nMute documents enabled.',
+        reasonMutedGifs = '\nMute gifs enabled.',
+        reasonMutedLocations = '\nMute locations enabled.',
+        reasonMutedPhoto = '\nMute photos enabled.',
+        reasonMutedStickers = '\nMute stickers enabled.',
+        reasonMutedText = '\nMute text enabled.',
+        reasonMutedVideo = '\nMute videos enabled.',
+        reasonMutedVoicenotes = '\nMute voicenotes enabled.',
+        reasonLockArabic = '\nLock arabic enabled.',
+        reasonLockLeave = '\nLock leave enabled.',
+        reasonLockLink = '\nLock link enabled.',
+        reasonLockLinkEntities = '\nLock link enabled (hidden link).',
+        reasonLockMembers = '\nLock members enabled.',
+        reasonLockRTL = '\nLock RTL enabled.',
+        reasonLockSpam = '\nLock spam enabled.',
 
         -- onservice.lua --
         notMyGroup = 'This is not one of my groups, bye.',
