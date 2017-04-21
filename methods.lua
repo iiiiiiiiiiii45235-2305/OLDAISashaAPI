@@ -1120,7 +1120,7 @@ function warnUser(executer, target, chat_id)
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 return banUser(executer, target, chat_id)
             end
-            return string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
+            return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
         else
             return banUser(executer, target, chat_id)
         end
@@ -1137,10 +1137,10 @@ function unwarnUser(executer, target, chat_id)
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
         if tonumber(warns) <= 0 then
             redis:set(chat_id .. ':warn:' .. target, 0)
-            return langs[lang].alreadyZeroWarnings
+            return langs[lang].user .. target .. ' ' .. langs[lang].alreadyZeroWarnings
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
-            return langs[lang].unwarned
+            return langs[lang].user .. target .. ' ' .. langs[lang].unwarned
         end
     else
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " N")
@@ -1153,7 +1153,7 @@ function unwarnallUser(executer, target, chat_id)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
-        return langs[lang].zeroWarnings
+        return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings
     else
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")
         return langs[lang].require_rank
