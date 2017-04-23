@@ -148,11 +148,67 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'setwelcome' then
                 mystat('/setwelcome')
-                return set_welcome(msg.chat.id, matches[2])
+                if matches[2] then
+                    return set_welcome(msg.chat.id, matches[2])
+                elseif msg.reply_to_message.media then
+                    local file_id = ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size > size then
+                                size = v.file_size
+                                bigger_pic_id = v.file_id
+                            end
+                        end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+                    end
+                    return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id)
+                end
             end
             if matches[1]:lower() == 'setgoodbye' then
                 mystat('/setgoodbye')
-                return set_goodbye(msg.chat.id, matches[2])
+                if matches[2] then
+                    return set_goodbye(msg.chat.id, matches[2])
+                elseif msg.reply_to_message.media then
+                    local file_id = ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size > size then
+                                size = v.file_size
+                                bigger_pic_id = v.file_id
+                            end
+                        end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+                    end
+                    return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id)
+                end
             end
             if matches[1]:lower() == 'unsetwelcome' then
                 mystat('/unsetwelcome')
@@ -197,11 +253,32 @@ local function pre_process(msg)
                     local hashonredis = redis:get(hash)
                     if hashonredis then
                         if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                            local text = ''
-                            for k, v in pairs(msg.added) do
-                                text = text .. adjust_goodbyewelcome(get_welcome(msg.chat.id), msg.chat, v) .. '\n'
+                            local welcome = get_welcome(msg.chat.id)
+                            if string.match(welcome, '^photo') then
+                                welcome = welcome:gsub('^photo', '')
+                                sendPhotoId(msg.chat.id, welcome, msg.message_id)
+                            elseif string.match(welcome, '^video') then
+                                welcome = welcome:gsub('^video', '')
+                                sendVideoId(msg.chat.id, welcome, msg.message_id)
+                            elseif string.match(welcome, '^audio') then
+                                welcome = welcome:gsub('^audio', '')
+                                sendAudioId(msg.chat.id, welcome, false, msg.message_id)
+                            elseif string.match(welcome, '^voice') then
+                                welcome = welcome:gsub('^voice', '')
+                                sendVoiceId(msg.chat.id, welcome, false, msg.message_id)
+                            elseif string.match(welcome, '^document') then
+                                welcome = welcome:gsub('^document', '')
+                                sendDocumentId(msg.chat.id, welcome, msg.message_id)
+                            elseif string.match(welcome, '^sticker') then
+                                welcome = welcome:gsub('^sticker', '')
+                                sendStickerId(msg.chat.id, welcome, msg.message_id)
+                            else
+                                local text = ''
+                                for k, v in pairs(msg.added) do
+                                    text = text .. adjust_goodbyewelcome(welcome, msg.chat, v) .. '\n'
+                                end
+                                sendReply(msg, text)
                             end
-                            sendMessage(msg.chat.id, text)
                             redis:getset(hash, 0)
                         end
                     else
@@ -209,7 +286,28 @@ local function pre_process(msg)
                     end
                 end
                 if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
-                    sendMessage(msg.chat.id, adjust_goodbyewelcome(get_goodbye(msg.chat.id), msg.chat, msg.removed))
+                    local goodbye = get_goodbye(msg.chat.id)
+                    if string.match(goodbye, '^photo') then
+                        goodbye = goodbye:gsub('^photo', '')
+                        sendPhotoId(msg.chat.id, goodbye, msg.message_id)
+                    elseif string.match(goodbye, '^video') then
+                        goodbye = goodbye:gsub('^video', '')
+                        sendVideoId(msg.chat.id, goodbye, msg.message_id)
+                    elseif string.match(goodbye, '^audio') then
+                        goodbye = goodbye:gsub('^audio', '')
+                        sendAudioId(msg.chat.id, goodbye, false, msg.message_id)
+                    elseif string.match(goodbye, '^voice') then
+                        goodbye = goodbye:gsub('^voice', '')
+                        sendVoiceId(msg.chat.id, goodbye, false, msg.message_id)
+                    elseif string.match(goodbye, '^document') then
+                        goodbye = goodbye:gsub('^document', '')
+                        sendDocumentId(msg.chat.id, goodbye, msg.message_id)
+                    elseif string.match(goodbye, '^sticker') then
+                        goodbye = goodbye:gsub('^sticker', '')
+                        sendStickerId(msg.chat.id, goodbye, msg.message_id)
+                    else
+                        sendReply(msg, adjust_goodbyewelcome(goodbye, msg.chat, msg.removed))
+                    end
                 end
             end
         end
@@ -222,10 +320,12 @@ return {
     patterns =
     {
         "^[#!/]([Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee]) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
         "^[#!/]([Gg][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
         "^[#!/]([Pp][Rr][Ee][Vv][Ii][Ee][Ww][Ww][Ee][Ll][Cc][Oo][Mm][Ee])$",
         "^[#!/]([Ss][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee]) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
         "^[#!/]([Gg][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
         "^[#!/]([Pp][Rr][Ee][Vv][Ii][Ee][Ww][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Oo][Oo][Dd][Bb][Yy][Ee])$",
@@ -242,8 +342,8 @@ return {
         "#getgoodbye",
         "#previewwelcome",
         "#previewgoodbye",
-        "#setwelcome <text>",
-        "#setgoodbye <text>",
+        "#setwelcome <text>|<reply_media>",
+        "#setgoodbye <text>|<reply_media>",
         "#unsetwelcome",
         "#unsetgoodbye",
         "#setmemberswelcome <value>",
