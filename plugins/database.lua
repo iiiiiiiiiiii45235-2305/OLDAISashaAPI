@@ -416,7 +416,7 @@ return {
     {
         "^[#!/]([Cc][Rr][Ee][Aa][Tt][Ee][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
         "^[#!/]([Dd][Oo][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
-        "^[#!/]([Dd][Bb][Ss][Ee][Aa][Rr][Cc][Hh]) (.*)$",
+        "^[#!/]([Dd][Bb][Ss][Ee][Aa][Rr][Cc][Hh]) ([^%s]+)$",
         "^[#!/]([Aa][Dd][Dd][Rr][Ee][Cc][Oo][Rr][Dd]) ([^%s]+) (.*)$",
         "^[#!/]([Dd][Bb][Dd][Ee][Ll][Ee][Tt][Ee]) (%-?%d+)$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Dd][Bb])$",
@@ -424,8 +424,8 @@ return {
         -- dodatabase
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
         -- dbsearch
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) (.*)$",
-        "^([Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) ([^%s]+)$",
+        "^([Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) ([^%s]+)$",
         -- dbdelete
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Dd][Bb]) (%-?%d+)$",
         "^([Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Dd][Bb]) (%-?%d+)$",

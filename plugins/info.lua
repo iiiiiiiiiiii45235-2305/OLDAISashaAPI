@@ -361,22 +361,22 @@ return {
     {
         "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ll][Ii][Nn][Kk]) (%-?%d+)$",
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee])$",
-        "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) (.*)$",
+        "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk])$",
-        "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk]) (.*)$",
+        "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Oo][Aa][Mm][Ii])$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
-        "^[#!/]([Ii][Nn][Ff][Oo]) (.*)$",
+        "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Oo])$",
         -- grouplink
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
         "^([Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
         -- getrank
         "^([Rr][Aa][Nn][Gg][Oo])$",
-        "^([Rr][Aa][Nn][Gg][Oo]) (.*)$",
+        "^([Rr][Aa][Nn][Gg][Oo]) ([^%s]+)$",
         -- info
         "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo]) ([^%s]+)$",
         -- who
         "^[#!/]([Mm][Ee][Mm][Bb][Ee][Rr][Ss])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Mm][Ee][Mm][Bb][Rr][Ii])$",
