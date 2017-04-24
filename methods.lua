@@ -168,7 +168,7 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
-function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
+function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_markup, send_sound)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if text then
@@ -187,6 +187,9 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                     end
                     if use_markdown then
                         url = url .. '&parse_mode=Markdown'
+                    end
+                    if reply_markup then
+                        url = url .. '&reply_markup=' .. URL.escape(JSON.encode(reply_markup))
                     end
                     if not send_sound then
                         url = url .. '&disable_notification=true'
@@ -352,12 +355,16 @@ function editMessageText(chat_id, message_id, text, keyboard, markdown)
     -- return false, and the code
 end
 
-function answerCallbackQuery(callback_query_id, text, show_alert)
+function answerCallbackQuery(callback_query_id, text, show_alert, cache_time)
     local url = BASE_URL ..
     '/answerCallbackQuery?callback_query_id=' .. callback_query_id ..
     '&text=' .. URL.escape(text)
     if show_alert then
         url = url .. '&show_alert=true'
+    end
+    if cache_time then
+        local seconds = tonumber(cache_time) * 3600
+        url = url .. '&cache_time=' .. seconds
     end
     return sendRequest(url)
 end
