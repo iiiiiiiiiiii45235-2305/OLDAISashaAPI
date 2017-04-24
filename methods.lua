@@ -207,15 +207,17 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_mar
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        if res.result then
-                            local sent_msg = res.result
-                            sent_msg = pre_process_reply(sent_msg)
-                            sent_msg = pre_process_forward(sent_msg)
-                            sent_msg = pre_process_media_msg(sent_msg)
-                            sent_msg = pre_process_service_msg(sent_msg)
-                            sent_msg = adjust_msg(sent_msg)
-                            print_msg(sent_msg)
-                            return res, code
+                        if type(res) == 'table' then
+                            if res.result then
+                                local sent_msg = res.result
+                                sent_msg = pre_process_reply(sent_msg)
+                                sent_msg = pre_process_forward(sent_msg)
+                                sent_msg = pre_process_media_msg(sent_msg)
+                                sent_msg = pre_process_service_msg(sent_msg)
+                                sent_msg = adjust_msg(sent_msg)
+                                print_msg(sent_msg)
+                                return res, code
+                            end
                         end
                     else
                         local my_text = string.sub(text, 1, 4096)
@@ -230,15 +232,17 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_mar
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        if res.result then
-                            local sent_msg = res.result
-                            sent_msg = pre_process_reply(sent_msg)
-                            sent_msg = pre_process_forward(sent_msg)
-                            sent_msg = pre_process_media_msg(sent_msg)
-                            sent_msg = pre_process_service_msg(sent_msg)
-                            sent_msg = adjust_msg(sent_msg)
-                            print_msg(sent_msg)
-                            res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+                        if type(res) == 'table' then
+                            if res.result then
+                                local sent_msg = res.result
+                                sent_msg = pre_process_reply(sent_msg)
+                                sent_msg = pre_process_forward(sent_msg)
+                                sent_msg = pre_process_media_msg(sent_msg)
+                                sent_msg = pre_process_service_msg(sent_msg)
+                                sent_msg = adjust_msg(sent_msg)
+                                print_msg(sent_msg)
+                                res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+                            end
                         end
                     end
 
