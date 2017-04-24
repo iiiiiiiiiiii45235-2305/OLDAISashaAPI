@@ -441,7 +441,7 @@ local function update_sudoers(msg)
     end
 end
 
-local function pre_process_reply(msg)
+function pre_process_reply(msg)
     if msg.reply_to_message then
         msg.reply = true
     end
@@ -449,7 +449,7 @@ local function pre_process_reply(msg)
 end
 
 -- recursive to simplify code
-local function pre_process_forward(msg)
+function pre_process_forward(msg)
     if msg.forward_from or msg.forward_from_chat then
         msg.forward = true
     end
