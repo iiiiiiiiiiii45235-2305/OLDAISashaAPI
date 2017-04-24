@@ -1036,8 +1036,8 @@ while is_started do
                 cb_msg.cb_id = cb_msg.id
                 cb_msg.message = nil
                 cb_msg.target_id = cb_msg.data:match('(-%d+)$')
+                msg.message = cb_msg
                 -- callback datas often ship IDs
-                function_key = 'onCallbackQuery'
             end
             if msg.message--[[ or msg.callback_query ]] then
                 on_msg_receive(msg.message)
