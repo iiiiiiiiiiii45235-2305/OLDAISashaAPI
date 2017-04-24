@@ -1018,6 +1018,26 @@ while is_started do
                 msg.message = msg.edited_message
                 msg.message.edited = true
                 msg.edited_message = nil
+            elseif msg.callback_query then
+                local cb_msg = msg.callback_query
+                cb_msg.cb = true
+                cb_msg.text = '###cb:' .. cb_msg.data
+                if cb_msg.message then
+                    cb_msg.original_text = cb_msg.message.text
+                    cb_msg.original_date = cb_msg.message.date
+                    cb_msg.message_id = cb_msg.message.message_id
+                    cb_msg.chat = cb_msg.message.chat
+                else
+                    -- when the inline keyboard is sent via the inline mode
+                    cb_msg.chat = { type = 'inline', id = cb_msg.from.id, title = cb_msg.from.first_name }
+                    cb_msg.message_id = cb_msg.inline_message_id
+                end
+                cb_msg.date = os.time()
+                cb_msg.cb_id = cb_msg.id
+                cb_msg.message = nil
+                cb_msg.target_id = cb_msg.data:match('(-%d+)$')
+                -- callback datas often ship IDs
+                function_key = 'onCallbackQuery'
             end
             if msg.message--[[ or msg.callback_query ]] then
                 on_msg_receive(msg.message)
