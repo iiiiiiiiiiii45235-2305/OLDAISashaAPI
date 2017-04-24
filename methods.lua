@@ -204,7 +204,12 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                        local sent_msg = res.result
+                        sent_msg = pre_process_reply(sent_msg)
+                        sent_msg = pre_process_forward(sent_msg)
+                        sent_msg = pre_process_media_msg(sent_msg)
+                        sent_msg = pre_process_service_msg(sent_msg)
+                        sent_msg = adjust_msg(sent_msg)
                         print_msg(sent_msg)
                         return res, code
                     else
@@ -220,7 +225,12 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                        local sent_msg = res.result
+                        sent_msg = pre_process_reply(sent_msg)
+                        sent_msg = pre_process_forward(sent_msg)
+                        sent_msg = pre_process_media_msg(sent_msg)
+                        sent_msg = pre_process_service_msg(sent_msg)
+                        sent_msg = adjust_msg(sent_msg)
                         print_msg(sent_msg)
                         res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
                     end
@@ -261,9 +271,22 @@ function forwardMessage(chat_id, from_chat_id, message_id)
         '/forwardMessage?chat_id=' .. chat_id ..
         '&from_chat_id=' .. from_chat_id ..
         '&message_id=' .. message_id
-        local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('forward_msg', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -359,9 +382,22 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_location', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -378,9 +414,22 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_photo', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -395,9 +444,22 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_sticker', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -417,9 +479,22 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_voice', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -439,9 +514,22 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_audio', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -456,9 +544,22 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_video', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
@@ -473,9 +574,22 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_document', code .. '\n' .. text)
+            end
+        end
+        local sent_msg = res.result
+        sent_msg = pre_process_reply(sent_msg)
+        sent_msg = pre_process_forward(sent_msg)
+        sent_msg = pre_process_media_msg(sent_msg)
+        sent_msg = pre_process_service_msg(sent_msg)
+        sent_msg = adjust_msg(sent_msg)
         print_msg(sent_msg)
-        return sendRequest(url)
+        return res, code
     end
 end
 
