@@ -169,7 +169,6 @@ function leaveChat(chat_id)
 end
 
 function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
-    -- print(text)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if text then
@@ -207,6 +206,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                         end
                         local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
                         print_msg(sent_msg)
+                        return res, code
                     else
                         local my_text = string.sub(text, 1, 4096)
                         local rest = string.sub(text, 4096, text_len)
