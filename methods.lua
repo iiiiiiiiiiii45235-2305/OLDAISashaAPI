@@ -168,7 +168,7 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
-function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_markup, send_sound)
+function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if text then
@@ -188,9 +188,6 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_mar
                     if use_markdown then
                         url = url .. '&parse_mode=Markdown'
                     end
-                    if reply_markup then
-                        url = url .. '&reply_markup=' .. URL.escape(JSON.encode(reply_markup))
-                    end
                     if not send_sound then
                         url = url .. '&disable_notification=true'
                         -- messages are silent by default
@@ -207,18 +204,14 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_mar
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        if type(res) == 'table' then
-                            if res.result then
-                                local sent_msg = res.result
-                                sent_msg = pre_process_reply(sent_msg)
-                                sent_msg = pre_process_forward(sent_msg)
-                                sent_msg = pre_process_media_msg(sent_msg)
-                                sent_msg = pre_process_service_msg(sent_msg)
-                                sent_msg = adjust_msg(sent_msg)
-                                print_msg(sent_msg)
-                                return res, code
-                            end
-                        end
+                        local sent_msg = res.result
+                        sent_msg = pre_process_reply(sent_msg)
+                        sent_msg = pre_process_forward(sent_msg)
+                        sent_msg = pre_process_media_msg(sent_msg)
+                        sent_msg = pre_process_service_msg(sent_msg)
+                        sent_msg = adjust_msg(sent_msg)
+                        print_msg(sent_msg)
+                        return res, code
                     else
                         local my_text = string.sub(text, 1, 4096)
                         local rest = string.sub(text, 4096, text_len)
@@ -232,18 +225,14 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, reply_mar
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        if type(res) == 'table' then
-                            if res.result then
-                                local sent_msg = res.result
-                                sent_msg = pre_process_reply(sent_msg)
-                                sent_msg = pre_process_forward(sent_msg)
-                                sent_msg = pre_process_media_msg(sent_msg)
-                                sent_msg = pre_process_service_msg(sent_msg)
-                                sent_msg = adjust_msg(sent_msg)
-                                print_msg(sent_msg)
-                                res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
-                            end
-                        end
+                        local sent_msg = res.result
+                        sent_msg = pre_process_reply(sent_msg)
+                        sent_msg = pre_process_forward(sent_msg)
+                        sent_msg = pre_process_media_msg(sent_msg)
+                        sent_msg = pre_process_service_msg(sent_msg)
+                        sent_msg = adjust_msg(sent_msg)
+                        print_msg(sent_msg)
+                        res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
                     end
 
                     return res, code
@@ -257,7 +246,7 @@ end
 function sendMessage_SUDOERS(text, use_markdown)
     for v, user in pairs(sudoers) do
         if user.id ~= bot.userVersion.id then
-            sendMessage(user.id, text, use_markdown, false, false, true)
+            sendMessage(user.id, text, use_markdown, false, true)
         end
     end
 end
