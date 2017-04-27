@@ -263,7 +263,8 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'kickrandom' then
             if msg.from.is_mod then
-                mystat('/kickrandom')
+                return langs[msg.lang].useAISasha
+                --[[mystat('/kickrandom')
                 local kickable = false
                 local id
                 local participants = getChatParticipants(msg.chat.id)
@@ -282,14 +283,15 @@ local function run(msg, matches)
                         unlocker = unlocker + 1
                     end
                 end
-                return id .. langs[msg.lang].kicked
+                return id .. langs[msg.lang].kicked]]
             else
                 return langs[msg.lang].require_mod
             end
         end
         if matches[1]:lower() == 'kickdeleted' then
             if msg.from.is_mod then
-                mystat('/kickdeleted')
+                return langs[msg.lang].useAISasha
+                --[[mystat('/kickdeleted')
                 local kicked = 0
                 local participants = getChatParticipants(msg.chat.id)
                 for k, v in pairs(participants) do
@@ -303,23 +305,25 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return langs[msg.lang].massacre:gsub('X', kicked)
+                return langs[msg.lang].massacre:gsub('X', kicked)]]
             else
                 return langs[msg.lang].require_mod
             end
         end
         if matches[1]:lower() == 'kickinactive' then
             if msg.from.is_owner then
-                mystat('/kickinactive')
+                return langs[msg.lang].kickinactiveWarning
+                --[[mystat('/kickinactive')
                 local num = matches[2] or 0
-                return kickinactive(msg.from.id, msg.chat.id, tonumber(num))
+                return kickinactive(msg.from.id, msg.chat.id, tonumber(num))]]
             else
                 return langs[msg.lang].require_owner
             end
         end
         if matches[1]:lower() == 'kicknouser' then
             if msg.from.is_owner then
-                mystat('/kicknouser')
+                return langs[msg.lang].useAISasha
+                --[[mystat('/kicknouser')
                 local kicked = 0
                 local participants = getChatParticipants(msg.chat.id)
                 for k, v in pairs(participants) do
@@ -331,7 +335,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return langs[msg.lang].massacre:gsub('X', kicked)
+                return langs[msg.lang].massacre:gsub('X', kicked)]]
             else
                 return langs[msg.lang].require_owner
             end

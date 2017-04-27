@@ -133,7 +133,8 @@ local function run(msg, matches)
         end
 
         if matches[1]:lower() == 'dodatabase' or matches[1]:lower() == 'sasha esegui database' then
-            mystat('/dodatabase')
+            return langs[msg.lang].useAISasha
+            --[[mystat('/dodatabase')
             local participants = getChatParticipants(msg.chat.id)
             for k, v in pairs(participants) do
                 if v.user then
@@ -145,7 +146,7 @@ local function run(msg, matches)
                 end
             end
             save_data(config.database.db, database)
-            return langs[msg.lang].dataLeaked
+            return langs[msg.lang].dataLeaked]]
         end
 
         if matches[1]:lower() == 'dbsearch' or matches[1]:lower() == 'sasha cerca db' or matches[1]:lower() == 'cerca db' then

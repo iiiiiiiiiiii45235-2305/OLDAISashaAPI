@@ -300,7 +300,8 @@ local function run(msg, matches)
     if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             if msg.from.is_mod then
-                mystat('/members')
+                return langs[msg.lang].useAISasha
+                --[[mystat('/members')
                 local participants = getChatParticipants(msg.chat.id)
                 local text = langs[msg.lang].membersOf .. msg.chat.title .. ' ' .. msg.chat.id .. '\n'
                 for k, v in pairsByKeys(participants) do
@@ -311,7 +312,7 @@ local function run(msg, matches)
                 end
                 -- remove rtl
                 text = text:gsub("‮", "")
-                return text
+                return text]]
             else
                 return langs[msg.lang].require_mod
             end

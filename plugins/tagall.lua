@@ -1,6 +1,7 @@
 local function run(msg, matches)
-    if is_owner(msg) then
-        local text = ''
+    if msg.from.is_owner then
+        return langs[msg.lang].useAISasha
+        --[[local text = ''
         if matches[1] then
             mystat('/tagall <text>')
             text = matches[1] .. "\n"
@@ -8,7 +9,6 @@ local function run(msg, matches)
             mystat('/tagall <reply_text>')
             text = msg.reply_to_message.text .. "\n"
         end
-
         local participants = getChatParticipants(msg.chat.id)
         for k, v in pairs(participants) do
             if v.user then
@@ -23,7 +23,7 @@ local function run(msg, matches)
                 end
             end
         end
-        return text
+        return text]]
     else
         return langs[msg.lang].require_owner
     end
