@@ -47,9 +47,11 @@ local function set_media(msg, name)
                 local bigger_pic_id = ''
                 local size = 0
                 for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                    if v.file_size > size then
-                        size = v.file_size
-                        bigger_pic_id = v.file_id
+                    if v.file_size then
+                        if v.file_size > size then
+                            size = v.file_size
+                            bigger_pic_id = v.file_id
+                        end
                     end
                 end
                 file_id = bigger_pic_id
