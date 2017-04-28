@@ -204,14 +204,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        if type(res) == 'table' then
-                            local sent_msg = res.result
-                            sent_msg = pre_process_reply(sent_msg)
-                            sent_msg = pre_process_forward(sent_msg)
-                            sent_msg = pre_process_media_msg(sent_msg)
-                            sent_msg = pre_process_service_msg(sent_msg)
-                            sent_msg = adjust_msg(sent_msg)
-                            print_msg(sent_msg)
+                        if print_res_msg(res) then
                             return res, code
                         else
                             local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
@@ -230,14 +223,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                                 savelog('send_msg', code .. '\n' .. text)
                             end
                         end
-                        if type(res) == 'table' then
-                            local sent_msg = res.result
-                            sent_msg = pre_process_reply(sent_msg)
-                            sent_msg = pre_process_forward(sent_msg)
-                            sent_msg = pre_process_media_msg(sent_msg)
-                            sent_msg = pre_process_service_msg(sent_msg)
-                            sent_msg = adjust_msg(sent_msg)
-                            print_msg(sent_msg)
+                        if print_res_msg(res) then
                             res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
                         else
                             local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
@@ -290,14 +276,7 @@ function forwardMessage(chat_id, from_chat_id, message_id)
                 savelog('forward_msg', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
@@ -410,14 +389,7 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
                 savelog('send_location', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
@@ -447,14 +419,7 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
                 savelog('send_photo', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
@@ -482,14 +447,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
                 savelog('send_sticker', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
@@ -522,14 +480,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
                 savelog('send_voice', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
@@ -562,14 +513,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
                 savelog('send_audio', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
@@ -597,14 +541,7 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
                 savelog('send_video', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
@@ -632,14 +569,7 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
                 savelog('send_document', code .. '\n' .. text)
             end
         end
-        if type(res) == 'table' then
-            local sent_msg = res.result
-            sent_msg = pre_process_reply(sent_msg)
-            sent_msg = pre_process_forward(sent_msg)
-            sent_msg = pre_process_media_msg(sent_msg)
-            sent_msg = pre_process_service_msg(sent_msg)
-            sent_msg = adjust_msg(sent_msg)
-            print_msg(sent_msg)
+        if print_res_msg(res) then
             return res, code
         else
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
@@ -1506,6 +1436,25 @@ function deleteMessage(msg)
             end
         end
     end
+end
+
+function print_res_msg(res, code)
+    if type(res) == 'table' then
+        if res.result then
+            local sent_msg = res.result
+            sent_msg = pre_process_reply(sent_msg)
+            sent_msg = pre_process_forward(sent_msg)
+            sent_msg = pre_process_media_msg(sent_msg)
+            sent_msg = pre_process_service_msg(sent_msg)
+            sent_msg = adjust_msg(sent_msg)
+            return print_msg(sent_msg)
+        else
+            sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. code)
+        end
+    else
+        sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. code)
+    end
+    return nil
 end
 
 function print_msg(msg, dont_print)
