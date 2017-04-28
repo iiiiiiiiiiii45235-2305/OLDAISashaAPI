@@ -106,7 +106,7 @@ local function pre_process(msg)
                     sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])
                     if tonumber(hashonredis) == #langs.phrases.flame then
                         local user_id = redis:get(tokick)
-                        sendMessage(msg.chat.id, kickUser(bot.id, user_id, msg.chat.id))
+                        sendMessage(msg.chat.id, kickUser(bot.id, user_id, msg.chat.id, langs[msg.lang].reasonFlame))
                         redis:del(hash)
                         redis:del(tokick)
                     end

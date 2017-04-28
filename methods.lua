@@ -964,7 +964,7 @@ function userVersionInChat(chat_id)
 end
 
 -- call this to kick
-function kickUser(executer, target, chat_id)
+function kickUser(executer, target, chat_id, reason)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
@@ -986,7 +986,12 @@ function kickUser(executer, target, chat_id)
                 unbanChatMember(target, chat_id)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                if reason then
+                    return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
+                    '\n#kick' .. target .. ' ' .. reason
+                else
+                    return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                end
             else
                 return code2text(code, get_lang(chat_id))
             end
@@ -1009,7 +1014,8 @@ function preBanUser(executer, target, chat_id)
         -- general: save how many kicks
         local hash = 'banned:' .. chat_id
         redis:sadd(hash, tostring(target))
-        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
+        '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
     else
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
         return langs[get_lang(chat_id)].require_rank
@@ -1017,7 +1023,7 @@ function preBanUser(executer, target, chat_id)
 end
 
 -- call this to ban
-function banUser(executer, target, chat_id)
+function banUser(executer, target, chat_id, reason)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
@@ -1039,7 +1045,14 @@ function banUser(executer, target, chat_id)
                 redis:sadd(hash, tostring(target))
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned .. '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                if reason then
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
+                    '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
+                    '\n#ban' .. target .. ' ' .. reason
+                else
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
+                    '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                end
             else
                 if code == 106 then
                     local hash = 'banned:' .. chat_id
@@ -1055,14 +1068,19 @@ function banUser(executer, target, chat_id)
 end
 
 -- call this to unban
-function unbanUser(executer, target, chat_id)
+function unbanUser(executer, target, chat_id, reason)
     if compare_ranks(executer, target, chat_id) then
         savelog(chat_id, "[" .. target .. "] unbanned")
         local hash = 'banned:' .. chat_id
         redis:srem(hash, tostring(target))
         -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
         local res, code = unbanChatMember(target, chat_id)
-        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+        if reason then
+            return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
+            '\n#unban' .. target .. ' ' .. reason
+        else
+            return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+        end
     else
         savelog(chat_id, "[" .. executer .. "] tried to unban user " .. target .. " require higher rank")
         return langs[get_lang(chat_id)].require_rank
@@ -1203,7 +1221,7 @@ function getUserWarns(user_id, chat_id)
     return warn_msg
 end
 
-function warnUser(executer, target, chat_id)
+function warnUser(executer, target, chat_id, reason)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         local warn_chat = string.match(getWarn(chat_id), "%d+")
@@ -1217,11 +1235,16 @@ function warnUser(executer, target, chat_id)
         if tonumber(warn_chat) ~= 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
-                return banUser(executer, target, chat_id)
+                return banUser(executer, target, chat_id, reason)
             end
-            return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
+            if reason then
+                return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis)) ..
+                '\n#warn' .. target .. ' ' .. reason
+            else
+                return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
+            end
         else
-            return banUser(executer, target, chat_id)
+            return banUser(executer, target, chat_id, reason)
         end
     else
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " N")
@@ -1229,7 +1252,7 @@ function warnUser(executer, target, chat_id)
     end
 end
 
-function unwarnUser(executer, target, chat_id)
+function unwarnUser(executer, target, chat_id, reason)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         local warns = redis:get(chat_id .. ':warn:' .. target)
@@ -1239,7 +1262,12 @@ function unwarnUser(executer, target, chat_id)
             return langs[lang].user .. target .. ' ' .. langs[lang].alreadyZeroWarnings
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
-            return langs[lang].user .. target .. ' ' .. langs[lang].unwarned
+            if reason then
+                return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
+                '\n#unwarn' .. target .. ' ' .. reason
+            else
+                return langs[lang].user .. target .. ' ' .. langs[lang].unwarned
+            end
         end
     else
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " N")
@@ -1247,12 +1275,17 @@ function unwarnUser(executer, target, chat_id)
     end
 end
 
-function unwarnallUser(executer, target, chat_id)
+function unwarnallUser(executer, target, chat_id, reason)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
-        return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings
+        if reason then
+            return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
+            '\n#unwarnall' .. target .. ' ' .. reason
+        else
+            return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings
+        end
     else
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")
         return langs[lang].require_rank

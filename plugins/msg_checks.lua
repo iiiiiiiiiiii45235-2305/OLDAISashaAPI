@@ -78,6 +78,7 @@ end
 
 local function check_msg(msg, settings)
     local lock_arabic = settings.lock_arabic
+    local lock_bots = settings.lock_bots
     local lock_leave = settings.lock_leave
     local lock_link = settings.lock_link
     local group_link = nil
@@ -367,6 +368,17 @@ local function check_msg(msg, settings)
                     sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockMembers)
                     msg = clean_msg(msg)
                     return nil
+                end
+                if lock_bots then
+                    if v.username then
+                        if string.sub(v.username:lower(), -3) == 'bot' then
+                            print('bots locked')
+                            -- Will ban bots added by normal users
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
+                            -- Save to logs
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockBots)
+                        end
+                    end
                 end
             end
         end

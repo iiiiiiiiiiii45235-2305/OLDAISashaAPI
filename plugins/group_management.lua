@@ -715,7 +715,7 @@ local function run(msg, matches)
                 if msg.from.id ~= bot.userVersion.id then
                     -- if not admin and not bot then
                     if not is_admin(msg) then
-                        return banUser(bot.id, msg.from.id, msg.chat.id)
+                        return banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteRealm)
                     end
                 end
             elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
@@ -728,7 +728,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return text
+                return text .. langs[msg.lang].reasonInviteRealm
             end
         end
         if is_group(msg) then

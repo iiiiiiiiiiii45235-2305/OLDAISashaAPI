@@ -27,7 +27,7 @@ local function kickinactive(executer, chat_id, num)
             if tonumber(v.id) ~= tonumber(bot.id) and not is_mod2(v.id, chat_id, true) then
                 local user_info = user_msgs(v.id, chat_id)
                 if tonumber(user_info) < tonumber(num) then
-                    kickUser(executer, v.id, chat_id)
+                    kickUser(executer, v.id, chat_id, langs[lang].reasonInactive)
                     kicked = kicked + 1
                 end
             end
@@ -42,10 +42,10 @@ local function run(msg, matches)
     end
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
-            mystat('/kickme')
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
                 -- Save to logs
+                mystat('/kickme')
                 return kickUser(bot.id, msg.from.id, msg.chat.id)
             else
                 return langs[msg.lang].useYourGroups
@@ -102,7 +102,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return warnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                        return warnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -111,16 +111,16 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     elseif matches[2] then
                         if string.match(matches[2], '^%d+$') then
-                            return warnUser(msg.from.id, matches[2], msg.chat.id)
+                            return warnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
                         else
                             local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                                    return warnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                                 end
                             end
                         end
@@ -142,7 +142,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return unwarnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                        return unwarnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -151,16 +151,16 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     elseif matches[2] then
                         if string.match(matches[2], '^%d+$') then
-                            return unwarnUser(msg.from.id, matches[2], msg.chat.id)
+                            return unwarnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
                         else
                             local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                                    return unwarnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                                 end
                             end
                         end
@@ -182,7 +182,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return unwarnallUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                        return unwarnallUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -191,16 +191,16 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     elseif matches[2] then
                         if string.match(matches[2], '^%d+$') then
-                            return unwarnallUser(msg.from.id, matches[2], msg.chat.id)
+                            return unwarnallUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
                         else
                             local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                                    return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                                 end
                             end
                         end
@@ -211,7 +211,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'uccidi' or matches[1]:lower() == 'spara' then
+        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'sasha spara' or matches[1]:lower() == 'uccidi' then
             if msg.from.is_mod then
                 mystat('/kick')
                 if msg.reply then
@@ -219,7 +219,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -234,24 +234,24 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. kickUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text
+                                return text ..(matches[2] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, matches[2] or nil)
                             else
-                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                             end
                         else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '^%d+$') then
-                        return kickUser(msg.from.id, matches[2], msg.chat.id)
+                        return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
                     else
                         local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                                return kickUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                             end
                         end
                     end
@@ -340,7 +340,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_owner
             end
         end
-        if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'esplodi' or matches[1]:lower() == 'kaboom' then
+        if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'sasha esplodi' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'kaboom' then
             if msg.from.is_mod then
                 mystat('/ban')
                 if msg.reply then
@@ -348,7 +348,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -363,24 +363,24 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. banUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text
+                                return text ..(matches[2] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, matches[2] or nil)
                             else
-                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                             end
                         else
-                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '^%d+$') then
-                        return banUser(msg.from.id, matches[2], msg.chat.id)
+                        return banUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
                     else
                         local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return banUser(msg.from.id, obj_user.id, msg.chat.id)
+                                return banUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                             end
                         end
                     end
@@ -398,7 +398,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id)
+                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -413,24 +413,24 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. unbanUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text
+                                return text ..(matches[2] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id)
+                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, matches[2] or nil)
                             else
-                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                             end
                         else
-                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '^%d+$') then
-                        return unbanUser(msg.from.id, matches[2], msg.chat.id)
+                        return unbanUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
                     else
                         local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                                return unbanUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                             end
                         end
                     end
@@ -622,7 +622,7 @@ local function pre_process(msg)
         if msg.service then
             if msg.service_type then
                 -- Check if banned users joins chat
-                if msg.service_type == 'chat_add_users' then
+                if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
                     for k, v in pairs(msg.added) do
                         print('Checking invited user ' .. v.id)
                         if isBanned(v.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(v.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, v.id))) then
@@ -630,18 +630,18 @@ local function pre_process(msg)
                             print('User is banned!')
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. v.id)
                             -- Save to logs
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonBannedUser))
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                             redis:incr(banhash)
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                             local banaddredis = redis:get(banhash)
                             if banaddredis then
                                 if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
-                                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id))
+                                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned))
                                     -- Kick user who adds ban ppl more than 3 times
                                 end
                                 if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned))
                                     -- Ban user who adds ban ppl more than 7 times
                                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                                     redis:set(banhash, 0)
@@ -711,24 +711,24 @@ return {
     {
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
-        "^[#!/]([Ww][Aa][Rr][Nn]) ([^%s]+)$",
-        "^[#!/]([Ww][Aa][Rr][Nn])$",
-        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ([^%s]+)$",
-        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn])$",
-        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+)$",
-        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll])$",
+        "^[#!/]([Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Ww][Aa][Rr][Nn]) ?(.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ?(.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ?(.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
-        "^[#!/]([Kk][Ii][Cc][Kk]) ([^%s]+)$",
-        "^[#!/]([Kk][Ii][Cc][Kk])$",
+        "^[#!/]([Kk][Ii][Cc][Kk]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Kk][Ii][Cc][Kk]) ?(.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk][Rr][Aa][Nn][Dd][Oo][Mm])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Nn][Oo][Uu][Ss][Ee][Rr])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Ii][Nn][Aa][Cc][Tt][Ii][Vv][Ee])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Ii][Nn][Aa][Cc][Tt][Ii][Vv][Ee]) (%d+)$",
         "^[#!/]([Kk][Ii][Cc][Kk][Dd][Ee][Ll][Ee][Tt][Ee][Dd])$",
-        "^[#!/]([Bb][Aa][Nn]) ([^%s]+)$",
-        "^[#!/]([Bb][Aa][Nn])$",
-        "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ([^%s]+)$",
-        "^[#!/]([Uu][Nn][Bb][Aa][Nn])$",
+        "^[#!/]([Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Bb][Aa][Nn]) ?(.*)$",
+        "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ?(.*)$",
         "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) ([^%s]+)$",
         "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Gg][Bb][Aa][Nn]) ([^%s]+)$",
@@ -742,15 +742,14 @@ return {
         "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+)$",
         "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
         -- warn
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
-        "^([Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+)$",
-        "^([Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ?(.*)$",
         -- unwarnall
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
-        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+)$",
-        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+) ?(.*)$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+) ?(.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ?(.*)$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ?(.*)$",
         -- kickme
         "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii][Mm][Ii])",
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Pp][Ll][Oo][Dd][Ii][Mm][Ii])",
@@ -758,38 +757,37 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa][Mm][Ii])",
         "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa][Mm][Ii])",
         -- kick
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii])$",
-        "^([Uu][Cc][Cc][Ii][Dd][Ii]) ([^%s]+)$",
-        "^([Uu][Cc][Cc][Ii][Dd][Ii])$",
-        "^([Ss][Pp][Aa][Rr][Aa]) ([^%s]+)$",
-        "^([Ss][Pp][Aa][Rr][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) ([^%s]+) ?(.*)$",
+        "^([Uu][Cc][Cc][Ii][Dd][Ii]) ([^%s]+) ?(.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) ?(.*)$",
+        "^([Uu][Cc][Cc][Ii][Dd][Ii]) ?(.*)$",
         -- ban
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Bb][Aa][Nn][Nn][Aa])$",
-        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+)$",
-        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Ee][Ss][Pp][Ll][Oo][Dd][Ii]) ([^%s]+)$",
-        "^([Ee][Ss][Pp][Ll][Oo][Dd][Ii])$",
-        "^([Kk][Aa][Bb][Oo][Oo][Mm]) ([^%s]+)$",
-        "^([Kk][Aa][Bb][Oo][Oo][Mm])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
+        "^([Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
+        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
+        "^([Kk][Aa][Bb][Oo][Oo][Mm]) ([^%s]+) ?(.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
+        "^([Bb][Aa][Nn][Nn][Aa]) ?(.*)$",
+        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
+        "^([Kk][Aa][Bb][Oo][Oo][Mm]) ?(.*)$",
         -- unban
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Bb][Aa][Nn][Nn][Aa])$",
-        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+)$",
-        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+)$",
-        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
+        "^([Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
+        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
+        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
+        "^([Ss][Bb][Aa][Nn][Nn][Aa]) ?(.*)$",
+        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
+        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
         -- banlist
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
@@ -818,11 +816,11 @@ return {
         "(#kickme|sasha (uccidimi|esplodimi|sparami|decompilami|bannami))",
         "MOD",
         "(#getuserwarns|[sasha] ottieni avvertimenti) <id>|<username>|<reply>|from",
-        "(#warn|[sasha] avverti) <id>|<username>|<reply>|from",
+        "(#warn|sasha avverti) <id>|<username>|<reply>|from",
         "#unwarn <id>|<username>|<reply>|from",
         "(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from",
-        "(#kick|spara|[sasha] uccidi) <id>|<username>|<reply>|from",
-        "(#ban|esplodi|kaboom|[sasha] banna|[sasha] decompila) <id>|<username>|<reply>|from",
+        "(#kick|[sasha] uccidi|sasha spara) <id>|<username>|<reply>|from",
+        "(#ban|kaboom|[sasha] banna|[sasha] decompila|sasha esplodi) <id>|<username>|<reply>|from",
         "(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from",
         "(#banlist|[sasha] lista ban)",
         "#kickrandom",
