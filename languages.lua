@@ -1235,7 +1235,7 @@ return {
         reasonMutedVideo = '\nMute videos enabled.',
         reasonMutedVoicenotes = '\nMute voicenotes enabled.',
         reasonLockArabic = '\nLock arabic enabled.',
-        reasonLockBots = '\Lock bots enabled.',
+        reasonLockBots = '\nLock bots enabled.',
         reasonLockLeave = '\nLock leave enabled.',
         reasonLockLink = '\nLock link enabled.',
         reasonLockLinkEntities = '\nLock link enabled (hidden link).',
