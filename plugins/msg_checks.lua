@@ -67,12 +67,12 @@ end
 
 local function action(msg, strict, reason)
     deleteMessage(msg)
-    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id) .. reason)
+    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
     if strict then
-        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. reason)
+        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
     end
     if msg.chat.type == 'group' then
-        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. reason)
+        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
     end
 end
 
@@ -108,7 +108,7 @@ local function check_msg(msg, settings)
             print('muted user')
             deleteMessage(msg)
             if msg.chat.type == 'group' then
-                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonMutedUser)
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonMutedUser))
             end
             msg = clean_msg(msg)
             return nil
@@ -117,7 +117,7 @@ local function check_msg(msg, settings)
             print('all muted')
             deleteMessage(msg)
             if msg.chat.type == 'group' then
-                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonMutedAll)
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonMutedAll))
             end
             msg = clean_msg(msg)
             return nil
@@ -291,11 +291,11 @@ local function check_msg(msg, settings)
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonLockSpam)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                     end
                     if msg.chat.type == 'group' then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonLockSpam)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                     end
                     msg = clean_msg(msg)
                     return nil
@@ -308,10 +308,10 @@ local function check_msg(msg, settings)
                     deleteMessage(msg)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonLockRTL)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                     end
                     if msg.chat.type == 'group' then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonLockRTL)
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                     end
                     msg = clean_msg(msg)
                     return nil
@@ -321,7 +321,7 @@ local function check_msg(msg, settings)
                 print('member locked')
                 deleteMessage(msg)
                 savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
-                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id) .. langs[msg.lang].reasonLockMembers)
+                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                 msg = clean_msg(msg)
                 return nil
             end
@@ -334,11 +334,11 @@ local function check_msg(msg, settings)
                         deleteMessage(msg)
                         if strict then
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockSpam)
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                         end
                         if msg.chat.type == 'group' then
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockSpam)
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                         end
                         msg = clean_msg(msg)
                         return nil
@@ -351,10 +351,10 @@ local function check_msg(msg, settings)
                         deleteMessage(msg)
                         if strict then
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockRTL)
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                         end
                         if msg.chat.type == 'group' then
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockRTL)
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                         end
                         msg = clean_msg(msg)
                         return nil
@@ -363,9 +363,9 @@ local function check_msg(msg, settings)
                 if lock_member then
                     print('member locked')
                     deleteMessage(msg)
-                    sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id) .. langs[msg.lang].reasonLockMembers)
+                    sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
-                    sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockMembers)
+                    sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                     msg = clean_msg(msg)
                     return nil
                 end
@@ -376,7 +376,8 @@ local function check_msg(msg, settings)
                             -- Will ban bots added by normal users
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
                             -- Save to logs
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id) .. langs[msg.lang].reasonLockBots)
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
+                            return nil
                         end
                     end
                 end
@@ -386,7 +387,7 @@ local function check_msg(msg, settings)
             if lock_leave then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
                     print('leave locked')
-                    sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id) .. langs[msg.lang].reasonLockLeave)
+                    sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id, langs[msg.lang].reasonLockLeave))
                     msg = clean_msg(msg)
                     return nil
                 end
