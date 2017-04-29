@@ -723,12 +723,12 @@ return {
     {
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
-        "^[#!/]([Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
-        "^[#!/]([Ww][Aa][Rr][Nn]) ?(.*)$",
-        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
-        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ?(.*)$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+) ?(.*)$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ?(.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ?(.*)$",
+        "^[#!/]([Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
+        "^[#!/]([Ww][Aa][Rr][Nn]) ?(.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
         "^[#!/]([Kk][Ii][Cc][Kk]) ([^%s]+) ?(.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk]) ?(.*)$",
@@ -753,15 +753,15 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
         "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+)$",
         "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
-        -- warn
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+) ?(.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ?(.*)$",
         -- unwarnall
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+) ?(.*)$",
         "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+) ?(.*)$",
 
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ?(.*)$",
         "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ?(.*)$",
+        -- warn
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+) ?(.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ?(.*)$",
         -- kickme
         "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii][Mm][Ii])",
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Pp][Ll][Oo][Dd][Ii][Mm][Ii])",
