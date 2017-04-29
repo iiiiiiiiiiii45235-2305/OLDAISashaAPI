@@ -249,6 +249,7 @@ return {
         reasonCensorship = 'Censura violata.',
         reasonFlame = 'Flame.',
         reasonInviteRealm = 'Aggiunta di utente/i in un regno.',
+        reasonWarnMax = 'Raggiunto limite warn.',
 
         -- seedbot.lua --
         sender = 'Mittente: ',
@@ -1251,6 +1252,7 @@ return {
         reasonCensorship = 'Violation of censorship.',
         reasonFlame = 'Flame.',
         reasonInviteRealm = 'Added user(s) in realm.',
+        reasonWarnMax = 'Warn limit reached.',
 
         -- seedbot.lua --
         sender = 'Sender: ',

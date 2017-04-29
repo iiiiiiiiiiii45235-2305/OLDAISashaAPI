@@ -109,6 +109,8 @@ local function run(msg, matches)
                                 else
                                     return langs[msg.lang].errorNoForward
                                 end
+                            else
+                                return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                             end
                         else
                             return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
@@ -149,6 +151,8 @@ local function run(msg, matches)
                                 else
                                     return langs[msg.lang].errorNoForward
                                 end
+                            else
+                                return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                             end
                         else
                             return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
@@ -189,6 +193,8 @@ local function run(msg, matches)
                                 else
                                     return langs[msg.lang].errorNoForward
                                 end
+                            else
+                                return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                             end
                         else
                             return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
@@ -226,6 +232,8 @@ local function run(msg, matches)
                             else
                                 return langs[msg.lang].errorNoForward
                             end
+                        else
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     else
                         if msg.reply_to_message.service then
@@ -355,6 +363,8 @@ local function run(msg, matches)
                             else
                                 return langs[msg.lang].errorNoForward
                             end
+                        else
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     else
                         if msg.reply_to_message.service then
@@ -405,6 +415,8 @@ local function run(msg, matches)
                             else
                                 return langs[msg.lang].errorNoForward
                             end
+                        else
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
                         end
                     else
                         if msg.reply_to_message.service then
