@@ -737,12 +737,12 @@ return {
         "^[#!/]([Kk][Ii][Cc][Kk][Ii][Nn][Aa][Cc][Tt][Ii][Vv][Ee])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Ii][Nn][Aa][Cc][Tt][Ii][Vv][Ee]) (%d+)$",
         "^[#!/]([Kk][Ii][Cc][Kk][Dd][Ee][Ll][Ee][Tt][Ee][Dd])$",
+        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) ([^%s]+)$",
+        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Bb][Aa][Nn]) ?(.*)$",
         "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ?(.*)$",
-        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) ([^%s]+)$",
-        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Gg][Bb][Aa][Nn]) ([^%s]+)$",
         "^[#!/]([Gg][Bb][Aa][Nn])$",
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn]) ([^%s]+)$",
@@ -774,6 +774,11 @@ return {
 
         "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) ?(.*)$",
         "^([Uu][Cc][Cc][Ii][Dd][Ii]) ?(.*)$",
+        -- banlist
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
+        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
+        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
         -- ban
         "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
@@ -800,11 +805,6 @@ return {
         "^([Ss][Bb][Aa][Nn][Nn][Aa]) ?(.*)$",
         "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
         "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ?(.*)$",
-        -- banlist
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
         -- gban
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
