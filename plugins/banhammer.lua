@@ -348,6 +348,14 @@ local function run(msg, matches)
                 return langs[msg.lang].require_owner
             end
         end
+        if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
+            if msg.from.is_mod then
+                mystat('/banlist')
+                return banList(msg.chat.id)
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
         if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'sasha esplodi' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'kaboom' then
             if msg.from.is_mod then
                 mystat('/ban')
@@ -448,14 +456,6 @@ local function run(msg, matches)
                     end
                 end
                 return
-            else
-                return langs[msg.lang].require_mod
-            end
-        end
-        if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
-            if msg.from.is_mod then
-                mystat('/banlist')
-                return banList(msg.chat.id)
             else
                 return langs[msg.lang].require_mod
             end
