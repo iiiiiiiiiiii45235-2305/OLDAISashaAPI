@@ -129,55 +129,59 @@ end
 
 local function sendWelcome(chat, added, message_id)
     local welcome = get_welcome(chat.id)
-    if string.match(welcome, '^photo') then
-        welcome = welcome:gsub('^photo', '')
-        sendPhotoId(chat.id, welcome, message_id)
-    elseif string.match(welcome, '^video') then
-        welcome = welcome:gsub('^video', '')
-        sendVideoId(chat.id, welcome, message_id)
-    elseif string.match(welcome, '^audio') then
-        welcome = welcome:gsub('^audio', '')
-        sendAudioId(chat.id, welcome, false, message_id)
-    elseif string.match(welcome, '^voice') then
-        welcome = welcome:gsub('^voice', '')
-        sendVoiceId(chat.id, welcome, false, message_id)
-    elseif string.match(welcome, '^document') then
-        welcome = welcome:gsub('^document', '')
-        sendDocumentId(chat.id, welcome, message_id)
-    elseif string.match(welcome, '^sticker') then
-        welcome = welcome:gsub('^sticker', '')
-        sendStickerId(chat.id, welcome, message_id)
-    else
-        local text = ''
-        for k, v in pairs(added) do
-            text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
+    if welcome then
+        if string.match(welcome, '^photo') then
+            welcome = welcome:gsub('^photo', '')
+            sendPhotoId(chat.id, welcome, message_id)
+        elseif string.match(welcome, '^video') then
+            welcome = welcome:gsub('^video', '')
+            sendVideoId(chat.id, welcome, message_id)
+        elseif string.match(welcome, '^audio') then
+            welcome = welcome:gsub('^audio', '')
+            sendAudioId(chat.id, welcome, false, message_id)
+        elseif string.match(welcome, '^voice') then
+            welcome = welcome:gsub('^voice', '')
+            sendVoiceId(chat.id, welcome, false, message_id)
+        elseif string.match(welcome, '^document') then
+            welcome = welcome:gsub('^document', '')
+            sendDocumentId(chat.id, welcome, message_id)
+        elseif string.match(welcome, '^sticker') then
+            welcome = welcome:gsub('^sticker', '')
+            sendStickerId(chat.id, welcome, message_id)
+        else
+            local text = ''
+            for k, v in pairs(added) do
+                text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
+            end
+            sendMessage(chat.id, text, false, message_id)
         end
-        sendMessage(chat.id, text, false, message_id)
     end
 end
 
 local function sendGoodbye(chat, removed, message_id)
     local goodbye = get_goodbye(chat.id)
-    if string.match(goodbye, '^photo') then
-        goodbye = goodbye:gsub('^photo', '')
-        sendPhotoId(chat.id, goodbye, message_id)
-    elseif string.match(goodbye, '^video') then
-        goodbye = goodbye:gsub('^video', '')
-        sendVideoId(chat.id, goodbye, message_id)
-    elseif string.match(goodbye, '^audio') then
-        goodbye = goodbye:gsub('^audio', '')
-        sendAudioId(chat.id, goodbye, false, message_id)
-    elseif string.match(goodbye, '^voice') then
-        goodbye = goodbye:gsub('^voice', '')
-        sendVoiceId(chat.id, goodbye, false, message_id)
-    elseif string.match(goodbye, '^document') then
-        goodbye = goodbye:gsub('^document', '')
-        sendDocumentId(chat.id, goodbye, message_id)
-    elseif string.match(goodbye, '^sticker') then
-        goodbye = goodbye:gsub('^sticker', '')
-        sendStickerId(chat.id, goodbye, message_id)
-    else
-        sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+    if goodbye then
+        if string.match(goodbye, '^photo') then
+            goodbye = goodbye:gsub('^photo', '')
+            sendPhotoId(chat.id, goodbye, message_id)
+        elseif string.match(goodbye, '^video') then
+            goodbye = goodbye:gsub('^video', '')
+            sendVideoId(chat.id, goodbye, message_id)
+        elseif string.match(goodbye, '^audio') then
+            goodbye = goodbye:gsub('^audio', '')
+            sendAudioId(chat.id, goodbye, false, message_id)
+        elseif string.match(goodbye, '^voice') then
+            goodbye = goodbye:gsub('^voice', '')
+            sendVoiceId(chat.id, goodbye, false, message_id)
+        elseif string.match(goodbye, '^document') then
+            goodbye = goodbye:gsub('^document', '')
+            sendDocumentId(chat.id, goodbye, message_id)
+        elseif string.match(goodbye, '^sticker') then
+            goodbye = goodbye:gsub('^sticker', '')
+            sendStickerId(chat.id, goodbye, message_id)
+        else
+            sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+        end
     end
 end
 
