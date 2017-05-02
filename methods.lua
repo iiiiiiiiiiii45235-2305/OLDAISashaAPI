@@ -1482,10 +1482,10 @@ function print_res_msg(res, code)
             sent_msg = adjust_msg(sent_msg)
             return print_msg(sent_msg)
         else
-            sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. code or '')
+            sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
         end
     else
-        sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. code or '')
+        sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
     end
     return nil
 end
