@@ -322,6 +322,7 @@ return {
         cantKickWhitelisted = 'Non posso rimuovere un utente in whitelist.',
         badLuck = 'Sfortuna.',
         kickinactiveWarning = 'Comando disattivato.\nE\' ASSOLUTAMENTE SCONSIGLIATO utilizzare questo comando con @AISasha su gruppi con membri >= 200.',
+        multipleUnban = 'X membri sbannati.',
 
         -- bot.lua --
         startMessage = 'Ciao, io sono la versione API di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
@@ -713,6 +714,7 @@ return {
             '#kickrandom: Sasha sceglie un utente a caso e lo rimuove.',
             '#kickdeleted: Sasha rimuove tutti gli account eliminati.',
             'OWNER',
+            '#multipleunban <user_id1> <user_id2> ...: Sasha sbanna tutti gli <user_id> specificati nella lista.',
             '#kicknouser: Sasha rimuove gli utenti senza username.',
             '#kickinactive [<msgs>]: Sasha rimuove tutti gli utenti inattivi sotto <msgs> messaggi.',
             'ADMIN',
@@ -1329,6 +1331,7 @@ return {
         cantKickWhitelisted = 'Can\'t kick a whitelisted user.',
         badLuck = 'Bad luck.',
         kickinactiveWarning = 'Deactivated command.\nIt is STRONGLY SUGGESTED NOT TO USE this command with @AISasha in groups with members >= 200.',
+        multipleUnban = 'X members unbanned.',
 
         -- bot.lua --
         startMessage = 'Hi, I\'m the API version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
@@ -1721,6 +1724,7 @@ return {
             '#kickrandom: Sasha chooses a random user and kicks it.',
             '#kickdeleted: Sasha kicks all deleted accounts.',
             'OWNER',
+            '#multipleunban <user_id1> <user_id2> ...: Sasha unbans all the <user_ids> in the list.',
             '#kicknouser: Sasha kicks users without username.',
             '#kickinactive [<msgs>]: Sasha kicks inactive users under <msgs> messages.',
             'ADMIN',
