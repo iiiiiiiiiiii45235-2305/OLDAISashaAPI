@@ -15,7 +15,7 @@ end
 
 local function get_welcome(chat_id)
     if not data[tostring(chat_id)]['welcome'] then
-        return ''
+        return
     end
     local welcome = data[tostring(chat_id)]['welcome']
     return welcome
@@ -53,7 +53,7 @@ end
 
 local function get_goodbye(chat_id)
     if not data[tostring(chat_id)]['goodbye'] then
-        return ''
+        return
     end
     local goodbye = data[tostring(chat_id)]['goodbye']
     return goodbye
