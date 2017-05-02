@@ -299,7 +299,7 @@ local function pre_process(msg)
     if msg then
         if msg.service then
             if is_realm(msg) or is_group(msg) or is_super_group(msg) then
-                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_users" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue then
+                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_users" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue and get_welcome(msg.chat.id) then
                     local hash
                     if msg.chat.type == 'group' then
                         hash = 'chat:welcome' .. msg.chat.id
@@ -318,7 +318,7 @@ local function pre_process(msg)
                         redis:set(hash, 0)
                     end
                 end
-                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) ~= '' then
+                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) then
                     sendGoodbye(msg.chat, msg.removed, msg.message_id)
                 end
             end
