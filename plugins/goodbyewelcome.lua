@@ -23,7 +23,7 @@ end
 
 local function unset_welcome(chat_id)
     local lang = get_lang(chat_id)
-    data[tostring(chat_id)]['welcome'] = ''
+    data[tostring(chat_id)]['welcome'] = nil
     save_data(config.moderation.data, data)
     return langs[lang].welcomeRemoved
 end
@@ -61,7 +61,7 @@ end
 
 local function unset_goodbye(chat_id)
     local lang = get_lang(chat_id)
-    data[tostring(chat_id)]['goodbye'] = ''
+    data[tostring(chat_id)]['goodbye'] = nil
     save_data(config.moderation.data, data)
     return langs[lang].goodbyeRemoved
 end

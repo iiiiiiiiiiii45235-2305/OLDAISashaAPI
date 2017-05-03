@@ -238,6 +238,15 @@ local function run(msg, matches)
             return langs[msg.lang].helpIntro .. text
         end
     end
+    if matches[1]:lower() == "faq" then
+        if not matches[2] then
+            mystat('/faq')
+            return langs[msg.lang].faqList
+        else
+            mystat('/faq<n>')
+            return langs[msg.lang].faq[tonumber(matches[2])]
+        end
+    end
 end
 
 return {
@@ -250,6 +259,7 @@ return {
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Ff][Aa][Qq])(%d+)?$",
         -- helpall
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Uu][Tt][Tt][Oo])$",
         -- help
@@ -274,5 +284,6 @@ return {
         "(#helpall|sasha aiuto tutto)",
         "(#syntax|sasha sintassi) <filter>",
         "(#syntaxall|sasha sintassi tutto)",
+        "#faq[<n>]",
     },
 }

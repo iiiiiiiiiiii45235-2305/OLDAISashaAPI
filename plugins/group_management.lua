@@ -139,10 +139,10 @@ local function addGroup(msg)
                 if admin.status == 'creator' then
                     -- Group configuration
                     data[tostring(msg.chat.id)] = {
-                        goodbye = "",
+                        goodbye = nil,
                         group_type = 'Group',
                         moderators = { },
-                        rules = "",
+                        rules = nil,
                         set_name = string.gsub(msg.chat.print_name,'_',' '),
                         set_owner = tostring(admin.user.id),
                         settings =
@@ -175,7 +175,7 @@ local function addGroup(msg)
                             strict = false,
                             warn_max = 3,
                         },
-                        welcome = "",
+                        welcome = nil,
                         welcomemembers = 0,
                     }
                     save_data(config.moderation.data, data)
@@ -229,10 +229,10 @@ local function addRealm(msg)
                 if admin.status == 'creator' then
                     -- Realm configuration
                     data[tostring(msg.chat.id)] = {
-                        goodbye = "",
+                        goodbye = nil,
                         group_type = 'Realm',
                         moderators = { },
-                        rules = "",
+                        rules = nil,
                         set_name = string.gsub(msg.chat.print_name,'_',' '),
                         set_owner = tostring(admin.user.id),
                         settings =
@@ -265,7 +265,7 @@ local function addRealm(msg)
                             strict = false,
                             warn_max = 3,
                         },
-                        welcome = "",
+                        welcome = nil,
                         welcomemembers = 0,
                     }
                     save_data(config.moderation.data, data)
@@ -309,10 +309,10 @@ local function addSuperGroup(msg)
                 if admin.status == 'creator' then
                     -- SuperGroup configuration
                     data[tostring(msg.chat.id)] = {
-                        goodbye = "",
+                        goodbye = nil,
                         group_type = 'SuperGroup',
                         moderators = { },
-                        rules = "",
+                        rules = nil,
                         set_name = string.gsub(msg.chat.print_name,'_',' '),
                         set_owner = tostring(admin.user.id),
                         settings =
@@ -345,7 +345,7 @@ local function addSuperGroup(msg)
                             strict = false,
                             warn_max = 3,
                         },
-                        welcome = "",
+                        welcome = nil,
                         welcomemembers = 0,
                     }
                     save_data(config.moderation.data, data)

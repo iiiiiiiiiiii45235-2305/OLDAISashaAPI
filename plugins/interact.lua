@@ -65,5 +65,6 @@ return {
     {
         "MOD",
         "(#echo|sasha ripeti) <text>",
+        "(#markdownecho|sasha markdown ripeti) <text>",
     },
 }
