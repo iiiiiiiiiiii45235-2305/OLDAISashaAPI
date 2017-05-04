@@ -188,8 +188,8 @@ local function keyboard_help_list(chat, rank)
             if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
                 if plugins[name].min_rank <= tonumber(rank) then
                     keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name, callback_data = name }
+                    column = column + 1
                 end
-                column = column + 1
                 if column >= 4 then
                     row = row + 1
                     column = 0
@@ -200,8 +200,8 @@ local function keyboard_help_list(chat, rank)
         else
             if plugins[name].min_rank <= tonumber(rank) then
                 keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name, callback_data = name }
+                column = column + 1
             end
-            column = column + 1
             if column >= 4 then
                 row = row + 1
                 column = 0
