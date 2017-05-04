@@ -273,7 +273,11 @@ local function run(msg, matches)
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
             mystat('/help')
-            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            if msg.from.type ~= 'private' then
+                sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+            end
+            -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
         else
             mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
@@ -287,10 +291,6 @@ local function run(msg, matches)
                 return matches[2]:lower() .. langs[msg.lang].notExists
             end
         end
-    end
-    if matches[1]:lower() == "tryhelp" then
-        sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
-        return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
     end
 
     if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
@@ -325,7 +325,6 @@ return {
         "^(###cb)(.*)$",
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
-        "^[#!/]([Tt][Rr][Yy][Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
