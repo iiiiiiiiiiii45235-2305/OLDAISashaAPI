@@ -225,7 +225,7 @@ end
 
 local function run(msg, matches)
     if matches[1] == '###cb' and matches[2] then
-        if matches[3] == 'BACK' then
+        if matches[2] == 'BACK' then
             return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
         else
             mystat('###cbhelp' .. matches[2])
