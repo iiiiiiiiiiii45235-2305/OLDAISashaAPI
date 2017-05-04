@@ -322,7 +322,7 @@ return {
     description = "HELP",
     patterns =
     {
-        "^(###cb)(%d+)(.*)$",
+        "^(###cb)(.*)$",
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Tt][Rr][Yy][Hh][Ee][Ll][Pp])$",
