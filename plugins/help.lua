@@ -291,6 +291,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == "tryhelp" then
+        sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
         return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
     end
 

@@ -403,7 +403,7 @@ return {
         helpIntro = 'Ogni \'#\' può essere sostituito con i simboli \'/\' o \'!\'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale.\nLe parentesi tonde indicano una scelta evidenziata da \'|\' che significa "oppure".\n\n',
         commandNotFound = 'Sintassi comando non trovata.',
         goBack = 'Indietro.',
-        hi = 'Ciao ',
+        sendHelpPvt = 'Ti ho mandato l\'help in privato.',
 
         -- get.lua --
         globalEnable = 'Variabili globali abilitate su questa chat.',
@@ -1485,7 +1485,7 @@ return {
         helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets with \'|\' means that\'s a choice".\n\n',
         commandNotFound = 'Command syntax not found.',
         goBack = 'Back.',
-        hi = 'Hi ',
+        sendHelpPvt = 'I\'ve sent you the help in private.',
 
         -- get.lua --
         globalEnable = 'Global variables enabled on this chat.',

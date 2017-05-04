@@ -56,7 +56,7 @@ local function pre_process(msg)
             end
         end
         -- Ignore mods,owner and admins
-        if msg.from.is_mod and not msg.cb then
+        if msg.from.is_mod then
             return msg
         end
 
