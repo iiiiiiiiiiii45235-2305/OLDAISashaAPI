@@ -187,10 +187,10 @@ local function keyboard_help_list(chat, rank)
     for name in pairsByKeys(plugins) do
         if config.disabled_plugin_on_chat[chat] then
             if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
-                column = column + 1
                 if plugins[name].min_rank <= tonumber(rank) then
                     keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
                 end
+                column = column + 1
                 if column >= 4 then
                     row = row + 1
                     column = 0
@@ -199,10 +199,10 @@ local function keyboard_help_list(chat, rank)
                 end
             end
         else
-            column = column + 1
             if plugins[name].min_rank <= tonumber(rank) then
                 keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
             end
+            column = column + 1
             if column >= 4 then
                 row = row + 1
                 column = 0
@@ -264,8 +264,7 @@ local function run(msg, matches)
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
             mystat('/help')
-            return sendKeyboard(msg.chat.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
-            -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
         else
             mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
@@ -279,6 +278,9 @@ local function run(msg, matches)
                 return matches[2]:lower() .. langs[msg.lang].notExists
             end
         end
+    end
+    if matches[1]:lower() == "tryhelp" then
+        return sendKeyboard(msg.chat.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
     end
 
     if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
@@ -313,6 +315,7 @@ return {
         "^(###cb)(.*)$",
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
+        "^[#!/]([Tt][Rr][Yy][Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
