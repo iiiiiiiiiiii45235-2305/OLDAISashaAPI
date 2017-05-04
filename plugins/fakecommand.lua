@@ -17,6 +17,7 @@ local function run(msg, matches)
             copied_msg.from.tg_cli_id = '*' .. rank_table[matches[1]:upper()]
             print(copied_msg.from.id, copied_msg.text)
             copied_msg = get_tg_rank(copied_msg)
+            printvardump(copied_msg)
             if msg_valid(copied_msg) then
                 match_plugins(copied_msg)
             end
