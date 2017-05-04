@@ -292,14 +292,20 @@ end
 function adjust_bot(tab)
     tab.type = 'private'
     tab.tg_cli_id = tonumber(tab.id)
-    tab.print_name = tab.first_name ..(tab.last_name or '')
+    tab.print_name = tab.first_name
+    if tab.last_name then
+        tab.print_name = tab.print_name .. ' ' .. tab.last_name
+    end
     return tab
 end
 
 function adjust_user(tab)
     tab.type = 'private'
     tab.tg_cli_id = tonumber(tab.id)
-    tab.print_name = tab.first_name ..(tab.last_name or '')
+    tab.print_name = tab.first_name
+    if tab.last_name then
+        tab.print_name = tab.print_name .. ' ' .. tab.last_name
+    end
     return tab
 end
 
