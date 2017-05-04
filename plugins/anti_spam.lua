@@ -67,9 +67,6 @@ local function pre_process(msg)
 
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
-                if msg.cb then
-                    max_msg = 5
-                end
                 print(msgs)
                 if msgs >= max_msg then
                     print("Pass2")
