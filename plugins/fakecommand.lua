@@ -15,9 +15,22 @@ local function run(msg, matches)
             -- replace the id of the executer with a '*' followed by the rank value so when it's checked with (i.e.) is_mod(msg) bot knows it's a fakecommand
             copied_msg.from.id = '*' .. rank_table[matches[1]:upper()]
             copied_msg.from.tg_cli_id = '*' .. rank_table[matches[1]:upper()]
-            copied_msg.from.is_mod = false
-            copied_msg.from.is_owner = false
-            copied_msg = get_tg_rank(copied_msg)
+            if matches[1]:lower() == 'user' then
+                copied_msg.from.is_mod = false
+                copied_msg.from.is_owner = false
+            end
+            if matches[1]:lower() == 'mod' then
+                copied_msg.from.is_mod = true
+                copied_msg.from.is_owner = false
+            end
+            if matches[1]:lower() == 'owner' then
+                copied_msg.from.is_mod = true
+                copied_msg.from.is_owner = true
+            end
+            if matches[1]:lower() == 'admin' then
+                copied_msg.from.is_mod = true
+                copied_msg.from.is_owner = true
+            end
             if msg_valid(copied_msg) then
                 match_plugins(copied_msg)
             end
