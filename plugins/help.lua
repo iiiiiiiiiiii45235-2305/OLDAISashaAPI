@@ -233,12 +233,12 @@ local function run(msg, matches)
                 local temp = plugin_help(matches[3]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
                 if temp ~= nil then
                     if temp ~= '' then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = msg.from.id .. 'BACK' } } } })
                     else
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = msg.from.id .. 'BACK' } } } })
                     end
                 else
-                    return editMessageText(msg.chat.id, msg.message_id, matches[3]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                    return editMessageText(msg.chat.id, msg.message_id, matches[3]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = msg.from.id .. 'BACK' } } } })
                 end
             end
         end
