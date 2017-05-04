@@ -100,6 +100,167 @@ function is_bot_admin(chat_id)
     return false
 end
 
+function is_sudo(msg)
+    local var = false
+    -- Check users id in config
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(msg.from.id) then
+            -- bot sudo
+            var = true
+        end
+    end
+    return var
+end
+
+function is_sudo2(user_id)
+    local var = false
+    -- Check users id in config
+    for v, user in pairs(sudoers) do
+        if tostring(user.id) == tostring(user_id) then
+            -- bot sudo
+            var = true
+        end
+    end
+    return var
+end
+
+function is_admin(msg)
+    local var = false
+    local user_id = msg.from.id
+    local admins = 'admins'
+    if data[tostring(admins)] then
+        if data[tostring(admins)][tostring(user_id)] then
+            -- bot admin
+            var = true
+        end
+    end
+
+    if is_sudo(msg) then
+        -- bot sudo
+        var = true
+    end
+
+    -- check if executing a fakecommand, if yes confirm
+    if tostring(user_id) == '*3' then
+        var = true
+    end
+    return var
+end
+
+function is_admin2(user_id)
+    local var = false
+    local admins = 'admins'
+    if data[tostring(admins)] then
+        if data[tostring(admins)][tostring(user_id)] then
+            -- bot admin
+            var = true
+        end
+    end
+
+    if is_sudo2(user_id) then
+        -- bot sudo
+        var = true
+    end
+
+    -- check if executing a fakecommand, if yes confirm
+    if tostring(user_id) == '*3' then
+        var = true
+    end
+    return var
+end
+
+function is_owner(msg, check_local)
+    local var = false
+    local user_id = msg.from.id
+    local chat_id = msg.chat.id
+
+    if not check_local then
+        local res = getChatMember(chat_id, user_id)
+        if type(res) == 'table' then
+            if res.result then
+                local status = res.result.status
+                if status == 'creator' then
+                    -- owner
+                    var = true
+                end
+            end
+        end
+    end
+
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['set_owner'] then
+            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
+                -- owner
+                var = true
+            end
+        end
+    end
+
+    if is_admin(msg) then
+        -- bot admin
+        var = true
+    end
+
+    if is_sudo(msg) then
+        -- bot sudo
+        var = true
+    end
+
+    -- check if executing a fakecommand, if yes confirm
+    if tostring(user_id) == '*2' then
+        var = true
+    end
+    if tostring(user_id) == '*3' then
+        var = true
+    end
+    return var
+end
+
+function is_owner2(user_id, chat_id, check_local)
+    local var = false
+
+    if not check_local then
+        local res = getChatMember(chat_id, user_id)
+        if type(res) == 'table' then
+            if res.result then
+                local status = res.result.status
+                if status == 'creator' then
+                    -- owner
+                    var = true
+                end
+            end
+        end
+    end
+
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)]['set_owner'] then
+            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
+                -- owner
+                var = true
+            end
+        end
+    end
+
+    if is_admin2(user_id) then
+        -- bot admin
+        var = true
+    end
+
+    if is_sudo2(user_id) then
+        -- bot sudo
+        var = true
+    end
+
+    -- check if executing a fakecommand, if yes confirm
+    if tostring(user_id) == '*2' then
+        var = true
+    end
+    if tostring(user_id) == '*3' then
+        var = true
+    end
+    return var
+end
+
 function is_mod(msg, check_local)
     local var = false
     local user_id = msg.from.id
@@ -131,27 +292,19 @@ function is_mod(msg, check_local)
         end
     end
 
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['set_owner'] then
-            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
-                -- owner
-                var = true
-            end
-        end
+    if is_owner(msg, check_local) then
+        -- owner
+        var = true
     end
 
-    if data['admins'] then
-        if data['admins'][tostring(user_id)] then
-            -- bot admin
-            var = true
-        end
+    if is_admin(msg) then
+        -- bot admin
+        var = true
     end
 
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
+    if is_sudo(msg) then
+        -- bot sudo
+        var = true
     end
 
     -- check if executing a fakecommand, if yes confirm
@@ -196,27 +349,19 @@ function is_mod2(user_id, chat_id, check_local)
         end
     end
 
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['set_owner'] then
-            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
-                -- owner
-                var = true
-            end
-        end
+    if is_owner2(user_id, chat_id, check_local) then
+        -- owner
+        var = true
     end
 
-    if data['admins'] then
-        if data['admins'][tostring(user_id)] then
-            -- bot admin
-            var = true
-        end
+    if is_admin2(user_id) then
+        -- bot admin
+        var = true
     end
 
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
+    if is_sudo2(user_id) then
+        -- bot sudo
+        var = true
     end
 
     -- check if executing a fakecommand, if yes confirm
@@ -228,178 +373,6 @@ function is_mod2(user_id, chat_id, check_local)
     end
     if tostring(user_id) == '*3' then
         var = true
-    end
-    return var
-end
-
-function is_owner(msg, check_local)
-    local var = false
-    local user_id = msg.from.id
-    local chat_id = msg.chat.id
-
-    if not check_local then
-        local res = getChatMember(chat_id, user_id)
-        if type(res) == 'table' then
-            if res.result then
-                local status = res.result.status
-                if status == 'creator' then
-                    -- owner
-                    var = true
-                end
-            end
-        end
-    end
-
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['set_owner'] then
-            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
-                -- owner
-                var = true
-            end
-        end
-    end
-
-    if data['admins'] then
-        if data['admins'][tostring(user_id)] then
-            -- bot admin
-            var = true
-        end
-    end
-
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
-    end
-
-    -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*2' then
-        var = true
-    end
-    if tostring(user_id) == '*3' then
-        var = true
-    end
-    return var
-end
-
-function is_owner2(user_id, chat_id, check_local)
-    local var = false
-
-    if not check_local then
-        local res = getChatMember(chat_id, user_id)
-        if type(res) == 'table' then
-            if res.result then
-                local status = res.result.status
-                if status == 'creator' then
-                    -- owner
-                    var = true
-                end
-            end
-        end
-    end
-
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['set_owner'] then
-            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
-                -- owner
-                var = true
-            end
-        end
-    end
-
-    if data['admins'] then
-        if data['admins'][tostring(user_id)] then
-            -- bot admin
-            var = true
-        end
-    end
-
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
-    end
-
-    -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*2' then
-        var = true
-    end
-    if tostring(user_id) == '*3' then
-        var = true
-    end
-    return var
-end
-
-function is_admin(msg)
-    local var = false
-    local user_id = msg.from.id
-    local admins = 'admins'
-    if data[tostring(admins)] then
-        if data[tostring(admins)][tostring(user_id)] then
-            -- bot admin
-            var = true
-        end
-    end
-
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
-    end
-
-    -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*3' then
-        var = true
-    end
-    return var
-end
-
-function is_admin2(user_id)
-    local var = false
-    local admins = 'admins'
-    if data[tostring(admins)] then
-        if data[tostring(admins)][tostring(user_id)] then
-            -- bot admin
-            var = true
-        end
-    end
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
-    end
-
-    -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*3' then
-        var = true
-    end
-    return var
-end
-
-function is_sudo(msg)
-    local var = false
-    -- Check users id in config
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(msg.from.id) then
-            -- bot sudo
-            var = true
-        end
-    end
-    return var
-end
-
-function is_sudo2(user_id)
-    local var = false
-    -- Check users id in config
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
-            -- bot sudo
-            var = true
-        end
     end
     return var
 end
