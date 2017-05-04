@@ -177,7 +177,56 @@ local function syntax_all(chat, rank, filter)
     return text
 end
 
+local function keyboard_help_list(chat, rank)
+    local keyboard = { }
+    local row = 1
+    local column = 1
+    for name in pairsByKeys(plugins) do
+        if config.disabled_plugin_on_chat[chat] then
+            if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
+                column = column + 1
+                if plugins[name].min_rank <= tonumber(rank) then
+                    keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
+                end
+                if column >= 4 then
+                    row = row + 1
+                    column = 0
+                end
+            end
+        else
+            column = column + 1
+            if plugins[name].min_rank <= tonumber(rank) then
+                keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
+            end
+            if column >= 4 then
+                row = row + 1
+                column = 0
+            end
+        end
+    end
+    return keyboard
+end
+
 local function run(msg, matches)
+    if matches[1] == '###cb' and matches[2] then
+        if matches[2] == 'BACK' then
+            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+        else
+            mystat('###cbhelp' .. matches[2])
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            if temp ~= nil then
+                if temp ~= '' then
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } })
+                else
+                    return langs[msg.lang].require_higher
+                end
+            else
+                return matches[2]:lower() .. langs[msg.lang].notExists
+            end
+            return
+        end
+    end
+
     if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
         mystat('/sudolist')
         local text = 'SUDO INFO'
@@ -208,7 +257,8 @@ local function run(msg, matches)
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
             mystat('/help')
-            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            return sendKeyboard(msg.chat.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+            -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
         else
             mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
@@ -253,6 +303,7 @@ return {
     description = "HELP",
     patterns =
     {
+        "^(###cb)(.*)$",
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",

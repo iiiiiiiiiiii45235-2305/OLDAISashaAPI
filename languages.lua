@@ -402,6 +402,7 @@ return {
         errorNoPlugin = 'Questo plugin non esiste o non ha una descrizione.',
         helpIntro = 'Ogni \'#\' può essere sostituito con i simboli \'/\' o \'!\'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale.\nLe parentesi tonde indicano una scelta evidenziata da \'|\' che significa "oppure".\n\n',
         commandNotFound = 'Sintassi comando non trovata.',
+        goBack = 'Indietro.',
 
         -- get.lua --
         globalEnable = 'Variabili globali abilitate su questa chat.',
@@ -1481,7 +1482,8 @@ return {
         helpInfo = 'ℹ️Write "!help <plugin_name>|<plugin_number>" for more info on that plugin.\nℹ️Or "!helpall" to have all commands.',
         errorNoPlugin = 'This plugin doesn\'t exist or doesn\'t have a description.',
         helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets with \'|\' means that\'s a choice".\n\n',
-        commandNotFound = 'Sintassi comando non trovata.',
+        commandNotFound = 'Command syntax not found.',
+        goBack = 'Back.',
 
         -- get.lua --
         globalEnable = 'Global variables enabled on this chat.',

@@ -1031,6 +1031,7 @@ while is_started do
                 cb_msg.cb_id = cb_msg.id
                 cb_msg.id = nil
                 cb_msg.target_id = cb_msg.data:match('(-%d+)$')
+                cb_msg.text = "###cb" .. cb_msg.data
                 msg.message = cb_msg
                 -- callback datas often ship IDs
             end
