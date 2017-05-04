@@ -270,6 +270,7 @@ local function run(msg, matches)
         mystat('/helpall')
         return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
     end
+
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
             mystat('/help')
@@ -278,6 +279,28 @@ local function run(msg, matches)
             end
             -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
             return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+        else
+            mystat('/help <plugin>')
+            if msg.chat.type ~= 'private' then
+                sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+            end
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            if temp ~= nil then
+                if temp ~= '' then
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                end
+            else
+                return sendKeyboard(msg.chat.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+            end
+        end
+    end
+
+    if matches[1]:lower() == "textualhelp" then
+        if not matches[2] then
+            mystat('/help')
+            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
         else
             mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
@@ -297,6 +320,7 @@ local function run(msg, matches)
         mystat('/syntaxall')
         return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
     end
+
     if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
@@ -307,6 +331,7 @@ local function run(msg, matches)
             return langs[msg.lang].helpIntro .. text
         end
     end
+
     if matches[1]:lower() == "faq" then
         if not matches[2] then
             mystat('/faq')
@@ -326,6 +351,8 @@ return {
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp])$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp]) ([^%s]+)$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
@@ -334,6 +361,10 @@ return {
         "^[#!/]([Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
         -- helpall
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Uu][Tt][Tt][Oo])$",
+        -- textualhelp
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Ee][Ss][Tt][Uu][Aa][Ll][Ee])$",
+        -- textualhelp <plugin_name>|<plugin_number>
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Ee][Ss][Tt][Uu][Aa][Ll][Ee]) ([^%s]+)$",
         -- help
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo])$",
         -- help <plugin_name>|<plugin_number>
@@ -353,6 +384,8 @@ return {
         "(#sudolist|sasha lista sudo)",
         "(#help|sasha aiuto)",
         "(#help|sasha aiuto) <plugin_name>|<plugin_number>",
+        "(#textualhelp|sasha aiuto testuale)",
+        "(#textualhelp|sasha aiuto testuale) <plugin_name>|<plugin_number>",
         "(#helpall|sasha aiuto tutto)",
         "(#syntax|sasha sintassi) <filter>",
         "(#syntaxall|sasha sintassi tutto)",
