@@ -199,7 +199,7 @@ local function keyboard_help_list(chat, rank)
                     keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                     column = column + 1
                 end
-                if column > 2 then
+                if column > 3 then
                     flag = true
                 end
             end
@@ -215,7 +215,7 @@ local function keyboard_help_list(chat, rank)
                 keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                 column = column + 1
             end
-            if column > 2 then
+            if column > 3 then
                 flag = true
             end
         end
