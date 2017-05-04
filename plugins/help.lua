@@ -194,7 +194,6 @@ local function keyboard_help_list(chat, rank)
                         row = row + 1
                         column = 1
                         keyboard.inline_keyboard[row] = { }
-                        keyboard.inline_keyboard[row][column] = { }
                     end
                     keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                     column = column + 1
@@ -210,7 +209,6 @@ local function keyboard_help_list(chat, rank)
                     row = row + 1
                     column = 1
                     keyboard.inline_keyboard[row] = { }
-                    keyboard.inline_keyboard[row][column] = { }
                 end
                 keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                 column = column + 1

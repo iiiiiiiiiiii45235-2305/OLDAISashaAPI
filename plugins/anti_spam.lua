@@ -57,6 +57,10 @@ local function pre_process(msg)
         end
 
         if not msg.edited then
+            -- Ignore mods,owner and admins
+            if msg.from.is_mod then
+                return msg
+            end
             -- Check flood
             local hash = 'api:user:' .. msg.from.id .. ':msgs'
             local msgs = tonumber(redis:get(hash) or 0)
@@ -89,10 +93,6 @@ local function pre_process(msg)
                 local max_msg = NUM_MSG_MAX * 1
                 if msgs >= max_msg then
                     local user = msg.from.id
-                    -- Ignore mods,owner and admins
-                    if msg.from.is_mod then
-                        return msg
-                    end
                     -- Ignore whitelisted
                     if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
                         return msg
