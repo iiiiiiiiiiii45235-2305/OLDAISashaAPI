@@ -224,22 +224,20 @@ local function keyboard_help_list(chat, rank)
 end
 
 local function run(msg, matches)
-    if matches[1] == '###cb' and matches[2] and matches[3] then
-        if msg.from.id == tonumber(matches[2]) then
-            if matches[3] == 'BACK' then
-                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
-            else
-                mystat('###cbhelp' .. matches[3])
-                local temp = plugin_help(matches[3]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
-                if temp ~= nil then
-                    if temp ~= '' then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
-                    else
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
-                    end
+    if matches[1] == '###cb' and matches[2] then
+        if matches[3] == 'BACK' then
+            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+        else
+            mystat('###cbhelp' .. matches[2])
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            if temp ~= nil then
+                if temp ~= '' then
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                 else
-                    return editMessageText(msg.chat.id, msg.message_id, matches[3]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                 end
+            else
+                return editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
             end
         end
         return
