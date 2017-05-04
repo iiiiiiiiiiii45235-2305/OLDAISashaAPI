@@ -177,7 +177,7 @@ local function syntax_all(chat, rank, filter)
     return text
 end
 
-local function keyboard_help_list(chat, user, rank)
+local function keyboard_help_list(chat, rank)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -196,7 +196,7 @@ local function keyboard_help_list(chat, user, rank)
                         column = 1
                         keyboard.inline_keyboard[row] = { }
                     end
-                    keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = user .. name }
+                    keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                     column = column + 1
                 end
                 if column > 2 then
@@ -212,7 +212,7 @@ local function keyboard_help_list(chat, user, rank)
                     column = 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = user .. name }
+                keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                 column = column + 1
             end
             if column > 2 then
@@ -227,18 +227,18 @@ local function run(msg, matches)
     if matches[1] == '###cb' and matches[2] and matches[3] then
         if msg.from.id == tonumber(matches[2]) then
             if matches[3] == 'BACK' then
-                return editMessageText(msg.chat.id, msg.message_id,(msg.from.username or msg.from.print_name) .. msg.from.id .. '\n' .. langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, msg.from.id, get_rank(msg.from.id, msg.chat.id)))
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
             else
                 mystat('###cbhelp' .. matches[3])
                 local temp = plugin_help(matches[3]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
                 if temp ~= nil then
                     if temp ~= '' then
-                        return editMessageText(msg.chat.id, msg.message_id,(msg.from.username or msg.from.print_name) .. msg.from.id .. '\n' .. langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = msg.from.id .. 'BACK' } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                     else
-                        return editMessageText(msg.chat.id, msg.message_id,(msg.from.username or msg.from.print_name) .. msg.from.id .. '\n' .. langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = msg.from.id .. 'BACK' } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                     end
                 else
-                    return editMessageText(msg.chat.id, msg.message_id,(msg.from.username or msg.from.print_name) .. msg.from.id .. '\n' .. matches[3]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = msg.from.id .. 'BACK' } } } })
+                    return editMessageText(msg.chat.id, msg.message_id, matches[3]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                 end
             end
         end
@@ -291,7 +291,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == "tryhelp" then
-        return sendKeyboard(msg.chat.id,(msg.from.username or msg.from.print_name) .. msg.from.id .. '\n' .. langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, msg.from.id, get_rank(msg.from.id, msg.chat.id)))
+        return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
     end
 
     if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
