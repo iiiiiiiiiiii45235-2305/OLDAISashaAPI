@@ -273,7 +273,7 @@ local function run(msg, matches)
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
         if not matches[2] then
             mystat('/help')
-            if msg.from.type ~= 'private' then
+            if msg.chat.type ~= 'private' then
                 sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
             end
             -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
