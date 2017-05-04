@@ -191,6 +191,7 @@ local function keyboard_help_list(chat, rank)
                 i = i + 1
                 if plugins[name].min_rank <= tonumber(rank) then
                     if flag then
+                        flag = false
                         row = row + 1
                         column = 1
                         keyboard.inline_keyboard[row] = { }
@@ -206,6 +207,7 @@ local function keyboard_help_list(chat, rank)
             i = i + 1
             if plugins[name].min_rank <= tonumber(rank) then
                 if flag then
+                    flag = false
                     row = row + 1
                     column = 1
                     keyboard.inline_keyboard[row] = { }
