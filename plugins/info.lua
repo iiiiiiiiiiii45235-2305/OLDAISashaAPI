@@ -13,9 +13,9 @@
     end
 end
 
-local function get_reverse_rank(chat_id, user_id)
+local function get_reverse_rank(chat_id, user_id, check_local)
     local lang = get_lang(chat_id)
-    local rank = get_rank(user_id, chat_id)
+    local rank = get_rank(user_id, chat_id, check_local)
     return langs[lang].rank .. reverse_rank_table[rank + 1]
 end
 
@@ -93,7 +93,7 @@ local function get_object_info(obj, chat_id)
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
             local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
-            text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id) + 1] ..
+            text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true) + 1] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
@@ -172,7 +172,7 @@ local function run(msg, matches)
                 if matches[2]:lower() == 'from' then
                     if msg.reply_to_message.forward then
                         if msg.reply_to_message.forward_from then
-                            return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id)
+                            return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id, check_local)
                         else
                             return langs[msg.lang].cantDoThisToChat
                         end
@@ -180,24 +180,24 @@ local function run(msg, matches)
                         return langs[msg.lang].errorNoForward
                     end
                 else
-                    return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id)
+                    return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
                 end
             else
-                return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id)
+                return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
             end
         elseif matches[2] then
             if string.match(matches[2], '^%d+$') then
-                return get_reverse_rank(msg.chat.id, matches[2])
+                return get_reverse_rank(msg.chat.id, matches[2], check_local)
             else
                 local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                        return get_reverse_rank(msg.chat.id, obj_user.id)
+                        return get_reverse_rank(msg.chat.id, obj_user.id, check_local)
                     end
                 end
             end
         else
-            return get_reverse_rank(msg.chat.id, msg.from.id)
+            return get_reverse_rank(msg.chat.id, msg.from.id, check_local)
         end
     end
     if matches[1]:lower() == 'ishere' then

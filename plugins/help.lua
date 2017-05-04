@@ -226,10 +226,10 @@ end
 local function run(msg, matches)
     if matches[1] == '###cb' and matches[2] then
         if matches[2] == 'BACK' then
-            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
         else
             mystat('###cbhelp' .. matches[2])
-            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
                     return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
@@ -268,7 +268,7 @@ local function run(msg, matches)
     table.sort(plugins)
     if matches[1]:lower() == "helpall" or matches[1]:lower() == "sasha aiuto tutto" then
         mystat('/helpall')
-        return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+        return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
     end
 
     if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
@@ -277,14 +277,14 @@ local function run(msg, matches)
             if msg.chat.type ~= 'private' then
                 sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
             end
-            -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
-            return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id)))
+            -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+            return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
         else
             mystat('/help <plugin>')
             if msg.chat.type ~= 'private' then
                 sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
             end
-            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
                     return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
@@ -300,10 +300,10 @@ local function run(msg, matches)
     if matches[1]:lower() == "textualhelp" then
         if not matches[2] then
             mystat('/help')
-            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
         else
             mystat('/help <plugin>')
-            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
                     return langs[msg.lang].helpIntro .. temp
@@ -318,13 +318,13 @@ local function run(msg, matches)
 
     if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
         mystat('/syntaxall')
-        return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id))
+        return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
     end
 
     if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
-        local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id), matches[2])
+        local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
         if text == '' then
             return langs[msg.lang].commandNotFound
         else
