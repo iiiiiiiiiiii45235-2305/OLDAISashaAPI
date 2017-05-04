@@ -68,7 +68,7 @@ local function pre_process(msg)
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
                 if msg.cb then
-                    max_msg = 10
+                    max_msg = 5
                 end
                 print(msgs)
                 if msgs >= max_msg then
@@ -95,7 +95,7 @@ local function pre_process(msg)
                 end
                 local max_msg = NUM_MSG_MAX * 1
                 if msg.cb then
-                    max_msg = 10
+                    max_msg = 5
                 end
                 if msgs >= max_msg then
                     local user = msg.from.id
