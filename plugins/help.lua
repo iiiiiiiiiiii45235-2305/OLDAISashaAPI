@@ -287,12 +287,12 @@ local function run(msg, matches)
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
             if temp ~= nil then
                 if temp ~= '' then
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                    return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                    return sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                 end
             else
-                return sendKeyboard(msg.chat.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
+                return sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
             end
         end
     end
