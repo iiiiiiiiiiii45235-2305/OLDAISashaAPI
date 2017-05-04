@@ -181,6 +181,8 @@ local function keyboard_help_list(chat, rank)
     local keyboard = { }
     local row = 1
     local column = 1
+    keyboard[row] = { }
+    keyboard[row][column] = { }
     for name in pairsByKeys(plugins) do
         if config.disabled_plugin_on_chat[chat] then
             if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
@@ -191,6 +193,8 @@ local function keyboard_help_list(chat, rank)
                 if column >= 4 then
                     row = row + 1
                     column = 0
+                    keyboard[row] = { }
+                    keyboard[row][column] = { }
                 end
             end
         else
@@ -201,6 +205,8 @@ local function keyboard_help_list(chat, rank)
             if column >= 4 then
                 row = row + 1
                 column = 0
+                keyboard[row] = { }
+                keyboard[row][column] = { }
             end
         end
     end
