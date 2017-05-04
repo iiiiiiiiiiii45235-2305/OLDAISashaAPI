@@ -194,7 +194,7 @@ local function keyboard_help_list(chat, rank)
                 end
                 if column >= 4 then
                     row = row + 1
-                    column = 0
+                    column = 1
                     keyboard.inline_keyboard[row] = { }
                     keyboard.inline_keyboard[row][column] = { }
                 end
@@ -207,7 +207,7 @@ local function keyboard_help_list(chat, rank)
             end
             if column >= 4 then
                 row = row + 1
-                column = 0
+                column = 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { }
             end
