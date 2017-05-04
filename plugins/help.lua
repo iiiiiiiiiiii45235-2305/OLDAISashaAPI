@@ -186,16 +186,16 @@ local function keyboard_help_list(chat, rank)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for name in pairsByKeys(plugins) do
-        if flag then
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][column] = { }
-        end
         if config.disabled_plugin_on_chat[chat] then
             if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
                 i = i + 1
                 if plugins[name].min_rank <= tonumber(rank) then
+                    if flag then
+                        row = row + 1
+                        column = 1
+                        keyboard.inline_keyboard[row] = { }
+                        keyboard.inline_keyboard[row][column] = { }
+                    end
                     keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                     column = column + 1
                 end
@@ -206,6 +206,12 @@ local function keyboard_help_list(chat, rank)
         else
             i = i + 1
             if plugins[name].min_rank <= tonumber(rank) then
+                if flag then
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
+                    keyboard.inline_keyboard[row][column] = { }
+                end
                 keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. i .. '. ' .. name, callback_data = name }
                 column = column + 1
             end
