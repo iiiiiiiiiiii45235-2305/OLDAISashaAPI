@@ -55,18 +55,21 @@ local function pre_process(msg)
                 return msg
             end
         end
+        -- Ignore mods,owner and admins
+        if msg.from.is_mod then
+            return msg
+        end
 
         if not msg.edited then
-            -- Ignore mods,owner and admins
-            if msg.from.is_mod then
-                return msg
-            end
             -- Check flood
             local hash = 'api:user:' .. msg.from.id .. ':msgs'
             local msgs = tonumber(redis:get(hash) or 0)
 
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
+                if msg.cb then
+                    max_msg = 20
+                end
                 print(msgs)
                 if msgs >= max_msg then
                     print("Pass2")
@@ -91,6 +94,9 @@ local function pre_process(msg)
                     end
                 end
                 local max_msg = NUM_MSG_MAX * 1
+                if msg.cb then
+                    max_msg = 20
+                end
                 if msgs >= max_msg then
                     local user = msg.from.id
                     -- Ignore whitelisted
