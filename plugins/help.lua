@@ -179,34 +179,35 @@ end
 
 local function keyboard_help_list(chat, rank)
     local keyboard = { }
+    keyboard.inline_keyboard = { }
     local row = 1
     local column = 1
-    keyboard[row] = { }
-    keyboard[row][column] = { }
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { }
     for name in pairsByKeys(plugins) do
         if config.disabled_plugin_on_chat[chat] then
             if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
                 column = column + 1
                 if plugins[name].min_rank <= tonumber(rank) then
-                    keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
+                    keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
                 end
                 if column >= 4 then
                     row = row + 1
                     column = 0
-                    keyboard[row] = { }
-                    keyboard[row][column] = { }
+                    keyboard.inline_keyboard[row] = { }
+                    keyboard.inline_keyboard[row][column] = { }
                 end
             end
         else
             column = column + 1
             if plugins[name].min_rank <= tonumber(rank) then
-                keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
+                keyboard.inline_keyboard[row][column] = { text = '🅿️ ' .. column .. '. ' .. name .. '\n', callback_data = name }
             end
             if column >= 4 then
                 row = row + 1
                 column = 0
-                keyboard[row] = { }
-                keyboard[row][column] = { }
+                keyboard.inline_keyboard[row] = { }
+                keyboard.inline_keyboard[row][column] = { }
             end
         end
     end
@@ -222,7 +223,7 @@ local function run(msg, matches)
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id))
             if temp ~= nil then
                 if temp ~= '' then
-                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } })
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'BACK' } } } })
                 else
                     return langs[msg.lang].require_higher
                 end
