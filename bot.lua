@@ -749,9 +749,7 @@ function msg_valid(msg)
         return false
     end
 
-    msg = get_tg_rank(msg)
-
-    if isChatDisabled(msg.chat.id) and not msg.from.is_owner then
+    if isChatDisabled(msg.chat.id) and not is_owner(msg, true) then
         print(clr.yellow .. 'Not valid: channel disabled' .. clr.reset)
         return false
     end
@@ -880,6 +878,7 @@ function on_msg_receive(msg)
     end
     local print_text = print_msg(msg, true)
     local chat_id = msg.chat.id
+    msg = get_tg_rank(msg)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then
