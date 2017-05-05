@@ -61,13 +61,16 @@ local function pre_process(msg)
         local msgs = tonumber(redis:get(hash) or 0)
 
         if msg.cb then
+            print('callback')
             if not cbwarntable[msg.from.id] then
+                print('not in cbwarntable')
                 if msgs > 5 then
-                    print('callback')
+                    print('more than 5 taps/clicks')
                     cbwarntable[msg.from.id] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
             else
+                print('in cbwarntable')
                 cbwarntable[msg.from.id] = false
             end
         end
