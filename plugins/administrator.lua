@@ -173,8 +173,6 @@ return {
         "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk])$",
         "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk]) ([^%s]+)$",
-        "^[#!/]([Ss][Yy][Nn][Cc]_[Gg][Bb][Aa][Nn][Ss])$",
-        -- sync your global bans with seed
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
@@ -194,8 +192,6 @@ return {
         -- block
         "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) ([^%s]+)$",
-        -- sync_gbans
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Cc][Rr][Oo][Nn][Ii][Zz][Zz][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
         -- backup
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Bb][Aa][Cc][Kk][Uu][Pp])$",
         -- uploadbackup
@@ -220,7 +216,6 @@ return {
         "#botrestart",
         "#redissave",
         "#update",
-        "(#sync_gbans|sasha sincronizza superban)",
         "(#backup|sasha esegui backup)",
         "(#uploadbackup|sasha invia backup)",
         "(#rebootcli|sasha riavvia cli)",
