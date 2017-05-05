@@ -59,28 +59,24 @@ local function pre_process(msg)
 
         local hash = 'api:user:' .. msg.from.id .. ':msgs'
         local msgs = tonumber(redis:get(hash) or 0)
+        redis:setex(hash, TIME_CHECK, msgs + 1)
 
         if msg.cb then
-            print('callback')
             if not cbwarntable[msg.from.id] then
-                print('not in cbwarntable')
                 if msgs >= 4 then
-                    print('more than 4 taps/clicks')
                     cbwarntable[msg.from.id] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
             else
-                print('in cbwarntable')
                 cbwarntable[msg.from.id] = false
             end
         end
 
-        --[[-- Ignore mods,owner and admins
-        if msg.from.is_mod then
-            return msg
-        end]]
-
         if not msg.edited then
+            -- Ignore mods,owner and admins
+            if msg.from.is_mod then
+                return msg
+            end
             -- Check flood
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
@@ -177,7 +173,6 @@ local function pre_process(msg)
                     msg = nil
                 end
             end
-            redis:setex(hash, TIME_CHECK, msgs + 1)
         end
         return msg
     end
