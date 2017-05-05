@@ -51,6 +51,7 @@ local function pre_process(msg)
             local hash = 'api:user:' .. msg.from.id .. ':msgs'
             local msgs = tonumber(redis:get(hash) or 0)
             redis:setex(hash, TIME_CHECK, msgs + 1)
+            print(msgs)
 
             if msg.cb then
                 if not cbwarntable[msg.from.id] then
@@ -80,7 +81,6 @@ local function pre_process(msg)
                 -- Check flood
                 if msg.chat.type == 'private' then
                     local max_msg = 7 * 1
-                    print(msgs)
                     if msgs >= max_msg then
                         print("Pass2")
                         -- Block user if spammed in private
