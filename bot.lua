@@ -447,18 +447,21 @@ local function update_sudoers(msg)
     end
 end
 
+function pre_process_reply(msg)
+    if msg.reply_to_message then
+        msg.reply = true
+    end
+    return msg
+end
+
 function pre_process_callback(msg)
     if msg.cb_id then
         msg.cb = true
         msg.text = "###cb" .. msg.data
         msg.target_id = msg.data:match('(-%d+)$')
     end
-    return msg
-end
-
-function pre_process_reply(msg)
-    if msg.reply_to_message then
-        msg.reply = true
+    if msg.reply then
+        msg.reply_to_message = pre_process_callback(msg.reply_to_message)
     end
     return msg
 end
