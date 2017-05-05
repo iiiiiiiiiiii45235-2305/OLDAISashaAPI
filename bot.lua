@@ -447,6 +447,15 @@ local function update_sudoers(msg)
     end
 end
 
+function pre_process_callback(msg)
+    if msg.cb_id then
+        msg.cb = true
+        msg.text = "###cb" .. msg.data
+        msg.target_id = msg.data:match('(-%d+)$')
+    end
+    return msg
+end
+
 function pre_process_reply(msg)
     if msg.reply_to_message then
         msg.reply = true
@@ -842,6 +851,7 @@ function on_msg_receive(msg)
         sendMessage(msg.chat.id, 'BEFORE ADJUST\n' .. vardumptext(msg))
     end
     update_sudoers(msg)
+    msg = pre_process_callback(msg)
     msg = pre_process_reply(msg)
     msg = pre_process_forward(msg)
     msg = pre_process_media_msg(msg)
@@ -996,7 +1006,6 @@ while is_started do
                 msg.edited_message = nil
             elseif msg.callback_query then
                 local cb_msg = msg.callback_query
-                cb_msg.cb = true
                 if cb_msg.message then
                     cb_msg.original_date = cb_msg.message.date
                     cb_msg.message_id = cb_msg.message.message_id
@@ -1006,8 +1015,6 @@ while is_started do
                 cb_msg.date = os.time()
                 cb_msg.cb_id = cb_msg.id
                 cb_msg.id = nil
-                cb_msg.target_id = cb_msg.data:match('(-%d+)$')
-                cb_msg.text = "###cb" .. cb_msg.data
                 msg.message = cb_msg
                 -- callback datas often ship IDs
             end

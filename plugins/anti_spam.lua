@@ -63,6 +63,7 @@ local function pre_process(msg)
         if msg.cb then
             if not cbwarntable[msg.from.id] then
                 if msgs > 5 then
+                    print('callback')
                     cbwarntable[msg.from.id] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
