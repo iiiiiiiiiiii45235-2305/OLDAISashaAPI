@@ -47,10 +47,6 @@ local function pre_process(msg)
             end
             redis:sadd(hash, msg.from.id)
 
-            -- Total user msgs in that chat
-            local hash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
-            redis:incr(hash)
-
             -- Total user msgs in TIME_CHECK seconds
             local hash = 'api:user:' .. msg.from.id .. ':msgs'
             local msgs = tonumber(redis:get(hash) or 0)
@@ -65,6 +61,10 @@ local function pre_process(msg)
                 else
                     cbwarntable[msg.from.id] = false
                 end
+            else
+                -- Total user msgs in that chat excluding keyboard interactions
+                local hash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
+                redis:incr(hash)
             end
 
             -- Check if flood is on or off
