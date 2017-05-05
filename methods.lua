@@ -322,6 +322,16 @@ function sendKeyboard(chat_id, text, keyboard, markdown)
     -- return false, and the code
 end
 
+function answerCallbackQuery(callback_query_id, text, show_alert)
+    local url = BASE_URL ..
+    '/answerCallbackQuery?callback_query_id=' .. callback_query_id ..
+    '&text=' .. URL.escape(text)
+    if show_alert then
+        url = url .. '&show_alert=true'
+    end
+    return sendRequest(url)
+end
+
 function editMessageText(chat_id, message_id, text, keyboard, markdown)
     local url = BASE_URL ..
     '/editMessageText?chat_id=' .. chat_id ..
@@ -345,20 +355,6 @@ function editMessageText(chat_id, message_id, text, keyboard, markdown)
 
     return res, code
     -- return false, and the code
-end
-
-function answerCallbackQuery(callback_query_id, text, show_alert, cache_time)
-    local url = BASE_URL ..
-    '/answerCallbackQuery?callback_query_id=' .. callback_query_id ..
-    '&text=' .. URL.escape(text)
-    if show_alert then
-        url = url .. '&show_alert=true'
-    end
-    if cache_time then
-        local seconds = tonumber(cache_time) * 3600
-        url = url .. '&cache_time=' .. seconds
-    end
-    return sendRequest(url)
 end
 
 function sendChatAction(chat_id, action)

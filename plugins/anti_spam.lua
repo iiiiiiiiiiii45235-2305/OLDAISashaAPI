@@ -1,5 +1,6 @@
 -- An empty table for solving multiple kicking problem(thanks to @topkecleon)
 kicktable = { }
+cbwarntable = { }
 
 local TIME_CHECK = 2
 -- seconds
@@ -55,6 +56,21 @@ local function pre_process(msg)
                 return msg
             end
         end
+
+        local hash = 'api:user:' .. msg.from.id .. ':msgs'
+        local msgs = tonumber(redis:get(hash) or 0)
+
+        if msg.cb then
+            if not cbwarntable[msg.from.id] then
+                if msgs > 5 then
+                    cbwarntable[msg.from.id] = true
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
+                end
+            else
+                cbwarntable[msg.from.id] = false
+            end
+        end
+
         -- Ignore mods,owner and admins
         if msg.from.is_mod then
             return msg
@@ -62,9 +78,6 @@ local function pre_process(msg)
 
         if not msg.edited then
             -- Check flood
-            local hash = 'api:user:' .. msg.from.id .. ':msgs'
-            local msgs = tonumber(redis:get(hash) or 0)
-
             if msg.chat.type == 'private' then
                 local max_msg = 7 * 1
                 print(msgs)
@@ -92,7 +105,7 @@ local function pre_process(msg)
                 end
                 local max_msg = NUM_MSG_MAX * 1
                 if msg.cb then
-                    max_msg = 5
+                    max_msg = 7
                 end
                 if msgs >= max_msg then
                     local user = msg.from.id
@@ -167,8 +180,9 @@ local function pre_process(msg)
 end
 
 local function cron()
-    -- clear that table on the top of the plugins
+    -- clear those tables on the top of the plugins
     kicktable = { }
+    cbwarntable = { }
 end
 
 return {
