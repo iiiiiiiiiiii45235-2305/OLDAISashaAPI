@@ -2,6 +2,8 @@ if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
 
+local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', title = 'FAKE USER CHAT', id = 'FAKE ID' }
+
 local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
 local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
@@ -280,6 +282,11 @@ function forwardMessage(chat_id, from_chat_id, message_id)
             return res, code
         else
             local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
+            if obj_from.type == 'private' then
+                sent_msg.forward_from = obj_from
+            elseif obj_from.type == 'channel' then
+                sent_msg.forward_from_chat = obj_from
+            end
             print_msg(sent_msg)
         end
     end
@@ -302,24 +309,31 @@ function forwardLog(from_chat_id, message_id)
 end
 
 function sendKeyboard(chat_id, text, keyboard, markdown)
-    local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
-    if markdown then
-        url = url .. '&parse_mode=Markdown'
-    end
-    url = url .. '&text=' .. URL.escape(text)
-    url = url .. '&disable_web_page_preview=true'
-    url = url .. '&reply_markup=' .. JSON.encode(keyboard)
-    local res, code = sendRequest(url)
-
-    if not res and code then
-        -- if the request failed and a code is returned (not 403 and 429)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            savelog('send_msg', code .. '\n' .. text)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
+        if markdown then
+            url = url .. '&parse_mode=Markdown'
         end
-    end
+        url = url .. '&text=' .. URL.escape(text)
+        url = url .. '&disable_web_page_preview=true'
+        url = url .. '&reply_markup=' .. JSON.encode(keyboard)
+        local res, code = sendRequest(url)
 
-    return res, code
-    -- return false, and the code
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_msg', code .. '\n' .. text)
+            end
+        end
+        if print_res_msg(res) then
+            return res, code
+        else
+            local sent_msg = { from = bot, chat = obj, text = text, cb = true }
+            print_msg(sent_msg)
+        end
+        -- return false, and the code
+    end
 end
 
 function answerCallbackQuery(callback_query_id, text, show_alert)
@@ -329,32 +343,45 @@ function answerCallbackQuery(callback_query_id, text, show_alert)
     if show_alert then
         url = url .. '&show_alert=true'
     end
-    return sendRequest(url)
+    local res, code = sendRequest(url)
+    if print_res_msg(res) then
+        return res, code
+    else
+        local sent_msg = { from = bot, chat = fake_user_chat, text = text, cb = true }
+        print_msg(sent_msg)
+    end
 end
 
 function editMessageText(chat_id, message_id, text, keyboard, markdown)
-    local url = BASE_URL ..
-    '/editMessageText?chat_id=' .. chat_id ..
-    '&message_id=' .. message_id ..
-    '&text=' .. URL.escape(text)
-    if markdown then
-        url = url .. '&parse_mode=Markdown'
-    end
-    url = url .. '&disable_web_page_preview=true'
-    if keyboard then
-        url = url .. '&reply_markup=' .. JSON.encode(keyboard)
-    end
-    local res, code = sendRequest(url)
-
-    if not res and code then
-        -- if the request failed and a code is returned (not 403 and 429)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            savelog('send_msg', code .. '\n' .. text)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/editMessageText?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id ..
+        '&text=' .. URL.escape(text)
+        if markdown then
+            url = url .. '&parse_mode=Markdown'
         end
-    end
+        url = url .. '&disable_web_page_preview=true'
+        if keyboard then
+            url = url .. '&reply_markup=' .. JSON.encode(keyboard)
+        end
+        local res, code = sendRequest(url)
 
-    return res, code
-    -- return false, and the code
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_msg', code .. '\n' .. text)
+            end
+        end
+        if print_res_msg(res) then
+            return res, code
+        else
+            local sent_msg = { from = fake_user_chat, chat = obj, text = text, edited = true }
+            print_msg(sent_msg)
+        end
+        -- return false, and the code
+    end
 end
 
 function sendChatAction(chat_id, action)
@@ -1474,6 +1501,7 @@ function print_res_msg(res, code)
                 local sent_msg = res.result
                 sent_msg = pre_process_reply(sent_msg)
                 sent_msg = pre_process_forward(sent_msg)
+                sent_msg = pre_process_callback(sent_msg)
                 sent_msg = pre_process_media_msg(sent_msg)
                 sent_msg = pre_process_service_msg(sent_msg)
                 sent_msg = adjust_msg(sent_msg)
@@ -1498,11 +1526,20 @@ function print_msg(msg, dont_print)
             local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
             local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
             local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
+            if msg.cb then
+                print_text = print_text .. clr.blue .. '[inline keyboard callback] ' .. clr.reset
+            end
             if msg.edited then
                 print_text = print_text .. clr.blue .. '[edited] ' .. clr.reset
             end
             if msg.forward then
-                print_text = print_text .. clr.blue .. '[forward] ' .. clr.reset
+                local forwarder = ''
+                if msg.forward_from then
+                    forwarder = msg.forward_from.first_name ..(msg.forward_from.last_name or '')
+                elseif msg.forward_from_chat then
+                    forwarder = msg.forward_from_chat.title
+                end
+                print_text = print_text .. clr.blue .. '[forward from ' .. forwarder .. '] ' .. clr.reset
             end
             if msg.reply then
                 print_text = print_text .. clr.blue .. '[reply] ' .. clr.reset
