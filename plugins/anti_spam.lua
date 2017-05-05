@@ -75,10 +75,10 @@ local function pre_process(msg)
             end
         end
 
-        -- Ignore mods,owner and admins
+        --[[-- Ignore mods,owner and admins
         if msg.from.is_mod then
             return msg
-        end
+        end]]
 
         if not msg.edited then
             -- Check flood
