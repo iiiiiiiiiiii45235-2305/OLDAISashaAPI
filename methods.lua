@@ -1499,13 +1499,17 @@ function print_res_msg(res, code)
         if type(res) == 'table' then
             if res.result then
                 local sent_msg = res.result
-                sent_msg = pre_process_reply(sent_msg)
-                sent_msg = pre_process_forward(sent_msg)
-                sent_msg = pre_process_callback(sent_msg)
-                sent_msg = pre_process_media_msg(sent_msg)
-                sent_msg = pre_process_service_msg(sent_msg)
-                sent_msg = adjust_msg(sent_msg)
-                return print_msg(sent_msg)
+                if type(sent_msg) == 'table' then
+                    sent_msg = pre_process_reply(sent_msg)
+                    sent_msg = pre_process_forward(sent_msg)
+                    sent_msg = pre_process_callback(sent_msg)
+                    sent_msg = pre_process_media_msg(sent_msg)
+                    sent_msg = pre_process_service_msg(sent_msg)
+                    sent_msg = adjust_msg(sent_msg)
+                    return print_msg(sent_msg)
+                else
+                    sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
+                end
             else
                 sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
             end
