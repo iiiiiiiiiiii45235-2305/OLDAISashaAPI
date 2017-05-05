@@ -64,8 +64,8 @@ local function pre_process(msg)
             print('callback')
             if not cbwarntable[msg.from.id] then
                 print('not in cbwarntable')
-                if msgs > 5 then
-                    print('more than 5 taps/clicks')
+                if msgs >= 4 then
+                    print('more than 4 taps/clicks')
                     cbwarntable[msg.from.id] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
