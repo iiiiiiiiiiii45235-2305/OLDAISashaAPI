@@ -17,57 +17,57 @@ local function pre_process(msg)
             end
         end
 
-        if data[tostring(msg.chat.id)] then
-            -- Save chat's total messages
-            local hash = 'chatmsgs:' .. msg.chat.id
-            if not redis:get(hash) then
-                redis:set(hash, 0)
+        -- Save chat's total messages
+        local hash = 'chatmsgs:' .. msg.chat.id
+        if not redis:get(hash) then
+            redis:set(hash, 0)
+        end
+        redis:incr(hash)
+
+        -- Save user on Redis
+        if msg.from.type == 'user' then
+            local hash = 'user:' .. msg.from.id
+            print('Saving user', hash)
+            if msg.from.print_name then
+                redis:hset(hash, 'print_name', msg.from.print_name)
             end
-            redis:incr(hash)
-
-            -- Save user on Redis
-            if msg.from.type == 'user' then
-                local hash = 'user:' .. msg.from.id
-                print('Saving user', hash)
-                if msg.from.print_name then
-                    redis:hset(hash, 'print_name', msg.from.print_name)
-                end
-                if msg.from.first_name then
-                    redis:hset(hash, 'first_name', msg.from.first_name)
-                end
-                if msg.from.last_name then
-                    redis:hset(hash, 'last_name', msg.from.last_name)
-                end
+            if msg.from.first_name then
+                redis:hset(hash, 'first_name', msg.from.first_name)
             end
-
-            -- Save stats on Redis
-            local hash = 'chat:' .. msg.chat.id .. ':users'
-            if msg.chat.type == 'private' then
-                hash = 'chat:' .. msg.from.id
+            if msg.from.last_name then
+                redis:hset(hash, 'last_name', msg.from.last_name)
             end
-            redis:sadd(hash, msg.from.id)
+        end
 
-            -- Total user msgs in TIME_CHECK seconds
-            local hash = 'api:user:' .. msg.from.id .. ':msgs'
-            local msgs = tonumber(redis:get(hash) or 0)
-            redis:setex(hash, TIME_CHECK, msgs + 1)
-            print(msgs)
+        -- Save stats on Redis
+        local hash = 'chat:' .. msg.chat.id .. ':users'
+        if msg.chat.type == 'private' then
+            hash = 'chat:' .. msg.from.id
+        end
+        redis:sadd(hash, msg.from.id)
 
-            if msg.cb then
-                if not cbwarntable[msg.from.id] then
-                    if msgs >= 4 then
-                        cbwarntable[msg.from.id] = true
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
-                    end
-                else
-                    cbwarntable[msg.from.id] = false
+        -- Total user msgs in TIME_CHECK seconds
+        local hash = 'api:user:' .. msg.from.id .. ':msgs'
+        local msgs = tonumber(redis:get(hash) or 0)
+        redis:setex(hash, TIME_CHECK, msgs + 1)
+        print(msgs)
+
+        if msg.cb then
+            if not cbwarntable[msg.from.id] then
+                if msgs >= 4 then
+                    cbwarntable[msg.from.id] = true
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
             else
-                -- Total user msgs in that chat excluding keyboard interactions
-                local hash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
-                redis:incr(hash)
+                cbwarntable[msg.from.id] = false
             end
+        else
+            -- Total user msgs in that chat excluding keyboard interactions
+            local hash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
+            redis:incr(hash)
+        end
 
+        if data[tostring(msg.chat.id)] then
             -- Check if flood is on or off
             if not data[tostring(msg.chat.id)].settings.flood then
                 return msg
