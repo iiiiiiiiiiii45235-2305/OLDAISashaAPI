@@ -1010,10 +1010,13 @@ function kickUser(executer, target, chat_id, reason)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if reason then
+                    -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. reason)
                     return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
                     '\n#kick' .. target .. ' ' .. reason
                 else
-                    return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                    -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))))
+                    return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
+                    '\n#kick' .. target
                 end
             else
                 return code2text(code, get_lang(chat_id))
@@ -1069,10 +1072,12 @@ function banUser(executer, target, chat_id, reason)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if reason then
+                    -- sendMessage(target, langs[get_lang(target)].bannedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. reason)
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
                     '\n#ban' .. target .. ' ' .. reason
                 else
+                    -- sendMessage(target, langs[get_lang(target)].bannedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))))
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
                 end
