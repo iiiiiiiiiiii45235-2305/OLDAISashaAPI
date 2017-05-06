@@ -501,16 +501,15 @@ local function contactMods(msg)
         text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
     end
     text = text .. langs[msg.lang].msgText ..(msg.text or msg.caption) .. '\n'
-    if msg.reply then
-        text = text .. langs[msg.lang].replyText ..(msg.reply_to_message.text or msg.reply_to_message.caption)
-    end
-
 
     local already_contacted = { }
     local list = getChatAdministrators(msg.chat.id)
     if list then
         for i, admin in pairs(list.result) do
             already_contacted[tonumber(admin.user.id)] = admin.user.id
+            if msg.reply then
+                forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+            end
             sendMessage(admin.user.id, text)
         end
     end
@@ -520,6 +519,9 @@ local function contactMods(msg)
     if owner then
         if not already_contacted[tonumber(owner)] then
             already_contacted[tonumber(owner)] = owner
+            if msg.reply then
+                forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
+            end
             sendMessage(owner, text)
         end
     end
@@ -532,6 +534,9 @@ local function contactMods(msg)
     for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
         if not already_contacted[tonumber(k)] then
             already_contacted[tonumber(k)] = k
+            if msg.reply then
+                forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
+            end
             sendMessage(k, text)
         end
     end
