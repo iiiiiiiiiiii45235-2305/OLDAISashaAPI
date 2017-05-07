@@ -738,7 +738,6 @@ return {
             'RTL => caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n' ..
             'Spam => messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n' ..
             'Strict => aumento di "pena" da kick a ban.\n' ..
-            'Per i gruppi normali la "pena" è sempre il ban.\n' ..
             '* = emoji, caratteri di controllo ecc...',
             [12] = 'D: Perchè non porti ruleta anche su @AISashaAPI?\n' ..
             'R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.',
@@ -1830,7 +1829,6 @@ return {
             'RTL => right to left characters (those that reverse messages).\n' ..
             'Spam => message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n' ..
             'Strict => increase punishment from kick to ban.\n' ..
-            'For normal groups it\'s always ban.\n' ..
             '* = emojis, control characters etc...',
             [12] = 'D: Why don\'t you port ruleta on @AISashaAPI?\n' ..
             'R: Because I\'m 90% sure that kicks number would be high enough to hit telegram limits causing problems.',
