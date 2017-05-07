@@ -19,7 +19,7 @@ local function run(msg, matches)
     local image = nil
     if pokemon.sprites then
         if pokemon.sprites[1] then
-            image = pokemon.sprites['front_default'].resource_uri
+            image = pokemon.sprites['front_default']
         end
     end
 
