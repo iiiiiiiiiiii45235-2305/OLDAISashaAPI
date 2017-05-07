@@ -39,8 +39,8 @@ end
 local function list_plugins_sudo()
     local text = ''
     for k, v in pairs(plugins_names()) do
-        --  ✅ enabled, ⚫️ disabled
-        local status = '⚫️'
+        --  ✅ enabled, 🚫 disabled
+        local status = '🚫'
         -- get the name
         v = string.match(v, "(.*)%.lua")
         -- Check if enabled
@@ -59,8 +59,8 @@ end
 local function list_plugins(chat_id)
     local text = ''
     for k, v in pairs(plugins_names()) do
-        --  ✅ enabled, ⚫️ disabled
-        local status = '⚫️'
+        --  ✅ enabled, 🚫 disabled
+        local status = '🚫'
         -- get the name
         v = string.match(v, "(.*)%.lua")
         -- Check if is enabled
@@ -119,7 +119,7 @@ local function disable_plugin(plugin_name, chat_id)
     table.remove(config.enabled_plugins, k)
     save_config()
     reload_plugins()
-    return '⚫️ ' .. plugin_name .. langs[lang].disabled
+    return '🚫 ' .. plugin_name .. langs[lang].disabled
 end
 
 local function disable_plugin_on_chat(plugin_name, chat_id)
@@ -189,8 +189,8 @@ local function keyboard_plugins_list(privileged, chat_id)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for k, name in pairs(plugins_names()) do
-        --  ✅ enabled, ⚫️ disabled
-        local status = '⚫️'
+        --  ✅ enabled, 🚫 disabled
+        local status = '🚫'
         local enabled = false
         -- get the name
         name = string.match(name, "(.*)%.lua")

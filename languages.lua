@@ -622,7 +622,7 @@ return {
         pluginsReloaded = '💊 Plugins ricaricati.',
         sendPluginsPvt = 'Ti ho mandato la lista dei plugins in privato.',
         pluginsList = 'Lista plugins: ',
-        pluginsIntro = 'Legenda plugins:\n💻 Di sistema\n✅ Abilitato\n⚫️ Disabilitato\n❌ Disabilitato nella chat\n✔️ Già abilitato\n✖️ Già disabilitato\n❔ Non esistente',
+        pluginsIntro = 'Legenda plugins:\n💻 Di sistema\n✅ Abilitato\n🚫 Disabilitato\n❌ Disabilitato nella chat\n✔️ Già abilitato\n✖️ Già disabilitato\n❔ Non esistente',
         stop = 'STOP',
 
         -- pokedex.lua --
@@ -1713,7 +1713,7 @@ return {
         pluginsReloaded = '💊 Plugins reloaded.',
         sendPluginsPvt = 'I\'ve sent you the plugins\' list in private.',
         pluginsList = 'Plugins\' list: ',
-        pluginsIntro = 'Plugins\' legend:\n💻 System\n✅ Enabled\n⚫️ Disabled\n❌ Disabled on chat\n✔️ Already enabled\n✖️ Already disabled\n❔ Not existent',
+        pluginsIntro = 'Plugins\' legend:\n💻 System\n✅ Enabled\n🚫 Disabled\n❌ Disabled on chat\n✔️ Already enabled\n✖️ Already disabled\n❔ Not existent',
         stop = 'STOP',
 
         -- pokedex.lua --
