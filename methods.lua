@@ -1512,13 +1512,13 @@ function print_res_msg(res, code)
                     sent_msg = pre_process_service_msg(sent_msg)
                     sent_msg = adjust_msg(sent_msg)
                     return print_msg(sent_msg)
-                else
+                elseif sent_msg ~= true then
                     sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
                 end
             else
                 sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
             end
-        elseif res ~= true then
+        else
             sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
         end
     end
