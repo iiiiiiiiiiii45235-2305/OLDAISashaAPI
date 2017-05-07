@@ -1,14 +1,3 @@
-local images_enabled = true;
-
-local function get_sprite(path)
-    local url = "http://pokeapi.co/" .. path
-    print(url)
-    local b, c = http.request(url)
-    local jsondata = json:decode(b)
-    local image = jsondata.image
-    return image
-end
-
 local function run(msg, matches)
     local query = URL.escape(matches[1])
     local url = "http://pokeapi.co/api/v2/pokemon/" .. query .. "/"
@@ -28,16 +17,15 @@ local function run(msg, matches)
     langs[msg.lang].pokeHeight .. height .. " m"
 
     local image = nil
-    if images_enabled and pokemon.sprites and pokemon.sprites[1] then
-        local sprite = pokemon.sprites['front_default'].resource_uri
-        image = get_sprite(sprite)
+    if pokemon.sprites then
+        if pokemon.sprites[1] then
+            image = pokemon.sprites['front_default'].resource_uri
+        end
     end
 
     if image then
-        image = "http://pokeapi.co" .. image
-        return sendPhotoFromUrl(msg.chat.id, image, text)
+        sendPhotoFromUrl(msg.chat.id, image, text)
     end
-    return text
 end
 
 return {
