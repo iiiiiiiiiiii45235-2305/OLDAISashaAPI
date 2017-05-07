@@ -1494,7 +1494,7 @@ function deleteMessage(chat_id, message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('delete_message', code .. '\n' .. text)
+                savelog('delete_message', code)
             end
         end
     end
