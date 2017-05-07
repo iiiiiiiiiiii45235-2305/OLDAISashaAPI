@@ -293,7 +293,7 @@ local function run(msg, matches)
                 sendMessage(msg.chat.id, langs[msg.lang].sendPluginsPvt)
             end
             if chat_plugins then
-                if data[msg.chat.id] then
+                if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
                     return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(false, msg.chat.id))
                 else
@@ -318,7 +318,7 @@ local function run(msg, matches)
                 chat_plugins = true
             end
             if chat_plugins then
-                if data[msg.chat.id] then
+                if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
                     return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins(msg.chat.id)
                 else
