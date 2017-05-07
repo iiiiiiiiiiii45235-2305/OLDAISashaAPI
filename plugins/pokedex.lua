@@ -16,15 +16,8 @@ local function run(msg, matches)
     langs[msg.lang].pokeWeight .. weight .. " kg" .. '\n' ..
     langs[msg.lang].pokeHeight .. height .. " m"
 
-    local image = nil
     if pokemon.sprites then
-        if pokemon.sprites[1] then
-            image = pokemon.sprites['front_default']
-        end
-    end
-
-    if image then
-        sendPhotoFromUrl(msg.chat.id, image, text)
+        sendPhotoFromUrl(msg.chat.id, pokemon.sprites.front_default, text)
     end
 end
 
