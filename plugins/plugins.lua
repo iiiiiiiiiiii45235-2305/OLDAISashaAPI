@@ -200,7 +200,7 @@ local function keyboard_plugins_list(privileged, chat_id)
             enabled = true
         end
         -- Check if system plugin, if not check if disabled on chat
-        if system_plugin(v) then
+        if system_plugin(name) then
             status = '💻'
         elseif not privileged then
             if plugin_disabled_on_chat(name, chat_id) then
