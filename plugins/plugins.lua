@@ -296,6 +296,8 @@ local function run(msg, matches)
                 if data[msg.chat.id] then
                     mystat('/plugins chat')
                     return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(false, msg.chat.id))
+                else
+                    return langs[msg.lang].useYourGroups
                 end
             else
                 mystat('/plugins')
@@ -319,6 +321,8 @@ local function run(msg, matches)
                 if data[msg.chat.id] then
                     mystat('/plugins chat')
                     return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins(msg.chat.id)
+                else
+                    return langs[msg.lang].useYourGroups
                 end
             else
                 mystat('/plugins')
