@@ -238,7 +238,7 @@ local function run(msg, matches)
             elseif matches[2] == 'BACK' then
                 if matches[3] then
                     if is_owner2(msg.from.id, matches[3]) then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, matches[3]))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, tonumber(matches[3])))
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
                     end
