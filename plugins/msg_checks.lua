@@ -67,9 +67,10 @@ end
 
 local function action(msg, strict, reason)
     deleteMessage(msg.chat.id, msg.message_id)
-    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
     if strict then
         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
+    else
+        sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
     end
 end
 
