@@ -293,8 +293,10 @@ local function run(msg, matches)
                 sendMessage(msg.chat.id, langs[msg.lang].sendPluginsPvt)
             end
             if chat_plugins then
-                mystat('/plugins chat')
-                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(false, msg.chat.id))
+                if data[msg.chat.id] then
+                    mystat('/plugins chat')
+                    return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(false, msg.chat.id))
+                end
             else
                 mystat('/plugins')
                 return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(true, msg.chat.id))
@@ -314,8 +316,10 @@ local function run(msg, matches)
                 chat_plugins = true
             end
             if chat_plugins then
-                mystat('/plugins chat')
-                return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins(msg.chat.id)
+                if data[msg.chat.id] then
+                    mystat('/plugins chat')
+                    return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins(msg.chat.id)
+                end
             else
                 mystat('/plugins')
                 return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins_sudo()
