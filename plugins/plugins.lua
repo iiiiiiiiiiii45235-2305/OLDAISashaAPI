@@ -205,6 +205,7 @@ local function keyboard_plugins_list(privileged, chat_id)
         elseif not privileged then
             if plugin_disabled_on_chat(name, chat_id) then
                 status = '❌'
+                enabled = false
             end
         end
         if flag then
