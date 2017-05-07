@@ -392,31 +392,19 @@ function sendChatAction(chat_id, action)
     return sendRequest(url)
 end
 
-function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
+function deleteMessage(chat_id, message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL ..
-        '/sendLocation?chat_id=' .. chat_id ..
-        '&latitude=' .. latitude ..
-        '&longitude=' .. longitude
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
+        '/deleteMessage?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id
         local res, code = sendRequest(url)
 
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_location', code .. '\n' .. text)
+                savelog('delete_message', code)
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
-            print_msg(sent_msg)
         end
     end
 end
@@ -732,6 +720,35 @@ function sendDocument(chat_id, document, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    end
+end
+
+function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/sendLocation?chat_id=' .. chat_id ..
+        '&latitude=' .. latitude ..
+        '&longitude=' .. longitude
+        local reply = false
+        if reply_to_message_id then
+            url = url .. '&reply_to_message_id=' .. reply_to_message_id
+            reply = true
+        end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_location', code .. '\n' .. text)
+            end
+        end
+        if print_res_msg(res) then
+            return res, code
+        else
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
+            print_msg(sent_msg)
+        end
     end
 end
 
@@ -1481,24 +1498,6 @@ end
         end
     end
 end]]
-
--- Delete message
-function deleteMessage(chat_id, message_id)
-    local obj = getChat(chat_id)
-    if type(obj) == 'table' then
-        local url = BASE_URL ..
-        '/deleteMessage?chat_id=' .. chat_id ..
-        '&message_id=' .. message_id
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('delete_message', code)
-            end
-        end
-    end
-end
 
 function print_res_msg(res, code)
     if res then
