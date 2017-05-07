@@ -41,12 +41,12 @@ local function list_plugins_sudo()
     for k, v in pairs(plugins_names()) do
         --  ✅ enabled, ⚫️ disabled
         local status = '⚫️'
+        -- get the name
+        v = string.match(v, "(.*)%.lua")
         -- Check if enabled
         if plugin_enabled(v) then
             status = '✅'
         end
-        -- get the name
-        v = string.match(v, "(.*)%.lua")
         -- Check if system plugin
         if system_plugin(v) then
             status = '💻'
@@ -61,12 +61,12 @@ local function list_plugins(chat_id)
     for k, v in pairs(plugins_names()) do
         --  ✅ enabled, ⚫️ disabled
         local status = '⚫️'
+        -- get the name
+        v = string.match(v, "(.*)%.lua")
         -- Check if is enabled
         if plugin_enabled(v) then
             status = '✅'
         end
-        -- get the name
-        v = string.match(v, "(.*)%.lua")
         -- Check if system plugin, if not check if disabled on chat
         if system_plugin(v) then
             status = '💻'
@@ -192,13 +192,13 @@ local function keyboard_plugins_list(privileged, chat_id)
         --  ✅ enabled, ⚫️ disabled
         local status = '⚫️'
         local enabled = false
+        -- get the name
+        name = string.match(name, "(.*)%.lua")
         -- Check if is enabled
         if plugin_enabled(name) then
             status = '✅'
             enabled = true
         end
-        -- get the name
-        name = string.match(name, "(.*)%.lua")
         -- Check if system plugin, if not check if disabled on chat
         if system_plugin(v) then
             status = '💻'
