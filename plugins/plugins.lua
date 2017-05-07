@@ -20,7 +20,7 @@ end
 
 -- Returns true if it is a system plugin
 local function system_plugin(p)
-    if p == 'administrator' or p == 'anti_spam' or p == 'banhammer' or p == 'bot' or p == 'broadcast' or p == 'check_tag' or p == 'database' or p == 'feedback' or p == 'goodbyewelcome' or p == 'group_management' or p == 'info' or p == 'msg_checks' or p == 'onservice' or p == 'ps' or p == 'strings' or p == 'tgcli_to_api_migration' or p == 'whitelist' then
+    if p == 'administrator' or p == 'anti_spam' or p == 'banhammer' or p == 'bot' or p == 'broadcast' or p == 'check_tag' or p == 'database' or p == 'feedback' or p == 'goodbyewelcome' or p == 'group_management' or p == 'info' or p == 'msg_checks' or p == 'onservice' or p == 'plugins' or p == 'strings' or p == 'tgcli_to_api_migration' or p == 'whitelist' then
         return true
     end
     return false
