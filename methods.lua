@@ -1482,18 +1482,19 @@ end
     end
 end]]
 
--- makes user version delete message
-function deleteMessage(msg)
-    local flag, status = userVersionInChat(msg.chat.id)
-    if flag then
-        if status == 'creator' or status == 'administrator' then
-            if is_super_group(msg) then
-                if bot.userVersion.username then
-                    if msg.reply then
-                        sendReply(msg.reply_to_message, '@' .. bot.userVersion.username .. ' !del')
-                    end
-                    sendReply(msg, '@' .. bot.userVersion.username .. ' !del')
-                end
+-- Delete message
+function deleteMessage(chat_id, message_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/deleteMessage?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('delete_message', code .. '\n' .. text)
             end
         end
     end

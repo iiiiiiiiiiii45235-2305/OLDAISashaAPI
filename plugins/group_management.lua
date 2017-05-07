@@ -1296,7 +1296,10 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     mystat('/del')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
-                    return deleteMessage(msg)
+                    if msg.reply then
+                        deleteMessage(msg.chat.id, msg.reply_to_message.message_id)
+                    end
+                    return deleteMessage(msg.chat.id, msg.message_id)
                 else
                     return langs[msg.lang].require_mod
                 end

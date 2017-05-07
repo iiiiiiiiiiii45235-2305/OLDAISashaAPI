@@ -66,7 +66,7 @@ local function clean_msg(msg)
 end
 
 local function action(msg, strict, reason)
-    deleteMessage(msg)
+    deleteMessage(msg.chat.id, msg.message_id)
     sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
     if strict then
         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
@@ -105,7 +105,7 @@ local function check_msg(msg, settings)
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
             print('muted user')
-            deleteMessage(msg)
+            deleteMessage(msg.chat.id, msg.message_id)
             if msg.chat.type == 'group' then
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonMutedUser))
             end
@@ -114,7 +114,7 @@ local function check_msg(msg, settings)
         end
         if mute_all then
             print('all muted')
-            deleteMessage(msg)
+            deleteMessage(msg.chat.id, msg.message_id)
             if msg.chat.type == 'group' then
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonMutedAll))
             end
@@ -278,7 +278,7 @@ local function check_msg(msg, settings)
     else
         if mute_tgservice then
             print('tgservice muted')
-            deleteMessage(msg)
+            deleteMessage(msg.chat.id, msg.message_id)
             msg = clean_msg(msg)
             return nil
         end
@@ -287,7 +287,7 @@ local function check_msg(msg, settings)
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
                     print('name spam found')
-                    deleteMessage(msg)
+                    deleteMessage(msg.chat.id, msg.message_id)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
@@ -303,7 +303,7 @@ local function check_msg(msg, settings)
                 local is_rtl_name = msg.from.print_name:match("‮")
                 if is_rtl_name then
                     print('rtl name found')
-                    deleteMessage(msg)
+                    deleteMessage(msg.chat.id, msg.message_id)
                     if strict then
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
@@ -317,7 +317,7 @@ local function check_msg(msg, settings)
             end
             if lock_member then
                 print('member locked')
-                deleteMessage(msg)
+                deleteMessage(msg.chat.id, msg.message_id)
                 savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                 msg = clean_msg(msg)
@@ -329,7 +329,7 @@ local function check_msg(msg, settings)
                     local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                     if string.len(v.print_name) > 70 or ctrl_chars > 40 then
                         print('name spam found')
-                        deleteMessage(msg)
+                        deleteMessage(msg.chat.id, msg.message_id)
                         if strict then
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
                             sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
@@ -345,7 +345,7 @@ local function check_msg(msg, settings)
                     local is_rtl_name = v.print_name:match("‮")
                     if is_rtl_name then
                         print('rtl name found')
-                        deleteMessage(msg)
+                        deleteMessage(msg.chat.id, msg.message_id)
                         if strict then
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
                             sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
@@ -359,7 +359,7 @@ local function check_msg(msg, settings)
                 end
                 if lock_member then
                     print('member locked')
-                    deleteMessage(msg)
+                    deleteMessage(msg.chat.id, msg.message_id)
                     sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
                     sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))

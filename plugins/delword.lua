@@ -88,7 +88,7 @@ local function pre_process(msg)
                         end
                     end
                     if found then
-                        deleteMessage(msg)
+                        deleteMessage(msg.chat.id, msg.message_id)
                         if msg.chat.type == 'group' then
                             banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonCensorship)
                         end
