@@ -1518,7 +1518,7 @@ function print_res_msg(res, code)
             else
                 sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
             end
-        elseif result ~= true then
+        elseif res ~= true then
             sendLog('#BadResult\n' .. vardumptext(res) .. '\n' .. vardumptext(code))
         end
     end
