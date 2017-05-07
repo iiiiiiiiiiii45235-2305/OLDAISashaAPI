@@ -233,20 +233,18 @@ end
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbplugins' then
-            if matches[2] == 'STOP' then
-                return
-            elseif matches[2] == 'BACK' then
+            if matches[2] == 'BACK' then
                 if matches[3] then
                     if is_owner2(msg.from.id, matches[3]) then
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, tonumber(matches[3])))
                     else
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
                 else
                     if is_sudo(msg) then
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(true))
                     else
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
                 end
             elseif matches[4] then
@@ -262,7 +260,7 @@ local function run(msg, matches)
                         return editMessageText(msg.chat.id, msg.message_id, disable_plugin_on_chat(matches[3], tonumber(matches[4])), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'pluginsBACK' .. matches[4] } } } })
                     end
                 else
-                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 -- Enable/Disable a plugin
@@ -277,7 +275,7 @@ local function run(msg, matches)
                         return editMessageText(msg.chat.id, msg.message_id, disable_plugin(matches[3], msg.chat.id), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'pluginsBACK' } } } })
                     end
                 else
-                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
             end
         end
@@ -403,7 +401,6 @@ return {
     description = "PLUGINS",
     patterns =
     {
-        "^(###cbplugins)(STOP)$",
         "^(###cbplugins)(BACK)(%-%d+)$",
         "^(###cbplugins)(BACK)$",
         "^(###cbplugins)(ENABLE)(.*)(%-%d+)$",
