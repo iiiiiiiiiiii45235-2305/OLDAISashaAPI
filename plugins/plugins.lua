@@ -237,7 +237,7 @@ local function run(msg, matches)
             elseif matches[2] == 'BACK' then
                 if matches[3] then
                     if is_owner2(msg.from.id, matches[3]) then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(is_sudo(msg), matches[3]))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, matches[3]))
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
                     end
@@ -290,17 +290,14 @@ local function run(msg, matches)
             elseif not is_sudo(msg) then
                 chat_plugins = true
             end
+            if msg.chat.type ~= 'private' then
+                sendMessage(msg.chat.id, langs[msg.lang].sendPluginsPvt)
+            end
             if chat_plugins then
                 mystat('/plugins chat')
-                if msg.chat.type ~= 'private' then
-                    sendMessage(msg.chat.id, langs[msg.lang].sendPluginsPvt)
-                end
                 return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList, keyboard_plugins_list(false, msg.chat.id))
             else
                 mystat('/plugins')
-                if msg.chat.type ~= 'private' then
-                    sendMessage(msg.chat.id, langs[msg.lang].sendPluginsPvt)
-                end
                 return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList, keyboard_plugins_list(true, msg.chat.id))
             end
         else
