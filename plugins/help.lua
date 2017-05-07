@@ -279,7 +279,6 @@ local function run(msg, matches)
             if msg.chat.type ~= 'private' then
                 sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
             end
-            -- return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
         else
             mystat('/help <plugin>')

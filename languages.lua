@@ -218,6 +218,7 @@ return {
         ungbanned = ' unbannato globalmente.',
         cantDoThisToChat = 'Non puoi usare questo comando su un messaggio inoltrato da un canale.',
         errorNoForward = 'Non è un messaggio inoltrato.',
+        goBack = 'Indietro.',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kickato da: ',
@@ -407,7 +408,6 @@ return {
         errorNoPlugin = 'Questo plugin non esiste o non ha una descrizione.',
         helpIntro = 'Ogni \'#\' può essere sostituito con i simboli \'/\' o \'!\'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale.\nLe parentesi tonde indicano una scelta evidenziata da \'|\' che significa "oppure".\n\n',
         commandNotFound = 'Sintassi comando non trovata.',
-        goBack = 'Indietro.',
         sendHelpPvt = 'Ti ho mandato l\'help in privato.',
 
         -- get.lua --
@@ -620,6 +620,10 @@ return {
         pluginNotDisabled = '✔️ Questo plugin non è disabilitato su questa chat.',
         pluginEnabledAgain = ' nuovamente abilitato.',
         pluginsReloaded = '💊 Plugins ricaricati.',
+        sendPluginsPvt = 'Ti ho mandato la lista dei plugins in privato.',
+        pluginsList = 'Lista plugins: ',
+        pluginsIntro = 'Legenda plugins:\n💻 Di sistema\n✅ Abilitato\n⚫️ Disabilitato\n❌ Disabilitato nella chat\n✔️ Già abilitato\n✖️ Già disabilitato\n❔ Non esistente',
+        stop = 'STOP',
 
         -- pokedex.lua --
         noPoke = 'Nessun pokémon trovato.',
@@ -1302,6 +1306,7 @@ return {
         ungbanned = ' globally unbanned.',
         cantDoThisToChat = 'You can\'t use this command on a message forwarded from a channel.',
         errorNoForward = 'It\'s not a forwarded message.',
+        goBack = 'Back.',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kicked from: ',
@@ -1495,7 +1500,6 @@ return {
         errorNoPlugin = 'This plugin doesn\'t exist or doesn\'t have a description.',
         helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets with \'|\' means that\'s a choice".\n\n',
         commandNotFound = 'Command syntax not found.',
-        goBack = 'Back.',
         sendHelpPvt = 'I\'ve sent you the help in private.',
 
         -- get.lua --
@@ -1709,6 +1713,10 @@ return {
         pluginNotDisabled = '✔️ This plugin is not disabled on chat.',
         pluginEnabledAgain = ' enabled on chat again.',
         pluginsReloaded = '💊 Plugins reloaded.',
+        sendPluginsPvt = 'I\'ve sent you the plugins\' list in private.',
+        pluginsList = 'Plugins\' list: ',
+        pluginsIntro = 'Plugins\' legend:\n💻 System\n✅ Enabled\n⚫️ Disabled\n❌ Disabled on chat\n✔️ Already enabled\n✖️ Already disabled\n❔ Not existent',
+        stop = 'STOP',
 
         -- pokedex.lua --
         noPoke = 'No pokémon found.',
@@ -2182,11 +2190,14 @@ return {
             '🅿️ PLUGINS',
             'Plugin to enable or disable plugins.',
             'OWNER',
-            '(#plugins|[sasha] lista plugins): Sasha sends a list of all plugins.',
+            '(#plugins|[sasha] lista plugins): Sasha sends in private an inline keyboard of plugins.',
+            '#textualplugins: Sasha sends a list of all plugins.',
             '(#disabledlist|([sasha] lista disabilitati|disattivati)): Sasha sends disabled plugins list.',
             '(#enable|[sasha] abilita|[sasha] attiva) <plugin> chat: Sasha re enables <plugin> on this chat.',
             '(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat: Sasha disables <plugin> on this chat.',
             'SUDO',
+            '(#plugins|[sasha] lista plugins) [chat]: Sasha sends in private an inline keyboard of plugins, if [chat] is specified it allows to manage the plugins\' list of the group in which the command was executed.',
+            '#textualplugins [chat]: Sasha sends a list of all plugins, if [chat] is specified it allows to see the plugins\' list of the group in which the command was executed.',
             '(#enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]: Sasha enables <plugin>, if the specified just on chat.',
             '(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]: Sasha disables <plugin>, if the specified just on chat.',
             '(#reload|[sasha] ricarica): Sasha reloads all plugins.',
