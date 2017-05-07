@@ -238,13 +238,13 @@ local function run(msg, matches)
             elseif matches[2] == 'BACK' then
                 if matches[3] then
                     if is_owner2(msg.from.id, matches[3]) then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, tonumber(matches[3])))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, tonumber(matches[3])))
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
                     end
                 else
                     if is_sudo(msg) then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList, keyboard_plugins_list(true))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(true))
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo, { inline_keyboard = { { { text = langs[msg.lang].stop, callback_data = 'pluginsSTOP' } } } })
                     end
@@ -296,10 +296,10 @@ local function run(msg, matches)
             end
             if chat_plugins then
                 mystat('/plugins chat')
-                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList, keyboard_plugins_list(false, msg.chat.id))
+                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(false, msg.chat.id))
             else
                 mystat('/plugins')
-                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n' .. langs[msg.lang].pluginsList, keyboard_plugins_list(true, msg.chat.id))
+                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(true, msg.chat.id))
             end
         else
             return langs[msg.lang].require_owner
@@ -317,10 +317,10 @@ local function run(msg, matches)
             end
             if chat_plugins then
                 mystat('/plugins chat')
-                return langs[msg.lang].pluginsIntro .. '\n' .. list_plugins(msg.chat.id)
+                return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins(msg.chat.id)
             else
                 mystat('/plugins')
-                return langs[msg.lang].pluginsIntro .. '\n' .. list_plugins_sudo()
+                return langs[msg.lang].pluginsIntro .. '\n\n' .. list_plugins_sudo()
             end
         else
             return langs[msg.lang].require_owner
