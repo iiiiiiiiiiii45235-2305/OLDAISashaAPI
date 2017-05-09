@@ -600,7 +600,41 @@ local function adjustSettingType(setting_type)
     return setting_type
 end
 
-function lockSetting(data, target, setting_type)
+local function reverseAdjustSettingType(setting_type)
+    if setting_type == 'lock_arabic' then
+        setting_type = 'arabic'
+    end
+    if setting_type == 'lock_bots' then
+        setting_type = 'bots'
+    end
+    if setting_type == 'flood' then
+        setting_type = 'flood'
+    end
+    if setting_type == 'lock_group_link' then
+        setting_type = 'grouplink'
+    end
+    if setting_type == 'lock_leave' then
+        setting_type = 'leave'
+    end
+    if setting_type == 'lock_link' then
+        setting_type = 'link'
+    end
+    if setting_type == 'lock_member' then
+        setting_type = 'member'
+    end
+    if setting_type == 'lock_rtl' then
+        setting_type = 'rtl'
+    end
+    if setting_type == 'lock_spam' then
+        setting_type = 'spam'
+    end
+    if setting_type == 'strict' then
+        setting_type = 'strict'
+    end
+    return setting_type
+end
+
+function lockSetting(target, setting_type)
     local lang = get_lang(target)
     setting_type = adjustSettingType(setting_type)
     local setting = data[tostring(target)].settings[tostring(setting_type)]
@@ -619,7 +653,7 @@ function lockSetting(data, target, setting_type)
     end
 end
 
-function unlockSetting(data, target, setting_type)
+function unlockSetting(target, setting_type)
     local lang = get_lang(target)
     setting_type = adjustSettingType(setting_type)
     local setting = data[tostring(target)].settings[tostring(setting_type)]
@@ -711,6 +745,62 @@ local function checkMatchesMuteUnmute(txt)
         return true
     end
     return false
+end
+
+local function keyboard_settings_list(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    for var, value in pairs(data[tostring(chat_id)].settings) do
+        if type(value) == 'boolean' then
+            if flag then
+                flag = false
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+            end
+            if value then
+                keyboard.inline_keyboard[row][column] = { text = '??' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '??' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+            end
+            column = column + 1
+            if column > 2 then
+                flag = true
+            end
+        end
+    end
+    return keyboard
+end
+
+local function keyboard_mutes_list(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    for var, value in pairs(data[tostring(chat_id)].mutes) do
+        if flag then
+            flag = false
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+        end
+        if value then
+            keyboard.inline_keyboard[row][column] = { text = '??' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '??' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id }
+        end
+        column = column + 1
+        if column > 2 then
+            flag = true
+        end
+    end
+    return keyboard
 end
 
 local function run(msg, matches)
@@ -911,7 +1001,7 @@ local function run(msg, matches)
             if is_admin(msg) then
                 if checkMatchesLockUnlock(matches[3]) then
                     mystat('/lock <group_id> ' .. matches[3]:lower())
-                    return lockSetting(data, matches[2], matches[3]:lower())
+                    return lockSetting(matches[2], matches[3]:lower())
                 end
                 return
             else
@@ -922,7 +1012,7 @@ local function run(msg, matches)
             if is_admin(msg) then
                 if checkMatchesLockUnlock(matches[3]) then
                     mystat('/unlock <group_id> ' .. matches[3]:lower())
-                    return unlockSetting(data, matches[2], matches[3]:lower())
+                    return unlockSetting(matches[2], matches[3]:lower())
                 end
                 return
             else
@@ -1057,6 +1147,46 @@ local function run(msg, matches)
             end
         end
         if data[tostring(msg.chat.id)] then
+            if msg.cb then
+                if matches[1] == '###cbgroup_management' then
+                    if matches[2] == 'BACKSETTINGS' then
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3], keyboard_settings_list(matches[3]))
+                    elseif matches[2] == 'BACKMUTES' then
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
+                    elseif matches[4] then
+                        if matches[2] == 'LOCK' then
+                            if is_mod2(msg.from.id, matches[4]) then
+                                mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
+                                return editMessageText(msg.chat.id, msg.message_id, lockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
+                            else
+                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                            end
+                        elseif matches[2] == 'UNLOCK' then
+                            if is_mod2(msg.from.id, matches[4]) then
+                                mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
+                                return editMessageText(msg.chat.id, msg.message_id, unlockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
+                            else
+                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                            end
+                        end
+                        if matches[2] == 'UNMUTE' then
+                            if is_owner2(msg.from.id, matches[4]) then
+                                mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
+                                return editMessageText(msg.chat.id, msg.message_id, unmute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
+                            else
+                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                            end
+                        elseif matches[2] == 'MUTE' then
+                            if is_owner2(msg.from.id, matches[4]) then
+                                mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
+                                return editMessageText(msg.chat.id, msg.message_id, mute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
+                            else
+                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                            end
+                        end
+                    end
+                end
+            end
             if matches[1]:lower() == 'rules' or matches[1]:lower() == 'sasha regole' then
                 mystat('/rules')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
@@ -1155,7 +1285,7 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     if checkMatchesLockUnlock(matches[2]) then
                         mystat('/lock ' .. matches[2]:lower())
-                        return lockSetting(data, msg.chat.id, matches[2]:lower())
+                        return lockSetting(msg.chat.id, matches[2]:lower())
                     end
                     return
                 else
@@ -1166,7 +1296,7 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     if checkMatchesLockUnlock(matches[2]) then
                         mystat('/unlock ' .. matches[2]:lower())
-                        return unlockSetting(data, msg.chat.id, matches[2]:lower())
+                        return unlockSetting(msg.chat.id, matches[2]:lower())
                     end
                     return
                 else
@@ -1285,6 +1415,19 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == "muteslist" or matches[1]:lower() == "lista muti" then
                 if msg.from.is_mod then
+                    if msg.chat.type ~= 'private' then
+                        sendMessage(msg.chat.id, langs[msg.lang].sendMutesPvt)
+                    end
+                    mystat('/muteslist')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                    sendKeyboard(msg.from.id, langs[msg.lang].mutesOf, keyboard_mutes_list(msg.chat.id))
+                    return
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == "textualmuteslist" then
+                if msg.from.is_mod then
                     mystat('/muteslist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     return mutesList(msg.chat.id)
@@ -1314,6 +1457,19 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'settings' then
+                if msg.from.is_mod then
+                    if msg.chat.type ~= 'private' then
+                        sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
+                    end
+                    mystat('/settings')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf, keyboard_settings_list(msg.chat.id))
+                    return
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == 'textualsettings' then
                 if msg.from.is_mod then
                     mystat('/settings')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
@@ -1547,6 +1703,13 @@ return {
     description = "GROUP_MANAGEMENT",
     patterns =
     {
+        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
+        "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
+        "^(###cbgroup_management)(ENABLE)(.*)(%-%d+)$",
+        "^(###cbgroup_management)(DISABLE)(.*)(%-%d+)$",
+        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)$",
+        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
+
         "!!tgservice chat_add_user_link",
         "!!tgservice chat_add_users",
         "!!tgservice chat_add_user",
@@ -1580,13 +1743,13 @@ return {
         "^[#!/]([Rr][Ee][Mm]) ([Rr][Ee][Aa][Ll][Mm])$",
 
         -- SUPERGROUP
-        "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
         -- getadmins
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
         "^([Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
 
         -- COMMON
+        "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
         "^[#!/]([Aa][Dd][Mm][Ii][Nn][Ss])",
@@ -1596,6 +1759,7 @@ return {
         "^[#!/]([Aa][Bb][Oo][Uu][Tt])$",
         "^[#!/]([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee]) ([^%s]+)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee])$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee]) ([^%s]+)$",
@@ -1604,6 +1768,7 @@ return {
         "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr])",
         "^[#!/]([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])",
         "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) ([^%s]+)",
         "^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+)",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
@@ -1687,8 +1852,10 @@ return {
         "#setwarn <value>",
         "#setflood <value>",
         "#settings",
+        "#textualsettings",
         "#muteuser|voce <id>|<username>|<reply>|from",
         "(#muteslist|lista muti)",
+        "#textualmuteslist",
         "(#mutelist|lista utenti muti)",
         "(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
