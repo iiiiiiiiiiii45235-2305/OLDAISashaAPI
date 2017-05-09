@@ -1,4 +1,4 @@
--- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
+﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
 
 group_type = ''
 
@@ -763,9 +763,9 @@ local function keyboard_settings_list(chat_id)
                 keyboard.inline_keyboard[row] = { }
             end
             if value then
-                keyboard.inline_keyboard[row][column] = { text = '??' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                keyboard.inline_keyboard[row][column] = { text = '🔒' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
             else
-                keyboard.inline_keyboard[row][column] = { text = '??' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+                keyboard.inline_keyboard[row][column] = { text = '🔓' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
             end
             column = column + 1
             if column > 2 then
@@ -791,9 +791,9 @@ local function keyboard_mutes_list(chat_id)
             keyboard.inline_keyboard[row] = { }
         end
         if value then
-            keyboard.inline_keyboard[row][column] = { text = '??' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = '🔇' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id }
         else
-            keyboard.inline_keyboard[row][column] = { text = '??' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = '🔊' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id }
         end
         column = column + 1
         if column > 2 then
@@ -1420,7 +1420,7 @@ local function run(msg, matches)
                     end
                     mystat('/muteslist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                    sendKeyboard(msg.from.id, langs[msg.lang].mutesOf, keyboard_mutes_list(msg.chat.id))
+                    sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. msg.chat.id, keyboard_mutes_list(msg.chat.id))
                     return
                 else
                     return langs[msg.lang].require_mod
@@ -1463,7 +1463,7 @@ local function run(msg, matches)
                     end
                     mystat('/settings')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf, keyboard_settings_list(msg.chat.id))
+                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id, keyboard_settings_list(msg.chat.id))
                     return
                 else
                     return langs[msg.lang].require_mod
