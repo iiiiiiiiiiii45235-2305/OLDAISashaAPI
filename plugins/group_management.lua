@@ -1705,8 +1705,8 @@ return {
     {
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
-        "^(###cbgroup_management)(ENABLE)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(DISABLE)(.*)(%-%d+)$",
+        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)$",
+        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)$",
         "^(###cbgroup_management)(MUTE)(.*)(%-%d+)$",
         "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
 
