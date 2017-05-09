@@ -783,7 +783,7 @@ local function keyboard_mutes_list(chat_id)
     local column = 1
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    for var, value in pairs(data[tostring(chat_id)].mutes) do
+    for var, value in pairs(data[tostring(chat_id)].settings.mutes) do
         if flag then
             flag = false
             row = row + 1
