@@ -1063,6 +1063,35 @@ local function run(msg, matches)
             if matches[2] then
                 if data[tostring(matches[2])].settings then
                     if is_admin(msg) then
+                        if msg.chat.type ~= 'private' then
+                            sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
+                        end
+                        mystat('/settings <group_id>')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
+                        sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2], keyboard_settings_list(matches[2]))
+                        return
+                    else
+                        return langs[msg.lang].require_admin
+                    end
+                end
+            else
+                if msg.from.is_mod then
+                    if msg.chat.type ~= 'private' then
+                        sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
+                    end
+                    mystat('/settings')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id, keyboard_settings_list(msg.chat.id))
+                    return
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+        end
+        if matches[1]:lower() == 'textualsettings' then
+            if matches[2] then
+                if data[tostring(matches[2])].settings then
+                    if is_admin(msg) then
                         mystat('/settings <group_id>')
                         return showSettings(matches[2], msg.lang)
                     else
@@ -1728,6 +1757,7 @@ return {
         "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
         "^[#!/]([Ss][Uu][Pp][Ee][Rr][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Rr][Uu][Ll][Ee][Ss]) (%-?%d+) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Aa][Bb][Oo][Uu][Tt]) (%-?%d+) (.*)$",
@@ -1886,6 +1916,7 @@ return {
         "(#lock|[sasha] blocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "(#unlock|[sasha] sblocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
+        "#textualsettings <group_id>",
         "#type",
         "#rem <group_id>",
         "#list admins|groups|realms",
