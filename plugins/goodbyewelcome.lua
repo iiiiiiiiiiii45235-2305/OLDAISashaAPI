@@ -207,6 +207,9 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setwelcome' then
                 mystat('/setwelcome')
                 if matches[2] then
+                    if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                        return langs[msg.lang].crossexecDenial
+                    end
                     return set_welcome(msg.chat.id, matches[2])
                 elseif msg.reply_to_message.media then
                     local file_id = ''
@@ -239,6 +242,9 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setgoodbye' then
                 mystat('/setgoodbye')
                 if matches[2] then
+                    if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                        return langs[msg.lang].crossexecDenial
+                    end
                     return set_goodbye(msg.chat.id, matches[2])
                 elseif msg.reply_to_message.media then
                     local file_id = ''

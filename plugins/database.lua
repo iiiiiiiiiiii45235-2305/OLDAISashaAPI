@@ -179,7 +179,7 @@ local function run(msg, matches)
                         return matches[2] .. langs[msg.lang].notFound
                     end
                 end
-            elseif matches[2] then
+            elseif matches[2] and matches[2] ~= '' then
                 if string.match(matches[2], '^%d+$') then
                     if database[tostring(matches[2])] then
                         return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
@@ -187,7 +187,7 @@ local function run(msg, matches)
                         return matches[2] .. langs[msg.lang].notFound
                     end
                 else
-                    local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
+                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             if database[tostring(obj_user.id)] then

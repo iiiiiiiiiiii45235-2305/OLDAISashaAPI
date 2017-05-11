@@ -259,6 +259,9 @@ local function run(msg, matches)
                     i = i + 1
                     local answer = cli_get_value(msg, word:lower())
                     if answer then
+                        if string.match(answer, '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                            return langs[msg.lang].crossexecDenial
+                        end
                         api_set_value(msg, word:lower(), answer)
                     end
                 end

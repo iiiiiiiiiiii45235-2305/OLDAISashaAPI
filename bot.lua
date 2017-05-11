@@ -687,8 +687,20 @@ function msg_valid(msg)
     if not msg.bot then
         if bot.userVersion then
             if msg.from.id == bot.userVersion.id then
-                print(clr.yellow .. 'Not valid: my user version in a group' .. clr.reset)
-                return false
+                local crossvalid = false
+                if not msg.forward then
+                    if msg.text then
+                        if string.match(msg.text, '^[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] (.*)$') then
+                            crossvalid = true
+                        end
+                    end
+                end
+                if not crossvalid then
+                    print(clr.yellow .. 'Not valid: my user version in a group' .. clr.reset)
+                    return false
+                else
+                    msg.text = string.gsub(msg.text, '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
+                end
             end
         end
 

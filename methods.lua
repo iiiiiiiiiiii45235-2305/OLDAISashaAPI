@@ -176,6 +176,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
         if text then
             if type(text) ~= 'table' then
                 if text ~= '' then
+                    text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
                     local text_max = 4096
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
@@ -315,6 +316,7 @@ function sendKeyboard(chat_id, text, keyboard, markdown)
         if markdown then
             url = url .. '&parse_mode=Markdown'
         end
+        text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         url = url .. '&text=' .. URL.escape(text)
         url = url .. '&disable_web_page_preview=true'
         url = url .. '&reply_markup=' .. JSON.encode(keyboard)
@@ -905,29 +907,43 @@ end
 -- call this to get the chat
 function getChat(id_or_username)
     if not string.match(id_or_username, '^%*%d') then
-        local obj = nil
-        local ok = false
-        -- API
-        if not ok then
-            obj = APIgetChat(id_or_username)
-            if type(obj) == 'table' then
-                if obj.result then
-                    obj = obj.result
-                    ok = true
+        if tostring(id_or_username) ~= '@' then
+            local obj = nil
+            local ok = false
+            -- API
+            if not ok then
+                obj = APIgetChat(id_or_username)
+                if type(obj) == 'table' then
+                    if obj.result then
+                        obj = obj.result
+                        ok = true
+                    end
                 end
             end
-        end
-        -- redis db then API
-        if not ok then
-            local hash = 'bot:usernames'
-            local stored = nil
-            if type(id_or_username) == 'string' then
-                stored = redis:hget(hash, id_or_username:lower())
-            else
-                stored = redis:hget(hash, id_or_username)
+            -- redis db then API
+            if not ok then
+                local hash = 'bot:usernames'
+                local stored = nil
+                if type(id_or_username) == 'string' then
+                    stored = redis:hget(hash, id_or_username:lower())
+                else
+                    stored = redis:hget(hash, id_or_username)
+                end
+                if stored then
+                    obj = APIgetChat(stored)
+                    if type(obj) == 'table' then
+                        if obj.result then
+                            obj = obj.result
+                            ok = true
+                            saveUsername(obj)
+                        end
+                    end
+                end
             end
-            if stored then
-                obj = APIgetChat(stored)
+            --[[
+            -- PWR API
+            if not ok then
+                obj = resolveChat(id_or_username)
                 if type(obj) == 'table' then
                     if obj.result then
                         obj = obj.result
@@ -936,22 +952,10 @@ function getChat(id_or_username)
                     end
                 end
             end
-        end
-        --[[
-        -- PWR API
-        if not ok then
-            obj = resolveChat(id_or_username)
-            if type(obj) == 'table' then
-                if obj.result then
-                    obj = obj.result
-                    ok = true
-                    saveUsername(obj)
-                end
+            ]]
+            if ok then
+                return obj
             end
-        end
-        ]]
-        if ok then
-            return obj
         end
         return nil
     else

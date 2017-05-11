@@ -89,6 +89,9 @@ local function run(msg, matches)
     if matches[1]:lower() == 'set' or matches[1]:lower() == 'sasha setta' or matches[1]:lower() == 'setta' then
         if msg.from.is_mod then
             mystat('/set')
+            if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
         else
             return langs[msg.lang].require_mod
@@ -98,6 +101,9 @@ local function run(msg, matches)
     if matches[1]:lower() == 'setglobal' then
         if is_admin(msg) then
             mystat('/setglobal')
+            if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
             return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
         else
             return langs[msg.lang].require_admin
