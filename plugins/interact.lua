@@ -2,6 +2,9 @@ local function run(msg, matches)
     if (matches[1]:lower() == 'markdownecho' or matches[1]:lower() == 'sasha markdown ripeti') and matches[2] then
         if msg.from.is_mod then
             mystat('/markdownecho')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2], true)
             else
@@ -14,6 +17,9 @@ local function run(msg, matches)
     if (matches[1]:lower() == 'echo' or matches[1]:lower() == 'sasha ripeti') and matches[2] then
         if msg.from.is_mod then
             mystat('/echo')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])
             else

@@ -176,6 +176,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
         if text then
             if type(text) ~= 'table' then
                 if text ~= '' then
+                    text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
                     local text_max = 4096
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
@@ -315,6 +316,7 @@ function sendKeyboard(chat_id, text, keyboard, markdown)
         if markdown then
             url = url .. '&parse_mode=Markdown'
         end
+        text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         url = url .. '&text=' .. URL.escape(text)
         url = url .. '&disable_web_page_preview=true'
         url = url .. '&reply_markup=' .. JSON.encode(keyboard)
