@@ -276,7 +276,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         else
-            return msg.from.username or(msg.from.first_name .. ' ' ..(msg.from.last_name or '')) .. '\n' .. msg.chat.username or msg.chat.title
+            return(msg.from.username or(msg.from.first_name .. ' ' ..(msg.from.last_name or ''))) .. '\n' ..(msg.chat.username or msg.chat.title)
         end
     end
     if matches[1]:lower() == "getrank" or matches[1]:lower() == "rango" then
