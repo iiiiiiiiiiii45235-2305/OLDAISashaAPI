@@ -196,6 +196,8 @@ local function run(msg, matches)
                                 return matches[2] .. langs[msg.lang].notFound
                             end
                         end
+                    else
+                        return langs[msg.lang].noObject
                     end
                 end
             end

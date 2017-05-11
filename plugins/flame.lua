@@ -42,6 +42,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return flame_user(msg.from.id, obj_user.id, msg.chat.id)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end

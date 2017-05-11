@@ -961,6 +961,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return promoteAdmin(obj_user, msg.chat.id)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     else
@@ -969,6 +971,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return promoteAdmin(obj_user, msg.chat.id)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -990,6 +994,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return demoteAdmin(obj_user, msg.chat.id)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     else
@@ -998,6 +1004,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return demoteAdmin(obj_user, msg.chat.id)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -1455,6 +1463,8 @@ local function run(msg, matches)
                                         return langs[msg.lang].require_rank
                                     end
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -1612,6 +1622,8 @@ local function run(msg, matches)
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return setOwner(obj_user, msg.chat.id)
                                     end
+                                else
+                                    return langs[msg.lang].noObject
                                 end
                             end
                         else
@@ -1620,6 +1632,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return setOwner(obj_user, msg.chat.id)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -1660,6 +1674,8 @@ local function run(msg, matches)
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return promoteMod(msg.chat.id, obj_user)
                                     end
+                                else
+                                    return langs[msg.lang].noObject
                                 end
                             end
                         else
@@ -1668,6 +1684,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return promoteMod(msg.chat.id, obj_user)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -1703,6 +1721,8 @@ local function run(msg, matches)
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return demoteMod(msg.chat.id, obj_user)
                                     end
+                                else
+                                    return langs[msg.lang].noObject
                                 end
                             end
                         else
@@ -1711,6 +1731,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return demoteMod(msg.chat.id, obj_user)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end

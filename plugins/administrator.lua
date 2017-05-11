@@ -53,6 +53,8 @@ local function run(msg, matches)
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return blockUser(obj_user.id, msg.lang)
                         end
+                    else
+                        return langs[msg.lang].noObject
                     end
                 end
             end
@@ -87,6 +89,8 @@ local function run(msg, matches)
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return unblockUser(obj_user.id, msg.lang)
                         end
+                    else
+                        return langs[msg.lang].noObject
                     end
                 end
             end

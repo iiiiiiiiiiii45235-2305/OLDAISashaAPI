@@ -165,6 +165,47 @@ local function get_object_info(obj, chat_id)
 end
 
 local function run(msg, matches)
+    if matches[1]:lower() == "id" then
+        mystat('/id')
+        if msg.reply then
+            if msg.from.is_mod then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                return msg.reply_to_message.forward_from.id
+                            else
+                                return msg.reply_to_message.forward_from_chat.id
+                            end
+                        else
+                            return langs[msg.lang].errorNoForward
+                        end
+                    else
+                        return msg.reply_to_message.from.id
+                    end
+                else
+                    return msg.reply_to_message.from.id
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        elseif matches[2] and matches[2] ~= '' then
+            if msg.from.is_mod then
+                local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                if obj_user then
+                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                        return obj_user.id
+                    end
+                else
+                    return langs[msg.lang].noObject
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        else
+            return msg.from.id .. '\n' .. msg.chat.id
+        end
+    end
     if matches[1]:lower() == "getrank" or matches[1]:lower() == "rango" then
         mystat('/getrank')
         if msg.reply then
@@ -194,6 +235,8 @@ local function run(msg, matches)
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return get_reverse_rank(msg.chat.id, obj_user.id, check_local)
                     end
+                else
+                    return langs[msg.lang].noObject
                 end
             end
         else
@@ -229,6 +272,8 @@ local function run(msg, matches)
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return is_here(msg.chat.id, obj_user.id)
                     end
+                else
+                    return langs[msg.lang].noObject
                 end
             end
         end
@@ -360,6 +405,8 @@ return {
     description = "INFO",
     patterns =
     {
+        "^[#!/]([Ii][Dd])$",
+        "^[#!/]([Ii][Dd]) ([^%s]+)$",
         "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ll][Ii][Nn][Kk]) (%-?%d+)$",
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee])$",
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) ([^%s]+)$",
@@ -389,11 +436,13 @@ return {
     syntax =
     {
         "USER",
-        "#getrank|rango [<id>|<username>|<reply>]",
+        "#id",
+        "#getrank|rango [<id>|<username>|<reply>|from]",
         "#whoami",
         "(#info|[sasha] info)",
         "#ishere <id>|<username>|<reply>|from",
         "MOD",
+        "#id <username>|<reply>|from",
         "(#info|[sasha] info) <id>|<username>|<reply>|from",
         "(#who|#members|[sasha] lista membri)",
         "ADMIN",

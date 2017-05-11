@@ -53,6 +53,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return whitelist_user(msg.chat.tg_cli_id, obj_user.id, msg.lang)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                     return
@@ -117,6 +119,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return whitegban_user(msg.chat.tg_cli_id, obj_user.id, msg.lang)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                     return

@@ -82,6 +82,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return getUserWarns(obj_user.id, msg.chat.id)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -124,6 +126,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return warnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -166,6 +170,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return unwarnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -208,6 +214,8 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                                 end
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
@@ -261,6 +269,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return kickUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -400,6 +410,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return banUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -452,6 +464,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return unbanUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -524,6 +538,8 @@ local function run(msg, matches)
                                 gbanUser(obj_user.id)
                                 return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -582,6 +598,8 @@ local function run(msg, matches)
                                 ungbanUser(obj_user.id)
                                 return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end

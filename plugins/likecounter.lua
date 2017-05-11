@@ -137,6 +137,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return like(likedata, msg.chat.id, obj_user.id)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
@@ -168,6 +170,8 @@ local function run(msg, matches)
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return dislike(likedata, msg.chat.id, obj_user.id)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                 end
