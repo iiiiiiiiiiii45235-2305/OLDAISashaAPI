@@ -128,7 +128,7 @@ local function run(msg, matches)
                     else
                         return like(likedata, msg.chat.id, msg.reply_to_message.from.id)
                     end
-                elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
                         return like(likedata, msg.chat.id, matches[2])
                     else
@@ -159,7 +159,7 @@ local function run(msg, matches)
                     else
                         return dislike(likedata, msg.chat.id, msg.reply_to_message.from.id)
                     end
-                elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
                         return dislike(likedata, msg.chat.id, matches[2])
                     else

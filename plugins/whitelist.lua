@@ -42,7 +42,7 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].require_owner
                 end
-            elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+            elseif matches[2] and matches[2] ~= '' then
                 if is_owner(msg) then
                     mystat('/whitelist <user>')
                     if string.match(matches[2], '^%d+$') then
@@ -106,7 +106,7 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].require_owner
                 end
-            elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+            elseif matches[2] and matches[2] ~= '' then
                 if is_owner(msg) then
                     mystat('/whitelistgban <user>')
                     if string.match(matches[2], '^%d+$') then

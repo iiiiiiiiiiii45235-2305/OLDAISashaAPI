@@ -44,7 +44,7 @@ local function run(msg, matches)
                 else
                     return blockUser(msg.reply_to_message.from.id, msg.lang)
                 end
-            elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+            elseif matches[2] and matches[2] ~= '' then
                 if string.match(matches[2], '^%d+$') then
                     return blockUser(matches[2], msg.lang)
                 else
@@ -78,7 +78,7 @@ local function run(msg, matches)
                 else
                     return unblockUser(msg.reply_to_message.from.id, msg.lang)
                 end
-            elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+            elseif matches[2] and matches[2] ~= '' then
                 if string.match(matches[2], '^%d+$') then
                     return unblockUser(matches[2], msg.lang)
                 else

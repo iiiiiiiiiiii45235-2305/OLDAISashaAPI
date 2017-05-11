@@ -953,7 +953,7 @@ local function run(msg, matches)
                 mystat('/addadmin')
                 if msg.reply then
                     return promoteAdmin(msg.reply_to_message.from, msg.chat.id)
-                elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -982,7 +982,7 @@ local function run(msg, matches)
                 mystat('/removeadmin')
                 if msg.reply then
                     return demoteAdmin(msg.reply_to_message.from, msg.chat.id)
-                elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -1403,7 +1403,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].require_rank
                             end
                         end
-                    elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                    elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
                             -- ignore higher or same rank
                             if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
@@ -1586,7 +1586,7 @@ local function run(msg, matches)
                         else
                             return setOwner(msg.reply_to_message.from, msg.chat.id)
                         end
-                    elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                    elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
                             local obj_user = getChat(matches[2])
@@ -1635,7 +1635,7 @@ local function run(msg, matches)
                         else
                             return promoteMod(msg.chat.id, msg.reply_to_message.from)
                         end
-                    elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                    elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1678,7 +1678,7 @@ local function run(msg, matches)
                         else
                             return demoteMod(msg.chat.id, msg.reply_to_message.from)
                         end
-                    elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+                    elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then

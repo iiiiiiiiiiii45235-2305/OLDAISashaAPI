@@ -179,7 +179,7 @@ local function run(msg, matches)
                         return matches[2] .. langs[msg.lang].notFound
                     end
                 end
-            elseif matches[2] and string.match(matches[2], '^[^%s]+') then
+            elseif matches[2] and matches[2] ~= '' then
                 if string.match(matches[2], '^%d+$') then
                     if database[tostring(matches[2])] then
                         return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
