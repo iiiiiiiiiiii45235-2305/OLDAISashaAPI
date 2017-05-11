@@ -177,6 +177,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
     if type(obj) == 'table' then
         if text then
             if type(text) ~= 'table' then
+                text = tostring(text)
                 if text ~= '' then
                     text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
                     local text_max = 4096
