@@ -1063,52 +1063,69 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == 'settings' then
-            if matches[2] then
-                if data[tostring(matches[2])].settings then
-                    if is_admin(msg) then
-                        if msg.chat.type ~= 'private' then
-                            sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
-                        end
-                        mystat('/settings <group_id>')
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
-                        sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2], keyboard_settings_list(matches[2]))
-                        return
-                    else
-                        return langs[msg.lang].require_admin
-                    end
+        if (matches[1]:lower() == 'mute' or matches[1]:lower() == 'silenzia') and matches[2] and matches[3] then
+            if is_admin(msg) then
+                if checkMatchesMuteUnmute(matches[3]) then
+                    mystat('/mute <group_id> ' .. matches[3]:lower())
+                    return mute(msg.chat.id, matches[3]:lower())
                 end
+                return
             else
-                if msg.from.is_mod then
-                    if msg.chat.type ~= 'private' then
-                        sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
-                    end
-                    mystat('/settings')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id, keyboard_settings_list(msg.chat.id))
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
+                return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == 'textualsettings' then
-            if matches[2] then
-                if data[tostring(matches[2])].settings then
-                    if is_admin(msg) then
-                        mystat('/settings <group_id>')
-                        return showSettings(matches[2], msg.lang)
-                    else
-                        return langs[msg.lang].require_admin
-                    end
+        if (matches[1]:lower() == 'unmute' or matches[1]:lower() == 'ripristina') and matches[2] and matches[3] then
+            if is_admin(msg) then
+                if checkMatchesMuteUnmute(matches[3]) then
+                    mystat('/unmute <group_id> ' .. matches[3]:lower())
+                    return unmute(msg.chat.id, matches[3]:lower())
                 end
+                return
             else
-                if msg.from.is_mod then
-                    mystat('/settings')
-                    return showSettings(msg.chat.id, msg.lang)
-                else
-                    return langs[msg.lang].require_mod
+                return langs[msg.lang].require_admin
+            end
+        end
+        if (matches[1]:lower() == "muteslist" or matches[1]:lower() == "lista muti") and matches[2] then
+            if is_admin(msg) then
+                if msg.chat.type ~= 'private' then
+                    sendMessage(msg.chat.id, langs[msg.lang].sendMutesPvt)
                 end
+                mystat('/muteslist <group_id>')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
+                sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. matches[2], keyboard_mutes_list(matches[2]))
+                return
+            else
+                return langs[msg.lang].require_admin
+            end
+        end
+        if matches[1]:lower() == "textualmuteslist" and matches[2] then
+            if is_admin(msg) then
+                mystat('/muteslist <group_id>')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
+                return mutesList(matches[2])
+            else
+                return langs[msg.lang].require_admin
+            end
+        end
+        if matches[1]:lower() == 'settings' and matches[2] then
+            if is_admin(msg) then
+                if msg.chat.type ~= 'private' then
+                    sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
+                end
+                mystat('/settings <group_id>')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
+                sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2], keyboard_settings_list(matches[2]))
+                return
+            else
+                return langs[msg.lang].require_admin
+            end
+        end
+        if matches[1]:lower() == 'textualsettings' and matches[2] then
+            if is_admin(msg) then
+                mystat('/settings <group_id>')
+                return showSettings(matches[2], msg.lang)
+            else
+                return langs[msg.lang].require_admin
             end
         end
         if matches[1]:lower() == 'setgprules' and matches[2] and matches[3] then
@@ -1758,6 +1775,10 @@ return {
         "^[#!/]([Rr][Ee][Mm][Oo][Vv][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Oo][Ww][Nn][Ee][Rr]) (%-?%d+) (%d+)$",-- (group id) (owner id)
         "^[#!/]([Ll][Ii][Ss][Tt]) ([^%s]+)$",
+        "^[#!/]([Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
+        "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
+        "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)$",
         "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
@@ -1771,6 +1792,12 @@ return {
         -- unlock
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) ([^%s]+)$",
         "^([Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) ([^%s]+)$",
+        -- mute
+        "^([Ss][Ii][Ll][Ee][Nn][Zz][Ii][Aa]) (%-?%d+) ([^%s]+)$",
+        -- unmute
+        "^([Rr][Ii][Pp][Rr][Ii][Ss][Tt][Ii][Nn][Aa]) (%-?%d+) ([^%s]+)$",
+        -- muteslist
+        "^([Ll][Ii][Ss][Tt][Aa] [Mm][Uu][Tt][Ii]) (%-?%d+)$",
 
         -- INGROUP
         "^[#!/]([Aa][Dd][Dd]) ([Rr][Ee][Aa][Ll][Mm])$",
@@ -1917,6 +1944,10 @@ return {
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
+        "#mute|silenzia <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|voice",
+        "#unmute|ripristina <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|voice",
+        "(#muteslist|lista muti) <group_id>",
+        "#textualmuteslist <group_id>",
         "(#lock|[sasha] blocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "(#unlock|[sasha] sblocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
