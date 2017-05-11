@@ -347,48 +347,50 @@ end
 
 local function save_to_db(msg)
     if database then
-        if msg.from.type == 'private' then
-            db_user(msg.from, bot.id)
-        end
-        if msg.from.type == 'channel' then
-            db_channel(msg.from)
-        end
-        if msg.chat.type == 'group' then
-            db_group(msg.chat)
-        end
-        if msg.chat.type == 'supergroup' then
-            db_supergroup(msg.chat)
-        end
-        if msg.chat.type == 'channel' then
-            db_channel(msg.chat)
-        end
-        if msg.adder then
-            db_user(msg.adder, msg.chat.id)
-        end
-        if msg.added then
-            for k, v in pairs(msg.added) do
-                db_user(v, msg.chat.id)
+        if not string.match(msg.from.id, '^%*%d') then
+            if msg.from.type == 'private' then
+                db_user(msg.from, bot.id)
             end
-        end
-        if msg.remover then
-            db_user(msg.remover, msg.chat.id)
-        end
-        if msg.removed then
-            db_user(msg.removed, msg.chat.id)
-        end
-
-        if msg.entities then
-            if msg.entities.user then
-                db_user(msg.entities.user, bot.id)
+            if msg.from.type == 'channel' then
+                db_channel(msg.from)
             end
-        end
+            if msg.chat.type == 'group' then
+                db_group(msg.chat)
+            end
+            if msg.chat.type == 'supergroup' then
+                db_supergroup(msg.chat)
+            end
+            if msg.chat.type == 'channel' then
+                db_channel(msg.chat)
+            end
+            if msg.adder then
+                db_user(msg.adder, msg.chat.id)
+            end
+            if msg.added then
+                for k, v in pairs(msg.added) do
+                    db_user(v, msg.chat.id)
+                end
+            end
+            if msg.remover then
+                db_user(msg.remover, msg.chat.id)
+            end
+            if msg.removed then
+                db_user(msg.removed, msg.chat.id)
+            end
 
-        -- if forward save forward
-        if msg.forward then
-            if msg.forward_from then
-                db_user(msg.forward_from, bot.id)
-            elseif msg.forward_from_chat then
-                db_channel(msg.forward_from_chat)
+            if msg.entities then
+                if msg.entities.user then
+                    db_user(msg.entities.user, bot.id)
+                end
+            end
+
+            -- if forward save forward
+            if msg.forward then
+                if msg.forward_from then
+                    db_user(msg.forward_from, bot.id)
+                elseif msg.forward_from_chat then
+                    db_channel(msg.forward_from_chat)
+                end
             end
         end
 
