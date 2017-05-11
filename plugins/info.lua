@@ -243,7 +243,7 @@ local function run(msg, matches)
                 else
                     if msg.reply_to_message.service then
                         if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                            local text = msg.reply_to_message.adder.username or(msg.reply_to_message.adder.first_name .. ' ' ..(msg.reply_to_message.adder.last_name or '')) .. '\n'
+                            local text =(msg.reply_to_message.adder.username or(msg.reply_to_message.adder.first_name .. ' ' ..(msg.reply_to_message.adder.last_name or ''))) .. '\n'
                             for k, v in pairs(msg.reply_to_message.added) do
                                 text = text ..(v.username or(v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
                             end
@@ -251,7 +251,7 @@ local function run(msg, matches)
                         elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
                             return msg.reply_to_message.from.username or(msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            return msg.reply_to_message.remover.username or(msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or '')) .. '\n' .. msg.reply_to_message.removed.username or(msg.reply_to_message.removed.first_name .. ' ' ..(msg.reply_to_message.removed.last_name or ''))
+                            return(msg.reply_to_message.remover.username or(msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))) .. '\n' ..(msg.reply_to_message.removed.username or(msg.reply_to_message.removed.first_name .. ' ' ..(msg.reply_to_message.removed.last_name or '')))
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
                             return msg.reply_to_message.removed.username or(msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))
                         else
