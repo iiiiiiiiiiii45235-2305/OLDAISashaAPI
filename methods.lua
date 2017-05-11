@@ -907,39 +907,40 @@ end
 -- call this to get the chat
 function getChat(id_or_username)
     if not string.match(id_or_username, '^%*%d') then
-        local obj = nil
-        local ok = false
-        -- API
-        if not ok then
-            obj = APIgetChat(id_or_username)
-            if type(obj) == 'table' then
-                if obj.result then
-                    obj = obj.result
-                    ok = true
-                end
-            end
-        end
-        -- redis db then API
-        if not ok then
-            local hash = 'bot:usernames'
-            local stored = nil
-            if type(id_or_username) == 'string' then
-                stored = redis:hget(hash, id_or_username:lower())
-            else
-                stored = redis:hget(hash, id_or_username)
-            end
-            if stored then
-                obj = APIgetChat(stored)
+        if tostring(id_or_username) ~= '@' then
+            local obj = nil
+            local ok = false
+            -- API
+            if not ok then
+                obj = APIgetChat(id_or_username)
                 if type(obj) == 'table' then
                     if obj.result then
                         obj = obj.result
                         ok = true
-                        saveUsername(obj)
                     end
                 end
             end
-        end
-        --[[
+            -- redis db then API
+            if not ok then
+                local hash = 'bot:usernames'
+                local stored = nil
+                if type(id_or_username) == 'string' then
+                    stored = redis:hget(hash, id_or_username:lower())
+                else
+                    stored = redis:hget(hash, id_or_username)
+                end
+                if stored then
+                    obj = APIgetChat(stored)
+                    if type(obj) == 'table' then
+                        if obj.result then
+                            obj = obj.result
+                            ok = true
+                            saveUsername(obj)
+                        end
+                    end
+                end
+            end
+            --[[
         -- PWR API
         if not ok then
             obj = resolveChat(id_or_username)
@@ -952,8 +953,9 @@ function getChat(id_or_username)
             end
         end
         ]]
-        if ok then
-            return obj
+            if ok then
+                return obj
+            end
         end
         return nil
     else

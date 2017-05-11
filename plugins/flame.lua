@@ -37,7 +37,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return flame_user(msg.from.id, matches[2], msg.chat.id)
                     else
-                        local obj_user = getChat('@' .. string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '')) or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return flame_user(msg.from.id, obj_user.id, msg.chat.id)
