@@ -941,18 +941,18 @@ function getChat(id_or_username)
                 end
             end
             --[[
-        -- PWR API
-        if not ok then
-            obj = resolveChat(id_or_username)
-            if type(obj) == 'table' then
-                if obj.result then
-                    obj = obj.result
-                    ok = true
-                    saveUsername(obj)
+            -- PWR API
+            if not ok then
+                obj = resolveChat(id_or_username)
+                if type(obj) == 'table' then
+                    if obj.result then
+                        obj = obj.result
+                        ok = true
+                        saveUsername(obj)
+                    end
                 end
             end
-        end
-        ]]
+            ]]
             if ok then
                 return obj
             end

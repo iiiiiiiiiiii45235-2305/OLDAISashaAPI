@@ -48,7 +48,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return whitelist_user(msg.chat.tg_cli_id, matches[2], msg.lang)
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '')) or '')
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return whitelist_user(msg.chat.tg_cli_id, obj_user.id, msg.lang)
@@ -112,7 +112,7 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         return whitegban_user(msg.chat.tg_cli_id, matches[2], msg.lang)
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '')) or '')
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return whitegban_user(msg.chat.tg_cli_id, obj_user.id, msg.lang)
