@@ -359,6 +359,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'sasha esplodi' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'kaboom' then
             if msg.from.is_mod then
                 mystat('/ban')
+                printvardump(matches)
                 if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
