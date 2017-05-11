@@ -89,6 +89,8 @@ function getChatMember(chat_id, user_id)
                 local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
                 return sendRequest(url)
             end
+        else
+            return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
         end
     else
         local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
@@ -240,6 +242,8 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                 end
             end
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -290,6 +294,8 @@ function forwardMessage(chat_id, from_chat_id, message_id)
             end
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -335,6 +341,8 @@ function sendKeyboard(chat_id, text, keyboard, markdown)
             print_msg(sent_msg)
         end
         -- return false, and the code
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -383,6 +391,8 @@ function editMessageText(chat_id, message_id, text, keyboard, markdown)
             print_msg(sent_msg)
         end
         -- return false, and the code
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -435,6 +445,8 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -463,6 +475,8 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -496,6 +510,8 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -529,6 +545,8 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -557,6 +575,8 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -585,6 +605,8 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -611,6 +633,8 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -627,6 +651,8 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -651,6 +677,8 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -681,6 +709,8 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -703,6 +733,8 @@ function sendVideo(chat_id, video, reply_to_message_id, duration, performer, tit
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -719,6 +751,8 @@ function sendDocument(chat_id, document, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -748,6 +782,8 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
             print_msg(sent_msg)
         end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -1043,6 +1079,8 @@ function kickUser(executer, target, chat_id, reason)
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " require higher rank")
             return langs[get_lang(chat_id)].require_rank
         end
+    else
+        return langs[get_lang(chat_id)].noObject
     end
 end
 
@@ -1110,6 +1148,8 @@ function banUser(executer, target, chat_id, reason)
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
             return langs[get_lang(chat_id)].require_rank
         end
+    else
+        return langs[get_lang(chat_id)].noObject
     end
 end
 
