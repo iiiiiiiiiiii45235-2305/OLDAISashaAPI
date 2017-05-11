@@ -33,7 +33,7 @@ local function run(msg, matches)
                     else
                         return flame_user(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                     end
-                elseif matches[2] then
+                elseif matches[2] and string.match(matches[2], '^[^%s]+') then
                     if string.match(matches[2], '^%d+$') then
                         return flame_user(msg.from.id, matches[2], msg.chat.id)
                     else

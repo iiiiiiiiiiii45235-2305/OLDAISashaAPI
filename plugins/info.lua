@@ -185,7 +185,7 @@ local function run(msg, matches)
             else
                 return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
             end
-        elseif matches[2] then
+        elseif matches[2] and string.match(matches[2], '^[^%s]+') then
             if string.match(matches[2], '^%d+$') then
                 return get_reverse_rank(msg.chat.id, matches[2], check_local)
             else
@@ -220,7 +220,7 @@ local function run(msg, matches)
             else
                 return is_here(msg.chat.id, msg.reply_to_message.from.id)
             end
-        elseif matches[2] then
+        elseif matches[2] and string.match(matches[2], '^[^%s]+') then
             if string.match(matches[2], '^%d+$') then
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
@@ -273,7 +273,7 @@ local function run(msg, matches)
             else
                 return langs[msg.lang].require_mod
             end
-        elseif matches[2] then
+        elseif matches[2] and string.match(matches[2], '^[^%s]+') then
             if msg.from.is_mod then
                 if msg.entities then
                     if msg.entities[1] then
