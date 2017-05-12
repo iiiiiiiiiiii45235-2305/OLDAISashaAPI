@@ -246,6 +246,13 @@ local function keyboard_plugins_list(privileged, chat_id)
             flag = true
         end
     end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'pluginsBACK' }
+    if not privileged then
+        keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+    end
     return keyboard
 end
 

@@ -177,7 +177,7 @@ local function syntax_all(chat, rank, filter)
     return text
 end
 
-local function keyboard_help_list(chat, rank)
+local function keyboard_help_list(chat_id, rank)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -186,8 +186,8 @@ local function keyboard_help_list(chat, rank)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for name in pairsByKeys(plugins) do
-        if config.disabled_plugin_on_chat[chat] then
-            if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
+        if config.disabled_plugin_on_chat[chat_id] then
+            if not config.disabled_plugin_on_chat[chat_id][name] or config.disabled_plugin_on_chat[chat_id][name] == false then
                 i = i + 1
                 if plugins[name].min_rank <= tonumber(rank) then
                     if flag then
@@ -220,6 +220,10 @@ local function keyboard_help_list(chat, rank)
             end
         end
     end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' }
     return keyboard
 end
 

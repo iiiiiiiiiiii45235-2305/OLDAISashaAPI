@@ -220,6 +220,7 @@ return {
         cantDoThisToChat = 'Non puoi usare questo comando su un messaggio inoltrato da un canale.',
         errorNoForward = 'Non è un messaggio inoltrato.',
         goBack = 'Indietro.',
+        updateKeyboard = 'AGGIORNA TASTIERA.',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kickato da: ',
@@ -1324,6 +1325,7 @@ return {
         cantDoThisToChat = 'You can\'t use this command on a message forwarded from a channel.',
         errorNoForward = 'It\'s not a forwarded message.',
         goBack = 'Back.',
+        updateKeyboard = 'UPDATE KEYBOARD.',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kicked from: ',

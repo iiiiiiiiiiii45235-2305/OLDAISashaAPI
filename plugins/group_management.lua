@@ -773,6 +773,10 @@ local function keyboard_settings_list(chat_id)
             end
         end
     end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
     return keyboard
 end
 
@@ -800,6 +804,10 @@ local function keyboard_mutes_list(chat_id)
             flag = true
         end
     end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
     return keyboard
 end
 
