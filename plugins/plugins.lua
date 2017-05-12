@@ -200,7 +200,7 @@ local function list_disabled_plugin_on_chat(chat_id)
     return text
 end
 
-local function keyboard_plugins_list(privileged, chat_id)
+local function keyboard_plugins_list(user_id, privileged, chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -249,7 +249,7 @@ local function keyboard_plugins_list(privileged, chat_id)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'pluginsBACK' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].updateKeyboard, callback_data = 'pluginsBACK' }
     if not privileged then
         keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
     end
@@ -262,13 +262,13 @@ local function run(msg, matches)
             if matches[2] == 'BACK' then
                 if matches[3] then
                     if is_owner2(msg.from.id, matches[3]) then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(false, tonumber(matches[3])))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(msg.from.id, false, tonumber(matches[3])))
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
                 else
                     if is_sudo(msg) then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(true))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true))
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
@@ -321,13 +321,13 @@ local function run(msg, matches)
             if chat_plugins then
                 if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
-                    return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(false, msg.chat.id))
+                    return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(msg.from.id, false, msg.chat.id))
                 else
                     return langs[msg.lang].useYourGroups
                 end
             else
                 mystat('/plugins')
-                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(true, msg.chat.id))
+                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true, msg.chat.id))
             end
         else
             return langs[msg.lang].require_owner
