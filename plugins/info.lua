@@ -230,35 +230,35 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                return msg.reply_to_message.forward_from.username or(msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))
+                                return msg.reply_to_message.forward_from.username or('NOUSER' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))
                             else
-                                return msg.reply_to_message.forward_from_chat.username or msg.reply_to_message.forward_from_chat.title
+                                return msg.reply_to_message.forward_from_chat.username or 'NOUSER' .. msg.reply_to_message.forward_from_chat.title
                             end
                         else
                             return langs[msg.lang].errorNoForward
                         end
                     else
-                        return msg.reply_to_message.from.username or(msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
+                        return msg.reply_to_message.from.username or('NOUSER' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                     end
                 else
                     if msg.reply_to_message.service then
                         if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                            local text =(msg.reply_to_message.adder.username or(msg.reply_to_message.adder.first_name .. ' ' ..(msg.reply_to_message.adder.last_name or ''))) .. '\n'
+                            local text =(msg.reply_to_message.adder.username or('NOUSER' .. msg.reply_to_message.adder.first_name .. ' ' ..(msg.reply_to_message.adder.last_name or ''))) .. '\n'
                             for k, v in pairs(msg.reply_to_message.added) do
-                                text = text ..(v.username or(v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
+                                text = text ..(v.username or('NOUSER' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
                             end
                             return text
                         elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
-                            return msg.reply_to_message.from.username or(msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
+                            return msg.reply_to_message.from.username or('NOUSER' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            return(msg.reply_to_message.remover.username or(msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))) .. '\n' ..(msg.reply_to_message.removed.username or(msg.reply_to_message.removed.first_name .. ' ' ..(msg.reply_to_message.removed.last_name or '')))
+                            return(msg.reply_to_message.remover.username or('NOUSER' .. msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))) .. '\n' ..(msg.reply_to_message.removed.username or('NOUSER' .. msg.reply_to_message.removed.first_name .. ' ' ..(msg.reply_to_message.removed.last_name or '')))
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
-                            return msg.reply_to_message.removed.username or(msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))
+                            return msg.reply_to_message.removed.username or('NOUSER' .. msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))
                         else
-                            return msg.reply_to_message.from.username or(msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
+                            return msg.reply_to_message.from.username or('NOUSER' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                         end
                     else
-                        return msg.reply_to_message.from.username or(msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
+                        return msg.reply_to_message.from.username or('NOUSER' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                     end
                 end
             else
@@ -268,7 +268,7 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 local obj = getChat(matches[2])
                 if obj then
-                    return obj.username or((obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
+                    return obj.username or('NOUSER' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
                 else
                     return langs[msg.lang].noObject
                 end
@@ -276,7 +276,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         else
-            return(msg.from.username or(msg.from.first_name .. ' ' ..(msg.from.last_name or ''))) .. '\n' ..(msg.chat.username or msg.chat.title)
+            return(msg.from.username or('NOUSER' .. msg.from.first_name .. ' ' ..(msg.from.last_name or ''))) .. '\n' ..(msg.chat.username or('NOUSER' .. msg.chat.title))
         end
     end
     if matches[1]:lower() == "getrank" or matches[1]:lower() == "rango" then
