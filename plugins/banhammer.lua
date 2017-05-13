@@ -7,16 +7,6 @@ local function user_msgs(user_id, chat_id)
     return user_info
 end
 
--- Returns chat's total messages
-local function get_msgs_chat(chat_id)
-    local hash = 'chatmsgs:' .. chat_id
-    local msgs = redis:get(hash)
-    if not msgs then
-        return 0
-    end
-    return msgs
-end
-
 local function kickinactive(executer, chat_id, num)
     local lang = get_lang(chat_id)
     local participants = getChatParticipants(chat_id)

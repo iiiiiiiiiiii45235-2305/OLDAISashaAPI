@@ -229,6 +229,12 @@ local function check_msg(msg, settings)
             end
         end
         if msg.caption then
+            if mute_text then
+                print('text muted')
+                action(msg, strict, langs[msg.lang].reasonMutedText)
+                msg = clean_msg(msg)
+                return nil
+            end
             if lock_link then
                 if check_if_link(msg.caption, group_link) then
                     print('link found')
