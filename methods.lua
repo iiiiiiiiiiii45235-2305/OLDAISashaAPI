@@ -1304,13 +1304,13 @@ end
 function getUserWarns(user_id, chat_id)
     local lang = get_lang(chat_id)
     local hashonredis = redis:get(chat_id .. ':warn:' .. user_id)
-    local warn_msg = langs[lang].yourWarnings
+    local warn_msg = langs[lang].yourWarnings or ''
     local warn_chat = string.match(getWarn(chat_id), "%d+")
 
     if hashonredis then
-        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis)) or ''
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
     else
-        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0') or ''
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0')
     end
     return warn_msg
 end
