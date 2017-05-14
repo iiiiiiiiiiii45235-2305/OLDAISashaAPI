@@ -1110,6 +1110,11 @@ function banUser(executer, target, chat_id, reason)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
+    if reason then
+        if reason == '' then
+            reason = nil
+        end
+    end
     if type(obj_chat) == 'table' and type(obj_remover) == 'table' and type(obj_removed) == 'table' then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
@@ -1136,7 +1141,8 @@ function banUser(executer, target, chat_id, reason)
                 else
                     -- sendMessage(target, langs[get_lang(target)].bannedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))))
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
-                    '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+                    '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
+                    '\n#ban' .. target
                 end
             else
                 if code == 106 then
@@ -1166,7 +1172,8 @@ function unbanUser(executer, target, chat_id, reason)
             return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
             '\n#unban' .. target .. ' ' .. reason
         else
-            return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned
+            return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
+            '\n#unban' .. target
         end
     else
         savelog(chat_id, "[" .. executer .. "] tried to unban user " .. target .. " require higher rank")
@@ -1328,7 +1335,8 @@ function warnUser(executer, target, chat_id, reason)
                 return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis)) ..
                 '\n#warn' .. target .. ' ' .. reason
             else
-                return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis))
+                return langs[lang].user .. target .. ' ' .. string.gsub(langs[lang].warned, 'X', tostring(hashonredis)) ..
+                '\n#warn' .. target
             end
         else
             return banUser(executer, target, chat_id, reason)
@@ -1353,7 +1361,8 @@ function unwarnUser(executer, target, chat_id, reason)
                 return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
                 '\n#unwarn' .. target .. ' ' .. reason
             else
-                return langs[lang].user .. target .. ' ' .. langs[lang].unwarned
+                return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
+                '\n#unwarn' .. target
             end
         end
     else
@@ -1371,7 +1380,8 @@ function unwarnallUser(executer, target, chat_id, reason)
             return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
             '\n#unwarnall' .. target .. ' ' .. reason
         else
-            return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings
+            return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
+            '\n#unwarnall' .. target
         end
     else
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")

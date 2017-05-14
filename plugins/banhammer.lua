@@ -94,7 +94,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return warnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
+                                        return warnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -102,19 +102,19 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                                return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             end
                         else
-                            return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
-                            return warnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
+                            return warnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return warnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
+                                    return warnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -138,7 +138,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return unwarnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
+                                        return unwarnUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -146,19 +146,19 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                                return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             end
                         else
-                            return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
-                            return unwarnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
+                            return unwarnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return unwarnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
+                                    return unwarnUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -182,7 +182,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return unwarnallUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
+                                        return unwarnallUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -190,19 +190,19 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                                return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             end
                         else
-                            return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
-                            return unwarnallUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
+                            return unwarnallUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
+                                    return unwarnallUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -223,7 +223,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
+                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -231,7 +231,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     else
                         if msg.reply_to_message.service then
@@ -240,24 +240,24 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. kickUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text ..(matches[2] or '')
+                                return text ..(matches[2] or '') ..(matches[3] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, matches[2] or nil)
+                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             else
-                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             end
                         else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
-                        return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
+                        return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return kickUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
+                                return kickUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
                             end
                         else
                             return langs[msg.lang].noObject
@@ -364,7 +364,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
+                                    return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -372,7 +372,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     else
                         if msg.reply_to_message.service then
@@ -381,24 +381,24 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. banUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text ..(matches[2] or '')
+                                return text ..(matches[2] or '') ..(matches[3] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, matches[2] or nil)
+                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             else
-                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             end
                         else
-                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
-                        return banUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
+                        return banUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return banUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
+                                return banUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
                             end
                         else
                             return langs[msg.lang].noObject
@@ -418,7 +418,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or nil)
+                                    return unbanUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -426,7 +426,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     else
                         if msg.reply_to_message.service then
@@ -435,24 +435,24 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. unbanUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text ..(matches[2] or '')
+                                return text ..(matches[2] or '') ..(matches[3] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, matches[2] or nil)
+                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             else
-                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                             end
                         else
-                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, matches[2] or nil)
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
-                        return unbanUser(msg.from.id, matches[2], msg.chat.id, matches[3] or nil)
+                        return unbanUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return unbanUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or nil)
+                                return unbanUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
                             end
                         else
                             return langs[msg.lang].noObject
