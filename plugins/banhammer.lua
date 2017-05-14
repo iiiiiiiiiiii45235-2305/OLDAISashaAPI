@@ -102,10 +102,24 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             end
                         else
-                            return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            if msg.reply_to_message.service then
+                                if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                    local text = warnUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                    for k, v in pairs(msg.reply_to_message.added) do
+                                        text = text .. warnUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                    end
+                                    return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
+                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                    return warnUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                                else
+                                    return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                                end
+                            else
+                                return warnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                            end
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
@@ -146,10 +160,24 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             end
                         else
-                            return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            if msg.reply_to_message.service then
+                                if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                    local text = unwarnUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                    for k, v in pairs(msg.reply_to_message.added) do
+                                        text = text .. unwarnUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                    end
+                                    return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
+                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                    return unwarnUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                                else
+                                    return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                                end
+                            else
+                                return unwarnUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                            end
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
@@ -190,10 +218,24 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             end
                         else
-                            return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            if msg.reply_to_message.service then
+                                if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                    local text = unwarnallUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                    for k, v in pairs(msg.reply_to_message.added) do
+                                        text = text .. unwarnallUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                    end
+                                    return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
+                                elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                    return unwarnallUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                                else
+                                    return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                                end
+                            else
+                                return unwarnallUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                            end
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
@@ -231,7 +273,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                         end
                     else
                         if msg.reply_to_message.service then
@@ -240,14 +282,14 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. kickUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text ..(matches[2] or '') ..(matches[3] or '')
+                                return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             else
-                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             end
                         else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
@@ -372,7 +414,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                         end
                     else
                         if msg.reply_to_message.service then
@@ -381,14 +423,14 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. banUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text ..(matches[2] or '') ..(matches[3] or '')
+                                return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             else
-                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             end
                         else
-                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
@@ -426,7 +468,7 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                         end
                     else
                         if msg.reply_to_message.service then
@@ -435,14 +477,14 @@ local function run(msg, matches)
                                 for k, v in pairs(msg.reply_to_message.added) do
                                     text = text .. unbanUser(msg.from.id, v.id, msg.chat.id) .. '\n'
                                 end
-                                return text ..(matches[2] or '') ..(matches[3] or '')
+                                return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
                             elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return unbanUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             else
-                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                                return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                             end
                         else
-                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') ..(matches[3] or ''))
+                            return unbanUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
