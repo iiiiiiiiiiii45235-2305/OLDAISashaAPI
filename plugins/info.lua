@@ -68,6 +68,9 @@ local function get_object_info(obj, chat_id)
             if isBanned(obj.id, chat_id) then
                 otherinfo = otherinfo .. 'BANNED '
             end
+            if isMutedUser(chat_id, obj.id) then
+                otherinfo = otherinfo .. 'MUTED '
+            end
             if string.match(getUserWarns(obj.id, chat_id), '%d+') then
                 otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
             end
@@ -122,6 +125,9 @@ local function get_object_info(obj, chat_id)
             end
             if isBanned(obj.id, chat_id) then
                 otherinfo = otherinfo .. 'BANNED '
+            end
+            if isMutedUser(chat_id, obj.id) then
+                otherinfo = otherinfo .. 'MUTED '
             end
             if isBlocked(obj.id) then
                 otherinfo = otherinfo .. 'PM BLOCKED '

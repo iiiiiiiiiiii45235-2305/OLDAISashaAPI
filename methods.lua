@@ -1308,9 +1308,9 @@ function getUserWarns(user_id, chat_id)
     local warn_chat = string.match(getWarn(chat_id), "%d+")
 
     if hashonredis then
-        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis)) or ''
     else
-        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0')
+        warn_msg = string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', '0') or ''
     end
     return warn_msg
 end
