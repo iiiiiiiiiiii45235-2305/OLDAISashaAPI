@@ -316,6 +316,7 @@ return {
         redisDbSaved = 'Database redis salvato.',
         cliReboot = 'AISasha Ucciso.',
         ok = 'Ok.',
+        dataReloaded = 'Dati gruppi ricaricati.',
 
         -- anti_spam.lua --
         blockedForSpam = ' bloccato (SPAM).',
@@ -658,6 +659,7 @@ return {
         unknownGroupType = 'Errore, tipo di gruppo sconosciuto, ID: ',
         noUserDataAvailable = 'Nessun dato dell\'utente disponibile.',
         noGroupDataAvailable = 'Nessun dato del gruppo disponibile.',
+        settingsCopied = 'Impostazioni copiate.',
 
         -- unset.lua --
         deleted = ' eliminato.',
@@ -794,6 +796,7 @@ return {
             '(#backup|sasha esegui backup): Sasha esegue un backup di se stessa e invia il log al richiedente.',
             '(#uploadbackup|sasha invia backup): Sasha invia il suo ultimo backup.',
             '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
+            '#reloaddata: Sasha ricarica i dati dei gruppi.',
         },
 
         banhammer =
@@ -1254,6 +1257,7 @@ return {
             'Plugin per la migrazione da tgcli.',
             'OWNER',
             '#migrate: Sasha migra le impostazioni del gruppo, i ban, le variabili settate e i likes.',
+            '#copysettings: Sasha copia le impostazioni del gruppo su quelle di @AISasha.',
             'SUDO',
             '#sudomigrate: Sasha migra i database e i set globali.',
         },
@@ -1442,6 +1446,7 @@ return {
         redisDbSaved = 'Redis db saved.',
         cliReboot = 'AISasha Killed.',
         ok = 'Ok.',
+        dataReloaded = 'Groups\' data reloaded.',
 
         -- anti_spam.lua --
         blockedForSpam = ' blocked (SPAM).',
@@ -1785,6 +1790,7 @@ return {
         unknownGroupType = 'Error, unknown group type, ID: ',
         noUserDataAvailable = 'No available data for the user.',
         noGroupDataAvailable = 'No available data for the group.',
+        settingsCopied = 'Settings copied.',
 
         -- unset.lua --
         deleted = ' deleted.',
@@ -1921,6 +1927,7 @@ return {
             '(#backup|sasha esegui backup): Sasha makes a backup of herself and sends log to the sender.',
             '(#uploadbackup|sasha invia backup): Sasha sends her last backup.',
             '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
+            '#reloaddata: Sasha reloads groups\' data.',
         },
 
         banhammer =
@@ -2380,7 +2387,8 @@ return {
             '🅿️ TGCLI_TO_API_MIGRATION',
             'Plugin for the migration from tgcli.',
             'OWNER',
-            '#migrate: Sasha migrates group settings, bans, variables set and likes.',
+            '#migrate: Sasha migrates group\'s settings, bans, variables set and likes.',
+            '#copysettings: Sasha copies group\'s settings over @AISasha\'s ones.',
             'SUDO',
             '#sudomigrate: Sasha migrates databases and global sets.',
         },

@@ -312,6 +312,66 @@ local function run(msg, matches)
         end
     end
 
+    if matches[1]:lower() == 'copysettings' then
+        if msg.from.is_owner then
+            mystat('/copysettings')
+            local found = false
+            local old_moderation_path = '/home/pi/AISasha/data/moderation.json'
+            local new_moderation_path = config.moderation.data
+            local old_moderation_data = load_data(old_moderation_path)
+            local new_moderation_data = load_data(new_moderation_path)
+            if old_moderation_data['groups'] then
+                for id_string in pairs(old_moderation_data['groups']) do
+                    if id_string == tostring(msg.chat.tg_cli_id) then
+                        if old_moderation_data[id_string] then
+                            if old_moderation_data[id_string].group_type == 'SuperGroup' or old_moderation_data[id_string].group_type == 'Group' then
+                                local lock_name = old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_name
+                                local lock_photo = old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_photo
+                                local set_photo = old_moderation_data[tostring(msg.chat.tg_cli_id)].set_photo
+                                local long_id = old_moderation_data[tostring(msg.chat.tg_cli_id)].long_id
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)] = new_moderation_data[tostring(msg.chat.id)]
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_name = lock_name
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_photo = lock_photo
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].set_photo = set_photo
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].long_id = long_id
+                                found = true
+                            end
+                        end
+                    end
+                end
+            end
+            if old_moderation_data['realms'] then
+                for id_string in pairs(old_moderation_data['realms']) do
+                    if id_string == tostring(msg.chat.tg_cli_id) then
+                        if old_moderation_data[id_string] then
+                            if old_moderation_data[id_string].group_type == 'Realm' then
+                                local lock_name = old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_name
+                                local lock_photo = old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_photo
+                                local set_photo = old_moderation_data[tostring(msg.chat.tg_cli_id)].set_photo
+                                local long_id = old_moderation_data[tostring(msg.chat.tg_cli_id)].long_id
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)] = new_moderation_data[tostring(msg.chat.id)]
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_name = lock_name
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].settings.lock_photo = lock_photo
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].set_photo = set_photo
+                                old_moderation_data[tostring(msg.chat.tg_cli_id)].long_id = long_id
+                                found = true
+                            end
+                        end
+                    end
+                end
+            end
+            if found then
+                save_data(old_moderation_path, old_moderation_data)
+                sendMessage(bot.userVersion.id, '/reloaddata')
+                return langs[msg.lang].settingsCopied
+            else
+                return langs[msg.lang].noGroupDataAvailable
+            end
+        else
+            return langs[msg.lang].require_owner
+        end
+    end
+
     if matches[1]:lower() == 'sudomigrate' then
         if is_sudo(msg) then
             mystat('/sudomigrate')
@@ -372,6 +432,7 @@ return {
     patterns =
     {
         "^[#!/]([Mm][Ii][Gg][Rr][Aa][Tt][Ee])$",
+        "^[#!/]([Cc][Oo][Pp][Yy][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Ss][Uu][Dd][Oo][Mm][Ii][Gg][Rr][Aa][Tt][Ee])$",
     },
     run = run,
@@ -380,6 +441,7 @@ return {
     {
         "OWNER",
         "#migrate",
+        "#copysettings",
         "SUDO",
         "#sudomigrate",
     },

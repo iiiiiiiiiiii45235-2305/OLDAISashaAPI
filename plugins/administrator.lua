@@ -110,6 +110,11 @@ local function run(msg, matches)
                 io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
                 return langs[msg.lang].cliReboot
             end
+            if matches[1]:lower() == "reloaddata" then
+                mystat('/reloaddata')
+                data = load_data(config.moderation.data)
+                return langs[msg.lang].dataReloaded
+            end
             if matches[1]:lower() == "update" then
                 mystat('/update')
                 return io.popen('git pull'):read('*all')
@@ -188,6 +193,7 @@ return {
         "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
+        "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Dd][Aa][Tt][Aa])$",
         -- pm
         "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
@@ -223,6 +229,7 @@ return {
         "(#backup|sasha esegui backup)",
         "(#uploadbackup|sasha invia backup)",
         "(#rebootcli|sasha riavvia cli)",
+        "#reloaddata",
     },
 }
 -- By @imandaneshi :)
