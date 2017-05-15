@@ -945,19 +945,27 @@ return {
             '(#flameinfo|[sasha] info flame): Sasha manda le info su chi sta flammando.',
         },
 
-        get =
+        getsetunset =
         {
-            '🅿️ GET',
-            'Plugin per ottenere le cose salvate con SET.',
+            '🅿️ GETSETUNSET',
+            'Plugin per ottenere/settare/unsettare cose.',
             'USER',
             '(#getlist|#get|sasha lista): Sasha mostra una lista delle variabili settate.',
             '(#getgloballist|#getglobal|sasha lista globali): Sasha mostra una lista delle variabili globali settate.',
+            'MOD',
+            'Per [un]settare una frase usare "_" al posto di " ".',
+            'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
+            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviata la risposta: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
+            '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha salva <text> come risposta a <var_name>|<pattern>.',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) in <reply> come risposta a <var_name>|<pattern>.',
+            '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha elimina <var_name>|<pattern>.',
             'OWNER',
             '#enableglobal: Sasha abilita i get globali sulla chat.',
             '#disableglobal: Sasha disabilita i get globali sulla chat.',
-            '#exportgroupsets: Sasha esporta i set della chat.',
             'ADMIN',
             '#exportglobalsets: Sasha esporta i get globali.',
+            '#setglobal <var_name>|<pattern> <text>: Sasha salva globalmente <text> come risposta a <var_name>|<pattern>.',
+            '#unsetglobal <var_name>|<pattern>: Sasha elimina globalmente <var_name>|<pattern>.',
         },
 
         goodbyewelcome =
@@ -1179,19 +1187,6 @@ return {
             '#find_location: Sasha finge di inviare una posizione.',
         },
 
-        set =
-        {
-            '🅿️ SET',
-            'Plugin per salvare cose.',
-            'MOD',
-            'Per settare una frase usare "_" al posto di " ".',
-            'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
-            '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha salva <text> come risposta a <var_name>|<pattern>.',
-            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply>: Sasha salva il media (foto, video, audio, nota vocale, documento, sticker) in <reply> come risposta a <var_name>|<pattern>.',
-            'ADMIN',
-            '#setglobal <var_name>|<pattern> <text>: Sasha salva globalmente <text> come risposta a <var_name>|<pattern>.',
-        },
-
         shout =
         {
             '🅿️ SHOUT',
@@ -1268,17 +1263,6 @@ return {
             'Plugin per inviare nella chat di LOG i todo.',
             'ADMIN',
             '#todo <text> [<reply>]: Sasha invia <text> e l\'eventuale <reply> nella chat di LOG.',
-        },
-
-        unset =
-        {
-            '🅿️ UNSET',
-            'Plugin per eliminare cose salvate con SET.',
-            'MOD',
-            'Per unsettare una frase usare "_" al posto di " ".',
-            '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha elimina <var_name>|<pattern>.',
-            'ADMIN',
-            '#unsetglobal <var_name>|<pattern>: Sasha elimina globalmente <var_name>|<pattern>.',
         },
 
         urbandictionary =
@@ -2076,19 +2060,27 @@ return {
             '(#flameinfo|[sasha] info flame): Sasha sends flamed user info.',
         },
 
-        get =
+        getsetunset =
         {
-            '🅿️ GET',
-            'Plugin to get things saved with SET.',
+            '🅿️ GETSETUNSET',
+            'Plugin to get/set/unset things.',
             'USER',
             '(#getlist|#get|sasha lista): Sasha sends a list of saved variables.',
             '(#getgloballist|#getglobal|sasha lista globali): Sasha sends a list of globally saved variables.',
+            'MOD',
+            'To [un]set a phrase use "_" instead of " ".',
+            'For more information on patterns see lua.org/pil/20.2.html',
+            'There are some markers that will be replaced when the answer is sent: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
+            '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha saves <text> as answer to <var_name>|<pattern>.',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern>: Sasha saves the media (photo, video, audio, voice note, document, sticker) in <reply> as answer to <var_name>|<pattern>.',
+            '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha deletes <var_name>|<pattern>.',
             'OWNER',
             '#enableglobal: Sasha enables global gets on chat.',
             '#disableglobal: Sasha disables global gets on chat.',
-            '#exportgroupsets: Sasha exports sets from chat.',
             'ADMIN',
             '#exportglobalsets: Sasha exports global sets.',
+            '#setglobal <var_name>|<pattern> <text>: Sasha globally saves <text> as answer to <var_name>|<pattern>.',
+            '#unsetglobal <var_name>|<pattern>: Sasha globally deletes <var_name>|<pattern>.',
         },
 
         goodbyewelcome =
@@ -2310,19 +2302,6 @@ return {
             '#find_location: Sasha pretends to send a location.',
         },
 
-        set =
-        {
-            '🅿️ SET',
-            'Plugin to save things.',
-            'MOD',
-            'To set a phrase use "_" instead of " ".',
-            'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
-            '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha saves <text> as answer to <var_name>|<pattern>.',
-            '(#setmedia|[sasha] setta media) <var_name>|<pattern>: Sasha saves the media (photo, video, audio, voice note, document, sticker) in <reply> as answer to <var_name>|<pattern>.',
-            'ADMIN',
-            '#setglobal <var_name>|<pattern> <text>: Sasha globally saves <text> as answer to <var_name>|<pattern>.',
-        },
-
         shout =
         {
             '🅿️ SHOUT',
@@ -2399,17 +2378,6 @@ return {
             'Plugin to send todos in the LOG chat.',
             'ADMIN',
             '#todo <text> [<reply>]: Sasha sends <text> and <reply> if present in the LOG chat.',
-        },
-
-        unset =
-        {
-            '🅿️ UNSET',
-            'Plugin to delete things saved with SET.',
-            'MOD',
-            'To unset a phrase use "_" instead of " ".',
-            '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha deletes <var_name>|<pattern>.',
-            'ADMIN',
-            '#unsetglobal <var_name>|<pattern>: Sasha globally deletes <var_name>|<pattern>.',
         },
 
         urbandictionary =
