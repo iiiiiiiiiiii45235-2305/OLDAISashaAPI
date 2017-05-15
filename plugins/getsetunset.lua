@@ -214,7 +214,7 @@ local function unset_var(msg, name, global)
 end
 
 local function run(msg, matches)
-    if (matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' or matches[1]:lower() == 'sasha lista') then
+    if matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' or matches[1]:lower() == 'sasha lista' then
         if not matches[2] then
             mystat('/get')
             return list_variables(msg, false)
@@ -224,7 +224,7 @@ local function run(msg, matches)
         end
     end
 
-    if (matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' or matches[1]:lower() == 'sasha lista globali') then
+    if matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' or matches[1]:lower() == 'sasha lista globali' then
         mystat('/getglobal')
         return list_variables(msg, true)
     end
@@ -462,7 +462,8 @@ return {
     syntax =
     {
         "USER",
-        "(#getlist|#get|sasha lista)",
+        "#get <var_name>",
+        "(#get|#getlist|sasha lista)",
         "(#getgloballist|#getglobal|sasha lista globali)",
         "MOD",
         "(#set|[sasha] setta) <var_name>|<pattern> <text>",
