@@ -413,9 +413,15 @@ return {
         commandNotFound = 'Sintassi comando non trovata.',
         sendHelpPvt = 'Ti ho mandato l\'help in privato.',
 
-        -- get.lua --
+        -- getsetunset.lua --
         globalEnable = 'Variabili globali abilitate su questa chat.',
         globalDisable = 'Variabili globali disabilitate su questa chat.',
+        saved = ' salvato.',
+        gSaved = ' variabile globale salvata.',
+        mediaSaved = 'Media salvato.',
+        deleted = ' eliminato.',
+        gDeleted = ' variabile globale eliminata.',
+        getCommand = 'Se scrivi X ti risponderò ',
 
         -- goodbyewelcome.lua --
         newWelcome = 'Nuovo messaggio di benvenuto:\n',
@@ -638,11 +644,6 @@ return {
         pokeWeight = 'Peso: ',
         pokeHeight = 'Altezza: ',
 
-        -- set.lua --
-        saved = ' salvato.',
-        gSaved = ' variabile globale salvata.',
-        mediaSaved = 'Media salvato.',
-
         -- stats.lua --
         usersInChat = 'Utenti in questa chat\n',
         totalChatMessages = 'Messaggi totali della chat: ',
@@ -660,10 +661,6 @@ return {
         noUserDataAvailable = 'Nessun dato dell\'utente disponibile.',
         noGroupDataAvailable = 'Nessun dato del gruppo disponibile.',
         settingsCopied = 'Impostazioni copiate.',
-
-        -- unset.lua --
-        deleted = ' eliminato.',
-        gDeleted = ' variabile globale eliminata.',
 
         -- whitelist.lua --
         userBot = 'Utente/Bot ',
@@ -1527,9 +1524,15 @@ return {
         commandNotFound = 'Command syntax not found.',
         sendHelpPvt = 'I\'ve sent you the help in private.',
 
-        -- get.lua --
+        -- getsetunset.lua --
         globalEnable = 'Global variables enabled on this chat.',
         globalDisable = 'Global variables disabled on this chat.',
+        saved = ' saved.',
+        gSaved = ' global variable saved.',
+        mediaSaved = 'Media saved.',
+        deleted = ' deleted.',
+        gDeleted = ' global variable deleted.',
+        getCommand = 'If you write X I will answer ',
 
         -- goodbyewelcome.lua --
         newWelcome = 'New welcome message:\n',
@@ -1753,11 +1756,6 @@ return {
         pokeWeight = 'Weight: ',
         pokeHeight = 'Height: ',
 
-        -- set.lua --
-        saved = ' saved.',
-        gSaved = ' global variable saved.',
-        mediaSaved = 'Media saved.',
-
         -- stats.lua --
         usersInChat = 'Users on chat\n',
         totalChatMessages = 'Total messages of the chat: ',
@@ -1775,10 +1773,6 @@ return {
         noUserDataAvailable = 'No available data for the user.',
         noGroupDataAvailable = 'No available data for the group.',
         settingsCopied = 'Settings copied.',
-
-        -- unset.lua --
-        deleted = ' deleted.',
-        gDeleted = ' global variable deleted.',
 
         -- whitelist.lua --
         userBot = 'User/Bot ',

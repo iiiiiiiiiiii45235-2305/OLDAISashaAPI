@@ -220,7 +220,7 @@ local function run(msg, matches)
             return list_variables(msg, false)
         else
             mystat('/get <var_name>')
-            return get_value(msg, matches[2]:lower())
+            return langs[msg.lang].getCommand:gsub('X', matches[2]:lower()) .. get_value(msg, matches[2]:lower())
         end
     end
 
