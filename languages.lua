@@ -421,7 +421,7 @@ return {
         mediaSaved = 'Media salvato.',
         deleted = ' eliminato.',
         gDeleted = ' variabile globale eliminata.',
-        getCommand = 'Se scrivi X ti risponderò ',
+        getCommand = 'Se scrivi "X" ti risponderò ',
 
         -- goodbyewelcome.lua --
         newWelcome = 'Nuovo messaggio di benvenuto:\n',
@@ -1532,7 +1532,7 @@ return {
         mediaSaved = 'Media saved.',
         deleted = ' deleted.',
         gDeleted = ' global variable deleted.',
-        getCommand = 'If you write X I will answer ',
+        getCommand = 'If you write "X" I will answer ',
 
         -- goodbyewelcome.lua --
         newWelcome = 'New welcome message:\n',
