@@ -551,6 +551,36 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
     end
 end
 
+function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/sendVideoNote?chat_id=' .. chat_id ..
+        '&video=' .. file_id
+        local reply = false
+        if reply_to_message_id then
+            url = url .. '&reply_to_message_id=' .. reply_to_message_id
+            reply = true
+        end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('send_video_note', code)
+            end
+        end
+        if print_res_msg(res) then
+            return res, code
+        else
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video_note' }
+            print_msg(sent_msg)
+        end
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
+    end
+end
+
 function sendVideoId(chat_id, file_id, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
@@ -732,6 +762,33 @@ function sendVideo(chat_id, video, reply_to_message_id, duration, performer, tit
             curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
         end
         local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+        print_msg(sent_msg)
+        return curlRequest(curl_command)
+    else
+        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
+    end
+end
+
+function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/sendVideoNote'
+        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video_note .. '"'
+        local reply = false
+        if reply_to_message_id then
+            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+            reply = true
+        end
+        if caption then
+            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+        end
+        if duration then
+            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+        end
+        if length then
+            curl_command = curl_command .. ' -F "length=' .. length .. '"'
+        end
+        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video_note' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else

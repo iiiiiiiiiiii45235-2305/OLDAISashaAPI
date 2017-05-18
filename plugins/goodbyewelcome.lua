@@ -138,7 +138,7 @@ local function sendWelcome(chat, added, message_id)
             sendVideoId(chat.id, welcome, message_id)
         elseif string.match(welcome, '^video_note') then
             welcome = welcome:gsub('^video_note', '')
-            sendVideoId(chat.id, welcome, message_id)
+            sendVideoNoteId(chat.id, welcome, message_id)
         elseif string.match(welcome, '^audio') then
             welcome = welcome:gsub('^audio', '')
             sendAudioId(chat.id, welcome, false, message_id)
@@ -173,7 +173,7 @@ local function sendGoodbye(chat, removed, message_id)
             sendVideoId(chat.id, goodbye, message_id)
         elseif string.match(goodbye, '^video_note') then
             goodbye = goodbye:gsub('^video_note', '')
-            sendVideoId(chat.id, goodbye, message_id)
+            sendVideoNoteId(chat.id, goodbye, message_id)
         elseif string.match(goodbye, '^audio') then
             goodbye = goodbye:gsub('^audio', '')
             sendAudioId(chat.id, goodbye, false, message_id)

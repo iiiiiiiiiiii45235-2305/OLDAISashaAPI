@@ -402,7 +402,7 @@ local function pre_process(msg)
                         sendVideoId(msg.chat.id, answer, msg.message_id)
                     elseif string.match(answer, '^video_note') then
                         answer = answer:gsub('^video_note', '')
-                        -- sendVideoNoteId(msg.chat.id, answer, msg.message_id)
+                        sendVideoNoteId(msg.chat.id, answer, msg.message_id)
                     elseif string.match(answer, '^audio') then
                         answer = answer:gsub('^audio', '')
                         sendAudioId(msg.chat.id, answer, false, msg.message_id)
