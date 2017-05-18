@@ -437,7 +437,7 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_photo', code .. '\n' .. text)
+                savelog('send_photo', code)
             end
         end
         if print_res_msg(res) then
@@ -467,7 +467,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_sticker', code .. '\n' .. text)
+                savelog('send_sticker', code)
             end
         end
         if print_res_msg(res) then
@@ -502,13 +502,13 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_voice', code .. '\n' .. text)
+                savelog('send_voice', code)
             end
         end
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice_note' }
             print_msg(sent_msg)
         end
     else
@@ -537,7 +537,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_audio', code .. '\n' .. text)
+                savelog('send_audio', code)
             end
         end
         if print_res_msg(res) then
@@ -567,7 +567,7 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_video', code .. '\n' .. text)
+                savelog('send_video', code)
             end
         end
         if print_res_msg(res) then
@@ -597,7 +597,7 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_document', code .. '\n' .. text)
+                savelog('send_document', code)
             end
         end
         if print_res_msg(res) then
@@ -675,7 +675,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
         if duration then
             curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice' }
+        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice_note' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -774,7 +774,7 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_location', code .. '\n' .. text)
+                savelog('send_location', code)
             end
         end
         if print_res_msg(res) then
@@ -1393,7 +1393,7 @@ function setMutes(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audio"] = false, ["contact"] = false, ["document"] = false, ["gif"] = false, ["location"] = false, ["photo"] = false, ["sticker"] = false, ["text"] = false, ["tgservice"] = false, ["video"] = false, ["voice"] = false }
+            data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audio"] = false, ["contact"] = false, ["document"] = false, ["gif"] = false, ["location"] = false, ["photo"] = false, ["sticker"] = false, ["text"] = false, ["tgservice"] = false, ["video"] = false, ["video_note"] = false, ["voice_note"] = false }
             save_data(config.moderation.data, data)
             return langs[lang].mutesSet
         end

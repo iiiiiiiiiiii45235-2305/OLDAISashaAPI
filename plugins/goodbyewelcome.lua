@@ -136,10 +136,14 @@ local function sendWelcome(chat, added, message_id)
         elseif string.match(welcome, '^video') then
             welcome = welcome:gsub('^video', '')
             sendVideoId(chat.id, welcome, message_id)
+        elseif string.match(welcome, '^video_note') then
+            welcome = welcome:gsub('^video_note', '')
+            sendVideoId(chat.id, welcome, message_id)
         elseif string.match(welcome, '^audio') then
             welcome = welcome:gsub('^audio', '')
             sendAudioId(chat.id, welcome, false, message_id)
-        elseif string.match(welcome, '^voice') then
+        elseif string.match(welcome, '^voice_note') or string.match(welcome, '^voice') then
+            welcome = welcome:gsub('^voice_note', '')
             welcome = welcome:gsub('^voice', '')
             sendVoiceId(chat.id, welcome, false, message_id)
         elseif string.match(welcome, '^document') then
@@ -167,10 +171,14 @@ local function sendGoodbye(chat, removed, message_id)
         elseif string.match(goodbye, '^video') then
             goodbye = goodbye:gsub('^video', '')
             sendVideoId(chat.id, goodbye, message_id)
+        elseif string.match(goodbye, '^video_note') then
+            goodbye = goodbye:gsub('^video_note', '')
+            sendVideoId(chat.id, goodbye, message_id)
         elseif string.match(goodbye, '^audio') then
             goodbye = goodbye:gsub('^audio', '')
             sendAudioId(chat.id, goodbye, false, message_id)
-        elseif string.match(goodbye, '^voice') then
+        elseif string.match(goodbye, '^voice_note') or string.match(goodbye, '^voice') then
+            goodbye = goodbye:gsub('^voice_note', '')
             goodbye = goodbye:gsub('^voice', '')
             sendVoiceId(chat.id, goodbye, false, message_id)
         elseif string.match(goodbye, '^document') then
@@ -225,9 +233,11 @@ local function run(msg, matches)
                         file_id = bigger_pic_id
                     elseif msg.reply_to_message.media_type == 'video' then
                         file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
                     elseif msg.reply_to_message.media_type == 'audio' then
                         file_id = msg.reply_to_message.audio.file_id
-                    elseif msg.reply_to_message.media_type == 'voice' then
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
                         file_id = msg.reply_to_message.voice.file_id
                     elseif msg.reply_to_message.media_type == 'document' then
                         file_id = msg.reply_to_message.document.file_id
@@ -260,9 +270,11 @@ local function run(msg, matches)
                         file_id = bigger_pic_id
                     elseif msg.reply_to_message.media_type == 'video' then
                         file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
                     elseif msg.reply_to_message.media_type == 'audio' then
                         file_id = msg.reply_to_message.audio.file_id
-                    elseif msg.reply_to_message.media_type == 'voice' then
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
                         file_id = msg.reply_to_message.voice.file_id
                     elseif msg.reply_to_message.media_type == 'document' then
                         file_id = msg.reply_to_message.document.file_id

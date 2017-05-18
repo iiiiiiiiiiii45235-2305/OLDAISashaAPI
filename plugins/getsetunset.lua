@@ -180,9 +180,11 @@ local function set_media(msg, name)
                 file_id = bigger_pic_id
             elseif msg.reply_to_message.media_type == 'video' then
                 file_id = msg.reply_to_message.video.file_id
+            elseif msg.reply_to_message.media_type == 'video_note' then
+                file_id = msg.reply_to_message.video_note.file_id
             elseif msg.reply_to_message.media_type == 'audio' then
                 file_id = msg.reply_to_message.audio.file_id
-            elseif msg.reply_to_message.media_type == 'voice' then
+            elseif msg.reply_to_message.media_type == 'voice_note' then
                 file_id = msg.reply_to_message.voice.file_id
             elseif msg.reply_to_message.media_type == 'document' then
                 file_id = msg.reply_to_message.document.file_id
@@ -398,10 +400,14 @@ local function pre_process(msg)
                     elseif string.match(answer, '^video') then
                         answer = answer:gsub('^video', '')
                         sendVideoId(msg.chat.id, answer, msg.message_id)
+                    elseif string.match(answer, '^video_note') then
+                        answer = answer:gsub('^video_note', '')
+                        -- sendVideoNoteId(msg.chat.id, answer, msg.message_id)
                     elseif string.match(answer, '^audio') then
                         answer = answer:gsub('^audio', '')
                         sendAudioId(msg.chat.id, answer, false, msg.message_id)
-                    elseif string.match(answer, '^voice') then
+                    elseif string.match(answer, '^voice_note') or string.match(answer, '^voice') then
+                        answer = answer:gsub('^voice_note', '')
                         answer = answer:gsub('^voice', '')
                         sendVoiceId(msg.chat.id, answer, false, msg.message_id)
                     elseif string.match(answer, '^document') then

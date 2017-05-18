@@ -154,7 +154,8 @@ local function check_msg(msg, settings)
     local mute_text = isMuted(msg.chat.id, 'text')
     local mute_tgservice = isMuted(msg.chat.id, 'tgservice')
     local mute_video = isMuted(msg.chat.id, 'video')
-    local mute_voice = isMuted(msg.chat.id, 'voice')
+    local mute_video_note = isMuted(msg.chat.id, 'video_note')
+    local mute_voice_note = isMuted(msg.chat.id, 'voice_note')
 
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
@@ -320,9 +321,16 @@ local function check_msg(msg, settings)
                     msg = clean_msg(msg)
                     return nil
                 end
-            elseif msg.media_type == 'voice' then
-                if mute_voice then
-                    print('voice muted')
+            elseif msg.media_type == 'video_note' then
+                if mute_video_note then
+                    print('video_note muted')
+                    action(msg, strict, langs[msg.lang].reasonMutedVideo)
+                    msg = clean_msg(msg)
+                    return nil
+                end
+            elseif msg.media_type == 'voice_note' then
+                if mute_voice_note then
+                    print('voice_note muted')
                     action(msg, strict, langs[msg.lang].reasonMutedVoicenotes)
                     msg = clean_msg(msg)
                     return nil

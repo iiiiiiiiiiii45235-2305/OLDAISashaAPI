@@ -510,10 +510,14 @@ function pre_process_media_msg(msg)
         msg.media = true
         msg.text = "%[video%]"
         msg.media_type = 'video'
+    elseif msg.video_note then
+        msg.media = true
+        msg.text = "%[video_note%]"
+        msg.media_type = 'video_note'
     elseif msg.voice then
         msg.media = true
-        msg.text = "%[voice%]"
-        msg.media_type = 'voice'
+        msg.text = "%[voice_note%]"
+        msg.media_type = 'voice_note'
     end
 
     if msg.entities then
@@ -814,7 +818,7 @@ function match_plugin(plugin, plugin_name, msg)
 
             local disabled = is_plugin_disabled_on_chat(plugin_name, msg.chat.id)
 
-            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice)%]" then
+            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
                 if msg.chat.type == 'private' then
                     if disabled then
                         savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')

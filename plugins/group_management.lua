@@ -170,7 +170,8 @@ local function addGroup(msg)
                                 text = false,
                                 tgservice = false,
                                 video = false,
-                                voice = false,
+                                video_note = false,
+                                voice_note = false,
                             },
                             strict = false,
                             warn_max = 3,
@@ -260,7 +261,8 @@ local function addRealm(msg)
                                 text = false,
                                 tgservice = false,
                                 video = false,
-                                voice = false,
+                                video_note = false,
+                                voice_note = false,
                             },
                             strict = false,
                             warn_max = 3,
@@ -340,7 +342,8 @@ local function addSuperGroup(msg)
                                 text = false,
                                 tgservice = false,
                                 video = false,
-                                voice = false,
+                                video_note = false,
+                                voice_note = false,
                             },
                             strict = false,
                             warn_max = 3,
@@ -741,7 +744,10 @@ local function checkMatchesMuteUnmute(txt)
     if txt:lower() == 'video' then
         return true
     end
-    if txt:lower() == 'voice' then
+    if txt:lower() == 'video_note' then
+        return true
+    end
+    if txt:lower() == 'voice_note' then
         return true
     end
     return false
@@ -1959,8 +1965,8 @@ return {
         "(#promote|[sasha] promuovi) <username>|<reply>",
         "(#demote|[sasha] degrada) <username>|<reply>",
         "#setowner <id>|<username>|<reply>",
-        "#mute|silenzia all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|voice",
-        "#unmute|ripristina all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|voice",
+        "#mute|silenzia all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#unmute|ripristina all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
         "#clean modlist|rules",
         "ADMIN",
         "#add",
@@ -1974,8 +1980,8 @@ return {
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
-        "#mute|silenzia <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|voice",
-        "#unmute|ripristina <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|voice",
+        "#mute|silenzia <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#unmute|ripristina <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
         "(#muteslist|lista muti) <group_id>",
         "#textualmuteslist <group_id>",
         "(#lock|[sasha] blocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",

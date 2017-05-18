@@ -86,22 +86,25 @@ function run(msg, matches)
                         local file_name = ''
                         local file_id = ''
                         if msg.reply_to_message.media_type == 'photo' then
-                            file_name = msg.reply_to_message.photo.file_name
+                            file_name = msg.reply_to_message.photo.file_name or msg.reply_to_message.photo.file_id
                             file_id = msg.reply_to_message.photo.file_id
                         elseif msg.reply_to_message.media_type == 'video' then
-                            file_name = msg.reply_to_message.video.file_name
+                            file_name = msg.reply_to_message.video.file_name or msg.reply_to_message.video.file_id
                             file_id = msg.reply_to_message.video.file_id
+                        elseif msg.reply_to_message.media_type == 'video_note' then
+                            file_name = msg.reply_to_message.video_note.file_name or msg.reply_to_message.video_note.file_id
+                            file_id = msg.reply_to_message.video_note.file_id
                         elseif msg.reply_to_message.media_type == 'audio' then
-                            file_name = msg.reply_to_message.audio.file_name
+                            file_name = msg.reply_to_message.audio.file_name or msg.reply_to_message.audio.file_id
                             file_id = msg.reply_to_message.audio.file_id
-                        elseif msg.reply_to_message.media_type == 'voice' then
-                            file_name = msg.reply_to_message.voice.file_name
+                        elseif msg.reply_to_message.media_type == 'voice_note' then
+                            file_name = msg.reply_to_message.voice.file_name or msg.reply_to_message.voice.file_id
                             file_id = msg.reply_to_message.voice.file_id
                         elseif msg.reply_to_message.media_type == 'document' then
-                            file_name = msg.reply_to_message.document.file_name
+                            file_name = msg.reply_to_message.document.file_name or msg.reply_to_message.document.file_id
                             file_id = msg.reply_to_message.document.file_id
                         elseif msg.reply_to_message.media_type == 'sticker' then
-                            file_name = msg.reply_to_message.sticker.file_name
+                            file_name = msg.reply_to_message.sticker.file_name or msg.reply_to_message.sticker.file_id
                             file_id = msg.reply_to_message.sticker.file_id
                         else
                             return langs[msg.lang].useQuoteOnFile
