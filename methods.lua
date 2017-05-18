@@ -556,7 +556,7 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendVideoNote?chat_id=' .. chat_id ..
-        '&video=' .. file_id
+        '&video_note=' .. file_id
         local reply = false
         if reply_to_message_id then
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -773,7 +773,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendVideoNote'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video_note .. '"'
+        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
         local reply = false
         if reply_to_message_id then
             curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
