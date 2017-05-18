@@ -779,9 +779,6 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
             curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
             reply = true
         end
-        if caption then
-            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-        end
         if duration then
             curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
         end
