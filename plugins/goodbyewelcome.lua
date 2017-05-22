@@ -76,6 +76,7 @@ local function get_rules(chat_id)
 end
 
 local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
+    -- chat
     if string.find(goodbyewelcome, '$chatid') then
         goodbyewelcome = goodbyewelcome:gsub('$chatid', chat.id)
     end
@@ -92,6 +93,15 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
     if string.find(goodbyewelcome, '$rules') then
         goodbyewelcome = goodbyewelcome:gsub('$rules', get_rules(chat.id))
     end
+    if string.find(goodbyewelcome, '$grouplink') then
+        if data[tostring(chat.id)].settings.set_link then
+            goodbyewelcome = goodbyewelcome:gsub('$grouplink', data[tostring(chat.id)].settings.set_link)
+        else
+            goodbyewelcome = goodbyewelcome:gsub('$grouplink', 'NO GROUP LINK SET')
+        end
+    end
+
+    -- user
     if string.find(goodbyewelcome, '$userid') then
         goodbyewelcome = goodbyewelcome:gsub('$userid', user.id)
     end
@@ -117,13 +127,6 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
             goodbyewelcome = goodbyewelcome:gsub('$username', 'NO USERNAME')
         end
     end
-    if string.find(goodbyewelcome, '$grouplink') then
-        if data[tostring(chat.id)].settings.set_link then
-            goodbyewelcome = goodbyewelcome:gsub('$grouplink', data[tostring(chat.id)].settings.set_link)
-        else
-            goodbyewelcome = goodbyewelcome:gsub('$grouplink', 'NO GROUP LINK SET')
-        end
-    end
     return goodbyewelcome
 end
 
@@ -132,26 +135,38 @@ local function sendWelcome(chat, added, message_id)
     if welcome then
         if string.match(welcome, '^photo') then
             welcome = welcome:gsub('^photo', '')
-            sendPhotoId(chat.id, welcome, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            local caption = welcome:match('^[^%s]+ (.*)')
+            sendPhotoId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^video') then
             welcome = welcome:gsub('^video', '')
-            sendVideoId(chat.id, welcome, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            local caption = welcome:match('^[^%s]+ (.*)')
+            sendVideoId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^video_note') then
             welcome = welcome:gsub('^video_note', '')
-            sendVideoNoteId(chat.id, welcome, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(welcome, '^audio') then
             welcome = welcome:gsub('^audio', '')
-            sendAudioId(chat.id, welcome, false, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            local caption = welcome:match('^[^%s]+ (.*)')
+            sendAudioId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^voice_note') or string.match(welcome, '^voice') then
             welcome = welcome:gsub('^voice_note', '')
             welcome = welcome:gsub('^voice', '')
-            sendVoiceId(chat.id, welcome, false, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            local caption = welcome:match('^[^%s]+ (.*)')
+            sendVoiceId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^document') then
             welcome = welcome:gsub('^document', '')
-            sendDocumentId(chat.id, welcome, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            local caption = welcome:match('^[^%s]+ (.*)')
+            sendDocumentId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^sticker') then
             welcome = welcome:gsub('^sticker', '')
-            sendStickerId(chat.id, welcome, message_id)
+            local media_id = welcome:match('^([^%s]+)')
+            sendStickerId(chat.id, media_id, message_id)
         else
             local text = ''
             for k, v in pairs(added) do
@@ -167,26 +182,38 @@ local function sendGoodbye(chat, removed, message_id)
     if goodbye then
         if string.match(goodbye, '^photo') then
             goodbye = goodbye:gsub('^photo', '')
-            sendPhotoId(chat.id, goodbye, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            local caption = goodbye:match('^[^%s]+ (.*)')
+            sendPhotoId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^video') then
             goodbye = goodbye:gsub('^video', '')
-            sendVideoId(chat.id, goodbye, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            local caption = goodbye:match('^[^%s]+ (.*)')
+            sendVideoId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^video_note') then
             goodbye = goodbye:gsub('^video_note', '')
-            sendVideoNoteId(chat.id, goodbye, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(goodbye, '^audio') then
             goodbye = goodbye:gsub('^audio', '')
-            sendAudioId(chat.id, goodbye, false, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            local caption = goodbye:match('^[^%s]+ (.*)')
+            sendAudioId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^voice_note') or string.match(goodbye, '^voice') then
             goodbye = goodbye:gsub('^voice_note', '')
             goodbye = goodbye:gsub('^voice', '')
-            sendVoiceId(chat.id, goodbye, false, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            local caption = goodbye:match('^[^%s]+ (.*)')
+            sendVoiceId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^document') then
             goodbye = goodbye:gsub('^document', '')
-            sendDocumentId(chat.id, goodbye, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            local caption = goodbye:match('^[^%s]+ (.*)')
+            sendDocumentId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^sticker') then
             goodbye = goodbye:gsub('^sticker', '')
-            sendStickerId(chat.id, goodbye, message_id)
+            local media_id = goodbye:match('^([^%s]+)')
+            sendStickerId(chat.id, media_id, message_id)
         else
             sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
         end
@@ -214,50 +241,50 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'setwelcome' then
                 mystat('/setwelcome')
-                if matches[2] then
+                if msg.reply_to_message.media then
+                    local file_id = ''
+                    local caption = matches[2] or ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size > size then
+                                size = v.file_size
+                                bigger_pic_id = v.file_id
+                            end
+                        end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+                    end
+                    if caption ~= '' then
+                        caption = ' ' .. caption
+                    end
+                    return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
+                elseif matches[2] then
                     if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                         return langs[msg.lang].crossexecDenial
                     end
                     return set_welcome(msg.chat.id, matches[2])
-                elseif msg.reply_to_message.media then
-                    local file_id = ''
-                    if msg.reply_to_message.media_type == 'photo' then
-                        local bigger_pic_id = ''
-                        local size = 0
-                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                            if v.file_size > size then
-                                size = v.file_size
-                                bigger_pic_id = v.file_id
-                            end
-                        end
-                        file_id = bigger_pic_id
-                    elseif msg.reply_to_message.media_type == 'video' then
-                        file_id = msg.reply_to_message.video.file_id
-                    elseif msg.reply_to_message.media_type == 'video_note' then
-                        file_id = msg.reply_to_message.video_note.file_id
-                    elseif msg.reply_to_message.media_type == 'audio' then
-                        file_id = msg.reply_to_message.audio.file_id
-                    elseif msg.reply_to_message.media_type == 'voice_note' then
-                        file_id = msg.reply_to_message.voice.file_id
-                    elseif msg.reply_to_message.media_type == 'document' then
-                        file_id = msg.reply_to_message.document.file_id
-                    elseif msg.reply_to_message.media_type == 'sticker' then
-                        file_id = msg.reply_to_message.sticker.file_id
-                    else
-                        sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
-                    end
-                    return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id)
                 end
             end
             if matches[1]:lower() == 'setgoodbye' then
                 mystat('/setgoodbye')
-                if matches[2] then
-                    if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
-                        return langs[msg.lang].crossexecDenial
-                    end
-                    return set_goodbye(msg.chat.id, matches[2])
-                elseif msg.reply_to_message.media then
+                if msg.reply_to_message.media then
                     local file_id = ''
+                    local caption = matches[2] or ''
                     if msg.reply_to_message.media_type == 'photo' then
                         local bigger_pic_id = ''
                         local size = 0
@@ -283,7 +310,15 @@ local function run(msg, matches)
                     else
                         sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
                     end
-                    return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id)
+                    if caption ~= '' then
+                        caption = ' ' .. caption
+                    end
+                    return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
+                elseif matches[2] then
+                    if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                        return langs[msg.lang].crossexecDenial
+                    end
+                    return set_goodbye(msg.chat.id, matches[2])
                 end
             end
             if matches[1]:lower() == 'unsetwelcome' then
@@ -372,8 +407,8 @@ return {
         "#getgoodbye",
         "#previewwelcome",
         "#previewgoodbye",
-        "#setwelcome <text>|<reply_media>",
-        "#setgoodbye <text>|<reply_media>",
+        "#setwelcome <text>|(<reply_media> [<caption>])",
+        "#setgoodbye <text>|(<reply_media> [<caption>])",
         "#unsetwelcome",
         "#unsetgoodbye",
         "#setmemberswelcome <value>",

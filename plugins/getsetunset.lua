@@ -69,7 +69,9 @@ local function get_rules(chat_id)
     return rules
 end
 
-local function adjust_value(value, chat, user)
+local function adjust_value(value, msg)
+    -- chat
+    local chat = msg.chat
     if string.find(value, '$chatid') then
         value = value:gsub('$chatid', chat.id)
     end
@@ -86,6 +88,16 @@ local function adjust_value(value, chat, user)
     if string.find(value, '$rules') then
         value = value:gsub('$rules', get_rules(chat.id))
     end
+    if string.find(value, '$grouplink') then
+        if data[tostring(chat.id)].settings.set_link then
+            value = value:gsub('$grouplink', data[tostring(chat.id)].settings.set_link)
+        else
+            value = value:gsub('$grouplink', 'NO GROUP LINK SET')
+        end
+    end
+
+    -- user
+    local user = msg.from
     if string.find(value, '$userid') then
         value = value:gsub('$userid', user.id)
     end
@@ -111,11 +123,82 @@ local function adjust_value(value, chat, user)
             value = value:gsub('$username', 'NO USERNAME')
         end
     end
-    if string.find(value, '$grouplink') then
-        if data[tostring(chat.id)].settings.set_link then
-            value = value:gsub('$grouplink', data[tostring(chat.id)].settings.set_link)
+
+    -- replyuser
+    local replyuser = user
+    if msg.reply then
+        replyuser = msg.reply_to_message.from
+    end
+    if string.find(value, '$replyuserid') then
+        value = value:gsub('$replyuserid', replyuser.id)
+    end
+    if string.find(value, '$replyfirstname') then
+        value = value:gsub('$replyfirstname', replyuser.first_name)
+    end
+    if string.find(value, '$replylastname') then
+        if replyuser.last_name then
+            value = value:gsub('$replylastname', replyuser.last_name)
+        end
+    end
+    if string.find(value, '$replyprintname') then
+        replyuser.print_name = replyuser.first_name
+        if replyuser.last_name then
+            replyuser.print_name = replyuser.print_name .. ' ' .. replyuser.last_name
+        end
+        value = value:gsub('$replyprintname', replyuser.print_name)
+    end
+    if string.find(value, '$replyusername') then
+        if replyuser.username then
+            value = value:gsub('$replyusername', '@' .. replyuser.username)
         else
-            value = value:gsub('$grouplink', 'NO GROUP LINK SET')
+            value = value:gsub('$replyusername', 'NO USERNAME')
+        end
+    end
+
+    -- forward chat
+    local fwd_chat = chat
+    if msg.forward and msg.forward_from_chat then
+        fwd_chat = msg.forward_from_chat
+    end
+    if string.find(value, '$forwardchatid') then
+        value = value:gsub('$forwardchatid', fwd_chat.id)
+    end
+    if string.find(value, '$forwardchatname') then
+        value = value:gsub('$forwardchatname', fwd_chat.title)
+    end
+    if string.find(value, '$forwardchatusername') then
+        if fwd_chat.username then
+            value = value:gsub('$forwardchatusername', '@' .. fwd_chat.username)
+        else
+            value = value:gsub('$forwardchatusername', 'NO CHAT USERNAME')
+        end
+    end
+
+    -- forward user
+    local fwd_user = user
+    if msg.forward and msg.forward_from then
+        fwd_user = msg.forward_from
+    end
+    if string.find(value, '$forwardfirstname') then
+        value = value:gsub('$forwardfirstname', fwd_user.first_name)
+    end
+    if string.find(value, '$forwardlastname') then
+        if fwd_user.last_name then
+            value = value:gsub('$forwardlastname', fwd_user.last_name)
+        end
+    end
+    if string.find(value, '$forwardprintname') then
+        fwd_user.print_name = fwd_user.first_name
+        if fwd_user.last_name then
+            fwd_user.print_name = fwd_user.print_name .. ' ' .. fwd_user.last_name
+        end
+        value = value:gsub('$forwardprintname', fwd_user.print_name)
+    end
+    if string.find(value, '$forwardusername') then
+        if fwd_user.username then
+            value = value:gsub('$forwardusername', '@' .. fwd_user.username)
+        else
+            value = value:gsub('$forwardusername', 'NO USERNAME')
         end
     end
     return value
@@ -153,48 +236,6 @@ local function set_value(msg, name, value, global)
             return name .. langs[msg.lang].gSaved
         else
             return name .. langs[msg.lang].saved
-        end
-    end
-end
-
-local function set_media(msg, name)
-    if not name then
-        return langs[msg.lang].errorTryAgain
-    end
-
-    local hash = set_unset_variables_hash(msg)
-    if hash then
-        if msg.reply_to_message.media then
-            local file_id = ''
-            if msg.reply_to_message.media_type == 'photo' then
-                local bigger_pic_id = ''
-                local size = 0
-                for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                    if v.file_size then
-                        if v.file_size > size then
-                            size = v.file_size
-                            bigger_pic_id = v.file_id
-                        end
-                    end
-                end
-                file_id = bigger_pic_id
-            elseif msg.reply_to_message.media_type == 'video' then
-                file_id = msg.reply_to_message.video.file_id
-            elseif msg.reply_to_message.media_type == 'video_note' then
-                file_id = msg.reply_to_message.video_note.file_id
-            elseif msg.reply_to_message.media_type == 'audio' then
-                file_id = msg.reply_to_message.audio.file_id
-            elseif msg.reply_to_message.media_type == 'voice_note' then
-                file_id = msg.reply_to_message.voice.file_id
-            elseif msg.reply_to_message.media_type == 'document' then
-                file_id = msg.reply_to_message.document.file_id
-            elseif msg.reply_to_message.media_type == 'sticker' then
-                file_id = msg.reply_to_message.sticker.file_id
-            else
-                sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
-            end
-            redis:hset(hash, name, msg.reply_to_message.media_type .. file_id)
-            sendMessage(msg.chat.id, langs[msg.lang].mediaSaved)
         end
     end
 end
@@ -300,7 +341,49 @@ local function run(msg, matches)
         if msg.from.is_mod then
             mystat('/setmedia')
             if msg.reply then
-                return set_media(msg, string.sub(matches[2]:lower(), 1, 50))
+                if not matches[2] then
+                    return langs[msg.lang].errorTryAgain
+                end
+
+                local hash = set_unset_variables_hash(msg)
+                if hash then
+                    if msg.reply_to_message.media then
+                        local file_id = ''
+                        local caption = matches[3] or ''
+                        if msg.reply_to_message.media_type == 'photo' then
+                            local bigger_pic_id = ''
+                            local size = 0
+                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                                if v.file_size then
+                                    if v.file_size > size then
+                                        size = v.file_size
+                                        bigger_pic_id = v.file_id
+                                    end
+                                end
+                            end
+                            file_id = bigger_pic_id
+                        elseif msg.reply_to_message.media_type == 'video' then
+                            file_id = msg.reply_to_message.video.file_id
+                        elseif msg.reply_to_message.media_type == 'video_note' then
+                            file_id = msg.reply_to_message.video_note.file_id
+                        elseif msg.reply_to_message.media_type == 'audio' then
+                            file_id = msg.reply_to_message.audio.file_id
+                        elseif msg.reply_to_message.media_type == 'voice_note' then
+                            file_id = msg.reply_to_message.voice.file_id
+                        elseif msg.reply_to_message.media_type == 'document' then
+                            file_id = msg.reply_to_message.document.file_id
+                        elseif msg.reply_to_message.media_type == 'sticker' then
+                            file_id = msg.reply_to_message.sticker.file_id
+                        else
+                            return langs[msg.lang].useQuoteOnFile
+                        end
+                        if caption ~= '' then
+                            caption = ' ' .. caption
+                        end
+                        redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), msg.reply_to_message.media_type .. file_id .. caption)
+                        return langs[msg.lang].mediaSaved
+                    end
+                end
             end
         else
             return langs[msg.lang].require_mod
@@ -377,13 +460,14 @@ end
 
 local function pre_process(msg)
     if msg then
+        -- global
         local vars = list_variables(msg, true)
         if vars ~= nil then
             local t = vars:split('\n')
             for i, word in pairs(t) do
                 local answer = check_word(msg, word:lower())
                 if answer then
-                    sendReply(msg, adjust_value(answer, msg.chat, msg.from))
+                    sendReply(msg, adjust_value(answer, msg))
                 end
             end
         end
@@ -396,28 +480,40 @@ local function pre_process(msg)
                 if answer then
                     if string.match(answer, '^photo') then
                         answer = answer:gsub('^photo', '')
-                        sendPhotoId(msg.chat.id, answer, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        local caption = answer:match('^[^%s]+ (.*)')
+                        sendPhotoId(msg.chat.id, media_id, caption, msg.message_id)
                     elseif string.match(answer, '^video') then
                         answer = answer:gsub('^video', '')
-                        sendVideoId(msg.chat.id, answer, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        local caption = answer:match('^[^%s]+ (.*)')
+                        sendVideoId(msg.chat.id, media_id, caption, msg.message_id)
                     elseif string.match(answer, '^video_note') then
                         answer = answer:gsub('^video_note', '')
-                        sendVideoNoteId(msg.chat.id, answer, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
                     elseif string.match(answer, '^audio') then
                         answer = answer:gsub('^audio', '')
-                        sendAudioId(msg.chat.id, answer, false, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        local caption = answer:match('^[^%s]+ (.*)')
+                        sendAudioId(msg.chat.id, media_id, caption, msg.message_id)
                     elseif string.match(answer, '^voice_note') or string.match(answer, '^voice') then
                         answer = answer:gsub('^voice_note', '')
                         answer = answer:gsub('^voice', '')
-                        sendVoiceId(msg.chat.id, answer, false, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        local caption = answer:match('^[^%s]+ (.*)')
+                        sendVoiceId(msg.chat.id, media_id, caption, msg.message_id)
                     elseif string.match(answer, '^document') then
                         answer = answer:gsub('^document', '')
-                        sendDocumentId(msg.chat.id, answer, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        local caption = answer:match('^[^%s]+ (.*)')
+                        sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
                     elseif string.match(answer, '^sticker') then
                         answer = answer:gsub('^sticker', '')
-                        sendStickerId(msg.chat.id, answer, msg.message_id)
+                        local media_id = answer:match('^([^%s]+)')
+                        sendStickerId(msg.chat.id, media_id, msg.message_id)
                     else
-                        sendReply(msg, adjust_value(answer, msg.chat, msg.from))
+                        sendReply(msg, adjust_value(answer, msg))
                     end
                 end
             end
@@ -448,13 +544,16 @@ return {
         --- SET
         "^[#!/]([Ss][Ee][Tt]) ([^%s]+) (.+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll]) ([^%s]+) (.+)$",
+        "^[#!/]([Ss][Ee][Tt][Mm][Ee][Dd][Ii][Aa]) ([^%s]+) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
         "^[#!/]([Cc][Aa][Nn][Cc][Ee][Ll])$",
         -- set
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
         "^([Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
         -- setmedia
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+) (.*)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
+        "^([Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+) (.*)$",
         "^([Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
         -- cancel
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
@@ -478,7 +577,7 @@ return {
         "(#getgloballist|#getglobal|sasha lista globali)",
         "MOD",
         "(#set|[sasha] setta) <var_name>|<pattern> <text>",
-        "(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply>",
+        "(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]",
         "(#unset|[sasha] unsetta) <var_name>|<pattern>",
         "OWNER",
         "#enableglobal",

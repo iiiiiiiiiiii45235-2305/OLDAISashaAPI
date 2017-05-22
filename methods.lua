@@ -421,12 +421,17 @@ end
 
 ----------------------------By Id-----------------------------------------
 
-function sendPhotoId(chat_id, file_id, reply_to_message_id)
+function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendPhoto?chat_id=' .. chat_id ..
         '&photo=' .. file_id
+        if caption then
+            if type(caption) == 'string' or type(caption) == 'number' then
+                url = url .. '&caption=' .. caption
+            end
+        end
         local reply = false
         if reply_to_message_id then
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -443,7 +448,7 @@ function sendPhotoId(chat_id, file_id, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
             print_msg(sent_msg)
         end
     else
@@ -473,7 +478,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
             print_msg(sent_msg)
         end
     else
@@ -508,7 +513,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice_note' }
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
             print_msg(sent_msg)
         end
     else
@@ -543,7 +548,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
             print_msg(sent_msg)
         end
     else
@@ -573,7 +578,7 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video_note' }
+            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
             print_msg(sent_msg)
         end
     else
@@ -581,12 +586,17 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
     end
 end
 
-function sendVideoId(chat_id, file_id, reply_to_message_id)
+function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendVideo?chat_id=' .. chat_id ..
         '&video=' .. file_id
+        if caption then
+            if type(caption) == 'string' or type(caption) == 'number' then
+                url = url .. '&caption=' .. caption
+            end
+        end
         local reply = false
         if reply_to_message_id then
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -603,7 +613,7 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
             print_msg(sent_msg)
         end
     else
@@ -611,12 +621,17 @@ function sendVideoId(chat_id, file_id, reply_to_message_id)
     end
 end
 
-function sendDocumentId(chat_id, file_id, reply_to_message_id)
+function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/sendDocument?chat_id=' .. chat_id ..
         '&document=' .. file_id
+        if caption then
+            if type(caption) == 'string' or type(caption) == 'number' then
+                url = url .. '&caption=' .. caption
+            end
+        end
         local reply = false
         if reply_to_message_id then
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -633,7 +648,7 @@ function sendDocumentId(chat_id, file_id, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
             print_msg(sent_msg)
         end
     else
@@ -661,7 +676,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
         if caption then
             curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'photo' }
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -679,7 +694,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
             curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'sticker' }
+        local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -705,7 +720,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
         if duration then
             curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'voice_note' }
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -737,7 +752,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
         if title then
             curl_command = curl_command .. ' -F "title=' .. title .. '"'
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'audio' }
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -745,7 +760,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
     end
 end
 
-function sendVideo(chat_id, video, reply_to_message_id, duration, performer, title)
+function sendVideo(chat_id, video, reply_to_message_id, caption, duration, performer, title)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendVideo'
@@ -761,7 +776,7 @@ function sendVideo(chat_id, video, reply_to_message_id, duration, performer, tit
         if duration then
             curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video' }
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -785,7 +800,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
         if length then
             curl_command = curl_command .. ' -F "length=' .. length .. '"'
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'video_note' }
+        local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -793,7 +808,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
     end
 end
 
-function sendDocument(chat_id, document, reply_to_message_id)
+function sendDocument(chat_id, document, caption, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendDocument'
@@ -803,7 +818,7 @@ function sendDocument(chat_id, document, reply_to_message_id)
             curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
             reply = true
         end
-        local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'document' }
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
     else
@@ -834,7 +849,7 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
         if print_res_msg(res) then
             return res, code
         else
-            local sent_msg = { from = bot, chat = obj, text = text, reply = reply, media = true, media_type = 'location' }
+            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'location' }
             print_msg(sent_msg)
         end
     else

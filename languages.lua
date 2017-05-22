@@ -686,88 +686,88 @@ return {
         },
 
         -- FAQ
-        faqList = '/faq1 limiti @AISasha.\n' ..
-        '/faq2 limiti @AISashaBot.\n' ..
-        '/faq3 utilizzo in contemporanea di @AISasha e @AISashaBot.\n' ..
-        '/faq4 madelineproto.\n' ..
-        '/faq5 lista warn.\n' ..
-        '/faq6 comandi solo di @AISasha.\n' ..
-        '/faq7 due o più owner.\n' ..
-        '/faq8 rango intermedio mod e owner.\n' ..
-        '/faq9 tagalert @AISasha.\n' ..
-        '/faq10 impostazioni gruppo divise tra i due bot.\n' ..
-        '/faq11 significato impostazioni.\n' ..
-        '/faq12 significato muti.\n' ..
-        '/faq13 ruleta @AISashaBot.\n' ..
-        '/faq14 api_patch.\n' ..
-        '/faq15 spam @AISashaBot.',
+        faqList = '/faq1 limiti @AISasha.\n'
+        .. '/faq2 limiti @AISashaBot.\n'
+        .. '/faq3 utilizzo in contemporanea di @AISasha e @AISashaBot.\n'
+        .. '/faq4 madelineproto.\n'
+        .. '/faq5 lista warn.\n'
+        .. '/faq6 comandi solo di @AISasha.\n'
+        .. '/faq7 due o più owner.\n'
+        .. '/faq8 rango intermedio mod e owner.\n'
+        .. '/faq9 tagalert @AISasha.\n'
+        .. '/faq10 impostazioni gruppo divise tra i due bot.\n'
+        .. '/faq11 significato impostazioni.\n'
+        .. '/faq12 significato muti.\n'
+        .. '/faq13 ruleta @AISashaBot.\n'
+        .. '/faq14 api_patch.\n'
+        .. '/faq15 spam @AISashaBot.',
         faq =
         {
-            [1] = 'D: Limiti sasha utente (@AISasha)?\n' ..
-            'R: *Freeze\n' ..
-            '*Comandi per risposta a volte non funzionanti (soluzione = inoltra e usa <command> from).\n' ..
-            '*Kick = ban.\n' ..
-            '*In gruppi con più di 200 membri non riceve più messaggi se non viene messo il tag all\'inizio (di conseguenza lock e mute non funzionano più).\n' ..
-            '*Non legge i messaggi modificati.\n' ..
-            '*Non legge le mentions (i tag di utenti senza username).\n' ..
-            'Meno aggiornata rispetto ad @AISashaBot (solitamente dovuto a telegram-cli).\n' ..
-            '* = Dovuti a telegram-cli, se sapete come risolvere qualcuno di questi scrivete a @EricSolinas.\n',
-            [2] = 'D: Limiti sasha api (@AISashaBot)?\n' ..
-            'R: *Impossibilità di ottenere i membri di gruppi e supergruppi.\n' ..
-            '*Impossibilità di leggere i messaggi di altri bot.\n' ..
-            'Freeze (più rari di quelli di @AISasha, utenti fidati appena si accorgono la riavviano).\n' ..
-            '* = Dovuti alle API di telegram.\n',
-            [3] = 'D: Perchè usi @AISasha e @AISashaBot insieme?\n' ..
-            'R: Perchè così facendo posso minimizzare i limiti di entrambe.\n' ..
-            'Grazie ad @AISashaBot => comandi per risposta sempre funzionanti, kick e ban non sono più la stessa cosa, problema dei 200 membri risolto.\n' ..
-            'Grazie ad @AISasha => pericolo di bot api spammer/flooder minimizzato.\n',
-            [4] = 'D: Perchè non usi MadelineProto?\n' ..
-            'R: Non mi piace il PHP e le API di telegram sono ufficiali, quelle di MadelineProto no.',
-            [5] = 'D: Perchè non c\'è una lista di utenti warnati?\n' ..
-            'R: Perchè diventerebbe una lista enorme in alcuni gruppi, oltretutto owner/mod potrebbero essere influenzati dalla lista stessa al momento del warn.',
-            [6] = 'D: Perchè per alcuni comandi devo usare obbligatoriamente @AISasha?\n' ..
-            'R: Solitamente è perchè i bot API sono limitati in maniera più restrittiva (/faq2).',
-            [7] = 'D: Perchè non possono esserci più owner di un solo gruppo?\n' ..
-            'R: Telegram non ammette nemmeno il passaggio di proprietà di un gruppo (attualmente) e non gestisce così le cose.',
-            [8] = 'D: Puoi aggiungere un rango intermedio tra mod e owner?\n' ..
-            'R: No, ogni owner deve controllare i propri moderatori, aggiungere ranghi intermedi non farebbe altro che creare confusione.',
-            [9] = 'D: Perchè il tagalert non è disponibile su @AISasha?\n' ..
-            'R: Telegram gestisce in maniera differente i messaggi di utenti e bot, quelli dei bot sono più semplici da gestire per la funzione di tagalert.',
-            [10] = 'D: Perchè le impostazioni dei due bot sono divise?\n' ..
-            'R: Per comodità di sviluppo (gli id dei gruppi e supergruppi sono differenti per utenti e bot, lo stesso vale per altri parametri).',
-            [11] = 'D: Cosa significano le impostazioni?\n' ..
-            'R: Arabic => caratteri arabi.\n' ..
-            'Bots => altri bot (controllati con le ultime lettere dell\'username).\n' ..
-            'Flood => N messaggi in 2 secondi.\n' ..
-            'Grouplink => permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n' ..
-            'Leave => abbandono del gruppo.\n' ..
-            'Link => link di altri gruppi.\n' ..
-            'Member => entrata di nuovi membri.\n' ..
-            'RTL => caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n' ..
-            'Spam => messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n' ..
-            'Strict => aumento di "pena" da kick a ban.\n' ..
-            '* = emoji, caratteri di controllo ecc...',
-            [12] = 'D: Cosa significano i muti?\n' ..
-            'R: All => tutto.\n' ..
-            'Audio => audio (non note vocali).\n' ..
-            'Contact => contatti.\n' ..
-            'Document => documenti generici (qualsiasi file inviato come tale).\n' ..
-            'Gif => gifs.\n' ..
-            'Location => posizioni.\n' ..
-            'Photo => foto.\n' ..
-            'Sticker => stickers.\n' ..
-            'Text => testo sia normale che sotto i media.\n' ..
-            'Tgservice => messaggi di servizio (non funzionante per @AISashaBot nei supergruppi*).\n' ..
-            'Video => video (non video messaggi).\n' ..
-            'Video_note => video messaggi.\n' ..
-            'Voice_note => note vocali.\n' ..
-            '* = limitazione di telegram.',
-            [13] = 'D: Perchè non porti ruleta anche su @AISashaAPI?\n' ..
-            'R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.',
-            [14] = 'D: Cos\'è l\'api_patch?\n' ..
-            'R: L\'api_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.',
-            [15] = 'D: Perchè non porti spam anche su @AISashaAPI?\n' ..
-            'R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti, inoltre inviare messaggi dopo tot tempo non è così semplice in LUA.',
+            [1] = 'D: Limiti sasha utente (@AISasha)?\n'
+            .. 'R: *Freeze\n'
+            .. '*Comandi per risposta a volte non funzionanti (soluzione = inoltra e usa <command> from).\n'
+            .. '*Kick = ban.\n'
+            .. '*In gruppi con più di 200 membri non riceve più messaggi se non viene messo il tag all\'inizio (di conseguenza lock e mute non funzionano più).\n'
+            .. '*Non legge i messaggi modificati.\n'
+            .. '*Non legge le mentions (i tag di utenti senza username).\n'
+            .. 'Meno aggiornata rispetto ad @AISashaBot (solitamente dovuto a telegram-cli).\n'
+            .. '* = Dovuti a telegram-cli, se sapete come risolvere qualcuno di questi scrivete a @EricSolinas.\n',
+            [2] = 'D: Limiti sasha api (@AISashaBot)?\n'
+            .. 'R: *Impossibilità di ottenere i membri di gruppi e supergruppi.\n'
+            .. '*Impossibilità di leggere i messaggi di altri bot.\n'
+            .. 'Freeze (più rari di quelli di @AISasha, utenti fidati appena si accorgono la riavviano).\n'
+            .. '* = Dovuti alle API di telegram.\n',
+            [3] = 'D: Perchè usi @AISasha e @AISashaBot insieme?\n'
+            .. 'R: Perchè così facendo posso minimizzare i limiti di entrambe.\n'
+            .. 'Grazie ad @AISashaBot => comandi per risposta sempre funzionanti, kick e ban non sono più la stessa cosa, problema dei 200 membri risolto.\n'
+            .. 'Grazie ad @AISasha => pericolo di bot api spammer/flooder minimizzato.\n',
+            [4] = 'D: Perchè non usi MadelineProto?\n'
+            .. 'R: Non mi piace il PHP e le API di telegram sono ufficiali, quelle di MadelineProto no.',
+            [5] = 'D: Perchè non c\'è una lista di utenti warnati?\n'
+            .. 'R: Perchè diventerebbe una lista enorme in alcuni gruppi, oltretutto owner/mod potrebbero essere influenzati dalla lista stessa al momento del warn.',
+            [6] = 'D: Perchè per alcuni comandi devo usare obbligatoriamente @AISasha?\n'
+            .. 'R: Solitamente è perchè i bot API sono limitati in maniera più restrittiva (/faq2).',
+            [7] = 'D: Perchè non possono esserci più owner di un solo gruppo?\n'
+            .. 'R: Telegram non ammette nemmeno il passaggio di proprietà di un gruppo (attualmente) e non gestisce così le cose.',
+            [8] = 'D: Puoi aggiungere un rango intermedio tra mod e owner?\n'
+            .. 'R: No, ogni owner deve controllare i propri moderatori, aggiungere ranghi intermedi non farebbe altro che creare confusione.',
+            [9] = 'D: Perchè il tagalert non è disponibile su @AISasha?\n'
+            .. 'R: Telegram gestisce in maniera differente i messaggi di utenti e bot, quelli dei bot sono più semplici da gestire per la funzione di tagalert.',
+            [10] = 'D: Perchè le impostazioni dei due bot sono divise?\n'
+            .. 'R: Per comodità di sviluppo (gli id dei gruppi e supergruppi sono differenti per utenti e bot, lo stesso vale per altri parametri).',
+            [11] = 'D: Cosa significano le impostazioni?\n'
+            .. 'R: Arabic => caratteri arabi.\n'
+            .. 'Bots => altri bot (controllati con le ultime lettere dell\'username).\n'
+            .. 'Flood => N messaggi in 2 secondi.\n'
+            .. 'Grouplink => permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n'
+            .. 'Leave => abbandono del gruppo.\n'
+            .. 'Link => link di altri gruppi.\n'
+            .. 'Member => entrata di nuovi membri.\n'
+            .. 'RTL => caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n'
+            .. 'Spam => messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n'
+            .. 'Strict => aumento di "pena" da kick a ban.\n'
+            .. '* = emoji, caratteri di controllo ecc...',
+            [12] = 'D: Cosa significano i muti?\n'
+            .. 'R: All => tutto.\n'
+            .. 'Audio => audio (non note vocali).\n'
+            .. 'Contact => contatti.\n'
+            .. 'Document => documenti generici (qualsiasi file inviato come tale).\n'
+            .. 'Gif => gifs.\n'
+            .. 'Location => posizioni.\n'
+            .. 'Photo => foto.\n'
+            .. 'Sticker => stickers.\n'
+            .. 'Text => testo sia normale che sotto i media.\n'
+            .. 'Tgservice => messaggi di servizio (non funzionante per @AISashaBot nei supergruppi*).\n'
+            .. 'Video => video (non video messaggi).\n'
+            .. 'Video_note => video messaggi.\n'
+            .. 'Voice_note => note vocali.\n'
+            .. '* = limitazione di telegram.',
+            [13] = 'D: Perchè non porti ruleta anche su @AISashaAPI?\n'
+            .. 'R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.',
+            [14] = 'D: Cos\'è l\'api_patch?\n'
+            .. 'R: L\'api_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.',
+            [15] = 'D: Perchè non porti spam anche su @AISashaAPI?\n'
+            .. 'R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti, inoltre inviare messaggi dopo tot tempo non è così semplice in LUA.',
         },
 
         ------------
@@ -954,9 +954,15 @@ return {
             'MOD',
             'Per [un]settare una frase usare "_" al posto di " ".',
             'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
-            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviata la risposta: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
+            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviata la risposta: '
+            .. '$chatid, $chatname, $chatusername, $rules, $grouplink, '
+            .. '$userid, $firstname, $lastname, $printname, $username, '
+            .. '$replyuserid, $replyfirstname, $replylastname, $replyprintname, $replyusername, '
+            .. '$forwardchatid, $forwardchatname, $forwardchatusername, '
+            .. '$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername.'
+            .. '\nSe alcuni marcatori non potessero essere risolti (reply, forwardchat, forward) verrebbero usati quelli normali (chat, user).',
             '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha salva <text> come risposta a <var_name>|<pattern>.',
-            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply>: Sasha salva il media (foto, video, video messaggio, audio, nota vocale, documento, sticker) in <reply> come risposta a <var_name>|<pattern>.',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]: Sasha salva il <reply_media> (foto, video, video messaggio, audio, nota vocale, documento, sticker) come risposta a <var_name>|<pattern>, se <caption> è presente viene usato come didascalia (non disponibile per tutti i media).',
             '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha elimina <var_name>|<pattern>.',
             'OWNER',
             '#enableglobal: Sasha abilita i get globali sulla chat.',
@@ -971,13 +977,15 @@ return {
             '🅿️ GOODBYEWELCOME',
             'Plugin per il benvenuto e l\'addio dei membri.',
             'MOD',
-            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l\'addio: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
+            'Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l\'addio: '
+            .. '$chatid, $chatname, $chatusername, $rules, $grouplink, '
+            .. '$userid, $firstname, $lastname, $printname, $username.',
             '#getwelcome: Sasha manda il benvenuto.',
             '#getgoodbye: Sasha manda l\'addio.',
             '#previewwelcome: Sasha manda l\'esempio di benvenuto.',
             '#previewgoodbye: Sasha manda l\'esempio di addio.',
-            '#setwelcome <text>|<reply_media>: Sasha imposta <text>|<reply_media> come benvenuto.',
-            '#setgoodbye <text>|<reply_media>: Sasha imposta <text>|<reply_media> come addio.',
+            '#setwelcome <text>|(<reply_media> [<caption>]): Sasha imposta <text>|(<reply_media> [<caption>]) come benvenuto.',
+            '#setgoodbye <text>|(<reply_media> [<caption>]): Sasha imposta <text>|(<reply_media> [<caption>]) come addio.',
             '#unsetwelcome: Sasha rimuove il benvenuto.',
             '#unsetgoodbye: Sasha rimuove l\'addio.',
             '#setmemberswelcome <value>: Sasha dopo <value> membri manderà il benvenuto con le regole, se zero il benvenuto non verrà più mandato.',
@@ -1795,88 +1803,88 @@ return {
         },
 
         -- FAQ
-        faqList = '/faq1 @AISasha limits.\n' ..
-        '/faq2 @AISashaBot limits.\n' ..
-        '/faq3 contemporary use of @AISasha and @AISashaBot.\n' ..
-        '/faq4 madelineproto.\n' ..
-        '/faq5 warns list.\n' ..
-        '/faq6 @AISasha\'s only commands.\n' ..
-        '/faq7 two or more owners.\n' ..
-        '/faq8 intermediate rank between mod and owner.\n' ..
-        '/faq9 tagalert @AISasha.\n' ..
-        '/faq10 group settings divided between the bots.\n' ..
-        '/faq11 settings meaning.\n' ..
-        '/faq12 mutes meaning.\n' ..
-        '/faq13 ruleta @AISashaBot.\n' ..
-        '/faq14 api_patch.\n' ..
-        '/faq15 spam @AISashaBot.',
+        faqList = '/faq1 @AISasha limits.\n'
+        .. '/faq2 @AISashaBot limits.\n'
+        .. '/faq3 contemporary use of @AISasha and @AISashaBot.\n'
+        .. '/faq4 madelineproto.\n'
+        .. '/faq5 warns list.\n'
+        .. '/faq6 @AISasha\'s only commands.\n'
+        .. '/faq7 two or more owners.\n'
+        .. '/faq8 intermediate rank between mod and owner.\n'
+        .. '/faq9 tagalert @AISasha.\n'
+        .. '/faq10 group settings divided between the bots.\n'
+        .. '/faq11 settings meaning.\n'
+        .. '/faq12 mutes meaning.\n'
+        .. '/faq13 ruleta @AISashaBot.\n'
+        .. '/faq14 api_patch.\n'
+        .. '/faq15 spam @AISashaBot.',
         faq =
         {
-            [1] = 'D: Sasha user\'s limits (@AISasha)?\n' ..
-            'R: *Freeze\n' ..
-            '*Commands by reply sometimes don\'t work (solution = forward and use <command> from).\n' ..
-            '*Kick = ban.\n' ..
-            '*In groups with more than 200 members she doesn\'t receive messages anymore if not tagged at the beginning of the message (so locks and mutes don\'t work anymore).\n' ..
-            '*Can\'t read edited messages.\n' ..
-            '*Can\'t read mentions (tags of users without an username).\n' ..
-            'Less updated compared to @AISashaBot (usually due to telegram-cli).\n' ..
-            '* = Due to telegram-cli, if you know how to solve any of these problems contact @EricSolinas.\n',
-            [2] = 'D: Sasha api\'s limits (@AISashaBot)?\n' ..
-            'R: *Can\'t obtain group members.\n' ..
-            '*Can\'t read other bots\' messages.\n' ..
-            'Freeze (more rare than @AISasha\'s ones, trusted users reboot her as soon as possible).\n' ..
-            '* = Due to telegram\'s api.\n',
-            [3] = 'D: Why do you use @AISasha and @AISashaBot together?\n' ..
-            'R: Because in this way I can minimize the limits of both.\n' ..
-            'Thanks to @AISashaBot => reply commands always working, kick and ban are not the same thing anymore, problem of 200 members solved.\n' ..
-            'Thanks to @AISasha => api spammer/flooder risk minimized.\n',
-            [4] = 'D: Why don\'t you use MadelineProto?\n' ..
-            'R: I don\'t like PHP and telegram\'s API are officials, MadelineProto\'s are not.',
-            [5] = 'D: Why there\'s no warns list?\n' ..
-            'R: Because it would be a giant list in some groups, also owner/mod could be influenced at the moment of giving warns.',
-            [6] = 'D: Why do I have to use @AISasha for certain commands?\n' ..
-            'R: Usually because API bots are much more limited (/faq2).',
-            [7] = 'D: Why there can\'t be two or more owners in the same group?\n' ..
-            'R: Telegram doesn\'t even allow transferring the ownership of the group (at this time) and it doesn\'t manage groups like that.',
-            [8] = 'D: Can you add an intermediate rank between mod and owner?\n' ..
-            'R: No, every owner has to control their moderators, adding intermediate ranks would just confound people.',
-            [9] = 'D: Why there\'s no tagalert on @AISasha?\n' ..
-            'R: Telegram manage differently users and bots messages, bots\' ones are more predisposed to a function like tagalert.',
-            [10] = 'D: Why settings of the two bots are divided?\n' ..
-            'R: Because of development facilitations (groups and supergroups ids are not the same for bots and users like other parameters).',
-            [11] = 'D: What do settings mean?\n' ..
-            'R: Arabic => arabic characters.\n' ..
-            'Bots => other bots (checked with the last letters of the username).\n' ..
-            'Flood => N messages in 2 seconds.\n' ..
-            'Grouplink => normal users obtaining group\'s link using /link.\n' ..
-            'Leave => group leave.\n' ..
-            'Link => other groups\' links.\n' ..
-            'Member => new members.\n' ..
-            'RTL => right to left characters (those that reverse messages).\n' ..
-            'Spam => message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n' ..
-            'Strict => increase punishment from kick to ban.\n' ..
-            '* = emojis, control characters etc...',
-            [12] = 'D: What do mutes mean?\n' ..
-            'R: All => everything.\n' ..
-            'Audio => audios (not voice notes).\n' ..
-            'Contact => contacts.\n' ..
-            'Document => generic documents (everything sent as a file).\n' ..
-            'Gif => gifs.\n' ..
-            'Location => positions.\n' ..
-            'Photo => photos.\n' ..
-            'Sticker => stickers.\n' ..
-            'Text => normal text or captions.\n' ..
-            'Tgservice => service messages (not working for @AISashaBot on supergroups*).\n' ..
-            'Video => videos (not video messages).\n' ..
-            'Video_note => video messages.\n' ..
-            'Voice_note => voice notes.\n' ..
-            '* = telegram\'s limitation.',
-            [13] = 'D: Why don\'t you port ruleta on @AISashaAPI?\n' ..
-            'R: Because I\'m 90% sure that kicks number would be high enough to hit telegram limits causing problems.',
-            [14] = 'D: What is the api_patch?\n' ..
-            'R: The api_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.',
-            [15] = 'D: Why don\'t you port spam on @AISashaAPI?\n' ..
-            'R: Because I\'m 90% sure that sent messages number would be high enough to hit telegram limits causing problems, also sending messages every x time is not so simple in LUA.',
+            [1] = 'D: Sasha user\'s limits (@AISasha)?\n'
+            .. 'R: *Freeze\n'
+            .. '*Commands by reply sometimes don\'t work (solution = forward and use <command> from).\n'
+            .. '*Kick = ban.\n'
+            .. '*In groups with more than 200 members she doesn\'t receive messages anymore if not tagged at the beginning of the message (so locks and mutes don\'t work anymore).\n'
+            .. '*Can\'t read edited messages.\n'
+            .. '*Can\'t read mentions (tags of users without an username).\n'
+            .. 'Less updated compared to @AISashaBot (usually due to telegram-cli).\n'
+            .. '* = Due to telegram-cli, if you know how to solve any of these problems contact @EricSolinas.\n',
+            [2] = 'D: Sasha api\'s limits (@AISashaBot)?\n'
+            .. 'R: *Can\'t obtain group members.\n'
+            .. '*Can\'t read other bots\' messages.\n'
+            .. 'Freeze (more rare than @AISasha\'s ones, trusted users reboot her as soon as possible).\n'
+            .. '* = Due to telegram\'s api.\n',
+            [3] = 'D: Why do you use @AISasha and @AISashaBot together?\n'
+            .. 'R: Because in this way I can minimize the limits of both.\n'
+            .. 'Thanks to @AISashaBot => reply commands always working, kick and ban are not the same thing anymore, problem of 200 members solved.\n'
+            .. 'Thanks to @AISasha => api spammer/flooder risk minimized.\n',
+            [4] = 'D: Why don\'t you use MadelineProto?\n'
+            .. 'R: I don\'t like PHP and telegram\'s API are officials, MadelineProto\'s are not.',
+            [5] = 'D: Why there\'s no warns list?\n'
+            .. 'R: Because it would be a giant list in some groups, also owner/mod could be influenced at the moment of giving warns.',
+            [6] = 'D: Why do I have to use @AISasha for certain commands?\n'
+            .. 'R: Usually because API bots are much more limited (/faq2).',
+            [7] = 'D: Why there can\'t be two or more owners in the same group?\n'
+            .. 'R: Telegram doesn\'t even allow transferring the ownership of the group (at this time) and it doesn\'t manage groups like that.',
+            [8] = 'D: Can you add an intermediate rank between mod and owner?\n'
+            .. 'R: No, every owner has to control their moderators, adding intermediate ranks would just confound people.',
+            [9] = 'D: Why there\'s no tagalert on @AISasha?\n'
+            .. 'R: Telegram manage differently users and bots messages, bots\' ones are more predisposed to a function like tagalert.',
+            [10] = 'D: Why settings of the two bots are divided?\n'
+            .. 'R: Because of development facilitations (groups and supergroups ids are not the same for bots and users like other parameters).',
+            [11] = 'D: What do settings mean?\n'
+            .. 'R: Arabic => arabic characters.\n'
+            .. 'Bots => other bots (checked with the last letters of the username).\n'
+            .. 'Flood => N messages in 2 seconds.\n'
+            .. 'Grouplink => normal users obtaining group\'s link using /link.\n'
+            .. 'Leave => group leave.\n'
+            .. 'Link => other groups\' links.\n'
+            .. 'Member => new members.\n'
+            .. 'RTL => right to left characters (those that reverse messages).\n'
+            .. 'Spam => message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n'
+            .. 'Strict => increase punishment from kick to ban.\n'
+            .. '* = emojis, control characters etc...',
+            [12] = 'D: What do mutes mean?\n'
+            .. 'R: All => everything.\n'
+            .. 'Audio => audios (not voice notes).\n'
+            .. 'Contact => contacts.\n'
+            .. 'Document => generic documents (everything sent as a file).\n'
+            .. 'Gif => gifs.\n'
+            .. 'Location => positions.\n'
+            .. 'Photo => photos.\n'
+            .. 'Sticker => stickers.\n'
+            .. 'Text => normal text or captions.\n'
+            .. 'Tgservice => service messages (not working for @AISashaBot on supergroups*).\n'
+            .. 'Video => videos (not video messages).\n'
+            .. 'Video_note => video messages.\n'
+            .. 'Voice_note => voice notes.\n'
+            .. '* = telegram\'s limitation.',
+            [13] = 'D: Why don\'t you port ruleta on @AISashaAPI?\n'
+            .. 'R: Because I\'m 90% sure that kicks number would be high enough to hit telegram limits causing problems.',
+            [14] = 'D: What is the api_patch?\n'
+            .. 'R: The api_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.',
+            [15] = 'D: Why don\'t you port spam on @AISashaAPI?\n'
+            .. 'R: Because I\'m 90% sure that sent messages number would be high enough to hit telegram limits causing problems, also sending messages every x time is not so simple in LUA.',
         },
 
         ------------
@@ -2063,9 +2071,15 @@ return {
             'MOD',
             'To [un]set a phrase use "_" instead of " ".',
             'For more information on patterns see lua.org/pil/20.2.html',
-            'There are some markers that will be replaced when the answer is sent: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
+            'There are some markers that will be replaced when the answer is sent: '
+            .. '$chatid, $chatname, $chatusername, $rules, $grouplink, '
+            .. '$userid, $firstname, $lastname, $printname, $username, '
+            .. '$replyuserid, $replyfirstname, $replylastname, $replyprintname, $replyusername, '
+            .. '$forwardchatid, $forwardchatname, $forwardchatusername, '
+            .. '$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername.'
+            .. '\nIf some markers can\'t be solved (reply, forwardchat, forward) normal ones will be used (chat, user).',
             '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha saves <text> as answer to <var_name>|<pattern>.',
-            '(#setmedia|[sasha] setta media) <var_name>|<pattern>: Sasha saves the media (photo, video, video message, audio, voice note, document, sticker) in <reply> as answer to <var_name>|<pattern>.',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]: Sasha saves <reply_media> (photo, video, video message, audio, voice note, document, sticker) as answer to <var_name>|<pattern>, if <caption> is present it will be sent as caption (not available for all media).',
             '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha deletes <var_name>|<pattern>.',
             'OWNER',
             '#enableglobal: Sasha enables global gets on chat.',
@@ -2080,13 +2094,15 @@ return {
             '🅿️ GOODBYEWELCOME',
             'Plugin for welcome and goodbye.',
             'MOD',
-            'There are some markers that will be replaced when goodbye/welcome is sent: $chatid, $chatname, $chatusername, $rules, $userid, $firstname, $lastname, $printname, $username, $grouplink',
+            'There are some markers that will be replaced when goodbye/welcome is sent: '
+            .. '$chatid, $chatname, $chatusername, $rules, $grouplink, '
+            .. '$userid, $firstname, $lastname, $printname, $username.',
             '#getwelcome: Sasha sends welcome.',
             '#getgoodbye: Sasha sends goodbye.',
             '#previewwelcome: Sasha sends welcome sample.',
             '#previewgoodbye: Sasha sends goodbye sample.',
-            '#setwelcome <text>|<reply_media>: Sasha sets <text>|<reply_media> as welcome.',
-            '#setgoodbye <text>|<reply_media>: Sasha sets <text>|<reply_media> as goodbye.',
+            '#setwelcome <text>|(<reply_media> [<caption>]): Sasha sets <text>|(<reply_media> [<caption>]) as welcome.',
+            '#setgoodbye <text>|(<reply_media> [<caption>]): Sasha sets <text>|(<reply_media> [<caption>]) as goodbye.',
             '#unsetwelcome: Sasha removes welcome.',
             '#unsetgoodbye: Sasha removes goodbye.',
             '#setmemberswelcome <value>: Sasha after <value> members will send welcome, if zero welcome will not be sent anymore.',
