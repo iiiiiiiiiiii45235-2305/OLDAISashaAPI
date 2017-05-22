@@ -180,7 +180,7 @@ local function adjust_value(value, msg)
         fwd_user = msg.forward_from
     end
     if string.find(value, '$forwarduserid') then
-        value = value:gsub('$forwarduserid', replyuser.id)
+        value = value:gsub('$forwarduserid', fwd_user.id)
     end
     if string.find(value, '$forwardfirstname') then
         value = value:gsub('$forwardfirstname', fwd_user.first_name)
