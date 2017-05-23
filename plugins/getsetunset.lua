@@ -305,10 +305,9 @@ local function run(msg, matches)
                     local answer = check_word(msg, word:lower(), false)
                     if answer then
                         return langs[msg.lang].getCommand:gsub('X', word:lower()) .. answer
-                    else
-                        return langs[msg.lang].noSetValue
                     end
                 end
+                return langs[msg.lang].noSetValue
             end
         end
     end
