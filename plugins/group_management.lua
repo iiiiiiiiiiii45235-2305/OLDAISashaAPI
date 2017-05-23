@@ -927,10 +927,10 @@ local function run(msg, matches)
             if is_admin(msg) then
                 -- adjust chat_id
                 if string.match(matches[2], '^-100') then
-                    sendMessage('-100' .. matches[2], "@AISasha")
+                    sendMessage(matches[2], "@AISasha")
                     sendMessage(bot.userVersion.id, "/lua channel_invite('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
                 elseif string.match(matches[2], '-') then
-                    sendMessage('-' .. matches[2], "@AISasha")
+                    sendMessage(matches[2], "@AISasha")
                     sendMessage(bot.userVersion.id, "/lua chat_add_user('chat#id' .. " .. matches[2]:gsub('-', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
                 else
                     sendMessage('-100' .. matches[2], "@AISasha")
