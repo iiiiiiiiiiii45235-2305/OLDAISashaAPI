@@ -494,7 +494,7 @@ return {
         "^[#!/]([Ii][Dd]) ([^%s]+)$",
         "^[#!/]([Uu][Ss][Ee][Rr][Nn][Aa][Mm][Ee])$",
         "^[#!/]([Uu][Ss][Ee][Rr][Nn][Aa][Mm][Ee]) ([^%s]+)$",
-        "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ll][Ii][Nn][Kk]) (%-?%d+)$",
+        "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ll][Ii][Nn][Kk]) (%-%d+)$",
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee])$",
         "^[#!/]([Ii][Ss][Hh][Ee][Rr][Ee]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Rr][Aa][Nn][Kk])$",
@@ -504,8 +504,8 @@ return {
         "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Oo])$",
         -- grouplink
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
-        "^([Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-?%d+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-%d+)$",
+        "^([Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-%d+)$",
         -- getrank
         "^([Rr][Aa][Nn][Gg][Oo])$",
         "^([Rr][Aa][Nn][Gg][Oo]) ([^%s]+)$",

@@ -529,7 +529,6 @@ function id_to_cli(id)
 end
 
 function doSendBackup()
-
     local time = os.time()
     local tar_command = 'tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- desktop

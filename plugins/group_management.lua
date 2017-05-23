@@ -923,6 +923,26 @@ local function run(msg, matches)
 
     -- INPM
     if is_sudo(msg) or msg.chat.type == 'private' then
+        if matches[1]:lower() == 'join' or matches[1]:lower() == 'inviteme' or matches[1]:lower() == 'sasha invitami' or matches[1]:lower() == 'invitami' then
+            if is_admin(msg) then
+                -- adjust chat_id
+                if string.match(matches[2], '^-100') then
+                    sendMessage(bot.userVersion.id, "/lua send_large_msg('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", '@AISasha') " ..
+                    "channel_invite('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
+                elseif string.match(matches[2], '-') then
+                    sendMessage(bot.userVersion.id, "/lua send_large_msg('chat#id' .. " .. matches[2]:gsub('-', '') .. ", '@AISasha') " ..
+                    "chat_add_user('chat#id' .. " .. matches[2]:gsub('-', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
+                else
+                    sendMessage(bot.userVersion.id, "/lua send_large_msg('channel#id' .. " .. matches[2] .. ", '@AISasha') " ..
+                    "send_large_msg('chat#id' .. " .. matches[2] .. ", '@AISasha') " ..
+                    "chat_add_user('chat#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false) " ..
+                    "channel_invite('channel#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
+                end
+                return langs[msg.lang].ok
+            else
+                return langs[msg.lang].require_admin
+            end
+        end
         if matches[1]:lower() == 'allchats' then
             if is_admin(msg) then
                 mystat('/allchats')
@@ -1802,8 +1822,13 @@ return {
         "!!tgservice chat_del_user",
 
         -- INPM
+        "^[#!/]([Jj][Oo][Ii][Nn]) (%-?%d+)$",
         "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss])$",
         "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss][Ll][Ii][Ss][Tt])$",
+        -- join
+        "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee][Mm][Ee]) (%-?%d+)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Tt][Aa][Mm][Ii]) (%-?%d+)$",
+        "^([Ii][Nn][Vv][Ii][Tt][Aa][Mm][Ii]) (%-?%d+)$",
 
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
@@ -1975,6 +2000,7 @@ return {
         "#add realm",
         "#rem realm",
         "ex INPM.LUA",
+        "(#join|#inviteme|[sasha] invitami) <chat_id>",
         "#allchats",
         "#allchatlist",
         "REALM",
