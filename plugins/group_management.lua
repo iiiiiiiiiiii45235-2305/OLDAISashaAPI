@@ -927,15 +927,15 @@ local function run(msg, matches)
             if is_admin(msg) then
                 -- adjust chat_id
                 if string.match(matches[2], '^-100') then
-                    sendMessage(bot.userVersion.id, "/lua send_large_msg('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", '@AISasha') " ..
-                    "channel_invite('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
+                    sendMessage('-100' .. matches[2], "@AISasha")
+                    sendMessage(bot.userVersion.id, "/lua channel_invite('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
                 elseif string.match(matches[2], '-') then
-                    sendMessage(bot.userVersion.id, "/lua send_large_msg('chat#id' .. " .. matches[2]:gsub('-', '') .. ", '@AISasha') " ..
-                    "chat_add_user('chat#id' .. " .. matches[2]:gsub('-', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
+                    sendMessage('-' .. matches[2], "@AISasha")
+                    sendMessage(bot.userVersion.id, "/lua chat_add_user('chat#id' .. " .. matches[2]:gsub('-', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
                 else
-                    sendMessage(bot.userVersion.id, "/lua send_large_msg('channel#id' .. " .. matches[2] .. ", '@AISasha') " ..
-                    "send_large_msg('chat#id' .. " .. matches[2] .. ", '@AISasha') " ..
-                    "chat_add_user('chat#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false) " ..
+                    sendMessage('-100' .. matches[2], "@AISasha")
+                    sendMessage('-' .. matches[2], "@AISasha")
+                    sendMessage(bot.userVersion.id, "/lua chat_add_user('chat#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false) " ..
                     "channel_invite('channel#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
                 end
                 return langs[msg.lang].ok
