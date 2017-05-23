@@ -313,8 +313,18 @@ local function run(msg, matches)
                         return langs[msg.lang].getCommand:gsub('X', word:lower()) .. answer
                     end
                 end
-                return langs[msg.lang].noSetValue
             end
+            local vars = list_variables(msg, false)
+            if vars ~= nil then
+                local t = vars:split('\n')
+                for i, word in pairs(t) do
+                    local answer = check_word(msg, word:lower(), false)
+                    if answer then
+                        return langs[msg.lang].getCommand:gsub('X', word:lower()) .. answer
+                    end
+                end
+            end
+            return langs[msg.lang].noSetValue
         end
     end
 
