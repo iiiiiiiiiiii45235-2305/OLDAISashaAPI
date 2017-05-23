@@ -529,6 +529,7 @@ function id_to_cli(id)
 end
 
 function doSendBackup()
+
     local time = os.time()
     local tar_command = 'tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- desktop
@@ -541,6 +542,8 @@ function doSendBackup()
     '/home/pi/MyBotForReported  --exclude=/home/pi/MyBotForReported/.git ' ..
     -- redis database
     '/var/lib/redis'
+    -- save redis db
+    redis:bgsave()
     local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
     local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
     file:write(log)

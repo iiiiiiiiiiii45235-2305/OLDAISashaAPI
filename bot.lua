@@ -945,8 +945,6 @@ function cron_administrator()
         if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
             sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
         end
-        -- save redis db
-        redis:bgsave()
         -- send the whole backup
         doSendBackup()
 
