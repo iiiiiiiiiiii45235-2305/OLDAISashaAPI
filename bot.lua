@@ -929,9 +929,8 @@ function cron_administrator()
         last_administrator_cron = last_redis_administrator_cron
         -- deletes all previous backups (they're in telegram so no problem)
         io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
-        -- save redis db
-        redis:bgsave()
 
+        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, true)
         -- AISASHAAPI
         -- deletes all files in tmp folder
         io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
@@ -946,6 +945,8 @@ function cron_administrator()
         if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
             sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
         end
+        -- save redis db
+        redis:bgsave()
         -- send the whole backup
         doSendBackup()
 

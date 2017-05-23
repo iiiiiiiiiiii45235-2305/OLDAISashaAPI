@@ -529,24 +529,6 @@ function id_to_cli(id)
 end
 
 function doSendBackup()
-    -- AISASHAAPI
-    -- deletes all files in tmp folder
-    io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
-    -- save database
-    save_data(config.database.db, database)
-    -- send database
-    if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
-        sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
-    end
-
-    -- AISASHA
-    -- send database
-    if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
-        sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
-    end
-
-    -- GENERAL BACKUP
-    -- do backup
     local time = os.time()
     local tar_command = 'tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- desktop
@@ -564,7 +546,6 @@ function doSendBackup()
     file:write(log)
     file:flush()
     file:close()
-    sendMessage_SUDOERS(langs['en'].autoSendBackupDb, true)
     -- send last backup
     local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
     local backups = { }
