@@ -527,3 +527,57 @@ function id_to_cli(id)
         return tostring(temp)
     end
 end
+
+function doSendBackup()
+    -- AISASHAAPI
+    -- deletes all files in tmp folder
+    io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
+    -- save database
+    save_data(config.database.db, database)
+    -- send database
+    if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
+        sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
+    end
+
+    -- AISASHA
+    -- send database
+    if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
+        sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
+    end
+
+    -- GENERAL BACKUP
+    -- do backup
+    local time = os.time()
+    local tar_command = 'tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
+    -- desktop
+    '/home/pi/Desktop ' ..
+    -- sasha user
+    '/home/pi/AISasha --exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.luarocks --exclude=/home/pi/AISasha/patches --exclude=/home/pi/AISasha/tg ' ..
+    -- sasha bot
+    '/home/pi/AISashaAPI --exclude=/home/pi/AISashaAPI/.git ' ..
+    -- bot for reported
+    '/home/pi/MyBotForReported  --exclude=/home/pi/MyBotForReported/.git ' ..
+    -- redis database
+    '/var/lib/redis'
+    local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
+    local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
+    file:write(log)
+    file:flush()
+    file:close()
+    sendMessage_SUDOERS(langs['en'].autoSendBackupDb, true)
+    -- send last backup
+    local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
+    local backups = { }
+    if files then
+        for k, v in pairsByKeys(files) do
+            if string.match(v, '^backupRaspberryPi%d+%.tar%.gz$') then
+                backups[string.match(v, '%d+')] = v
+            end
+        end
+        local last_backup = ''
+        for k, v in pairsByKeys(backups) do
+            last_backup = v
+        end
+        sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
+    end
+end

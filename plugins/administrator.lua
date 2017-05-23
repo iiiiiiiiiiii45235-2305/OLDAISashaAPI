@@ -132,38 +132,8 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == "backup" or matches[1]:lower() == "sasha esegui backup" then
                 mystat('/backup')
-                local time = os.time()
-                local log = io.popen('cd "/home/pi/BACKUPS/" && tar -zcvf backupAISashaBot' .. time .. '.tar.gz /home/pi/AISashaAPI --exclude=/home/pi/AISashaAPI/.git'):read('*all')
-                local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
-                file:write(log)
-                file:flush()
-                file:close()
-                sendDocument_SUDOERS("/home/pi/BACKUPS/backupLog" .. time .. ".txt")
+                doSendBackup()
                 return langs[msg.lang].backupDone
-            end
-            if matches[1]:lower() == "uploadbackup" or matches[1]:lower() == "sasha invia backup" then
-                mystat('/uploadbackup')
-                local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
-                if files then
-                    local backups = { }
-                    for k, v in pairsByKeys(files) do
-                        if string.match(v, '^backupAISashaBot%d+%.tar%.gz$') then
-                            backups[string.match(v, '%d+')] = v
-                        end
-                    end
-                    if backups then
-                        local last_backup = ''
-                        for k, v in pairsByKeys(backups) do
-                            last_backup = v
-                        end
-                        sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
-                        return langs[msg.lang].backupSent
-                    else
-                        return langs[msg.lang].backupMissing
-                    end
-                else
-                    return langs[msg.lang].backupMissing
-                end
             end
         else
             return langs[msg.lang].require_sudo
@@ -183,7 +153,6 @@ return {
         "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
-        "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
@@ -204,8 +173,6 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) ([^%s]+)$",
         -- backup
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Bb][Aa][Cc][Kk][Uu][Pp])$",
-        -- uploadbackup
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Aa] [Bb][Aa][Cc][Kk][Uu][Pp])$",
         -- rebootapi
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Aa][Vv][Ii][Aa] [Cc][Ll][Ii])$",
     },
@@ -227,7 +194,6 @@ return {
         "#redissave",
         "#update",
         "(#backup|sasha esegui backup)",
-        "(#uploadbackup|sasha invia backup)",
         "(#rebootcli|sasha riavvia cli)",
         "#reloaddata",
     },
