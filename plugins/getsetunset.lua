@@ -266,12 +266,16 @@ local function run(msg, matches)
             return list_variables(msg, false)
         else
             mystat('/get <var_name>')
-            if string.match(msg.text:lower(), word) then
-                local value = get_value(msg, matches[2]:lower())
-                if value then
-                    return langs[msg.lang].getCommand:gsub('X', matches[2]:lower()) .. value
-                else
-                    return langs[msg.lang].noSetValue
+            local vars = list_variables(msg, true)
+            if vars ~= nil then
+                local t = vars:split('\n')
+                for i, word in pairs(t) do
+                    local answer = check_word(msg, word:lower(), false)
+                    if answer then
+                        return langs[msg.lang].getCommand:gsub('X', word:lower()) .. answer
+                    else
+                        return langs[msg.lang].noSetValue
+                    end
                 end
             end
         end
@@ -437,9 +441,15 @@ local function run(msg, matches)
     end
 end
 
-local function check_word(msg, word)
+local function check_word(msg, word, pre)
     if msg.text then
-        if not string.match(msg.text, "^[#!/][Gg][Ee][Tt] (.*)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Ss][Ee][Tt][Ss]) (.+)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt] ([^%s]+)$") and not string.match(msg.text, "^[Uu][Nn][Ss][Ee][Tt][Tt][Aa] ([^%s]+)$") and not string.match(msg.text, "^[Ss][Aa][Ss][Hh][Aa] [Uu][Nn][Ss][Ee][Tt][Tt][Aa] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Rr][Oo][Uu][Pp][Ss][Ee][Tt][Ss]) (.+)$") then
+        local tests = false
+        if pre then
+            tests = not string.match(msg.text, "^[#!/][Gg][Ee][Tt] (.*)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Ss][Ee][Tt][Ss]) (.+)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt] ([^%s]+)$") and not string.match(msg.text, "^[Uu][Nn][Ss][Ee][Tt][Tt][Aa] ([^%s]+)$") and not string.match(msg.text, "^[Ss][Aa][Ss][Hh][Aa] [Uu][Nn][Ss][Ee][Tt][Tt][Aa] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Rr][Oo][Uu][Pp][Ss][Ee][Tt][Ss]) (.+)$")
+        else
+            tests = not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Ss][Ee][Tt][Ss]) (.+)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt] ([^%s]+)$") and not string.match(msg.text, "^[Uu][Nn][Ss][Ee][Tt][Tt][Aa] ([^%s]+)$") and not string.match(msg.text, "^[Ss][Aa][Ss][Hh][Aa] [Uu][Nn][Ss][Ee][Tt][Tt][Aa] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Rr][Oo][Uu][Pp][Ss][Ee][Tt][Ss]) (.+)$")
+        end
+        if tests then
             if string.match(msg.text:lower(), word) then
                 local value = get_value(msg, word)
                 if value then
@@ -470,7 +480,7 @@ local function pre_process(msg)
         if vars ~= nil then
             local t = vars:split('\n')
             for i, word in pairs(t) do
-                local answer = check_word(msg, word:lower())
+                local answer = check_word(msg, word:lower(), true)
                 if answer then
                     sendReply(msg, adjust_value(answer, msg))
                 end
@@ -481,7 +491,7 @@ local function pre_process(msg)
         if vars ~= nil then
             local t = vars:split('\n')
             for i, word in pairs(t) do
-                local answer = check_word(msg, word:lower())
+                local answer = check_word(msg, word:lower(), true)
                 if answer then
                     if string.match(answer, '^photo') then
                         answer = answer:gsub('^photo', '')
