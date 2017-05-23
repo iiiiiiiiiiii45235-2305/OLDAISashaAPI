@@ -244,7 +244,7 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
             end
         end
     else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
+        -- return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
