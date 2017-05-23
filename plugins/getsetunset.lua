@@ -266,11 +266,13 @@ local function run(msg, matches)
             return list_variables(msg, false)
         else
             mystat('/get <var_name>')
-            local value = get_value(msg, matches[2]:lower())
-            if value then
-                return langs[msg.lang].getCommand:gsub('X', matches[2]:lower()) .. value
-            else
-                return langs[msg.lang].noSetValue
+            if string.match(msg.text:lower(), word) then
+                local value = get_value(msg, matches[2]:lower())
+                if value then
+                    return langs[msg.lang].getCommand:gsub('X', matches[2]:lower()) .. value
+                else
+                    return langs[msg.lang].noSetValue
+                end
             end
         end
     end
