@@ -496,6 +496,7 @@ local function pre_process(msg)
                 local answer = check_word(msg, word:lower(), true)
                 if answer then
                     sendReply(msg, adjust_value(answer, msg))
+                    return msg
                 end
             end
         end
@@ -511,37 +512,45 @@ local function pre_process(msg)
                         local media_id = answer:match('^([^%s]+)')
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendPhotoId(msg.chat.id, media_id, caption, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^video') then
                         answer = answer:gsub('^video', '')
                         local media_id = answer:match('^([^%s]+)')
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendVideoId(msg.chat.id, media_id, caption, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^video_note') then
                         answer = answer:gsub('^video_note', '')
                         local media_id = answer:match('^([^%s]+)')
                         sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^audio') then
                         answer = answer:gsub('^audio', '')
                         local media_id = answer:match('^([^%s]+)')
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendAudioId(msg.chat.id, media_id, caption, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^voice_note') or string.match(answer, '^voice') then
                         answer = answer:gsub('^voice_note', '')
                         answer = answer:gsub('^voice', '')
                         local media_id = answer:match('^([^%s]+)')
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendVoiceId(msg.chat.id, media_id, caption, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^document') then
                         answer = answer:gsub('^document', '')
                         local media_id = answer:match('^([^%s]+)')
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^sticker') then
                         answer = answer:gsub('^sticker', '')
                         local media_id = answer:match('^([^%s]+)')
                         sendStickerId(msg.chat.id, media_id, msg.message_id)
+                        return msg
                     else
                         sendReply(msg, adjust_value(answer, msg))
+                        return msg
                     end
                 end
             end
