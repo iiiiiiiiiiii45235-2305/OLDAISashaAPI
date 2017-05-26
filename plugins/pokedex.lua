@@ -4,15 +4,15 @@ local function run(msg, matches)
     local b, c = http.request(url)
     local pokemon = json:decode(b)
 
-    if pokemon == nil then
+    if not pokemon then
         return langs[msg.lang].noPoke
     end
     -- api returns height and weight x10
-    local height = tonumber(pokemon.height) / 10
-    local weight = tonumber(pokemon.weight) / 10
+    local height = tonumber(pokemon.height or 0) / 10
+    local weight = tonumber(pokemon.weight or 0) / 10
 
-    local text = 'ID Pokédex: ' .. pokemon.id .. '\n' ..
-    langs[msg.lang].pokeName .. pokemon.name .. '\n' ..
+    local text = 'ID Pokédex: ' ..(pokemon.id or 'ERROR') .. '\n' ..
+    langs[msg.lang].pokeName ..(pokemon.name or 'ERROR') .. '\n' ..
     langs[msg.lang].pokeWeight .. weight .. " kg" .. '\n' ..
     langs[msg.lang].pokeHeight .. height .. " m"
 
