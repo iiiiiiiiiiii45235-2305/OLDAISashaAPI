@@ -257,60 +257,6 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'sasha spara' or matches[1]:lower() == 'uccidi' then
-            if msg.from.is_mod then
-                mystat('/kick')
-                if msg.reply then
-                    if matches[2] then
-                        if matches[2]:lower() == 'from' then
-                            if msg.reply_to_message.forward then
-                                if msg.reply_to_message.forward_from then
-                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
-                                else
-                                    return langs[msg.lang].cantDoThisToChat
-                                end
-                            else
-                                return langs[msg.lang].errorNoForward
-                            end
-                        else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
-                        end
-                    else
-                        if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                                local text = kickUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
-                                for k, v in pairs(msg.reply_to_message.added) do
-                                    text = text .. kickUser(msg.from.id, v.id, msg.chat.id) .. '\n'
-                                end
-                                return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
-                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
-                            else
-                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
-                            end
-                        else
-                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
-                        end
-                    end
-                elseif matches[2] and matches[2] ~= '' then
-                    if string.match(matches[2], '^%d+$') then
-                        return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
-                    else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return kickUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
-                            end
-                        else
-                            return langs[msg.lang].noObject
-                        end
-                    end
-                end
-                return
-            else
-                return langs[msg.lang].require_mod
-            end
-        end
         if matches[1]:lower() == 'kickrandom' then
             if msg.from.is_mod then
                 return langs[msg.lang].useAISasha
@@ -388,6 +334,60 @@ local function run(msg, matches)
                 return langs[msg.lang].massacre:gsub('X', kicked)]]
             else
                 return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'sasha spara' or matches[1]:lower() == 'uccidi' then
+            if msg.from.is_mod then
+                mystat('/kick')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return kickUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[3] or '')
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        else
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                        end
+                    else
+                        if msg.reply_to_message.service then
+                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                                local text = kickUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) .. '\n'
+                                for k, v in pairs(msg.reply_to_message.added) do
+                                    text = text .. kickUser(msg.from.id, v.id, msg.chat.id) .. '\n'
+                                end
+                                return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
+                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                                return kickUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                            else
+                                return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                            end
+                        else
+                            return kickUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[2] or '') .. ' ' ..(matches[3] or ''))
+                        end
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return kickUser(msg.from.id, obj_user.id, msg.chat.id, matches[3] or '')
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_mod
             end
         end
         if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
