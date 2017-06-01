@@ -332,7 +332,7 @@ return {
         multipleUnban = 'X membri sbannati.',
 
         -- bot.lua --
-        startMessage = 'Ciao, io sono la versione API di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
+        startMessage = 'Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
         botOn = 'Sono tornata. 😏',
         botOff = 'Nulla da fare qui. 🚀',
 
@@ -724,7 +724,7 @@ return {
             [5] = 'D: Perchè non c\'è una lista di utenti warnati?\n'
             .. 'R: Perchè diventerebbe una lista enorme in alcuni gruppi, oltretutto owner/mod potrebbero essere influenzati dalla lista stessa al momento del warn.',
             [6] = 'D: Perchè per alcuni comandi devo usare obbligatoriamente @AISasha?\n'
-            .. 'R: Solitamente è perchè i bot API sono limitati in maniera più restrittiva (/faq2).',
+            .. 'R: Solitamente è perchè i bot sono limitati in maniera più restrittiva (/faq2).',
             [7] = 'D: Perchè non possono esserci più owner di un solo gruppo?\n'
             .. 'R: Telegram non ammette nemmeno il passaggio di proprietà di un gruppo (attualmente) e non gestisce così le cose.',
             [8] = 'D: Puoi aggiungere un rango intermedio tra mod e owner?\n'
@@ -1446,7 +1446,7 @@ return {
         multipleUnban = 'X members unbanned.',
 
         -- bot.lua --
-        startMessage = 'Hi, I\'m the API version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
+        startMessage = 'Hi, I\'m the BOT version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
         botOn = 'I\'m back. 😏',
         botOff = 'Nothing to do here. 🚀',
 
@@ -1839,7 +1839,7 @@ return {
             [5] = 'D: Why there\'s no warns list?\n'
             .. 'R: Because it would be a giant list in some groups, also owner/mod could be influenced at the moment of giving warns.',
             [6] = 'D: Why do I have to use @AISasha for certain commands?\n'
-            .. 'R: Usually because API bots are much more limited (/faq2).',
+            .. 'R: Usually because bots are much more limited (/faq2).',
             [7] = 'D: Why there can\'t be two or more owners in the same group?\n'
             .. 'R: Telegram doesn\'t even allow transferring the ownership of the group (at this time) and it doesn\'t manage groups like that.',
             [8] = 'D: Can you add an intermediate rank between mod and owner?\n'
