@@ -352,7 +352,7 @@ local function run(msg, matches)
             if msg.reply_to_message.from.id == bot.id then
                 if msg.reply_to_message.text then
                     mystat('/deletekeyboard')
-                    return editMessageText(msg.chat.id, msg.reply_to_message.id, msg.reply_to_message.text)
+                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text)
                 end
             end
         end
