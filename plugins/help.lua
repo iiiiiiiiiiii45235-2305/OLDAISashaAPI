@@ -346,6 +346,17 @@ local function run(msg, matches)
             return langs[msg.lang].faq[tonumber(matches[2])]
         end
     end
+
+    if matches[1]:lower() == "deletekeyboard" then
+        if msg.reply then
+            if msg.reply_to_message.from.id == bot.id then
+                if msg.reply_to_message.text then
+                    mystat('/deletekeyboard')
+                    return editMessageText(msg.chat.id, msg.reply_to_message.id, msg.reply_to_message.text)
+                end
+            end
+        end
+    end
 end
 
 return {
@@ -361,6 +372,7 @@ return {
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Dd][Ee][Ll][Ee][Tt][Ee][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
         "^[#!/]([Ff][Aa][Qq])$",
         "^[#!/]([Ff][Aa][Qq])(%d+)$",
         "^[#!/]([Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
@@ -395,5 +407,6 @@ return {
         "(#syntax|sasha sintassi) <filter>",
         "(#syntaxall|sasha sintassi tutto)",
         "#faq[<n>]",
+        "#deletekeyboard <reply>",
     },
 }

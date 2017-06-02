@@ -1067,6 +1067,7 @@ return {
             '(#syntax|sasha sintassi) <filter>: Sasha mostra la sintassi dei comandi che corrispondono a <filter>.',
             '(#syntaxall|sasha sintassi tutto): Sasha mostra la sintassi di tutti i comandi di tutti i plugin.',
             '#faq[<n>]: Sasha mostra le Frequently asked questions, se <n> è specificato manda la risposta.',
+            '#deletekeyboard <reply>: Sasha elimina la keyboard in <reply>.',
         },
 
         info =
@@ -2182,6 +2183,7 @@ return {
             '(#syntax|sasha sintassi) <filter>: Sasha sends syntax of all commands that matches with <filter>.',
             '(#syntaxall|sasha sintassi tutto): Sasha sends syntax of all commands of all plugins.',
             '#faq[<n>]: Sasha shows Frequently asked questions, if <n> the specified she sends the answer.',
+            '#deletekeyboard <reply>: Sasha deletes the keyboard in <reply>.',
         },
 
         info =
