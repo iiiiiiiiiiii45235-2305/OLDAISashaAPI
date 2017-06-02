@@ -187,8 +187,9 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
-                    chat_stats(msg.chat.id, msg.lang)
-                    return sendDocument(msg.chat.id, "./groups/lists/" .. msg.chat.id .. "stats.txt")
+                    return langs[msg.lang].useAISasha
+                    -- chat_stats(msg.chat.id, msg.lang)
+                    -- return sendDocument(msg.chat.id, "./groups/lists/" .. msg.chat.id .. "stats.txt")
                 end
             else
                 return langs[msg.lang].require_mod

@@ -1152,7 +1152,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'settings' and matches[2] then
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' then
-                    sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
+                    sendReply(msg, langs[msg.lang].sendSettingsPvt)
                 end
                 mystat('/settings <group_id>')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
@@ -1553,7 +1553,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'settings' then
                 if msg.from.is_mod then
                     if msg.chat.type ~= 'private' then
-                        sendMessage(msg.chat.id, langs[msg.lang].sendSettingsPvt)
+                        sendReply(msg, langs[msg.lang].sendSettingsPvt)
                     end
                     mystat('/settings')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
