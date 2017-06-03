@@ -810,10 +810,13 @@ return {
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+) ?(.*)$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) (.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll])$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn])$",
         "^[#!/]([Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Ww][Aa][Rr][Nn])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
         "^[#!/]([Kk][Ii][Cc][Kk][Rr][Aa][Nn][Dd][Oo][Mm])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Nn][Oo][Uu][Ss][Ee][Rr])$",
@@ -822,12 +825,15 @@ return {
         "^[#!/]([Kk][Ii][Cc][Kk][Dd][Ee][Ll][Ee][Tt][Ee][Dd])$",
         "^[#!/]([Kk][Ii][Cc][Kk]) ([^%s]+) ?(.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk]) (.*)$",
+        "^[#!/]([Kk][Ii][Cc][Kk])$",
         "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) ([^%s]+)$",
         "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Bb][Aa][Nn])$",
         "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Uu][Nn][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Uu][Nn][Bb][Aa][Nn])$",
         "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Bb][Aa][Nn]) (.*)$",
         "^[#!/]([Gg][Bb][Aa][Nn]) ([^%s]+)$",
         "^[#!/]([Gg][Bb][Aa][Nn])$",
@@ -845,10 +851,13 @@ return {
 
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
         "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
+        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
         -- warn
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+) ?(.*)$",
-
         "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) (.*)$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
         -- kickme
         "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii][Mm][Ii])",
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Pp][Ll][Oo][Dd][Ii][Mm][Ii])",
@@ -861,6 +870,9 @@ return {
 
         "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) (.*)$",
         "^([Uu][Cc][Cc][Ii][Dd][Ii]) (.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii])$",
+        "^([Uu][Cc][Cc][Ii][Dd][Ii])$",
         -- banlist
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
@@ -878,6 +890,12 @@ return {
         "^([Bb][Aa][Nn][Nn][Aa]) (.*)$",
         "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
         "^([Kk][Aa][Bb][Oo][Oo][Mm]) (.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Bb][Aa][Nn][Nn][Aa])$",
+        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Kk][Aa][Bb][Oo][Oo][Mm])$",
         -- unban
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
@@ -892,6 +910,13 @@ return {
         "^([Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
         "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
         "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
+
+        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Ss][Bb][Aa][Nn][Nn][Aa])$",
+        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
+        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
         -- gban
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
