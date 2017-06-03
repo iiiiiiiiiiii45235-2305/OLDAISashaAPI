@@ -180,7 +180,7 @@ local function pre_process(msg)
 end
 
 local function cron()
-    -- clear those tables on the top of the plugins
+    -- clear those tables on the top of the plugin
     kicktable = { }
     cbwarntable = { }
 end

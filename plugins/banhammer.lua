@@ -1,3 +1,5 @@
+local kick_ban_errors = { }
+
 local function user_msgs(user_id, chat_id)
     local user_info
     local uhash = 'user:' .. user_id
@@ -772,7 +774,20 @@ local function pre_process(msg)
                 print('Banned user talking!')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs
-                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                local txt = banUser(bot.id, msg.from.id, msg.chat.id)
+                if txt == langs[msg.lang].kick_errors[1] or txt == langs[msg.lang].kick_errors[2] or txt == langs[msg.lang].kick_errors[3] or txt == langs[msg.lang].kick_errors[4] then
+                    if kick_ban_errors[tostring(chat_id)] then
+                        if txt ~= kick_ban_errors[tostring(chat_id)] then
+                            kick_ban_errors[tostring(chat_id)] = txt
+                            sendMessage(msg.chat.id, txt)
+                        end
+                    else
+                        kick_ban_errors[tostring(chat_id)] = txt
+                        sendMessage(msg.chat.id, txt)
+                    end
+                else
+                    sendMessage(msg.chat.id, txt)
+                end
                 msg = clean_msg(msg)
                 return nil
             end
@@ -781,8 +796,14 @@ local function pre_process(msg)
     end
 end
 
+local function cron()
+    -- clear table on the top of the plugin
+    kick_ban_errors = { }
+end
+
 return {
     description = "BANHAMMER",
+    cron = cron,
     patterns =
     {
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
