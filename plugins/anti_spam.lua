@@ -128,7 +128,7 @@ local function pre_process(msg)
                         local text = ''
                         if string.match(getWarn(msg.chat.id), "%d+") then
                             text = warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
-                            text = text .. '\n' .. kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                            text = text .. '\n' .. tostring(kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                         elseif not strict then
                             text = kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
                         else
