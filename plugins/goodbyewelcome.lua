@@ -1,10 +1,14 @@
-preview_user = {
+local preview_user = {
     id = '1234567890',
     first_name = 'FIRST_NAME',
     last_name = 'LAST_NAME',
     username = 'USERNAME',
     print_name = 'FIRST_NAME LAST_NAME'
 }
+
+-- tables that contains 'group_id' = message_id to delete old goodbye/welcome messages
+local last_goodbye = { }
+local last_welcome = { }
 
 local function set_welcome(chat_id, welcome)
     local lang = get_lang(chat_id)
@@ -137,42 +141,42 @@ local function sendWelcome(chat, added, message_id)
             welcome = welcome:gsub('^photo', '')
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
-            sendPhotoId(chat.id, media_id, caption, message_id)
+            return sendPhotoId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^video') then
             welcome = welcome:gsub('^video', '')
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
-            sendVideoId(chat.id, media_id, caption, message_id)
+            return sendVideoId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^video_note') then
             welcome = welcome:gsub('^video_note', '')
             local media_id = welcome:match('^([^%s]+)')
-            sendVideoNoteId(chat.id, media_id, message_id)
+            return sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(welcome, '^audio') then
             welcome = welcome:gsub('^audio', '')
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
-            sendAudioId(chat.id, media_id, caption, message_id)
+            return sendAudioId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^voice_note') or string.match(welcome, '^voice') then
             welcome = welcome:gsub('^voice_note', '')
             welcome = welcome:gsub('^voice', '')
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
-            sendVoiceId(chat.id, media_id, caption, message_id)
+            return sendVoiceId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^document') then
             welcome = welcome:gsub('^document', '')
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
-            sendDocumentId(chat.id, media_id, caption, message_id)
+            return sendDocumentId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^sticker') then
             welcome = welcome:gsub('^sticker', '')
             local media_id = welcome:match('^([^%s]+)')
-            sendStickerId(chat.id, media_id, message_id)
+            return sendStickerId(chat.id, media_id, message_id)
         else
             local text = ''
             for k, v in pairs(added) do
                 text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
             end
-            sendMessage(chat.id, text, false, message_id)
+            return sendMessage(chat.id, text, false, message_id)
         end
     end
 end
@@ -184,38 +188,38 @@ local function sendGoodbye(chat, removed, message_id)
             goodbye = goodbye:gsub('^photo', '')
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
-            sendPhotoId(chat.id, media_id, caption, message_id)
+            return sendPhotoId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^video') then
             goodbye = goodbye:gsub('^video', '')
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
-            sendVideoId(chat.id, media_id, caption, message_id)
+            return sendVideoId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^video_note') then
             goodbye = goodbye:gsub('^video_note', '')
             local media_id = goodbye:match('^([^%s]+)')
-            sendVideoNoteId(chat.id, media_id, message_id)
+            return sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(goodbye, '^audio') then
             goodbye = goodbye:gsub('^audio', '')
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
-            sendAudioId(chat.id, media_id, caption, message_id)
+            return sendAudioId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^voice_note') or string.match(goodbye, '^voice') then
             goodbye = goodbye:gsub('^voice_note', '')
             goodbye = goodbye:gsub('^voice', '')
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
-            sendVoiceId(chat.id, media_id, caption, message_id)
+            return sendVoiceId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^document') then
             goodbye = goodbye:gsub('^document', '')
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
-            sendDocumentId(chat.id, media_id, caption, message_id)
+            return sendDocumentId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^sticker') then
             goodbye = goodbye:gsub('^sticker', '')
             local media_id = goodbye:match('^([^%s]+)')
-            sendStickerId(chat.id, media_id, message_id)
+            return sendStickerId(chat.id, media_id, message_id)
         else
-            sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+            return sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
         end
     end
 end
@@ -233,11 +237,18 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'previewwelcome' then
                 mystat('/previewwelcome')
-                return sendWelcome(msg.chat, { preview_user }, msg.message_id)
+                if last_welcome[tostring(msg.chat.id)] then
+                    deleteMessage(msg.chat.id, last_welcome[tostring(msg.chat.id)])
+                end
+                last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, { preview_user }, msg.message_id).result.message_id or nil
             end
             if matches[1]:lower() == 'previewgoodbye' then
                 mystat('/previewgoodbye')
-                return sendGoodbye(msg.chat, preview_user, msg.message_id)
+                if last_goodbye[tostring(msg.chat.id)] then
+                    deleteMessage(msg.chat.id, last_goodbye[tostring(msg.chat.id)])
+                end
+                last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, preview_user, msg.message_id).result.message_id or nil
+                return
             end
             if matches[1]:lower() == 'setwelcome' then
                 mystat('/setwelcome')
@@ -372,7 +383,10 @@ local function pre_process(msg)
                     local hashonredis = redis:get(hash)
                     if hashonredis then
                         if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                            sendWelcome(msg.chat, msg.added, msg.message_id)
+                            if last_welcome[tostring(msg.chat.id)] then
+                                deleteMessage(msg.chat.id, last_welcome[tostring(msg.chat.id)])
+                            end
+                            last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id).result.message_id or nil
                             redis:getset(hash, 0)
                         end
                     else
@@ -380,7 +394,10 @@ local function pre_process(msg)
                     end
                 end
                 if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) then
-                    sendGoodbye(msg.chat, msg.removed, msg.message_id)
+                    if last_goodbye[tostring(msg.chat.id)] then
+                        deleteMessage(msg.chat.id, last_goodbye[tostring(msg.chat.id)])
+                    end
+                    last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id).result.message_id or nil
                 end
             end
         end
