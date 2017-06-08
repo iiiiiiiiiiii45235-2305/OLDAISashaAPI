@@ -784,7 +784,7 @@ local function keyboard_settings_list(chat_id)
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 
@@ -817,7 +817,7 @@ local function keyboard_mutes_list(chat_id)
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 

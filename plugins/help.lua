@@ -225,7 +225,7 @@ local function keyboard_help_list(chat_id, rank)
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'helpDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'helpDELETE' }
     return keyboard
 end
 
