@@ -852,12 +852,12 @@ local function run(msg, matches)
     end
     if msg.cb then
         if matches[1] == '###cbgroup_management' then
-            if matches[2] == 'BACKSETTINGS' then
+            if matches[2] == 'DELETE' then
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+            elseif matches[2] == 'BACKSETTINGS' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3], keyboard_settings_list(matches[3]))
             elseif matches[2] == 'BACKMUTES' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
-            elseif matches[2] == 'DELETE' then
-                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             elseif matches[4] then
                 if matches[2] == 'LOCK' then
                     if is_mod2(msg.from.id, matches[4]) then
@@ -1815,6 +1815,7 @@ return {
     description = "GROUP_MANAGEMENT",
     patterns =
     {
+        "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
         "^(###cbgroup_management)(LOCK)(.*)(%-%d+)$",

@@ -439,6 +439,7 @@ return {
     description = "PLUGINS",
     patterns =
     {
+        "^(###cbplugins)(DELETE)$",
         "^(###cbplugins)(BACK)(%-%d+)$",
         "^(###cbplugins)(BACK)$",
         "^(###cbplugins)(ENABLE)(.*)(%-%d+)$",
