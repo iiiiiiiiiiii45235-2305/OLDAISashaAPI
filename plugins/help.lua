@@ -235,7 +235,7 @@ local function run(msg, matches)
             if matches[2] == 'BACK' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
             elseif matches[2] == 'DELETE' then
-                return editMessageText(msg.chat.id, msg.message_id, msg.text)
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             else
                 mystat('###cbhelp' .. matches[2])
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))

@@ -857,7 +857,7 @@ local function run(msg, matches)
             elseif matches[2] == 'BACKMUTES' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
             elseif matches[2] == 'DELETE' then
-                return editMessageText(msg.chat.id, msg.message_id, msg.text)
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             elseif matches[4] then
                 if matches[2] == 'LOCK' then
                     if is_mod2(msg.from.id, matches[4]) then

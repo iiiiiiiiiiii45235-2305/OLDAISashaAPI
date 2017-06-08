@@ -276,7 +276,7 @@ local function run(msg, matches)
                     end
                 end
             elseif matches[2] == 'DELETE' then
-                return editMessageText(msg.chat.id, msg.message_id, msg.text)
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             elseif matches[4] then
                 -- Enable/Disable a plugin for this chat
                 if is_owner2(msg.from.id, matches[4]) then

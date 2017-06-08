@@ -222,6 +222,7 @@ return {
         goBack = 'Indietro.',
         updateKeyboard = 'AGGIORNA TASTIERA.',
         deleteKeyboard = 'ELIMINA TASTIERA.',
+        stop = 'STOP',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kickato da: ',
@@ -635,7 +636,6 @@ return {
         sendPluginsPvt = 'Ti ho mandato la lista dei plugins in privato.',
         pluginsList = 'Lista plugins: ',
         pluginsIntro = 'Legenda plugins:\n💻 Di sistema\n✅ Abilitato\n🚫 Disabilitato\n❌ Disabilitato nella chat\n✔️ Già abilitato\n✖️ Già disabilitato\n❔ Non esistente',
-        stop = 'STOP',
 
         -- pokedex.lua --
         noPoke = 'Nessun pokémon trovato.',
@@ -1334,6 +1334,7 @@ return {
         goBack = 'Back.',
         updateKeyboard = 'UPDATE KEYBOARD.',
         deleteKeyboard = 'DELETE KEYBOARD.',
+        stop = 'STOP',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kicked from: ',
@@ -1752,7 +1753,6 @@ return {
         sendPluginsPvt = 'I\'ve sent you the plugins\' list in private.',
         pluginsList = 'Plugins\' list: ',
         pluginsIntro = 'Plugins\' legend:\n💻 System\n✅ Enabled\n🚫 Disabled\n❌ Disabled on chat\n✔️ Already enabled\n✖️ Already disabled\n❔ Not existent',
-        stop = 'STOP',
 
         -- pokedex.lua --
         noPoke = 'No pokémon found.',
