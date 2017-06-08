@@ -1,7 +1,7 @@
 local function run(msg, matches)
-    if msg.from.is_owner then
+    --[[if msg.from.is_owner then
         return langs[msg.lang].useAISasha
-        --[[local text = ''
+        local text = ''
         if matches[1] then
             mystat('/tagall <text>')
             text = matches[1] .. "\n"
@@ -23,10 +23,10 @@ local function run(msg, matches)
                 end
             end
         end
-        return text]]
+        return text
     else
         return langs[msg.lang].require_owner
-    end
+    end]]
 end
 
 return {
@@ -43,6 +43,6 @@ return {
     syntax =
     {
         "OWNER",
-        "(#tagall|sasha tagga tutti) <text>|<reply_text>",
+        -- "(#tagall|sasha tagga tutti) <text>|<reply_text>",
     },
 }

@@ -313,10 +313,10 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'kickrandom' then
+        --[[if matches[1]:lower() == 'kickrandom' then
             if msg.from.is_mod then
                 return langs[msg.lang].useAISasha
-                --[[mystat('/kickrandom')
+                mystat('/kickrandom')
                 local kickable = false
                 local id
                 local participants = getChatParticipants(msg.chat.id)
@@ -335,7 +335,7 @@ local function run(msg, matches)
                         unlocker = unlocker + 1
                     end
                 end
-                return id .. langs[msg.lang].kicked]]
+                return id .. langs[msg.lang].kicked
             else
                 return langs[msg.lang].require_mod
             end
@@ -343,7 +343,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'kickdeleted' then
             if msg.from.is_mod then
                 return langs[msg.lang].useAISasha
-                --[[mystat('/kickdeleted')
+                mystat('/kickdeleted')
                 local kicked = 0
                 local participants = getChatParticipants(msg.chat.id)
                 for k, v in pairs(participants) do
@@ -357,7 +357,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return langs[msg.lang].massacre:gsub('X', kicked)]]
+                return langs[msg.lang].massacre:gsub('X', kicked)
             else
                 return langs[msg.lang].require_mod
             end
@@ -365,9 +365,9 @@ local function run(msg, matches)
         if matches[1]:lower() == 'kickinactive' then
             if msg.from.is_owner then
                 return langs[msg.lang].kickinactiveWarning
-                --[[mystat('/kickinactive')
+                mystat('/kickinactive')
                 local num = matches[2] or 0
-                return kickinactive(msg.from.id, msg.chat.id, tonumber(num))]]
+                return kickinactive(msg.from.id, msg.chat.id, tonumber(num))
             else
                 return langs[msg.lang].require_owner
             end
@@ -375,7 +375,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'kicknouser' then
             if msg.from.is_owner then
                 return langs[msg.lang].useAISasha
-                --[[mystat('/kicknouser')
+                mystat('/kicknouser')
                 local kicked = 0
                 local participants = getChatParticipants(msg.chat.id)
                 for k, v in pairs(participants) do
@@ -387,11 +387,11 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return langs[msg.lang].massacre:gsub('X', kicked)]]
+                return langs[msg.lang].massacre:gsub('X', kicked)
             else
                 return langs[msg.lang].require_owner
             end
-        end
+        end]]
         if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
             if msg.from.is_mod then
                 mystat('/banlist')
@@ -947,12 +947,12 @@ return {
         "(#ban|kaboom|[sasha] banna|[sasha] decompila|sasha esplodi) <id>|<username>|<reply>|from [<reason>]",
         "(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from [<reason>]",
         "(#banlist|[sasha] lista ban)",
-        "#kickrandom",
-        "#kickdeleted",
+        -- "#kickrandom",
+        -- "#kickdeleted",
         "OWNER",
         "#multipleunban <user_id1> <user_id2> ...",
-        "#kicknouser",
-        "#kickinactive [<msgs>]",
+        -- "#kicknouser",
+        -- "#kickinactive [<msgs>]",
         "ADMIN",
         "(#banlist|[sasha] lista ban) <group_id>",
         "(#gban|[sasha] superbanna) <id>|<username>|<reply>|from",

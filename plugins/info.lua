@@ -427,11 +427,11 @@ local function run(msg, matches)
         end
         return
     end
-    if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
+    --[[if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             if msg.from.is_mod then
                 return langs[msg.lang].useAISasha
-                --[[mystat('/members')
+                mystat('/members')
                 local participants = getChatParticipants(msg.chat.id)
                 local text = langs[msg.lang].membersOf .. msg.chat.title .. ' ' .. msg.chat.id .. '\n'
                 for k, v in pairsByKeys(participants) do
@@ -442,12 +442,12 @@ local function run(msg, matches)
                 end
                 -- remove rtl
                 text = text:gsub("‮", "")
-                return text]]
+                return text
             else
                 return langs[msg.lang].require_mod
             end
         end
-    end
+    end]]
     if matches[1]:lower() == 'whoami' then
         mystat('/whoami')
         return get_object_info(msg.from, msg.chat.id)
@@ -533,7 +533,7 @@ return {
         "#id <username>|<reply>|from",
         "#username <id>|<reply>|from",
         "(#info|[sasha] info) <id>|<username>|<reply>|from",
-        "(#who|#members|[sasha] lista membri)",
+        -- "(#who|#members|[sasha] lista membri)",
         "ADMIN",
         "(#grouplink|[sasha] link gruppo) <group_id>",
     },

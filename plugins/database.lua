@@ -132,9 +132,9 @@ local function run(msg, matches)
             return langs[msg.lang].dbCreated
         end
 
-        if matches[1]:lower() == 'dodatabase' or matches[1]:lower() == 'sasha esegui database' then
+        --[[if matches[1]:lower() == 'dodatabase' or matches[1]:lower() == 'sasha esegui database' then
             return langs[msg.lang].useAISasha
-            --[[mystat('/dodatabase')
+            mystat('/dodatabase')
             local participants = getChatParticipants(msg.chat.id)
             for k, v in pairs(participants) do
                 if v.user then
@@ -146,8 +146,8 @@ local function run(msg, matches)
                 end
             end
             save_data(config.database.db, database)
-            return langs[msg.lang].dataLeaked]]
-        end
+            return langs[msg.lang].dataLeaked
+        end]]
 
         if matches[1]:lower() == 'dbsearch' or matches[1]:lower() == 'sasha cerca db' or matches[1]:lower() == 'cerca db' then
             mystat('/dbsearch')
@@ -442,7 +442,7 @@ return {
     {
         "SUDO",
         "#createdatabase",
-        "(#dodatabase|sasha esegui database)",
+        -- "(#dodatabase|sasha esegui database)",
         "(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from",
         "(#dbdelete|[sasha] elimina db) <id>",
         "#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<groups_ids_separated_by_space>",

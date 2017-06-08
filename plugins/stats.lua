@@ -157,7 +157,7 @@ local function run(msg, matches)
         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] used /aisashabot ")
         return config.about_text
     end
-    if matches[1]:lower() == "stats" or matches[1]:lower() == "messages" then
+    --[[if matches[1]:lower() == "stats" or matches[1]:lower() == "messages" then
         if not matches[2] then
             mystat('/stats')
             if msg.from.is_mod then
@@ -207,7 +207,8 @@ local function run(msg, matches)
             end
         end
         return
-    elseif matches[1]:lower() == "cleanstats" or matches[1]:lower() == "cleanmessages" then
+    else]]
+    if matches[1]:lower() == "cleanstats" or matches[1]:lower() == "cleanmessages" then
         if not matches[2] then
             mystat('/cleanstats')
             if msg.from.is_mod then
@@ -245,7 +246,6 @@ return {
         "^[#!/]([Ss][Tt][Aa][Tt][Ss]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
         "^[#!/]([Cc][Ll][Ee][Aa][Nn][Ss][Tt][Aa][Tt][Ss]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
         "^[#!/]([Ss][Tt][Aa][Tt][Ss][Ll][Ii][Ss][Tt]) ([Gg][Rr][Oo][Uu][Pp]) (%-?%d+)$",
-        "^[#!/]([Bb][Oo][Tt][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]?([Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt])$",
         -- stats
         "^[#!/]([Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss])$",
@@ -263,11 +263,10 @@ return {
         "USER",
         "[#]aisashabot",
         "MOD",
-        "(#stats|#statslist|#messages)",
+        -- "(#stats|#statslist|#messages)",
         "(#cleanstats|#cleanmessages)",
         "ADMIN",
-        "(#stats|#statslist|#messages) group <group_id>",
+        -- "(#stats|#statslist|#messages) group <group_id>",
         "(#cleanstats|#cleanmessages) group <group_id>",
-        "(#stats|#statslist) aisasha",
     },
 }
