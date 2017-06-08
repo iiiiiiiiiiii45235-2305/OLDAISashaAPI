@@ -783,6 +783,8 @@ local function keyboard_settings_list(chat_id)
     column = 1
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 
@@ -814,6 +816,8 @@ local function keyboard_mutes_list(chat_id)
     column = 1
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 
@@ -852,6 +856,8 @@ local function run(msg, matches)
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3], keyboard_settings_list(matches[3]))
             elseif matches[2] == 'BACKMUTES' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
+            elseif matches[2] == 'DELETE' then
+                return editMessageText(msg.chat.id, msg.message_id, msg.text)
             elseif matches[4] then
                 if matches[2] == 'LOCK' then
                     if is_mod2(msg.from.id, matches[4]) then

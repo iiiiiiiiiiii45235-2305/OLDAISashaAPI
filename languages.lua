@@ -221,6 +221,7 @@ return {
         errorNoForward = 'Non è un messaggio inoltrato.',
         goBack = 'Indietro.',
         updateKeyboard = 'AGGIORNA TASTIERA.',
+        deleteKeyboard = 'ELIMINA TASTIERA.',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kickato da: ',
@@ -1332,6 +1333,7 @@ return {
         errorNoForward = 'It\'s not a forwarded message.',
         goBack = 'Back.',
         updateKeyboard = 'UPDATE KEYBOARD.',
+        deleteKeyboard = 'DELETE KEYBOARD.',
 
         -- warn/kick/ban reasons --
         kickedFrom = 'Kicked from: ',

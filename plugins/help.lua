@@ -224,6 +224,8 @@ local function keyboard_help_list(chat_id, rank)
     column = 1
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'helpDELETE' }
     return keyboard
 end
 
@@ -232,6 +234,8 @@ local function run(msg, matches)
         if matches[1] == '###cbhelp' and matches[2] then
             if matches[2] == 'BACK' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
+            elseif matches[2] == 'DELETE' then
+                return editMessageText(msg.chat.id, msg.message_id, msg.text)
             else
                 mystat('###cbhelp' .. matches[2])
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))

@@ -253,6 +253,8 @@ local function keyboard_plugins_list(user_id, privileged, chat_id)
     if not privileged then
         keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
     end
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'pluginsDELETE' }
     return keyboard
 end
 
@@ -273,6 +275,8 @@ local function run(msg, matches)
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
                 end
+            elseif matches[2] == 'DELETE' then
+                return editMessageText(msg.chat.id, msg.message_id, msg.text)
             elseif matches[4] then
                 -- Enable/Disable a plugin for this chat
                 if is_owner2(msg.from.id, matches[4]) then
