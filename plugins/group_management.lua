@@ -1188,11 +1188,13 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'setgpowner' and matches[2] and matches[3] then
             if is_admin(msg) then
-                mystat('/setgpowner <group_id> <user_id>')
-                data[tostring(matches[2])].set_owner = matches[3]
-                save_data(config.moderation.data, data)
-                sendMessage(matches[2], matches[3] .. langs[lang].setOwner)
-                return matches[3] .. langs[lang].setOwner
+                if data[tostring(matches[2])] then
+                    mystat('/setgpowner <group_id> <user_id>')
+                    data[tostring(matches[2])].set_owner = matches[3]
+                    save_data(config.moderation.data, data)
+                    sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
+                    return matches[3] .. langs[lang].setOwner
+                end
             else
                 return langs[msg.lang].require_admin
             end
