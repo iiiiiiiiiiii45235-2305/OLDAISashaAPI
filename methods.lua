@@ -40,13 +40,13 @@ function sendRequest(url)
         redis:hincrby('bot:errors', code, 1)
 
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
+            --sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
         end
         return nil, code, tab.description
     end
 
     if not tab.ok then
-        sendLog('Not tab.ok' .. vardumptext(tab))
+        --sendLog('Not tab.ok' .. vardumptext(tab))
         return false, tab.description
     end
 
