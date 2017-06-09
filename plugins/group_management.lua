@@ -1193,7 +1193,7 @@ local function run(msg, matches)
                     data[tostring(matches[2])].set_owner = matches[3]
                     save_data(config.moderation.data, data)
                     sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
-                    return matches[3] .. langs[lang].setOwner
+                    return matches[3] .. langs[msg.lang].setOwner
                 end
             else
                 return langs[msg.lang].require_admin
