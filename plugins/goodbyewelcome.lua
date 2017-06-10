@@ -164,6 +164,11 @@ local function sendWelcome(chat, added, message_id)
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
             return sendVoiceId(chat.id, media_id, caption, message_id)
+        elseif string.match(welcome, '^gif') then
+            welcome = welcome:gsub('^gif', '')
+            local media_id = welcome:match('^([^%s]+)')
+            local caption = welcome:match('^[^%s]+ (.*)')
+            return sendDocumentId(chat.id, media_id, caption, message_id)
         elseif string.match(welcome, '^document') then
             welcome = welcome:gsub('^document', '')
             local media_id = welcome:match('^([^%s]+)')
@@ -211,6 +216,11 @@ local function sendGoodbye(chat, removed, message_id)
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
             return sendVoiceId(chat.id, media_id, caption, message_id)
+        elseif string.match(goodbye, '^gif') then
+            goodbye = goodbye:gsub('^gif', '')
+            local media_id = goodbye:match('^([^%s]+)')
+            local caption = goodbye:match('^[^%s]+ (.*)')
+            return sendDocumentId(chat.id, media_id, caption, message_id)
         elseif string.match(goodbye, '^document') then
             goodbye = goodbye:gsub('^document', '')
             local media_id = goodbye:match('^([^%s]+)')
