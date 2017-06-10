@@ -148,7 +148,7 @@ function write_file(path, text, mode)
     if not mode then
         mode = "w"
     end
-    file = io.open(path, mode)
+    local file = io.open(path, mode)
     if not file then
         create_folder('logs')
         file = io.open(path, mode)
@@ -272,7 +272,7 @@ function download_to_file(url, file_path)
 
     print("Saved to: " .. file_path)
 
-    file = io.open(file_path, "w+")
+    local file = io.open(file_path, "w+")
     file:write(table.concat(respbody))
     file:close()
     return file_path, code
@@ -338,7 +338,7 @@ end
 -- Save into file the data serialized for lua.
 -- Set uglify true to minify the file.
 function serialize_to_file(data, file, uglify)
-    file = io.open(file, 'w+')
+    local file = io.open(file, 'w+')
     local serialized
     if not uglify then
         serialized = serpent.block(data, {
