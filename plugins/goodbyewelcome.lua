@@ -276,6 +276,8 @@ local function run(msg, matches)
                             file_id = msg.reply_to_message.audio.file_id
                         elseif msg.reply_to_message.media_type == 'voice_note' then
                             file_id = msg.reply_to_message.voice.file_id
+                        elseif msg.reply_to_message.media_type == 'gif' then
+                            file_id = msg.reply_to_message.document.file_id
                         elseif msg.reply_to_message.media_type == 'document' then
                             file_id = msg.reply_to_message.document.file_id
                         elseif msg.reply_to_message.media_type == 'sticker' then
@@ -321,6 +323,8 @@ local function run(msg, matches)
                             file_id = msg.reply_to_message.audio.file_id
                         elseif msg.reply_to_message.media_type == 'voice_note' then
                             file_id = msg.reply_to_message.voice.file_id
+                        elseif msg.reply_to_message.media_type == 'gif' then
+                            file_id = msg.reply_to_message.document.file_id
                         elseif msg.reply_to_message.media_type == 'document' then
                             file_id = msg.reply_to_message.document.file_id
                         elseif msg.reply_to_message.media_type == 'sticker' then
