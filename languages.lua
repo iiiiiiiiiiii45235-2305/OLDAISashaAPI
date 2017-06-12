@@ -960,7 +960,7 @@ return {
             .. '$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername.'
             .. '\nSe alcuni marcatori non potessero essere risolti (reply, forwardchat, forward) verrebbero usati quelli normali (chat, user).',
             '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha salva <text> come risposta a <var_name>|<pattern>.',
-            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]: Sasha salva il <reply_media> (foto, video, video messaggio, audio, nota vocale, documento, sticker) come risposta a <var_name>|<pattern>, se <caption> è presente viene usato come didascalia (non disponibile per tutti i media).',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]: Sasha salva il <reply_media> (foto, video, video messaggio, audio, nota vocale, gif, documento, sticker) come risposta a <var_name>|<pattern>, se <caption> è presente viene usato come didascalia (non disponibile per tutti i media).',
             '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha elimina <var_name>|<pattern>.',
             'OWNER',
             '#enableglobal: Sasha abilita i get globali sulla chat.',
@@ -2077,7 +2077,7 @@ return {
             .. '$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername.'
             .. '\nIf some markers can\'t be solved (reply, forwardchat, forward) normal ones will be used (chat, user).',
             '(#set|[sasha] setta) <var_name>|<pattern> <text>: Sasha saves <text> as answer to <var_name>|<pattern>.',
-            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]: Sasha saves <reply_media> (photo, video, video message, audio, voice note, document, sticker) as answer to <var_name>|<pattern>, if <caption> is present it will be sent as caption (not available for all media).',
+            '(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]: Sasha saves <reply_media> (photo, video, video message, audio, voice note, gif, document, sticker) as answer to <var_name>|<pattern>, if <caption> is present it will be sent as caption (not available for all media).',
             '(#unset|[sasha] unsetta) <var_name>|<pattern>: Sasha deletes <var_name>|<pattern>.',
             'OWNER',
             '#enableglobal: Sasha enables global gets on chat.',

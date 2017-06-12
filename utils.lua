@@ -263,8 +263,12 @@ function download_to_file(url, file_path)
     }
     -- nil, code, headers, status
     local response = nil
-    options.redirect = false
-    response = { HTTPS.request(options) }
+    if url:starts('https') then
+        options.redirect = false
+        response = { HTTPS.request(options) }
+    else
+        response = { http.request(options) }
+    end
     local code = response[2]
     local headers = response[3]
     local status = response[4]

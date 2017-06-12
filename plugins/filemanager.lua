@@ -115,7 +115,7 @@ function run(msg, matches)
                         local res = getFile(file_id)
                         local download_link = telegram_file_link(res)
                         local file_path, res_code = download_to_file(download_link, folder .. file_name)
-                        return langs[msg.lang].fileDownloadedTo ..(file_path or code)
+                        return langs[msg.lang].fileDownloadedTo ..(file_path or res_code)
                     end
                 else
                     return langs[msg.lang].useQuoteOnFile
