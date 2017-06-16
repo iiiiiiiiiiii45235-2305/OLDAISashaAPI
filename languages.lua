@@ -607,6 +607,10 @@ return {
         ishereNo = 'No.',
         noLinkAvailable = 'Nessun link disponibile.',
 
+        -- interact.lua
+        userBlockedBot = 'L\'utente specificato ha bloccato il bot.',
+        userDidNotBlockBot = 'L\'utente specificato ha bot attivo.',
+
         -- lua_exec.lua --
         doneNoOutput = 'Fatto, nessun output.',
 
@@ -1720,6 +1724,10 @@ return {
         ishereYes = 'Yes.',
         ishereNo = 'No.',
         noLinkAvailable = 'No link available.',
+
+        -- interact.lua
+        userBlockedBot = 'The specifided user blocked the bot.',
+        userDidNotBlockBot = 'The specified did not block the bot .',
 
         -- lua_exec.lua --
         doneNoOutput = 'Done, no output.',
