@@ -37,7 +37,7 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                return sendChatAction(msg.reply_to_message.forward_from.id, 'typing')
+                                return tostring(sendChatAction(msg.reply_to_message.forward_from.id, 'typing').ok or false)
                             else
                                 return langs[msg.lang].cantDoThisToChat
                             end
@@ -45,33 +45,33 @@ local function run(msg, matches)
                             return langs[msg.lang].errorNoForward
                         end
                     else
-                        return sendChatAction(msg.reply_to_message.from.id, 'typing')
+                        return tostring(sendChatAction(msg.reply_to_message.from.id, 'typing').ok or false)
                     end
                 else
                     if msg.reply_to_message.service then
                         if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                            local text = sendChatAction(msg.reply_to_message.adder.id, 'typing') .. '\n'
+                            local text = tostring(sendChatAction(msg.reply_to_message.adder.id, 'typing').ok or false) .. '\n'
                             for k, v in pairs(msg.reply_to_message.added) do
-                                text = text .. v.id .. ' ' ..(tostring(sendChatAction(v.id, 'typing') or false)) .. '\n'
+                                text = text .. v.id .. ' ' ..(tostring(sendChatAction(v.id, 'typing').ok or false)) .. '\n'
                             end
                             return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            return sendChatAction(msg.reply_to_message.removed.id, 'typing')
+                            return tostring(sendChatAction(msg.reply_to_message.removed.id, 'typing').ok or false)
                         else
-                            return sendChatAction(msg.reply_to_message.from.id, 'typing')
+                            return tostring(sendChatAction(msg.reply_to_message.from.id, 'typing').ok or false)
                         end
                     else
-                        return sendChatAction(msg.reply_to_message.from.id, 'typing')
+                        return tostring(sendChatAction(msg.reply_to_message.from.id, 'typing').ok or false)
                     end
                 end
             elseif matches[2] and matches[2] ~= '' then
                 if string.match(matches[2], '^%d+$') then
-                    return sendChatAction(matches[2], 'typing')
+                    return tostring(sendChatAction(matches[2], 'typing').ok or false)
                 else
                     local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            return sendChatAction(obj_user.id, 'typing')
+                            return tostring(sendChatAction(obj_user.id, 'typing').ok or false)
                         end
                     else
                         return langs[msg.lang].noObject
