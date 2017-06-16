@@ -1095,9 +1095,21 @@ return {
         {
             '🅿️ INTERACT',
             'Plugin per l\'interazione con gli utenti.',
+            'USER',
+            '#typing: Sasha finge di scrivere.',
+            '#upload_photo: Sasha finge di inviare una foto.',
+            '#record_video: Sasha finge di registrare un video.',
+            '#upload_video: Sasha finge di inviare un video.',
+            '#record_audio: Sasha finge di registrare un audio.',
+            '#upload_audio: Sasha finge di inviare un audio.',
+            '#upload_document: Sasha finge di inviare un documento.',
+            '#find_location: Sasha finge di inviare una posizione.',
+            '#record_videonote: Sasha finge di registrare un video messaggio.',
+            '#upload_videonote: Sasha finge di inviare un video messaggio.',
             'MOD',
             '(#echo|sasha ripeti) [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio.',
             '(#markdownecho|sasha markdown ripeti) [<reply>]<text>: Sasha ripete <text> usando il markdown, se in risposta ad un messaggio sasha risponde a quel messaggio.',
+            '#testuser <id>|<username>|<reply>|from: Sasha controlla se l\'utente specificato ha bloccato il bot.',
         },
 
         likecounter =
@@ -1172,21 +1184,6 @@ return {
             'Notazione Esadecimale => ("a56729" è marrone).',
             'Notazione Decimale => ("255-192-203" è rosa).',
             '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha crea il QR Code di <text>, se specificato colora il QR Code.',
-        },
-
-        reactions =
-        {
-            '🅿️ REACTIONS',
-            'Plugin per far reagire Sasha.',
-            'MOD',
-            '#typing: Sasha finge di scrivere.',
-            '#upload_photo: Sasha finge di inviare una foto.',
-            '#record_video: Sasha finge di registrare un video.',
-            '#upload_video: Sasha finge di inviare un video.',
-            '#record_audio: Sasha finge di registrare un audio.',
-            '#upload_audio: Sasha finge di inviare un audio.',
-            '#upload_document: Sasha finge di inviare un documento.',
-            '#find_location: Sasha finge di inviare una posizione.',
         },
 
         shout =
@@ -2212,9 +2209,21 @@ return {
         {
             '🅿️ INTERACT',
             'Plugin for the interaction with users.',
+            'USER',
+            '#typing: Sasha pretends to write.',
+            '#upload_photo: Sasha pretends to upload a photo.',
+            '#record_video: Sasha pretends to record a video.',
+            '#upload_video: Sasha pretends to upload a video.',
+            '#record_audio: Sasha pretends to record an audio.',
+            '#upload_audio: Sasha pretends to upload an audio.',
+            '#upload_document: Sasha pretends to upload a document.',
+            '#find_location: Sasha pretends to send a location.',
+            '#record_videonote: Sasha pretends to record a video message.',
+            '#upload_videonote: Sasha pretends to upload a video message.',
             'MOD',
             '(#echo|sasha ripeti) [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message.',
             '(#markdownecho|sasha markdown ripeti) [<reply>]<text>: Sasha repeats <text> using markdown, if in reply of a message she replies to that message.',
+            '#testuser <id>|<username>|<reply>|from: Sasha tests if the specified user has blocked the bot.',
         },
 
         likecounter =
@@ -2289,21 +2298,6 @@ return {
             'Hexadecimal => ("a56729" it\'s brown).',
             'Decimal => ("255-192-203" it\'s pink).',
             '(#qr|sasha qr) ["<background_color>" "<data_color>"] <text>: Sasha creates QR Code of <text>, if the specified it colors QR Code.',
-        },
-
-        reactions =
-        {
-            '🅿️ REACTIONS',
-            'Plugin to make Sasha reacts.',
-            'MOD',
-            '#typing: Sasha pretends to write.',
-            '#upload_photo: Sasha pretends to upload a photo.',
-            '#record_video: Sasha pretends to record a video.',
-            '#upload_video: Sasha pretends to upload a video.',
-            '#record_audio: Sasha pretends to record an audio.',
-            '#upload_audio: Sasha pretends to upload an audio.',
-            '#upload_document: Sasha pretends to upload a document.',
-            '#find_location: Sasha pretends to send a location.',
         },
 
         shout =
