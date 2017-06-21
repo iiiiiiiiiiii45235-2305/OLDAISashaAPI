@@ -769,9 +769,9 @@ local function keyboard_settings_list(chat_id)
                 keyboard.inline_keyboard[row] = { }
             end
             if value then
-                keyboard.inline_keyboard[row][column] = { text = '🔒' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                keyboard.inline_keyboard[row][column] = { text = '🔴' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
             else
-                keyboard.inline_keyboard[row][column] = { text = '🔓' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+                keyboard.inline_keyboard[row][column] = { text = '🔵' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
             end
             column = column + 1
             if column > 2 then
