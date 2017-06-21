@@ -121,10 +121,12 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'typing' or matches[1]:lower() == 'upload_photo' or matches[1]:lower() == 'record_video' or matches[1]:lower() == 'upload_video' or matches[1]:lower() == 'record_audio' or matches[1]:lower() == 'upload_audio' or matches[1]:lower() == 'upload_document' or matches[1]:lower() == 'find_location' or matches[1]:lower() == 'record_videonote' or matches[1]:lower() == 'upload_videonote' then
-        mystat('/reactions')
-        return sendChatAction(msg.chat.id, matches[1]:lower())
-    else
-        return langs[msg.lang].require_mod
+        if msg.from.is_mod then
+            mystat('/reactions')
+            return sendChatAction(msg.chat.id, matches[1]:lower())
+        else
+            return langs[msg.lang].require_mod
+        end
     end
     -- interact
     mystat('/interact')
