@@ -497,6 +497,7 @@ return {
         cantContact = 'Se non mi scrive per primo/a non posso contattare ',
         groupInfoUpdated = 'Nome gruppo e moderatori aggiornati.',
         modListSynced = 'Lista moderatori sincronizzata con quella di telegram.',
+        locksIntro = 'Legenda blocchi:\n🔴 Blocco attivato\n🔵 Blocco disattivato',
         -- ex inpm.lua --
         groupsJoin = 'Gruppi:\nUsa /join <group_id> per entrare\n\n',
         realmsJoin = 'Reami:\nUsa /join <realm_id> per entrare\n\n',
@@ -1613,6 +1614,7 @@ return {
         cantContact = 'If (s)he doesn\'t write me first I can\'t contact ',
         groupInfoUpdated = 'Group name and mods updated.',
         modListSynced = 'Modlist synced with telegram\'s one.',
+        locksIntro = 'Locks\' legend:\n🔴 Locked\n🔵 Unlocked',
         -- ex inpm.lua --
         groupsJoin = 'Groups:\nUse /join <group_id> to join\n\n',
         realmsJoin = 'Realm:\nUse /join <realm_id> to join\n\n',

@@ -855,7 +855,7 @@ local function run(msg, matches)
             if matches[2] == 'DELETE' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             elseif matches[2] == 'BACKSETTINGS' then
-                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3], keyboard_settings_list(matches[3]))
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3]))
             elseif matches[2] == 'BACKMUTES' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
             elseif matches[4] then
@@ -1162,7 +1162,7 @@ local function run(msg, matches)
                 end
                 mystat('/settings <group_id>')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
-                sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2], keyboard_settings_list(matches[2]))
+                sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[2]))
                 return
             else
                 return langs[msg.lang].require_admin
@@ -1565,7 +1565,7 @@ local function run(msg, matches)
                     end
                     mystat('/settings')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id, keyboard_settings_list(msg.chat.id))
+                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(msg.chat.id))
                     return
                 else
                     return langs[msg.lang].require_mod
