@@ -761,7 +761,7 @@ local function pre_process(msg)
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs
                 local txt = banUser(bot.id, msg.from.id, msg.chat.id)
-                if txt == langs[msg.lang].kick_errors[1] or txt == langs[msg.lang].kick_errors[2] or txt == langs[msg.lang].kick_errors[3] or txt == langs[msg.lang].kick_errors[4] then
+                if txt == langs[msg.lang].errors[1] or txt == langs[msg.lang].errors[2] or txt == langs[msg.lang].errors[3] or txt == langs[msg.lang].errors[4] then
                     if kick_ban_errors[tostring(chat_id)] then
                         if txt ~= kick_ban_errors[tostring(chat_id)] then
                             kick_ban_errors[tostring(chat_id)] = txt

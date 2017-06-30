@@ -1073,6 +1073,38 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
+            if matches[1]:lower() == 'silentpin' then
+                if msg.from.is_mod then
+                    if msg.reply then
+                        mystat('/silentpin')
+                        return pinChatMessage(msg.chat.id, msg.reply_to_message.message_id)
+                    else
+                        return langs[msg.lang].needReply
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == 'pin' then
+                if msg.from.is_mod then
+                    if msg.reply then
+                        mystat('/pin')
+                        return pinChatMessage(msg.chat.id, msg.reply_to_message.message_id, true)
+                    else
+                        return langs[msg.lang].needReply
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == 'unpin' then
+                if msg.from.is_mod then
+                    mystat('/unpin')
+                    return unpinChatMessage(msg.chat.id)
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca' then
                 if msg.from.is_mod then
                     if checkMatchesLockUnlock(matches[2]) then
@@ -1294,20 +1326,50 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'link' or matches[1]:lower() == 'sasha link' then
                 mystat('/link')
-                if data[tostring(msg.chat.id)].settings.set_link then
-                    if data[tostring(msg.chat.id)].settings.lock_group_link then
-                        if msg.from.is_mod then
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                            return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                if data[tostring(msg.chat.id)].settings.lock_group_link then
+                    if msg.from.is_mod then
+                        local link = exportChatInviteLink(msg.chat.id)
+                        if link then
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. tostring(link) .. "]")
+                            return msg.chat.title .. '\n' .. tostring(link)
                         else
-                            return langs[msg.lang].require_mod
+                            return langs[msg.lang].errors[1]
                         end
                     else
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                        return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                        return langs[msg.lang].require_mod
                     end
                 else
-                    return langs[msg.lang].sendMeLink
+                    local link = exportChatInviteLink(msg.chat.id)
+                    if link then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. tostring(link) .. "]")
+                        return msg.chat.title .. '\n' .. tostring(link)
+                    else
+                        return langs[msg.lang].errors[1]
+                    end
+                end
+            end
+            if matches[1]:lower() == 'chatlink' then
+                mystat('/chatlink')
+                if data[tostring(msg.chat.id)].settings.lock_group_link then
+                    if msg.from.is_mod then
+                        local chat = getChat(msg.chat.id)
+                        if chat.invite_link then
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. chat.invite_link .. "]")
+                            return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                        else
+                            return langs[msg.lang].errors[1]
+                        end
+                    else
+                        return langs[msg.lang].require_mod
+                    end
+                else
+                    local chat = getChat(msg.chat.id)
+                    if chat.invite_link then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. chat.invite_link .. "]")
+                        return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                    else
+                        return langs[msg.lang].errors[1]
+                    end
                 end
             end
             if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
@@ -1380,6 +1442,104 @@ local function run(msg, matches)
                 mystat('/modlist')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
                 return modList(msg)
+            end
+            if matches[1]:lower() == 'promoteadmin' then
+                if msg.from.is_owner then
+                    mystat('/promoteadmin')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        local permissions = adjust_permissions(matches[3]:lower())
+                                        return promoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, permissions)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            else
+                                local permissions = adjust_permissions(matches[3]:lower())
+                                return promoteChatMember(msg.chat.id, msg.reply_to_message.from.id, permissions)
+                            end
+                        end
+                    elseif matches[2] and matches[2] ~= '' then
+                        if string.match(matches[2], '^%d+$') then
+                            local obj_user = getChat(matches[2])
+                            if type(obj_user) == 'table' then
+                                if obj_user then
+                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                        local permissions = adjust_permissions(matches[3]:lower())
+                                        return promoteChatMember(msg.chat.id, obj_user.id, permissions)
+                                    end
+                                else
+                                    return langs[msg.lang].noObject
+                                end
+                            end
+                        else
+                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    local permissions = adjust_permissions(matches[3]:lower())
+                                    return promoteChatMember(msg.chat.id, obj_user.id, permissions)
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    end
+                    return
+                else
+                    return langs[msg.lang].require_owner
+                end
+            end
+            if matches[1]:lower() == 'demoteadmin' then
+                if msg.from.is_owner then
+                    mystat('/demoteadmin')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return demoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            end
+                        else
+                            return demoteChatMember(msg.chat.id, msg.reply_to_message.from.id)
+                        end
+                    elseif matches[2] and matches[2] ~= '' then
+                        if string.match(matches[2], '^%d+$') then
+                            local obj_user = getChat(matches[2])
+                            if type(obj_user) == 'table' then
+                                if obj_user then
+                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                        return demoteChatMember(msg.chat.id, obj_user.id)
+                                    end
+                                else
+                                    return langs[msg.lang].noObject
+                                end
+                            end
+                        else
+                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    return demoteChatMember(msg.chat.id, obj_user.id)
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    end
+                    return
+                else
+                    return langs[msg.lang].require_owner
+                end
             end
             if matches[1]:lower() == 'promote' or matches[1]:lower() == 'sasha promuovi' or matches[1]:lower() == 'promuovi' then
                 if msg.from.is_owner then
@@ -1555,6 +1715,9 @@ return {
 
         -- SUPERGROUP
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
+        "^[#!/]([Pp][Ii][Nn])$",
+        "^[#!/]([Ss][Ii][Ll][Ee][Nn][Tt][Pp][Ii][Nn])$",
+        "^[#!/]([Uu][Nn][Pp][Ii][Nn])$",
         -- getadmins
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
         "^([Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
@@ -1571,6 +1734,10 @@ return {
         "^[#!/]([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
+        -- "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+) (.*)$",
+        -- "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) (.*)$",
+        -- "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
+        -- "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn])$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee]) ([^%s]+)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee])$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee]) ([^%s]+)$",
@@ -1588,6 +1755,7 @@ return {
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ll][Ii][Nn][Kk])$",
+        "^[#!/]([Cc][Hh][Aa][Tt][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee][Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ss][Yy][Nn][Cc][Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
@@ -1656,6 +1824,7 @@ return {
         "#owner",
         "#admins [<reply>|<text>]",
         "(#link|sasha link)",
+        "#chatlink",
         "MOD",
         "#type",
         "#updategroupinfo",
@@ -1670,14 +1839,18 @@ return {
         "(#mutelist|lista utenti muti)",
         "(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "#[silent]pin <reply>",
+        "#unpin",
         "OWNER",
         "#syncmodlist",
         "#log",
         "(#getadmins|[sasha] lista admin)",
         "(#setlink|sasha imposta link) <link>",
         "(#unsetlink|sasha elimina link)",
-        "(#promote|[sasha] promuovi) <username>|<reply>",
-        "(#demote|[sasha] degrada) <username>|<reply>",
+        "(#promote|[sasha] promuovi) <id>|<username>|<reply>|from",
+        "(#demote|[sasha] degrada) <id>|<username>|<reply>|from",
+        "#promoteadmin <id>|<username>|<reply>|from",
+        "#demoteadmin <id>|<username>|<reply>|from",
         "#setowner <id>|<username>|<reply>",
         "#mute|silenzia all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
         "#unmute|ripristina all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",

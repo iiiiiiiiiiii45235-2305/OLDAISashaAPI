@@ -117,13 +117,13 @@ end
 function code2text(code, ln)
     -- the default error description can't be sent as output, so a translation is needed
     if code == 101 or code == 105 or code == 107 then
-        return langs[ln].kick_errors[1]
+        return langs[ln].errors[1]
     elseif code == 102 or code == 104 then
-        return langs[ln].kick_errors[2]
+        return langs[ln].errors[2]
     elseif code == 103 then
-        return langs[ln].kick_errors[3]
+        return langs[ln].errors[3]
     elseif code == 106 then
-        return langs[ln].kick_errors[4]
+        return langs[ln].errors[4]
     elseif code == 7 then
         return false
     end
@@ -169,12 +169,12 @@ end
 
 function promoteChatMember(chat_id, user_id, permissions)
     --[[local permissions = { can_change_info = true,
-    can_post_messages = true,
-    can_edit_messages = true,
+    can_post_messages = true, -- channel
+    can_edit_messages = true, -- channel
     can_delete_messages = true,
     can_invite_users = true,
     can_restrict_members = true,
-    can_pin_messages = true,
+    can_pin_messages = true,  -- supergroups
     can_promote_members = true }]]
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
@@ -194,7 +194,7 @@ function promoteChatMember(chat_id, user_id, permissions)
     end
 end
 
-function demoteChatMember(chat_id)
+function demoteChatMember(chat_id, user_id)
     return promoteChatMember(chat_id, user_id)
 end
 
