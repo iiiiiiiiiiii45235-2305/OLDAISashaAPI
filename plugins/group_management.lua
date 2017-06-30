@@ -2,131 +2,7 @@
 
 group_type = ''
 
--- INPM
-local function allChats(msg)
-    i = 1
-    if not data['groups'] then
-        return langs[msg.lang].noGroups
-    end
-    local message = langs[msg.lang].groupsJoin
-    for k, v in pairsByKeys(data['groups']) do
-        local group_id = v
-        if data[tostring(group_id)] then
-            for m, n in pairsByKeys(data[tostring(group_id)]) do
-                if type(m) == 'string' then
-                    if m == 'set_name' then
-                        name = n:gsub("", "")
-                        chat_name = name:gsub("?", "")
-                        group_name_id = name .. '\n(ID: ' .. group_id .. ')\n'
-                        if name:match("[\216-\219][\128-\191]") then
-                            group_info = i .. '. \n' .. group_name_id
-                        else
-                            group_info = i .. '. ' .. group_name_id
-                        end
-                        i = i + 1
-                    end
-                end
-            end
-        end
-        message = message .. group_info
-    end
-
-    i = 1
-    if not data['realms'] then
-        return langs[msg.lang].noRealms
-    end
-    message = message .. '\n\n' .. langs[msg.lang].realmsJoin
-    for k, v in pairsByKeys(data['realms']) do
-        local realm_id = v
-        if data[tostring(realm_id)] then
-            for m, n in pairsByKeys(data[tostring(realm_id)]) do
-                if type(m) == 'string' then
-                    if m == 'set_name' then
-                        name = n:gsub("", "")
-                        chat_name = name:gsub("?", "")
-                        realm_name_id = name .. '\n(ID: ' .. realm_id .. ')\n'
-                        if name:match("[\216-\219][\128-\191]") then
-                            realm_info = i .. '. \n' .. realm_name_id
-                        else
-                            realm_info = i .. '. ' .. realm_name_id
-                        end
-                        i = i + 1
-                    end
-                end
-            end
-        end
-        message = message .. realm_info
-    end
-    local file = io.open("./groups/lists/all_listed_groups.txt", "w")
-    file:write(message)
-    file:flush()
-    file:close()
-    return message
-end
-
 -- INREALM
-local function groupsList(msg)
-    if not data.groups then
-        return langs[msg.lang].noGroups
-    end
-    local message = langs[msg.lang].groupListStart
-    for k, v in pairs(data.groups) do
-        if data[tostring(v)] then
-            if data[tostring(v)]['settings'] then
-                local settings = data[tostring(v)]['settings']
-                for m, n in pairs(settings) do
-                    if m == 'set_name' then
-                        name = n
-                    end
-                end
-                local group_owner = "No owner"
-                if data[tostring(v)]['set_owner'] then
-                    group_owner = tostring(data[tostring(v)]['set_owner'])
-                end
-                local group_link = "No link"
-                if data[tostring(v)]['settings']['set_link'] then
-                    group_link = data[tostring(v)]['settings']['set_link']
-                end
-                message = message .. name .. ' ' .. v .. ' - ' .. group_owner .. '\n{' .. group_link .. "}\n"
-            end
-        end
-    end
-    local file = io.open("./groups/lists/groups.txt", "w")
-    file:write(message)
-    file:flush()
-    file:close()
-    return message
-end
-
-local function realmsList(msg)
-    if not data.realms then
-        return langs[msg.lang].noRealms
-    end
-    local message = langs[msg.lang].realmListStart
-    for k, v in pairs(data.realms) do
-        local settings = data[tostring(v)]['settings']
-        for m, n in pairs(settings) do
-            if m == 'set_name' then
-                name = n
-            end
-        end
-        local group_owner = "No owner"
-        if data[tostring(v)]['admins_in'] then
-            group_owner = tostring(data[tostring(v)]['admins_in'])
-        end
-        local group_link = "No link"
-        if data[tostring(v)]['settings']['set_link'] then
-            group_link = data[tostring(v)]['settings']['set_link']
-        end
-        message = message .. name .. ' ' .. v .. ' - ' .. group_owner .. '\n{' .. group_link .. "}\n"
-    end
-    local file = io.open("./groups/lists/realms.txt", "w")
-    file:write(message)
-    file:flush()
-    file:close()
-    return message
-end
-
 -- begin ADD/REM GROUPS
 local function addGroup(msg)
     if is_group(msg) then
@@ -393,47 +269,6 @@ end
 -- end ADD/REM GROUPS
 
 -- begin RANKS MANAGEMENT
-local function promoteAdmin(user, chat_id)
-    local lang = get_lang(chat_id)
-    if not data.admins then
-        data.admins = { }
-        save_data(config.moderation.data, data)
-    end
-    if data.admins[tostring(user.id)] then
-        return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyAdmin
-    end
-    data.admins[tostring(user.id)] =(user.username or user.print_name or user.first_name)
-    save_data(config.moderation.data, data)
-    return(user.username or user.print_name or user.first_name) .. langs[lang].promoteAdmin
-end
-
-local function demoteAdmin(user, chat_id)
-    local lang = get_lang(chat_id)
-    if not data.admins then
-        data.admins = { }
-        save_data(config.moderation.data, data)
-    end
-    if not data.admins[tostring(user.id)] then
-        return(user.username or user.print_name or user.first_name) .. langs[lang].notAdmin
-    end
-    data.admins[tostring(user.id)] = nil
-    save_data(config.moderation.data, data)
-    return(user.username or user.print_name or user.first_name) .. langs[lang].demoteAdmin
-end
-
-local function botAdminsList(chat_id)
-    local lang = get_lang(chat_id)
-    if not data.admins then
-        data.admins = { }
-        save_data(config.moderation.data, data)
-    end
-    local message = langs[lang].adminListStart
-    for k, v in pairs(data.admins) do
-        message = message .. v .. ' - ' .. k .. '\n'
-    end
-    return message
-end
-
 local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)]['set_owner'] = tostring(user.id)
@@ -927,48 +762,6 @@ local function run(msg, matches)
         return contactMods(msg)
     end
 
-    -- INPM
-    if is_sudo(msg) or msg.chat.type == 'private' then
-        if matches[1]:lower() == 'join' or matches[1]:lower() == 'inviteme' or matches[1]:lower() == 'sasha invitami' or matches[1]:lower() == 'invitami' then
-            if is_admin(msg) then
-                -- adjust chat_id
-                if string.match(matches[2], '^-100') then
-                    sendMessage(matches[2], "@AISasha")
-                    sendMessage(bot.userVersion.id, "/lua channel_invite('channel#id' .. " .. matches[2]:gsub('-100', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
-                elseif string.match(matches[2], '-') then
-                    sendMessage(matches[2], "@AISasha")
-                    sendMessage(bot.userVersion.id, "/lua chat_add_user('chat#id' .. " .. matches[2]:gsub('-', '') .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
-                else
-                    sendMessage('-100' .. matches[2], "@AISasha")
-                    sendMessage('-' .. matches[2], "@AISasha")
-                    sendMessage(bot.userVersion.id, "/lua chat_add_user('chat#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false) " ..
-                    "channel_invite('channel#id' .. " .. matches[2] .. ", 'user#id' .. " .. msg.from.id .. ", ok_cb, false)")
-                end
-                return langs[msg.lang].ok
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'allchats' then
-            if is_admin(msg) then
-                mystat('/allchats')
-                return allChats(msg)
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-
-        if matches[1]:lower() == 'allchatslist' then
-            if is_admin(msg) then
-                mystat('/allchatslist')
-                allChats(msg)
-                return sendDocument(msg.chat.id, "./groups/lists/all_listed_groups.txt")
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-    end
-
     -- INREALM
     if is_realm(msg) then
         if matches[1]:lower() == 'rem' and string.match(matches[2], '^%-?%d+$') then
@@ -984,107 +777,6 @@ local function run(msg, matches)
                 data[tostring('groups')][tostring(matches[2])] = nil
                 save_data(config.moderation.data, data)
                 return langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'addadmin' then
-            if is_sudo(msg) then
-                mystat('/addadmin')
-                if msg.reply then
-                    return promoteAdmin(msg.reply_to_message.from, msg.chat.id)
-                elseif matches[2] and matches[2] ~= '' then
-                    if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return promoteAdmin(obj_user, msg.chat.id)
-                                end
-                            else
-                                return langs[msg.lang].noObject
-                            end
-                        end
-                    else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return promoteAdmin(obj_user, msg.chat.id)
-                            end
-                        else
-                            return langs[msg.lang].noObject
-                        end
-                    end
-                end
-                return
-            else
-                return langs[msg.lang].require_sudo
-            end
-        end
-        if matches[1]:lower() == 'removeadmin' then
-            if is_sudo(msg) then
-                mystat('/removeadmin')
-                if msg.reply then
-                    return demoteAdmin(msg.reply_to_message.from, msg.chat.id)
-                elseif matches[2] and matches[2] ~= '' then
-                    if string.match(matches[2], '^%d+$') then
-                        local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return demoteAdmin(obj_user, msg.chat.id)
-                                end
-                            else
-                                return langs[msg.lang].noObject
-                            end
-                        end
-                    else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return demoteAdmin(obj_user, msg.chat.id)
-                            end
-                        else
-                            return langs[msg.lang].noObject
-                        end
-                    end
-                end
-                return
-            else
-                return langs[msg.lang].require_sudo
-            end
-        end
-        if matches[1]:lower() == 'list' then
-            if is_admin(msg) then
-                if matches[2]:lower() == 'admins' then
-                    mystat('/list admins')
-                    return botAdminsList(msg.chat.id)
-                elseif matches[2]:lower() == 'groups' then
-                    mystat('/list groups')
-                    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                        groupsList(msg)
-                        sendDocument(msg.chat.id, "./groups/lists/groups.txt")
-                        -- return group_list(msg)
-                    elseif msg.chat.type == 'private' then
-                        groupsList(msg)
-                        sendDocument(msg.from.id, "./groups/lists/groups.txt")
-                        -- return group_list(msg)
-                    end
-                    return langs[msg.lang].groupListCreated
-                elseif matches[2]:lower() == 'realms' then
-                    mystat('/list realms')
-                    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                        realmsList(msg)
-                        sendDocument(msg.chat.id, "./groups/lists/realms.txt")
-                        -- return realmsList(msg)
-                    elseif msg.chat.type == 'private' then
-                        realmsList(msg)
-                        sendDocument(msg.from.id, "./groups/lists/realms.txt")
-                        -- return realmsList(msg)
-                    end
-                    return langs[msg.lang].realmListCreated
-                end
-                return
             else
                 return langs[msg.lang].require_admin
             end
@@ -1830,21 +1522,9 @@ return {
         "!!tgservice chat_add_user",
         "!!tgservice chat_del_user",
 
-        -- INPM
-        "^[#!/]([Jj][Oo][Ii][Nn]) (%-?%d+)$",
-        "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss])$",
-        "^[#!/]([Aa][Ll][Ll][Cc][Hh][Aa][Tt][Ss][Ll][Ii][Ss][Tt])$",
-        -- join
-        "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee][Mm][Ee]) (%-?%d+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Vv][Ii][Tt][Aa][Mm][Ii]) (%-?%d+)$",
-        "^([Ii][Nn][Vv][Ii][Tt][Aa][Mm][Ii]) (%-?%d+)$",
-
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
-        "^[#!/]([Aa][Dd][Dd][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
-        "^[#!/]([Rr][Ee][Mm][Oo][Vv][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Oo][Ww][Nn][Ee][Rr]) (%-?%d+) (%d+)$",-- (group id) (owner id)
-        "^[#!/]([Ll][Ii][Ss][Tt]) ([^%s]+)$",
         "^[#!/]([Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
         "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
         "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)",
@@ -2008,10 +1688,6 @@ return {
         "ex INGROUP.LUA",
         "#add realm",
         "#rem realm",
-        "ex INPM.LUA",
-        "(#join|#inviteme|[sasha] invitami) <chat_id>",
-        "#allchats",
-        "#allchatlist",
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
@@ -2025,9 +1701,5 @@ return {
         "#textualsettings <group_id>",
         "#type",
         "#rem <group_id>",
-        "#list admins|groups|realms",
-        "SUDO",
-        "#addadmin <user_id>|<username>",
-        "#removeadmin <user_id>|<username>",
     },
 }

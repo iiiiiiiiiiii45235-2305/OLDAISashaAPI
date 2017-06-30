@@ -167,6 +167,61 @@ function unbanChatMember(user_id, chat_id)
     return tab
 end
 
+function promoteChatMember(chat_id, user_id, permissions)
+    --[[local permissions = { can_change_info = true,
+    can_post_messages = true,
+    can_edit_messages = true,
+    can_delete_messages = true,
+    can_invite_users = true,
+    can_restrict_members = true,
+    can_pin_messages = true,
+    can_promote_members = true }]]
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
+        '&user_id=' .. user_id
+        for k, v in pairs(permissions) do
+            url = url .. '&' .. k .. '=' .. v
+        end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('delete_photo', code)
+            end
+        end
+    end
+end
+
+function demoteChatMember(chat_id)
+    return promoteChatMember(chat_id, user_id)
+end
+
+function restrictChatMember(chat_id, user_id, until_date, permissions)
+    --[[local permissions = { can_send_messages = true,
+    can_send_media_messages = true,
+    can_send_other_messages = true,
+    can_add_web_page_previews = true }]]
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
+        '&user_id=' .. user_id ..
+        '&until_date=' .. until_date or '29'
+        for k, v in pairs(permissions) do
+            url = url .. '&' .. k .. '=' .. v
+        end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('delete_photo', code)
+            end
+        end
+    end
+end
+
 function leaveChat(chat_id)
     local url = BASE_URL .. '/leaveChat?chat_id=' .. chat_id
     return sendRequest(url)
@@ -406,20 +461,138 @@ function sendChatAction(chat_id, action)
 end
 
 function deleteMessage(chat_id, message_id)
-    local url = BASE_URL ..
-    '/deleteMessage?chat_id=' .. chat_id ..
-    '&message_id=' .. message_id
-    local res, code = sendRequest(url)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/deleteMessage?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id
+        local res, code = sendRequest(url)
 
-    if not res and code then
-        -- if the request failed and a code is returned (not 403 and 429)
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            savelog('delete_message', code)
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('delete_message', code)
+            end
+        end
+    end
+end
+
+function pinChatMessage(chat_id, message_id, send_sound)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/pinChatMessage?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id
+        if not send_sound then
+            url = url .. '&disable_notification=true'
+            -- messages are silent by default
+        end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('pin_message', code)
+            end
+        end
+    end
+end
+
+function unpinChatMessage(chat_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL ..
+        '/unpinChatMessage?chat_id=' .. chat_id
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('unpin_message', code)
+            end
+        end
+    end
+end
+
+function exportChatInviteLink(chat_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/exportChatInviteLink?chat_id=' .. chat_id
+        local obj_link = sendRequest(url)
+        if type(obj_link) == 'table' then
+            if obj_link.result then
+                obj_link = obj_link.result
+                return obj_link
+            end
+        end
+    end
+end
+
+function setChatTitle(chat_id, title)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/setChatTitle?chat_id=' .. chat_id ..
+        '&title=' .. title
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('set_title', code)
+            end
+        end
+    end
+end
+
+-- supergroups/channels only
+function setChatDescription(chat_id, photo)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/setChatDescription?chat_id=' .. chat_id ..
+        '&description=' .. description
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('set_description', code)
+            end
+        end
+    end
+end
+
+function deleteChatPhoto(chat_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/deleteChatPhoto?chat_id=' .. chat_id
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('delete_photo', code)
+            end
         end
     end
 end
 
 ----------------------------By Id-----------------------------------------
+
+function setChatPhotoId(chat_id, file_id)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/setChatPhoto?chat_id=' .. chat_id ..
+        '&photo=' .. file_id
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('set_photo', code)
+            end
+        end
+    end
+end
 
 function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
     local obj = getChat(chat_id)
@@ -451,8 +624,6 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -481,8 +652,6 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -516,8 +685,6 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -551,8 +718,6 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -581,8 +746,6 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -616,8 +779,6 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -651,8 +812,6 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -661,6 +820,17 @@ end
 function curlRequest(curl_command)
     -- Use at your own risk. Will not check for success.
     io.popen(curl_command)
+end
+
+function setChatPhoto(chat_id, photo)
+    local obj = getChat(chat_id)
+    if type(obj) == 'table' then
+        local url = BASE_URL .. '/setChatPhoto'
+        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
+        -- print_msg(sent_msg)
+        return curlRequest(curl_command)
+    end
 end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
@@ -679,8 +849,6 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -697,8 +865,6 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -723,8 +889,6 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -755,8 +919,6 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -779,8 +941,6 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -803,8 +963,6 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
         local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -821,8 +979,6 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
         print_msg(sent_msg)
         return curlRequest(curl_command)
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -852,8 +1008,6 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'location' }
             print_msg(sent_msg)
         end
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
@@ -1111,7 +1265,7 @@ function userVersionInChat(chat_id)
 end
 
 -- call this to kick
-function kickUser(executer, target, chat_id, reason)
+function kickUser(executer, target, chat_id, reason, until_date)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)

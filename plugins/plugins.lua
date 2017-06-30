@@ -34,6 +34,7 @@ local function system_plugin(p)
         p == 'info' or
         p == 'lua_exec' or
         p == 'msg_checks' or
+        p == 'multiple_commands' or
         p == 'onservice' or
         p == 'plugins' or
         p == 'strings' or

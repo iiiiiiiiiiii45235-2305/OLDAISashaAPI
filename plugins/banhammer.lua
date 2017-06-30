@@ -508,20 +508,6 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'multipleunban' and matches[2] then
-            if msg.from.is_owner then
-                mystat('/multipleunban')
-                local tab = matches[2]:split(' ')
-                local i = 0
-                for k, id in pairs(tab) do
-                    unbanUser(msg.from.id, id, msg.chat.id)
-                    i = i + 1
-                end
-                return langs[msg.lang].multipleUnban:gsub('X', i)
-            else
-                return langs[msg.lang].require_owner
-            end
-        end
         if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
             if is_admin(msg) then
                 mystat('/gban')
@@ -834,7 +820,6 @@ return {
         "^[#!/]([Uu][Nn][Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Uu][Nn][Bb][Aa][Nn]) (.*)$",
         "^[#!/]([Uu][Nn][Bb][Aa][Nn])$",
-        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Bb][Aa][Nn]) (.*)$",
         "^[#!/]([Gg][Bb][Aa][Nn]) ([^%s]+)$",
         "^[#!/]([Gg][Bb][Aa][Nn])$",
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn]) ([^%s]+)$",
@@ -950,7 +935,6 @@ return {
         -- "#kickrandom",
         -- "#kickdeleted",
         "OWNER",
-        "#multipleunban <user_id1> <user_id2> ...",
         -- "#kicknouser",
         -- "#kickinactive [<msgs>]",
         "ADMIN",

@@ -785,12 +785,15 @@ return {
             '(#pm|sasha messaggia) <user_id> <msg>: Sasha invia <msg> a <user_id>.',
             '(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from: Sasha blocca l\'utente specificato.',
             '(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from: Sasha sblocca l\'utente specificato.',
+            '#list admins|groups|realms: Sasha mostra una lista della variabile specificata.',
             '#checkspeed: Sasha calcola la velocità con cui processa i messaggi.',
             '#vardump [<reply>]: Sasha esegue il vardump del messaggio specificato.',
             '#commandsstats: Sasha manda gli stats di tutti i comandi.',
             '#ping: Sasha risponde con "Pong".',
             '#laststart: Sasha manda la data dell\'avvio.',
             'SUDO',
+            '#addadmin <user_id>|<username>: Sasha promuove l\'utente specificato ad amminstratore.',
+            '#removeadmin <user_id>|<username>: Sasha degrada l\'utente specificato.',
             '#botstop: Sasha si stoppa.',
             '#botrestart: Sasha si riavvia.',
             '#redissave: Sasha salva il database redis.',
@@ -818,7 +821,6 @@ return {
             -- '#kickrandom: Sasha sceglie un utente a caso e lo kicka.',
             -- '#kickdeleted: Sasha kicka tutti gli account eliminati.',
             'OWNER',
-            '#multipleunban <user_id1> <user_id2> ...: Sasha sbanna tutti gli <user_id> specificati nella lista.',
             -- '#kicknouser: Sasha kicka tutti gli utenti senza username.',
             -- '#kickinactive [<msgs>]: Sasha kicka tutti gli utenti inattivi sotto <msgs> messaggi.',
             'ADMIN',
@@ -1039,10 +1041,6 @@ return {
             'ex INGROUP.LUA',
             '#add realm: Sasha aggiunge il regno.',
             '#rem realm: Sasha rimuove il regno.',
-            'ex INPM.LUA',
-            '(#join|#inviteme|[sasha] invitami) <chat_id>: Sasha tenta di aggiungere (tramite @AISasha) l\'utente a <chat_id>.',
-            '#allchats: Sasha mostra l\'elenco delle chat.',
-            '#allchatlist: Sasha manda un file con l\'elenco delle chat.',
             'REGNO',
             '#setgpowner <group_id> <user_id>: Sasha imposta <user_id> come proprietario di <group_id>.',
             '(#setrules|sasha imposta regole) <group_id> <text>: Sasha cambia le regole di <group_id> in <text>.',
@@ -1055,10 +1053,6 @@ return {
             '<setting_type> può essere: arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict',
             '#[textual]settings <group_id>: Sasha manda le impostazioni di <group_id>.',
             '#rem <group_id>: Sasha rimuove il gruppo.',
-            '#list admins|groups|realms: Sasha mostra una lista della variabile specificata.',
-            'SUDO',
-            '#addadmin <user_id>|<username>: Sasha promuove l\'utente specificato ad amminstratore.',
-            '#removeadmin <user_id>|<username>: Sasha degrada l\'utente specificato.',
         },
 
         help =
@@ -1145,6 +1139,14 @@ return {
             'Plugin per sapere i messaggi mandati.',
             'USER',
             '#me: Sasha dice quanti messaggi hai mandato.',
+        },
+
+        multiple_commands =
+        {
+            '🅿️ ME',
+            'Plugin per eseguire azioni multiple.',
+            'OWNER',
+            '#multipleunban <user_id1> <user_id2> ...: Sasha sbanna tutti gli <user_id> specificati nella lista.',
         },
 
         onservice =
@@ -1904,12 +1906,15 @@ return {
             '(#pm|sasha messaggia) <user_id> <msg>: Sasha writes <msg> to <user_id>.',
             '(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from: Sasha blocks the specified user.',
             '(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from: Sasha unblocks the specified user.',
+            '#list admins|groups|realms: Sasha sends list of the specified parameter.',
             '#checkspeed: Sasha calculates how much time she needs to process messages.',
             '#vardump [<reply>]: Sasha sends vardump of the specified message.',
             '#commandsstats: Sasha sends commands stats.',
             '#ping: Sasha answers with "Pong".',
             '#laststart: Sasha sends last start date.',
             'SUDO',
+            '#addadmin <user_id>|<username>: Sasha promotes the specified user to administrator.',
+            '#removeadmin <user_id>|<username>: Sasha demotes the specified user from administrator.',
             '#botstop: Sasha stops.',
             '#botrestart: Sasha restarts.',
             '#redissave: Sasha saves redis db.',
@@ -1937,7 +1942,6 @@ return {
             -- '#kickrandom: Sasha chooses a random user and kicks it.',
             -- '#kickdeleted: Sasha kicks all deleted accounts.',
             'OWNER',
-            '#multipleunban <user_id1> <user_id2> ...: Sasha unbans all the <user_ids> in the list.',
             -- '#kicknouser: Sasha kicks users without username.',
             -- '#kickinactive [<msgs>]: Sasha kicks inactive users under <msgs> messages.',
             'ADMIN',
@@ -2158,10 +2162,6 @@ return {
             'ex INGROUP.LUA',
             '#add realm: Sasha adds realm.',
             '#rem realm: Sasha removes realm.',
-            'ex INPM.LUA',
-            '(#join|#inviteme|[sasha] invitami) <chat_id>: Sasha tries to add (using @AISasha) the sender to <chat_id>.',
-            '#allchats: Sasha sends a list of all chats.',
-            '#allchatlist: Sasha sends a file with a list of all chats.',
             'REALM',
             '#setgpowner <group_id> <user_id>: Sasha sets <user_id> as owner of <group_id>.',
             '(#setrules|sasha imposta regole) <group_id> <text>: Sasha changes <group_id>\'s rules with <text>.',
@@ -2174,10 +2174,6 @@ return {
             '<setting_type> can be: arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict',
             '#[textual]settings <group_id>: Sasha sends <group_id>\'s settings.',
             '#rem <group_id>: Sasha removes group.',
-            '#list admins|groups|realms: Sasha sends list of the specified parameter.',
-            'SUDO',
-            '#addadmin <user_id>|<username>: Sasha promotes the specified user to administrator.',
-            '#removeadmin <user_id>|<username>: Sasha demotes the specified user from administrator.',
         },
 
         help =
@@ -2264,6 +2260,14 @@ return {
             'Plugin to know number of sent messages.',
             'USER',
             '#me: Sasha tells you how many messages you\'ve sent.',
+        },
+
+        multiple_commands =
+        {
+            '🅿️ ME',
+            'Plugin to do multiple actions.',
+            'OWNER',
+            '#multipleunban <user_id1> <user_id2> ...: Sasha unbans all the <user_ids> in the list.',
         },
 
         onservice =
