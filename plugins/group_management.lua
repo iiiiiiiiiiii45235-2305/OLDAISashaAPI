@@ -1508,6 +1508,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    printvardump(adjustPermissions(matches[3]:lower()))
                                     return promoteChatMember(msg.chat.id, obj_user.id, adjustPermissions(matches[3]:lower()))
                                 end
                             else
