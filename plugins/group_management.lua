@@ -1365,6 +1365,21 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
+            if matches[1]:lower() == 'newlink' or matches[1]:lower() == 'sasha nuovo link' then
+                if msg.from.is_mod then
+                    mystat('/newlink')
+                    local link = exportChatInviteLink(msg.chat.id)
+                    if link then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] created new group link [" .. tostring(link) .. "]")
+                        data[tostring(msg.chat.id)].settings.set_link = tostring(link)
+                        return langs[msg.lang].linkCreated
+                    else
+                        return langs[msg.lang].sendMeLink
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
                 if msg.from.is_owner then
                     mystat('/setlink')
@@ -1389,23 +1404,21 @@ local function run(msg, matches)
                 mystat('/link')
                 if data[tostring(msg.chat.id)].settings.lock_group_link then
                     if msg.from.is_mod then
-                        local link = exportChatInviteLink(msg.chat.id)
-                        if link then
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. tostring(link) .. "]")
-                            return msg.chat.title .. '\n' .. tostring(link)
+                        if data[tostring(msg.chat.id)].settings.set_link then
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
+                            return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                         else
-                            return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                            return langs[msg.lang].createLink
                         end
                     else
                         return langs[msg.lang].require_mod
                     end
                 else
-                    local link = exportChatInviteLink(msg.chat.id)
-                    if link then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. tostring(link) .. "]")
-                        return msg.chat.title .. '\n' .. tostring(link)
+                    if data[tostring(msg.chat.id)].settings.set_link then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
+                        return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                     else
-                        return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                        return langs[msg.lang].createLink
                     end
                 end
             end
