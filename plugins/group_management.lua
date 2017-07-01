@@ -405,8 +405,9 @@ end
 
 local function adjustPermissions(string_permissions)
     local permissions = { }
+    printvardump(string_permissions:split(' '))
+    local permission_type = ''
     for k, v in pairs(string_permissions:split(' ')) do
-        local permission_type = ''
         if permission_type == 'change_info' then
             permission_type = 'can_change_info'
         end
@@ -428,6 +429,7 @@ local function adjustPermissions(string_permissions)
         if permission_type ~= '' then
             permissions[tostring(permission_type)] = v
         end
+        permission_type = ''
     end
     return permissions
 end
@@ -1511,9 +1513,7 @@ local function run(msg, matches)
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     local permissions = adjustPermissions(matches[3]:lower())
-        printvardump(permissions)
-                                    
-        printvardump(promoteChatMember(msg.chat.id, obj_user.id, permissions))
+                                    return promoteChatMember(msg.chat.id, obj_user.id, permissions)
                                 end
                             else
                                 return langs[msg.lang].noObject
