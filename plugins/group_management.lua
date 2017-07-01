@@ -1333,7 +1333,7 @@ local function run(msg, matches)
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. tostring(link) .. "]")
                             return msg.chat.title .. '\n' .. tostring(link)
                         else
-                            return langs[msg.lang].errors[1]
+                            return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                         end
                     else
                         return langs[msg.lang].require_mod
@@ -1344,7 +1344,7 @@ local function run(msg, matches)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. tostring(link) .. "]")
                         return msg.chat.title .. '\n' .. tostring(link)
                     else
-                        return langs[msg.lang].errors[1]
+                        return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                     end
                 end
             end
@@ -1355,9 +1355,9 @@ local function run(msg, matches)
                         local chat = getChat(msg.chat.id)
                         if chat.invite_link then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. chat.invite_link .. "]")
-                            return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                            return msg.chat.title .. '\n' .. chat.invite_link
                         else
-                            return langs[msg.lang].errors[1]
+                            return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                         end
                     else
                         return langs[msg.lang].require_mod
@@ -1366,9 +1366,9 @@ local function run(msg, matches)
                     local chat = getChat(msg.chat.id)
                     if chat.invite_link then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. chat.invite_link .. "]")
-                        return msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
+                        return msg.chat.title .. '\n' .. chat.invite_link
                     else
-                        return langs[msg.lang].errors[1]
+                        return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
                     end
                 end
             end
