@@ -407,32 +407,29 @@ local function adjustPermissions(string_permissions)
     local permissions = { }
     local permission_type = ''
     for k, v in pairs(string_permissions:split(' ')) do
-        if permission_type == 'change_info' then
+        if v == 'change_info' then
             permission_type = 'can_change_info'
         end
-        if permission_type == 'delete_messages' then
+        if v == 'delete_messages' then
             permission_type = 'can_delete_messages'
         end
-        if permission_type == 'invite_users' then
+        if v == 'invite_users' then
             permission_type = 'can_invite_users'
         end
-        if permission_type == 'restrict_members' then
+        if v == 'restrict_members' then
             permission_type = 'can_restrict_members'
         end
-        if permission_type == 'pin_messages' then
+        if v == 'pin_messages' then
             permission_type = 'can_pin_messages'
         end
-        if permission_type == 'promote_members' then
+        if v == 'promote_members' then
             permission_type = 'can_promote_members'
         end
-        print(permission_type)
         if permission_type ~= '' then
             permissions[tostring(permission_type)] = true
         end
         permission_type = ''
-        printvardump(permissions)
     end
-    printvardump(permissions)
     return permissions
 end
 
@@ -1511,7 +1508,6 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    printvardump(adjustPermissions(matches[3]:lower()))
                                     return promoteChatMember(msg.chat.id, obj_user.id, adjustPermissions(matches[3]:lower()))
                                 end
                             else
