@@ -1365,7 +1365,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == 'newlink' or matches[1]:lower() == 'sasha nuovo link' then
+            if matches[1]:lower() == 'newlink' or matches[1]:lower() == 'sasha crea link' then
                 if msg.from.is_mod then
                     mystat('/newlink')
                     local link = exportChatInviteLink(msg.chat.id)
@@ -1862,6 +1862,8 @@ return {
         -- modlist
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Mm][Oo][Dd])$",
         "^([Ll][Ii][Ss][Tt][Aa] [Mm][Oo][Dd])$",
+        -- newlink
+        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Rr][Ee][Aa] [Ll][Ii][Nn][Kk])$",
         -- link
         "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk])$",
         -- setlink
