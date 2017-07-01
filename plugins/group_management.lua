@@ -287,6 +287,37 @@ local function getAdmins(chat_id)
     end
 end
 
+local function promoteTgAdmin(chat_id, user, string_permissions)
+    local lang = get_lang(chat_id)
+    if not data[tostring(chat_id)] then
+        return langs[lang].groupNotAdded
+    end
+    local permissions = adjustPermissions(string_permissions)
+    if promoteChatMember(chat_id, user.id, permissions) then
+        data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
+        save_data(config.moderation.data, data)
+        return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
+    else
+        return langs[lang].checkMyPermissions
+    end
+end
+
+local function demoteTgAdmin(chat_id, user)
+    local lang = get_lang(chat_id)
+    if not data[tostring(chat_id)] then
+        return langs[lang].groupNotAdded
+    end
+    if demoteChatMember(chat_id, user.id) then
+        if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
+            data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
+            save_data(config.moderation.data, data)
+        end
+        return(user.username or user.print_name or user.first_name) .. langs[lang].demoteModAdmin
+    else
+        return langs[lang].checkMyPermissions
+    end
+end
+
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
@@ -1481,7 +1512,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return promoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, adjustPermissions(matches[3]:lower()))
+                                        return promoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from, matches[3]:lower())
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -1489,7 +1520,7 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return promoteChatMember(msg.chat.id, msg.reply_to_message.from.id, adjustPermissions(matches[3]:lower()))
+                                return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, matches[3]:lower())
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
@@ -1498,7 +1529,7 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return promoteChatMember(msg.chat.id, obj_user.id, adjustPermissions(matches[3]:lower()))
+                                        return promoteTgAdmin(msg.chat.id, obj_user, matches[3]:lower())
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -1508,7 +1539,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return promoteChatMember(msg.chat.id, obj_user.id, adjustPermissions(matches[3]:lower()))
+                                    return promoteTgAdmin(msg.chat.id, obj_user, matches[3]:lower())
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -1528,7 +1559,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return demoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id)
+                                        return demoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from)
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -1537,7 +1568,7 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return demoteChatMember(msg.chat.id, msg.reply_to_message.from.id)
+                            return demoteTgAdmin(msg.chat.id, msg.reply_to_message.from)
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
@@ -1545,7 +1576,7 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return demoteChatMember(msg.chat.id, obj_user.id)
+                                        return demoteTgAdmin(msg.chat.id, obj_user)
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -1555,7 +1586,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return demoteChatMember(msg.chat.id, obj_user.id)
+                                    return demoteTgAdmin(msg.chat.id, obj_user)
                                 end
                             else
                                 return langs[msg.lang].noObject

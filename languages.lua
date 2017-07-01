@@ -507,6 +507,9 @@ return {
         groupInfoUpdated = 'Nome gruppo e moderatori aggiornati.',
         modListSynced = 'Lista moderatori sincronizzata con quella di telegram.',
         locksIntro = 'Legenda blocchi:\n🔴 Blocco attivato\n🔵 Blocco disattivato',
+        checkMyPermissions = 'Errore, controlla i miei permessi.',
+        promoteModAdmin = ' è stato promosso a moderatore e amministratore di telegram con i permessi specificati.',
+        demoteModAdmin = ' è stato degradato da moderatore e amministratore di telegram.',
         -- ex inrealm.lua --
         none = 'Nessuno',
         realm = 'Regno ',
