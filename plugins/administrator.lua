@@ -48,8 +48,8 @@ local function groupsList(msg)
         if data[tostring(v)] then
             if data[tostring(v)]['settings'] then
                 local name = ''
-                local settings = data[tostring(v)]['settings']
-                for m, n in pairs(settings) do
+                local grp = data[tostring(v)]
+                for m, n in pairs(grp) do
                     if m == 'set_name' then
                         name = n
                     end
@@ -62,7 +62,7 @@ local function groupsList(msg)
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
                 end
-                message = message .. name .. ' ' .. v .. ' - ' .. group_owner .. '\n{' .. group_link .. "}\n"
+                message = message .. name .. ' [' .. v .. '] - [' .. group_owner .. ']\n{' .. group_link .. "}\n"
             end
         end
     end
@@ -81,9 +81,9 @@ local function realmsList(msg)
     for k, v in pairs(data.realms) do
         if data[tostring(v)] then
             if data[tostring(v)]['settings'] then
-                local settings = data[tostring(v)]['settings']
+                local grp = data[tostring(v)]
                 local name = ''
-                for m, n in pairs(settings) do
+                for m, n in pairs(grp) do
                     if m == 'set_name' then
                         name = n
                     end
@@ -96,7 +96,7 @@ local function realmsList(msg)
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
                 end
-                message = message .. name .. ' ' .. v .. ' - ' .. group_owner .. '\n{' .. group_link .. "}\n"
+                message = message .. name .. ' [' .. v .. '] - [' .. group_owner .. ']\n{' .. group_link .. "}\n"
             end
         end
     end
