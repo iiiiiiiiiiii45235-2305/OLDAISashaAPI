@@ -182,8 +182,7 @@ function promoteChatMember(chat_id, user_id, permissions)
         local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
         for k, v in pairs(permissions) do
-            print(k, v)
-            url = url .. '&' .. k .. '=true'
+            url = url .. '&can_' .. k .. '=true'
         end
         local res, code = sendRequest(url)
 
