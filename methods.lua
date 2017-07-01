@@ -167,15 +167,16 @@ function unbanChatMember(user_id, chat_id)
     return tab
 end
 
-function promoteChatMember(chat_id, user_id, permissions)
-    --[[local permissions = { can_change_info = true,
+--[[permissions is a table that contains (not necessarily all of them):
+    can_change_info = true,
     can_post_messages = true, -- channel
     can_edit_messages = true, -- channel
     can_delete_messages = true,
     can_invite_users = true,
     can_restrict_members = true,
     can_pin_messages = true,  -- supergroups
-    can_promote_members = true }]]
+    can_promote_members = true]]
+function promoteChatMember(chat_id, user_id, permissions)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..

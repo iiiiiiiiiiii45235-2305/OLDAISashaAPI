@@ -426,7 +426,7 @@ local function adjustPermissions(string_permissions)
             permission_type = 'can_promote_members'
         end
         if permission_type ~= '' then
-            permissions[tostring(permission_type)] = v
+            permissions[tostring(permission_type)] = true
         end
         permission_type = ''
     end
@@ -1481,8 +1481,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        local permissions = adjustPermissions(matches[3]:lower())
-                                        return promoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, permissions)
+                                        return promoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, adjustPermissions(matches[3]:lower()))
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -1490,8 +1489,7 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                local permissions = adjustPermissions(matches[3]:lower())
-                                return promoteChatMember(msg.chat.id, msg.reply_to_message.from.id, permissions)
+                                return promoteChatMember(msg.chat.id, msg.reply_to_message.from.id, adjustPermissions(matches[3]:lower()))
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
@@ -1500,8 +1498,7 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        local permissions = adjustPermissions(matches[3]:lower())
-                                        return promoteChatMember(msg.chat.id, obj_user.id, permissions)
+                                        return promoteChatMember(msg.chat.id, obj_user.id, adjustPermissions(matches[3]:lower()))
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -1511,8 +1508,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    local permissions = adjustPermissions(matches[3]:lower())
-                                    return promoteChatMember(msg.chat.id, obj_user.id, permissions)
+                                    return promoteChatMember(msg.chat.id, obj_user.id, adjustPermissions(matches[3]:lower()))
                                 end
                             else
                                 return langs[msg.lang].noObject
