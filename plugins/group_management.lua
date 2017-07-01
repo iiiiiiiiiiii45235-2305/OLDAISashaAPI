@@ -425,6 +425,7 @@ local function adjustPermissions(string_permissions)
         if permission_type == 'promote_members' then
             permission_type = 'can_promote_members'
         end
+        print(permission_type)
         if permission_type ~= '' then
             permissions[tostring(permission_type)] = true
         end
