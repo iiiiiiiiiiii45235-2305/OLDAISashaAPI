@@ -1372,6 +1372,7 @@ local function run(msg, matches)
                     if link then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] created new group link [" .. tostring(link) .. "]")
                         data[tostring(msg.chat.id)].settings.set_link = tostring(link)
+                        save_data(config.moderation.data, data)
                         return langs[msg.lang].linkCreated
                     else
                         return langs[msg.lang].sendMeLink
