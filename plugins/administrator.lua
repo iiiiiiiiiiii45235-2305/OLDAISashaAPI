@@ -290,11 +290,11 @@ local function run(msg, matches)
                         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                             -- groupsList(msg)
                             -- sendDocument(msg.chat.id, "./groups/lists/groups.txt")
-                            return group_list(msg)
+                            return groupsList(msg)
                         elseif msg.chat.type == 'private' then
                             -- groupsList(msg)
                             -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
-                            return group_list(msg)
+                            return groupsList(msg)
                         end
                         return langs[msg.lang].groupListCreated
                     elseif matches[2]:lower() == 'realms' then
