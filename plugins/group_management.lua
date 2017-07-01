@@ -268,6 +268,36 @@ local function remSuperGroup(msg)
 end
 -- end ADD/REM GROUPS
 
+local function adjustPermissions(string_permissions)
+    local permissions = { }
+    local permission_type = ''
+    for k, v in pairs(string_permissions:split(' ')) do
+        if v == 'change_info' then
+            permission_type = 'can_change_info'
+        end
+        if v == 'delete_messages' then
+            permission_type = 'can_delete_messages'
+        end
+        if v == 'invite_users' then
+            permission_type = 'can_invite_users'
+        end
+        if v == 'restrict_members' then
+            permission_type = 'can_restrict_members'
+        end
+        if v == 'pin_messages' then
+            permission_type = 'can_pin_messages'
+        end
+        if v == 'promote_members' then
+            permission_type = 'can_promote_members'
+        end
+        if permission_type ~= '' then
+            permissions[tostring(v)] = true
+        end
+        permission_type = ''
+    end
+    return permissions
+end
+
 -- begin RANKS MANAGEMENT
 local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
@@ -432,36 +462,6 @@ local function showSettings(target, lang)
             return text
         end
     end
-end
-
-local function adjustPermissions(string_permissions)
-    local permissions = { }
-    local permission_type = ''
-    for k, v in pairs(string_permissions:split(' ')) do
-        if v == 'change_info' then
-            permission_type = 'can_change_info'
-        end
-        if v == 'delete_messages' then
-            permission_type = 'can_delete_messages'
-        end
-        if v == 'invite_users' then
-            permission_type = 'can_invite_users'
-        end
-        if v == 'restrict_members' then
-            permission_type = 'can_restrict_members'
-        end
-        if v == 'pin_messages' then
-            permission_type = 'can_pin_messages'
-        end
-        if v == 'promote_members' then
-            permission_type = 'can_promote_members'
-        end
-        if permission_type ~= '' then
-            permissions[tostring(v)] = true
-        end
-        permission_type = ''
-    end
-    return permissions
 end
 
 -- begin LOCK/UNLOCK FUNCTIONS
