@@ -1511,7 +1511,9 @@ local function run(msg, matches)
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     local permissions = adjustPermissions(matches[3]:lower())
-                                    return promoteChatMember(msg.chat.id, obj_user.id, permissions)
+        printvardump(permissions)
+                                    
+        printvardump(promoteChatMember(msg.chat.id, obj_user.id, permissions))
                                 end
                             else
                                 return langs[msg.lang].noObject

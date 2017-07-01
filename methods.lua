@@ -183,6 +183,7 @@ function promoteChatMember(chat_id, user_id, permissions)
         for k, v in pairs(permissions) do
             url = url .. '&' .. k .. '=' .. v
         end
+        printvardump(url)
         local res, code = sendRequest(url)
 
         if not res and code then
