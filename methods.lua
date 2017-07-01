@@ -191,6 +191,7 @@ function promoteChatMember(chat_id, user_id, permissions)
                 savelog('promote_user', code)
             end
         end
+        return res
     end
 end
 
@@ -219,6 +220,7 @@ function restrictChatMember(chat_id, user_id, until_date, permissions)
                 savelog('restrict_user', code)
             end
         end
+        return res
     end
 end
 
@@ -298,8 +300,6 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                 end
             end
         end
-    else
-        -- return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
 end
 
