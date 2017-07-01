@@ -429,7 +429,9 @@ local function adjustPermissions(string_permissions)
             permissions[tostring(permission_type)] = true
         end
         permission_type = ''
+        printvardump(permissions)
     end
+    printvardump(permissions)
     return permissions
 end
 
