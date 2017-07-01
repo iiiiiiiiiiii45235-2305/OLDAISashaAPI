@@ -188,7 +188,7 @@ function promoteChatMember(chat_id, user_id, permissions)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('delete_photo', code)
+                savelog('promote_user', code)
             end
         end
     end
@@ -216,7 +216,7 @@ function restrictChatMember(chat_id, user_id, until_date, permissions)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('delete_photo', code)
+                savelog('restrict_user', code)
             end
         end
     end

@@ -403,6 +403,35 @@ local function showSettings(target, lang)
     end
 end
 
+local function adjustPermissions(string_permissions)
+    local permissions = { }
+    for k, v in pairs(string_permissions:split(' ')) do
+        local permission_type = ''
+        if permission_type == 'change_info' then
+            permission_type = 'can_change_info'
+        end
+        if permission_type == 'delete_messages' then
+            permission_type = 'can_delete_messages'
+        end
+        if permission_type == 'invite_users' then
+            permission_type = 'can_invite_users'
+        end
+        if permission_type == 'restrict_members' then
+            permission_type = 'can_restrict_members'
+        end
+        if permission_type == 'pin_messages' then
+            permission_type = 'can_pin_messages'
+        end
+        if permission_type == 'promote_members' then
+            permission_type = 'can_promote_members'
+        end
+        if permission_type ~= '' then
+            permissions[tostring(permission_type)] = v
+        end
+    end
+    return permissions
+end
+
 -- begin LOCK/UNLOCK FUNCTIONS
 local function adjustSettingType(setting_type)
     if setting_type == 'arabic' then
@@ -1451,7 +1480,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        local permissions = adjust_permissions(matches[3]:lower())
+                                        local permissions = adjustPermissions(matches[3]:lower())
                                         return promoteChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, permissions)
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -1460,7 +1489,7 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                local permissions = adjust_permissions(matches[3]:lower())
+                                local permissions = adjustPermissions(matches[3]:lower())
                                 return promoteChatMember(msg.chat.id, msg.reply_to_message.from.id, permissions)
                             end
                         end
@@ -1470,7 +1499,7 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        local permissions = adjust_permissions(matches[3]:lower())
+                                        local permissions = adjustPermissions(matches[3]:lower())
                                         return promoteChatMember(msg.chat.id, obj_user.id, permissions)
                                     end
                                 else
@@ -1481,7 +1510,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    local permissions = adjust_permissions(matches[3]:lower())
+                                    local permissions = adjustPermissions(matches[3]:lower())
                                     return promoteChatMember(msg.chat.id, obj_user.id, permissions)
                                 end
                             else
