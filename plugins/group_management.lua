@@ -1423,30 +1423,6 @@ local function run(msg, matches)
                     end
                 end
             end
-            if matches[1]:lower() == 'chatlink' then
-                mystat('/chatlink')
-                if data[tostring(msg.chat.id)].settings.lock_group_link then
-                    if msg.from.is_mod then
-                        local chat = getChat(msg.chat.id)
-                        if chat.invite_link then
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. chat.invite_link .. "]")
-                            return msg.chat.title .. '\n' .. chat.invite_link
-                        else
-                            return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
-                        end
-                    else
-                        return langs[msg.lang].require_mod
-                    end
-                else
-                    local chat = getChat(msg.chat.id)
-                    if chat.invite_link then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. chat.invite_link .. "]")
-                        return msg.chat.title .. '\n' .. chat.invite_link
-                    else
-                        return langs[msg.lang].errors[1] .. '\n' .. data[tostring(msg.chat.id)].settings.set_link
-                    end
-                end
-            end
             if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
                 if msg.from.is_owner then
                     mystat('/getadmins')
