@@ -197,7 +197,7 @@ function promoteChatMember(chat_id, user_id, permissions)
 end
 
 function demoteChatMember(chat_id, user_id)
-    return promoteChatMember(chat_id, user_id)
+    return promoteChatMember(chat_id, user_id, { })
 end
 
 function restrictChatMember(chat_id, user_id, until_date, permissions)
