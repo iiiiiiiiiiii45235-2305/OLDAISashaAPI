@@ -405,7 +405,6 @@ end
 
 local function adjustPermissions(string_permissions)
     local permissions = { }
-    printvardump(string_permissions:split(' '))
     local permission_type = ''
     for k, v in pairs(string_permissions:split(' ')) do
         if permission_type == 'change_info' then
