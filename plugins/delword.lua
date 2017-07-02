@@ -118,7 +118,7 @@ return {
     syntax =
     {
         "USER",
-        "(#dellist|[sasha] lista censura)",
+        "(#dellist|[sasha] lista censure)",
         "MOD",
         "(#delword|[sasha] censura) <word>|<pattern>",
     },

@@ -779,7 +779,7 @@ return {
             '🅿️ ADMINISTRATOR',
             'Plugin per amministratori di Sasha.',
             'ADMIN',
-            '(#pm|sasha messaggia) <user_id> <msg>: Sasha invia <msg> a <user_id>.',
+            '#pm <user_id> <msg>: Sasha invia <msg> a <user_id>.',
             '(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from: Sasha blocca l\'utente specificato.',
             '(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from: Sasha sblocca l\'utente specificato.',
             '#list admins|groups|realms: Sasha mostra una lista della variabile specificata.',
@@ -796,7 +796,7 @@ return {
             '#redissave: Sasha salva il database redis.',
             '#update: Sasha si aggiorna.',
             '(#backup|sasha esegui backup): Sasha esegue un backup del raspberry e lo invia ai sudo.',
-            '(#rebootcli|sasha riavvia cli): Sasha riavvia la sua versione cli.',
+            '#rebootcli: Sasha riavvia la sua versione cli.',
             '#reloaddata: Sasha ricarica i dati dei gruppi.',
         },
 
@@ -869,8 +869,8 @@ return {
             'SUDO',
             '#createdatabase: Sasha crea il database.',
             -- '(#dodatabase|sasha esegui database): Sasha salva i dati di tutti gli utenti del gruppo e i dati del gruppo.',
-            '(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from: Sasha cerca l\'utente specificato nel database.',
-            '(#dbdelete|[sasha] elimina db) <id>: Sasha elimina <id> dal database.',
+            '#dbsearch <id>|<username>|<reply>|from: Sasha cerca l\'utente specificato nel database.',
+            '#dbdelete <id>: Sasha elimina <id> dal database.',
             '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha aggiunge manualmente al database l\'utente specificato.',
             '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>: Sasha aggiunge manualmente al database il gruppo specificato.',
             '#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha aggiunge manualmente al database il supergruppo specificato.',
@@ -884,7 +884,7 @@ return {
             '🅿️ DELWORD',
             'Plugin per la censura delle parole.',
             'USER',
-            '(#dellist|[sasha] lista censura): Sasha manda una lista di parole o pattern censurati.',
+            '(#dellist|[sasha] lista censure): Sasha manda una lista di parole o pattern censurati.',
             'MOD',
             'Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html',
             '(#delword|[sasha] censura) <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata nei supergruppi Sasha eliminerà il messaggio mentre nei gruppi bannerà il membro.',
@@ -1088,7 +1088,7 @@ return {
             '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha manda le info del parametro specificato.',
             -- '(#who|#members|[sasha] lista membri): Sasha manda la lista degli utenti.',
             'ADMIN',
-            '(#grouplink|[sasha] link gruppo) <group_id>: Sasha manda il link del gruppo specificato.',
+            '#grouplink <group_id>: Sasha manda il link del gruppo specificato.',
         },
 
         interact =
@@ -1227,7 +1227,7 @@ return {
             'OWNER',
             '(#setlang|lingua) (it|en): Sasha imposta la lingua in cui deve parlare in questo gruppo.',
             'SUDO',
-            '(#reloadstrings|[sasha] aggiorna stringhe): Sasha aggiorna le stringhe di testo.',
+            '(#reloadstrings|#reloadlangs): Sasha aggiorna le stringhe di testo.',
         },
 
         tagall =
@@ -1277,7 +1277,7 @@ return {
             '🅿️ URBANDICTIONARY',
             'Plugin per interagire con l\'Urban Dictionary.',
             'USER',
-            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha mostra la definizione di <text> dall\'Urban Dictionary.',
+            '(#urbandictionary|#urban|#ud) <text>: Sasha mostra la definizione di <text> dall\'Urban Dictionary.',
         },
 
         webshot =
@@ -1904,7 +1904,7 @@ return {
             '🅿️ ADMINISTRATOR',
             'Plugin for Sasha\'s administrators.',
             'ADMIN',
-            '(#pm|sasha messaggia) <user_id> <msg>: Sasha writes <msg> to <user_id>.',
+            '#pm <user_id> <msg>: Sasha writes <msg> to <user_id>.',
             '(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from: Sasha blocks the specified user.',
             '(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from: Sasha unblocks the specified user.',
             '#list admins|groups|realms: Sasha sends list of the specified parameter.',
@@ -1921,7 +1921,7 @@ return {
             '#redissave: Sasha saves redis db.',
             '#update: Sasha updates herself.',
             '(#backup|sasha esegui backup): Sasha makes the raspberry backup and sends it to sudoers.',
-            '(#rebootcli|sasha riavvia cli): Sasha reboots her cli version.',
+            '#rebootcli: Sasha reboots her cli version.',
             '#reloaddata: Sasha reloads groups\' data.',
         },
 
@@ -1994,8 +1994,8 @@ return {
             'SUDO',
             '#createdatabase: Sasha creates the database.',
             -- '(#dodatabase|sasha esegui database): Sasha saves all info of all users of group and group info.',
-            '(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from: Sasha searches for the specified user in the database.',
-            '(#dbdelete|[sasha] elimina db) <id>: Sasha deleted <id> from the database.',
+            '#dbsearch <id>|<username>|<reply>|from: Sasha searches for the specified user in the database.',
+            '#dbdelete <id>: Sasha deleted <id> from the database.',
             '#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>: Sasha manually adds the specified user to the database.',
             '#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>: Sasha manually adds the specified group to the database.',
             '#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]: Sasha manually adds the specified supergroup to the database.',
@@ -2017,7 +2017,7 @@ return {
             '🅿️ DELWORD',
             'Plugin for the management of censorships.',
             'USER',
-            '(#dellist|[sasha] lista censura): Sasha sends a list of censored words or patterns.',
+            '(#dellist|[sasha] lista censure): Sasha sends a list of censored words or patterns.',
             'MOD',
             'For more information on patterns see lua.org/pil/20.2.html',
             '(#delword|[sasha] censura) <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it in supergroups the message is deleted and in normal groups the user is kicked.',
@@ -2213,7 +2213,7 @@ return {
             '(#info|[sasha] info) <id>|<username>|<reply>|from: Sasha sends info of the specified parameter.',
             -- '(#who|#members|[sasha] lista membri): Sasha users list.',
             'ADMIN',
-            '(#grouplink|[sasha] link gruppo) <group_id>: Sasha sends link of the specified group.',
+            '#grouplink <group_id>: Sasha sends link of the specified group.',
         },
 
         interact =
@@ -2352,7 +2352,7 @@ return {
             'OWNER',
             '(#setlang|lingua) (it|en): Sasha sets the language she has to talk in this group.',
             'SUDO',
-            '(#reloadstrings|[sasha] aggiorna stringhe): Sasha updates strings.',
+            '(#reloadstrings|#reloadlangs): Sasha updates strings.',
         },
 
         tagall =
@@ -2402,7 +2402,7 @@ return {
             '🅿️ URBANDICTIONARY',
             'Plugin for the interaction with the Urban Dictionary.',
             'USER',
-            '(#urbandictionary|#urban|#ud|[sasha] urban|[sasha] ud) <text>: Sasha searches <text> in the Urban Dictionary.',
+            '(#urbandictionary|#urban|#ud) <text>: Sasha searches <text> in the Urban Dictionary.',
         },
 
         webshot =

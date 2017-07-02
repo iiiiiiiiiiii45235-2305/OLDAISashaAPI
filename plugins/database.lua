@@ -428,12 +428,6 @@ return {
         "^[#!/]([Rr][Ee][Pp][Ll][Aa][Cc][Ee][Dd][Bb])$",
         -- dodatabase
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
-        -- dbsearch
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) ([^%s]+)$",
-        "^([Cc][Ee][Rr][Cc][Aa] [Dd][Bb]) ([^%s]+)$",
-        -- dbdelete
-        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Dd][Bb]) (%-?%d+)$",
-        "^([Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Dd][Bb]) (%-?%d+)$",
     },
     run = run,
     pre_process = pre_process,
@@ -443,8 +437,8 @@ return {
         "SUDO",
         "#createdatabase",
         -- "(#dodatabase|sasha esegui database)",
-        "(#dbsearch|[sasha] cerca db) <id>|<username>|<reply>|from",
-        "(#dbdelete|[sasha] elimina db) <id>",
+        "#dbsearch <id>|<username>|<reply>|from",
+        "#dbdelete <id>",
         "#addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<groups_ids_separated_by_space>",
         "#addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>",
         "#addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]",

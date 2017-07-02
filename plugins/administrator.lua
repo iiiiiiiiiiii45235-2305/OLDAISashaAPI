@@ -120,7 +120,7 @@ local function run(msg, matches)
             end
             return text
         end
-        if matches[1]:lower() == "pm" or matches[1]:lower() == "sasha messaggia" then
+        if matches[1]:lower() == "pm" then
             mystat('/pm')
             sendMessage(matches[2], matches[3])
             return langs[msg.lang].pmSent
@@ -213,26 +213,32 @@ local function run(msg, matches)
             mystat('/checkspeed')
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
         end
+        if matches[1]:lower() == 'list' then
+            if matches[2]:lower() == 'admins' then
+                mystat('/list admins')
+                return botAdminsList(msg.chat.id)
+            elseif matches[2]:lower() == 'groups' then
+                mystat('/list groups')
+                -- groupsList(msg)
+                -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
+                return groupsList(msg)
+            elseif matches[2]:lower() == 'realms' then
+                mystat('/list realms')
+                -- realmsList(msg)
+                -- sendDocument(msg.from.id, "./groups/lists/realms.txt")
+                return realmsList(msg)
+            end
+            return
+        end
         if is_sudo(msg) then
             if matches[1]:lower() == 'addadmin' then
-                if is_sudo(msg) then
-                    mystat('/addadmin')
-                    if msg.reply then
-                        return promoteAdmin(msg.reply_to_message.from, msg.chat.id)
-                    elseif matches[2] and matches[2] ~= '' then
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return promoteAdmin(obj_user, msg.chat.id)
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                mystat('/addadmin')
+                if msg.reply then
+                    return promoteAdmin(msg.reply_to_message.from, msg.chat.id)
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return promoteAdmin(obj_user, msg.chat.id)
@@ -241,31 +247,27 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject
                             end
                         end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_sudo
-                end
-            end
-            if matches[1]:lower() == 'removeadmin' then
-                if is_sudo(msg) then
-                    mystat('/removeadmin')
-                    if msg.reply then
-                        return demoteAdmin(msg.reply_to_message.from, msg.chat.id)
-                    elseif matches[2] and matches[2] ~= '' then
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return demoteAdmin(obj_user, msg.chat.id)
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return promoteAdmin(obj_user, msg.chat.id)
                             end
                         else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                end
+                return
+            end
+            if matches[1]:lower() == 'removeadmin' then
+                mystat('/removeadmin')
+                if msg.reply then
+                    return demoteAdmin(msg.reply_to_message.from, msg.chat.id)
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return demoteAdmin(obj_user, msg.chat.id)
@@ -274,48 +276,20 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject
                             end
                         end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_sudo
-                end
-            end
-            if matches[1]:lower() == 'list' then
-                if is_admin(msg) then
-                    if matches[2]:lower() == 'admins' then
-                        mystat('/list admins')
-                        return botAdminsList(msg.chat.id)
-                    elseif matches[2]:lower() == 'groups' then
-                        mystat('/list groups')
-                        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                            -- groupsList(msg)
-                            -- sendDocument(msg.chat.id, "./groups/lists/groups.txt")
-                            return groupsList(msg)
-                        elseif msg.chat.type == 'private' then
-                            -- groupsList(msg)
-                            -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
-                            return groupsList(msg)
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return demoteAdmin(obj_user, msg.chat.id)
+                            end
+                        else
+                            return langs[msg.lang].noObject
                         end
-                        return langs[msg.lang].groupListCreated
-                    elseif matches[2]:lower() == 'realms' then
-                        mystat('/list realms')
-                        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                            -- realmsList(msg)
-                            -- sendDocument(msg.chat.id, "./groups/lists/realms.txt")
-                            return realmsList(msg)
-                        elseif msg.chat.type == 'private' then
-                            -- realmsList(msg)
-                            -- sendDocument(msg.from.id, "./groups/lists/realms.txt")
-                            return realmsList(msg)
-                        end
-                        return langs[msg.lang].realmListCreated
                     end
-                    return
-                else
-                    return langs[msg.lang].require_admin
                 end
+                return
             end
-            if matches[1]:lower() == "rebootcli" or matches[1]:lower() == "sasha riavvia cli" then
+            if matches[1]:lower() == "rebootcli" then
                 mystat('/rebootcli')
                 io.popen('kill -9 $(pgrep telegram-cli)'):read('*all')
                 return langs[msg.lang].cliReboot
@@ -376,8 +350,6 @@ return {
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Dd][Aa][Tt][Aa])$",
-        -- pm
-        "^([Ss][Aa][Ss][Hh][Aa] [Mm][Ee][Ss][Ss][Aa][Gg][Gg][Ii][Aa]) (%-?%d+) (.*)$",
         -- unblock
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) ([^%s]+)$",
@@ -386,15 +358,13 @@ return {
         "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) ([^%s]+)$",
         -- backup
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Bb][Aa][Cc][Kk][Uu][Pp])$",
-        -- rebootapi
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Aa][Vv][Ii][Aa] [Cc][Ll][Ii])$",
     },
     run = run,
     min_rank = 3,
     syntax =
     {
         "ADMIN",
-        "(#pm|sasha messaggia) <id> <msg>",
+        "#pm <id> <msg>",
         "(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from",
         "(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from",
         "#list admins|groups|realms",
@@ -410,7 +380,7 @@ return {
         "#redissave",
         "#update",
         "(#backup|sasha esegui backup)",
-        "(#rebootcli|sasha riavvia cli)",
+        "#rebootcli",
         "#reloaddata",
     },
 }

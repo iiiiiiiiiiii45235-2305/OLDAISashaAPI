@@ -452,7 +452,7 @@ local function run(msg, matches)
         mystat('/whoami')
         return get_object_info(msg.from, msg.chat.id)
     end
-    if matches[1]:lower() == 'grouplink' or matches[1]:lower() == 'sasha link gruppo' or matches[1]:lower() == 'link gruppo' and matches[2] then
+    if matches[1]:lower() == 'grouplink' and matches[2] then
         mystat('/grouplink')
         if is_admin(msg) then
             local group_link = data[tostring(matches[2])]['settings']['set_link']
@@ -503,9 +503,6 @@ return {
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Oo])$",
-        -- grouplink
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-%d+)$",
-        "^([Ll][Ii][Nn][Kk] [Gg][Rr][Uu][Pp][Pp][Oo]) (%-%d+)$",
         -- getrank
         "^([Rr][Aa][Nn][Gg][Oo])$",
         "^([Rr][Aa][Nn][Gg][Oo]) ([^%s]+)$",
@@ -535,6 +532,6 @@ return {
         "(#info|[sasha] info) <id>|<username>|<reply>|from",
         -- "(#who|#members|[sasha] lista membri)",
         "ADMIN",
-        "(#grouplink|[sasha] link gruppo) <group_id>",
+        "#grouplink <group_id>",
     },
 }
