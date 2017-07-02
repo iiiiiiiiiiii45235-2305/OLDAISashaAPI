@@ -131,8 +131,12 @@ function code2text(code, ln)
 end
 
 -- never call this outside this file
-function kickChatMember(user_id, chat_id)
-    local url = BASE_URL .. '/kickChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+function kickChatMember(user_id, chat_id, until_date)
+    local url = BASE_URL .. '/kickChatMember?chat_id=' .. chat_id ..
+    '&user_id=' .. user_id
+    if until_date then
+        url = url .. '&until_date=' .. until_date
+    end
     local dat, res = HTTPS.request(url)
     local tab = JSON.decode(dat)
 
@@ -151,7 +155,8 @@ end
 
 -- never call this outside this file
 function unbanChatMember(user_id, chat_id)
-    local url = BASE_URL .. '/unbanChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+    local url = BASE_URL .. '/unbanChatMember?chat_id=' .. chat_id ..
+    '&user_id=' .. user_id
     -- return sendRequest(url)
     local dat, res = HTTPS.request(url)
     local tab = JSON.decode(dat)
@@ -1266,7 +1271,7 @@ function userVersionInChat(chat_id)
 end
 
 -- call this to kick
-function kickUser(executer, target, chat_id, reason, until_date)
+function kickUser(executer, target, chat_id, reason)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
@@ -1277,7 +1282,7 @@ function kickUser(executer, target, chat_id, reason, until_date)
         end
         if compare_ranks(executer, target, chat_id) then
             -- try to kick
-            local res, code = kickChatMember(target, chat_id)
+            local res, code = kickChatMember(target, chat_id, tonumber(os.time()) + 35)
 
             if res then
                 -- if the user has been kicked, then...
@@ -1285,7 +1290,6 @@ function kickUser(executer, target, chat_id, reason, until_date)
                 redis:hincrby('bot:general', 'kick', 1)
                 -- general: save how many kicks
                 -- unban
-                unbanChatMember(target, chat_id)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if reason then
@@ -1330,7 +1334,7 @@ function preBanUser(executer, target, chat_id)
 end
 
 -- call this to ban
-function banUser(executer, target, chat_id, reason)
+function banUser(executer, target, chat_id, reason, until_date)
     local obj_chat = getChat(chat_id)
     local obj_remover = getChat(executer)
     local obj_removed = getChat(target)
@@ -1346,7 +1350,7 @@ function banUser(executer, target, chat_id, reason)
         end
         if compare_ranks(executer, target, chat_id) then
             -- try to kick. "code" is already specific
-            local res, code = kickChatMember(target, chat_id)
+            local res, code = kickChatMember(target, chat_id, until_date)
 
             if res then
                 -- if the user has been kicked, then...
