@@ -30,7 +30,16 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == '/start' and msg.bot then
-        return langs[msg.lang].startMessage
+        sendMessage(msg.chat.id, langs[msg.lang].startMessage)
+        if matches[2] then
+            msg.text = '/' .. matches[2]
+            if msg_valid(msg) then
+                msg = pre_process_msg(msg)
+                if msg then
+                    match_plugins(msg)
+                end
+            end
+        end
     end
     if msg.from.is_owner then
         if not matches[2] then
@@ -64,6 +73,7 @@ return {
     patterns =
     {
         "^(/[Ss][Tt][Aa][Rr][Tt])$",
+        "^(/[Ss][Tt][Aa][Rr][Tt]) (.*)$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Ff][Ff])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn]) (%-?%d+)$",
