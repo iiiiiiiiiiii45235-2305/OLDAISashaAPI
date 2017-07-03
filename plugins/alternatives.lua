@@ -355,7 +355,7 @@ local function pre_process(msg)
                             else
                                 return msg
                             end
-                            if ('media:' .. media_type .. file_id) == k then
+                            if ('media:' .. msg.media_type .. file_id) == k then
                                 -- one match is enough
                                 msg.text = v
                                 return msg
@@ -400,7 +400,7 @@ local function pre_process(msg)
                             else
                                 return msg
                             end
-                            if ('media:' .. media_type .. file_id) == k then
+                            if ('media:' .. msg.media_type .. file_id) == k then
                                 -- one match is enough
                                 msg.text = v
                                 return msg
