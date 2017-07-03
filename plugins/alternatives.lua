@@ -207,7 +207,7 @@ local function run(msg, matches)
                     if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
                         local tmptable = { }
                         for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
-                            if v ~= matches[2]:lower() then
+                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
                                 table.insert(tmptable, v)
                             end
                         end
@@ -281,7 +281,7 @@ local function run(msg, matches)
                     if alternatives.global.cmdAlt[tempcmd] then
                         local tmptable = { }
                         for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
-                            if v ~= matches[2]:lower() then
+                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
                                 table.insert(tmptable, v)
                             end
                         end
