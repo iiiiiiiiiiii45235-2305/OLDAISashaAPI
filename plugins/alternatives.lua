@@ -329,11 +329,11 @@ local function pre_process(msg)
                             if msg.media_type == 'photo' then
                                 local bigger_pic_id = ''
                                 local size = 0
-                                for k, v in pairsByKeys(msg.photo) do
-                                    if v.file_size then
-                                        if v.file_size > size then
-                                            size = v.file_size
-                                            bigger_pic_id = v.file_id
+                                for k1, v1 in pairsByKeys(msg.photo) do
+                                    if v1.file_size then
+                                        if v1.file_size > size then
+                                            size = v1.file_size
+                                            bigger_pic_id = v1.file_id
                                         end
                                     end
                                 end
@@ -378,11 +378,11 @@ local function pre_process(msg)
                             if msg.media_type == 'photo' then
                                 local bigger_pic_id = ''
                                 local size = 0
-                                for k, v in pairsByKeys(msg.photo) do
-                                    if v.file_size then
-                                        if v.file_size > size then
-                                            size = v.file_size
-                                            bigger_pic_id = v.file_id
+                                for k1, v1 in pairsByKeys(msg.photo) do
+                                    if v1.file_size then
+                                        if v1.file_size > size then
+                                            size = v1.file_size
+                                            bigger_pic_id = v1.file_id
                                         end
                                     end
                                 end
