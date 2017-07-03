@@ -838,6 +838,8 @@ return {
         {
             '🅿️ BOT',
             'Plugin per attivare e disattivare Sasha sul gruppo.',
+            'USER',
+            '/start[@AISashaBot]: Sasha manda il messaggio di start (funziona solo in chat privata).',
             'OWNER',
             '#bot|sasha on|off: Sasha si attiva|disattiva.',
             'ADMIN',
@@ -1971,6 +1973,8 @@ return {
         {
             '🅿️ BOT',
             'Plugin to enable or disable Sasha on the group.',
+            'USER',
+            '/start[@AISashaBot]: Sasha sends the start message (works only in private chat).',
             'OWNER',
             '#bot|sasha on|off: Sasha goes on|off on the group.',
             'ADMIN',

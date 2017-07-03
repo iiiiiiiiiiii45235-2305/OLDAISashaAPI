@@ -74,20 +74,19 @@ return {
     {
         "^(/[Ss][Tt][Aa][Rr][Tt])$",
         "^(/[Ss][Tt][Aa][Rr][Tt]) (.*)$",
+        "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
+        "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] (.*)$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Ff][Ff])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn]) (%-?%d+)$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Ff][Ff]) (%-?%d+)$",
-        -- bot
-        "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Nn])$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Ff][Ff])$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Nn]) (%-?%d+)$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Ff][Ff]) (%-?%d+)$",
     },
     run = run,
-    min_rank = 2,
+    min_rank = 0,
     syntax =
     {
+        "USER",
+        "/start[@AISashaBot]",
         "OWNER",
         "#bot|sasha on|off",
         "ADMIN",
