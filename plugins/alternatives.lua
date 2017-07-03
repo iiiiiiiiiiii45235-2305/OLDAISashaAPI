@@ -5,11 +5,13 @@ end
 local function pre_process(msg)
     if msg then
         if alternatives[tostring(msg.chat.id)] then
-            for k, v in pairs(alternatives[tostring(msg.chat.id)].altCmd) do
-                if string.match(msg.text:lower(), '^' .. k) then
-                    -- one match is enough
-                    msg.text = string.gsub(msg.text, '^' .. k, v)
-                    return msg
+            if alternatives[tostring(msg.chat.id)].altCmd then
+                for k, v in pairs(alternatives[tostring(msg.chat.id)].altCmd) do
+                    if string.match(msg.text:lower(), '^' .. k) then
+                        -- one match is enough
+                        msg.text = string.gsub(msg.text, '^' .. k, v)
+                        return msg
+                    end
                 end
             end
         end
