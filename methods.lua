@@ -1373,15 +1373,11 @@ function banUser(executer, target, chat_id, reason, until_date)
                     '\n#ban' .. target
                 end
             else
-                local txt = ''
                 if code == 106 then
-                    txt = preBanUser(executer, target, chat_id)
+                    local hash = 'banned:' .. chat_id
+                    redis:sadd(hash, tostring(target))
                 end
-                if code2text(code, get_lang(chat_id)) then
-                    return txt .. code2text(code, get_lang(chat_id))
-                elseif txt ~= '' then
-                    return txt
-                end
+                return code2text(code, get_lang(chat_id))
             end
         else
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
