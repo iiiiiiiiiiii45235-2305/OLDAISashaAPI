@@ -46,7 +46,7 @@ local function run(msg, matches)
                 table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], matches[3]:lower())
                 alternatives[tostring(msg.chat.id)].altCmd[matches[3]:lower()] = string.sub(matches[2]:lower(), 1, 50)
                 save_alternatives()
-                return string.sub(matches[2]:lower(), 1, 50) .. langs[msg.lang].alternativeSaved
+                return matches[3]:lower() .. langs[msg.lang].alternativeSaved
             else
                 return langs[msg.lang].errorCommandTooShort
             end
@@ -68,7 +68,7 @@ local function run(msg, matches)
                 table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], matches[3]:lower())
                 alternatives[tostring(msg.chat.id)].altCmd[matches[3]:lower()] = string.sub(matches[2]:lower(), 1, 50)
                 save_alternatives()
-                return string.sub(matches[2]:lower(), 1, 50) .. langs[msg.lang].gAlternativeSaved
+                return matches[3]:lower() .. langs[msg.lang].gAlternativeSaved
             else
                 return langs[msg.lang].errorCommandTooShort
             end
