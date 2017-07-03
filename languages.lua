@@ -1473,7 +1473,6 @@ return {
 
         -- alternatives.lua --
         listAlternatives = 'List of X\'s alternative commands: ',
-        listGAlternatives = 'List of X\'s global alternative commands: ',
         noAlternativeCommands = 'There are no X\'s alternative commands.',
         noCommandsAlternative = 'There are no commands associated with X\'s',
         alternativeSaved = ' saved.',

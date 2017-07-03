@@ -1,15 +1,14 @@
 local function run(msg, matches)
     if matches[1]:lower() == 'getalternatives' and matches[2] then
         mystat('/getalternatives')
+        local text = langs[msg.lang].listAlternatives:gsub('X', matches[2]:lower()) .. '\n'
         if data[tostring(msg.chat.id)] then
             if alternatives[tostring(msg.chat.id)] then
                 matches[2] = matches[2]:gsub('[#!]', '/')
                 if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()] then
-                    local text = langs[msg.lang].listAlternatives:gsub('X', matches[2]:lower()) .. '\n'
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()]) do
                         text = text .. k .. '. ' .. v .. '\n'
                     end
-                    return text
                 else
                     return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
                 end
@@ -19,20 +18,14 @@ local function run(msg, matches)
         else
             return langs[msg.lang].useYourGroups
         end
-        return list_variables(msg, false)
-    end
-    if matches[1]:lower() == 'getglobalalternatives' and matches[2] then
-        mystat('/getglobalalternatives')
-        matches[2] = matches[2]:gsub('[#!]', '/')
         if alternatives.global.cmdAlt[matches[2]:lower()] then
-            local text = langs[msg.lang].listGAlternatives:gsub('X', matches[2]:lower()) .. '\n'
             for k, v in pairs(alternatives.global.cmdAlt[matches[2]:lower()]) do
-                text = text .. k .. '. ' .. v .. '\n'
+                text = text .. k .. 'G. ' .. v .. '\n'
             end
-            return text
         else
             return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
         end
+        return text
     end
     if matches[1]:lower() == 'setalternative' and matches[2] and matches[3] then
         if msg.from.is_mod then
@@ -172,7 +165,6 @@ return {
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([^%s]+) (.*)$",
-        "^[#!/]([Gg][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([^%s]+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([^%s]+) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
     },
@@ -183,7 +175,6 @@ return {
     {
         "USER",
         "#getalternatives <command>",
-        "#getglobalalternatives <command>",
         "MOD",
         "#setalternative <command> <alternative>",
         "#unsetalternative <alternative>",
