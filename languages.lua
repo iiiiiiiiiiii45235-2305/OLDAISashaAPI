@@ -822,10 +822,12 @@ return {
             '#setalternative /<command> <alternative>|<reply_media>: Sasha eseguirà <alternative>|<reply_media> come se fosse <command>.',
             '#unsetalternative <alternative>|<reply_media>: Sasha rimuove <alternative>|<reply_media>.',
             'OWNER',
+            '#setdefaultalternatives: Sasha ripristina i comandi alternativi di default.',
             '#unsetalternatives /<command>: Sasha rimuove tutte le alternative di <command>.',
             'ADMIN',
             '#setglobalalternative /<command> <alternative>|<reply_media>: Sasha eseguirà <alternative>|<reply_media> come se fosse <command> in tutti i gruppi.',
             '#unsetglobalalternative <alternative>|<reply_media>: Sasha rimuove <alternative>|<reply_media> dalle alternative globali.',
+            '#setdefaultglobalalternatives: Sasha ripristina i comandi alternativi globali di default.',
         },
 
         banhammer =
@@ -1981,10 +1983,12 @@ return {
             '#setalternative /<command> <alternative>|<reply_media>: Sasha will execute <alternative>|<reply_media> as if it was <command>.',
             '#unsetalternative <alternative>|<reply_media>: Sasha deletes <alternative>|<reply_media>.',
             'OWNER',
+            '#setdefaultalternatives: Sasha restores the default alternative commands.',
             '#unsetalternatives /<command>: Sasha deletes all <command>\'s alternatives.',
             'ADMIN',
             '#setglobalalternative /<command> <alternative>|<reply_media>: Sasha will execute <alternative>|<reply_media> as if it was <command> in all groups.',
             '#unsetglobalalternative <alternative><reply_media>: Sasha deletes <alternative>|<reply_media> from global alternatives.',
+            '#setdefaultglobalalternatives: Sasha restores the default global alternative commands.',
         },
 
         banhammer =

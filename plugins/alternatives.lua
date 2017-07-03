@@ -1,3 +1,312 @@
+default_alternatives = {
+    cmdAlt =
+    {
+        ['/kickme'] =
+        {
+            'sasha uccidimi',
+            'sasha esplodimi',
+            'sasha sparami',
+            'sasha decompilami',
+            'sasha bannami'
+        },
+        ['/getuserwarns'] =
+        {
+            'sasha ottieni avvertimenti',
+            'ottieni avvertimenti'
+        },
+        ['/warn'] = { 'sasha avverti' },
+        ['/unwarnall'] =
+        {
+            'sasha azzera avvertimenti',
+            'azzera avvertimenti'
+        },
+        ['/kick'] =
+        {
+            'sasha uccidi',
+            'uccidi',
+            'sasha spara'
+        },
+        ['/ban'] =
+        {
+            'kaboom',
+            'sasha banna',
+            'banna',
+            'sasha decompila',
+            'decompila',
+            'sasha esplodi'
+        },
+        ['/unban'] =
+        {
+            'sasha sbanna',
+            'sbanna',
+            'sasha ricompila',
+            'ricompila'
+        },
+        ['/banlist'] =
+        {
+            'sasha lista ban',
+            'lista ban'
+        },
+        ['/dellist'] =
+        {
+            'sasha lista censure',
+            'lista censure'
+        },
+        ['/delword'] =
+        {
+            'sasha censura',
+            'censura'
+        },
+        ['/dogify'] =
+        {
+            'sasha doge',
+            'doge'
+        },
+        ['/startflame'] =
+        {
+            'sasha flamma',
+            'flamma'
+        },
+        ['/stopflame'] =
+        {
+            'sasha stop flame',
+            'stop flame'
+        },
+        ['/flameinfo'] =
+        {
+            'sasha info flame',
+            'info flame'
+        },
+        ['/get'] = { 'sasha lista' },
+        ['/getlist'] = { 'sasha lista' },
+        ['/getgloballist'] = { 'sasha lista globali' },
+        ['/getglobal'] = { 'sasha lista globali' },
+        ['/set'] =
+        {
+            'sasha setta',
+            'setta'
+        },
+        ['/setmedia'] =
+        {
+            'sasha setta media',
+            'setta media'
+        },
+        ['/unset'] =
+        {
+            'sasha unsetta',
+            'unsetta'
+        },
+        ['/rules'] = { 'sasha regole' },
+        ['/modlist'] =
+        {
+            'sasha lista mod',
+            'lista mod'
+        },
+        ['/link'] = { 'sasha link' },
+        ['/setrules'] = { 'sasha imposta regole' },
+        ['/newlink'] = { 'sasha crea link' },
+        ['/muteuser'] = { 'voce' },
+        ['/muteslist'] = { 'lista muti' },
+        ['/mutelist'] = { 'lista utenti muti' },
+        ['/lock'] =
+        {
+            'sasha blocca',
+            'blocca'
+        },
+        ['/unlock'] =
+        {
+            'sasha sblocca',
+            'sblocca'
+        },
+        ['/setlink'] = { 'sasha imposta link' },
+        ['/unsetlink'] = { 'sasha elimina link' },
+        ['/getadmins'] =
+        {
+            'sasha lista admin',
+            'lista admin'
+        },
+        ['/promote'] =
+        {
+            'sasha promuovi',
+            'promuovi'
+        },
+        ['/demote'] =
+        {
+            'sasha degrada',
+            'degrada'
+        },
+        ['/mute'] = { 'silenzia' },
+        ['/unmute'] = { 'ripristina' },
+        ['/sudolist'] = { 'sasha lista sudo' },
+        ['/help'] = { 'sasha aiuto' },
+        ['/helpall'] = { 'sasha aiuto tutto' },
+        ['/syntax'] = { 'sasha sintassi' },
+        ['/syntaxall'] = { 'sasha sintassi tutto' },
+        ['/getrank'] = { 'rango' },
+        ['/info'] =
+        {
+            'sasha info',
+            'info'
+        },
+        ['/echo'] = { 'sasha ripeti' },
+        ['/markdownecho'] = { 'sasha markdown ripeti' },
+        ['/leave'] = { 'sasha abbandona' },
+        ['/plugins'] =
+        {
+            'sasha lista plugins',
+            'lista plugins'
+        },
+        ['/disabledlist'] =
+        {
+            'sasha lista disabilitati',
+            'lista disabilitati',
+            'sasha lista disattivati',
+            'lista disattivati'
+        },
+        ['/enable'] =
+        {
+            'sasha abilita',
+            'abilita',
+            'sasha attiva',
+            'attiva'
+        },
+        ['/disable'] =
+        {
+            'sasha disabilita',
+            'disabilita',
+            'sasha disattiva',
+            'disattiva'
+        },
+        ['/qr'] = { 'sasha qr' },
+        ['/shout'] =
+        {
+            'sasha grida',
+            'grida',
+            'sasha urla',
+            'urla'
+        },
+        ['/setlang'] = { 'lingua' },
+        ['/tagall'] = { 'sasha tagga tutti' },
+        ['/tex'] =
+        {
+            'sasha equazione',
+            'equazione'
+        },
+        ['/webshot'] =
+        {
+            'sasha webshotta',
+            'webshotta'
+        },
+    },
+    altCmd =
+    {
+        ['sasha uccidimi'] = '/kickme',
+        ['sasha esplodimi'] = '/kickme',
+        ['sasha sparami'] = '/kickme',
+        ['sasha decompilami'] = '/kickme',
+        ['sasha bannami'] = '/kickme',
+        ['sasha ottieni avvertimenti'] = '/getuserwarns',
+        ['ottieni avvertimenti'] = '/getuserwarns',
+        ['sasha avverti'] = '/warn',
+        ['sasha azzera avvertimenti'] = '/unwarnall',
+        ['azzera avvertimenti'] = '/unwarnall',
+        ['sasha uccidi'] = '/kick',
+        ['uccidi'] = '/kick',
+        ['sasha spara'] = '/kick',
+        ['kaboom'] = '/ban',
+        ['sasha banna'] = '/ban',
+        ['banna'] = '/ban',
+        ['sasha decompila'] = '/ban',
+        ['decompila'] = '/ban',
+        ['sasha esplodi'] = '/ban',
+        ['sasha sbanna'] = '/unban',
+        ['sbanna'] = '/unban',
+        ['sasha ricompila'] = '/unban',
+        ['ricompila'] = '/unban',
+        ['sasha lista ban'] = '/banlist',
+        ['lista ban'] = '/banlist',
+        ['sasha lista censure'] = '/dellist',
+        ['lista censure'] = '/dellist',
+        ['sasha censura'] = '/delword',
+        ['censura'] = '/delword',
+        ['sasha doge'] = '/dogify',
+        ['doge'] = '/dogify',
+        ['sasha flamma'] = '/startflame',
+        ['flamma'] = '/startflame',
+        ['sasha stop flame'] = '/stopflame',
+        ['stop flame'] = '/stopflame',
+        ['sasha info flame'] = '/flameinfo',
+        ['info flame'] = '/flameinfo',
+        ['sasha lista'] = '/getlist',
+        ['sasha lista globali'] = '/getgloballist',
+        ['sasha setta'] = '/set',
+        ['setta'] = '/set',
+        ['sasha setta media'] = '/setmedia',
+        ['setta media'] = '/setmedia',
+        ['sasha unsetta'] = '/unset',
+        ['unsetta'] = '/unset',
+        ['sasha regole'] = '/rules',
+        ['sasha lista mod'] = '/modlist',
+        ['lista mod'] = '/modlist',
+        ['sasha link'] = '/link',
+        ['sasha imposta regole'] = '/setrules',
+        ['sasha crea link'] = '/newlink',
+        ['voce'] = '/muteuser',
+        ['lista muti'] = '/muteslist',
+        ['lista utenti muti'] = '/mutelist',
+        ['sasha blocca'] = '/lock',
+        ['blocca'] = '/lock',
+        ['sasha sblocca'] = '/unlock',
+        ['sblocca'] = '/unlock',
+        ['sasha imposta link'] = '/setlink',
+        ['sasha elimina link'] = '/unsetlink',
+        ['sasha lista admin'] = '/getadmins',
+        ['lista admin'] = '/getadmins',
+        ['sasha promuovi'] = '/promote',
+        ['promuovi'] = '/promote',
+        ['sasha degrada'] = '/demote',
+        ['degrada'] = '/demote',
+        ['silenzia'] = '/mute',
+        ['ripristina'] = '/unmute',
+        ['sasha lista sudo'] = '/sudolist',
+        ['sasha aiuto'] = '/help',
+        ['sasha aiuto tutto'] = '/helpall',
+        ['sasha sintassi'] = '/syntax',
+        ['sasha sintassi tutto'] = '/syntaxall',
+        ['rango'] = '/getrank',
+        ['sasha info'] = '/info',
+        ['info'] = '/info',
+        ['sasha ripeti'] = '/echo',
+        ['sasha markdown ripeti'] = '/markdownecho',
+        ['sasha abbandona'] = '/leave',
+        ['sasha lista plugins'] = '/plugins',
+        ['lista plugins'] = '/plugins',
+        ['sasha lista disabilitati'] = '/disabledlist',
+        ['lista disabilitati'] = '/disabledlist',
+        ['sasha lista disattivati'] = '/disabledlist',
+        ['lista disattivati'] = '/disabledlist',
+        ['sasha abilita'] = '/enable',
+        ['abilita'] = '/enable',
+        ['sasha attiva'] = '/enable',
+        ['attiva'] = '/enable',
+        ['sasha disabilita'] = '/disable',
+        ['disabilita'] = '/disable',
+        ['sasha disattiva'] = '/disable',
+        ['disattiva'] = '/disable',
+        ['sasha qr'] = '/qr',
+        ['sasha grida'] = '/shout',
+        ['grida'] = '/shout',
+        ['sasha urla'] = '/shout',
+        ['urla'] = '/shout',
+        ['lingua'] = '/setlang',
+        ['sasha tagga tutti'] = '/tagall',
+        ['sasha equazione'] = '/tex',
+        ['equazione'] = '/tex',
+        ['sasha webshotta'] = '/webshot',
+        ['webshotta'] = '/webshot',
+    },
+}
+
 local function run(msg, matches)
     if matches[1]:lower() == 'getalternatives' and matches[2] then
         mystat('/getalternatives')
@@ -7,11 +316,21 @@ local function run(msg, matches)
                 text = text .. k .. 'G. ' .. v .. '\n'
             end
         end
+        if alternatives.global.cmdAlt[matches[2]] then
+            for k, v in pairs(alternatives.global.cmdAlt[matches[2]]) do
+                text = text .. k .. 'G. ' .. v .. '\n'
+            end
+        end
         if data[tostring(msg.chat.id)] then
             if alternatives[tostring(msg.chat.id)] then
                 matches[2] = matches[2]:gsub('[#!]', '/')
                 if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()] then
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()]) do
+                        text = text .. k .. '. ' .. v .. '\n'
+                    end
+                end
+                if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]] then
+                    for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]]) do
                         text = text .. k .. '. ' .. v .. '\n'
                     end
                 end
@@ -145,6 +464,24 @@ local function run(msg, matches)
                 save_alternatives()
                 return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
             end
+        else
+            return langs[msg.lang].require_admin
+        end
+    end
+    if matches[1]:lower() == 'setdefaultalternatives' then
+        if msg.from.is_owner then
+            mystat('/setdefaultalternatives')
+            alternatives[tostring(msg.chat.id)] = default_alternatives
+            save_alternatives()
+        else
+            return langs[msg.lang].require_owner
+        end
+    end
+    if matches[1]:lower() == 'setdefaultglobalalternatives' then
+        if is_admin(msg) then
+            mystat('/setdefaultglobalalternatives')
+            alternatives.global = default_alternatives
+            save_alternatives()
         else
             return langs[msg.lang].require_admin
         end
@@ -436,8 +773,10 @@ return {
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([#!/].*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([#!/][^%s]+) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([#!/][^%s]+)$",
+        "^[#!/]([Ss][Ee][Tt][Dd][Ee][Ff][Aa][Uu][Ll][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss])$",
         "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([#!/][^%s]+) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([#!/][^%s]+)$",
+        "^[#!/]([Ss][Ee][Tt][Dd][Ee][Ff][Aa][Uu][Ll][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss])$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee])$",
     },
@@ -452,9 +791,11 @@ return {
         "#setalternative /<command> <alternative>|<reply_media>",
         "#unsetalternative <alternative>|<reply_media>",
         "OWNER",
+        "#setdefaultalternatives",
         "#unsetalternatives /<command>",
         "ADMIN",
         "#setglobalalternative /<command> <alternative>|<reply_media>",
+        "#setdefaultglobalalternatives",
         "#unsetglobalalternative <alternative>|<reply_media>",
     },
 }
