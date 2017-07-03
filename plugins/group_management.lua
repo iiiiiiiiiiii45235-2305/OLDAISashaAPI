@@ -4,8 +4,8 @@ default_settings = {
     group_type = 'Unknown',
     moderators = { },
     rules = nil,
-    set_name = string.gsub(msg.chat.print_name,'_',' '),
-    set_owner = tostring(admin.user.id),
+    set_name = 'TITLE',
+    set_owner = '41400331',
     settings =
     {
         flood = true,
@@ -363,6 +363,8 @@ local function addGroup(msg)
                     -- Group configuration
                     data[tostring(msg.chat.id)] = default_settings
                     data[tostring(msg.chat.id)].group_type = 'Group'
+                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                    data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
                     save_data(config.moderation.data, data)
                     if not data['groups'] then
                         data['groups'] = { }
@@ -420,6 +422,8 @@ local function addRealm(msg)
                     -- Realm configuration
                     data[tostring(msg.chat.id)] = default_settings
                     data[tostring(msg.chat.id)].group_type = 'Realm'
+                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                    data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
                     save_data(config.moderation.data, data)
                     if not data['realms'] then
                         data['realms'] = { }
@@ -467,6 +471,8 @@ local function addSuperGroup(msg)
                     -- SuperGroup configuration
                     data[tostring(msg.chat.id)] = default_settings
                     data[tostring(msg.chat.id)].group_type = 'SuperGroup'
+                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                    data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
                     save_data(config.moderation.data, data)
                     if not data['groups'] then
                         data['groups'] = { }
