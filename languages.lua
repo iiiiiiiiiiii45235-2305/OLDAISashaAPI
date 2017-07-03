@@ -338,6 +338,7 @@ return {
         alternativegDeleted = ' comando alternativo globale eliminato.',
         alternativesDeleted = 'Tutti i comandi alternativi di X sono stati eliminati.',
         errorCommandTooShort = 'Errore, comando alternativo troppo corto, minimo 4 caratteri.',
+        alternativeCommandsRestored = 'Comandi alternativi ripristinati.',
 
         -- anti_spam.lua --
         blockedForSpam = ' bloccato (SPAM).',
@@ -1492,6 +1493,7 @@ return {
         alternativegDeleted = ' global alternative command deleted.',
         alternativesDeleted = 'All X\'s alternative commands have been deleted.',
         errorCommandTooShort = 'Error, alternative command too short, at least 4 characters.',
+        alternativeCommandsRestored = 'Alternative commands restored.',
 
         -- anti_spam.lua --
         blockedForSpam = ' blocked (SPAM).',

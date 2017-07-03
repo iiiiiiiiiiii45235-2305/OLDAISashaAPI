@@ -473,6 +473,7 @@ local function run(msg, matches)
             mystat('/setdefaultalternatives')
             alternatives[tostring(msg.chat.id)] = default_alternatives
             save_alternatives()
+            return langs[msg.lang].alternativeCommandsRestored
         else
             return langs[msg.lang].require_owner
         end
@@ -482,6 +483,7 @@ local function run(msg, matches)
             mystat('/setdefaultglobalalternatives')
             alternatives.global = default_alternatives
             save_alternatives()
+            return langs[msg.lang].alternativeCommandsRestored
         else
             return langs[msg.lang].require_admin
         end
