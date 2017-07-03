@@ -177,7 +177,7 @@ local function get_object_info(obj, chat_id)
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == "id" then
+    if matches[1]:lower() == 'id' then
         mystat('/id')
         if msg.reply then
             if msg.from.is_mod then
@@ -234,7 +234,7 @@ local function run(msg, matches)
             return msg.from.id .. '\n' .. msg.chat.id
         end
     end
-    if matches[1]:lower() == "username" then
+    if matches[1]:lower() == 'username' then
         mystat('/username')
         if msg.reply then
             if msg.from.is_mod then
@@ -291,7 +291,7 @@ local function run(msg, matches)
             return(msg.from.username or('NOUSER ' .. msg.from.first_name .. ' ' ..(msg.from.last_name or ''))) .. '\n' ..(msg.chat.username or('NOUSER ' .. msg.chat.title))
         end
     end
-    if matches[1]:lower() == "getrank" or matches[1]:lower() == "rango" then
+    if matches[1]:lower() == 'getrank' then
         mystat('/getrank')
         if msg.reply then
             if matches[2] then
@@ -363,7 +363,7 @@ local function run(msg, matches)
             end
         end
     end
-    if matches[1]:lower() == 'info' or matches[1]:lower() == 'sasha info' then
+    if matches[1]:lower() == 'info' then
         mystat('/info')
         if msg.reply then
             if msg.from.is_mod then
@@ -427,7 +427,7 @@ local function run(msg, matches)
         end
         return
     end
-    --[[if matches[1]:lower() == "who" or matches[1]:lower() == "members" or matches[1]:lower() == "sasha lista membri" or matches[1]:lower() == "lista membri" then
+    --[[if matches[1]:lower() == 'who' or matches[1]:lower() == 'members' then
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             if msg.from.is_mod then
                 return langs[msg.lang].useAISasha
@@ -503,16 +503,8 @@ return {
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Oo])$",
-        -- getrank
-        "^([Rr][Aa][Nn][Gg][Oo])$",
-        "^([Rr][Aa][Nn][Gg][Oo]) ([^%s]+)$",
-        -- info
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo]) ([^%s]+)$",
         -- who
         "^[#!/]([Mm][Ee][Mm][Bb][Ee][Rr][Ss])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Mm][Ee][Mm][Bb][Rr][Ii])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Mm][Ee][Mm][Bb][Rr][Ii])$",
     },
     run = run,
     pre_process = pre_process,
@@ -522,15 +514,15 @@ return {
         "USER",
         "#id",
         "#username",
-        "#getrank|rango [<id>|<username>|<reply>|from]",
+        "#getrank [<id>|<username>|<reply>|from]",
         "#whoami",
-        "(#info|[sasha] info)",
+        "#info",
         "#ishere <id>|<username>|<reply>|from",
         "MOD",
         "#id <username>|<reply>|from",
         "#username <id>|<reply>|from",
-        "(#info|[sasha] info) <id>|<username>|<reply>|from",
-        -- "(#who|#members|[sasha] lista membri)",
+        "#info <id>|<username>|<reply>|from",
+        -- "(#who|#members)",
         "ADMIN",
         "#grouplink <group_id>",
     },

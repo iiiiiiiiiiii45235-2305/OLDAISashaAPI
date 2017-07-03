@@ -15,7 +15,7 @@ end
 local function run(msg, matches)
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if msg.from.is_mod then
-            if matches[1]:lower() == 'startflame' or matches[1]:lower() == 'sasha flamma' or matches[1]:lower() == 'flamma' then
+            if matches[1]:lower() == 'startflame' then
                 mystat('/startflame')
                 if msg.reply then
                     if matches[2] then
@@ -48,7 +48,7 @@ local function run(msg, matches)
                     end
                 end
                 return
-            elseif matches[1]:lower() == 'stopflame' or matches[1]:lower() == 'sasha stop flame' or matches[1]:lower() == 'stop flame' then
+            elseif matches[1]:lower() == 'stopflame' then
                 mystat('/stopflame')
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
@@ -62,7 +62,7 @@ local function run(msg, matches)
                         return langs[msg.lang].require_rank
                     end
                 end
-            elseif matches[1]:lower() == 'flameinfo' or matches[1]:lower() == 'sasha info flame' or matches[1]:lower() == 'info flame' then
+            elseif matches[1]:lower() == 'flameinfo' then
                 mystat('/flameinfo')
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
@@ -127,17 +127,6 @@ return {
         "^[#!/]([Ss][Tt][Aa][Rr][Tt][Ff][Ll][Aa][Mm][Ee])$",
         "^[#!/]([Ss][Tt][Oo][Pp][Ff][Ll][Aa][Mm][Ee])$",
         "^[#!/]([Ff][Ll][Aa][Mm][Ee][Ii][Nn][Ff][Oo])$",
-        -- startflame
-        "^([Ss][Aa][Ss][Hh][Aa] [Ff][Ll][Aa][Mm][Mm][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ff][Ll][Aa][Mm][Mm][Aa])$",
-        "^([Ff][Ll][Aa][Mm][Mm][Aa]) ([^%s]+)$",
-        "^([Ff][Ll][Aa][Mm][Mm][Aa])$",
-        -- stopflame
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Tt][Oo][Pp] [Ff][Ll][Aa][Mm][Ee])$",
-        "^([Ss][Tt][Oo][Pp] [Ff][Ll][Aa][Mm][Ee])$",
-        -- flameinfo
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Nn][Ff][Oo] [Ff][Ll][Aa][Mm][Ee])$",
-        "^([Ii][Nn][Ff][Oo] [Ff][Ll][Aa][Mm][Ee])$",
     },
     pre_process = pre_process,
     run = run,
@@ -145,8 +134,8 @@ return {
     syntax =
     {
         "MOD",
-        "(#startflame|[sasha] flamma) <id>|<username>|<reply>|from",
-        "(#stopflame|[sasha] stop flame)",
-        "(#flameinfo|[sasha] info flame)",
+        "#startflame <id>|<username>|<reply>|from",
+        "#stopflame",
+        "#flameinfo",
     },
 }

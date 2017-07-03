@@ -35,14 +35,12 @@ return {
     {
         "^[#!/][Tt][Aa][Gg][Aa][Ll][Ll]$",
         "^[#!/][Tt][Aa][Gg][Aa][Ll][Ll] +(.+)$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Tt][Aa][Gg][Gg][Aa] [Tt][Uu][Tt][Tt][Ii]$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Tt][Aa][Gg][Gg][Aa] [Tt][Uu][Tt][Tt][Ii] +(.+)$",
     },
     run = run,
     min_rank = 2,
     syntax =
     {
         "OWNER",
-        -- "(#tagall|sasha tagga tutti) <text>|<reply_text>",
+        -- "#tagall <text>|<reply_text>",
     },
 }

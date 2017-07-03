@@ -296,7 +296,7 @@ local function check_word(msg, word, pre)
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' or matches[1]:lower() == 'sasha lista' then
+    if matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' then
         if not matches[2] then
             mystat('/get')
             return list_variables(msg, false)
@@ -326,7 +326,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' or matches[1]:lower() == 'sasha lista globali' then
+    if matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' then
         mystat('/getglobal')
         return list_variables(msg, true)
     end
@@ -391,7 +391,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'setmedia' or matches[1]:lower() == 'sasha setta media' or matches[1]:lower() == 'setta media' then
+    if matches[1]:lower() == 'setmedia' then
         if msg.from.is_mod then
             mystat('/setmedia')
             if msg.reply then
@@ -446,7 +446,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'set' or matches[1]:lower() == 'sasha setta' or matches[1]:lower() == 'setta' then
+    if matches[1]:lower() == 'set' then
         if msg.from.is_mod then
             mystat('/set')
             if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
@@ -470,7 +470,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'unset' or matches[1]:lower() == 'sasha unsetta' or matches[1]:lower() == 'unsetta' then
+    if matches[1]:lower() == 'unset' then
         mystat('/unset')
         if msg.from.is_mod then
             return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), ' ', '_'):lower(), false)
@@ -581,35 +581,18 @@ return {
         -- "^[#!/]([Ee][Xx][Pp][Oo][Rr][Tt][Gg][Rr][Oo][Uu][Pp][Ss][Ee][Tt][Ss])$",
         -- getlist
         "^[#!/]([Gg][Ee][Tt])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa])$",
         -- getgloballist
         "^[#!/]([Gg][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Gg][Ll][Oo][Bb][Aa][Ll][Ii])$",
 
         --- SET
         "^[#!/]([Ss][Ee][Tt]) ([^%s]+) (.+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll]) ([^%s]+) (.+)$",
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Dd][Ii][Aa]) ([^%s]+) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
-        "^[#!/]([Cc][Aa][Nn][Cc][Ee][Ll])$",
-        -- set
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
-        "^([Ss][Ee][Tt][Tt][Aa]) ([^%s]+) (.+)$",
-        -- setmedia
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+) (.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
-        "^([Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+) (.*)$",
-        "^([Ss][Ee][Tt][Tt][Aa] [Mm][Ee][Dd][Ii][Aa]) ([^%s]+)$",
-        -- cancel
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
-        "^([Aa][Nn][Nn][Uu][Ll][Ll][Aa])$",
 
         --- UNSET
         "^[#!/]([Uu][Nn][Ss][Ee][Tt]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll]) (.*)$",
-        -- unset
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Nn][Ss][Ee][Tt][Tt][Aa]) (.*)$",
-        "^([Uu][Nn][Ss][Ee][Tt][Tt][Aa]) (.*)$",
     },
     pre_process = pre_process,
     run = run,
@@ -618,12 +601,12 @@ return {
     {
         "USER",
         "#get <var_name>",
-        "(#get|#getlist|sasha lista)",
-        "(#getgloballist|#getglobal|sasha lista globali)",
+        "(#getlist|#get)",
+        "(#getgloballist|#getglobal)",
         "MOD",
-        "(#set|[sasha] setta) <var_name>|<pattern> <text>",
-        "(#setmedia|[sasha] setta media) <var_name>|<pattern> <reply_media> [<caption>]",
-        "(#unset|[sasha] unsetta) <var_name>|<pattern>",
+        "#set <var_name>|<pattern> <text>",
+        "#setmedia <var_name>|<pattern> <reply_media> [<caption>]",
+        "#unset <var_name>|<pattern>",
         "OWNER",
         "#enableglobal",
         "#disableglobal",

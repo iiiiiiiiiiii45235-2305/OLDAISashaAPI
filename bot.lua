@@ -203,7 +203,6 @@ function create_alternatives()
                     'sasha supersbanna',
                     'supersbanna'
                 },
-                ['/bot'] = { 'sasha' },
             },
             altCmd =
             {
@@ -214,7 +213,6 @@ function create_alternatives()
                 ['superbanna'] = '/gban',
                 ['sasha supersbanna'] = '/ungban',
                 ['supersbanna'] = '/ungban',
-                ['sasha'] = '/bot',
             },
         },
     }

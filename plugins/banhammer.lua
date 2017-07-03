@@ -33,7 +33,7 @@ local function run(msg, matches)
         return
     end
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if matches[1]:lower() == 'kickme' or matches[1]:lower() == 'sasha uccidimi' or matches[1]:lower() == 'sasha esplodimi' or matches[1]:lower() == 'sasha sparami' or matches[1]:lower() == 'sasha decompilami' or matches[1]:lower() == 'sasha bannami' then
+        if matches[1]:lower() == 'kickme' then
             if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
                 -- Save to logs
@@ -43,7 +43,7 @@ local function run(msg, matches)
                 return langs[msg.lang].useYourGroups
             end
         end
-        if matches[1]:lower() == 'getuserwarns' or matches[1]:lower() == 'sasha ottieni avvertimenti' or matches[1]:lower() == 'ottieni avvertimenti' then
+        if matches[1]:lower() == 'getuserwarns' then
             if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
@@ -85,7 +85,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'warn' or matches[1]:lower() == 'sasha avverti' then
+        if matches[1]:lower() == 'warn' then
             if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
@@ -201,7 +201,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'unwarnall' or matches[1]:lower() == 'sasha azzera avvertimenti' or matches[1]:lower() == 'azzera avvertimenti' then
+        if matches[1]:lower() == 'unwarnall' then
             if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
                     return langs[msg.lang].noWarnSet
@@ -259,7 +259,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'kick' or matches[1]:lower() == 'sasha uccidi' or matches[1]:lower() == 'sasha spara' or matches[1]:lower() == 'uccidi' then
+        if matches[1]:lower() == 'kick' then
             if msg.from.is_mod then
                 mystat('/kick')
                 if msg.reply then
@@ -392,7 +392,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_owner
             end
         end]]
-        if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and not matches[2] then
+        if matches[1]:lower() == 'banlist' and not matches[2] then
             if msg.from.is_mod then
                 mystat('/banlist')
                 return banList(msg.chat.id)
@@ -400,7 +400,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'ban' or matches[1]:lower() == 'sasha banna' or matches[1]:lower() == 'sasha decompila' or matches[1]:lower() == 'sasha esplodi' or matches[1]:lower() == 'banna' or matches[1]:lower() == 'decompila' or matches[1]:lower() == 'kaboom' then
+        if matches[1]:lower() == 'ban' then
             if msg.from.is_mod then
                 mystat('/ban')
                 if msg.reply then
@@ -454,7 +454,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' then
+        if matches[1]:lower() == 'unban' then
             if msg.from.is_mod then
                 mystat('/unban')
                 if msg.reply then
@@ -508,7 +508,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'gban' or matches[1]:lower() == 'sasha superbanna' or matches[1]:lower() == 'superbanna' then
+        if matches[1]:lower() == 'gban' then
             if is_admin(msg) then
                 mystat('/gban')
                 if msg.reply then
@@ -568,7 +568,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == 'ungban' or matches[1]:lower() == 'sasha supersbanna' or matches[1]:lower() == 'supersbanna' then
+        if matches[1]:lower() == 'ungban' then
             if is_admin(msg) then
                 mystat('/ungban')
                 if msg.reply then
@@ -629,7 +629,7 @@ local function run(msg, matches)
             end
         end
     else
-        if (matches[1]:lower() == "banlist" or matches[1]:lower() == "sasha lista ban" or matches[1]:lower() == "lista ban") and matches[2] then
+        if matches[1]:lower() == 'banlist' and matches[2] then
             if is_admin(msg) then
                 mystat('/banlist <group_id>')
                 return banList(matches[2])
@@ -637,7 +637,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == 'gbanlist' or matches[1]:lower() == 'sasha lista superban' or matches[1]:lower() == 'lista superban' then
+        if matches[1]:lower() == 'gbanlist' then
             if is_admin(msg) then
                 mystat('/gbanlist')
                 local hash = 'gbanned'
@@ -825,90 +825,6 @@ return {
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn]) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn])$",
         "^[#!/]([Gg][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
-        -- getuserwarns
-        "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
-        "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+)$",
-        "^([Oo][Tt][Tt][Ii][Ee][Nn][Ii] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
-        -- unwarnall
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+) ?(.*)$",
-        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) ([^%s]+) ?(.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
-        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii]) (.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
-        "^([Aa][Zz][Zz][Ee][Rr][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii][Mm][Ee][Nn][Tt][Ii])$",
-        -- warn
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) ([^%s]+) ?(.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii]) (.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Vv][Vv][Ee][Rr][Tt][Ii])$",
-        -- kickme
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii][Mm][Ii])",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Pp][Ll][Oo][Dd][Ii][Mm][Ii])",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Pp][Aa][Rr][Aa][Mm][Ii])",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa][Mm][Ii])",
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa][Mm][Ii])",
-        -- kick
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) ([^%s]+) ?(.*)$",
-        "^([Uu][Cc][Cc][Ii][Dd][Ii]) ([^%s]+) ?(.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii]) (.*)$",
-        "^([Uu][Cc][Cc][Ii][Dd][Ii]) (.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Uu][Cc][Cc][Ii][Dd][Ii])$",
-        "^([Uu][Cc][Cc][Ii][Dd][Ii])$",
-        -- banlist
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn]) ([^%s]+)$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Bb][Aa][Nn])$",
-        -- ban
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
-        "^([Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
-        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
-        "^([Kk][Aa][Bb][Oo][Oo][Mm]) ([^%s]+) ?(.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa]) (.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
-        "^([Bb][Aa][Nn][Nn][Aa]) (.*)$",
-        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
-        "^([Kk][Aa][Bb][Oo][Oo][Mm]) (.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Aa][Nn][Nn][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Bb][Aa][Nn][Nn][Aa])$",
-        "^([Dd][Ee][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Kk][Aa][Bb][Oo][Oo][Mm])$",
-        -- unban
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
-        "^([Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
-        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
-        "^([Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
-        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
-
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Ss][Bb][Aa][Nn][Nn][Aa])$",
-        "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        -- gban
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
-        "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
-        -- ungban
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa])$",
-        "^([Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
-        "^([Ss][Uu][Pp][Ee][Rr][Ss][Bb][Aa][Nn][Nn][Aa])$",
-        -- gbanlist
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn])$",
     },
     run = run,
     pre_process = pre_process,
@@ -916,25 +832,25 @@ return {
     syntax =
     {
         "USER",
-        "(#kickme|sasha (uccidimi|esplodimi|sparami|decompilami|bannami))",
+        "#kickme",
         "MOD",
-        "(#getuserwarns|[sasha] ottieni avvertimenti) <id>|<username>|<reply>|from",
-        "(#warn|sasha avverti) <id>|<username>|<reply>|from [<reason>]",
+        "#getuserwarns <id>|<username>|<reply>|from",
+        "#warn <id>|<username>|<reply>|from [<reason>]",
         "#unwarn <id>|<username>|<reply>|from [<reason>]",
-        "(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from [<reason>]",
-        "(#kick|[sasha] uccidi|sasha spara) <id>|<username>|<reply>|from [<reason>]",
-        "(#ban|kaboom|[sasha] banna|[sasha] decompila|sasha esplodi) <id>|<username>|<reply>|from [<reason>]",
-        "(#unban|[sasha] sbanna|[sasha] ricompila) <id>|<username>|<reply>|from [<reason>]",
-        "(#banlist|[sasha] lista ban)",
+        "#unwarnall <id>|<username>|<reply>|from [<reason>]",
+        "#kick <id>|<username>|<reply>|from [<reason>]",
+        "#ban <id>|<username>|<reply>|from [<reason>]",
+        "#unban <id>|<username>|<reply>|from [<reason>]",
+        "#banlist",
         -- "#kickrandom",
         -- "#kickdeleted",
         "OWNER",
         -- "#kicknouser",
         -- "#kickinactive [<msgs>]",
         "ADMIN",
-        "(#banlist|[sasha] lista ban) <group_id>",
-        "(#gban|[sasha] superbanna) <id>|<username>|<reply>|from",
-        "(#ungban|[sasha] supersbanna) <id>|<username>|<reply>|from",
-        "(#gbanlist|[sasha] lista superban)",
+        "#banlist <group_id>",
+        "#gban <id>|<username>|<reply>|from",
+        "#ungban <id>|<username>|<reply>|from",
+        "#gbanlist",
     },
 }

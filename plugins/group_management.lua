@@ -1100,7 +1100,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if (matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca') and matches[2] and matches[3] then
+        if matches[1]:lower() == 'lock' and matches[2] and matches[3] then
             if is_admin(msg) then
                 if checkMatchesLockUnlock(matches[3]) then
                     mystat('/lock <group_id> ' .. matches[3]:lower())
@@ -1111,7 +1111,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if (matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca') and matches[2] and matches[3] then
+        if matches[1]:lower() == 'unlock' and matches[2] and matches[3] then
             if is_admin(msg) then
                 if checkMatchesLockUnlock(matches[3]) then
                     mystat('/unlock <group_id> ' .. matches[3]:lower())
@@ -1122,7 +1122,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if (matches[1]:lower() == 'mute' or matches[1]:lower() == 'silenzia') and matches[2] and matches[3] then
+        if matches[1]:lower() == 'mute' and matches[2] and matches[3] then
             if is_admin(msg) then
                 if checkMatchesMuteUnmute(matches[3]) then
                     mystat('/mute <group_id> ' .. matches[3]:lower())
@@ -1133,7 +1133,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if (matches[1]:lower() == 'unmute' or matches[1]:lower() == 'ripristina') and matches[2] and matches[3] then
+        if matches[1]:lower() == 'unmute' and matches[2] and matches[3] then
             if is_admin(msg) then
                 if checkMatchesMuteUnmute(matches[3]) then
                     mystat('/unmute <group_id> ' .. matches[3]:lower())
@@ -1144,7 +1144,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if (matches[1]:lower() == "muteslist" or matches[1]:lower() == "lista muti") and matches[2] then
+        if matches[1]:lower() == 'muteslist' and matches[2] then
             if is_admin(msg) then
                 if msg.chat.type ~= 'private' then
                     sendMessage(msg.chat.id, langs[msg.lang].sendMutesPvt)
@@ -1157,7 +1157,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_admin
             end
         end
-        if matches[1]:lower() == "textualmuteslist" and matches[2] then
+        if matches[1]:lower() == 'textualmuteslist' and matches[2] then
             if is_admin(msg) then
                 mystat('/muteslist <group_id>')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
@@ -1298,7 +1298,7 @@ local function run(msg, matches)
             end
         end
         if data[tostring(msg.chat.id)] then
-            if matches[1]:lower() == 'rules' or matches[1]:lower() == 'sasha regole' then
+            if matches[1]:lower() == 'rules' then
                 mystat('/rules')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
                 if not data[tostring(msg.chat.id)].rules then
@@ -1350,7 +1350,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'setrules' or matches[1]:lower() == 'sasha imposta regole' then
+            if matches[1]:lower() == 'setrules' then
                 mystat('/setrules')
                 if msg.from.is_mod then
                     data[tostring(msg.chat.id)].rules = matches[2]
@@ -1424,7 +1424,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == 'lock' or matches[1]:lower() == 'sasha blocca' or matches[1]:lower() == 'blocca' then
+            if matches[1]:lower() == 'lock' then
                 if msg.from.is_mod then
                     if checkMatchesLockUnlock(matches[2]) then
                         mystat('/lock ' .. matches[2]:lower())
@@ -1435,7 +1435,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == 'unlock' or matches[1]:lower() == 'sasha sblocca' or matches[1]:lower() == 'sblocca' then
+            if matches[1]:lower() == 'unlock' then
                 if msg.from.is_mod then
                     if checkMatchesLockUnlock(matches[2]) then
                         mystat('/unlock ' .. matches[2]:lower())
@@ -1446,7 +1446,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == 'mute' or matches[1]:lower() == 'silenzia' then
+            if matches[1]:lower() == 'mute' then
                 if msg.from.is_owner then
                     if checkMatchesMuteUnmute(matches[2]) then
                         mystat('/mute ' .. matches[2]:lower())
@@ -1457,7 +1457,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'unmute' or matches[1]:lower() == 'ripristina' then
+            if matches[1]:lower() == 'unmute' then
                 if msg.from.is_owner then
                     if checkMatchesMuteUnmute(matches[2]) then
                         mystat('/unmute ' .. matches[2]:lower())
@@ -1468,7 +1468,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == "muteuser" or matches[1]:lower() == 'voce' then
+            if matches[1]:lower() == 'muteuser' then
                 if msg.from.is_mod then
                     mystat('/muteuser')
                     if msg.reply then
@@ -1558,7 +1558,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == "muteslist" or matches[1]:lower() == "lista muti" then
+            if matches[1]:lower() == 'muteslist' then
                 if msg.from.is_mod then
                     if msg.chat.type ~= 'private' then
                         sendMessage(msg.chat.id, langs[msg.lang].sendMutesPvt)
@@ -1571,7 +1571,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == "textualmuteslist" then
+            if matches[1]:lower() == 'textualmuteslist' then
                 if msg.from.is_mod then
                     mystat('/muteslist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
@@ -1580,7 +1580,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == "del" then
+            if matches[1]:lower() == 'del' then
                 if msg.from.is_mod then
                     mystat('/del')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
@@ -1592,7 +1592,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == "mutelist" or matches[1]:lower() == "lista utenti muti" then
+            if matches[1]:lower() == 'mutelist' then
                 if msg.from.is_mod then
                     mystat('/mutelist')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup mutelist")
@@ -1623,7 +1623,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == 'newlink' or matches[1]:lower() == 'sasha crea link' then
+            if matches[1]:lower() == 'newlink' then
                 if msg.from.is_mod then
                     mystat('/newlink')
                     local link = exportChatInviteLink(msg.chat.id)
@@ -1639,7 +1639,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if (matches[1]:lower() == 'setlink' or matches[1]:lower() == "sasha imposta link") and matches[2] then
+            if matches[1]:lower() == 'setlink' and matches[2] then
                 if msg.from.is_owner then
                     mystat('/setlink')
                     data[tostring(msg.chat.id)].settings.set_link = matches[2]
@@ -1649,7 +1649,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'unsetlink' or matches[1]:lower() == "sasha elimina link" then
+            if matches[1]:lower() == 'unsetlink' then
                 if msg.from.is_owner then
                     mystat('/unsetlink')
                     data[tostring(msg.chat.id)].settings.set_link = nil
@@ -1659,7 +1659,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'link' or matches[1]:lower() == 'sasha link' then
+            if matches[1]:lower() == 'link' then
                 mystat('/link')
                 if data[tostring(msg.chat.id)].settings.lock_group_link then
                     if msg.from.is_mod then
@@ -1681,7 +1681,7 @@ local function run(msg, matches)
                     end
                 end
             end
-            if matches[1]:lower() == "getadmins" or matches[1]:lower() == "sasha lista admin" or matches[1]:lower() == "lista admin" then
+            if matches[1]:lower() == 'getadmins' then
                 if msg.from.is_owner then
                     mystat('/getadmins')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup Admins list")
@@ -1747,7 +1747,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'modlist' or matches[1]:lower() == 'sasha lista mod' or matches[1]:lower() == 'lista mod' then
+            if matches[1]:lower() == 'modlist' then
                 mystat('/modlist')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
                 return modList(msg)
@@ -1846,7 +1846,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'promote' or matches[1]:lower() == 'sasha promuovi' or matches[1]:lower() == 'promuovi' then
+            if matches[1]:lower() == 'promote' then
                 if msg.from.is_owner then
                     mystat('/promote')
                     if msg.reply then
@@ -1893,7 +1893,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'demote' or matches[1]:lower() == 'sasha degrada' or matches[1]:lower() == 'degrada' then
+            if matches[1]:lower() == 'demote' then
                 if msg.from.is_owner then
                     mystat('/demote')
                     if msg.reply then
@@ -2001,18 +2001,6 @@ return {
         "^[#!/]([Ss][Uu][Pp][Ee][Rr][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Rr][Uu][Ll][Ee][Ss]) (%-?%d+) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Aa][Bb][Oo][Uu][Tt]) (%-?%d+) (.*)$",
-        -- lock
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) ([^%s]+)$",
-        "^([Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) ([^%s]+)$",
-        -- unlock
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) ([^%s]+)$",
-        "^([Ss][Bb][Ll][Oo][Cc][Cc][Aa]) (%-?%d+) ([^%s]+)$",
-        -- mute
-        "^([Ss][Ii][Ll][Ee][Nn][Zz][Ii][Aa]) (%-?%d+) ([^%s]+)$",
-        -- unmute
-        "^([Rr][Ii][Pp][Rr][Ii][Ss][Tt][Ii][Nn][Aa]) (%-?%d+) ([^%s]+)$",
-        -- muteslist
-        "^([Ll][Ii][Ss][Tt][Aa] [Mm][Uu][Tt][Ii]) (%-?%d+)$",
 
         -- INGROUP
         "^[#!/]([Aa][Dd][Dd]) ([Rr][Ee][Aa][Ll][Mm])$",
@@ -2023,9 +2011,6 @@ return {
         "^[#!/]([Pp][Ii][Nn])$",
         "^[#!/]([Ss][Ii][Ll][Ee][Nn][Tt][Pp][Ii][Nn])$",
         "^[#!/]([Uu][Nn][Pp][Ii][Nn])$",
-        -- getadmins
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Aa][Dd][Mm][Ii][Nn])$",
 
         -- COMMON
         "^[#!/]([Dd][Ee][Ll])$",
@@ -2074,51 +2059,6 @@ return {
         "^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
         "^[#!/]([Ss][Ee][Tt][Ww][Aa][Rr][Nn]) (%d+)$",
         "^[#!/]([Gg][Ee][Tt][Ww][Aa][Rr][Nn])$",
-        -- rules
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ee][Gg][Oo][Ll][Ee])$",
-        -- promote
-        "^([Ss][Aa][Ss][Hh][Aa] [Pp][Rr][Oo][Mm][Uu][Oo][Vv][Ii]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Pp][Rr][Oo][Mm][Uu][Oo][Vv][Ii])$",
-        "^([Pp][Rr][Oo][Mm][Uu][Oo][Vv][Ii]) ([^%s]+)$",
-        "^([Pp][Rr][Oo][Mm][Uu][Oo][Vv][Ii])$",
-        -- demote
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Gg][Rr][Aa][Dd][Aa]) ([^%s]+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Dd][Ee][Gg][Rr][Aa][Dd][Aa])$",
-        "^([Dd][Ee][Gg][Rr][Aa][Dd][Aa]) ([^%s]+)$",
-        "^([Dd][Ee][Gg][Rr][Aa][Dd][Aa])$",
-        -- setrules
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Rr][Ee][Gg][Oo][Ll][Ee]) (.*)$",
-        -- lock
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa]) ([^%s]+)$",
-        "^([Bb][Ll][Oo][Cc][Cc][Aa]) ([^%s]+)$",
-        -- unlock
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa]) ([^%s]+)$",
-        "^([Ss][Bb][Ll][Oo][Cc][Cc][Aa]) ([^%s]+)$",
-        -- modlist
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Mm][Oo][Dd])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Mm][Oo][Dd])$",
-        -- newlink
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Rr][Ee][Aa] [Ll][Ii][Nn][Kk])$",
-        -- link
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Nn][Kk])$",
-        -- setlink
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ii][Mm][Pp][Oo][Ss][Tt][Aa] [Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
-        -- unsetlink
-        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ll][Ii][Mm][Ii][Nn][Aa] [Ll][Ii][Nn][Kk])$",
-        -- mute
-        "^([Ss][Ii][Ll][Ee][Nn][Zz][Ii][Aa]) ([^%s]+)$",
-        -- unmute
-        "^([Rr][Ii][Pp][Rr][Ii][Ss][Tt][Ii][Nn][Aa]) ([^%s]+)$",
-        -- muteuser
-        "^([Vv][Oo][Cc][Ee])$",
-        "^([Vv][Oo][Cc][Ee]) ([^%s]+)$",
-        -- muteslist
-        "^([Ll][Ii][Ss][Tt][Aa] [Mm][Uu][Tt][Ii])$",
-        -- mutelist
-        "^([Ll][Ii][Ss][Tt][Aa] [Uu][Tt][Ee][Nn][Tt][Ii] [Mm][Uu][Tt][Ii])$",
     },
     run = run,
     min_rank = 0,
@@ -2126,41 +2066,41 @@ return {
     {
         "USER",
         "#getwarn",
-        "(#rules|sasha regole)",
-        "(#modlist|[sasha] lista mod)",
+        "#rules",
+        "#modlist",
         "#owner",
         "#admins [<reply>|<text>]",
-        "(#link|sasha link)",
+        "#link",
         "MOD",
         "#type",
         "#updategroupinfo",
-        "(#setrules|sasha imposta regole) <text>",
+        "#setrules <text>",
         "#setwarn <value>",
         "#setflood <value>",
-        "(#newlink|sasha crea link)",
+        "#newlink",
         "#settings",
         "#textualsettings",
-        "#muteuser|voce <id>|<username>|<reply>|from",
-        "(#muteslist|lista muti)",
+        "#muteuser <id>|<username>|<reply>|from",
+        "#muteslist",
         "#textualmuteslist",
-        "(#mutelist|lista utenti muti)",
-        "(#lock|[sasha] blocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "#mutelist",
+        "#lock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "#unlock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#[silent]pin <reply>",
         "#unpin",
         "OWNER",
         "#syncmodlist",
         "#log",
-        "(#getadmins|[sasha] lista admin)",
-        "(#setlink|sasha imposta link) <link>",
-        "(#unsetlink|sasha elimina link)",
-        "(#promote|[sasha] promuovi) <id>|<username>|<reply>|from",
-        "(#demote|[sasha] degrada) <id>|<username>|<reply>|from",
+        "#getadmins",
+        "#setlink <link>",
+        "#unsetlink",
+        "#promote <id>|<username>|<reply>|from",
+        "#demote <id>|<username>|<reply>|from",
         "#promoteadmin <id>|<username>|<reply>|from",
         "#demoteadmin <id>|<username>|<reply>|from",
         "#setowner <id>|<username>|<reply>",
-        "#mute|silenzia all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "#unmute|ripristina all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#mute all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#unmute all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
         "#clean modlist|rules",
         "ADMIN",
         "#add",
@@ -2171,12 +2111,12 @@ return {
         "REALM",
         "#setgpowner <group_id> <user_id>",
         "#setgprules <group_id> <text>",
-        "#mute|silenzia <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "#unmute|ripristina <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "(#muteslist|lista muti) <group_id>",
+        "#mute <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#unmute <group_id> all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#muteslist <group_id>",
         "#textualmuteslist <group_id>",
-        "(#lock|[sasha] blocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "(#unlock|[sasha] sblocca) <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "#lock <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "#unlock <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
         "#textualsettings <group_id>",
         "#type",

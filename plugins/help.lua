@@ -253,7 +253,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == "sudolist" or matches[1]:lower() == "sasha lista sudo" then
+    if matches[1]:lower() == 'sudolist' then
         mystat('/sudolist')
         local text = 'SUDO INFO'
         for v, user in pairs(sudoers) do
@@ -276,12 +276,12 @@ local function run(msg, matches)
     end
 
     table.sort(plugins)
-    if matches[1]:lower() == "helpall" or matches[1]:lower() == "sasha aiuto tutto" then
+    if matches[1]:lower() == 'helpall' then
         mystat('/helpall')
         return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
     end
 
-    if matches[1]:lower() == "help" or matches[1]:lower() == "sasha aiuto" then
+    if matches[1]:lower() == 'help' then
         if not matches[2] then
             mystat('/help')
             if msg.chat.type ~= 'private' then
@@ -306,7 +306,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == "textualhelp" then
+    if matches[1]:lower() == 'textualhelp' then
         if not matches[2] then
             mystat('/help')
             return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
@@ -325,12 +325,12 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == "syntaxall" or matches[1]:lower() == "sasha sintassi tutto" then
+    if matches[1]:lower() == 'syntaxall' then
         mystat('/syntaxall')
         return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
     end
 
-    if matches[1]:lower() == "syntax" or matches[1]:lower() == "sasha sintassi" and matches[2] then
+    if matches[1]:lower() == 'syntax' and matches[2] then
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
         local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
@@ -341,7 +341,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == "faq" then
+    if matches[1]:lower() == 'faq' then
         if not matches[2] then
             mystat('/faq')
             return langs[msg.lang].faqList
@@ -351,7 +351,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == "deletekeyboard" then
+    if matches[1]:lower() == 'deletekeyboard' then
         if msg.reply then
             if msg.reply_to_message.from.id == bot.id then
                 if msg.reply_to_message.text then
@@ -380,36 +380,20 @@ return {
         "^[#!/]([Ff][Aa][Qq])$",
         "^[#!/]([Ff][Aa][Qq])(%d+)$",
         "^[#!/]([Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
-        -- helpall
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Uu][Tt][Tt][Oo])$",
-        -- textualhelp
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Ee][Ss][Tt][Uu][Aa][Ll][Ee])$",
-        -- textualhelp <plugin_name>|<plugin_number>
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo] [Tt][Ee][Ss][Tt][Uu][Aa][Ll][Ee]) ([^%s]+)$",
-        -- help
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo])$",
-        -- help <plugin_name>|<plugin_number>
-        "^([Ss][Aa][Ss][Hh][Aa] [Aa][Ii][Uu][Tt][Oo]) ([^%s]+)$",
-        -- syntaxall
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Tt][Aa][Ss][Ss][Ii] [Tt][Uu][Tt][Tt][Oo])$",
-        -- syntax <filter>
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Ii][Nn][Tt][Aa][Ss][Ss][Ii]) (.*)$",
-        -- sudolist
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Ss][Uu][Dd][Oo])$",
     },
     run = run,
     min_rank = 0,
     syntax =
     {
         "USER",
-        "(#sudolist|sasha lista sudo)",
-        "(#help|sasha aiuto)",
-        "(#help|sasha aiuto) <plugin_name>|<plugin_number>",
-        "(#textualhelp|sasha aiuto testuale)",
-        "(#textualhelp|sasha aiuto testuale) <plugin_name>|<plugin_number>",
-        "(#helpall|sasha aiuto tutto)",
-        "(#syntax|sasha sintassi) <filter>",
-        "(#syntaxall|sasha sintassi tutto)",
+        "#sudolist",
+        "#help",
+        "#help <plugin_name>|<plugin_number>",
+        "#textualhelp",
+        "#textualhelp <plugin_name>|<plugin_number>",
+        "#helpall",
+        "#syntax <filter>",
+        "#syntaxall",
         "#faq[<n>]",
         "#deletekeyboard <reply>",
     },

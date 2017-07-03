@@ -313,7 +313,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'plugins' or matches[1]:lower() == 'lista plugins' then
+    if matches[1]:lower() == 'plugins' then
         if msg.from.is_owner then
             local chat_plugins = false
             if matches[2] then
@@ -365,7 +365,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'enable' or matches[1]:lower() == 'abilita' or matches[1]:lower() == 'attiva' then
+    if matches[1]:lower() == 'enable' then
         if matches[3] then
             -- Re-enable a plugin for this chat
             if msg.from.is_owner then
@@ -387,7 +387,7 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'disable' or matches[1]:lower() == 'disabilita' or matches[1]:lower() == 'disattiva' then
+    if matches[1]:lower() == 'disable' then
         if matches[3] then
             -- Disable a plugin for this chat
             if msg.from.is_owner then
@@ -416,7 +416,7 @@ local function run(msg, matches)
     end
 
     -- Show on chat disabled plugin
-    if matches[1]:lower() == 'disabledlist' or matches[1]:lower() == 'lista disabilitati' or matches[1]:lower() == 'lista disattivati' then
+    if matches[1]:lower() == 'disabledlist' then
         if msg.from.is_owner then
             mystat('/disabledlist')
             return list_disabled_plugin_on_chat(msg.chat.id)
@@ -426,7 +426,7 @@ local function run(msg, matches)
     end
 
     -- Reload all the plugins and strings!
-    if matches[1]:lower() == 'reload' or matches[1]:lower() == 'sasha ricarica' or matches[1]:lower() == 'ricarica' then
+    if matches[1]:lower() == 'reload' then
         if is_sudo(msg) then
             mystat('/reload')
             print(reload_plugins())
@@ -459,55 +459,22 @@ return {
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd])$",
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd][Ll][Ii][Ss][Tt])",
-        -- plugins
-        "^[Ss][Aa][Ss][Hh][Aa] ([Ll][Ii][Ss][Tt][Aa] [Pp][Ll][Uu][Gg][Ii][Nn][Ss])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Pp][Ll][Uu][Gg][Ii][Nn][Ss])$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Ll][Ii][Ss][Tt][Aa] [Pp][Ll][Uu][Gg][Ii][Nn][Ss]) ([Cc][Hh][Aa][Tt])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Pp][Ll][Uu][Gg][Ii][Nn][Ss]) ([Cc][Hh][Aa][Tt])$",
-        -- enable
-        "^[Ss][Aa][Ss][Hh][Aa] ([Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+)$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+)$",
-        "^([Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+)$",
-        "^([Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+)$",
-        -- disable
-        "^[Ss][Aa][Ss][Hh][Aa] ([Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+)$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Dd][Ii][Ss][Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+)$",
-        "^([Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+)$",
-        "^([Dd][Ii][Ss][Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+)$",
-        -- enable chat
-        "^[Ss][Aa][Ss][Hh][Aa] ([Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^([Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^([Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        -- disable chat
-        "^[Ss][Aa][Ss][Hh][Aa] ([Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Dd][Ii][Ss][Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^([Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        "^([Dd][Ii][Ss][Aa][Tt][Tt][Ii][Vv][Aa]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
-        -- reload
-        "^[Ss][Aa][Ss][Hh][Aa] ([Rr][Ii][Cc][Aa][Rr][Ii][Cc][Aa])$",
-        "^([Rr][Ii][Cc][Aa][Rr][Ii][Cc][Aa])$",
-        -- disabledlist
-        "^[Ss][Aa][Ss][Hh][Aa] ([Ll][Ii][Ss][Tt][Aa] [Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa][Tt][Ii])$",
-        "^[Ss][Aa][Ss][Hh][Aa] ([Ll][Ii][Ss][Tt][Aa] [Dd][Ii][Ss][Aa][Tt][Tt][Ii][Vv][Aa][Tt][Ii])$",
-        "^[(Ll][Ii][Ss][Tt][Aa] [Dd][Ii][Ss][Aa][Bb][Ii][Ll][Ii][Tt][Aa][Tt][Ii])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Dd][Ii][Ss][Aa][Tt][Tt][Ii][Vv][Aa][Tt][Ii])$",
     },
     run = run,
     min_rank = 2,
     syntax =
     {
         "OWNER",
-        "(#plugins|[sasha] lista plugins)",
+        "#plugins",
         "#textualplugins",
-        "(#disabledlist|([sasha] lista disabilitati|disattivati))",
-        "(#enable|[sasha] abilita|[sasha] attiva) <plugin> chat",
-        "(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> chat",
+        "#disabledlist",
+        "#enable <plugin> chat",
+        "#disable <plugin> chat",
         "SUDO",
-        "(#plugins|[sasha] lista plugins) [chat]",
+        "#plugins [chat]",
         "#textualplugins [chat]",
-        "(#enable|[sasha] abilita|[sasha] attiva) <plugin> [chat]",
-        "(#disable|[sasha] disabilita|[sasha] disattiva) <plugin> [chat]",
-        "(#reload|[sasha] ricarica)",
+        "#enable <plugin> [chat]",
+        "#disable <plugin> [chat]",
+        "#reload",
     },
 }

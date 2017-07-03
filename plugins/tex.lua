@@ -11,15 +11,12 @@ return {
     patterns =
     {
         "^[#!/][Tt][Ee][Xx] (.+)$",
-        -- tex
-        "^[Ss][Aa][Ss][Hh][Aa] [Ee][Qq][Uu][Aa][Zz][Ii][Oo][Nn][Ee] (.+)$",
-        "^[Ee][Qq][Uu][Aa][Zz][Ii][Oo][Nn][Ee] (.+)$",
     },
     run = run,
     min_rank = 0,
     syntax =
     {
         "USER",
-        "(#tex|[sasha] equazione) <equation>",
+        "#tex <equation>",
     },
 }

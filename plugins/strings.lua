@@ -1,5 +1,5 @@
 local function run(msg, matches)
-    if (matches[1]:lower() == 'setlang' or matches[1]:lower() == 'lingua') and matches[2] then
+    if matches[1]:lower() == 'setlang' and matches[2] then
         mystat('/setlang')
         if msg.chat.type == 'private' then
             redis:set('lang:' .. msg.chat.id, matches[2]:lower())
@@ -31,18 +31,15 @@ return {
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ee][Nn])$',
         '^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Ss][Tt][Rr][Ii][Nn][Gg][Ss])$',
         '^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Ll][Aa][Nn][Gg][Ss])$',
-        -- setlang
-        '^([Ll][Ii][Nn][Gg][Uu][Aa]) ([Ii][Tt])$',
-        '^([Ll][Ii][Nn][Gg][Uu][Aa]) ([Ee][Nn])$',
     },
     run = run,
     min_rank = 0,
     syntax =
     {
         "USER",
-        "(#setlang|lingua) (it|en)",
+        "#setlang (it|en)",
         "OWNER",
-        "(#setlang|lingua) (it|en)",
+        "#setlang (it|en)",
         "SUDO",
         "#reloadstrings|#reloadlangs",
     },

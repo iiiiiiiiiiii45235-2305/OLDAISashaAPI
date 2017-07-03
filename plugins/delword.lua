@@ -35,10 +35,10 @@ local function list_censorships(msg)
 end
 
 local function run(msg, matches)
-    if matches[1]:lower() == 'dellist' or matches[1]:lower() == 'sasha lista censure' or matches[1]:lower() == 'lista censure' then
+    if matches[1]:lower() == 'dellist' then
         return list_censorships(msg)
     end
-    if (matches[1]:lower() == 'delword' or matches[1]:lower() == 'sasha censura' or matches[1]:lower() == 'censura') and matches[2] then
+    if matches[1]:lower() == 'delword' and matches[2] then
         if msg.from.is_mod then
             return setunset_delword(msg, matches[2]:lower())
         else
@@ -105,12 +105,6 @@ return {
     {
         "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ll][Ii][Ss][Tt])$",
-        -- delword
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Ee][Nn][Ss][Uu][Rr][Aa]) (.*)$",
-        "^([Cc][Ee][Nn][Ss][Uu][Rr][Aa]) (.*)$",
-        -- dellist
-        "^([Ss][Aa][Ss][Hh][Aa] [Ll][Ii][Ss][Tt][Aa] [Cc][Ee][Nn][Ss][Uu][Rr][Ee])$",
-        "^([Ll][Ii][Ss][Tt][Aa] [Cc][Ee][Nn][Ss][Uu][Rr][Ee])$",
     },
     pre_process = pre_process,
     run = run,
@@ -118,8 +112,8 @@ return {
     syntax =
     {
         "USER",
-        "(#dellist|[sasha] lista censure)",
+        "#dellist",
         "MOD",
-        "(#delword|[sasha] censura) <word>|<pattern>",
+        "#delword <word>|<pattern>",
     },
 }

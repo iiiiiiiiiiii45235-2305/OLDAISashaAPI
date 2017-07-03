@@ -66,17 +66,12 @@ return {
         "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([Hh][Tt][Tt][Pp][Ss]?://[%w-_%.%?%.:/%+=&]+)$",
         "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([%w-_%.%?%.:/%+=&]+) (.*)$",
         "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([%w-_%.%?%.:/%+=&]+)$",
-        -- webshot
-        "^[Ss][Aa][Ss][Hh][Aa] [Ww][Ee][Bb][Ss][Hh][Oo][Tt][Tt][Aa] ([Hh][Tt][Tt][Pp][Ss]?://[%w-_%.%?%.:/%+=&]+) (.*)$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Ww][Ee][Bb][Ss][Hh][Oo][Tt][Tt][Aa] ([Hh][Tt][Tt][Pp][Ss]?://[%w-_%.%?%.:/%+=&]+)$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Ww][Ee][Bb][Ss][Hh][Oo][Tt][Tt][Aa] ([%w-_%.%?%.:/%+=&]+) (.*)$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Ww][Ee][Bb][Ss][Hh][Oo][Tt][Tt][Aa] ([%w-_%.%?%.:/%+=&]+)$",
     },
     run = run,
     min_rank = 1,
     syntax =
     {
         "MOD",
-        "(#webshot|[sasha] webshotta) <url> [<size>]",
+        "#webshot <url> [<size>]",
     },
 }

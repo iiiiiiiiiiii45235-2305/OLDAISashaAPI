@@ -29,17 +29,12 @@ return {
     patterns =
     {
         "^[#!/][Ss][Hh][Oo][Uu][Tt] (.*)$",
-        -- shout
-        "^[Ss][Aa][Ss][Hh][Aa] [Gg][Rr][Ii][Dd][Aa] (.*)$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Uu][Rr][Ll][Aa] (.*)$",
-        "^[Gg][Rr][Ii][Dd][Aa] (.*)$",
-        "^[Uu][Rr][Ll][Aa] (.*)$",
     },
     run = run,
     min_rank = 0,
     syntax =
     {
         "USER",
-        "(#shout|[sasha] grida|[sasha] urla) <text>",
+        "#shout <text>",
     },
 }

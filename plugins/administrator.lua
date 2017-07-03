@@ -133,7 +133,7 @@ local function run(msg, matches)
             mystat('/laststart')
             return start_time
         end
-        if matches[1]:lower() == "pmblock" or matches[1]:lower() == "sasha blocca pm" then
+        if matches[1]:lower() == "pmblock" then
             mystat('/block')
             if msg.reply then
                 if matches[2] then
@@ -169,7 +169,7 @@ local function run(msg, matches)
             end
             return
         end
-        if matches[1]:lower() == "pmunblock" or matches[1]:lower() == "sasha sblocca pm" then
+        if matches[1]:lower() == "pmunblock" then
             mystat('/unblock')
             if msg.reply then
                 if matches[2] then
@@ -314,7 +314,7 @@ local function run(msg, matches)
                 redis:bgsave()
                 return langs[msg.lang].redisDbSaved
             end
-            if matches[1]:lower() == "backup" or matches[1]:lower() == "sasha esegui backup" then
+            if matches[1]:lower() == "backup" then
                 mystat('/backup')
                 doSendBackup()
                 return langs[msg.lang].backupDone
@@ -350,14 +350,6 @@ return {
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Dd][Aa][Tt][Aa])$",
-        -- unblock
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) ([^%s]+)$",
-        -- block
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Bb][Ll][Oo][Cc][Cc][Aa] [Pp][Mm]) ([^%s]+)$",
-        -- backup
-        "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Bb][Aa][Cc][Kk][Uu][Pp])$",
     },
     run = run,
     min_rank = 3,
@@ -365,8 +357,8 @@ return {
     {
         "ADMIN",
         "#pm <id> <msg>",
-        "(#pmblock|sasha blocca pm) <id>|<username>|<reply>|from",
-        "(#pmunblock|sasha sblocca pm) <id>|<username>|<reply>|from",
+        "#pmblock <id>|<username>|<reply>|from",
+        "#pmunblock <id>|<username>|<reply>|from",
         "#list admins|groups|realms",
         "#checkspeed",
         "#vardump [<reply>]",
@@ -379,7 +371,7 @@ return {
         "#botrestart",
         "#redissave",
         "#update",
-        "(#backup|sasha esegui backup)",
+        "#backup",
         "#rebootcli",
         "#reloaddata",
     },

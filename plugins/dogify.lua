@@ -16,15 +16,12 @@ return {
     patterns =
     {
         "^[#!/][Dd][Oo][Gg][Ii][Ff][Yy] (.+)$",
-        -- dogify
-        "^[Ss][Aa][Ss][Hh][Aa] [Dd][Oo][Gg][Ee] (.+)$",
-        "^[Dd][Oo][Gg][Ee] (.+)$",
     },
     run = run,
     min_rank = 0,
     syntax =
     {
         "USER",
-        "(#dogify|[sasha] doge) <your/words/with/slashes>",
+        "#dogify <your/words/with/slashes>",
     },
 }

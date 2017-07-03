@@ -57,15 +57,12 @@ return {
     {
         "^[#!/][Qq][Rr] \"(%w+)\" \"(%w+)\" (.+)$",
         "^[#!/][Qq][Rr] (.+)$",
-        -- qr
-        "^[Ss][Aa][Ss][Hh][Aa] [Qq][Rr] \"(%w+)\" \"(%w+)\" (.+)$",
-        "^[Ss][Aa][Ss][Hh][Aa] [Qq][Rr] (.+)$",
     },
     run = run,
     min_rank = 0,
     syntax =
     {
         "USER",
-        "(#qr|sasha qr) [\"<background_color>\" \"<data_color>\"] <text>",
+        "#qr [\"<background_color>\" \"<data_color>\"] <text>",
     },
 }
