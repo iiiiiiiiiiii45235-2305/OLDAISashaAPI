@@ -39,6 +39,7 @@ local function run(msg, matches)
                 if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                     return langs[msg.lang].crossexecDenial
                 end
+                matches[2] = matches[2]:gsub('[#!]', '/')
                 if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
                     alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
                 end
@@ -60,6 +61,7 @@ local function run(msg, matches)
                 if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                     return langs[msg.lang].crossexecDenial
                 end
+                matches[2] = matches[2]:gsub('[#!]', '/')
                 if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
                     alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
                 end
@@ -125,6 +127,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'unsetalternatives' and matches[2] then
         if msg.from.is_owner then
             mystat('/unsetalternatives')
+            matches[2] = matches[2]:gsub('[#!]', '/')
             if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()] then
                 local temptable = alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()]
                 alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()] = nil
@@ -163,13 +166,13 @@ return {
     description = "ALTERNATIVES",
     patterns =
     {
-        "^[#!/][Gg][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss] ([^%s]+)$",
-        "^[#!/][Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee] (.*)$",
-        "^[#!/][Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss] (.*)$",
-        "^[#!/][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee] ([^%s]+) (.*)$",
-        "^[#!/][Gg][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss] ([^%s]+)$",
-        "^[#!/][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee] ([^%s]+) (.*)$",
-        "^[#!/][Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee] (.*)$",
+        "^[#!/]([Gg][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([^%s]+)$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([^%s]+) (.*)$",
+        "^[#!/]([Gg][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([^%s]+)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([^%s]+) (.*)$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
     },
     run = run,
     pre_process = pre_process,
