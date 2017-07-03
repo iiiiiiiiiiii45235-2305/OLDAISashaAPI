@@ -1,5 +1,5 @@
 local function run(msg, matches)
-    return [[]]
+    return "Alternative plugin completed, it manages alternative commands that can be executed as normal commands in the help."
 end
 
 return {
