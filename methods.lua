@@ -1282,7 +1282,7 @@ function kickUser(executer, target, chat_id, reason)
         end
         if compare_ranks(executer, target, chat_id) then
             -- try to kick
-            local res, code = kickChatMember(target, chat_id, tonumber(os.time()) + 35)
+            local res, code = kickChatMember(target, chat_id)
 
             if res then
                 -- if the user has been kicked, then...
@@ -1290,6 +1290,7 @@ function kickUser(executer, target, chat_id, reason)
                 redis:hincrby('bot:general', 'kick', 1)
                 -- general: save how many kicks
                 -- unban
+                unbanChatMember(target, chat_id)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if reason then
