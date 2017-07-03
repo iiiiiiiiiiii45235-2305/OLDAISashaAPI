@@ -157,11 +157,11 @@ return {
     description = "ALTERNATIVES",
     patterns =
     {
-        "^[#!/]([Gg][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([^%s]+)$",
+        "^[#!/]([Gg][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([#!/][^%s]+)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
-        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) (.*)$",
-        "^[#!/]([Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([^%s]+) (.*)$",
-        "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([^%s]+) (.*)$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([#!/].*)$",
+        "^[#!/]([Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([#!/][^%s]+) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) ([#!/][^%s]+) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
     },
     run = run,
@@ -170,14 +170,14 @@ return {
     syntax =
     {
         "USER",
-        "#getalternatives <command>",
+        "#getalternatives /<command>",
         "MOD",
-        "#setalternative <command> <alternative>",
+        "#setalternative /<command> <alternative>",
         "#unsetalternative <alternative>",
         "OWNER",
-        "#unsetalternatives <command>",
+        "#unsetalternatives /<command>",
         "ADMIN",
-        "#setglobalalternative <command> <alternative>",
+        "#setglobalalternative /<command> <alternative>",
         "#unsetglobalalternative <alternative>",
     },
 }
