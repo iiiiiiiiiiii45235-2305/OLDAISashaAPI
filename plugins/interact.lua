@@ -1,5 +1,5 @@
 local function run(msg, matches)
-    if (matches[1]:lower() == 'markdownecho' or matches[1]:lower() == 'sasha markdown ripeti') and matches[2] then
+    if matches[1]:lower() == 'markdownecho' and matches[2] then
         if msg.from.is_mod then
             mystat('/markdownecho')
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
@@ -14,7 +14,7 @@ local function run(msg, matches)
             return langs[msg.lang].require_mod
         end
     end
-    if (matches[1]:lower() == 'echo' or matches[1]:lower() == 'sasha ripeti') and matches[2] then
+    if matches[1]:lower() == 'echo' and matches[2] then
         if msg.from.is_mod then
             mystat('/echo')
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
@@ -152,9 +152,6 @@ return {
         "^[#!/]([Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Cc][Hh][Oo]) +(.+)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr]) (.*)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr])$",
-        -- echo
-        "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Pp][Ee][Tt][Ii]) +(.+)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn] [Rr][Ii][Pp][Ee][Tt][Ii]) +(.+)$",
         -- react
         "^(@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Ee] [Vv][Aa]%?)$",
@@ -190,7 +187,7 @@ return {
         "#upload_videonote",
         "#testuser <id>|<username>|<reply>|from",
         "MOD",
-        "(#echo|sasha ripeti) <text>",
-        "(#markdownecho|sasha markdown ripeti) <text>",
+        "#echo <text>",
+        "#markdownecho <text>",
     },
 }
