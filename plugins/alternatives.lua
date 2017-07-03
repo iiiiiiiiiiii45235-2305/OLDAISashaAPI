@@ -3,6 +3,7 @@ local function run(msg, matches)
         mystat('/getalternatives')
         if data[tostring(msg.chat.id)] then
             if alternatives[tostring(msg.chat.id)] then
+                matches[2] = matches[2]:gsub('[#!]', '/')
                 if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()] then
                     local text = langs[msg.lang].listAlternatives:gsub('X', matches[2]:lower()) .. '\n'
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()]) do
@@ -20,8 +21,9 @@ local function run(msg, matches)
         end
         return list_variables(msg, false)
     end
-    if matches[1]:lower() == 'getglobalalternatives' then
+    if matches[1]:lower() == 'getglobalalternatives' and matches[2] then
         mystat('/getglobalalternatives')
+        matches[2] = matches[2]:gsub('[#!]', '/')
         if alternatives.global.cmdAlt[matches[2]:lower()] then
             local text = langs[msg.lang].listGAlternatives:gsub('X', matches[2]:lower()) .. '\n'
             for k, v in pairs(alternatives.global.cmdAlt[matches[2]:lower()]) do
