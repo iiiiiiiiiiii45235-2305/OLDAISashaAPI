@@ -1,6 +1,353 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
-
-group_type = ''
+default_settings = {
+    goodbye = nil,
+    group_type = 'Unknown',
+    moderators = { },
+    rules = nil,
+    set_name = string.gsub(msg.chat.print_name,'_',' '),
+    set_owner = tostring(admin.user.id),
+    settings =
+    {
+        flood = true,
+        flood_max = 5,
+        lock_arabic = false,
+        lock_bots = false,
+        lock_group_link = true,
+        lock_leave = false,
+        lock_link = false,
+        lock_member = false,
+        lock_rtl = false,
+        lock_spam = false,
+        mutes =
+        {
+            all = false,
+            audio = false,
+            contact = false,
+            document = false,
+            gif = false,
+            location = false,
+            photo = false,
+            sticker = false,
+            text = false,
+            tgservice = false,
+            video = false,
+            video_note = false,
+            voice_note = false,
+        },
+        strict = false,
+        warn_max = 3,
+    },
+    welcome = nil,
+    welcomemembers = 0,
+}
+default_alternatives = {
+    cmdAlt =
+    {
+        ['/kickme'] =
+        {
+            'sasha uccidimi',
+            'sasha esplodimi',
+            'sasha sparami',
+            'sasha decompilami',
+            'sasha bannami'
+        },
+        ['/getuserwarns'] =
+        {
+            'sasha ottieni avvertimenti',
+            'ottieni avvertimenti'
+        },
+        ['/warn'] = { 'sasha avverti' },
+        ['/unwarnall'] =
+        {
+            'sasha azzera avvertimenti',
+            'azzera avvertimenti'
+        },
+        ['/kick'] =
+        {
+            'sasha uccidi',
+            'uccidi',
+            'sasha spara'
+        },
+        ['/ban'] =
+        {
+            'kaboom',
+            'sasha banna',
+            'banna',
+            'sasha decompila',
+            'decompila',
+            'sasha esplodi'
+        },
+        ['/unban'] =
+        {
+            'sasha sbanna',
+            'sbanna',
+            'sasha ricompila',
+            'ricompila'
+        },
+        ['/banlist'] =
+        {
+            'sasha lista ban',
+            'lista ban'
+        },
+        ['/dellist'] =
+        {
+            'sasha lista censure',
+            'lista censure'
+        },
+        ['/delword'] =
+        {
+            'sasha censura',
+            'censura'
+        },
+        ['/dogify'] =
+        {
+            'sasha doge',
+            'doge'
+        },
+        ['/startflame'] =
+        {
+            'sasha flamma',
+            'flamma'
+        },
+        ['/stopflame'] =
+        {
+            'sasha stop flame',
+            'stop flame'
+        },
+        ['/flameinfo'] =
+        {
+            'sasha info flame',
+            'info flame'
+        },
+        ['/get'] = { 'sasha lista' },
+        ['/getlist'] = { 'sasha lista' },
+        ['/getgloballist'] = { 'sasha lista globali' },
+        ['/getglobal'] = { 'sasha lista globali' },
+        ['/set'] =
+        {
+            'sasha setta',
+            'setta'
+        },
+        ['/setmedia'] =
+        {
+            'sasha setta media',
+            'setta media'
+        },
+        ['/unset'] =
+        {
+            'sasha unsetta',
+            'unsetta'
+        },
+        ['/rules'] = { 'sasha regole' },
+        ['/modlist'] =
+        {
+            'sasha lista mod',
+            'lista mod'
+        },
+        ['/link'] = { 'sasha link' },
+        ['/setrules'] = { 'sasha imposta regole' },
+        ['/newlink'] = { 'sasha crea link' },
+        ['/muteuser'] = { 'voce' },
+        ['/muteslist'] = { 'lista muti' },
+        ['/mutelist'] = { 'lista utenti muti' },
+        ['/lock'] =
+        {
+            'sasha blocca',
+            'blocca'
+        },
+        ['/unlock'] =
+        {
+            'sasha sblocca',
+            'sblocca'
+        },
+        ['/setlink'] = { 'sasha imposta link' },
+        ['/unsetlink'] = { 'sasha elimina link' },
+        ['/getadmins'] =
+        {
+            'sasha lista admin',
+            'lista admin'
+        },
+        ['/promote'] =
+        {
+            'sasha promuovi',
+            'promuovi'
+        },
+        ['/demote'] =
+        {
+            'sasha degrada',
+            'degrada'
+        },
+        ['/mute'] = { 'silenzia' },
+        ['/unmute'] = { 'ripristina' },
+        ['/sudolist'] = { 'sasha lista sudo' },
+        ['/help'] = { 'sasha aiuto' },
+        ['/helpall'] = { 'sasha aiuto tutto' },
+        ['/syntax'] = { 'sasha sintassi' },
+        ['/syntaxall'] = { 'sasha sintassi tutto' },
+        ['/getrank'] = { 'rango' },
+        ['/info'] =
+        {
+            'sasha info',
+            'info'
+        },
+        ['/echo'] = { 'sasha ripeti' },
+        ['/markdownecho'] = { 'sasha markdown ripeti' },
+        ['/leave'] = { 'sasha abbandona' },
+        ['/plugins'] =
+        {
+            'sasha lista plugins',
+            'lista plugins'
+        },
+        ['/disabledlist'] =
+        {
+            'sasha lista disabilitati',
+            'lista disabilitati',
+            'sasha lista disattivati',
+            'lista disattivati'
+        },
+        ['/enable'] =
+        {
+            'sasha abilita',
+            'abilita',
+            'sasha attiva',
+            'attiva'
+        },
+        ['/disable'] =
+        {
+            'sasha disabilita',
+            'disabilita',
+            'sasha disattiva',
+            'disattiva'
+        },
+        ['/qr'] = { 'sasha qr' },
+        ['/shout'] =
+        {
+            'sasha grida',
+            'grida',
+            'sasha urla',
+            'urla'
+        },
+        ['/setlang'] = { 'lingua' },
+        ['/tagall'] = { 'sasha tagga tutti' },
+        ['/tex'] =
+        {
+            'sasha equazione',
+            'equazione'
+        },
+        ['/webshot'] =
+        {
+            'sasha webshotta',
+            'webshotta'
+        },
+    },
+    altCmd =
+    {
+        ['sasha uccidimi'] = '/kickme',
+        ['sasha esplodimi'] = '/kickme',
+        ['sasha sparami'] = '/kickme',
+        ['sasha decompilami'] = '/kickme',
+        ['sasha bannami'] = '/kickme',
+        ['sasha ottieni avvertimenti'] = '/getuserwarns',
+        ['ottieni avvertimenti'] = '/getuserwarns',
+        ['sasha avverti'] = '/warn',
+        ['sasha azzera avvertimenti'] = '/unwarnall',
+        ['azzera avvertimenti'] = '/unwarnall',
+        ['sasha uccidi'] = '/kick',
+        ['uccidi'] = '/kick',
+        ['sasha spara'] = '/kick',
+        ['kaboom'] = '/ban',
+        ['sasha banna'] = '/ban',
+        ['banna'] = '/ban',
+        ['sasha decompila'] = '/ban',
+        ['decompila'] = '/ban',
+        ['sasha esplodi'] = '/ban',
+        ['sasha sbanna'] = '/unban',
+        ['sbanna'] = '/unban',
+        ['sasha ricompila'] = '/unban',
+        ['ricompila'] = '/unban',
+        ['sasha lista ban'] = '/banlist',
+        ['lista ban'] = '/banlist',
+        ['sasha lista censure'] = '/dellist',
+        ['lista censure'] = '/dellist',
+        ['sasha censura'] = '/delword',
+        ['censura'] = '/delword',
+        ['sasha doge'] = '/dogify',
+        ['doge'] = '/dogify',
+        ['sasha flamma'] = '/startflame',
+        ['flamma'] = '/startflame',
+        ['sasha stop flame'] = '/stopflame',
+        ['stop flame'] = '/stopflame',
+        ['sasha info flame'] = '/flameinfo',
+        ['info flame'] = '/flameinfo',
+        ['sasha lista'] = '/getlist',
+        ['sasha lista globali'] = '/getgloballist',
+        ['sasha setta'] = '/set',
+        ['setta'] = '/set',
+        ['sasha setta media'] = '/setmedia',
+        ['setta media'] = '/setmedia',
+        ['sasha unsetta'] = '/unset',
+        ['unsetta'] = '/unset',
+        ['sasha regole'] = '/rules',
+        ['sasha lista mod'] = '/modlist',
+        ['lista mod'] = '/modlist',
+        ['sasha link'] = '/link',
+        ['sasha imposta regole'] = '/setrules',
+        ['sasha crea link'] = '/newlink',
+        ['voce'] = '/muteuser',
+        ['lista muti'] = '/muteslist',
+        ['lista utenti muti'] = '/mutelist',
+        ['sasha blocca'] = '/lock',
+        ['blocca'] = '/lock',
+        ['sasha sblocca'] = '/unlock',
+        ['sblocca'] = '/unlock',
+        ['sasha imposta link'] = '/setlink',
+        ['sasha elimina link'] = '/unsetlink',
+        ['sasha lista admin'] = '/getadmins',
+        ['lista admin'] = '/getadmins',
+        ['sasha promuovi'] = '/promote',
+        ['promuovi'] = '/promote',
+        ['sasha degrada'] = '/demote',
+        ['degrada'] = '/demote',
+        ['silenzia'] = '/mute',
+        ['ripristina'] = '/unmute',
+        ['sasha lista sudo'] = '/sudolist',
+        ['sasha aiuto'] = '/help',
+        ['sasha aiuto tutto'] = '/helpall',
+        ['sasha sintassi'] = '/syntax',
+        ['sasha sintassi tutto'] = '/syntaxall',
+        ['rango'] = '/getrank',
+        ['sasha info'] = '/info',
+        ['info'] = '/info',
+        ['sasha ripeti'] = '/echo',
+        ['sasha markdown ripeti'] = '/markdownecho',
+        ['sasha abbandona'] = '/leave',
+        ['sasha lista plugins'] = '/plugins',
+        ['lista plugins'] = '/plugins',
+        ['sasha lista disabilitati'] = '/disabledlist',
+        ['lista disabilitati'] = '/disabledlist',
+        ['sasha lista disattivati'] = '/disabledlist',
+        ['lista disattivati'] = '/disabledlist',
+        ['sasha abilita'] = '/enable',
+        ['abilita'] = '/enable',
+        ['sasha attiva'] = '/enable',
+        ['attiva'] = '/enable',
+        ['sasha disabilita'] = '/disable',
+        ['disabilita'] = '/disable',
+        ['sasha disattiva'] = '/disable',
+        ['disattiva'] = '/disable',
+        ['sasha qr'] = '/qr',
+        ['sasha grida'] = '/shout',
+        ['grida'] = '/shout',
+        ['sasha urla'] = '/shout',
+        ['urla'] = '/shout',
+        ['lingua'] = '/setlang',
+        ['sasha tagga tutti'] = '/tagall',
+        ['sasha equazione'] = '/tex',
+        ['equazione'] = '/tex',
+        ['sasha webshotta'] = '/webshot',
+        ['webshotta'] = '/webshot',
+    },
+}
 
 -- INREALM
 -- begin ADD/REM GROUPS
@@ -14,47 +361,8 @@ local function addGroup(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- Group configuration
-                    data[tostring(msg.chat.id)] = {
-                        goodbye = nil,
-                        group_type = 'Group',
-                        moderators = { },
-                        rules = nil,
-                        set_name = string.gsub(msg.chat.print_name,'_',' '),
-                        set_owner = tostring(admin.user.id),
-                        settings =
-                        {
-                            flood = true,
-                            flood_max = 5,
-                            lock_arabic = false,
-                            lock_bots = false,
-                            lock_group_link = true,
-                            lock_leave = false,
-                            lock_link = false,
-                            lock_member = false,
-                            lock_rtl = false,
-                            lock_spam = false,
-                            mutes =
-                            {
-                                all = false,
-                                audio = false,
-                                contact = false,
-                                document = false,
-                                gif = false,
-                                location = false,
-                                photo = false,
-                                sticker = false,
-                                text = false,
-                                tgservice = false,
-                                video = false,
-                                video_note = false,
-                                voice_note = false,
-                            },
-                            strict = false,
-                            warn_max = 3,
-                        },
-                        welcome = nil,
-                        welcomemembers = 0,
-                    }
+                    data[tostring(msg.chat.id)] = default_settings
+                    data[tostring(msg.chat.id)].group_type = 'Group'
                     save_data(config.moderation.data, data)
                     if not data['groups'] then
                         data['groups'] = { }
@@ -92,6 +400,11 @@ local function remGroup(msg)
     end
     data['groups'][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
+    alternatives[tostring(msg.chat.id)] = nil
+    save_data(config.alternatives.db, alternatives)
+    local likecounter = load_data(config.likecounter.db)
+    likecounter[tostring(msg.chat.id)] = nil
+    save_data(config.likecounter.db, likecounter)
     return langs[msg.lang].groupRemoved
 end
 
@@ -105,47 +418,8 @@ local function addRealm(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- Realm configuration
-                    data[tostring(msg.chat.id)] = {
-                        goodbye = nil,
-                        group_type = 'Realm',
-                        moderators = { },
-                        rules = nil,
-                        set_name = string.gsub(msg.chat.print_name,'_',' '),
-                        set_owner = tostring(admin.user.id),
-                        settings =
-                        {
-                            flood = true,
-                            flood_max = 5,
-                            lock_arabic = false,
-                            lock_bots = false,
-                            lock_group_link = true,
-                            lock_leave = false,
-                            lock_link = false,
-                            lock_member = false,
-                            lock_rtl = false,
-                            lock_spam = false,
-                            mutes =
-                            {
-                                all = false,
-                                audio = false,
-                                contact = false,
-                                document = false,
-                                gif = false,
-                                location = false,
-                                photo = false,
-                                sticker = false,
-                                text = false,
-                                tgservice = false,
-                                video = false,
-                                video_note = false,
-                                voice_note = false,
-                            },
-                            strict = false,
-                            warn_max = 3,
-                        },
-                        welcome = nil,
-                        welcomemembers = 0,
-                    }
+                    data[tostring(msg.chat.id)] = default_settings
+                    data[tostring(msg.chat.id)].group_type = 'Realm'
                     save_data(config.moderation.data, data)
                     if not data['realms'] then
                         data['realms'] = { }
@@ -173,6 +447,11 @@ local function remRealm(msg)
     end
     data['realms'][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
+    alternatives[tostring(msg.chat.id)] = nil
+    save_data(config.alternatives.db, alternatives)
+    local likecounter = load_data(config.likecounter.db)
+    likecounter[tostring(msg.chat.id)] = nil
+    save_data(config.likecounter.db, likecounter)
     return langs[msg.lang].realmRemoved
 end
 
@@ -186,47 +465,8 @@ local function addSuperGroup(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- SuperGroup configuration
-                    data[tostring(msg.chat.id)] = {
-                        goodbye = nil,
-                        group_type = 'SuperGroup',
-                        moderators = { },
-                        rules = nil,
-                        set_name = string.gsub(msg.chat.print_name,'_',' '),
-                        set_owner = tostring(admin.user.id),
-                        settings =
-                        {
-                            flood = true,
-                            flood_max = 5,
-                            lock_arabic = false,
-                            lock_bots = false,
-                            lock_group_link = true,
-                            lock_leave = false,
-                            lock_link = false,
-                            lock_member = false,
-                            lock_rtl = false,
-                            lock_spam = false,
-                            mutes =
-                            {
-                                all = false,
-                                audio = false,
-                                contact = false,
-                                document = false,
-                                gif = false,
-                                location = false,
-                                photo = false,
-                                sticker = false,
-                                text = false,
-                                tgservice = false,
-                                video = false,
-                                video_note = false,
-                                voice_note = false,
-                            },
-                            strict = false,
-                            warn_max = 3,
-                        },
-                        welcome = nil,
-                        welcomemembers = 0,
-                    }
+                    data[tostring(msg.chat.id)] = default_settings
+                    data[tostring(msg.chat.id)].group_type = 'SuperGroup'
                     save_data(config.moderation.data, data)
                     if not data['groups'] then
                         data['groups'] = { }
@@ -264,7 +504,20 @@ local function remSuperGroup(msg)
     end
     data['groups'][tostring(msg.chat.id)] = nil
     save_data(config.moderation.data, data)
+    alternatives[tostring(msg.chat.id)] = nil
+    save_data(config.alternatives.db, alternatives)
+    local likecounter = load_data(config.likecounter.db)
+    likecounter[tostring(msg.chat.id)] = nil
+    save_data(config.likecounter.db, likecounter)
     return langs[msg.lang].supergroupRemoved
+end
+
+local function getDefaultAlternativeCommands(chat_id)
+    local lang = get_lang(chat_id)
+    alternatives[chat_id] = default_alternatives
+    save_alternatives()
+    --
+    return langs[lang].alternativeCommandsSet
 end
 -- end ADD/REM GROUPS
 

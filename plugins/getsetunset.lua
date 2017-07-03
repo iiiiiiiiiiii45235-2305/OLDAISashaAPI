@@ -490,19 +490,7 @@ end
 
 local function pre_process(msg)
     if msg then
-        -- global
-        local vars = list_variables(msg, true)
-        if vars ~= nil then
-            local t = vars:split('\n')
-            for i, word in pairs(t) do
-                local answer = check_word(msg, word:lower(), true)
-                if answer then
-                    sendReply(msg, adjust_value(answer, msg))
-                    return msg
-                end
-            end
-        end
-
+        -- local
         local vars = list_variables(msg, false)
         if vars ~= nil then
             local t = vars:split('\n')
@@ -560,6 +548,18 @@ local function pre_process(msg)
                         sendReply(msg, adjust_value(answer, msg))
                         return msg
                     end
+                end
+            end
+        end
+        -- global
+        local vars = list_variables(msg, true)
+        if vars ~= nil then
+            local t = vars:split('\n')
+            for i, word in pairs(t) do
+                local answer = check_word(msg, word:lower(), true)
+                if answer then
+                    sendReply(msg, adjust_value(answer, msg))
+                    return msg
                 end
             end
         end

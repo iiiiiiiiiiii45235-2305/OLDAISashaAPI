@@ -21,6 +21,7 @@ end
 -- Returns true if it is a system plugin
 local function system_plugin(p)
     if p == 'administrator' or
+        p == 'alternatives' or
         p == 'anti_spam' or
         p == 'banhammer' or
         p == 'bot' or

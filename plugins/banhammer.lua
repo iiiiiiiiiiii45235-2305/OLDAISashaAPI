@@ -454,7 +454,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sasha compila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' or matches[1]:lower() == 'compila' then
+        if matches[1]:lower() == 'unban' or matches[1]:lower() == 'sasha sbanna' or matches[1]:lower() == 'sasha ricompila' or matches[1]:lower() == 'sbanna' or matches[1]:lower() == 'ricompila' then
             if msg.from.is_mod then
                 mystat('/unban')
                 if msg.reply then
@@ -884,24 +884,18 @@ return {
         -- unban
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
         "^([Ss][Bb][Aa][Nn][Nn][Aa]) ([^%s]+) ?(.*)$",
         "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
-        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) ([^%s]+) ?(.*)$",
 
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
         "^([Ss][Bb][Aa][Nn][Nn][Aa]) (.*)$",
         "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
-        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa]) (.*)$",
 
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Bb][Aa][Nn][Nn][Aa])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
         "^([Ss][Bb][Aa][Nn][Nn][Aa])$",
         "^([Rr][Ii][Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
-        "^([Cc][Oo][Mm][Pp][Ii][Ll][Aa])$",
         -- gban
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa]) ([^%s]+)$",
         "^([Ss][Aa][Ss][Hh][Aa] [Ss][Uu][Pp][Ee][Rr][Bb][Aa][Nn][Nn][Aa])$",
@@ -930,7 +924,7 @@ return {
         "(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from [<reason>]",
         "(#kick|[sasha] uccidi|sasha spara) <id>|<username>|<reply>|from [<reason>]",
         "(#ban|kaboom|[sasha] banna|[sasha] decompila|sasha esplodi) <id>|<username>|<reply>|from [<reason>]",
-        "(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from [<reason>]",
+        "(#unban|[sasha] sbanna|[sasha] ricompila) <id>|<username>|<reply>|from [<reason>]",
         "(#banlist|[sasha] lista ban)",
         -- "#kickrandom",
         -- "#kickdeleted",

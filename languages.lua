@@ -800,6 +800,13 @@ return {
             '#reloaddata: Sasha ricarica i dati dei gruppi.',
         },
 
+        alternatives =
+        {
+            '🅿️ ALTERNATIVES',
+            'Plugin per l\'utilizzo di comandi alternativi.',
+            'USER',
+        },
+
         banhammer =
         {
             '🅿️ BANHAMMER',
@@ -813,7 +820,7 @@ return {
             '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from [<reason>]: Sasha azzera gli avvertimenti dell\'utente.',
             '(#kick|[sasha] uccidi|sasha spara) <id>|<username>|<reply>|from [<reason>]: Sasha kicka l\'utente specificato.',
             '(#ban|kaboom|[sasha] banna|[sasha] decompila|sasha esplodi) <id>|<username>|<reply>|from [<reason>]: Sasha banna l\'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.',
-            '(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from [<reason>]: Sasha sbanna l\'utente specificato.',
+            '(#unban|[sasha] sbanna|[sasha] ricompila) <id>|<username>|<reply>|from [<reason>]: Sasha sbanna l\'utente specificato.',
             '(#banlist|[sasha] lista ban): Sasha mostra la lista di utenti bannati dal gruppo.',
             -- '#kickrandom: Sasha sceglie un utente a caso e lo kicka.',
             -- '#kickdeleted: Sasha kicka tutti gli account eliminati.',
@@ -822,9 +829,9 @@ return {
             -- '#kickinactive [<msgs>]: Sasha kicka tutti gli utenti inattivi sotto <msgs> messaggi.',
             'ADMIN',
             '(#banlist|[sasha] lista ban) <group_id>: Sasha mostra la lista di utenti bannati da <group_id>.',
-            '(#gban|[sasha] superbanna) <id>|<username>|<reply>|from: Sasha superbanna l\'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.',
-            '(#ungban|[sasha] supersbanna) <id>|<username>|<reply>|from: Sasha supersbanna l\'utente specificato.',
-            '(#gbanlist|[sasha] lista superban): Sasha mostra la lista di utenti super bannati.',
+            '#gban <id>|<username>|<reply>|from: Sasha superbanna l\'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.',
+            '#ungban <id>|<username>|<reply>|from: Sasha supersbanna l\'utente specificato.',
+            '#gbanlist: Sasha mostra la lista di utenti super bannati.',
         },
 
         bot =
@@ -1106,10 +1113,10 @@ return {
             '#find_location: Sasha finge di inviare una posizione.',
             '#record_videonote: Sasha finge di registrare un video messaggio.',
             '#upload_videonote: Sasha finge di inviare un video messaggio.',
+            '#testuser <id>|<username>|<reply>|from: Sasha controlla se l\'utente specificato ha bloccato il bot.',
             'MOD',
             '(#echo|sasha ripeti) [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio.',
             '(#markdownecho|sasha markdown ripeti) [<reply>]<text>: Sasha ripete <text> usando il markdown, se in risposta ad un messaggio sasha risponde a quel messaggio.',
-            '#testuser <id>|<username>|<reply>|from: Sasha controlla se l\'utente specificato ha bloccato il bot.',
         },
 
         likecounter =
@@ -1148,6 +1155,14 @@ return {
             'Plugin per eseguire azioni multiple.',
             'OWNER',
             '#multipleunban <user_id1> <user_id2> ...: Sasha sbanna tutti gli <user_id> specificati nella lista.',
+        },
+
+        news =
+        {
+            '🅿️ NEWS',
+            'Plugin per le news di Sasha.',
+            'USER',
+            '#news: Sasha manda le novità di se stessa.',
         },
 
         onservice =
@@ -1236,13 +1251,6 @@ return {
             'Plugin per taggare tutti i membri.',
             'OWNER',
             -- '(#tagall|sasha tagga tutti) <text>|<reply_text>: Sasha scrive <text>|<reply_text> e tagga tutti i membri del gruppo.',
-        },
-
-        tagalert =
-        {
-            '🅿️ TAGALERT',
-            'Plugin per non perdere più un tag.',
-            'USER',
         },
 
         tex =
@@ -1925,6 +1933,13 @@ return {
             '#reloaddata: Sasha reloads groups\' data.',
         },
 
+        alternatives =
+        {
+            '🅿️ ALTERNATIVES',
+            'Plugin for using alternative commands.',
+            'USER',
+        },
+
         banhammer =
         {
             '🅿️ BANHAMMER',
@@ -1938,7 +1953,7 @@ return {
             '(#unwarnall|[sasha] azzera avvertimenti) <id>|<username>|<reply>|from [<reason>]: Sasha removes all warns from the specified user.',
             '(#kick|[sasha] uccidi|sasha spara) <id>|<username>|<reply>|from [<reason>]: Sasha kicks the specified user.',
             '(#ban|kaboom|[sasha] banna|[sasha] decompila|sasha esplodi) <id>|<username>|<reply>|from [<reason>]: Sasha kicks and bans the specified user, if he tries to join again it\'s automatically kicked.',
-            '(#unban|[sasha] sbanna|[sasha] [ri]compila) <id>|<username>|<reply>|from [<reason>]: Sasha unbans the specified user.',
+            '(#unban|[sasha] sbanna|[sasha] ricompila) <id>|<username>|<reply>|from [<reason>]: Sasha unbans the specified user.',
             '(#banlist|[sasha] lista ban): Sasha sends bans list of the group.',
             -- '#kickrandom: Sasha chooses a random user and kicks it.',
             -- '#kickdeleted: Sasha kicks all deleted accounts.',
@@ -1947,9 +1962,9 @@ return {
             -- '#kickinactive [<msgs>]: Sasha kicks inactive users under <msgs> messages.',
             'ADMIN',
             '(#banlist|[sasha] lista ban) <group_id>: Sasha sends bans list of <group_id>.',
-            '(#gban|[sasha] superbanna) <id>|<username>|<reply>|from: Sasha kicks and gbans the specified user, if he tries to join again it\'s automatically kicked.',
-            '(#ungban|[sasha] supersbanna) <id>|<username>|<reply>|from: Sasha ungbans the specified user.',
-            '(#gbanlist|[sasha] lista superban): Sasha sends gbans list.',
+            '#gban <id>|<username>|<reply>|from: Sasha kicks and gbans the specified user, if he tries to join again it\'s automatically kicked.',
+            '#ungban <id>|<username>|<reply>|from: Sasha ungbans the specified user.',
+            '#gbanlist: Sasha sends gbans list.',
         },
 
         bot =
@@ -2231,10 +2246,10 @@ return {
             '#find_location: Sasha pretends to send a location.',
             '#record_videonote: Sasha pretends to record a video message.',
             '#upload_videonote: Sasha pretends to upload a video message.',
+            '#testuser <id>|<username>|<reply>|from: Sasha tests if the specified user has blocked the bot.',
             'MOD',
             '(#echo|sasha ripeti) [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message.',
             '(#markdownecho|sasha markdown ripeti) [<reply>]<text>: Sasha repeats <text> using markdown, if in reply of a message she replies to that message.',
-            '#testuser <id>|<username>|<reply>|from: Sasha tests if the specified user has blocked the bot.',
         },
 
         likecounter =
@@ -2273,6 +2288,14 @@ return {
             'Plugin to do multiple actions.',
             'OWNER',
             '#multipleunban <user_id1> <user_id2> ...: Sasha unbans all the <user_ids> in the list.',
+        },
+
+        news =
+        {
+            '🅿️ NEWS',
+            'Plugin for Sasha\'s news.',
+            'USER',
+            '#news: Sasha sends her news.',
         },
 
         onservice =
@@ -2361,13 +2384,6 @@ return {
             'Plugin to tag all users.',
             'OWNER',
             -- '(#tagall|sasha tagga tutti) <text>|<reply_text>: Sasha writes <text>|<reply_text> tags all group\'s members.',
-        },
-
-        tagalert =
-        {
-            '🅿️ TAGALERT',
-            'Plugin for not missing tags anymore.',
-            'USER',
         },
 
         tex =

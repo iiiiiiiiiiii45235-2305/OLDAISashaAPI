@@ -33,7 +33,7 @@ function load_config()
     return config
 end
 
--- Create a basic config.json file and saves it.
+-- Create a basic config.lua file and saves it.
 function create_config()
     -- A simple config with basic plugins and ourselves as privileged user
     local config = {
@@ -41,6 +41,7 @@ function create_config()
         enabled_plugins =
         {
             'anti_spam',
+            'alternatives',
             'msg_checks',
             'onservice',
             'administrator',
@@ -71,6 +72,7 @@ function create_config()
         },
         disabled_plugin_on_chat = { },
         sudo_users = { 41400331, },
+        alternatives = { db = 'data/alternatives.json' },
         moderation = { data = 'data/moderation.json' },
         likecounter = { db = 'data/likecounterdb.json' },
         database = { db = 'data/database.json' },
@@ -156,8 +158,66 @@ function create_config()
             -- too many callback_data requests
         }
     }
-    serialize_to_file(config, './config.lua', false)
-    print(clr.white .. 'saved config into ./config.lua' .. clr.reset)
+    save_config()
+end
+
+-- Save the content of alternatives to alternatives.lua
+function save_alternatives()
+    serialize_to_file(alternatives, './alternatives.lua', false)
+    print(clr.white .. 'saved alternatives into ./alternatives.lua' .. clr.reset)
+end
+
+-- Returns the alternatives from alternatives.lua file.
+-- If file doesn't exist, create it.
+function load_alternatives()
+    local f = io.open('./alternatives.lua', "r")
+    -- If alternatives.lua doesn't exist
+    if not f then
+        create_alternatives()
+        print(clr.white .. "Created new alternatives file: alternatives.lua" .. clr.reset)
+    else
+        f:close()
+    end
+    local alternatives = loadfile("./alternatives.lua")()
+    return alternatives
+end
+
+-- Create a basic alternatives.lua file and saves it.
+function create_alternatives()
+    local alternatives = {
+        ['global'] =
+        {
+            cmdAlt =
+            {
+                ['/pmblock'] = { 'sasha blocca pm' },
+                ['/pmunblock'] = { 'sasha sblocca pm' },
+                ['/backup'] = { 'sasha esegui backup' },
+                ['/gban'] =
+                {
+                    'sasha superbanna',
+                    'superbanna'
+                },
+                ['/ungban'] =
+                {
+                    'sasha supersbanna',
+                    'supersbanna'
+                },
+                ['/bot'] = { 'sasha' },
+            },
+            altCmd =
+            {
+                ['sasha blocca pm'] = '/pmblock',
+                ['sasha sblocca pm'] = '/pmunblock',
+                ['sasha esegui backup'] = '/backup',
+                ['sasha superbanna'] = '/gban',
+                ['superbanna'] = '/gban',
+                ['sasha supersbanna'] = '/ungban',
+                ['supersbanna'] = '/ungban',
+                ['sasha'] = '/bot',
+            },
+        },
+    }
+    save_alternatives()
 end
 
 -- Enable plugins in config.lua
@@ -188,8 +248,10 @@ function bot_init()
     plugins = { }
     database = nil
     data = nil
+    alternatives = { }
 
     config = load_config()
+    alternatives = load_alternatives()
     local file = io.open('bot_api_key.txt', "r")
     if file then
         -- read all contents of file into a string
@@ -764,6 +826,8 @@ end
 
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
+    print(clr.white .. 'Preprocess', 'alternatives')
+    msg = plugins.alternatives.pre_process(msg)
     print(clr.white .. 'Preprocess', 'database')
     msg = plugins.database.pre_process(msg)
     print(clr.white .. 'Preprocess', 'anti_spam')
@@ -776,7 +840,7 @@ function pre_process_msg(msg)
     msg = plugins.onservice.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
-            if plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'DATABASE' and plugin.description ~= 'DELWORD' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
+            if plugin.description ~= 'ALTERNATIVES' and plugin.description ~= 'ANTI_SPAM' and plugin.description ~= 'DATABASE' and plugin.description ~= 'DELWORD' and plugin.description ~= 'MSG_CHECKS' and plugin.description ~= 'ONSERVICE' then
                 print(clr.white .. 'Preprocess', name)
                 msg = plugin.pre_process(msg)
             end
