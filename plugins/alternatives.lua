@@ -92,7 +92,7 @@ local function run(msg, matches)
                     alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
                 end
                 save_alternatives()
-                return langs[msg.lang].alternativedeleted
+                return langs[msg.lang].alternativeDeleted
             else
                 return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
             end
