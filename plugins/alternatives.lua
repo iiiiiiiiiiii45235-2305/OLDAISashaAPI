@@ -77,10 +77,10 @@ local function run(msg, matches)
                 if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
                     alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
                 end
-                table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id:lower())
-                alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()] = string.sub(matches[2]:lower(), 1, 50)
+                table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
+                alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
                 save_alternatives()
-                return 'media:' .. msg.reply_to_message.media_type .. file_id:lower() .. langs[msg.lang].alternativeSaved
+                return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeSaved
             end
         else
             return langs[msg.lang].require_mod
@@ -140,10 +140,10 @@ local function run(msg, matches)
                 if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
                     alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
                 end
-                table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id:lower())
-                alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()] = string.sub(matches[2]:lower(), 1, 50)
+                table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
+                alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
                 save_alternatives()
-                return 'media:' .. msg.reply_to_message.media_type .. file_id:lower() .. langs[msg.lang].gAlternativeSaved
+                return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
             end
         else
             return langs[msg.lang].require_admin
@@ -201,22 +201,22 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].useQuoteOnFile
                 end
-                if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()] then
-                    local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()]
-                    alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()] = nil
+                if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
+                    local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
+                    alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
                     if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
                         local tmptable = { }
                         for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
-                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id:lower()) then
+                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
                                 table.insert(tmptable, v)
                             end
                         end
                         alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
                     end
                     save_alternatives()
-                    return 'media:' .. msg.reply_to_message.media_type .. file_id:lower() .. langs[msg.lang].alternativeDeleted
+                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeDeleted
                 else
-                    return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id:lower())
+                    return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                 end
             end
         else
@@ -275,22 +275,22 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].useQuoteOnFile
                 end
-                if alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()] then
-                    local tempcmd = alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()]
-                    alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id:lower()] = nil
+                if alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
+                    local tempcmd = alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
+                    alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
                     if alternatives.global.cmdAlt[tempcmd] then
                         local tmptable = { }
                         for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
-                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id:lower()) then
+                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
                                 table.insert(tmptable, v)
                             end
                         end
                         alternatives.global.cmdAlt[tempcmd] = tmptable
                     end
                     save_alternatives()
-                    return 'media:' .. msg.reply_to_message.media_type .. file_id:lower() .. langs[msg.lang].alternativegDeleted
+                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativegDeleted
                 else
-                    return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id:lower())
+                    return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                 end
             end
         else
