@@ -358,6 +358,9 @@ local function pre_process(msg)
                             if ('media:' .. msg.media_type .. file_id) == k then
                                 -- one match is enough
                                 msg.text = v
+                                if msg.caption then
+                                    msg.text = msg.text .. ' ' .. msg.caption
+                                end
                                 return msg
                             end
                         elseif string.match(msg.text:lower(), '^' .. k) then
@@ -403,6 +406,9 @@ local function pre_process(msg)
                             if ('media:' .. msg.media_type .. file_id) == k then
                                 -- one match is enough
                                 msg.text = v
+                                if msg.caption then
+                                    msg.text = msg.text .. ' ' .. msg.caption
+                                end
                                 return msg
                             end
                         elseif string.match(msg.text:lower(), '^' .. k) then
