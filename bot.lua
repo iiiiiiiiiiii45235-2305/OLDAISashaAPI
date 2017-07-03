@@ -158,7 +158,8 @@ function create_config()
             -- too many callback_data requests
         }
     }
-    save_config()
+    serialize_to_file(config, './config.lua', false)
+    print(clr.white .. 'saved config into ./config.lua' .. clr.reset)
 end
 
 -- Save the content of alternatives to alternatives.lua
@@ -217,7 +218,8 @@ function create_alternatives()
             },
         },
     }
-    save_alternatives()
+    serialize_to_file(alternatives, './alternatives.lua', false)
+    print(clr.white .. 'saved alternatives into ./alternatives.lua' .. clr.reset)
 end
 
 -- Enable plugins in config.lua
