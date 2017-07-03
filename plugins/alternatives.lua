@@ -2,6 +2,11 @@ local function run(msg, matches)
     if matches[1]:lower() == 'getalternatives' and matches[2] then
         mystat('/getalternatives')
         local text = langs[msg.lang].listAlternatives:gsub('X', matches[2]:lower()) .. '\n'
+        if alternatives.global.cmdAlt[matches[2]:lower()] then
+            for k, v in pairs(alternatives.global.cmdAlt[matches[2]:lower()]) do
+                text = text .. k .. 'G. ' .. v .. '\n'
+            end
+        end
         if data[tostring(msg.chat.id)] then
             if alternatives[tostring(msg.chat.id)] then
                 matches[2] = matches[2]:gsub('[#!]', '/')
@@ -9,23 +14,14 @@ local function run(msg, matches)
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()]) do
                         text = text .. k .. '. ' .. v .. '\n'
                     end
-                else
-                    return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
                 end
-            else
-                return langs[msg.lang].useYourGroups
             end
-        else
-            return langs[msg.lang].useYourGroups
         end
-        if alternatives.global.cmdAlt[matches[2]:lower()] then
-            for k, v in pairs(alternatives.global.cmdAlt[matches[2]:lower()]) do
-                text = text .. k .. 'G. ' .. v .. '\n'
-            end
-        else
+        if text ==(langs[msg.lang].listAlternatives:gsub('X', matches[2]:lower()) .. '\n') then
             return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
+        else
+            return text
         end
-        return text
     end
     if matches[1]:lower() == 'setalternative' and matches[2] and matches[3] then
         if msg.from.is_mod then
