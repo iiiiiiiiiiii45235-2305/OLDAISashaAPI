@@ -522,8 +522,7 @@ local function getDefaultAlternativeCommands(chat_id)
     local lang = get_lang(chat_id)
     alternatives[chat_id] = default_alternatives
     save_alternatives()
-    --
-    return langs[lang].alternativeCommandsSet
+    return langs[lang].defaultAlternativesSet
 end
 -- end ADD/REM GROUPS
 

@@ -328,6 +328,16 @@ return {
         groupListCreated = 'Lista gruppi creata.',
         realmListCreated = 'Lista reami creata.',
 
+        -- alternatives.lua --
+        listAlternatives = 'Lista comandi alternativi a X: ',
+        noAlternativeCommands = 'Non ci sono comandi alternativi disponibili per X.',
+        alternativeSaved = ' salvato.',
+        gAlternativeSaved = ' comando alternativo globale salvato.',
+        alternativeDeleted = ' eliminato.',
+        alternativegDeleted = ' comando alternativo globale eliminato.',
+        alternativesDeleted = 'Tutti i comandi alternativi di X sono stati eliminati.',
+        errorCommandTooShort = 'Errore, comando alternativo troppo corto, minimo 4 caratteri.',
+
         -- anti_spam.lua --
         blockedForSpam = ' bloccato (SPAM).',
         floodNotAdmitted = 'Il flood non è ammesso.\n',
@@ -510,6 +520,7 @@ return {
         checkMyPermissions = 'Errore, controlla i miei permessi.',
         promoteModAdmin = ' è stato promosso a moderatore e amministratore di telegram con i permessi specificati.',
         demoteModAdmin = ' è stato degradato da moderatore e amministratore di telegram.',
+        defaultAlternativesSet = 'Comandi alternativi di default impostati.',
         -- ex inrealm.lua --
         none = 'Nessuno',
         realm = 'Regno ',
@@ -1459,6 +1470,17 @@ return {
         groupListCreated = 'Group list created.',
         realmListCreated = 'Realm list created.',
 
+        -- alternatives.lua --
+        listAlternatives = 'List of X\'s alternative commands: ',
+        listGAlternatives = 'List of X\'s global alternative commands: ',
+        noAlternativeCommands = 'There are no X\'s alternative commands.',
+        alternativeSaved = ' saved.',
+        gAlternativeSaved = ' global alternative command saved.',
+        alternativeDeleted = ' deleted.',
+        alternativegDeleted = ' global alternative command deleted.',
+        alternativesDeleted = 'All X\'s alternative commands have been deleted.',
+        errorCommandTooShort = 'Error, alternative command too short, at least 4 characters.',
+
         -- anti_spam.lua --
         blockedForSpam = ' blocked (SPAM).',
         floodNotAdmitted = 'Flooding is not admitted.\n',
@@ -1636,6 +1658,10 @@ return {
         groupInfoUpdated = 'Group name and mods updated.',
         modListSynced = 'Modlist synced with telegram\'s one.',
         locksIntro = 'Locks\' legend:\n🔴 Locked\n🔵 Unlocked',
+        checkMyPermissions = 'Error, check my permissions.',
+        promoteModAdmin = ' promoted to moderator and telegram\'s administrator with the specified permissions.',
+        demoteModAdmin = ' demoted from moderator and telegram\'s administrator.',
+        defaultAlternativesSet = 'Default alternative commands set.',
         -- ex inpm.lua --
         groupsJoin = 'Groups:\nUse /join <group_id> to join\n\n',
         realmsJoin = 'Realm:\nUse /join <realm_id> to join\n\n',

@@ -302,7 +302,7 @@ local function run(msg, matches)
             return list_variables(msg, false)
         else
             mystat('/get <var_name>')
-            local vars = list_variables(msg, true)
+            local vars = list_variables(msg, false)
             if vars ~= nil then
                 local t = vars:split('\n')
                 for i, word in pairs(t) do
@@ -312,7 +312,7 @@ local function run(msg, matches)
                     end
                 end
             end
-            local vars = list_variables(msg, false)
+            local vars = list_variables(msg, true)
             if vars ~= nil then
                 local t = vars:split('\n')
                 for i, word in pairs(t) do
