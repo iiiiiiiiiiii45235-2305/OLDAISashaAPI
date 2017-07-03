@@ -331,6 +331,7 @@ return {
         -- alternatives.lua --
         listAlternatives = 'Lista comandi alternativi a X: ',
         noAlternativeCommands = 'Non ci sono comandi alternativi disponibili per X.',
+        noCommandsAlternative = 'Non ci sono comandi associati a X',
         alternativeSaved = ' salvato.',
         gAlternativeSaved = ' comando alternativo globale salvato.',
         alternativeDeleted = ' eliminato.',
@@ -1474,6 +1475,7 @@ return {
         listAlternatives = 'List of X\'s alternative commands: ',
         listGAlternatives = 'List of X\'s global alternative commands: ',
         noAlternativeCommands = 'There are no X\'s alternative commands.',
+        noCommandsAlternative = 'There are no commands associated with X\'s',
         alternativeSaved = ' saved.',
         gAlternativeSaved = ' global alternative command saved.',
         alternativeDeleted = ' deleted.',

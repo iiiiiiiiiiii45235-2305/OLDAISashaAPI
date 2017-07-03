@@ -96,7 +96,7 @@ local function run(msg, matches)
                 save_alternatives()
                 return matches[2]:lower() .. langs[msg.lang].alternativeDeleted
             else
-                return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
+                return langs[msg.lang].noCommandsAlternative:gsub('X', matches[2])
             end
         else
             return langs[msg.lang].require_mod
@@ -120,7 +120,7 @@ local function run(msg, matches)
                 save_alternatives()
                 return matches[2]:lower() .. langs[msg.lang].alternativegDeleted
             else
-                return langs[msg.lang].noAlternativeCommands:gsub('X', matches[2])
+                return langs[msg.lang].noCommandsAlternative:gsub('X', matches[2])
             end
         else
             return langs[msg.lang].require_admin
