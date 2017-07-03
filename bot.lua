@@ -252,6 +252,7 @@ function bot_init()
     data = nil
     alternatives = { }
 
+    require("utils")
     config = load_config()
     alternatives = load_alternatives()
     local file = io.open('bot_api_key.txt', "r")
@@ -264,7 +265,6 @@ function bot_init()
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return
     end
-    require("utils")
     require("methods")
     require("ranks")
 
