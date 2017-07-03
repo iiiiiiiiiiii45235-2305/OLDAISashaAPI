@@ -817,6 +817,15 @@ return {
             '🅿️ ALTERNATIVES',
             'Plugin per l\'utilizzo di comandi alternativi.',
             'USER',
+            '#getalternatives <command>: Sasha manda le alternative a <command>.',
+            'MOD',
+            '#setalternative <command> <alternative>: Sasha eseguirà <alternative> come se fosse <command>.',
+            '#unsetalternative <alternative>: Sasha rimuove <alternative>.',
+            'OWNER',
+            '#unsetalternatives <command>: Sasha rimuove tutte le alternative di <command>.',
+            'ADMIN',
+            '#setglobalalternative <command> <alternative>: Sasha eseguirà <alternative> come se fosse <command> in tutti i gruppi.',
+            '#unsetglobalalternative <alternative>: Sasha rimuove <alternative> dalle alternative globali.',
         },
 
         banhammer =
@@ -1967,6 +1976,15 @@ return {
             '🅿️ ALTERNATIVES',
             'Plugin for using alternative commands.',
             'USER',
+            '#getalternatives <command>: Sasha sends <command>\'s alternatives.',
+            'MOD',
+            '#setalternative <command> <alternative>: Sasha will execute <alternative> as if it was <command>.',
+            '#unsetalternative <alternative>: Sasha deletes <alternative>.',
+            'OWNER',
+            '#unsetalternatives <command>: Sasha deletes all <command>\'s alternatives.',
+            'ADMIN',
+            '#setglobalalternative <command> <alternative>: Sasha will execute <alternative> as if it was <command> in all groups.',
+            '#unsetglobalalternative <alternative>: Sasha deletes <alternative> from global alternatives.',
         },
 
         banhammer =
