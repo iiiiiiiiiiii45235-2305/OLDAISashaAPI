@@ -316,21 +316,11 @@ local function run(msg, matches)
                 text = text .. k .. 'G. ' .. v .. '\n'
             end
         end
-        if alternatives.global.cmdAlt[matches[2]] then
-            for k, v in pairs(alternatives.global.cmdAlt[matches[2]]) do
-                text = text .. k .. 'G. ' .. v .. '\n'
-            end
-        end
         if data[tostring(msg.chat.id)] then
             if alternatives[tostring(msg.chat.id)] then
                 matches[2] = matches[2]:gsub('[#!]', '/')
                 if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()] then
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]:lower()]) do
-                        text = text .. k .. '. ' .. v .. '\n'
-                    end
-                end
-                if alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]] then
-                    for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[matches[2]]) do
                         text = text .. k .. '. ' .. v .. '\n'
                     end
                 end
