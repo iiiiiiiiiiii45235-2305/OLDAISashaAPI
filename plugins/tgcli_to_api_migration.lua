@@ -293,7 +293,7 @@ local function run(msg, matches)
             local new_likecounter_path = config.likecounter.db
             local old_likecounter_data = load_data(old_likecounter_path)
             local new_likecounter_data = load_data(new_likecounter_path)
-            if old_likecounter_data['groups'] then
+            if old_likecounter_data then
                 for id_string in pairs(old_likecounter_data) do
                     -- if there are any groups check for everyone of them to find the one requesting migration, if found migrate
                     if id_string == tostring(msg.chat.tg_cli_id) then
