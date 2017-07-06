@@ -8,6 +8,7 @@ last_redis_db_cron = ''
 last_redis_administrator_cron = ''
 
 sudoers = { }
+tmp_msg = { }
 
 -- Save the content of config to config.lua
 function save_config()
@@ -951,6 +952,7 @@ function on_msg_receive(msg)
     local print_text = print_msg(msg, true)
     local chat_id = msg.chat.id
     msg = get_tg_rank(msg)
+    tmp_msg = msg
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then

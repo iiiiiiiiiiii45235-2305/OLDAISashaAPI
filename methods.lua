@@ -323,7 +323,7 @@ end
 
 function sendLog(text, markdown)
     if config.log_chat then
-        sendMessage(config.log_chat, text, markdown)
+        sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), markdown)
     else
         sendMessage_SUDOERS(text, markdown)
     end
