@@ -1,4 +1,4 @@
-return {
+api_errors = {
     [101] = 'not enough rights to kick/unban chat member',
     -- SUPERGROUP: bot is not admin
     [102] = 'user_admin_invalid',
