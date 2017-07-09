@@ -321,11 +321,19 @@ function sendReply(msg, text, markd, send_sound)
     sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
 end
 
-function sendLog(text, markdown)
+function sendLog(text, markdown, novardump)
     if config.log_chat then
-        sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), markdown)
+        if novardump then
+            sendMessage(config.log_chat, text, markdown)
+        else
+            sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), markdown)
+        end
     else
-        sendMessage_SUDOERS(text, markdown)
+        if novardump then
+            sendMessage_SUDOERS(text, markdown)
+        else
+            sendMessage_SUDOERS(text .. '\n' ..(vardumptext(tmp_msg) or ''), markdown)
+        end
     end
 end
 

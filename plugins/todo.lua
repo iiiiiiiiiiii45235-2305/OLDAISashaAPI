@@ -4,7 +4,7 @@ local function run(msg, matches)
         if msg.reply then
             forwardLog(msg.chat.id, msg.reply_to_message.message_id)
         end
-        sendLog('#todo ' .. matches[1])
+        sendLog('#todo ' .. matches[1], false, true)
         return langs[msg.lang].ok
     end
 end
