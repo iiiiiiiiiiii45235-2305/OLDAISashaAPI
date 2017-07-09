@@ -31,6 +31,7 @@ end
 local function run(msg, matches)
     if matches[1]:lower() == '/start' and msg.bot then
         sendMessage(msg.chat.id, langs[msg.lang].startMessage)
+        mystat('/start' ..(matches[2]:lower() or ''))
         if matches[2] then
             msg.text = '/' .. matches[2]
             if msg_valid(msg) then
@@ -40,8 +41,7 @@ local function run(msg, matches)
                 end
             end
         end
-    end
-    if msg.from.is_owner then
+    elseif msg.from.is_owner then
         if not matches[2] then
             if matches[1]:lower() == 'on' then
                 mystat('/bot on')
