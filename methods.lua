@@ -8,6 +8,7 @@ local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
 local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
 local curl_context = curl.easy { verbose = false }
+local api_errors = require 'api_bad_requests'
 
 -- *** START API FUNCTIONS ***
 function performRequest(url)
@@ -105,7 +106,7 @@ function getFile(file_id)
 end
 
 function getCode(error)
-    for k, v in pairs(config.api_errors) do
+    for k, v in pairs(api_errors) do
         if error:match(v) then
             return k
         end
