@@ -8,6 +8,7 @@ local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
 local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
 local curl_context = curl.easy { verbose = false }
+require("api_bad_requests")
 
 -- *** START API FUNCTIONS ***
 function performRequest(url)

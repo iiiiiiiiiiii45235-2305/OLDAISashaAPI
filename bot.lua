@@ -190,7 +190,6 @@ function bot_init()
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return
     end
-    require("api_bad_requests")
     require("methods")
     require("ranks")
 
