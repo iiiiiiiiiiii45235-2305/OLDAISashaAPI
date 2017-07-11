@@ -1,5 +1,5 @@
 local chats = nil
-local news = "SASHA\'S NEWS\nPlugin news.\nAlternative plugin completed, it manages alternative commands that can be executed as normal commands in the help.\nEcho now have markdown in html and telegram mode and new commands for interact."
+local news = langs.news
 local spam = false
 
 local function run(msg, matches)
