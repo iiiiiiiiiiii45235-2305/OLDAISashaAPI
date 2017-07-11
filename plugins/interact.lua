@@ -6,9 +6,56 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if msg.reply then
-                return sendReply(msg.reply_to_message, matches[2], true)
+                return sendReply(msg.reply_to_message, matches[2], 'markdown')
             else
-                return sendMessage(msg.chat.id, matches[2], true)
+                return sendMessage(msg.chat.id, matches[2], 'markdown')
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'delmarkdownecho' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/delmarkdownecho')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            deleteMessage(msg.chat.id, msg.message_id)
+            if msg.reply then
+                return sendReply(msg.reply_to_message, matches[2], 'markdown')
+            else
+                return sendMessage(msg.chat.id, matches[2], 'markdown')
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'htmlecho' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/htmlecho')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if msg.reply then
+                return sendReply(msg.reply_to_message, matches[2], 'html')
+            else
+                return sendMessage(msg.chat.id, matches[2], 'html')
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'delhtmlecho' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/delhtmlecho')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            deleteMessage(msg.chat.id, msg.message_id)
+            if msg.reply then
+                return sendReply(msg.reply_to_message, matches[2], 'html')
+            else
+                return sendMessage(msg.chat.id, matches[2], 'html')
             end
         else
             return langs[msg.lang].require_mod
@@ -20,6 +67,22 @@ local function run(msg, matches)
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
+            if msg.reply then
+                return sendReply(msg.reply_to_message, matches[2])
+            else
+                return sendMessage(msg.chat.id, matches[2])
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'delecho' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/delecho')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            deleteMessage(msg.chat.id, msg.message_id)
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])
             else
@@ -149,7 +212,11 @@ return {
     patterns =
     {
         "^[#!/]([Ee][Cc][Hh][Oo]) +(.+)$",
+        "^[#!/]([Dd][Ee][Ll][Ee][Cc][Hh][Oo]) +(.+)$",
         "^[#!/]([Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Cc][Hh][Oo]) +(.+)$",
+        "^[#!/]([Dd][Ee][Ll][Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Cc][Hh][Oo]) +(.+)$",
+        "^[#!/]([Hh][Tt][Mm][Ll][Ee][Cc][Hh][Oo]) +(.+)$",
+        "^[#!/]([Dd][Ee][Ll][Hh][Tt][Mm][Ll][Ee][Cc][Hh][Oo]) +(.+)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr]) (.*)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr])$",
         -- react
@@ -188,6 +255,10 @@ return {
         "#testuser <id>|<username>|<reply>|from",
         "MOD",
         "#echo <text>",
+        "#delecho <text>",
         "#markdownecho <text>",
+        "#delmarkdownecho <text>",
+        "#htmlecho <text>",
+        "#delhtmlecho <text>",
     },
 }

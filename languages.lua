@@ -1141,8 +1141,9 @@ return {
             '#upload_videonote: Sasha finge di inviare un video messaggio.',
             '#testuser <id>|<username>|<reply>|from: Sasha controlla se l\'utente specificato ha bloccato il bot.',
             'MOD',
-            '#echo [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio.',
-            '#markdownecho [<reply>]<text>: Sasha ripete <text> usando il markdown, se in risposta ad un messaggio sasha risponde a quel messaggio.',
+            '#[del]echo [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
+            '#[del]markdownecho [<reply>]<text>: Sasha ripete <text> usando il markdown di telegram, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
+            '#[del]htmlecho [<reply>]<text>: Sasha ripete <text> usando il markdown html, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
         },
 
         likecounter =
@@ -1189,6 +1190,9 @@ return {
             'Plugin per le news di Sasha.',
             'USER',
             '#news: Sasha manda le novità di se stessa.',
+            'SUDO',
+            '#spamnews: Sasha manda le novità ad ogni gruppo appena riceve un messaggio dallo stesso.',
+            '#stopnews: Sasha smette di mandare le novità.',
         },
 
         onservice =
@@ -2303,8 +2307,9 @@ return {
             '#upload_videonote: Sasha pretends to upload a video message.',
             '#testuser <id>|<username>|<reply>|from: Sasha tests if the specified user has blocked the bot.',
             'MOD',
-            '#echo [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message.',
-            '#markdownecho [<reply>]<text>: Sasha repeats <text> using markdown, if in reply of a message she replies to that message.',
+            '#[del]echo [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message, if "del" she deletes the command.',
+            '#[del]markdownecho [<reply>]<text>: Sasha repeats <text> using telegram\'s markdown, if in reply of a message she replies to that message, if "del" she deletes the command.',
+            '#[del]htmlecho [<reply>]<text>: Sasha repeats <text> using html markdown, if in reply of a message she replies to that message, if "del" she deletes the command.',
         },
 
         likecounter =
@@ -2351,6 +2356,9 @@ return {
             'Plugin for Sasha\'s news.',
             'USER',
             '#news: Sasha sends her news.',
+            'SUDO',
+            '#spamnews: Sasha sends her news to every group as soon as she receives a message from it.',
+            '#stopnews: Sasha stops sending her news.',
         },
 
         onservice =

@@ -401,7 +401,7 @@ local function save_to_db(msg)
             msg.reply_to_message = save_to_db(msg.reply_to_message)
         end
     else
-        sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp, true)
+        sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp, 'markdown')
         local f = io.open(config.database.db, 'w+')
         f:write('{}')
         f:close()

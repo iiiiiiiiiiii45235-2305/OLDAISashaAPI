@@ -337,7 +337,7 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
-function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_sound)
+function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if text then
@@ -356,8 +356,14 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                         url = url .. '&reply_to_message_id=' .. reply_to_message_id
                         reply = true
                     end
-                    if use_markdown then
-                        url = url .. '&parse_mode=Markdown'
+                    if parse_mode then
+                        if parse_mode:lower() == 'html' then
+                            url = url .. '&parse_mode=HTML'
+                        elseif parse_mode:lower() == 'markdown' then
+                            url = url .. '&parse_mode=Markdown'
+                        else
+                            -- no parse_mode
+                        end
                     end
                     if not send_sound then
                         url = url .. '&disable_notification=true'
@@ -395,11 +401,11 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
                             end
                         end
                         if print_res_msg(res) then
-                            res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+                            res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
                         else
                             local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
                             print_msg(sent_msg)
-                            res, code = sendMessage(chat_id, rest, use_markdown, reply_to_message_id, send_sound)
+                            res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
                         end
                     end
 
@@ -411,10 +417,10 @@ function sendMessage(chat_id, text, use_markdown, reply_to_message_id, send_soun
     end
 end
 
-function sendMessage_SUDOERS(text, use_markdown)
+function sendMessage_SUDOERS(text, parse_mode)
     for v, user in pairs(sudoers) do
         if user.id ~= bot.userVersion.id then
-            sendMessage(user.id, text, use_markdown, false, true)
+            sendMessage(user.id, text, parse_mode, false, true)
         end
     end
 end
@@ -423,18 +429,18 @@ function sendReply(msg, text, markd, send_sound)
     sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
 end
 
-function sendLog(text, markdown, novardump)
+function sendLog(text, parse_mode, novardump)
     if config.log_chat then
         if novardump then
-            sendMessage(config.log_chat, text, markdown)
+            sendMessage(config.log_chat, text, parse_mode)
         else
-            sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), markdown)
+            sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
         end
     else
         if novardump then
-            sendMessage_SUDOERS(text, markdown)
+            sendMessage_SUDOERS(text, parse_mode)
         else
-            sendMessage_SUDOERS(text .. '\n' ..(vardumptext(tmp_msg) or ''), markdown)
+            sendMessage_SUDOERS(text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
         end
     end
 end
@@ -487,12 +493,18 @@ function forwardLog(from_chat_id, message_id)
     end
 end
 
-function sendKeyboard(chat_id, text, keyboard, markdown)
+function sendKeyboard(chat_id, text, keyboard, parse_mode)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
-        if markdown then
-            url = url .. '&parse_mode=Markdown'
+        if parse_mode then
+            if parse_mode:lower() == 'html' then
+                url = url .. '&parse_mode=HTML'
+            elseif parse_mode:lower() == 'markdown' then
+                url = url .. '&parse_mode=Markdown'
+            else
+                -- no parse_mode
+            end
         end
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         url = url .. '&text=' .. URL.escape(text)
@@ -534,15 +546,21 @@ function answerCallbackQuery(callback_query_id, text, show_alert)
     end
 end
 
-function editMessageText(chat_id, message_id, text, keyboard, markdown)
+function editMessageText(chat_id, message_id, text, keyboard, parse_mode)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL ..
         '/editMessageText?chat_id=' .. chat_id ..
         '&message_id=' .. message_id ..
         '&text=' .. URL.escape(text)
-        if markdown then
-            url = url .. '&parse_mode=Markdown'
+        if parse_mode then
+            if parse_mode:lower() == 'html' then
+                url = url .. '&parse_mode=HTML'
+            elseif parse_mode:lower() == 'markdown' then
+                url = url .. '&parse_mode=Markdown'
+            else
+                -- no parse_mode
+            end
         end
         url = url .. '&disable_web_page_preview=true'
         if keyboard then

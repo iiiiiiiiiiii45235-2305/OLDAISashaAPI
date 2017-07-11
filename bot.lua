@@ -223,7 +223,7 @@ function bot_init()
 
     print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
     redis:hincrby('bot:general', 'starts', 1)
-    sendMessage_SUDOERS(string.gsub(string.gsub(langs['en'].botStarted, 'Y', tot_plugins), 'X', os.date('On %A, %d %B %Y\nAt %X')), true)
+    sendMessage_SUDOERS(string.gsub(string.gsub(langs['en'].botStarted, 'Y', tot_plugins), 'X', os.date('On %A, %d %B %Y\nAt %X')), 'markdown')
 
     -- Generate a random seed and "pop" the first random number. :)
     math.randomseed(os.time())
@@ -856,7 +856,7 @@ function on_msg_receive(msg)
         return
     end
     if not msg then
-        sendMessage_SUDOERS(langs['en'].loopWithoutMessage, true)
+        sendMessage_SUDOERS(langs['en'].loopWithoutMessage, 'markdown')
         return
     end
     if msg.chat.id == config.vardump_chat then
@@ -922,7 +922,7 @@ function cron_administrator()
         -- deletes all previous backups (they're in telegram so no problem)
         io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
 
-        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, true)
+        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
         -- AISASHAAPI
         -- deletes all files in tmp folder
         io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
