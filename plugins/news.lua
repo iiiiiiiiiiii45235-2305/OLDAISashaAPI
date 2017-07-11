@@ -8,6 +8,7 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'spamnews' then
         if is_sudo(msg) then
+            chats = { }
             for k, v in pairs(data.groups) do
                 if data[tostring(v)] then
                     chats[tostring(v)] = true
