@@ -351,45 +351,47 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].errorCommandTooShort
                 end
-            elseif msg.reply_to_message.media then
-                local file_id = ''
-                if msg.reply_to_message.media_type == 'photo' then
-                    local bigger_pic_id = ''
-                    local size = 0
-                    for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                        if v.file_size then
-                            if v.file_size > size then
-                                size = v.file_size
-                                bigger_pic_id = v.file_id
+            elseif msg.reply then
+                if msg.reply_to_message.media then
+                    local file_id = ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size then
+                                if v.file_size > size then
+                                    size = v.file_size
+                                    bigger_pic_id = v.file_id
+                                end
                             end
                         end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'gif' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        return langs[msg.lang].useQuoteOnFile
                     end
-                    file_id = bigger_pic_id
-                elseif msg.reply_to_message.media_type == 'video' then
-                    file_id = msg.reply_to_message.video.file_id
-                elseif msg.reply_to_message.media_type == 'video_note' then
-                    file_id = msg.reply_to_message.video_note.file_id
-                elseif msg.reply_to_message.media_type == 'audio' then
-                    file_id = msg.reply_to_message.audio.file_id
-                elseif msg.reply_to_message.media_type == 'voice_note' then
-                    file_id = msg.reply_to_message.voice.file_id
-                elseif msg.reply_to_message.media_type == 'gif' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'document' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'sticker' then
-                    file_id = msg.reply_to_message.sticker.file_id
-                else
-                    return langs[msg.lang].useQuoteOnFile
+                    matches[2] = matches[2]:gsub('[#!]', '/')
+                    if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
+                        alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                    end
+                    table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
+                    alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
+                    save_alternatives()
+                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeSaved
                 end
-                matches[2] = matches[2]:gsub('[#!]', '/')
-                if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
-                    alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
-                end
-                table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
-                alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
-                save_alternatives()
-                return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeSaved
             end
         else
             return langs[msg.lang].require_mod
@@ -414,45 +416,47 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].errorCommandTooShort
                 end
-            elseif msg.reply_to_message.media then
-                local file_id = ''
-                if msg.reply_to_message.media_type == 'photo' then
-                    local bigger_pic_id = ''
-                    local size = 0
-                    for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                        if v.file_size then
-                            if v.file_size > size then
-                                size = v.file_size
-                                bigger_pic_id = v.file_id
+            elseif msg.reply then
+                if msg.reply_to_message.media then
+                    local file_id = ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size then
+                                if v.file_size > size then
+                                    size = v.file_size
+                                    bigger_pic_id = v.file_id
+                                end
                             end
                         end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'gif' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        return langs[msg.lang].useQuoteOnFile
                     end
-                    file_id = bigger_pic_id
-                elseif msg.reply_to_message.media_type == 'video' then
-                    file_id = msg.reply_to_message.video.file_id
-                elseif msg.reply_to_message.media_type == 'video_note' then
-                    file_id = msg.reply_to_message.video_note.file_id
-                elseif msg.reply_to_message.media_type == 'audio' then
-                    file_id = msg.reply_to_message.audio.file_id
-                elseif msg.reply_to_message.media_type == 'voice_note' then
-                    file_id = msg.reply_to_message.voice.file_id
-                elseif msg.reply_to_message.media_type == 'gif' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'document' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'sticker' then
-                    file_id = msg.reply_to_message.sticker.file_id
-                else
-                    return langs[msg.lang].useQuoteOnFile
+                    matches[2] = matches[2]:gsub('[#!]', '/')
+                    if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
+                        alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                    end
+                    table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
+                    alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
+                    save_alternatives()
+                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
                 end
-                matches[2] = matches[2]:gsub('[#!]', '/')
-                if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
-                    alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
-                end
-                table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
-                alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
-                save_alternatives()
-                return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
             end
         else
             return langs[msg.lang].require_admin
@@ -499,53 +503,55 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].noCommandsAlternative:gsub('X', matches[2])
                 end
-            elseif msg.reply_to_message.media then
-                local file_id = ''
-                if msg.reply_to_message.media_type == 'photo' then
-                    local bigger_pic_id = ''
-                    local size = 0
-                    for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                        if v.file_size then
-                            if v.file_size > size then
-                                size = v.file_size
-                                bigger_pic_id = v.file_id
+            elseif msg.reply then
+                if msg.reply_to_message.media then
+                    local file_id = ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size then
+                                if v.file_size > size then
+                                    size = v.file_size
+                                    bigger_pic_id = v.file_id
+                                end
                             end
                         end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'gif' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        return langs[msg.lang].useQuoteOnFile
                     end
-                    file_id = bigger_pic_id
-                elseif msg.reply_to_message.media_type == 'video' then
-                    file_id = msg.reply_to_message.video.file_id
-                elseif msg.reply_to_message.media_type == 'video_note' then
-                    file_id = msg.reply_to_message.video_note.file_id
-                elseif msg.reply_to_message.media_type == 'audio' then
-                    file_id = msg.reply_to_message.audio.file_id
-                elseif msg.reply_to_message.media_type == 'voice_note' then
-                    file_id = msg.reply_to_message.voice.file_id
-                elseif msg.reply_to_message.media_type == 'gif' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'document' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'sticker' then
-                    file_id = msg.reply_to_message.sticker.file_id
-                else
-                    return langs[msg.lang].useQuoteOnFile
-                end
-                if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
-                    local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
-                    alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
-                    if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
-                        local tmptable = { }
-                        for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
-                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
-                                table.insert(tmptable, v)
+                    if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
+                        local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
+                        alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
+                        if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
+                            local tmptable = { }
+                            for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
+                                if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
+                                    table.insert(tmptable, v)
+                                end
                             end
+                            alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
                         end
-                        alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
+                        save_alternatives()
+                        return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeDeleted
+                    else
+                        return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                     end
-                    save_alternatives()
-                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeDeleted
-                else
-                    return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                 end
             end
         else
@@ -573,53 +579,55 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].noCommandsAlternative:gsub('X', matches[2])
                 end
-            elseif msg.reply_to_message.media then
-                local file_id = ''
-                if msg.reply_to_message.media_type == 'photo' then
-                    local bigger_pic_id = ''
-                    local size = 0
-                    for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                        if v.file_size then
-                            if v.file_size > size then
-                                size = v.file_size
-                                bigger_pic_id = v.file_id
+            elseif msg.reply then
+                if msg.reply_to_message.media then
+                    local file_id = ''
+                    if msg.reply_to_message.media_type == 'photo' then
+                        local bigger_pic_id = ''
+                        local size = 0
+                        for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                            if v.file_size then
+                                if v.file_size > size then
+                                    size = v.file_size
+                                    bigger_pic_id = v.file_id
+                                end
                             end
                         end
+                        file_id = bigger_pic_id
+                    elseif msg.reply_to_message.media_type == 'video' then
+                        file_id = msg.reply_to_message.video.file_id
+                    elseif msg.reply_to_message.media_type == 'video_note' then
+                        file_id = msg.reply_to_message.video_note.file_id
+                    elseif msg.reply_to_message.media_type == 'audio' then
+                        file_id = msg.reply_to_message.audio.file_id
+                    elseif msg.reply_to_message.media_type == 'voice_note' then
+                        file_id = msg.reply_to_message.voice.file_id
+                    elseif msg.reply_to_message.media_type == 'gif' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'document' then
+                        file_id = msg.reply_to_message.document.file_id
+                    elseif msg.reply_to_message.media_type == 'sticker' then
+                        file_id = msg.reply_to_message.sticker.file_id
+                    else
+                        return langs[msg.lang].useQuoteOnFile
                     end
-                    file_id = bigger_pic_id
-                elseif msg.reply_to_message.media_type == 'video' then
-                    file_id = msg.reply_to_message.video.file_id
-                elseif msg.reply_to_message.media_type == 'video_note' then
-                    file_id = msg.reply_to_message.video_note.file_id
-                elseif msg.reply_to_message.media_type == 'audio' then
-                    file_id = msg.reply_to_message.audio.file_id
-                elseif msg.reply_to_message.media_type == 'voice_note' then
-                    file_id = msg.reply_to_message.voice.file_id
-                elseif msg.reply_to_message.media_type == 'gif' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'document' then
-                    file_id = msg.reply_to_message.document.file_id
-                elseif msg.reply_to_message.media_type == 'sticker' then
-                    file_id = msg.reply_to_message.sticker.file_id
-                else
-                    return langs[msg.lang].useQuoteOnFile
-                end
-                if alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
-                    local tempcmd = alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
-                    alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
-                    if alternatives.global.cmdAlt[tempcmd] then
-                        local tmptable = { }
-                        for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
-                            if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
-                                table.insert(tmptable, v)
+                    if alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
+                        local tempcmd = alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
+                        alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
+                        if alternatives.global.cmdAlt[tempcmd] then
+                            local tmptable = { }
+                            for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
+                                if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
+                                    table.insert(tmptable, v)
+                                end
                             end
+                            alternatives.global.cmdAlt[tempcmd] = tmptable
                         end
-                        alternatives.global.cmdAlt[tempcmd] = tmptable
+                        save_alternatives()
+                        return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativegDeleted
+                    else
+                        return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                     end
-                    save_alternatives()
-                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativegDeleted
-                else
-                    return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                 end
             end
         else
