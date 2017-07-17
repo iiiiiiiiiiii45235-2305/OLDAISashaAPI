@@ -290,7 +290,7 @@ function promoteChatMember(chat_id, user_id, permissions)
         '&user_id=' .. user_id
         if permissions then
             for k, v in pairs(permissions) do
-                url = url .. '&can_' .. k .. '=true'
+                url = url .. '&can_' .. k .. '=' tostring(v)
             end
         end
         local res, code = sendRequest(url)
