@@ -528,12 +528,12 @@ end
 
 local function adjustPermissions(string_permissions)
     local permissions = {
-        ['change_info'] = false,
-        ['delete_messages'] = false,
-        ['invite_users'] = false,
-        ['restrict_members'] = false,
-        ['pin_messages'] = false,
-        ['promote_members'] = false,
+        ['can_change_info'] = false,
+        ['can_delete_messages'] = false,
+        ['can_invite_users'] = false,
+        ['can_restrict_members'] = false,
+        ['can_pin_messages'] = false,
+        ['can_promote_members'] = false,
     }
     local permission_type = ''
     for k, v in pairs(string_permissions:split(' ')) do
@@ -556,7 +556,7 @@ local function adjustPermissions(string_permissions)
             permission_type = 'can_promote_members'
         end
         if permission_type ~= '' then
-            permissions[tostring(v)] = true
+            permissions[tostring(permission_type)] = true
         end
         permission_type = ''
     end

@@ -290,7 +290,7 @@ function promoteChatMember(chat_id, user_id, permissions)
         '&user_id=' .. user_id
         if permissions then
             for k, v in pairs(permissions) do
-                url = url .. '&can_' .. k .. '=' tostring(v)
+                url = url .. '&' .. k .. '=' tostring(v)
             end
         end
         local res, code = sendRequest(url)
@@ -306,7 +306,15 @@ function promoteChatMember(chat_id, user_id, permissions)
 end
 
 function demoteChatMember(chat_id, user_id)
-    return promoteChatMember(chat_id, user_id, { ['change_info'] = false, ['delete_messages'] = false, ['invite_users'] = false, ['restrict_members'] = false, ['pin_messages'] = false, ['promote_members'] = false, })
+    local demote_table = {
+        ['can_change_info'] = false,
+        ['can_delete_messages'] = false,
+        ['can_invite_users'] = false,
+        ['can_restrict_members'] = false,
+        ['can_pin_messages'] = false,
+        ['can_promote_members'] = false,
+    }
+    return promoteChatMember(chat_id, user_id, demote_table)
 end
 
 function restrictChatMember(chat_id, user_id, until_date, permissions)
