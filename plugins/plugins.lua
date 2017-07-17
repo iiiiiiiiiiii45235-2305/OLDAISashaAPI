@@ -60,8 +60,8 @@ end
 local function list_plugins_sudo()
     local text = ''
     for k, v in pairs(plugins_names()) do
-        --  ✅ enabled, 🚫 disabled
-        local status = '🚫'
+        --  ✅ enabled, ☑️ disabled
+        local status = '☑️'
         -- get the name
         v = string.match(v, "(.*)%.lua")
         -- Check if enabled
@@ -80,8 +80,8 @@ end
 local function list_plugins(chat_id)
     local text = ''
     for k, v in pairs(plugins_names()) do
-        --  ✅ enabled, 🚫 disabled
-        local status = '🚫'
+        --  ✅ enabled, ☑️ disabled
+        local status = '☑️'
         -- get the name
         v = string.match(v, "(.*)%.lua")
         -- Check if is enabled
@@ -92,7 +92,7 @@ local function list_plugins(chat_id)
         if system_plugin(v) then
             status = '💻'
         elseif plugin_disabled_on_chat(v, chat_id) then
-            status = '❌'
+            status = '🚫'
         end
         text = text .. k .. '. ' .. status .. ' ' .. v .. '\n'
     end
@@ -140,7 +140,7 @@ local function disable_plugin(plugin_name, chat_id)
     table.remove(config.enabled_plugins, k)
     save_config()
     reload_plugins()
-    return '🚫 ' .. plugin_name .. langs[lang].disabled
+    return '☑️ ' .. plugin_name .. langs[lang].disabled
 end
 
 local function disable_plugin_on_chat(plugin_name, chat_id)
@@ -160,7 +160,7 @@ local function disable_plugin_on_chat(plugin_name, chat_id)
     config.disabled_plugin_on_chat[chat_id][plugin_name] = true
 
     save_config()
-    return '❌ ' .. plugin_name .. langs[lang].disabledOnChat
+    return '🚫 ' .. plugin_name .. langs[lang].disabledOnChat
 end
 
 local function reenable_plugin_on_chat(plugin_name, chat_id)
@@ -192,7 +192,7 @@ local function list_disabled_plugin_on_chat(chat_id)
         return langs[lang].noDisabledPlugin
     end
 
-    local status = '❌'
+    local status = '🚫'
     local text = ''
     for k in pairs(config.disabled_plugin_on_chat[chat_id]) do
         if config.disabled_plugin_on_chat[chat_id][k] == true then
@@ -210,8 +210,8 @@ local function keyboard_plugins_list(user_id, privileged, chat_id)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for k, name in pairs(plugins_names()) do
-        --  ✅ enabled, 🚫 disabled
-        local status = '🚫'
+        --  ✅ enabled, ☑️ disabled
+        local status = '☑️'
         local enabled = false
         -- get the name
         name = string.match(name, "(.*)%.lua")
@@ -225,7 +225,7 @@ local function keyboard_plugins_list(user_id, privileged, chat_id)
             status = '💻'
         elseif not privileged then
             if plugin_disabled_on_chat(name, chat_id) then
-                status = '❌'
+                status = '🚫'
                 enabled = false
             end
         end

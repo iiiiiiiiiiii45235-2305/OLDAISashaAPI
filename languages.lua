@@ -519,7 +519,7 @@ return {
         cantContact = 'Se non mi scrive per primo/a non posso contattare ',
         groupInfoUpdated = 'Nome gruppo e moderatori aggiornati.',
         modListSynced = 'Lista moderatori sincronizzata con quella di telegram.',
-        locksIntro = 'Legenda blocchi:\n🔴 Blocco attivato\n🔵 Blocco disattivato',
+        locksIntro = 'Legenda blocchi:\n✅ Blocco attivato\n☑️ Blocco disattivato',
         checkMyPermissions = 'Errore, controlla i miei permessi.',
         promoteModAdmin = ' è stato promosso a moderatore e amministratore di telegram con i permessi specificati.',
         demoteModAdmin = ' è stato degradato da moderatore e amministratore di telegram.',
@@ -651,7 +651,7 @@ return {
         pluginsReloaded = '💊 Plugins ricaricati.',
         sendPluginsPvt = 'Ti ho mandato la lista dei plugins in privato.',
         pluginsList = 'Lista plugins: ',
-        pluginsIntro = 'Legenda plugins:\n💻 Di sistema\n✅ Abilitato\n🚫 Disabilitato\n❌ Disabilitato nella chat\n✔️ Già abilitato\n✖️ Già disabilitato\n❔ Non esistente',
+        pluginsIntro = 'Legenda plugins:\n💻 Di sistema\n✅ Abilitato\n☑️ Disabilitato\n🚫 Disabilitato nella chat\n✔️ Già abilitato\n✖️ Già disabilitato\n❔ Non esistente',
 
         -- pokedex.lua --
         noPoke = 'Nessun pokémon trovato.',
@@ -1684,7 +1684,7 @@ return {
         cantContact = 'If (s)he doesn\'t write me first I can\'t contact ',
         groupInfoUpdated = 'Group name and mods updated.',
         modListSynced = 'Modlist synced with telegram\'s one.',
-        locksIntro = 'Locks\' legend:\n🔴 Locked\n🔵 Unlocked',
+        locksIntro = 'Locks\' legend:\n✅ Locked\n☑️ Unlocked',
         checkMyPermissions = 'Error, check my permissions.',
         promoteModAdmin = ' promoted to moderator and telegram\'s administrator with the specified permissions.',
         demoteModAdmin = ' demoted from moderator and telegram\'s administrator.',
@@ -1825,7 +1825,7 @@ return {
         pluginsReloaded = '💊 Plugins reloaded.',
         sendPluginsPvt = 'I\'ve sent you the plugins\' list in private.',
         pluginsList = 'Plugins\' list: ',
-        pluginsIntro = 'Plugins\' legend:\n💻 System\n✅ Enabled\n🚫 Disabled\n❌ Disabled on chat\n✔️ Already enabled\n✖️ Already disabled\n❔ Not existent',
+        pluginsIntro = 'Plugins\' legend:\n💻 System\n✅ Enabled\n☑️ Disabled\n🚫 Disabled on chat\n✔️ Already enabled\n✖️ Already disabled\n❔ Not existent',
 
         -- pokedex.lua --
         noPoke = 'No pokémon found.',
