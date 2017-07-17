@@ -293,6 +293,7 @@ function promoteChatMember(chat_id, user_id, permissions)
                 url = url .. '&' .. k .. '=' tostring(v)
             end
         end
+        print(url)
         local res, code = sendRequest(url)
 
         if not res and code then
