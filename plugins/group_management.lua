@@ -527,7 +527,14 @@ end
 -- end ADD/REM GROUPS
 
 local function adjustPermissions(string_permissions)
-    local permissions = { }
+    local permissions = {
+        ['change_info'] = false,
+        ['delete_messages'] = false,
+        ['invite_users'] = false,
+        ['restrict_members'] = false,
+        ['pin_messages'] = false,
+        ['promote_members'] = false,
+    }
     local permission_type = ''
     for k, v in pairs(string_permissions:split(' ')) do
         if v == 'change_info' then
