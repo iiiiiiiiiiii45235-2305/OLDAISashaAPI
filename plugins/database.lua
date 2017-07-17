@@ -411,6 +411,12 @@ end
 
 local function pre_process(msg)
     if msg then
+        if data[tostring(msg.chat.id)] then
+            if data[tostring(msg.chat.id)].set_name then
+                -- update chat's names
+                data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+            end
+        end
         return save_to_db(msg)
     end
 end
