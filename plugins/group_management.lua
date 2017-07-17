@@ -588,7 +588,6 @@ local function promoteTgAdmin(chat_id, user, string_permissions)
         return langs[lang].groupNotAdded
     end
     local permissions = adjustPermissions(string_permissions)
-    printvardump(permissions)
     if promoteChatMember(chat_id, user.id, permissions) then
         data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
         save_data(config.moderation.data, data)
