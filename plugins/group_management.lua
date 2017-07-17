@@ -2096,7 +2096,7 @@ return {
         "#unsetlink",
         "#promote <id>|<username>|<reply>|from",
         "#demote <id>|<username>|<reply>|from",
-        "#promoteadmin <id>|<username>|<reply>|from",
+        "#promoteadmin <id>|<username>|<reply>|from [change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]",
         "#demoteadmin <id>|<username>|<reply>|from",
         "#setowner <id>|<username>|<reply>",
         "#mute all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",

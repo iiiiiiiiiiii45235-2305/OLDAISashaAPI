@@ -288,8 +288,10 @@ function promoteChatMember(chat_id, user_id, permissions)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
-        for k, v in pairs(permissions) do
-            url = url .. '&can_' .. k .. '=true'
+        if permissions then
+            for k, v in pairs(permissions) do
+                url = url .. '&can_' .. k .. '=true'
+            end
         end
         local res, code = sendRequest(url)
 
@@ -304,7 +306,7 @@ function promoteChatMember(chat_id, user_id, permissions)
 end
 
 function demoteChatMember(chat_id, user_id)
-    return promoteChatMember(chat_id, user_id, { })
+    return promoteChatMember(chat_id, user_id)
 end
 
 function restrictChatMember(chat_id, user_id, until_date, permissions)

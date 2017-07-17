@@ -715,7 +715,8 @@ return {
         .. '/faq12 significato muti.\n'
         .. '/faq13 ruleta @AISashaBot.\n'
         .. '/faq14 api_patch.\n'
-        .. '/faq15 spam @AISashaBot.',
+        .. '/faq15 spam @AISashaBot.'
+        .. '/faq16 significato permessi.',
         faq =
         {
             [1] = 'D: Limiti sasha utente (@AISasha)?\n'
@@ -751,31 +752,31 @@ return {
             [10] = 'D: Perchè le impostazioni dei due bot sono divise?\n'
             .. 'R: Per comodità di sviluppo (gli id dei gruppi e supergruppi sono differenti per utenti e bot, lo stesso vale per altri parametri).',
             [11] = 'D: Cosa significano le impostazioni?\n'
-            .. 'R: Arabic => caratteri arabi.\n'
-            .. 'Bots => altri bot (controllati con le ultime lettere dell\'username).\n'
+            .. 'R: Arabic => Caratteri arabi.\n'
+            .. 'Bots => Altri bot (controllati con le ultime lettere dell\'username).\n'
             .. 'Flood => N messaggi in 2 secondi.\n'
-            .. 'Grouplink => permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n'
-            .. 'Leave => abbandono del gruppo.\n'
-            .. 'Link => link di altri gruppi.\n'
-            .. 'Member => entrata di nuovi membri.\n'
-            .. 'RTL => caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n'
-            .. 'Spam => messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n'
-            .. 'Strict => aumento di "pena" da kick a ban.\n'
+            .. 'Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n'
+            .. 'Leave => Abbandono del gruppo.\n'
+            .. 'Link => Link di altri gruppi.\n'
+            .. 'Member => Entrata di nuovi membri.\n'
+            .. 'RTL => Caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n'
+            .. 'Spam => Messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n'
+            .. 'Strict => Aumento di "pena" da kick a ban.\n'
             .. '* = emoji, caratteri di controllo ecc...',
             [12] = 'D: Cosa significano i muti?\n'
-            .. 'R: All => tutto.\n'
-            .. 'Audio => audio (non note vocali).\n'
-            .. 'Contact => contatti.\n'
-            .. 'Document => documenti generici (qualsiasi file inviato come tale).\n'
-            .. 'Gif => gifs.\n'
-            .. 'Location => posizioni.\n'
-            .. 'Photo => foto.\n'
-            .. 'Sticker => stickers.\n'
-            .. 'Text => testo sia normale che sotto i media.\n'
-            .. 'Tgservice => messaggi di servizio (non funzionante per @AISashaBot nei supergruppi*).\n'
-            .. 'Video => video (non video messaggi).\n'
-            .. 'Video_note => video messaggi.\n'
-            .. 'Voice_note => note vocali.\n'
+            .. 'R: All => Tutto.\n'
+            .. 'Audio => Audio (non note vocali).\n'
+            .. 'Contact => Contatti.\n'
+            .. 'Document => Documenti generici (qualsiasi file inviato come tale).\n'
+            .. 'Gif => Gifs.\n'
+            .. 'Location => Posizioni.\n'
+            .. 'Photo => Foto.\n'
+            .. 'Sticker => Stickers.\n'
+            .. 'Text => Testo sia normale che sotto i media.\n'
+            .. 'Tgservice => Messaggi di servizio (non funzionante per @AISashaBot nei supergruppi*).\n'
+            .. 'Video => Video (non video messaggi).\n'
+            .. 'Video_note => Video messaggi.\n'
+            .. 'Voice_note => Note vocali.\n'
             .. '* = limitazione di telegram.',
             [13] = 'D: Perchè non porti ruleta anche su @AISashaAPI?\n'
             .. 'R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.',
@@ -783,6 +784,13 @@ return {
             .. 'R: L\'api_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.',
             [15] = 'D: Perchè non porti spam anche su @AISashaAPI?\n'
             .. 'R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti, inoltre inviare messaggi dopo tot tempo non è così semplice in LUA.',
+            [16] = 'D: Cosa significano i permessi?\n'
+            .. 'R: Change_info => Cambiare info come nome gruppo, foto e altre impostazioni.\n'
+            .. 'Delete_messages => Eliminare messaggi di altri utenti.\n'
+            .. 'Invite_users => Invitare utenti tramite link.\n'
+            .. 'Restrict_members => Restringere bannare o sbannare membri.\n'
+            .. 'Pin_messages => Fissare messaggi.\n'
+            .. 'Promote_members => Promuovere amministratori con gli stessi permessi o inferiori.\n',
         },
 
         ------------
@@ -1881,7 +1889,8 @@ return {
         .. '/faq12 mutes meaning.\n'
         .. '/faq13 ruleta @AISashaBot.\n'
         .. '/faq14 api_patch.\n'
-        .. '/faq15 spam @AISashaBot.',
+        .. '/faq15 spam @AISashaBot.'
+        .. '/faq16 permissions meaning.',
         faq =
         {
             [1] = 'D: Sasha user\'s limits (@AISasha)?\n'
@@ -1917,31 +1926,31 @@ return {
             [10] = 'D: Why settings of the two bots are divided?\n'
             .. 'R: Because of development facilitations (groups and supergroups ids are not the same for bots and users like other parameters).',
             [11] = 'D: What do settings mean?\n'
-            .. 'R: Arabic => arabic characters.\n'
-            .. 'Bots => other bots (checked with the last letters of the username).\n'
+            .. 'R: Arabic => Arabic characters.\n'
+            .. 'Bots => Other bots (checked with the last letters of the username).\n'
             .. 'Flood => N messages in 2 seconds.\n'
-            .. 'Grouplink => normal users obtaining group\'s link using /link.\n'
-            .. 'Leave => group leave.\n'
-            .. 'Link => other groups\' links.\n'
-            .. 'Member => new members.\n'
-            .. 'RTL => right to left characters (those that reverse messages).\n'
-            .. 'Spam => message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n'
-            .. 'Strict => increase punishment from kick to ban.\n'
+            .. 'Grouplink => Normal users obtaining group\'s link using /link.\n'
+            .. 'Leave => Group leave.\n'
+            .. 'Link => Other groups\' links.\n'
+            .. 'Member => New members.\n'
+            .. 'RTL => Right to left characters (those that reverse messages).\n'
+            .. 'Spam => Message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n'
+            .. 'Strict => Increase punishment from kick to ban.\n'
             .. '* = emojis, control characters etc...',
             [12] = 'D: What do mutes mean?\n'
-            .. 'R: All => everything.\n'
-            .. 'Audio => audios (not voice notes).\n'
-            .. 'Contact => contacts.\n'
-            .. 'Document => generic documents (everything sent as a file).\n'
-            .. 'Gif => gifs.\n'
-            .. 'Location => positions.\n'
-            .. 'Photo => photos.\n'
-            .. 'Sticker => stickers.\n'
-            .. 'Text => normal text or captions.\n'
-            .. 'Tgservice => service messages (not working for @AISashaBot on supergroups*).\n'
-            .. 'Video => videos (not video messages).\n'
-            .. 'Video_note => video messages.\n'
-            .. 'Voice_note => voice notes.\n'
+            .. 'R: All => Everything.\n'
+            .. 'Audio => Audios (not voice notes).\n'
+            .. 'Contact => Contacts.\n'
+            .. 'Document => Generic documents (everything sent as a file).\n'
+            .. 'Gif => Gifs.\n'
+            .. 'Location => Positions.\n'
+            .. 'Photo => Photos.\n'
+            .. 'Sticker => Stickers.\n'
+            .. 'Text => Normal text or captions.\n'
+            .. 'Tgservice => Service messages (not working for @AISashaBot on supergroups*).\n'
+            .. 'Video => Videos (not video messages).\n'
+            .. 'Video_note => Video messages.\n'
+            .. 'Voice_note => Voice notes.\n'
             .. '* = telegram\'s limitation.',
             [13] = 'D: Why don\'t you port ruleta on @AISashaAPI?\n'
             .. 'R: Because I\'m 90% sure that kicks number would be high enough to hit telegram limits causing problems.',
@@ -1949,6 +1958,13 @@ return {
             .. 'R: The api_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.',
             [15] = 'D: Why don\'t you port spam on @AISashaAPI?\n'
             .. 'R: Because I\'m 90% sure that sent messages number would be high enough to hit telegram limits causing problems, also sending messages every x time is not so simple in LUA.',
+            [16] = 'D: What do permissions mean?\n'
+            .. 'R: Change_info => Change info as group\'s name, pic and other settings.\n'
+            .. 'Delete_messages => Delete other\'s messages.\n'
+            .. 'Invite_users => Invite users with link.\n'
+            .. 'Restrict_members => Restrict, ban, unban members.\n'
+            .. 'Pin_messages => Pin messages.\n'
+            .. 'Promote_members => Promote other members as admins with the same permissions or lower.\n',
         },
 
         ------------
