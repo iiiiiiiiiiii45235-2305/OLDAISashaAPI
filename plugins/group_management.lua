@@ -40,6 +40,14 @@ default_settings = {
     welcome = nil,
     welcomemembers = 0,
 }
+default_permissions = {
+    ['can_change_info'] = true,
+    ['can_delete_messages'] = true,
+    ['can_invite_users'] = true,
+    ['can_restrict_members'] = true,
+    ['can_pin_messages'] = true,
+    ['can_promote_members'] = false,
+}
 default_alternatives = {
     cmdAlt =
     {
@@ -527,6 +535,7 @@ end
 -- end ADD/REM GROUPS
 
 local function adjustPermissions(string_permissions)
+    string_permissions = string_permissions:lower()
     local permissions = {
         ['can_change_info'] = false,
         ['can_delete_messages'] = false,
@@ -582,12 +591,11 @@ local function getAdmins(chat_id)
     end
 end
 
-local function promoteTgAdmin(chat_id, user, string_permissions)
+local function promoteTgAdmin(chat_id, user, permissions)
     local lang = get_lang(chat_id)
     if not data[tostring(chat_id)] then
         return langs[lang].groupNotAdded
     end
-    local permissions = adjustPermissions(string_permissions)
     if promoteChatMember(chat_id, user.id, permissions) then
         data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
         save_data(config.moderation.data, data)
@@ -1762,11 +1770,15 @@ local function run(msg, matches)
             if matches[1]:lower() == 'promoteadmin' then
                 if msg.from.is_owner then
                     mystat('/promoteadmin')
+                    local permissions = default_permissions
                     if msg.reply then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
+                                        if matches[3] then
+                                            permissions = adjustPermissions(matches[3]:lower())
+                                        end
                                         return promoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from, matches[3]:lower())
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -1775,8 +1787,16 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, matches[3]:lower())
+                                if matches[2] then
+                                    permissions = adjustPermissions(matches[2]:lower())
+                                end
+                                return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions)
                             end
+                        else
+                            if matches[2] then
+                                permissions = adjustPermissions(matches[2]:lower())
+                            end
+                            return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions)
                         end
                     elseif matches[2] and matches[2] ~= '' then
                         if string.match(matches[2], '^%d+$') then
@@ -1784,7 +1804,10 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return promoteTgAdmin(msg.chat.id, obj_user, matches[3]:lower())
+                                        if matches[3] then
+                                            permissions = adjustPermissions(matches[3]:lower())
+                                        end
+                                        return promoteTgAdmin(msg.chat.id, obj_user, permissions)
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -1794,6 +1817,9 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if matches[3] then
+                                        permissions = adjustPermissions(permissions)
+                                    end
                                     return promoteTgAdmin(msg.chat.id, obj_user, matches[3]:lower())
                                 end
                             else
