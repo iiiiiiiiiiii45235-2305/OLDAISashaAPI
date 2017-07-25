@@ -945,6 +945,8 @@ function cron_administrator()
         if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
             sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
         end
+        -- save crontab
+        io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
         -- send the whole backup
         doSendBackup()
 
