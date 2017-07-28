@@ -701,10 +701,12 @@ local function pre_process(msg)
                                 end
                                 return msg
                             end
-                        elseif string.match(msg.text:lower(), '^' .. k) then
-                            -- one match is enough
-                            msg.text = string.gsub(msg.text:lower(), '^' .. k, v)
-                            return msg
+                        elseif msg.text then
+                            if string.match(msg.text:lower(), '^' .. k) then
+                                -- one match is enough
+                                msg.text = string.gsub(msg.text:lower(), '^' .. k, v)
+                                return msg
+                            end
                         end
                     end
                 end
@@ -750,10 +752,12 @@ local function pre_process(msg)
                                 end
                                 return msg
                             end
-                        elseif string.match(msg.text:lower(), '^' .. k) then
-                            -- one match is enough
-                            msg.text = string.gsub(msg.text:lower(), '^' .. k, v)
-                            return msg
+                        elseif msg.text then
+                            if string.match(msg.text:lower(), '^' .. k) then
+                                -- one match is enough
+                                msg.text = string.gsub(msg.text:lower(), '^' .. k, v)
+                                return msg
+                            end
                         end
                     end
                 end

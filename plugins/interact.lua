@@ -6,9 +6,13 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if msg.reply then
-                return sendReply(msg.reply_to_message, matches[2], 'markdown')
+                if not sendReply(msg.reply_to_message, matches[2], 'markdown') then
+                    return langs[msg.lang].errorTryAgain
+                end
             else
-                return sendMessage(msg.chat.id, matches[2], 'markdown')
+                if not sendMessage(msg.chat.id, matches[2], 'markdown') then
+                    return langs[msg.lang].errorTryAgain
+                end
             end
         else
             return langs[msg.lang].require_mod
@@ -22,9 +26,13 @@ local function run(msg, matches)
             end
             deleteMessage(msg.chat.id, msg.message_id)
             if msg.reply then
-                return sendReply(msg.reply_to_message, matches[2], 'markdown')
+                if not sendReply(msg.reply_to_message, matches[2], 'markdown') then
+                    return langs[msg.lang].errorTryAgain
+                end
             else
-                return sendMessage(msg.chat.id, matches[2], 'markdown')
+                if not sendMessage(msg.chat.id, matches[2], 'markdown') then
+                    return langs[msg.lang].errorTryAgain
+                end
             end
         else
             return langs[msg.lang].require_mod
@@ -37,9 +45,13 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if msg.reply then
-                return sendReply(msg.reply_to_message, matches[2], 'html')
+                if not sendReply(msg.reply_to_message, matches[2], 'html') then
+                    return langs[msg.lang].errorTryAgain
+                end
             else
-                return sendMessage(msg.chat.id, matches[2], 'html')
+                if not sendMessage(msg.chat.id, matches[2], 'html') then
+                    return langs[msg.lang].errorTryAgain
+                end
             end
         else
             return langs[msg.lang].require_mod
@@ -53,9 +65,13 @@ local function run(msg, matches)
             end
             deleteMessage(msg.chat.id, msg.message_id)
             if msg.reply then
-                return sendReply(msg.reply_to_message, matches[2], 'html')
+                if not sendReply(msg.reply_to_message, matches[2], 'html') then
+                    return langs[msg.lang].errorTryAgain
+                end
             else
-                return sendMessage(msg.chat.id, matches[2], 'html')
+                if not sendMessage(msg.chat.id, matches[2], 'html') then
+                    return langs[msg.lang].errorTryAgain
+                end
             end
         else
             return langs[msg.lang].require_mod
