@@ -1151,10 +1151,8 @@ return {
             '#upload_videonote: Sasha finge di inviare un video messaggio.',
             '#testuser <id>|<username>|<reply>|from: Sasha controlla se l\'utente specificato ha bloccato il bot.',
             'MOD',
-            '#[del]echo [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
-            '#[del]markdownecho [<reply>]<text>: Sasha ripete <text> usando il markdown di telegram, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
-            '#[del]htmlecho [<reply>]<text>: Sasha ripete <text> usando il markdown html, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
-            '#edit <reply> <text>: Sasha modifica <reply>.',
+            '#[del][markdown|html]echo [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando, se "html" o "markdown" usa la formattazione specificata.',
+            '#[markdown|html]edit <reply> <text>: Sasha modifica <reply>, se "markdown" o "html" usa la formattazione specificata.',
         },
 
         likecounter =
@@ -2327,10 +2325,8 @@ return {
             '#upload_videonote: Sasha pretends to upload a video message.',
             '#testuser <id>|<username>|<reply>|from: Sasha tests if the specified user has blocked the bot.',
             'MOD',
-            '#[del]echo [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message, if "del" she deletes the command.',
-            '#[del]markdownecho [<reply>]<text>: Sasha repeats <text> using telegram\'s markdown, if in reply of a message she replies to that message, if "del" she deletes the command.',
-            '#[del]htmlecho [<reply>]<text>: Sasha repeats <text> using html markdown, if in reply of a message she replies to that message, if "del" she deletes the command.',
-            '#edit <reply> <text>: Sasha edits <reply>.',
+            '#[del][markdown|html]echo [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message, if "del" she deletes the command, if "html" or "markdown" she uses the specified format.',
+            '#[markdown|html]edit <reply> <text>: Sasha edits <reply>, if "html" or "markdown" she uses the specified format.',
         },
 
         likecounter =

@@ -1,13 +1,15 @@
 local function run(msg, matches)
-    if matches[1]:lower() == 'edit' and matches[2] then
+    if matches[1]:lower() == 'markdownedit' and matches[2] then
         if msg.from.is_mod then
-            mystat('/edit')
+            mystat('/markdownedit')
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
+                        return langs[msg.lang].errorTryAgain
+                    end
                 else
                     return langs[msg.lang].cantEditOthersMessages
                 end
@@ -55,6 +57,25 @@ local function run(msg, matches)
             return langs[msg.lang].require_mod
         end
     end
+    if matches[1]:lower() == 'htmledit' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/htmledit')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
+                        return langs[msg.lang].errorTryAgain
+                    end
+                else
+                    return langs[msg.lang].cantEditOthersMessages
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
     if matches[1]:lower() == 'htmlecho' and matches[2] then
         if msg.from.is_mod then
             mystat('/htmlecho')
@@ -88,6 +109,23 @@ local function run(msg, matches)
             else
                 if not sendMessage(msg.chat.id, matches[2], 'html') then
                     return langs[msg.lang].errorTryAgain
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'edit' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/edit')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                else
+                    return langs[msg.lang].cantEditOthersMessages
                 end
             end
         else
@@ -253,6 +291,8 @@ return {
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr]) (.*)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr])$",
         "^[#!/]([Ee][Dd][Ii][Tt]) (.+)$",
+        "^[#!/]([Hh][Tt][Mm][Ll][Ee][Dd][Ii][Tt]) (.+)$",
+        "^[#!/]([Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Dd][Ii][Tt]) (.+)$",
         -- react
         "^(@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Ee] [Vv][Aa]%?)$",
@@ -289,11 +329,13 @@ return {
         "#testuser <id>|<username>|<reply>|from",
         "MOD",
         "#echo <text>",
+        "#edit <reply> <text>",
         "#delecho <text>",
         "#markdownecho <text>",
+        "#markdownedit <reply> <text>",
         "#delmarkdownecho <text>",
         "#htmlecho <text>",
+        "#htmledit <reply> <text>",
         "#delhtmlecho <text>",
-        "#edit <reply> <text>",
     },
 }
