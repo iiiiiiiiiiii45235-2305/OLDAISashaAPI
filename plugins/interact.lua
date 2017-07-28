@@ -1,4 +1,21 @@
 local function run(msg, matches)
+    if matches[1]:lower() == 'edit' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/edit')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                else
+                    return langs[msg.lang].cantEditOthersMessages
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
     if matches[1]:lower() == 'markdownecho' and matches[2] then
         if msg.from.is_mod then
             mystat('/markdownecho')
@@ -235,6 +252,7 @@ return {
         "^[#!/]([Dd][Ee][Ll][Hh][Tt][Mm][Ll][Ee][Cc][Hh][Oo]) +(.+)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr]) (.*)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr])$",
+        "^[#!/]([Ee][Dd][Ii][Tt]) (.+)$",
         -- react
         "^(@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Ee] [Vv][Aa]%?)$",
@@ -276,5 +294,6 @@ return {
         "#delmarkdownecho <text>",
         "#htmlecho <text>",
         "#delhtmlecho <text>",
+        "#edit <reply> <text>",
     },
 }

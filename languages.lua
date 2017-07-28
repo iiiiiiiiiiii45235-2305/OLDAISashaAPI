@@ -622,6 +622,7 @@ return {
         -- interact.lua
         userBlockedBot = 'L\'utente specificato ha bloccato il bot.',
         userDidNotBlockBot = 'L\'utente specificato ha il bot attivo.',
+        cantEditOthersMessages = 'Non posso modificare i messaggi altrui.',
 
         -- lua_exec.lua --
         doneNoOutput = 'Fatto, nessun output.',
@@ -1153,6 +1154,7 @@ return {
             '#[del]echo [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
             '#[del]markdownecho [<reply>]<text>: Sasha ripete <text> usando il markdown di telegram, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
             '#[del]htmlecho [<reply>]<text>: Sasha ripete <text> usando il markdown html, se in risposta ad un messaggio sasha risponde a quel messaggio, se "del" elimina il comando.',
+            '#edit <reply> <text>: Sasha modifica <reply>.',
         },
 
         likecounter =
@@ -1796,6 +1798,7 @@ return {
         -- interact.lua
         userBlockedBot = 'The specifided user blocked the bot.',
         userDidNotBlockBot = 'The specified did not block the bot .',
+        cantEditOthersMessages = 'I can\'t edit others\' messages.',
 
         -- lua_exec.lua --
         doneNoOutput = 'Done, no output.',
@@ -2327,6 +2330,7 @@ return {
             '#[del]echo [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message, if "del" she deletes the command.',
             '#[del]markdownecho [<reply>]<text>: Sasha repeats <text> using telegram\'s markdown, if in reply of a message she replies to that message, if "del" she deletes the command.',
             '#[del]htmlecho [<reply>]<text>: Sasha repeats <text> using html markdown, if in reply of a message she replies to that message, if "del" she deletes the command.',
+            '#edit <reply> <text>: Sasha edits <reply>.',
         },
 
         likecounter =
