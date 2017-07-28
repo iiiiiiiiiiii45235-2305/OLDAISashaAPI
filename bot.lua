@@ -696,6 +696,8 @@ function msg_valid(msg)
         end
 
         if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
+            print(clr.white .. 'Preprocess', 'database')
+            plugins.database.pre_process(msg)
             -- if not a known group receive messages just from sudo
             local sudoMessage = false
             for v, user in pairs(sudoers) do
@@ -762,11 +764,11 @@ function pre_process_msg(msg)
     print(clr.white .. 'Preprocess', 'delword')
     msg = plugins.delword.pre_process(msg)
     print(clr.white .. 'Preprocess', 'goodbyewelcome')
-    msg = plugins.goodbyewelcome.pre_process(msg)
+    plugins.goodbyewelcome.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.msg_checks.pre_process(msg)
     print(clr.white .. 'Preprocess', 'onservice')
-    msg = plugins.onservice.pre_process(msg)
+    plugins.onservice.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
             if plugin.description ~= 'ALTERNATIVES' and

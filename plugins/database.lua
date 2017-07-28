@@ -398,7 +398,7 @@ local function save_to_db(msg)
 
         -- if reply save reply
         if msg.reply then
-            msg.reply_to_message = save_to_db(msg.reply_to_message)
+            save_to_db(msg.reply_to_message)
         end
     else
         sendMessage_SUDOERS(langs[msg.lang].databaseFuckedUp, 'markdown')
@@ -406,7 +406,6 @@ local function save_to_db(msg)
         f:write('{}')
         f:close()
     end
-    return msg
 end
 
 local function pre_process(msg)
@@ -417,7 +416,8 @@ local function pre_process(msg)
                 data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
             end
         end
-        return save_to_db(msg)
+        save_to_db(msg)
+        return msg
     end
 end
 
