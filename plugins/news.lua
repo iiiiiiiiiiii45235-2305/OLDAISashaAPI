@@ -1,10 +1,9 @@
 local chats = nil
-local news = langs.news
 local spam = false
 
 local function run(msg, matches)
     if matches[1]:lower() == 'news' then
-        return news
+        return langs.news
     end
     if matches[1]:lower() == 'spamnews' then
         if is_sudo(msg) then
@@ -38,7 +37,7 @@ local function pre_process(msg)
     if msg then
         if spam and chats then
             if chats[tostring(msg.chat.id)] then
-                sendMessage(msg.chat.id, news)
+                sendMessage(msg.chat.id, langs.news)
                 chats[tostring(msg.chat.id)] = false
             end
         end
