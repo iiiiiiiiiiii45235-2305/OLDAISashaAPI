@@ -534,6 +534,28 @@ local function getDefaultAlternativeCommands(chat_id)
 end
 -- end ADD/REM GROUPS
 
+local function reverseAdjustPermissions(permission_type, lang)
+    if permission_type == 'can_change_info' then
+        permission_type = langs[lang]
+    end
+    if permission_type == 'can_delete_messages' then
+        permission_type = 'bots'
+    end
+    if permission_type == 'can_invite_users' then
+        permission_type = 'flood'
+    end
+    if permission_type == 'can_restrict_members' then
+        permission_type = 'grouplink'
+    end
+    if permission_type == 'can_pin_messages' then
+        permission_type = 'leave'
+    end
+    if permission_type == 'can_promote_members' then
+        permission_type = 'link'
+    end
+    return permission_type
+end
+
 local function adjustPermissions(string_permissions)
     string_permissions = string_permissions:lower()
     local permissions = {
@@ -920,6 +942,41 @@ local function checkMatchesMuteUnmute(txt)
         return true
     end
     return false
+end
+
+local function keyboard_permissions_list(chat_id, permissions)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    for var, value in pairs(permissions) do
+        if type(value) == 'boolean' then
+            if flag then
+                flag = false
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+            end
+            if value then
+                keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '☑️' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+            end
+            column = column + 1
+            if column > 2 then
+                flag = true
+            end
+        end
+    end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+    return keyboard
 end
 
 local function keyboard_settings_list(chat_id)
@@ -1407,6 +1464,63 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
+            if matches[1]:lower() == 'settitle' then
+                if msg.from.is_mod then
+                    mystat('/settitle')
+                    return setChatTitle(msg.chat.id, matches[2])
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == 'setdescription' then
+                if msg.from.is_mod then
+                    mystat('/setdescription')
+                    return setChatDescription(msg.chat.id, matches[2])
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == 'setphoto' then
+                if msg.from.is_mod then
+                    if msg.reply then
+                        if msg.reply_to_message.media then
+                            local file_id = ''
+                            local caption = matches[3] or ''
+                            if msg.reply_to_message.media_type == 'photo' then
+                                local bigger_pic_id = ''
+                                local size = 0
+                                for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                                    if v.file_size then
+                                        if v.file_size > size then
+                                            size = v.file_size
+                                            bigger_pic_id = v.file_id
+                                        end
+                                    end
+                                end
+                                file_id = bigger_pic_id
+                                mystat('/setphoto')
+                                return setChatPhotoId(msg.chat.id, file_id)
+                            else
+                                return langs[msg.lang].needPhoto
+                            end
+                        else
+                            return langs[msg.lang].needPhoto
+                        end
+                    else
+                        return langs[msg.lang].needReply
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            if matches[1]:lower() == 'unsetphoto' then
+                if msg.from.is_mod then
+                    mystat('/unsetphoto')
+                    return deleteChatPhoto(msg.chat.id)
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if matches[1]:lower() == 'silentpin' then
                 if msg.from.is_mod then
                     if msg.reply then
@@ -1483,96 +1597,6 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
-            if matches[1]:lower() == 'muteuser' then
-                if msg.from.is_mod then
-                    mystat('/muteuser')
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        -- ignore higher or same rank
-                                        if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
-                                            if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
-                                                unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
-                                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
-                                                return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserRemove
-                                            else
-                                                muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
-                                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
-                                                return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserAdd
-                                            end
-                                        else
-                                            return langs[msg.lang].require_rank
-                                        end
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
-                                else
-                                    return langs[msg.lang].errorNoForward
-                                end
-                            end
-                        else
-                            -- ignore higher or same rank
-                            if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
-                                if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
-                                    unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
-                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
-                                    return msg.reply_to_message.from.id .. langs[msg.lang].muteUserRemove
-                                else
-                                    muteUser(msg.chat.id, msg.reply_to_message.from.id)
-                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
-                                    return msg.reply_to_message.from.id .. langs[msg.lang].muteUserAdd
-                                end
-                            else
-                                return langs[msg.lang].require_rank
-                            end
-                        end
-                    elseif matches[2] and matches[2] ~= '' then
-                        if string.match(matches[2], '^%d+$') then
-                            -- ignore higher or same rank
-                            if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
-                                if isMutedUser(msg.chat.id, matches[2]) then
-                                    unmuteUser(msg.chat.id, matches[2])
-                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
-                                    return matches[2] .. langs[msg.lang].muteUserRemove
-                                else
-                                    muteUser(msg.chat.id, matches[2])
-                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
-                                    return matches[2] .. langs[msg.lang].muteUserAdd
-                                end
-                            else
-                                return langs[msg.lang].require_rank
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    -- ignore higher or same rank
-                                    if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
-                                        if isMutedUser(msg.chat.id, obj_user.id) then
-                                            unmuteUser(msg.chat.id, obj_user.id)
-                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
-                                            return obj_user.id .. langs[msg.lang].muteUserRemove
-                                        else
-                                            muteUser(msg.chat.id, obj_user.id)
-                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
-                                            return obj_user.id .. langs[msg.lang].muteUserAdd
-                                        end
-                                    else
-                                        return langs[msg.lang].require_rank
-                                    end
-                                end
-                            else
-                                return langs[msg.lang].noObject
-                            end
-                        end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
             if matches[1]:lower() == 'muteslist' then
                 if msg.from.is_mod then
                     if msg.chat.type ~= 'private' then
@@ -1607,36 +1631,23 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if matches[1]:lower() == 'mutelist' then
-                if msg.from.is_mod then
-                    mystat('/mutelist')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup mutelist")
-                    return mutedUserList(msg.chat.id)
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
             if matches[1]:lower() == 'settings' then
+                mystat('/settings')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                 if msg.from.is_mod then
                     if msg.chat.type ~= 'private' then
                         sendReply(msg, langs[msg.lang].sendSettingsPvt)
                     end
-                    mystat('/settings')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                     sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(msg.chat.id))
                     return
                 else
-                    return langs[msg.lang].require_mod
+                    return showSettings(msg.chat.id, msg.lang)
                 end
             end
             if matches[1]:lower() == 'textualsettings' then
-                if msg.from.is_mod then
-                    mystat('/settings')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-                    return showSettings(msg.chat.id, msg.lang)
-                else
-                    return langs[msg.lang].require_mod
-                end
+                mystat('/settings')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+                return showSettings(msg.chat.id, msg.lang)
             end
             if matches[1]:lower() == 'newlink' then
                 if msg.from.is_mod then
@@ -2044,6 +2055,10 @@ return {
         "^[#!/]([Pp][Ii][Nn])$",
         "^[#!/]([Ss][Ii][Ll][Ee][Nn][Tt][Pp][Ii][Nn])$",
         "^[#!/]([Uu][Nn][Pp][Ii][Nn])$",
+        "^[#!/]([Ss][Ee][Tt][Tt][Ii][Tt][Ll][Ee]) (.+)$",
+        "^[#!/]([Ss][Ee][Tt][Dd][Ee][Ss][Cc][Rr][Ii][Pp][Tt][Ii][Oo][Nn]) (.+)$",
+        "^[#!/]([Ss][Ee][Tt][Pp][Hh][Oo][Tt][Oo])$",
+        "^[#!/]([Uu][Nn][Ss][Ee][Tt][Pp][Hh][Oo][Tt][Oo])$",
 
         -- COMMON
         "^[#!/]([Dd][Ee][Ll])$",
@@ -2065,9 +2080,6 @@ return {
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee])$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee]) ([^%s]+)$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee])$",
-        "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr]) ([^%s]+)$",
-        "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr])",
-        "^[#!/]([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])",
         "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) ([^%s]+)",
@@ -2104,6 +2116,8 @@ return {
         "#owner",
         "#admins [<reply>|<text>]",
         "#link",
+        "#settings",
+        "#textualsettings",
         "MOD",
         "#type",
         "#updategroupinfo",
@@ -2111,16 +2125,17 @@ return {
         "#setwarn <value>",
         "#setflood <value>",
         "#newlink",
-        "#settings",
-        "#textualsettings",
-        "#muteuser <id>|<username>|<reply>|from",
         "#muteslist",
         "#textualmuteslist",
-        "#mutelist",
         "#lock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#unlock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "#[silent]pin <reply>",
+        "#pin <reply>",
+        "#silentpin <reply>",
         "#unpin",
+        "#settitle <text>",
+        "#setdescription <text>",
+        "#setphoto <reply>",
+        "#unsetphoto",
         "OWNER",
         "#syncmodlist",
         "#log",

@@ -85,6 +85,105 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
+        if matches[1]:lower() == 'muteuser' then
+            if msg.from.is_mod then
+                mystat('/muteuser')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    -- ignore higher or same rank
+                                    if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
+                                        if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
+                                            unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
+                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
+                                            return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserRemove
+                                        else
+                                            muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
+                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
+                                            return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserAdd
+                                        end
+                                    else
+                                        return langs[msg.lang].require_rank
+                                    end
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        -- ignore higher or same rank
+                        if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
+                            if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
+                                unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
+                                return msg.reply_to_message.from.id .. langs[msg.lang].muteUserRemove
+                            else
+                                muteUser(msg.chat.id, msg.reply_to_message.from.id)
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
+                                return msg.reply_to_message.from.id .. langs[msg.lang].muteUserAdd
+                            end
+                        else
+                            return langs[msg.lang].require_rank
+                        end
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        -- ignore higher or same rank
+                        if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
+                            if isMutedUser(msg.chat.id, matches[2]) then
+                                unmuteUser(msg.chat.id, matches[2])
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
+                                return matches[2] .. langs[msg.lang].muteUserRemove
+                            else
+                                muteUser(msg.chat.id, matches[2])
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
+                                return matches[2] .. langs[msg.lang].muteUserAdd
+                            end
+                        else
+                            return langs[msg.lang].require_rank
+                        end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                -- ignore higher or same rank
+                                if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
+                                    if isMutedUser(msg.chat.id, obj_user.id) then
+                                        unmuteUser(msg.chat.id, obj_user.id)
+                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
+                                        return obj_user.id .. langs[msg.lang].muteUserRemove
+                                    else
+                                        muteUser(msg.chat.id, obj_user.id)
+                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
+                                        return obj_user.id .. langs[msg.lang].muteUserAdd
+                                    end
+                                else
+                                    return langs[msg.lang].require_rank
+                                end
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'mutelist' then
+            if msg.from.is_mod then
+                mystat('/mutelist')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup mutelist")
+                return mutedUserList(msg.chat.id)
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
         if matches[1]:lower() == 'warn' then
             if msg.from.is_mod then
                 if getWarn(msg.chat.id) == langs[msg.lang].noWarnSet then
@@ -508,176 +607,161 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'gban' then
-            if is_admin(msg) then
-                mystat('/gban')
-                if msg.reply then
-                    if matches[2] then
-                        if matches[2]:lower() == 'from' then
-                            if msg.reply_to_message.forward then
-                                if msg.reply_to_message.forward_from then
-                                    gbanUser(msg.reply_to_message.forward_from.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].gbanned
-                                else
-                                    return langs[msg.lang].cantDoThisToChat
-                                end
+    end
+    if matches[1]:lower() == 'gban' then
+        if is_admin(msg) then
+            mystat('/gban')
+            if msg.reply then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                gbanUser(msg.reply_to_message.forward_from.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].gbanned
                             else
-                                return langs[msg.lang].errorNoForward
+                                return langs[msg.lang].cantDoThisToChat
                             end
+                        else
+                            return langs[msg.lang].errorNoForward
                         end
-                    else
-                        if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                                gbanUser(msg.reply_to_message.adder.id)
-                                local text = langs[msg.lang].user .. msg.reply_to_message.adder.id .. langs[msg.lang].gbanned '\n'
-                                for k, v in pairs(msg.reply_to_message.added) do
-                                    gbanUser(v.id)
-                                    text = text .. langs[msg.lang].user .. v.id .. langs[msg.lang].gbanned .. '\n'
-                                end
-                                return text
-                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                gbanUser(msg.reply_to_message.removed.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].gbanned
-                            else
-                                gbanUser(msg.reply_to_message.from.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
+                    end
+                else
+                    if msg.reply_to_message.service then
+                        if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                            gbanUser(msg.reply_to_message.adder.id)
+                            local text = langs[msg.lang].user .. msg.reply_to_message.adder.id .. langs[msg.lang].gbanned '\n'
+                            for k, v in pairs(msg.reply_to_message.added) do
+                                gbanUser(v.id)
+                                text = text .. langs[msg.lang].user .. v.id .. langs[msg.lang].gbanned .. '\n'
                             end
+                            return text
+                        elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                            gbanUser(msg.reply_to_message.removed.id)
+                            return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].gbanned
                         else
                             gbanUser(msg.reply_to_message.from.id)
                             return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                         end
-                    end
-                elseif matches[2] and matches[2] ~= '' then
-                    if string.match(matches[2], '^%d+$') then
-                        gbanUser(matches[2])
-                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                gbanUser(obj_user.id)
-                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
-                            end
-                        else
-                            return langs[msg.lang].noObject
-                        end
+                        gbanUser(msg.reply_to_message.from.id)
+                        return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].gbanned
                     end
                 end
-                return
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'ungban' then
-            if is_admin(msg) then
-                mystat('/ungban')
-                if msg.reply then
-                    if matches[2] then
-                        if matches[2]:lower() == 'from' then
-                            if msg.reply_to_message.forward then
-                                if msg.reply_to_message.forward_from then
-                                    ungbanUser(msg.reply_to_message.forward_from.id)
-                                    return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].ungbanned
-                                else
-                                    return langs[msg.lang].cantDoThisToChat
-                                end
-                            else
-                                return langs[msg.lang].errorNoForward
-                            end
+            elseif matches[2] and matches[2] ~= '' then
+                if string.match(matches[2], '^%d+$') then
+                    gbanUser(matches[2])
+                    return langs[msg.lang].user .. matches[2] .. langs[msg.lang].gbanned
+                else
+                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    if obj_user then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                            gbanUser(obj_user.id)
+                            return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].gbanned
                         end
                     else
-                        if msg.reply_to_message.service then
-                            if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                                ungbanUser(msg.reply_to_message.adder.id)
-                                local text = langs[msg.lang].user .. msg.reply_to_message.adder.id .. langs[msg.lang].ungbanned '\n'
-                                for k, v in pairs(msg.reply_to_message.added) do
-                                    ungbanUser(v.id)
-                                    text = text .. langs[msg.lang].user .. v.id .. langs[msg.lang].ungbanned .. '\n'
-                                end
-                                return text
-                            elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                ungbanUser(msg.reply_to_message.removed.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].ungbanned
+                        return langs[msg.lang].noObject
+                    end
+                end
+            end
+            return
+        else
+            return langs[msg.lang].require_admin
+        end
+    end
+    if matches[1]:lower() == 'ungban' then
+        if is_admin(msg) then
+            mystat('/ungban')
+            if msg.reply then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                ungbanUser(msg.reply_to_message.forward_from.id)
+                                return langs[msg.lang].user .. msg.reply_to_message.forward_from.id .. langs[msg.lang].ungbanned
                             else
-                                ungbanUser(msg.reply_to_message.from.id)
-                                return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
+                                return langs[msg.lang].cantDoThisToChat
                             end
+                        else
+                            return langs[msg.lang].errorNoForward
+                        end
+                    end
+                else
+                    if msg.reply_to_message.service then
+                        if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                            ungbanUser(msg.reply_to_message.adder.id)
+                            local text = langs[msg.lang].user .. msg.reply_to_message.adder.id .. langs[msg.lang].ungbanned '\n'
+                            for k, v in pairs(msg.reply_to_message.added) do
+                                ungbanUser(v.id)
+                                text = text .. langs[msg.lang].user .. v.id .. langs[msg.lang].ungbanned .. '\n'
+                            end
+                            return text
+                        elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                            ungbanUser(msg.reply_to_message.removed.id)
+                            return langs[msg.lang].user .. msg.reply_to_message.removed.id .. langs[msg.lang].ungbanned
                         else
                             ungbanUser(msg.reply_to_message.from.id)
                             return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
                         end
-                    end
-                elseif matches[2] and matches[2] ~= '' then
-                    if string.match(matches[2], '^%d+$') then
-                        ungbanUser(matches[2])
-                        return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                ungbanUser(obj_user.id)
-                                return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
-                            end
-                        else
-                            return langs[msg.lang].noObject
+                        ungbanUser(msg.reply_to_message.from.id)
+                        return langs[msg.lang].user .. msg.reply_to_message.from.id .. langs[msg.lang].ungbanned
+                    end
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if string.match(matches[2], '^%d+$') then
+                    ungbanUser(matches[2])
+                    return langs[msg.lang].user .. matches[2] .. langs[msg.lang].ungbanned
+                else
+                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    if obj_user then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                            ungbanUser(obj_user.id)
+                            return langs[msg.lang].user .. obj_user.id .. langs[msg.lang].ungbanned
                         end
-                    end
-                end
-                return
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-    else
-        if matches[1]:lower() == 'banlist' and matches[2] then
-            if is_admin(msg) then
-                mystat('/banlist <group_id>')
-                return banList(matches[2])
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'gbanlist' then
-            if is_admin(msg) then
-                mystat('/gbanlist')
-                local hash = 'gbanned'
-                local list = redis:smembers(hash)
-                local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
-                for k, v in pairs(list) do
-                    local user_info = redis:hgetall('user:' .. v)
-                    if user_info and user_info.print_name then
-                        local print_name = string.gsub(user_info.print_name, "_", " ")
-                        local print_name = string.gsub(print_name, "?", "")
-                        gbanlist = gbanlist .. k .. " - " .. print_name .. " [" .. v .. "]\n"
                     else
-                        gbanlist = gbanlist .. k .. " - " .. v .. "\n"
+                        return langs[msg.lang].noObject
                     end
                 end
-                local file = io.open("./groups/gbanlist.txt", "w")
-                file:write(gbanlist)
-                file:flush()
-                file:close()
-                return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
-                -- return sendMessage(msg.chat.id, gbanlist)
-            else
-                return langs[msg.lang].require_admin
             end
+            return
+        else
+            return langs[msg.lang].require_admin
         end
     end
-end
-
-local function clean_msg(msg)
-    -- clean msg but returns it
-    msg.cleaned = true
-    if msg.text then
-        msg.text = ''
-    end
-    if msg.media then
-        if msg.caption then
-            msg.caption = ''
+    if matches[1]:lower() == 'banlist' and matches[2] then
+        if is_admin(msg) then
+            mystat('/banlist <group_id>')
+            return banList(matches[2])
+        else
+            return langs[msg.lang].require_admin
         end
     end
-    return msg
+    if matches[1]:lower() == 'gbanlist' then
+        if is_admin(msg) then
+            mystat('/gbanlist')
+            local hash = 'gbanned'
+            local list = redis:smembers(hash)
+            local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
+            for k, v in pairs(list) do
+                local user_info = redis:hgetall('user:' .. v)
+                if user_info and user_info.print_name then
+                    local print_name = string.gsub(user_info.print_name, "_", " ")
+                    local print_name = string.gsub(print_name, "?", "")
+                    gbanlist = gbanlist .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+                else
+                    gbanlist = gbanlist .. k .. " - " .. v .. "\n"
+                end
+            end
+            local file = io.open("./groups/gbanlist.txt", "w")
+            file:write(gbanlist)
+            file:flush()
+            file:close()
+            return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
+            -- return sendMessage(msg.chat.id, gbanlist)
+        else
+            return langs[msg.lang].require_admin
+        end
+    end
 end
 
 local function pre_process(msg)
@@ -803,6 +887,9 @@ return {
         "^[#!/]([Ww][Aa][Rr][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Ww][Aa][Rr][Nn]) (.*)$",
         "^[#!/]([Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr]) ([^%s]+)$",
+        "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr])",
+        "^[#!/]([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])",
         "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
         "^[#!/]([Kk][Ii][Cc][Kk][Rr][Aa][Nn][Dd][Oo][Mm])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Nn][Oo][Uu][Ss][Ee][Rr])$",
@@ -835,6 +922,8 @@ return {
         "#kickme",
         "MOD",
         "#getuserwarns <id>|<username>|<reply>|from",
+        "#muteuser <id>|<username>|<reply>|from",
+        "#mutelist",
         "#warn <id>|<username>|<reply>|from [<reason>]",
         "#unwarn <id>|<username>|<reply>|from [<reason>]",
         "#unwarnall <id>|<username>|<reply>|from [<reason>]",

@@ -690,7 +690,7 @@ function setChatTitle(chat_id, title)
 end
 
 -- supergroups/channels only
-function setChatDescription(chat_id, photo)
+function setChatDescription(chat_id, description)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/setChatDescription?chat_id=' .. chat_id ..

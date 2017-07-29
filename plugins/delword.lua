@@ -47,20 +47,6 @@ local function run(msg, matches)
     end
 end
 
-local function clean_msg(msg)
-    -- clean msg but returns it
-    msg.cleaned = true
-    if msg.text then
-        msg.text = ''
-    end
-    if msg.media then
-        if msg.caption then
-            msg.caption = ''
-        end
-    end
-    return msg
-end
-
 local function pre_process(msg)
     if msg then
         if not msg.from.is_mod then

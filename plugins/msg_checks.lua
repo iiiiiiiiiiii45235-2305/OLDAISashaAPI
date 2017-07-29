@@ -106,20 +106,6 @@ end
     return false
 end]]
 
-local function clean_msg(msg)
-    -- clean msg but returns it
-    msg.cleaned = true
-    if msg.text then
-        msg.text = ''
-    end
-    if msg.media then
-        if msg.caption then
-            msg.caption = ''
-        end
-    end
-    return msg
-end
-
 local function action(msg, strict, reason)
     deleteMessage(msg.chat.id, msg.message_id)
     if strict then
