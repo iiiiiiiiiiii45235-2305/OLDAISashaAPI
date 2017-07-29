@@ -1,5 +1,8 @@
 return {
-    news = "SASHA\'S NEWS\nPlugin news.\nAlternative plugin completed, it manages alternative commands that can be executed as normal commands in the help.\nEcho now have markdown in html and telegram mode and new commands for interact.",
+    news = "SASHA\'S NEWS\n" ..
+    "Interact: !edit command to edit messages, works also with markdown and html (mod^).\n" ..
+    "Group_management: moved !muteuser and !mutelist into Banhammer, !settings is now available for all, new commands !settitle, !setphoto, !setdescription, !unsetphoto.\n" ..
+    "Working on permissions and restrictions, waiting bot support for clarifications.",
     phrases =
     {
         banhammer =
