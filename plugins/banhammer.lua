@@ -858,7 +858,6 @@ local function pre_process(msg)
                 else
                     sendMessage(msg.chat.id, txt)
                 end
-                msg = clean_msg(msg)
                 return nil
             end
         end

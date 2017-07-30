@@ -381,7 +381,7 @@ local function run(msg, matches)
             return langs[msg.lang].require_owner
         end
     end
-    --[[if matches[1]:lower() == 'multiplegban' and matches[2] then
+    if matches[1]:lower() == 'multiplegban' and matches[2] then
         if is_sudo(msg) then
             mystat('/multiplegban')
             local tab = matches[2]:split(' ')
@@ -395,7 +395,7 @@ local function run(msg, matches)
             return langs[msg.lang].require_sudo
         end
     end
-    if matches[1]:lower() == 'multipleungban' and matches[2] then
+    --[[if matches[1]:lower() == 'multipleungban' and matches[2] then
         if is_sudo(msg) then
             mystat('/multipleungban')
             local tab = matches[2]:split(' ')
@@ -411,7 +411,7 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'multiplegrouplink' and matches[2] then
         if is_sudo(msg) then
-            mystat('/multipleungban')
+            mystat('/multiplegrouplink')
             local tab = matches[2]:split(' ')
             local i = 0
             for k, id in pairs(tab) do
@@ -439,6 +439,7 @@ return {
     patterns =
     {
         "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Gg][Bb][Aa][Nn]) (.*)$",
     },
     run = run,
     min_rank = 2,
@@ -447,5 +448,6 @@ return {
         "OWNER",
         "#multipleunban <user_id1> <user_id2> ...",
         "SUDO",
+        "#multiplegban <user_id1> <user_id2> ...",
     },
 }

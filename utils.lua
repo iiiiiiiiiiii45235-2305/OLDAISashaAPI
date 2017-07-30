@@ -506,20 +506,6 @@ function get_lang(chat_id)
     return lang
 end
 
-function clean_msg(msg)
-    -- clean msg but returns it
-    msg.cleaned = true
-    if msg.text then
-        msg.text = ''
-    end
-    if msg.media then
-        if msg.caption then
-            msg.caption = ''
-        end
-    end
-    return msg
-end
-
 function obj_id_to_cli(obj)
     if obj.type then
         if obj.type == 'bot' or obj.type == 'private' or obj.type == 'user' then

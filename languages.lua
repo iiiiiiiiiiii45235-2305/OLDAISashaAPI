@@ -358,6 +358,7 @@ return {
         badLuck = 'Sfortuna.',
         kickinactiveWarning = 'Comando disattivato.\nE\' ASSOLUTAMENTE SCONSIGLIATO utilizzare questo comando con @AISasha su gruppi con membri >= 200.',
         multipleUnban = 'X membri sbannati.',
+        multipleGban = 'X membri gbannati.',
 
         -- bot.lua --
         startMessage = 'Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
@@ -1193,6 +1194,8 @@ return {
             'Plugin per eseguire azioni multiple.',
             'OWNER',
             '#multipleunban <user_id1> <user_id2> ...: Sasha sbanna tutti gli <user_id> specificati nella lista.',
+            'SUDO',
+            '#multiplegban <user_id1> <user_id2> ...: Sasha banna globalmente tutti gli <user_id> specificati nella lista.',
         },
 
         news =
@@ -1524,6 +1527,7 @@ return {
         badLuck = 'Bad luck.',
         kickinactiveWarning = 'Deactivated command.\nIt is STRONGLY SUGGESTED NOT TO USE this command with @AISasha in groups with members >= 200.',
         multipleUnban = 'X members unbanned.',
+        multipleGban = 'X members gbanned.',
 
         -- bot.lua --
         startMessage = 'Hi, I\'m the BOT version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
@@ -2366,6 +2370,8 @@ return {
             'Plugin to do multiple actions.',
             'OWNER',
             '#multipleunban <user_id1> <user_id2> ...: Sasha unbans all the <user_ids> in the list.',
+            'SUDO',
+            '#multiplegban <user_id1> <user_id2> ...: Sasha gbans all the <user_ids> in the list.',
         },
 
         news =

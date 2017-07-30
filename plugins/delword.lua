@@ -75,7 +75,6 @@ local function pre_process(msg)
                     end
                     if found then
                         deleteMessage(msg.chat.id, msg.message_id)
-                        msg = clean_msg(msg)
                         return nil
                     end
                 end

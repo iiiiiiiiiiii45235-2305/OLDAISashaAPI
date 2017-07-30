@@ -1,5 +1,8 @@
 local chats = nil
 local spam = false
+local msg_to_update = nil
+local chat_msg_to_update = nil
+local counter = 0
 
 local function run(msg, matches)
     if matches[1]:lower() == 'news' then
@@ -19,6 +22,9 @@ local function run(msg, matches)
                 end
             end
             spam = true
+            counter = 0
+            chat_msg_to_update = msg.chat.id
+            msg_to_update = sendMessage(msg.chat.id, "SPAMMING NEWS " .. counter .. "/" .. tostring(#chats)).result.message_id
         else
             return langs[msg.lang].require_sudo
         end
@@ -39,6 +45,8 @@ local function pre_process(msg)
             if chats[tostring(msg.chat.id)] then
                 sendMessage(msg.chat.id, langs.news)
                 chats[tostring(msg.chat.id)] = false
+                counter = counter + 1
+                editMessageText(chat_msg_to_update, msg_to_update, "SPAMMING NEWS " .. counter .. "/" .. tostring(#chats))
             end
         end
         return msg

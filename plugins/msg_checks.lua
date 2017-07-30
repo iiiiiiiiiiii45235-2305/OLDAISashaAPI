@@ -147,13 +147,11 @@ local function check_msg(msg, settings)
         if isMutedUser(msg.chat.id, msg.from.id) then
             print('muted user')
             deleteMessage(msg.chat.id, msg.message_id)
-            msg = clean_msg(msg)
             return nil
         end
         if mute_all then
             print('all muted')
             deleteMessage(msg.chat.id, msg.message_id)
-            msg = clean_msg(msg)
             return nil
         end
         if msg.entities then
@@ -163,7 +161,6 @@ local function check_msg(msg, settings)
                         if check_if_link(v.url, group_link) then
                             print('link found entities')
                             action(msg, strict, langs[msg.lang].reasonLockLinkEntities)
-                            msg = clean_msg(msg)
                             return nil
                         end
                     end
@@ -174,7 +171,6 @@ local function check_msg(msg, settings)
             if mute_text then
                 print('text muted')
                 action(msg, strict, langs[msg.lang].reasonMutedText)
-                msg = clean_msg(msg)
                 return nil
             end
             -- msg.text checks
@@ -184,7 +180,6 @@ local function check_msg(msg, settings)
                 if string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
                     print('spam found')
                     action(msg, strict, langs[msg.lang].reasonLockSpam)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -192,7 +187,6 @@ local function check_msg(msg, settings)
                 if check_if_link(msg.text, group_link) then
                     print('link found')
                     action(msg, strict, langs[msg.lang].reasonLockLink)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -201,7 +195,6 @@ local function check_msg(msg, settings)
                 if is_squig_msg then
                     print('arabic found')
                     action(msg, strict, langs[msg.lang].reasonLockArabic)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -210,7 +203,6 @@ local function check_msg(msg, settings)
                 if is_rtl then
                     print('rtl found')
                     action(msg, strict, langs[msg.lang].reasonLockRTL)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -219,14 +211,12 @@ local function check_msg(msg, settings)
             if mute_text then
                 print('text muted')
                 action(msg, strict, langs[msg.lang].reasonMutedText)
-                msg = clean_msg(msg)
                 return nil
             end
             if lock_link then
                 if check_if_link(msg.caption, group_link) then
                     print('link found')
                     action(msg, strict, langs[msg.lang].reasonLockLink)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -235,7 +225,6 @@ local function check_msg(msg, settings)
                 if is_squig_caption then
                     print('arabic found')
                     action(msg, strict, langs[msg.lang].reasonLockArabic)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -244,7 +233,6 @@ local function check_msg(msg, settings)
                 if is_rtl then
                     print('rtl found')
                     action(msg, strict, langs[msg.lang].reasonLockRTL)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -255,70 +243,60 @@ local function check_msg(msg, settings)
                 if mute_audio then
                     print('audio muted')
                     action(msg, strict, langs[msg.lang].reasonMutedAudio)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'contact' then
                 if mute_contact then
                     print('contact muted')
                     action(msg, strict, langs[msg.lang].reasonMutedContacts)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'document' then
                 if mute_document then
                     print('document muted')
                     action(msg, strict, langs[msg.lang].reasonMutedDocuments)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'gif' then
                 if mute_gif then
                     print('gif muted')
                     action(msg, strict, langs[msg.lang].reasonMutedGifs)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'location' then
                 if mute_location then
                     print('location muted')
                     action(msg, strict, langs[msg.lang].reasonMutedLocations)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'photo' then
                 if mute_photo then
                     print('photo muted')
                     action(msg, strict, langs[msg.lang].reasonMutedPhoto)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'sticker' then
                 if mute_sticker then
                     print('sticker muted')
                     action(msg, strict, langs[msg.lang].reasonMutedStickers)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'video' then
                 if mute_video then
                     print('video muted')
                     action(msg, strict, langs[msg.lang].reasonMutedVideo)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'video_note' then
                 if mute_video_note then
                     print('video_note muted')
                     action(msg, strict, langs[msg.lang].reasonMutedVideo)
-                    msg = clean_msg(msg)
                     return nil
                 end
             elseif msg.media_type == 'voice_note' then
                 if mute_voice_note then
                     print('voice_note muted')
                     action(msg, strict, langs[msg.lang].reasonMutedVoicenotes)
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -327,7 +305,6 @@ local function check_msg(msg, settings)
         if mute_tgservice then
             print('tgservice muted')
             deleteMessage(msg.chat.id, msg.message_id)
-            msg = clean_msg(msg)
             return nil
         end
         if msg.service_type == 'chat_add_user_link' then
@@ -340,7 +317,6 @@ local function check_msg(msg, settings)
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                     end
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -353,7 +329,6 @@ local function check_msg(msg, settings)
                         savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                     end
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
@@ -362,7 +337,6 @@ local function check_msg(msg, settings)
                 deleteMessage(msg.chat.id, msg.message_id)
                 savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                msg = clean_msg(msg)
                 return nil
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
@@ -376,7 +350,6 @@ local function check_msg(msg, settings)
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
                             sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                         end
-                        msg = clean_msg(msg)
                         return nil
                     end
                 end
@@ -389,7 +362,6 @@ local function check_msg(msg, settings)
                             savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
                             sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                         end
-                        msg = clean_msg(msg)
                         return nil
                     end
                 end
@@ -399,7 +371,6 @@ local function check_msg(msg, settings)
                     sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                     savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
                     sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                    msg = clean_msg(msg)
                     return nil
                 end
                 if lock_bots then
@@ -421,7 +392,6 @@ local function check_msg(msg, settings)
                 if not is_mod2(msg.removed.id, msg.chat.id) then
                     print('leave locked')
                     sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id, langs[msg.lang].reasonLockLeave))
-                    msg = clean_msg(msg)
                     return nil
                 end
             end
