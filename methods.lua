@@ -731,7 +731,7 @@ function setChatPhotoId(chat_id, file_id)
             if download_link.result then
                 download_link = download_link.result
                 download_link = 'https://api.telegram.org/file/bot' .. config.bot_api_key .. '/' .. download_link.file_path
-                local file_path = download_to_file(download_link, '/home/pi/AISashaAPI/data/tmp/')
+                local file_path = download_to_file(download_link, '/home/pi/AISashaAPI/data/tmp/' .. download_link:match('.*/(.*)'))
                 return setChatPhoto(chat_id, file_path)
             end
         else
