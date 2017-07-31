@@ -2143,6 +2143,7 @@ return {
         "!!tgservice chat_add_user",
         "!!tgservice chat_del_user",
         "!!tgservice chat_change_photo",
+        "!!tgservice delete_chat_photo",
         "!!tgservice chat_rename",
 
         -- INREALM
