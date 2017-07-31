@@ -727,12 +727,12 @@ function setChatPhotoId(chat_id, file_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         if file_id then
-            local download_link = getFile(data[tostring(msg.chat.id)].photo)
+            local download_link = getFile(data[tostring(chat_id)].photo)
             if download_link.result then
                 download_link = download_link.result
                 download_link = 'https://api.telegram.org/file/bot' .. config.bot_api_key .. '/' .. download_link.file_path
                 local file_path = download_to_file(download_link, '/home/pi/AISashaAPI/data/tmp/')
-                return setChatPhoto(msg.chat.id, file_path)
+                return setChatPhoto(chat_id, file_path)
             end
         else
             deleteChatPhoto(chat_id)
