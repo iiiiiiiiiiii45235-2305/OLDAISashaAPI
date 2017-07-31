@@ -1209,7 +1209,7 @@ local function run(msg, matches)
                                 elseif matches[2] == 'FLOODMINUS' then
                                     flood = flood - 1
                                 end
-                                if tonumber(flood) < 3 or tonumber(flood) > 200 then
+                                if tonumber(flood) < 3 or tonumber(flood) > 20 then
                                     return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
                                 end
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
@@ -1544,7 +1544,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'setflood' then
                 if msg.from.is_mod then
-                    if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 200 then
+                    if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 20 then
                         return langs[msg.lang].errorFloodRange
                     end
                     mystat('/setflood')
