@@ -995,9 +995,17 @@ local function keyboard_settings_list(chat_id)
                 keyboard.inline_keyboard[row] = { }
             end
             if value then
-                keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                if reverseAdjustSettingType(var) == 'flood' then
+                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustSettingType(var) .. ' (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                end
             else
-                keyboard.inline_keyboard[row][column] = { text = '☑️' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+                if reverseAdjustSettingType(var) == 'flood' then
+                    keyboard.inline_keyboard[row][column] = { text = '☑️' .. reverseAdjustSettingType(var) .. ' (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCK' .. var .. chat_id }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+                end
             end
             column = column + 1
             if column > 2 then
@@ -1088,14 +1096,18 @@ local function run(msg, matches)
                 if matches[2] == 'LOCK' then
                     if is_mod2(msg.from.id, matches[4]) then
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                        return editMessageText(msg.chat.id, msg.message_id, lockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
+                        answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                        -- return editMessageText(msg.chat.id, msg.message_id, lockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'UNLOCK' then
                     if is_mod2(msg.from.id, matches[4]) then
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                        return editMessageText(msg.chat.id, msg.message_id, unlockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
+                        answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                        -- return editMessageText(msg.chat.id, msg.message_id, unlockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
