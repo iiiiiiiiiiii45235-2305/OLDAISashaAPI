@@ -686,6 +686,8 @@ function setChatTitle(chat_id, title)
                 savelog('set_title', code)
             end
         end
+        data[tostring(chat_id)].set_name = title
+        save_data(config.moderation.data, data)
     end
 end
 
@@ -732,6 +734,8 @@ function setChatPhotoId(chat_id, file_id)
                 download_link = download_link.result
                 download_link = 'https://api.telegram.org/file/bot' .. config.bot_api_key .. '/' .. download_link.file_path
                 local file_path = download_to_file(download_link, '/home/pi/AISashaAPI/data/tmp/' .. download_link:match('.*/(.*)'))
+                data[tostring(chat_id)].photo = file_id
+                save_data(config.moderation.data, data)
                 return setChatPhoto(chat_id, file_path)
             end
         else
