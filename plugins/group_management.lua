@@ -1015,9 +1015,9 @@ local function keyboard_settings_list(chat_id)
     keyboard.inline_keyboard[row][column] = { text = '➖', callback_data = 'group_managementFLOOD-' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     column = column + 1
     if data[tostring(chat_id)].settings.flood then
-        keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
     else
-        keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCK' .. var .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
     end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = '➕', callback_data = 'group_managementFLOOD+' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
