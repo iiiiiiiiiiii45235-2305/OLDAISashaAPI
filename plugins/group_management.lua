@@ -1123,40 +1123,30 @@ local function run(msg, matches)
                 return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.removed.id)
             end
         end
-        if is_super_group(msg) then
-            print('spgrp')
-            if msg.service_type == 'chat_rename' then
-                print('rename')
-                if data[tostring(msg.chat.id)].settings.lock_name then
-                    print('in')
-                    return setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
-                end
-            elseif msg.service_type == 'chat_change_photo' then
-                print('changepic')
-                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
-                    print('in')
-                    return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
-                else
-                    print('in save pic')
-                    local bigger_pic_id = ''
-                    local size = 0
-                    for k, v in pairsByKeys(msg.new_chat_photo) do
-                        if v.file_size then
-                            if v.file_size > size then
-                                size = v.file_size
-                                bigger_pic_id = v.file_id
-                            end
+        if msg.service_type == 'chat_rename' then
+            if data[tostring(msg.chat.id)].settings.lock_name then
+                return setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
+            end
+        elseif msg.service_type == 'chat_change_photo' then
+            if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
+            else
+                local bigger_pic_id = ''
+                local size = 0
+                for k, v in pairsByKeys(msg.new_chat_photo) do
+                    if v.file_size then
+                        if v.file_size > size then
+                            size = v.file_size
+                            bigger_pic_id = v.file_id
                         end
                     end
-                    data[tostring(msg.chat.id)].photo = bigger_pic_id
-                    return
                 end
-            elseif msg.service_type == 'delete_chat_photo' then
-                print('deletepic')
-                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
-                    print('in')
-                    return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
-                end
+                data[tostring(msg.chat.id)].photo = bigger_pic_id
+                return
+            end
+        elseif msg.service_type == 'delete_chat_photo' then
+            if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
             end
         end
     end
