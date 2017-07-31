@@ -1012,7 +1012,7 @@ local function keyboard_settings_list(chat_id)
     keyboard.inline_keyboard[row] = { }
 
     -- flood part
-    keyboard.inline_keyboard[row][column] = { text = '➖', callback_data = 'group_managementFLOOD-' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '➖', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     column = column + 1
     if data[tostring(chat_id)].settings.flood then
         keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
@@ -1020,7 +1020,7 @@ local function keyboard_settings_list(chat_id)
         keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '➕', callback_data = 'group_managementFLOOD+' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '➕', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
 
     row = row + 1
     column = 1
@@ -1144,12 +1144,12 @@ local function run(msg, matches)
                             else
                                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
-                        elseif matches[2] == 'FLOOD+' or matches[2] == 'FLOOD-' then
+                        elseif matches[2] == 'FLOODPLUS' or matches[2] == 'FLOODMINUS' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 local flood = matches[3]
-                                if matches[2] == 'FLOOD+' then
+                                if matches[2] == 'FLOODPLUS' then
                                     flood = flood + 1
-                                elseif matches[2] == 'FLOOD-' then
+                                elseif matches[2] == 'FLOODMINUS' then
                                     flood = flood - 1
                                 end
                                 if tonumber(flood) < 3 or tonumber(flood) > 200 then
@@ -2077,8 +2077,8 @@ return {
         "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)$",
         "^(###cbgroup_management)(MUTE)(.*)(%-%d+)$",
         "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(FLOOD%+)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(FLOOD%-)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)$",
 
         "!!tgservice chat_add_user_link",
         "!!tgservice chat_add_users",
