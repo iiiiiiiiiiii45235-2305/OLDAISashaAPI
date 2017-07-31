@@ -289,7 +289,7 @@ local function run(msg, matches)
                         -- return editMessageText(msg.chat.id, msg.message_id, reenable_plugin_on_chat(matches[3], tonumber(matches[4])), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'pluginsBACK' .. matches[4] } } } })
                     elseif matches[2] == 'DISABLE' then
                         if system_plugin(matches[3]) then
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
+                            return answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                             -- return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].systemPlugin, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'pluginsBACK' .. matches[4] } } } })
                         end
                         answerCallbackQuery(msg.cb_id, disable_plugin_on_chat(matches[3], tonumber(matches[4])), false)
@@ -309,7 +309,7 @@ local function run(msg, matches)
                         -- return editMessageText(msg.chat.id, msg.message_id, enable_plugin(matches[3], msg.chat.id), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'pluginsBACK' } } } })
                     elseif matches[2] == 'DISABLE' then
                         if system_plugin(matches[3]) then
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
+                            return answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                             -- return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].systemPlugin, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'pluginsBACK' } } } })
                         end
                         answerCallbackQuery(msg.cb_id, disable_plugin(matches[3], msg.chat.id), false)
