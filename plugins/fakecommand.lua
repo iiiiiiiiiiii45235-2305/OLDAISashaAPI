@@ -4,24 +4,31 @@ local function run(msg, matches)
     if msg.from.is_mod then
         local rank = get_rank(msg.from.id, msg.chat.id, true)
         local fakerank = rank_table[matches[1]:upper()]
+        print(rank, fakerank)
         if fakerank <= rank then
             -- yes
             mystat('/fakecommand')
             -- remove "[#!/]<rank> " from message so it's like a normal message
             local copied_msg = clone_table(msg)
+            msg = nil
             copied_msg.text = copied_msg.text:gsub('#' .. matches[1] .. ' ', '')
             copied_msg.text = copied_msg.text:gsub('!' .. matches[1] .. ' ', '')
             copied_msg.text = copied_msg.text:gsub('/' .. matches[1] .. ' ', '')
             -- replace the id of the executer with a '*' followed by the rank value so when it's checked with (e.g.) is_mod(msg) bot knows it's a fakecommand
-            copied_msg.from.id = '*' .. rank_table[matches[1]:upper()]
-            copied_msg.from.tg_cli_id = '*' .. rank_table[matches[1]:upper()]
+            copied_msg.from.id = '*' .. fakerank
+            copied_msg.from.tg_cli_id = '*' .. fakerank
             copied_msg.from.is_mod = false
             copied_msg.from.is_owner = false
-            copied_msg = get_tg_rank(copied_msg)
+            if is_owner(copied_msg, true) then
+                copied_msg.from.is_mod = true
+                copied_msg.from.is_owner = true
+            end
+            if is_mod(copied_msg, true) then
+                copied_msg.from.is_mod = true
+            end
             if msg_valid(copied_msg) then
                 match_plugins(copied_msg)
             end
-            msg = nil
         else
             -- no
             return langs[msg.lang].fakecommandYouTried
