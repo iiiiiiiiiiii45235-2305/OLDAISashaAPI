@@ -1097,7 +1097,7 @@ local function run(msg, matches)
                     if is_mod2(msg.from.id, matches[4]) then
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                         answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                         -- return editMessageText(msg.chat.id, msg.message_id, lockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
@@ -1106,7 +1106,7 @@ local function run(msg, matches)
                     if is_mod2(msg.from.id, matches[4]) then
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                         answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                         -- return editMessageText(msg.chat.id, msg.message_id, unlockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
@@ -1115,14 +1115,18 @@ local function run(msg, matches)
                 if matches[2] == 'UNMUTE' then
                     if is_owner2(msg.from.id, matches[4]) then
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                        return editMessageText(msg.chat.id, msg.message_id, unmute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
+                        answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
+                        -- return editMessageText(msg.chat.id, msg.message_id, unmute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
                 elseif matches[2] == 'MUTE' then
                     if is_owner2(msg.from.id, matches[4]) then
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                        return editMessageText(msg.chat.id, msg.message_id, mute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
+                        answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
+                        -- return editMessageText(msg.chat.id, msg.message_id, mute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
                     else
                         return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
