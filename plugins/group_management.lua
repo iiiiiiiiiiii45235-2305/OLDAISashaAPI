@@ -3,6 +3,7 @@ default_settings = {
     goodbye = nil,
     group_type = 'Unknown',
     moderators = { },
+    photo = nil,
     rules = nil,
     set_name = 'TITLE',
     set_owner = '41400331',
@@ -16,6 +17,8 @@ default_settings = {
         lock_leave = false,
         lock_link = false,
         lock_member = false,
+        lock_name = false,
+        lock_photo = false,
         lock_rtl = false,
         lock_spam = false,
         mutes =
@@ -369,7 +372,7 @@ local function addGroup(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- Group configuration
-                    data[tostring(msg.chat.id)] = default_settings
+                    data[tostring(msg.chat.id)] = clone_table(default_settings)
                     data[tostring(msg.chat.id)].group_type = 'Group'
                     data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
                     data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
@@ -428,7 +431,7 @@ local function addRealm(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- Realm configuration
-                    data[tostring(msg.chat.id)] = default_settings
+                    data[tostring(msg.chat.id)] = clone_table(default_settings)
                     data[tostring(msg.chat.id)].group_type = 'Realm'
                     data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
                     data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
@@ -477,7 +480,7 @@ local function addSuperGroup(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- SuperGroup configuration
-                    data[tostring(msg.chat.id)] = default_settings
+                    data[tostring(msg.chat.id)] = clone_table(default_settings)
                     data[tostring(msg.chat.id)].group_type = 'SuperGroup'
                     data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
                     data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
@@ -782,6 +785,12 @@ local function adjustSettingType(setting_type)
     if setting_type == 'member' then
         setting_type = 'lock_member'
     end
+    if setting_type == 'name' then
+        setting_type = 'lock_name'
+    end
+    if setting_type == 'photo' then
+        setting_type = 'lock_photo'
+    end
     if setting_type == 'rtl' then
         setting_type = 'lock_rtl'
     end
@@ -816,6 +825,12 @@ local function reverseAdjustSettingType(setting_type)
     if setting_type == 'lock_member' then
         setting_type = 'member'
     end
+    if setting_type == 'lock_name' then
+        setting_type = 'name'
+    end
+    if setting_type == 'lock_photo' then
+        setting_type = 'photo'
+    end
     if setting_type == 'lock_rtl' then
         setting_type = 'rtl'
     end
@@ -831,6 +846,14 @@ end
 function lockSetting(target, setting_type)
     local lang = get_lang(target)
     setting_type = adjustSettingType(setting_type)
+    if setting_type == 'photo' then
+        local obj = getChat(target)
+        if type(obj) == 'table' then
+            if obj.photo then
+                data[tostring(target)].photo = obj.photo.big_file_id
+            end
+        end
+    end
     local setting = data[tostring(target)].settings[tostring(setting_type)]
     if setting ~= nil then
         if setting then
@@ -886,6 +909,12 @@ local function checkMatchesLockUnlock(txt)
         return true
     end
     if txt:lower() == 'member' then
+        return true
+    end
+    if txt:lower() == 'name' then
+        return true
+    end
+    if txt:lower() == 'photo' then
         return true
     end
     if txt:lower() == 'rtl' then
@@ -1011,7 +1040,7 @@ local function keyboard_settings_list(chat_id)
     column = 1
     keyboard.inline_keyboard[row] = { }
 
-    -- flood part
+    -- start flood part
     keyboard.inline_keyboard[row][column] = { text = '➖', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     column = column + 1
     if data[tostring(chat_id)].settings.flood then
@@ -1021,6 +1050,7 @@ local function keyboard_settings_list(chat_id)
     end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = '➕', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    -- end flood part
 
     row = row + 1
     column = 1
@@ -1090,6 +1120,34 @@ local function run(msg, matches)
         if is_group(msg) then
             if msg.service_type == 'chat_del_user' then
                 return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.removed.id)
+            end
+        end
+        if is_super_group(msg) then
+            if msg.service_type == 'chat_rename' then
+                if data[tostring(msg.chat.id)].settings.lock_name then
+                    return setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
+                end
+            elseif msg.service_type == 'chat_change_photo' then
+                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                    return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
+                else
+                    local bigger_pic_id = ''
+                    local size = 0
+                    for k, v in pairsByKeys(msg.new_chat_photo) do
+                        if v.file_size then
+                            if v.file_size > size then
+                                size = v.file_size
+                                bigger_pic_id = v.file_id
+                            end
+                        end
+                    end
+                    data[tostring(msg.chat.id)].photo = bigger_pic_id
+                    return
+                end
+            elseif msg.service_type == 'delete_chat_photo' then
+                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                    return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
+                end
             end
         end
     end
@@ -2084,6 +2142,8 @@ return {
         "!!tgservice chat_add_users",
         "!!tgservice chat_add_user",
         "!!tgservice chat_del_user",
+        "!!tgservice chat_change_photo",
+        "!!tgservice chat_rename",
 
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",

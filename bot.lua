@@ -627,6 +627,10 @@ function pre_process_service_msg(msg)
         msg.service = true
         msg.text = '!!tgservice pinned_message ' ..(msg.text or '')
         msg.service_type = 'pinned_message'
+    elseif msg.delete_chat_photo then
+        msg.service = true
+        msg.text = '!!tgservice delete_chat_photo ' ..(msg.text or '')
+        msg.service_type = 'delete_chat_photo'
     elseif msg.new_chat_photo then
         msg.service = true
         msg.text = '!!tgservice chat_change_photo ' ..(msg.text or '')

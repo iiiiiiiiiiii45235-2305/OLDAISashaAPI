@@ -726,15 +726,19 @@ end
 function setChatPhotoId(chat_id, file_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
-        local url = BASE_URL .. '/setChatPhoto?chat_id=' .. chat_id ..
-        '&photo=' .. file_id
-        local res, code = sendRequest(url)
+        if file_id then
+            local url = BASE_URL .. '/setChatPhoto?chat_id=' .. chat_id ..
+            '&photo=' .. file_id
+            local res, code = sendRequest(url)
 
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('set_photo', code)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('set_photo', code)
+                end
             end
+        else
+            deleteChatPhoto(chat_id)
         end
     end
 end

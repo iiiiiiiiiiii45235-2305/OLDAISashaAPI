@@ -20,6 +20,7 @@ local function run(msg, matches)
             if msg_valid(msg) then
                 match_plugins(msg)
             end
+            msg = nil
         else
             -- no
             return langs[msg.lang].fakecommandYouTried
