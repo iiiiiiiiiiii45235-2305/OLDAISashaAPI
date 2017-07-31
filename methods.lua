@@ -1453,7 +1453,7 @@ function kickUser(executer, target, chat_id, reason)
     end
 end
 
-function preBanUser(executer, target, chat_id)
+function preBanUser(executer, target, chat_id, reason, until_date)
     if isWhitelisted(id_to_cli(chat_id), target) then
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
         return langs[get_lang(chat_id)].cantKickWhitelisted
@@ -1466,7 +1466,8 @@ function preBanUser(executer, target, chat_id)
         local hash = 'banned:' .. chat_id
         redis:sadd(hash, tostring(target))
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
-        '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)]
+        '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
+        '\n#user' .. target .. ' #preban #ban ' .. reason
     else
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
         return langs[get_lang(chat_id)].require_rank
@@ -1524,6 +1525,7 @@ function banUser(executer, target, chat_id, reason, until_date)
             return langs[get_lang(chat_id)].require_rank
         end
     else
+        preBanUser(executer, target, chat_id, reason, until_date)
         return langs[get_lang(chat_id)].noObject
     end
 end
