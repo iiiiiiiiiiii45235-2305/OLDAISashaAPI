@@ -1155,51 +1155,51 @@ local function run(msg, matches)
             if matches[1] == '###cbgroup_management' then
                 if matches[2] then
                     if matches[2] == 'DELETE' then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     elseif matches[2] == 'BACKSETTINGS' then
                         if matches[3] then
-                            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3]))
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3]))
                         end
                     elseif matches[2] == 'BACKMUTES' then
                         if matches[3] then
-                            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
                         end
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'LOCK' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                                 -- return editMessageText(msg.chat.id, msg.message_id, lockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                             else
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
                         elseif matches[2] == 'UNLOCK' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                                 -- return editMessageText(msg.chat.id, msg.message_id, unlockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                             else
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
                         elseif matches[2] == 'MUTE' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
                                 -- return editMessageText(msg.chat.id, msg.message_id, mute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
                             else
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
                         elseif matches[2] == 'UNMUTE' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
                                 -- return editMessageText(msg.chat.id, msg.message_id, unmute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
                             else
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
                         elseif matches[2] == 'FLOODPLUS' or matches[2] == 'FLOODMINUS' then
                             if is_mod2(msg.from.id, matches[4]) then
@@ -1210,19 +1210,20 @@ local function run(msg, matches)
                                     flood = flood - 1
                                 end
                                 if tonumber(flood) < 3 or tonumber(flood) > 20 then
-                                    return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
                                 end
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 data[tostring(matches[4])].settings.flood_max = flood
                                 save_data(config.moderation.data, data)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
-                                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
                         end
                     end
+                    return
                 end
             end
         end
