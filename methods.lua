@@ -1508,8 +1508,7 @@ function banUser(executer, target, chat_id, reason, until_date)
             return langs[get_lang(chat_id)].require_rank
         end
     else
-        preBanUser(executer, target, chat_id, reason, until_date)
-        return langs[get_lang(chat_id)].noObject
+        return langs[get_lang(chat_id)].noObject .. '\n' .. preBanUser(executer, target, chat_id, reason, until_date)
     end
 end
 
