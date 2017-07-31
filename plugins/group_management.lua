@@ -1218,6 +1218,7 @@ local function run(msg, matches)
                                         save_data(config.moderation.data, data)
                                     end
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
+                                    return
                                 end
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 data[tostring(matches[4])].settings.flood_max = flood
