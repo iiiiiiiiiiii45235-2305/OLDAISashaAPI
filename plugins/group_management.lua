@@ -1156,7 +1156,7 @@ local function run(msg, matches)
                                     return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
                                 end
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                                data[tostring(msg.chat.id)].settings.flood_max = flood
+                                data[tostring(matches[4])].settings.flood_max = flood
                                 save_data(config.moderation.data, data)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
