@@ -1096,6 +1096,7 @@ end
 
 local function run(msg, matches)
     if msg.service then
+        print('service')
         if is_realm(msg) then
             if msg.service_type == 'chat_add_user_link' then
                 if msg.from.id ~= bot.userVersion.id then
@@ -1123,14 +1124,20 @@ local function run(msg, matches)
             end
         end
         if is_super_group(msg) then
+            print('spgrp')
             if msg.service_type == 'chat_rename' then
+                print('rename')
                 if data[tostring(msg.chat.id)].settings.lock_name then
+                    print('in')
                     return setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
                 end
             elseif msg.service_type == 'chat_change_photo' then
+                print('changepic')
                 if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                    print('in')
                     return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                 else
+                    print('in save pic')
                     local bigger_pic_id = ''
                     local size = 0
                     for k, v in pairsByKeys(msg.new_chat_photo) do
@@ -1145,7 +1152,9 @@ local function run(msg, matches)
                     return
                 end
             elseif msg.service_type == 'delete_chat_photo' then
+                print('deletepic')
                 if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                    print('in')
                     return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                 end
             end
