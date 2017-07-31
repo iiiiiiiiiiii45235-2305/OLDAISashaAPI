@@ -1210,6 +1210,13 @@ local function run(msg, matches)
                                     flood = flood - 1
                                 end
                                 if tonumber(flood) < 3 or tonumber(flood) > 20 then
+                                    if tonumber(flood) < 3 then
+                                        data[tostring(matches[4])].settings.flood_max = 3
+                                        save_data(config.moderation.data, data)
+                                    elseif tonumber(flood) > 20 then
+                                        data[tostring(matches[4])].settings.flood_max = 20
+                                        save_data(config.moderation.data, data)
+                                    end
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
                                 end
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
@@ -1546,6 +1553,13 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setflood' then
                 if msg.from.is_mod then
                     if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 20 then
+                        if tonumber(matches[2]) < 3 then
+                            data[tostring(msg.chat.id)].settings.flood_max = 3
+                            save_data(config.moderation.data, data)
+                        elseif tonumber(matches[2]) > 20 then
+                            data[tostring(msg.chat.id)].settings.flood_max = 20
+                            save_data(config.moderation.data, data)
+                        end
                         return langs[msg.lang].errorFloodRange
                     end
                     mystat('/setflood')
