@@ -314,9 +314,9 @@ local function run(msg, matches)
                         -- ignore higher or same rank
                         if compare_ranks(msg.from.id, user, msg.chat.id) then
                             if isMutedUser(msg.chat.id, user) then
-                                txt = txt .. unmuteUser(msg.chat.id, user)
+                                txt = txt .. unmuteUser(msg.chat.id, user, msg.lang)
                             else
-                                txt = txt .. muteUser(msg.chat.id, user)
+                                txt = txt .. muteUser(msg.chat.id, user, msg.lang)
                             end
                         else
                             txt = txt .. langs[msg.lang].require_rank
@@ -328,9 +328,9 @@ local function run(msg, matches)
                                 -- ignore higher or same rank
                                 if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
                                     if isMutedUser(msg.chat.id, obj_user.id) then
-                                        txt = txt .. unmuteUser(msg.chat.id, obj_user.id)
+                                        txt = txt .. unmuteUser(msg.chat.id, obj_user.id, msg.lang)
                                     else
-                                        txt = txt .. muteUser(msg.chat.id, obj_user.id)
+                                        txt = txt .. muteUser(msg.chat.id, obj_user.id, msg.lang)
                                     end
                                 else
                                     txt = txt .. langs[msg.lang].require_rank

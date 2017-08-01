@@ -97,10 +97,10 @@ local function run(msg, matches)
                                     if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
                                         if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
                                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
-                                            return unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
+                                            return unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
                                         else
                                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
-                                            return muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
+                                            return muteUser(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
                                         end
                                     else
                                         return langs[msg.lang].require_rank
@@ -117,10 +117,10 @@ local function run(msg, matches)
                         if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                             if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
-                                return unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
+                                return unmuteUser(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                             else
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
-                                return muteUser(msg.chat.id, msg.reply_to_message.from.id)
+                                return muteUser(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                             end
                         else
                             return langs[msg.lang].require_rank
@@ -132,10 +132,10 @@ local function run(msg, matches)
                         if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
                             if isMutedUser(msg.chat.id, matches[2]) then
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
-                                return unmuteUser(msg.chat.id, matches[2])
+                                return unmuteUser(msg.chat.id, matches[2], msg.lang)
                             else
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
-                                return muteUser(msg.chat.id, matches[2])
+                                return muteUser(msg.chat.id, matches[2], msg.lang)
                             end
                         else
                             return langs[msg.lang].require_rank
@@ -148,10 +148,10 @@ local function run(msg, matches)
                                 if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
                                     if isMutedUser(msg.chat.id, obj_user.id) then
                                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
-                                        return unmuteUser(msg.chat.id, obj_user.id)
+                                        return unmuteUser(msg.chat.id, obj_user.id, msg.lang)
                                     else
                                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
-                                        return muteUser(msg.chat.id, obj_user.id)
+                                        return muteUser(msg.chat.id, obj_user.id, msg.lang)
                                     end
                                 else
                                     return langs[msg.lang].require_rank
