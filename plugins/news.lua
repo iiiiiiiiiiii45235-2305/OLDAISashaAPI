@@ -3,6 +3,7 @@ local spam = false
 local msg_to_update = nil
 local chat_msg_to_update = nil
 local counter = 0
+local tot_chats = 0
 
 local function run(msg, matches)
     if matches[1]:lower() == 'news' then
@@ -10,21 +11,24 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'spamnews' then
         if is_sudo(msg) then
+            tot_chats = 0
             chats = { }
             for k, v in pairs(data.groups) do
                 if data[tostring(v)] then
+                    tot_chats = tot_chats + 1
                     chats[tostring(v)] = true
                 end
             end
             for k, v in pairs(data.realms) do
                 if data[tostring(v)] then
+                    tot_chats = tot_chats + 1
                     chats[tostring(v)] = true
                 end
             end
             spam = true
             counter = 0
             chat_msg_to_update = msg.chat.id
-            msg_to_update = sendMessage(msg.chat.id, "SPAMMING NEWS " .. counter .. "/" .. tostring(#chats)).result.message_id
+            msg_to_update = sendMessage(msg.chat.id, "SPAMMING NEWS " .. counter .. "/" .. tostring(tot_chats)).result.message_id
         else
             return langs[msg.lang].require_sudo
         end
@@ -33,6 +37,7 @@ local function run(msg, matches)
         if is_sudo(msg) then
             chats = nil
             spam = false
+            tot_chats = 0
         else
             return langs[msg.lang].require_sudo
         end
@@ -46,7 +51,7 @@ local function pre_process(msg)
                 sendMessage(msg.chat.id, langs.news)
                 chats[tostring(msg.chat.id)] = false
                 counter = counter + 1
-                editMessageText(chat_msg_to_update, msg_to_update, "SPAMMING NEWS " .. counter .. "/" .. tostring(#chats))
+                editMessageText(chat_msg_to_update, msg_to_update, "SPAMMING NEWS " .. counter .. "/" .. tostring(tot_chats))
             end
         end
         return msg
