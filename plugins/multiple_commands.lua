@@ -270,9 +270,9 @@ local function run(msg, matches)
                 for k, user in pairs(tab) do
                     txt = txt .. user .. ' '
                     if string.match(user, '^%-?%d+$') then
-                        txt = txt .. get_object_info(getChat(user), msg.chat.id)
+                        txt = txt .. get_object_info(getChat(user), msg.chat.id) .. '\n'
                     else
-                        txt = txt .. get_object_info(getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id)
+                        txt = txt .. get_object_info(getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id) .. '\n'
                     end
                     txt = txt .. '\n'
                 end
