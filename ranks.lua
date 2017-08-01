@@ -102,6 +102,7 @@ end
 
 function is_sudo(param_msg)
     local var = false
+
     -- Check users id in config
     for v, user in pairs(sudoers) do
         if tostring(user.id) == tostring(param_msg.from.id) then
@@ -114,6 +115,7 @@ end
 
 function is_sudo2(user_id)
     local var = false
+
     -- Check users id in config
     for v, user in pairs(sudoers) do
         if tostring(user.id) == tostring(user_id) then
@@ -127,31 +129,35 @@ end
 function is_admin(param_msg)
     local var = false
     local user_id = param_msg.from.id
-    local admins = 'admins'
-    if data[tostring(admins)] then
-        if data[tostring(admins)][tostring(user_id)] then
+
+    print(var)
+    if data.admins then
+        if data.admins[tostring(user_id)] then
             -- bot admin
             var = true
         end
     end
 
+    print(var)
     if is_sudo(param_msg) then
         -- bot sudo
         var = true
     end
 
+    print(var)
     -- check if executing a fakecommand, if yes confirm
     if tonumber(user_id) <= -3 then
         var = true
     end
+    print(var)
     return var
 end
 
 function is_admin2(user_id)
     local var = false
-    local admins = 'admins'
-    if data[tostring(admins)] then
-        if data[tostring(admins)][tostring(user_id)] then
+
+    if data.admins then
+        if data.admins[tostring(user_id)] then
             -- bot admin
             var = true
         end
@@ -174,7 +180,6 @@ function is_owner(param_msg, check_local)
     local user_id = param_msg.from.id
     local chat_id = param_msg.chat.id
 
-    print(var)
     if not check_local then
         local res = getChatMember(chat_id, user_id)
         if type(res) == 'table' then
@@ -188,7 +193,6 @@ function is_owner(param_msg, check_local)
         end
     end
 
-    print(var)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)]['set_owner'] then
             if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
@@ -198,24 +202,20 @@ function is_owner(param_msg, check_local)
         end
     end
 
-    print(var)
     if is_admin(param_msg) then
         -- bot admin
         var = true
     end
 
-    print(var)
     if is_sudo(param_msg) then
         -- bot sudo
         var = true
     end
 
-    print(var)
     -- check if executing a fakecommand, if yes confirm
     if tonumber(user_id) <= -2 then
         var = true
     end
-    print(var)
     return var
 end
 
