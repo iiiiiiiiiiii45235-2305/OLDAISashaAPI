@@ -103,13 +103,16 @@ end
 function is_sudo(param_msg)
     local var = false
 
+    print(var)
     -- Check users id in config
     for v, user in pairs(sudoers) do
         if tostring(user.id) == tostring(param_msg.from.id) then
+            print(user.id, param_msg.from.id)
             -- bot sudo
             var = true
         end
     end
+    print(var)
     return var
 end
 
@@ -130,7 +133,6 @@ function is_admin(param_msg)
     local var = false
     local user_id = param_msg.from.id
 
-    print(var)
     if data.admins then
         if data.admins[tostring(user_id)] then
             -- bot admin
@@ -138,18 +140,15 @@ function is_admin(param_msg)
         end
     end
 
-    print(var)
     if is_sudo(param_msg) then
         -- bot sudo
         var = true
     end
 
-    print(var)
     -- check if executing a fakecommand, if yes confirm
     if tonumber(user_id) <= -3 then
         var = true
     end
-    print(var)
     return var
 end
 
