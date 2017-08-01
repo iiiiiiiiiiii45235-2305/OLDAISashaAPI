@@ -141,7 +141,7 @@ function is_admin(msg)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*3' then
+    if tonumber(user_id) <= -3 then
         var = true
     end
     return var
@@ -163,7 +163,7 @@ function is_admin2(user_id)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*3' then
+    if tonumber(user_id) <= -3 then
         var = true
     end
     return var
@@ -207,10 +207,7 @@ function is_owner(msg, check_local)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*2' then
-        var = true
-    end
-    if tostring(user_id) == '*3' then
+    if tonumber(user_id) <= -2 then
         var = true
     end
     return var
@@ -252,10 +249,7 @@ function is_owner2(user_id, chat_id, check_local)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*2' then
-        var = true
-    end
-    if tostring(user_id) == '*3' then
+    if tonumber(user_id) <= -2 then
         var = true
     end
     return var
@@ -308,13 +302,7 @@ function is_mod(msg, check_local)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*1' then
-        var = true
-    end
-    if tostring(user_id) == '*2' then
-        var = true
-    end
-    if tostring(user_id) == '*3' then
+    if tonumber(user_id) <= -1 then
         var = true
     end
     return var
@@ -365,13 +353,7 @@ function is_mod2(user_id, chat_id, check_local)
     end
 
     -- check if executing a fakecommand, if yes confirm
-    if tostring(user_id) == '*1' then
-        var = true
-    end
-    if tostring(user_id) == '*2' then
-        var = true
-    end
-    if tostring(user_id) == '*3' then
+    if tonumber(user_id) <= -1 then
         var = true
     end
     return var
