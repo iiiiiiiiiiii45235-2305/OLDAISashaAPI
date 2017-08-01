@@ -96,13 +96,11 @@ local function run(msg, matches)
                                     -- ignore higher or same rank
                                     if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
                                         if isMutedUser(msg.chat.id, msg.reply_to_message.forward_from.id) then
-                                            unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.forward_from.id .. "] from the muted users list")
-                                            return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserRemove
+                                            return unmuteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                         else
-                                            muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.forward_from.id .. "] to the muted users list")
-                                            return msg.reply_to_message.forward_from.id .. langs[msg.lang].muteUserAdd
+                                            return muteUser(msg.chat.id, msg.reply_to_message.forward_from.id)
                                         end
                                     else
                                         return langs[msg.lang].require_rank
@@ -118,13 +116,11 @@ local function run(msg, matches)
                         -- ignore higher or same rank
                         if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                             if isMutedUser(msg.chat.id, msg.reply_to_message.from.id) then
-                                unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.reply_to_message.from.id .. "] from the muted users list")
-                                return msg.reply_to_message.from.id .. langs[msg.lang].muteUserRemove
+                                return unmuteUser(msg.chat.id, msg.reply_to_message.from.id)
                             else
-                                muteUser(msg.chat.id, msg.reply_to_message.from.id)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.reply_to_message.from.id .. "] to the muted users list")
-                                return msg.reply_to_message.from.id .. langs[msg.lang].muteUserAdd
+                                return muteUser(msg.chat.id, msg.reply_to_message.from.id)
                             end
                         else
                             return langs[msg.lang].require_rank
@@ -135,13 +131,11 @@ local function run(msg, matches)
                         -- ignore higher or same rank
                         if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
                             if isMutedUser(msg.chat.id, matches[2]) then
-                                unmuteUser(msg.chat.id, matches[2])
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. matches[2] .. "] from the muted users list")
-                                return matches[2] .. langs[msg.lang].muteUserRemove
+                                return unmuteUser(msg.chat.id, matches[2])
                             else
-                                muteUser(msg.chat.id, matches[2])
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. matches[2] .. "] to the muted users list")
-                                return matches[2] .. langs[msg.lang].muteUserAdd
+                                return muteUser(msg.chat.id, matches[2])
                             end
                         else
                             return langs[msg.lang].require_rank
@@ -153,13 +147,11 @@ local function run(msg, matches)
                                 -- ignore higher or same rank
                                 if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
                                     if isMutedUser(msg.chat.id, obj_user.id) then
-                                        unmuteUser(msg.chat.id, obj_user.id)
                                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. obj_user.id .. "] from the muted users list")
-                                        return obj_user.id .. langs[msg.lang].muteUserRemove
+                                        return unmuteUser(msg.chat.id, obj_user.id)
                                     else
-                                        muteUser(msg.chat.id, obj_user.id)
                                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. obj_user.id .. "] to the muted users list")
-                                        return obj_user.id .. langs[msg.lang].muteUserAdd
+                                        return muteUser(msg.chat.id, obj_user.id)
                                     end
                                 else
                                     return langs[msg.lang].require_rank

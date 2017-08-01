@@ -502,9 +502,9 @@ return {
         "^[#!/]([Ww][Hh][Oo][Aa][Mm][Ii])$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
-        "^[#!/]([Ww][Hh][Oo])$",
+        -- "^[#!/]([Ww][Hh][Oo])$",
         -- who
-        "^[#!/]([Mm][Ee][Mm][Bb][Ee][Rr][Ss])$",
+        -- "^[#!/]([Mm][Ee][Mm][Bb][Ee][Rr][Ss])$",
     },
     run = run,
     pre_process = pre_process,

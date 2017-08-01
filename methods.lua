@@ -1322,11 +1322,15 @@ function getChat(id_or_username)
             local ok = false
             -- API
             if not ok then
-                obj = APIgetChat(id_or_username)
-                if type(obj) == 'table' then
-                    if obj.result then
-                        obj = obj.result
-                        ok = true
+                if not id_or_username:match('^@') then
+                    -- getChat if not a username
+                    obj = APIgetChat(id_or_username)
+                    if type(obj) == 'table' then
+                        if obj.result then
+                            obj = obj.result
+                            ok = true
+                            saveUsername(obj)
+                        end
                     end
                 end
             end
@@ -1340,7 +1344,18 @@ function getChat(id_or_username)
                     stored = redis:hget(hash, id_or_username)
                 end
                 if stored then
+                    -- check API
                     obj = APIgetChat(stored)
+                    if type(obj) == 'table' then
+                        if obj.result then
+                            obj = obj.result
+                            ok = true
+                            saveUsername(obj)
+                        end
+                    end
+                else
+                    -- check API if not in redis db, it could be a channel username that was not checked before
+                    obj = APIgetChat(id_or_username)
                     if type(obj) == 'table' then
                         if obj.result then
                             obj = obj.result
@@ -1805,9 +1820,10 @@ function unmute(chat_id, msg_type)
     end
 end
 
-function muteUser(chat_id, user_id)
+function muteUser(chat_id, user_id, lang)
     local hash = 'mute_user:' .. chat_id
     redis:sadd(hash, user_id)
+    return user_id .. langs[lang].muteUserAdd
 end
 
 function isMutedUser(chat_id, user_id)
@@ -1816,9 +1832,10 @@ function isMutedUser(chat_id, user_id)
     return muted or false
 end
 
-function unmuteUser(chat_id, user_id)
+function unmuteUser(chat_id, user_id, lang)
     local hash = 'mute_user:' .. chat_id
     redis:srem(hash, user_id)
+    return user_id .. langs[lang].muteUserRemove
 end
 
 -- Returns chat_id mute list

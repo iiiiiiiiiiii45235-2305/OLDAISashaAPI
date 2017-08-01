@@ -177,277 +177,545 @@ local function get_object_info(obj, chat_id)
 end
 
 local function run(msg, matches)
-    --[[if matches[1]:lower() == 'multipleid' and matches[2] then
-        if msg.from.is_mod then
-            mystat('/multipleid')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            local txt = ''
-            for k, id in pairs(tab) do
-                txt = txt .. id .. ' '
-                local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                if obj then
-                    txt = txt .. obj.id
-                else
-                    txt = txt .. langs[msg.lang].noObject
-                end
-                i = i + 1
-                txt = txt .. '\n'
-            end
-            return txt
-        else
-            return langs[msg.lang].require_mod
-        end
-    end
-    if matches[1]:lower() == 'multipleusername' and matches[2] then
-        if msg.from.is_mod then
-            mystat('/multipleusername')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            local txt = ''
-            for k, id in pairs(tab) do
-                txt = txt .. id .. ' '
-                local obj = getChat(matches[2])
-                if obj then
-                    txt = txt .. obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
-                else
-                    txt = txt .. langs[msg.lang].noObject
-                end
-                i = i + 1
-                txt = txt .. '\n'
-            end
-            return txt
-        else
-            return langs[msg.lang].require_mod
-        end
-    end
-    if matches[1]:lower() == 'multipleishere' and matches[2] then
-        if msg.from.is_mod then
-            mystat('/multipleishere')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            local txt = ''
-            for k, id in pairs(tab) do
-                txt = txt .. id .. ' '
-                if string.match(matches[2], '^%d+$') then
-                    txt = txt .. is_here(msg.chat.id, tonumber(matches[2]))
-                else
-                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                    if obj_user then
-                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            txt = txt .. is_here(msg.chat.id, obj_user.id)
-                        end
+    if matches[2] then
+        local tab = matches[2]:split(' ')
+        local txt = ''
+        if matches[1]:lower() == 'multipleid' then
+            if msg.from.is_mod then
+                mystat('/multipleid')
+                for k, username in pairs(tab) do
+                    txt = txt .. username .. ' '
+                    local obj = getChat('@' ..(string.match(username, '^[^%s]+'):gsub('@', '') or ''))
+                    if obj then
+                        txt = txt .. obj.id
                     else
                         txt = txt .. langs[msg.lang].noObject
                     end
+                    txt = txt .. '\n'
                 end
-                i = i + 1
-                txt = txt .. '\n'
+                return txt
+            else
+                return langs[msg.lang].require_mod
             end
-            return txt
-        else
-            return langs[msg.lang].require_mod
         end
-    end
-    if matches[1]:lower() == 'multiplegetrank' and matches[2] then
-        if msg.from.is_mod then
-            mystat('/multiplegetrank')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            local txt = ''
-            for k, id in pairs(tab) do
-                txt = txt .. id .. ' '
-                if string.match(matches[2], '^%d+$') then
-                    txt = txt .. get_reverse_rank(msg.chat.id, matches[2], check_local)
-                else
-                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                    if obj_user then
-                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            txt = txt .. get_reverse_rank(msg.chat.id, obj_user.id, check_local)
-                        end
+        if matches[1]:lower() == 'multipleusername' then
+            if msg.from.is_mod then
+                mystat('/multipleusername')
+                for k, id in pairs(tab) do
+                    txt = txt .. id .. ' '
+                    local obj = getChat(id)
+                    if obj then
+                        txt = txt .. obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
                     else
                         txt = txt .. langs[msg.lang].noObject
                     end
+                    txt = txt .. '\n'
                 end
-                i = i + 1
-                txt = txt .. '\n'
+                return txt
+            else
+                return langs[msg.lang].require_mod
             end
-            return txt
-        else
-            return langs[msg.lang].require_mod
         end
-    end
-    if matches[1]:lower() == 'multipleinfo' and matches[2] then
-        if msg.from.is_mod then
-            mystat('/multipleinfo')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            local txt = ''
-            for k, id in pairs(tab) do
-                if string.match(id, '^%-?%d+$') then
-                    txt = txt .. get_object_info(getChat(id), msg.chat.id)
-                else
-                    txt = txt .. get_object_info(getChat('@' ..(string.match(id, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id)
+        if matches[1]:lower() == 'multipleishere' then
+            if msg.from.is_mod then
+                mystat('/multipleishere')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. is_here(msg.chat.id, tonumber(user))
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. is_here(msg.chat.id, obj_user.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
                 end
-                i = i + 1
-                txt = txt .. '\n'
+                return txt
+            else
+                return langs[msg.lang].require_mod
             end
-            return txt
-        else
-            return langs[msg.lang].require_mod
         end
-    end
-    if matches[1]:lower() == 'multiplewarn' and matches[2] then
-        if msg.from.is_owner then
-            mystat('/multiplewarn')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                warnUser(msg.from.id, id, msg.chat.id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleWarn:gsub('X', i)
-        else
-            return langs[msg.lang].require_owner
-        end
-    end
-    if matches[1]:lower() == 'multipleunwarn' and matches[2] then
-        if msg.from.is_owner then
-            mystat('/multipleunwarn')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                unwarnUser(msg.from.id, id, msg.chat.id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleUnwarn:gsub('X', i)
-        else
-            return langs[msg.lang].require_owner
-        end
-    end
-    if matches[1]:lower() == 'multipleunwarnall' and matches[2] then
-        if msg.from.is_owner then
-            mystat('/multipleunwarnall')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                unwarnallUser(msg.from.id, id, msg.chat.id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleUnwarnall:gsub('X', i)
-        else
-            return langs[msg.lang].require_owner
-        end
-    end
-    if matches[1]:lower() == 'multiplekick' and matches[2] then
-        if msg.from.is_owner then
-            mystat('/multiplekick')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                kickUser(msg.from.id, id, msg.chat.id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleKick:gsub('X', i)
-        else
-            return langs[msg.lang].require_owner
-        end
-    end
-    if matches[1]:lower() == 'multipleban' and matches[2] then
-        if msg.from.is_owner then
-            mystat('/multipleban')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                banUser(msg.from.id, id, msg.chat.id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleBan:gsub('X', i)
-        else
-            return langs[msg.lang].require_owner
-        end
-    end]]
-    if matches[1]:lower() == 'multipleunban' and matches[2] then
-        if msg.from.is_owner then
-            mystat('/multipleunban')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                unbanUser(msg.from.id, id, msg.chat.id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleUnban:gsub('X', i)
-        else
-            return langs[msg.lang].require_owner
-        end
-    end
-    if matches[1]:lower() == 'multiplegban' and matches[2] then
-        if is_sudo(msg) then
-            mystat('/multiplegban')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                gbanUser(id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleGban:gsub('X', i)
-        else
-            return langs[msg.lang].require_sudo
-        end
-    end
-    --[[if matches[1]:lower() == 'multipleungban' and matches[2] then
-        if is_sudo(msg) then
-            mystat('/multipleungban')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                ungbanUser(id)
-                i = i + 1
-            end
-            return langs[msg.lang].multipleUngban:gsub('X', i)
-        else
-            return langs[msg.lang].require_sudo
-        end
-    end
-    if matches[1]:lower() == 'multiplegrouplink' and matches[2] then
-        if is_sudo(msg) then
-            mystat('/multiplegrouplink')
-            local tab = matches[2]:split(' ')
-            local i = 0
-            for k, id in pairs(tab) do
-                txt = txt .. id .. ' '
-                local group_link = data[tostring(id)]['settings']['set_link']
-                if not group_link then
-                    txt = txt .. langs[msg.lang].noLinkAvailable
+        if matches[1]:lower() == 'multiplegetrank' then
+            if msg.from.is_mod then
+                mystat('/multiplegetrank')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. get_reverse_rank(msg.chat.id, user, check_local)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. get_reverse_rank(msg.chat.id, obj_user.id, check_local)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
                 end
-                local obj = getChat(matches[2])
-                if type(obj) == 'table' then
-                    txt = txt .. obj.title .. '\n' .. group_link
-                end
-                i = i + 1
-                txt = txt .. '\n'
+                return txt
+            else
+                return langs[msg.lang].require_mod
             end
-            return langs[msg.lang].multipleUngban:gsub('X', i)
-        else
-            return langs[msg.lang].require_sudo
         end
-    end]]
+        if matches[1]:lower() == 'multipleinfo' then
+            if msg.from.is_mod then
+                mystat('/multipleinfo')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%-?%d+$') then
+                        txt = txt .. get_object_info(getChat(user), msg.chat.id)
+                    else
+                        txt = txt .. get_object_info(getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id)
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'multiplegetuserwarns' then
+            if msg.from.is_mod then
+                mystat('/multiplegetuserwarns')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. getUserWarns(user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. getUserWarns(obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'multiplemuteuser' then
+            if msg.from.is_mod then
+                mystat('/multiplemuteuser')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        -- ignore higher or same rank
+                        if compare_ranks(msg.from.id, user, msg.chat.id) then
+                            if isMutedUser(msg.chat.id, user) then
+                                txt = txt .. unmuteUser(msg.chat.id, user)
+                            else
+                                txt = txt .. muteUser(msg.chat.id, user)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].require_rank
+                        end
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                -- ignore higher or same rank
+                                if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
+                                    if isMutedUser(msg.chat.id, obj_user.id) then
+                                        txt = txt .. unmuteUser(msg.chat.id, obj_user.id)
+                                    else
+                                        txt = txt .. muteUser(msg.chat.id, obj_user.id)
+                                    end
+                                else
+                                    txt = txt .. langs[msg.lang].require_rank
+                                end
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'multiplewarn' then
+            if msg.from.is_owner then
+                mystat('/multiplewarn')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. warnUser(msg.from.id, user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'multipleunwarn' then
+            if msg.from.is_owner then
+                mystat('/multipleunwarn')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. unwarnUser(msg.from.id, user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'multipleunwarnall' then
+            if msg.from.is_owner then
+                mystat('/multipleunwarnall')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. unwarnallUser(msg.from.id, user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'multiplekick' then
+            if msg.from.is_owner then
+                mystat('/multiplekick')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. kickUser(msg.from.id, user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'multipleban' then
+            if msg.from.is_owner then
+                mystat('/multipleban')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. banUser(msg.from.id, user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. banUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'multipleunban' then
+            if msg.from.is_owner then
+                mystat('/multipleunban')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. unbanUser(msg.from.id, user, msg.chat.id)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'multipledbsearch' then
+            if is_sudo(msg) then
+                mystat('/multipledbsearch')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        if database[tostring(user)] then
+                            txt = txt .. serpent.block(database[tostring(user)], { sortkeys = false, comment = false })
+                        else
+                            txt = txt .. langs[msg.lang].notFound
+                        end
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if database[tostring(obj_user.id)] then
+                                    txt = txt .. serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false })
+                                else
+                                    txt = txt .. langs[msg.lang].notFound
+                                end
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+        if matches[1]:lower() == 'multipledbdelete' then
+            if is_sudo(msg) then
+                mystat('/multipledbdelete')
+                for k, id in pairs(tab) do
+                    if string.match(id, '^%d+$') then
+                        txt = txt .. id .. ' '
+                        if database[tostring(id)] then
+                            database[tostring(id)] = nil
+                            txt = txt .. langs[msg.lang].recordDeleted
+                        else
+                            txt = txt .. langs[msg.lang].notFound
+                        end
+                        txt = txt .. '\n'
+                    end
+                end
+                save_data(config.database.db, database)
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+        if matches[1]:lower() == 'multiplegrouplink' then
+            if is_sudo(msg) then
+                mystat('/multiplegrouplink')
+                for k, id in pairs(tab) do
+                    txt = txt .. id .. ' '
+                    local chat_title = ''
+                    local group_link = langs[msg.lang].noLinkAvailable
+                    if data[tostring(id)] then
+                        chat_title = data[tostring(id)].set_name
+                        if data[tostring(id)].settings then
+                            if data[tostring(id)].settings.set_link then
+                                group_link = data[tostring(id)].settings.set_link
+                            end
+                        end
+                    end
+                    txt = txt .. chat_title .. group_link .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+        if matches[1]:lower() == 'multiplepmblock' then
+            if is_sudo(msg) then
+                mystat('/multiplepmblock')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. blockUser(user, msg.lang)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. blockUser(obj_user.id, msg.lang)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+        if matches[1]:lower() == 'multiplepmunblock' then
+            if is_sudo(msg) then
+                mystat('/multiplepmunblock')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. unblockUser(user, msg.lang)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. unblockUser(obj_user.id, msg.lang)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+        if matches[1]:lower() == 'multiplegban' then
+            if is_sudo(msg) then
+                mystat('/multiplegban')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. gbanUser(user)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. gbanUser(obj_user.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+        if matches[1]:lower() == 'multipleungban' then
+            if is_sudo(msg) then
+                mystat('/multipleungban')
+                for k, user in pairs(tab) do
+                    txt = txt .. user .. ' '
+                    if string.match(user, '^%d+$') then
+                        txt = txt .. ungbanUser(user)
+                    else
+                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                txt = txt .. ungbanUser(obj_user.id)
+                            end
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
+                    end
+                    txt = txt .. '\n'
+                end
+                return txt
+            else
+                return langs[msg.lang].require_sudo
+            end
+        end
+    end
 end
 
 return {
     description = "MULTIPLE_COMMANDS",
     patterns =
     {
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Ii][Dd]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Ss][Ee][Rr][Nn][Aa][Mm][Ee]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Ii][Ss][Hh][Ee][Rr][Ee]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Gg][Ee][Tt][Rr][Aa][Nn][Kk]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Ii][Nn][Ff][Oo]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Ww][Aa][Rr][Nn]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Kk][Ii][Cc][Kk]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Bb][Aa][Nn]) (.*)$",
         "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Dd][Bb][Ss][Ee][Aa][Rr][Cc][Hh]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Dd][Bb][Dd][Ee][Ll][Ee][Tt][Ee]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Gg][Rr][Oo][Uu][Pp][Ll][Ii][Nn][Kk]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Pp][Mm][Bb][Ll][Oo][Cc][Kk]) (.*)$",
         "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Gg][Bb][Aa][Nn]) (.*)$",
+        "^[#!/]([Mm][Uu][Ll][Tt][Ii][Pp][Ll][Ee][Uu][Nn][Gg][Bb][Aa][Nn]) (.*)$",
     },
     run = run,
     min_rank = 2,
     syntax =
     {
+        "MOD",
+        "#multipleid <username1> <username2> ...",
+        "#multipleusername <id1> <id2> ...",
+        "#multipleishere <user1> <user2> ...",
+        "#multiplegetrank <user1> <user2> ...",
+        "#multipleinfo <obj1> <obj2> ...",
+        "#multiplegetuserwarns <user1> <user2> ...",
+        "#multiplemuteuser <user1> <user2> ...",
         "OWNER",
-        "#multipleunban <user_id1> <user_id2> ...",
+        "#multiplewarn <user1> <user2> ...",
+        "#multipleunwarn <user1> <user2> ...",
+        "#multipleunwarnall <user1> <user2> ...",
+        "#multiplekick <user1> <user2> ...",
+        "#multipleban <user1> <user2> ...",
+        "#multipleunban <user1> <user2> ...",
         "SUDO",
-        "#multiplegban <user_id1> <user_id2> ...",
+        "#multipledbsearch <obj1> <obj2> ...",
+        "#multipledbdelete <obj1> <obj2> ...",
+        "#multiplegrouplink <group1> <group2> ...",
+        "#multiplepmblock <user1> <user2> ...",
+        "#multiplepmunblock <user1> <user2> ...",
+        "#multiplegban <user1> <user2> ...",
+        "#multipleungban <user1> <user2> ...",
     },
 }
