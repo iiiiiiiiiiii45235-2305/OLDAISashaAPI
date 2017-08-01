@@ -430,7 +430,7 @@ end
 
 local function update_sudoers(msg)
     if sudoers[tostring(msg.from.id)] then
-        sudoers[tostring(msg.from.id)] = msg.from
+        sudoers[tostring(msg.from.id)] = clone_table(msg.from)
     end
 end
 
@@ -892,7 +892,7 @@ function on_msg_receive(msg)
     local print_text = print_msg(msg, true)
     local chat_id = msg.chat.id
     msg = get_tg_rank(msg)
-    tmp_msg = msg
+    tmp_msg = clone_table(msg)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then

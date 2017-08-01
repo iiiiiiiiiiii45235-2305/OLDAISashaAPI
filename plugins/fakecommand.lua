@@ -19,8 +19,6 @@ local function run(msg, matches)
             copied_msg.from.tg_cli_id = - fakerank
             copied_msg.from.is_mod = false
             copied_msg.from.is_owner = false
-            sendMessage(copied_msg.chat.id, vardumptext(copied_msg))
-            sendMessage(copied_msg.chat.id, vardumptext(sudoers))
             if is_owner(copied_msg, true) then
                 copied_msg.from.is_mod = true
                 copied_msg.from.is_owner = true
@@ -28,10 +26,9 @@ local function run(msg, matches)
             if is_mod(copied_msg, true) then
                 copied_msg.from.is_mod = true
             end
-            return vardumptext(copied_msg)
-            --[[if msg_valid(copied_msg) then
+            if msg_valid(copied_msg) then
                 match_plugins(copied_msg)
-            end]]
+            end
         else
             -- no
             return langs[msg.lang].fakecommandYouTried
