@@ -16,7 +16,7 @@ end
 local function get_reverse_rank(chat_id, user_id, check_local)
     local lang = get_lang(chat_id)
     local rank = get_rank(user_id, chat_id, check_local)
-    return langs[lang].rank .. reverse_rank_table[rank + 1]
+    return reverse_rank_table[rank + 1]
 end
 
 local function get_object_info(obj, chat_id)
