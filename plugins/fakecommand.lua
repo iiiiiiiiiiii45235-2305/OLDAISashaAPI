@@ -26,9 +26,10 @@ local function run(msg, matches)
             if is_mod(copied_msg, true) then
                 copied_msg.from.is_mod = true
             end
-            if msg_valid(copied_msg) then
-                match_plugins(copied_msg)
-            end
+            return vardumptext(copied_msg)
+            -- if msg_valid(copied_msg) then
+            --    match_plugins(copied_msg)
+            -- end
         else
             -- no
             return langs[msg.lang].fakecommandYouTried
