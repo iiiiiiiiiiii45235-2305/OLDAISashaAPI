@@ -103,7 +103,6 @@ end
 function is_sudo(param_msg)
     local var = false
 
-    print(var)
     -- Check users id in config
     for v, user in pairs(sudoers) do
         if tostring(user.id) == tostring(param_msg.from.id) then
@@ -112,7 +111,6 @@ function is_sudo(param_msg)
             var = true
         end
     end
-    print(var)
     return var
 end
 
