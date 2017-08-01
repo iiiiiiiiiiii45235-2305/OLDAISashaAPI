@@ -1,8 +1,6 @@
 return {
     news = "SASHA\'S NEWS\n" ..
-    "Interact: !edit command to edit messages, works also with markdown and html (mod^).\n" ..
-    "Group_management: moved !muteuser and !mutelist into Banhammer, !settings is now available for all, new commands !settitle, !setphoto, !setdescription, !unsetphoto.\n" ..
-    "Working on permissions and restrictions, waiting bot support for clarifications.",
+    "Multiple_commands: various multiplecommands added to apply various actions to more than one user at the same time (mod^).\n",
     phrases =
     {
         banhammer =
