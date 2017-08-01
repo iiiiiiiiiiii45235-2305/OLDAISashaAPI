@@ -20,8 +20,6 @@ local function run(msg, matches)
             copied_msg.from.is_mod = false
             copied_msg.from.is_owner = false
             sendMessage(copied_msg.chat.id, vardumptext(copied_msg))
-            printvardump(is_owner(copied_msg, true))
-            printvardump(is_mod(copied_msg, true))
             if is_owner(copied_msg, true) then
                 copied_msg.from.is_mod = true
                 copied_msg.from.is_owner = true

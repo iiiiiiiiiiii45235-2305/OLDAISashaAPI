@@ -100,11 +100,11 @@ function is_bot_admin(chat_id)
     return false
 end
 
-function is_sudo(msg)
+function is_sudo(param_msg)
     local var = false
     -- Check users id in config
     for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(msg.from.id) then
+        if tostring(user.id) == tostring(param_msg.from.id) then
             -- bot sudo
             var = true
         end
@@ -124,9 +124,9 @@ function is_sudo2(user_id)
     return var
 end
 
-function is_admin(msg)
+function is_admin(param_msg)
     local var = false
-    local user_id = msg.from.id
+    local user_id = param_msg.from.id
     local admins = 'admins'
     if data[tostring(admins)] then
         if data[tostring(admins)][tostring(user_id)] then
@@ -135,7 +135,7 @@ function is_admin(msg)
         end
     end
 
-    if is_sudo(msg) then
+    if is_sudo(param_msg) then
         -- bot sudo
         var = true
     end
@@ -169,11 +169,12 @@ function is_admin2(user_id)
     return var
 end
 
-function is_owner(msg, check_local)
+function is_owner(param_msg, check_local)
     local var = false
-    local user_id = msg.from.id
-    local chat_id = msg.chat.id
+    local user_id = param_msg.from.id
+    local chat_id = param_msg.chat.id
 
+    print(var)
     if not check_local then
         local res = getChatMember(chat_id, user_id)
         if type(res) == 'table' then
@@ -187,6 +188,7 @@ function is_owner(msg, check_local)
         end
     end
 
+    print(var)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)]['set_owner'] then
             if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
@@ -196,20 +198,24 @@ function is_owner(msg, check_local)
         end
     end
 
-    if is_admin(msg) then
+    print(var)
+    if is_admin(param_msg) then
         -- bot admin
         var = true
     end
 
-    if is_sudo(msg) then
+    print(var)
+    if is_sudo(param_msg) then
         -- bot sudo
         var = true
     end
 
+    print(var)
     -- check if executing a fakecommand, if yes confirm
     if tonumber(user_id) <= -2 then
         var = true
     end
+    print(var)
     return var
 end
 
@@ -255,10 +261,10 @@ function is_owner2(user_id, chat_id, check_local)
     return var
 end
 
-function is_mod(msg, check_local)
+function is_mod(param_msg, check_local)
     local var = false
-    local user_id = msg.from.id
-    local chat_id = msg.chat.id
+    local user_id = param_msg.from.id
+    local chat_id = param_msg.chat.id
 
     if not check_local then
         local res = getChatMember(chat_id, user_id)
@@ -286,17 +292,17 @@ function is_mod(msg, check_local)
         end
     end
 
-    if is_owner(msg, check_local) then
+    if is_owner(param_msg, check_local) then
         -- owner
         var = true
     end
 
-    if is_admin(msg) then
+    if is_admin(param_msg) then
         -- bot admin
         var = true
     end
 
-    if is_sudo(msg) then
+    if is_sudo(param_msg) then
         -- bot sudo
         var = true
     end
@@ -359,31 +365,31 @@ function is_mod2(user_id, chat_id, check_local)
     return var
 end
 
-function get_tg_rank(msg)
+function get_tg_rank(param_msg)
     -- commented because it slows down the whole process of receiving messages
-    --[[local res = getChatMember(msg.chat.id, msg.from.id)
+    --[[local res = getChatMember(param_msg.chat.id, param_msg.from.id)
     if type(res) == 'table' then
         if res.result then
             local status = res.result.status
-            if status == 'administrator' or is_mod(msg, true) then
+            if status == 'administrator' or is_mod(param_msg, true) then
                 -- mod
-                msg.from.is_mod = true
+                param_msg.from.is_mod = true
             end
-            if status == 'creator' or is_owner(msg, true) then
+            if status == 'creator' or is_owner(param_msg, true) then
                 -- owner
-                msg.from.is_mod = true
-                msg.from.is_owner = true
+                param_msg.from.is_mod = true
+                param_msg.from.is_owner = true
             end
         end
     end
-    if type(msg.from.is_mod) == 'nil' then]]
-    if is_owner(msg, true) then
-        msg.from.is_mod = true
-        msg.from.is_owner = true
+    if type(param_msg.from.is_mod) == 'nil' then]]
+    if is_owner(param_msg, true) then
+        param_msg.from.is_mod = true
+        param_msg.from.is_owner = true
     end
-    if is_mod(msg, true) then
-        msg.from.is_mod = true
+    if is_mod(param_msg, true) then
+        param_msg.from.is_mod = true
     end
     -- end
-    return msg
+    return param_msg
 end
