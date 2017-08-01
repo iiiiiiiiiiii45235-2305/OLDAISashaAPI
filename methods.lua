@@ -1575,25 +1575,27 @@ function banList(chat_id)
 end
 
 -- Global ban
-function gbanUser(user_id)
+function gbanUser(user_id, lang)
     if tonumber(user_id) == tonumber(bot.id) then
         -- Ignore bot
-        return
+        return ''
     end
     if is_admin2(user_id) then
         -- Ignore admins
-        return
+        return ''
     end
     -- Save to redis
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
+    return langs[lang].user .. user_id .. langs[lang].gbanned
 end
 
 -- Global unban
-function ungbanUser(user_id)
+function ungbanUser(user_id, lang)
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
+    return langs[lang].user .. user_id .. langs[lang].ungbanned
 end
 
 -- Check if user_id is globally banned or not

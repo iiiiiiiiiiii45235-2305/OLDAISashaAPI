@@ -620,12 +620,12 @@ local function run(msg, matches)
                 for k, user in pairs(tab) do
                     txt = txt .. user .. ' '
                     if string.match(user, '^%d+$') then
-                        txt = txt .. gbanUser(user)
+                        txt = txt .. gbanUser(user, msg.lang)
                     else
                         local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. gbanUser(obj_user.id)
+                                txt = txt .. gbanUser(obj_user.id, msg.lang)
                             end
                         else
                             txt = txt .. langs[msg.lang].noObject
@@ -644,12 +644,12 @@ local function run(msg, matches)
                 for k, user in pairs(tab) do
                     txt = txt .. user .. ' '
                     if string.match(user, '^%d+$') then
-                        txt = txt .. ungbanUser(user)
+                        txt = txt .. ungbanUser(user, msg.lang)
                     else
                         local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. ungbanUser(obj_user.id)
+                                txt = txt .. ungbanUser(obj_user.id, msg.lang)
                             end
                         else
                             txt = txt .. langs[msg.lang].noObject
