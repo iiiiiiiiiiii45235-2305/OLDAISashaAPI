@@ -523,7 +523,17 @@ return {
         checkMyPermissions = 'Errore, controlla i miei permessi.',
         promoteModAdmin = ' è stato promosso a moderatore e amministratore di telegram con i permessi specificati.',
         demoteModAdmin = ' è stato degradato da moderatore e amministratore di telegram.',
+        cantContact = 'Non posso contattare: ',
         defaultAlternativesSet = 'Comandi alternativi di default impostati.',
+        sendPermissionsPvt = 'Ti ho mandato i permessi dell\'utente in privato.',
+        permissions = 'Permessi: ',
+        permissionChangeInfo = '\nCambiare informazioni del gruppo: ',
+        permissionDeleteMessages = '\nEliminare messaggi: ',
+        permissionInviteUsers = '\nInvitare utenti: ',
+        permissionPinMessages = '\nFissare messaggi: ',
+        permissionPromoteMembers = '\nPromuovere utenti: ',
+        permissionRestrictMembers = '\nLimitare utenti: ',
+        permissionCanBeEdited = '\nSasha può cambiare i permessi di questo utente? ',
         -- ex inrealm.lua --
         none = 'Nessuno',
         realm = 'Regno ',
@@ -717,8 +727,8 @@ return {
         .. '/faq12 significato muti.\n'
         .. '/faq13 ruleta @AISashaBot.\n'
         .. '/faq14 api_patch.\n'
-        .. '/faq15 spam @AISashaBot.'
-        .. '/faq16 significato permessi.',
+        .. '/faq15 spam @AISashaBot.\n'
+        .. '/faq16 significato permessi.\n',
         faq =
         {
             [1] = 'D: Limiti sasha utente (@AISasha)?\n'
@@ -1708,6 +1718,16 @@ return {
         promoteModAdmin = ' promoted to moderator and telegram\'s administrator with the specified permissions.',
         demoteModAdmin = ' demoted from moderator and telegram\'s administrator.',
         defaultAlternativesSet = 'Default alternative commands set.',
+        cantContact = 'I can\'t contact: ',
+        sendPermissionsPvt = 'I\'ve sent you the user\'s permissions in private.',
+        permissions = 'Permissions: ',
+        permissionChangeInfo = '\nChange information: ',
+        permissionDeleteMessages = '\nDelete messages: ',
+        permissionInviteUsers = '\nInvite users: ',
+        permissionPinMessages = '\nPin messages: ',
+        permissionPromoteMembers = '\nPromote members: ',
+        permissionRestrictMembers = '\nRestrict members: ',
+        permissionCanBeEdited = '\nCan Sasha change this user\'s permissions? ',
         -- ex inpm.lua --
         groupsJoin = 'Groups:\nUse /join <group_id> to join\n\n',
         realmsJoin = 'Realm:\nUse /join <realm_id> to join\n\n',
@@ -1910,8 +1930,8 @@ return {
         .. '/faq12 mutes meaning.\n'
         .. '/faq13 ruleta @AISashaBot.\n'
         .. '/faq14 api_patch.\n'
-        .. '/faq15 spam @AISashaBot.'
-        .. '/faq16 permissions meaning.',
+        .. '/faq15 spam @AISashaBot.\n'
+        .. '/faq16 permissions meaning.\n',
         faq =
         {
             [1] = 'D: Sasha user\'s limits (@AISasha)?\n'
