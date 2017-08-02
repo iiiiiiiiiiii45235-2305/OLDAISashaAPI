@@ -51,314 +51,6 @@ default_permissions = {
     ['can_pin_messages'] = true,
     ['can_promote_members'] = false,
 }
-default_alternatives = {
-    cmdAlt =
-    {
-        ['/kickme'] =
-        {
-            'sasha uccidimi',
-            'sasha esplodimi',
-            'sasha sparami',
-            'sasha decompilami',
-            'sasha bannami'
-        },
-        ['/getuserwarns'] =
-        {
-            'sasha ottieni avvertimenti',
-            'ottieni avvertimenti'
-        },
-        ['/warn'] = { 'sasha avverti' },
-        ['/unwarnall'] =
-        {
-            'sasha azzera avvertimenti',
-            'azzera avvertimenti'
-        },
-        ['/kick'] =
-        {
-            'sasha uccidi',
-            'uccidi',
-            'sasha spara'
-        },
-        ['/ban'] =
-        {
-            'kaboom',
-            'sasha banna',
-            'banna',
-            'sasha decompila',
-            'decompila',
-            'sasha esplodi'
-        },
-        ['/unban'] =
-        {
-            'sasha sbanna',
-            'sbanna',
-            'sasha ricompila',
-            'ricompila'
-        },
-        ['/banlist'] =
-        {
-            'sasha lista ban',
-            'lista ban'
-        },
-        ['/dellist'] =
-        {
-            'sasha lista censure',
-            'lista censure'
-        },
-        ['/delword'] =
-        {
-            'sasha censura',
-            'censura'
-        },
-        ['/dogify'] =
-        {
-            'sasha doge',
-            'doge'
-        },
-        ['/startflame'] =
-        {
-            'sasha flamma',
-            'flamma'
-        },
-        ['/stopflame'] =
-        {
-            'sasha stop flame',
-            'stop flame'
-        },
-        ['/flameinfo'] =
-        {
-            'sasha info flame',
-            'info flame'
-        },
-        ['/get'] = { 'sasha lista' },
-        ['/getlist'] = { 'sasha lista' },
-        ['/getgloballist'] = { 'sasha lista globali' },
-        ['/getglobal'] = { 'sasha lista globali' },
-        ['/set'] =
-        {
-            'sasha setta',
-            'setta'
-        },
-        ['/setmedia'] =
-        {
-            'sasha setta media',
-            'setta media'
-        },
-        ['/unset'] =
-        {
-            'sasha unsetta',
-            'unsetta'
-        },
-        ['/rules'] = { 'sasha regole' },
-        ['/modlist'] =
-        {
-            'sasha lista mod',
-            'lista mod'
-        },
-        ['/link'] = { 'sasha link' },
-        ['/setrules'] = { 'sasha imposta regole' },
-        ['/newlink'] = { 'sasha crea link' },
-        ['/muteuser'] = { 'voce' },
-        ['/muteslist'] = { 'lista muti' },
-        ['/mutelist'] = { 'lista utenti muti' },
-        ['/lock'] =
-        {
-            'sasha blocca',
-            'blocca'
-        },
-        ['/unlock'] =
-        {
-            'sasha sblocca',
-            'sblocca'
-        },
-        ['/setlink'] = { 'sasha imposta link' },
-        ['/unsetlink'] = { 'sasha elimina link' },
-        ['/getadmins'] =
-        {
-            'sasha lista admin',
-            'lista admin'
-        },
-        ['/promote'] =
-        {
-            'sasha promuovi',
-            'promuovi'
-        },
-        ['/demote'] =
-        {
-            'sasha degrada',
-            'degrada'
-        },
-        ['/mute'] = { 'silenzia' },
-        ['/unmute'] = { 'ripristina' },
-        ['/sudolist'] = { 'sasha lista sudo' },
-        ['/help'] = { 'sasha aiuto' },
-        ['/helpall'] = { 'sasha aiuto tutto' },
-        ['/syntax'] = { 'sasha sintassi' },
-        ['/syntaxall'] = { 'sasha sintassi tutto' },
-        ['/getrank'] = { 'rango' },
-        ['/info'] =
-        {
-            'sasha info',
-            'info'
-        },
-        ['/echo'] = { 'sasha ripeti' },
-        ['/markdownecho'] = { 'sasha markdown ripeti' },
-        ['/leave'] = { 'sasha abbandona' },
-        ['/plugins'] =
-        {
-            'sasha lista plugins',
-            'lista plugins'
-        },
-        ['/disabledlist'] =
-        {
-            'sasha lista disabilitati',
-            'lista disabilitati',
-            'sasha lista disattivati',
-            'lista disattivati'
-        },
-        ['/enable'] =
-        {
-            'sasha abilita',
-            'abilita',
-            'sasha attiva',
-            'attiva'
-        },
-        ['/disable'] =
-        {
-            'sasha disabilita',
-            'disabilita',
-            'sasha disattiva',
-            'disattiva'
-        },
-        ['/qr'] = { 'sasha qr' },
-        ['/shout'] =
-        {
-            'sasha grida',
-            'grida',
-            'sasha urla',
-            'urla'
-        },
-        ['/setlang'] = { 'lingua' },
-        ['/tagall'] = { 'sasha tagga tutti' },
-        ['/tex'] =
-        {
-            'sasha equazione',
-            'equazione'
-        },
-        ['/webshot'] =
-        {
-            'sasha webshotta',
-            'webshotta'
-        },
-    },
-    altCmd =
-    {
-        ['sasha uccidimi'] = '/kickme',
-        ['sasha esplodimi'] = '/kickme',
-        ['sasha sparami'] = '/kickme',
-        ['sasha decompilami'] = '/kickme',
-        ['sasha bannami'] = '/kickme',
-        ['sasha ottieni avvertimenti'] = '/getuserwarns',
-        ['ottieni avvertimenti'] = '/getuserwarns',
-        ['sasha avverti'] = '/warn',
-        ['sasha azzera avvertimenti'] = '/unwarnall',
-        ['azzera avvertimenti'] = '/unwarnall',
-        ['sasha uccidi'] = '/kick',
-        ['uccidi'] = '/kick',
-        ['sasha spara'] = '/kick',
-        ['kaboom'] = '/ban',
-        ['sasha banna'] = '/ban',
-        ['banna'] = '/ban',
-        ['sasha decompila'] = '/ban',
-        ['decompila'] = '/ban',
-        ['sasha esplodi'] = '/ban',
-        ['sasha sbanna'] = '/unban',
-        ['sbanna'] = '/unban',
-        ['sasha ricompila'] = '/unban',
-        ['ricompila'] = '/unban',
-        ['sasha lista ban'] = '/banlist',
-        ['lista ban'] = '/banlist',
-        ['sasha lista censure'] = '/dellist',
-        ['lista censure'] = '/dellist',
-        ['sasha censura'] = '/delword',
-        ['censura'] = '/delword',
-        ['sasha doge'] = '/dogify',
-        ['doge'] = '/dogify',
-        ['sasha flamma'] = '/startflame',
-        ['flamma'] = '/startflame',
-        ['sasha stop flame'] = '/stopflame',
-        ['stop flame'] = '/stopflame',
-        ['sasha info flame'] = '/flameinfo',
-        ['info flame'] = '/flameinfo',
-        ['sasha lista'] = '/getlist',
-        ['sasha lista globali'] = '/getgloballist',
-        ['sasha setta'] = '/set',
-        ['setta'] = '/set',
-        ['sasha setta media'] = '/setmedia',
-        ['setta media'] = '/setmedia',
-        ['sasha unsetta'] = '/unset',
-        ['unsetta'] = '/unset',
-        ['sasha regole'] = '/rules',
-        ['sasha lista mod'] = '/modlist',
-        ['lista mod'] = '/modlist',
-        ['sasha link'] = '/link',
-        ['sasha imposta regole'] = '/setrules',
-        ['sasha crea link'] = '/newlink',
-        ['voce'] = '/muteuser',
-        ['lista muti'] = '/muteslist',
-        ['lista utenti muti'] = '/mutelist',
-        ['sasha blocca'] = '/lock',
-        ['blocca'] = '/lock',
-        ['sasha sblocca'] = '/unlock',
-        ['sblocca'] = '/unlock',
-        ['sasha imposta link'] = '/setlink',
-        ['sasha elimina link'] = '/unsetlink',
-        ['sasha lista admin'] = '/getadmins',
-        ['lista admin'] = '/getadmins',
-        ['sasha promuovi'] = '/promote',
-        ['promuovi'] = '/promote',
-        ['sasha degrada'] = '/demote',
-        ['degrada'] = '/demote',
-        ['silenzia'] = '/mute',
-        ['ripristina'] = '/unmute',
-        ['sasha lista sudo'] = '/sudolist',
-        ['sasha aiuto'] = '/help',
-        ['sasha aiuto tutto'] = '/helpall',
-        ['sasha sintassi'] = '/syntax',
-        ['sasha sintassi tutto'] = '/syntaxall',
-        ['rango'] = '/getrank',
-        ['sasha info'] = '/info',
-        ['info'] = '/info',
-        ['sasha ripeti'] = '/echo',
-        ['sasha markdown ripeti'] = '/markdownecho',
-        ['sasha abbandona'] = '/leave',
-        ['sasha lista plugins'] = '/plugins',
-        ['lista plugins'] = '/plugins',
-        ['sasha lista disabilitati'] = '/disabledlist',
-        ['lista disabilitati'] = '/disabledlist',
-        ['sasha lista disattivati'] = '/disabledlist',
-        ['lista disattivati'] = '/disabledlist',
-        ['sasha abilita'] = '/enable',
-        ['abilita'] = '/enable',
-        ['sasha attiva'] = '/enable',
-        ['attiva'] = '/enable',
-        ['sasha disabilita'] = '/disable',
-        ['disabilita'] = '/disable',
-        ['sasha disattiva'] = '/disable',
-        ['disattiva'] = '/disable',
-        ['sasha qr'] = '/qr',
-        ['sasha grida'] = '/shout',
-        ['grida'] = '/shout',
-        ['sasha urla'] = '/shout',
-        ['urla'] = '/shout',
-        ['lingua'] = '/setlang',
-        ['sasha tagga tutti'] = '/tagall',
-        ['sasha equazione'] = '/tex',
-        ['equazione'] = '/tex',
-        ['sasha webshotta'] = '/webshot',
-        ['webshotta'] = '/webshot',
-    },
-}
 
 -- INREALM
 -- begin ADD/REM GROUPS
@@ -582,66 +274,74 @@ local function showPermissions(chat_id, user_id, lang)
     end
 end
 
-local function reverseAdjustPermissions(permission_type, lang)
+local function reverseAdjustPermissions(permission_type)
     if permission_type == 'can_change_info' then
-        permission_type = langs[lang]
+        permission_type = 'change_info'
     end
     if permission_type == 'can_delete_messages' then
-        permission_type = 'bots'
+        permission_type = 'delete_messages'
     end
     if permission_type == 'can_invite_users' then
-        permission_type = 'flood'
+        permission_type = 'invite_users'
     end
     if permission_type == 'can_restrict_members' then
-        permission_type = 'grouplink'
+        permission_type = 'restrict_members'
     end
     if permission_type == 'can_pin_messages' then
-        permission_type = 'leave'
+        permission_type = 'pin_messages'
     end
     if permission_type == 'can_promote_members' then
-        permission_type = 'link'
+        permission_type = 'promote_members'
     end
     return permission_type
 end
 
-local function adjustPermissions(string_permissions)
-    if string_permissions then
-        string_permissions = string_permissions:lower()
-        local permissions = {
-            ['can_change_info'] = false,
-            ['can_delete_messages'] = false,
-            ['can_invite_users'] = false,
-            ['can_restrict_members'] = false,
-            ['can_pin_messages'] = false,
-            ['can_promote_members'] = false,
-        }
-        local permission_type = ''
-        for k, v in pairs(string_permissions:split(' ')) do
-            if v == 'change_info' then
-                permission_type = 'can_change_info'
+local function adjustPermissions(param_permissions)
+    local permissions = {
+        ['can_change_info'] = false,
+        ['can_delete_messages'] = false,
+        ['can_invite_users'] = false,
+        ['can_restrict_members'] = false,
+        ['can_pin_messages'] = false,
+        ['can_promote_members'] = false,
+    }
+    if param_permissions then
+        if type(param_permissions) == 'table' then
+            for k, v in pairs(param_permissions) do
+                if v == 'can_change_info' or v == 'can_delete_messages' or v == 'can_invite_users' or v == 'can_restrict_members' or v == 'can_pin_messages' or v == 'can_promote_members' then
+                    permissions[tostring(v)] = param_permissions[tostring(v)]
+                end
             end
-            if v == 'delete_messages' then
-                permission_type = 'can_delete_messages'
+        elseif type(param_permissions) == 'string' then
+            local permission_type = ''
+            param_permissions = param_permissions:lower()
+            for k, v in pairs(param_permissions:split(' ')) do
+                if v == 'change_info' then
+                    permission_type = 'can_change_info'
+                end
+                if v == 'delete_messages' then
+                    permission_type = 'can_delete_messages'
+                end
+                if v == 'invite_users' then
+                    permission_type = 'can_invite_users'
+                end
+                if v == 'restrict_members' then
+                    permission_type = 'can_restrict_members'
+                end
+                if v == 'pin_messages' then
+                    permission_type = 'can_pin_messages'
+                end
+                if v == 'promote_members' then
+                    permission_type = 'can_promote_members'
+                end
+                if permission_type ~= '' then
+                    permissions[tostring(permission_type)] = true
+                end
+                permission_type = ''
             end
-            if v == 'invite_users' then
-                permission_type = 'can_invite_users'
-            end
-            if v == 'restrict_members' then
-                permission_type = 'can_restrict_members'
-            end
-            if v == 'pin_messages' then
-                permission_type = 'can_pin_messages'
-            end
-            if v == 'promote_members' then
-                permission_type = 'can_promote_members'
-            end
-            if permission_type ~= '' then
-                permissions[tostring(permission_type)] = true
-            end
-            permission_type = ''
         end
-        return permissions
     end
+    return permissions
 end
 
 -- begin RANKS MANAGEMENT
@@ -1041,39 +741,53 @@ local function checkMatchesMuteUnmute(txt)
     return false
 end
 
-local function keyboard_permissions_list(chat_id, permissions)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    for var, value in pairs(permissions) do
-        if type(value) == 'boolean' then
-            if flag then
-                flag = false
-                row = row + 1
-                column = 1
-                keyboard.inline_keyboard[row] = { }
-            end
-            if value then
-                keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
-            end
-            column = column + 1
-            if column > 2 then
-                flag = true
+local function keyboard_permissions_list(chat_id, user_id)
+    local obj_user = getChatMember(chat_id, user_id)
+    if type(obj_user) == 'table' then
+        if obj_user.result then
+            -- assign obj_user to permissions parameter
+            obj_user = obj_user.result
+        else
+            obj_user = nil
+        end
+    else
+        obj_user = nil
+    end
+    if obj_user then
+        local permissions = adjustPermissions(obj_user)
+        local keyboard = { }
+        keyboard.inline_keyboard = { }
+        local row = 1
+        local column = 1
+        local flag = false
+        keyboard.inline_keyboard[row] = { }
+        for var, value in pairs(permissions) do
+            if type(value) == 'boolean' then
+                if flag then
+                    flag = false
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
+                end
+                if value then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementDENY' .. user_id .. var .. chat_id }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementGRANT' .. user_id .. var .. chat_id }
+                end
+                column = column + 1
+                if column > 1 then
+                    flag = true
+                end
             end
         end
+        row = row + 1
+        column = 1
+        keyboard.inline_keyboard[row] = { }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
+        column = column + 1
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+        return keyboard
     end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
-    return keyboard
 end
 
 local function keyboard_settings_list(chat_id)
@@ -1232,13 +946,16 @@ local function run(msg, matches)
                         if matches[3] then
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
                         end
+                    elseif matches[2] == 'BACKPERMISSIONS' then
+                        if matches[3] and matches[4] then
+                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[4]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[4], matches[3]))
+                        end
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'LOCK' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
-                                -- return editMessageText(msg.chat.id, msg.message_id, lockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
@@ -1247,7 +964,6 @@ local function run(msg, matches)
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
-                                -- return editMessageText(msg.chat.id, msg.message_id, unlockSetting(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKSETTINGS' .. matches[4] } } } })
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
@@ -1256,7 +972,6 @@ local function run(msg, matches)
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
-                                -- return editMessageText(msg.chat.id, msg.message_id, mute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
@@ -1265,7 +980,6 @@ local function run(msg, matches)
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
-                                -- return editMessageText(msg.chat.id, msg.message_id, unmute(tonumber(matches[4]), matches[3]), { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'group_managementBACKMUTES' .. matches[4] } } } })
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
@@ -1288,6 +1002,33 @@ local function run(msg, matches)
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                            end
+                        elseif matches[5] then
+                            if matches[2] == 'GRANT' then
+                                if is_owner2(msg.from.id, matches[4]) then
+                                    mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                                    permissions = adjustPermissions(matches[2]:lower())
+                                    if promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions) ~= langs[msg.lang].checkMyPermissions then
+                                        answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
+                                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                    else
+                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                    end
+                                else
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                                end
+                            elseif matches[2] == 'DENY' then
+                                if is_owner2(msg.from.id, matches[4]) then
+                                    mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                                    if promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions) ~= langs[msg.lang].checkMyPermissions then
+                                        answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
+                                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                    else
+                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                    end
+                                else
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                                end
                             end
                         end
                     end
@@ -2167,14 +1908,18 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'permissions' then
-                if msg.from.is_owner then
-                    mystat('/permissions')
-                    if msg.reply then
+                mystat('/permissions')
+                if msg.reply then
+                    if msg.from.is_mod then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        return promoteMod(msg.chat.id, msg.reply_to_message.forward_from)
+                                        if msg.chat.type ~= 'private' then
+                                            sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                        end
+                                        sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id))
+                                        return
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -2183,15 +1928,27 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            return promoteMod(msg.chat.id, msg.reply_to_message.from)
+                            if msg.chat.type ~= 'private' then
+                                sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                            end
+                            sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id))
+                            return
                         end
-                    elseif matches[2] and matches[2] ~= '' then
+                    else
+                        return langs[msg.lang].require_mod
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.from.is_mod then
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return promoteMod(msg.chat.id, obj_user)
+                                        if msg.chat.type ~= 'private' then
+                                            sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                        end
+                                        sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id))
+                                        return
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -2201,17 +1958,23 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return promoteMod(msg.chat.id, obj_user)
+                                    if msg.chat.type ~= 'private' then
+                                        sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                    end
+                                    sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id))
+                                    return
                                 end
                             else
                                 return langs[msg.lang].noObject
                             end
                         end
+                    else
+                        return langs[msg.lang].require_mod
                     end
-                    return
                 else
-                    return langs[msg.lang].require_owner
+                    return showPermissions(msg.chat.id, msg.from.id, msg.lang)
                 end
+                return
             end
             if matches[1]:lower() == 'textualpermissions' then
                 mystat('/permissions')
@@ -2220,7 +1983,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id, check_local)
+                                    return showPermissions(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -2228,26 +1991,26 @@ local function run(msg, matches)
                                 return langs[msg.lang].errorNoForward
                             end
                         else
-                            return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
+                            return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                         end
                     else
-                        return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
+                        return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
-                        return get_reverse_rank(msg.chat.id, matches[2], check_local)
+                        return showPermissions(msg.chat.id, matches[2], msg.lang)
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return get_reverse_rank(msg.chat.id, obj_user.id, check_local)
+                                return showPermissions(msg.chat.id, obj_user.id, msg.lang)
                             end
                         else
                             return langs[msg.lang].noObject
                         end
                     end
                 else
-                    return get_reverse_rank(msg.chat.id, msg.from.id, check_local)
+                    return showPermissions(msg.chat.id, msg.from.id, msg.lang)
                 end
             end
             if matches[1]:lower() == 'clean' then
@@ -2287,12 +2050,15 @@ return {
         "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
+        "^(###cbgroup_management)(BACKPERMISSIONS)(%d+)(%-%d+)$",
         "^(###cbgroup_management)(LOCK)(.*)(%-%d+)$",
         "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)$",
         "^(###cbgroup_management)(MUTE)(.*)(%-%d+)$",
         "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
         "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)$",
         "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)$",
+        "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
 
         "!!tgservice chat_add_user_link",
         "!!tgservice chat_add_users",
@@ -2343,6 +2109,10 @@ return {
         "^[#!/]([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
+        "^[#!/]([Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Oo][Nn][Ss]) ([^%s]+)$",
+        "^[#!/]([Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Oo][Nn][Ss])$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Oo][Nn][Ss]) ([^%s]+)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Oo][Nn][Ss])$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+) (.*)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) (.*)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn])$",
