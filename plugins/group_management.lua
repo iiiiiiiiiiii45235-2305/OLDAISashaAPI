@@ -691,13 +691,17 @@ local function modList(msg)
 end
 
 local function contactMods(msg)
+    local hashtag = '#admins' .. tostring(msg.message_id)
     local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
     if msg.from.username then
         text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
     else
         text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
     end
-    text = text .. langs[msg.lang].msgText ..(msg.text or msg.caption) .. '\n'
+    text = text .. langs[msg.lang].msgText ..(msg.text or msg.caption) .. '\n' ..
+    'HASHTAG ' .. hashtag
+
+    sendMessage(msg.chat.id, hashtag)
 
     local already_contacted = { }
     local list = getChatAdministrators(msg.chat.id)
@@ -727,14 +731,15 @@ local function contactMods(msg)
     if next(data[tostring(msg.chat.id)]['moderators']) == nil then
         -- fix way
         return
-    end
-    for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-        if not already_contacted[tonumber(k)] then
-            already_contacted[tonumber(k)] = k
-            if msg.reply then
-                forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
+    else
+        for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
+            if not already_contacted[tonumber(k)] then
+                already_contacted[tonumber(k)] = k
+                if msg.reply then
+                    forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
+                end
+                sendMessage(k, text)
             end
-            sendMessage(k, text)
         end
     end
 end
@@ -1260,7 +1265,11 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'admins' then
         mystat('/admins')
-        return contactMods(msg)
+        if is_group(msg) or is_super_group(msg) then
+            return contactMods(msg)
+        else
+            return langs[msg.lang].useYourGroups
+        end
     end
 
     -- INREALM
@@ -2179,7 +2188,7 @@ return {
         "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
-        "^[#!/]([Aa][Dd][Mm][Ii][Nn][Ss])",
+        "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss])",
         "^[#!/]([Aa][Dd][Dd])$",
         "^[#!/]([Rr][Ee][Mm])$",
         "^[#!/]([Rr][Uu][Ll][Ee][Ss])$",
