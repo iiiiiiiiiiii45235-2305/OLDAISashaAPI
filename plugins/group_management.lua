@@ -1954,7 +1954,7 @@ local function run(msg, matches)
                                         if matches[3] then
                                             permissions = adjustPermissions(matches[3]:lower())
                                         end
-                                        return promoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from, matches[3]:lower())
+                                        return promoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from, permissions)
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -1995,7 +1995,7 @@ local function run(msg, matches)
                                     if matches[3] then
                                         permissions = adjustPermissions(permissions)
                                     end
-                                    return promoteTgAdmin(msg.chat.id, obj_user, matches[3]:lower())
+                                    return promoteTgAdmin(msg.chat.id, obj_user, permissions)
                                 end
                             else
                                 return langs[msg.lang].noObject
