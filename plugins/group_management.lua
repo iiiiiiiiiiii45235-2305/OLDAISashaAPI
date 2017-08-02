@@ -1019,6 +1019,7 @@ local function run(msg, matches)
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
                                         permissions[matches[4]:lower()] = true
+                                        printvardump(permissions)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[msg.lang].checkMyPermissions and res ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
@@ -1046,6 +1047,7 @@ local function run(msg, matches)
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
                                         permissions[matches[4]:lower()] = false
+                                        printvardump(permissions)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[msg.lang].checkMyPermissions and res ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
