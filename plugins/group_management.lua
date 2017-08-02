@@ -779,8 +779,6 @@ local function keyboard_permissions_list(chat_id, user_id)
             end
         end
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
-        row = row + 1
-        keyboard.inline_keyboard[row] = { }
         column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
         return keyboard
