@@ -308,8 +308,8 @@ local function adjustPermissions(param_permissions)
     if param_permissions then
         if type(param_permissions) == 'table' then
             for k, v in pairs(param_permissions) do
-                if v == 'can_change_info' or v == 'can_delete_messages' or v == 'can_invite_users' or v == 'can_restrict_members' or v == 'can_pin_messages' or v == 'can_promote_members' then
-                    permissions[tostring(v)] = param_permissions[tostring(v)]
+                if k == 'can_change_info' or k == 'can_delete_messages' or k == 'can_invite_users' or k == 'can_restrict_members' or k == 'can_pin_messages' or k == 'can_promote_members' then
+                    permissions[tostring(k)] = param_permissions[tostring(k)]
                 end
             end
         elseif type(param_permissions) == 'string' then
