@@ -750,7 +750,6 @@ local function checkMatchesMuteUnmute(txt)
 end
 
 local function keyboard_permissions_list(chat_id, user_id, param_permissions)
-    printvardump(param_permissions)
     if not param_permissions then
         local obj_user = getChatMember(chat_id, user_id)
         if type(obj_user) == 'table' then
@@ -767,7 +766,6 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
     end
     if param_permissions then
         local permissions = adjustPermissions(param_permissions)
-        printvardump(permissions)
         local keyboard = { }
         keyboard.inline_keyboard = { }
         local row = 1
