@@ -750,21 +750,24 @@ local function checkMatchesMuteUnmute(txt)
 end
 
 local function keyboard_permissions_list(chat_id, user_id, param_permissions)
+    printvardump(param_permissions)
     if not param_permissions then
         local obj_user = getChatMember(chat_id, user_id)
         if type(obj_user) == 'table' then
             if obj_user.result then
                 -- assign user to permissions
-                param_permissions = obj_user.result
+                obj_user = obj_user.result
             else
                 obj_user = nil
             end
         else
             obj_user = nil
         end
+        param_permissions = obj_user
     end
     if param_permissions then
         local permissions = adjustPermissions(param_permissions)
+        printvardump(permissions)
         local keyboard = { }
         keyboard.inline_keyboard = { }
         local row = 1
@@ -772,7 +775,6 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         keyboard.inline_keyboard[row] = { }
         for var, value in pairs(permissions) do
             if type(value) == 'boolean' then
-                print(var, value)
                 if value then
                     keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementDENY' .. user_id .. var .. chat_id }
                 else
@@ -1019,7 +1021,6 @@ local function run(msg, matches)
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
                                         permissions[matches[4]:lower()] = true
-                                        printvardump(permissions)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[msg.lang].checkMyPermissions and res ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
@@ -1047,7 +1048,6 @@ local function run(msg, matches)
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
                                         permissions[matches[4]:lower()] = false
-                                        printvardump(permissions)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[msg.lang].checkMyPermissions and res ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
