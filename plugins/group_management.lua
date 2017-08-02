@@ -371,7 +371,7 @@ local function promoteTgAdmin(chat_id, user, permissions)
     if promoteChatMember(chat_id, user.id, permissions) then
         local promote = false
         for key, var in pairs(permissions) do
-            if permissions[var] then
+            if permissions[key] then
                 promote = true
             end
         end
@@ -766,31 +766,21 @@ local function keyboard_permissions_list(chat_id, user_id)
         keyboard.inline_keyboard = { }
         local row = 1
         local column = 1
-        local flag = false
         keyboard.inline_keyboard[row] = { }
         for var, value in pairs(permissions) do
             if type(value) == 'boolean' then
-                if flag then
-                    flag = false
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                end
                 if value then
                     keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementDENY' .. user_id .. var .. chat_id }
                 else
                     keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementGRANT' .. user_id .. var .. chat_id }
                 end
-                column = column + 1
-                if column > 1 then
-                    flag = true
-                end
+                row = row + 1
+                keyboard.inline_keyboard[row] = { }
             end
         end
-        row = row + 1
-        column = 1
-        keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
+        row = row + 1
+        keyboard.inline_keyboard[row] = { }
         column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
         return keyboard
