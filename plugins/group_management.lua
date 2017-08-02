@@ -1026,7 +1026,7 @@ local function run(msg, matches)
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
                                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
                                         else
-                                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                                         end
                                     end
                                 else
@@ -1053,7 +1053,7 @@ local function run(msg, matches)
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
                                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
                                         else
-                                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                                         end
                                     end
                                 else
