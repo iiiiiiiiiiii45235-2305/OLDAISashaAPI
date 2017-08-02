@@ -1014,6 +1014,7 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
+                                        permissions[matches[4]:lower()] = true
                                         if promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].checkMyPermissions and promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
                                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
@@ -1039,6 +1040,7 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
+                                        permissions[matches[4]:lower()] = false
                                         if promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].checkMyPermissions and promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
                                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
