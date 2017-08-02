@@ -749,19 +749,22 @@ local function checkMatchesMuteUnmute(txt)
     return false
 end
 
-local function keyboard_permissions_list(chat_id, user_id)
-    local obj_user = getChatMember(chat_id, user_id)
-    if type(obj_user) == 'table' then
-        if obj_user.result then
-            obj_user = obj_user.result
+local function keyboard_permissions_list(chat_id, user_id, param_permissions)
+    if not param_permissions then
+        local obj_user = getChatMember(chat_id, user_id)
+        if type(obj_user) == 'table' then
+            if obj_user.result then
+                -- assign user to permissions
+                param_permissions = obj_user.result
+            else
+                obj_user = nil
+            end
         else
             obj_user = nil
         end
-    else
-        obj_user = nil
     end
-    if obj_user then
-        local permissions = adjustPermissions(obj_user)
+    if param_permissions then
+        local permissions = adjustPermissions(param_permissions)
         local keyboard = { }
         keyboard.inline_keyboard = { }
         local row = 1
@@ -769,7 +772,6 @@ local function keyboard_permissions_list(chat_id, user_id)
         keyboard.inline_keyboard[row] = { }
         for var, value in pairs(permissions) do
             if type(value) == 'boolean' then
-                print(value)
                 if value then
                     keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementDENY' .. user_id .. var .. chat_id }
                 else
@@ -1019,7 +1021,7 @@ local function run(msg, matches)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[msg.lang].checkMyPermissions and res ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
-                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
                                         else
                                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
                                         end
@@ -1046,7 +1048,7 @@ local function run(msg, matches)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[msg.lang].checkMyPermissions and res ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
-                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
                                         else
                                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
                                         end
