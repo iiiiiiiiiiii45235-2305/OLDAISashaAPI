@@ -772,6 +772,7 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         keyboard.inline_keyboard[row] = { }
         for var, value in pairs(permissions) do
             if type(value) == 'boolean' then
+                print(var, value)
                 if value then
                     keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementDENY' .. user_id .. var .. chat_id }
                 else
