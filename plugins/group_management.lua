@@ -1006,7 +1006,7 @@ local function run(msg, matches)
                             if matches[2] == 'GRANT' then
                                 if is_owner2(msg.from.id, matches[5]) then
                                     mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                                    local obj_user = getChatMember(chat_id, user_id)
+                                    local obj_user = getChatMember(matches[5], matches[3])
                                     if type(obj_user) == 'table' then
                                         if obj_user.result then
                                             obj_user = obj_user.result
@@ -1031,7 +1031,7 @@ local function run(msg, matches)
                             elseif matches[2] == 'DENY' then
                                 if is_owner2(msg.from.id, matches[5]) then
                                     mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                                    local obj_user = getChatMember(chat_id, user_id)
+                                    local obj_user = getChatMember(matches[5], matches[3])
                                     if type(obj_user) == 'table' then
                                         if obj_user.result then
                                             obj_user = obj_user.result
