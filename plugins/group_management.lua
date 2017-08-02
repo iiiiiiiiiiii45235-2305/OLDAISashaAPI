@@ -745,7 +745,6 @@ local function keyboard_permissions_list(chat_id, user_id)
     local obj_user = getChatMember(chat_id, user_id)
     if type(obj_user) == 'table' then
         if obj_user.result then
-            -- assign obj_user to permissions parameter
             obj_user = obj_user.result
         else
             obj_user = nil
@@ -1005,26 +1004,51 @@ local function run(msg, matches)
                             end
                         elseif matches[5] then
                             if matches[2] == 'GRANT' then
-                                if is_owner2(msg.from.id, matches[4]) then
+                                if is_owner2(msg.from.id, matches[5]) then
                                     mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                                    permissions = adjustPermissions(matches[2]:lower())
-                                    if promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions) ~= langs[msg.lang].checkMyPermissions then
-                                        answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
-                                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                    local obj_user = getChatMember(chat_id, user_id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user.result then
+                                            obj_user = obj_user.result
+                                        else
+                                            obj_user = nil
+                                        end
                                     else
-                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                        obj_user = nil
+                                    end
+                                    if obj_user then
+                                        local permissions = adjustPermissions(obj_user)
+                                        if promoteTgAdmin(matches[5], obj_user, permissions) ~= langs[msg.lang].checkMyPermissions then
+                                            answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
+                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                        else
+                                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                        end
                                     end
                                 else
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                                 end
                             elseif matches[2] == 'DENY' then
-                                if is_owner2(msg.from.id, matches[4]) then
+                                if is_owner2(msg.from.id, matches[5]) then
                                     mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                                    if promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions) ~= langs[msg.lang].checkMyPermissions then
-                                        answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
-                                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                    local obj_user = getChatMember(chat_id, user_id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user.result then
+                                            obj_user = obj_user.result
+                                        else
+                                            obj_user = nil
+                                        end
                                     else
-                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                        obj_user = nil
+                                    end
+                                    if obj_user then
+                                        local permissions = adjustPermissions(obj_user)
+                                        if promoteTgAdmin(matches[5], obj_user, permissions) ~= langs[msg.lang].checkMyPermissions then
+                                            answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
+                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
+                                        else
+                                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].checkMyPermissions)
+                                        end
                                     end
                                 else
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
