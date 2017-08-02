@@ -541,26 +541,42 @@ local function showPermissions(chat_id, user_id, lang)
     else
         obj_user = nil
     end
-    local obj_bot = getChatMember(chat_id, bot.id)
-    if type(obj_bot) == 'table' then
-        if obj_bot.result then
-            obj_bot = obj_bot.result
+    if obj_user then
+        if obj_user.status ~= 'creator' or obj_user.status ~= 'administrator' then
+            local text = langs[lang].permissions ..
+            langs[lang].permissionCanBeEdited .. tostring(obj_user.can_be_edited or false) ..
+            langs[lang].permissionChangeInfo .. tostring(obj_user.can_change_info or false) ..
+            langs[lang].permissionDeleteMessages .. tostring(obj_user.can_delete_messages or false) ..
+            langs[lang].permissionInviteUsers .. tostring(obj_user.can_invite_users or false) ..
+            langs[lang].permissionPinMessages .. tostring(obj_user.can_pin_messages or false) ..
+            langs[lang].permissionPromoteMembers .. tostring(obj_user.can_promote_members or false) ..
+            langs[lang].permissionRestrictMembers .. tostring(obj_user.can_restrict_members or false)
+            return text
         else
-            obj_bot = nil
+            local obj_bot = getChatMember(chat_id, bot.id)
+            if type(obj_bot) == 'table' then
+                if obj_bot.result then
+                    obj_bot = obj_bot.result
+                else
+                    obj_bot = nil
+                end
+            else
+                obj_bot = nil
+            end
+            if obj_bot then
+                local text = langs[lang].permissions ..
+                langs[lang].permissionCanBeEdited .. tostring(obj_bot.can_promote_members or false) ..
+                langs[lang].permissionChangeInfo .. tostring(false) ..
+                langs[lang].permissionDeleteMessages .. tostring(false) ..
+                langs[lang].permissionInviteUsers .. tostring(false) ..
+                langs[lang].permissionPinMessages .. tostring(false) ..
+                langs[lang].permissionPromoteMembers .. tostring(false) ..
+                langs[lang].permissionRestrictMembers .. tostring(false)
+                return text
+            else
+                return langs[lang].errorTryAgain
+            end
         end
-    else
-        obj_bot = nil
-    end
-    if obj_user and obj_bot then
-        local text = langs[lang].permissions ..
-        langs[lang].permissionCanBeEdited .. tostring(obj_user.can_be_edited or false) ..
-        langs[lang].permissionChangeInfo .. tostring(obj_user.can_change_info or false) ..
-        langs[lang].permissionDeleteMessages .. tostring(obj_user.can_delete_messages or false) ..
-        langs[lang].permissionInviteUsers .. tostring(obj_user.can_invite_users or false) ..
-        langs[lang].permissionPinMessages .. tostring(obj_user.can_pin_messages or false) ..
-        langs[lang].permissionPromoteMembers .. tostring(obj_user.can_promote_members or false) ..
-        langs[lang].permissionRestrictMembers .. tostring(obj_user.can_restrict_members or false)
-        return text
     else
         return langs[lang].errorTryAgain
     end
@@ -589,41 +605,43 @@ local function reverseAdjustPermissions(permission_type, lang)
 end
 
 local function adjustPermissions(string_permissions)
-    string_permissions = string_permissions:lower()
-    local permissions = {
-        ['can_change_info'] = false,
-        ['can_delete_messages'] = false,
-        ['can_invite_users'] = false,
-        ['can_restrict_members'] = false,
-        ['can_pin_messages'] = false,
-        ['can_promote_members'] = false,
-    }
-    local permission_type = ''
-    for k, v in pairs(string_permissions:split(' ')) do
-        if v == 'change_info' then
-            permission_type = 'can_change_info'
+    if string_permissions then
+        string_permissions = string_permissions:lower()
+        local permissions = {
+            ['can_change_info'] = false,
+            ['can_delete_messages'] = false,
+            ['can_invite_users'] = false,
+            ['can_restrict_members'] = false,
+            ['can_pin_messages'] = false,
+            ['can_promote_members'] = false,
+        }
+        local permission_type = ''
+        for k, v in pairs(string_permissions:split(' ')) do
+            if v == 'change_info' then
+                permission_type = 'can_change_info'
+            end
+            if v == 'delete_messages' then
+                permission_type = 'can_delete_messages'
+            end
+            if v == 'invite_users' then
+                permission_type = 'can_invite_users'
+            end
+            if v == 'restrict_members' then
+                permission_type = 'can_restrict_members'
+            end
+            if v == 'pin_messages' then
+                permission_type = 'can_pin_messages'
+            end
+            if v == 'promote_members' then
+                permission_type = 'can_promote_members'
+            end
+            if permission_type ~= '' then
+                permissions[tostring(permission_type)] = true
+            end
+            permission_type = ''
         end
-        if v == 'delete_messages' then
-            permission_type = 'can_delete_messages'
-        end
-        if v == 'invite_users' then
-            permission_type = 'can_invite_users'
-        end
-        if v == 'restrict_members' then
-            permission_type = 'can_restrict_members'
-        end
-        if v == 'pin_messages' then
-            permission_type = 'can_pin_messages'
-        end
-        if v == 'promote_members' then
-            permission_type = 'can_promote_members'
-        end
-        if permission_type ~= '' then
-            permissions[tostring(permission_type)] = true
-        end
-        permission_type = ''
+        return permissions
     end
-    return permissions
 end
 
 -- begin RANKS MANAGEMENT
@@ -1993,7 +2011,7 @@ local function run(msg, matches)
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if matches[3] then
-                                        permissions = adjustPermissions(permissions)
+                                        permissions = adjustPermissions(matches[3]:lower())
                                     end
                                     return promoteTgAdmin(msg.chat.id, obj_user, permissions)
                                 end
@@ -2326,7 +2344,6 @@ return {
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+) (.*)$",
-        "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) (.*)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn])$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
