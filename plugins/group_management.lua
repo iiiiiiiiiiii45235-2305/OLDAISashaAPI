@@ -528,14 +528,43 @@ local function remSuperGroup(msg)
     save_data(config.likecounter.db, likecounter)
     return langs[msg.lang].supergroupRemoved
 end
-
-local function getDefaultAlternativeCommands(chat_id)
-    local lang = get_lang(chat_id)
-    alternatives[chat_id] = default_alternatives
-    save_alternatives()
-    return langs[lang].defaultAlternativesSet
-end
 -- end ADD/REM GROUPS
+
+local function showPermissions(chat_id, user_id, lang)
+    local obj_user = getChatMember(chat_id, user_id)
+    if type(obj_user) == 'table' then
+        if obj_user.result then
+            obj_user = obj_user.result
+        else
+            obj_user = nil
+        end
+    else
+        obj_user = nil
+    end
+    local obj_bot = getChatMember(chat_id, bot.id)
+    if type(obj_bot) == 'table' then
+        if obj_bot.result then
+            obj_bot = obj_bot.result
+        else
+            obj_bot = nil
+        end
+    else
+        obj_bot = nil
+    end
+    if obj_user and obj_bot then
+        local text = langs[lang].permissions ..
+        langs[lang].permissionCanBeEdited .. tostring(obj_user.can_be_edited or false) ..
+        langs[lang].permissionChangeInfo .. tostring(obj_user.can_change_info or false) ..
+        langs[lang].permissionDeleteMessages .. tostring(obj_user.can_delete_messages or false) ..
+        langs[lang].permissionInviteUsers .. tostring(obj_user.can_invite_users or false) ..
+        langs[lang].permissionPinMessages .. tostring(obj_user.can_pin_messages or false) ..
+        langs[lang].permissionPromoteMembers .. tostring(obj_user.can_promote_members or false) ..
+        langs[lang].permissionRestrictMembers .. tostring(obj_user.can_restrict_members or false)
+        return text
+    else
+        return langs[lang].errorTryAgain
+    end
+end
 
 local function reverseAdjustPermissions(permission_type, lang)
     if permission_type == 'can_change_info' then
@@ -704,14 +733,19 @@ local function contactMods(msg)
     sendMessage(msg.chat.id, hashtag)
 
     local already_contacted = { }
+    local cant_contact = ''
     local list = getChatAdministrators(msg.chat.id)
     if list then
         for i, admin in pairs(list.result) do
             already_contacted[tonumber(admin.user.id)] = admin.user.id
-            if msg.reply then
-                forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+            if sendChatAction(admin.user.id, 'typing') then
+                if msg.reply then
+                    forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+                end
+                sendMessage(admin.user.id, text)
+            else
+                cant_contact = cant_contact .. admin.user.id .. ' ' .. admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or '')) .. '\n'
             end
-            sendMessage(admin.user.id, text)
         end
     end
 
@@ -720,10 +754,14 @@ local function contactMods(msg)
     if owner then
         if not already_contacted[tonumber(owner)] then
             already_contacted[tonumber(owner)] = owner
-            if msg.reply then
-                forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
+            if sendChatAction(admin.user.id, 'typing') then
+                if msg.reply then
+                    forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
+                end
+                sendMessage(owner, text)
+            else
+                cant_contact = cant_contact .. owner .. '\n'
             end
-            sendMessage(owner, text)
         end
     end
 
@@ -734,13 +772,20 @@ local function contactMods(msg)
     else
         for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
             if not already_contacted[tonumber(k)] then
-                already_contacted[tonumber(k)] = k
-                if msg.reply then
-                    forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
+                if sendChatAction(admin.user.id, 'typing') then
+                    already_contacted[tonumber(k)] = k
+                    if msg.reply then
+                        forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
+                    end
+                    sendMessage(k, text)
+                else
+                    cant_contact = cant_contact .. k .. '\n'
                 end
-                sendMessage(k, text)
             end
         end
+    end
+    if cant_contact ~= '' then
+        sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
     end
 end
 -- end RANKS MANAGEMENT
@@ -2103,6 +2148,90 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             end
+            if matches[1]:lower() == 'permissions' then
+                if msg.from.is_owner then
+                    mystat('/permissions')
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        return promoteMod(msg.chat.id, msg.reply_to_message.forward_from)
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            end
+                        else
+                            return promoteMod(msg.chat.id, msg.reply_to_message.from)
+                        end
+                    elseif matches[2] and matches[2] ~= '' then
+                        if string.match(matches[2], '^%d+$') then
+                            local obj_user = getChat(matches[2])
+                            if type(obj_user) == 'table' then
+                                if obj_user then
+                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                        return promoteMod(msg.chat.id, obj_user)
+                                    end
+                                else
+                                    return langs[msg.lang].noObject
+                                end
+                            end
+                        else
+                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    return promoteMod(msg.chat.id, obj_user)
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    end
+                    return
+                else
+                    return langs[msg.lang].require_owner
+                end
+            end
+            if matches[1]:lower() == 'textualpermissions' then
+                mystat('/permissions')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id, check_local)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        else
+                            return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
+                        end
+                    else
+                        return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        return get_reverse_rank(msg.chat.id, matches[2], check_local)
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return get_reverse_rank(msg.chat.id, obj_user.id, check_local)
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                else
+                    return get_reverse_rank(msg.chat.id, msg.from.id, check_local)
+                end
+            end
             if matches[1]:lower() == 'clean' then
                 if msg.from.is_owner then
                     if matches[2]:lower() == 'modlist' then
@@ -2197,7 +2326,9 @@ return {
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+) (.*)$",
+        "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) (.*)$",
+        "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn])$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee][Aa][Dd][Mm][Ii][Nn])$",
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee]) ([^%s]+)$",
