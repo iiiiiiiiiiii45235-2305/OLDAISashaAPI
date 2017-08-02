@@ -699,7 +699,7 @@ local function contactMods(msg)
         text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
     end
     text = text .. langs[msg.lang].msgText ..(msg.text or msg.caption) .. '\n' ..
-    'HASHTAG ' .. hashtag
+    'HASHTAG: ' .. hashtag
 
     sendMessage(msg.chat.id, hashtag)
 
