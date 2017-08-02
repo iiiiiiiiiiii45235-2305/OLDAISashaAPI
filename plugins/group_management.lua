@@ -369,9 +369,17 @@ local function promoteTgAdmin(chat_id, user, permissions)
         return langs[lang].groupNotAdded
     end
     if promoteChatMember(chat_id, user.id, permissions) then
-        data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
-        save_data(config.moderation.data, data)
-        return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
+        local promote = false
+        for key, var in pairs(permissions) do
+            if permissions[var] then
+                promote = true
+            end
+        end
+        if promote then
+            data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
+            save_data(config.moderation.data, data)
+            return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
+        end
     else
         return langs[lang].checkMyPermissions
     end
@@ -1018,7 +1026,7 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
-                                        if promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].checkMyPermissions then
+                                        if promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].checkMyPermissions and promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
                                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
                                         else
@@ -1043,7 +1051,7 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local permissions = adjustPermissions(obj_user)
-                                        if promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].checkMyPermissions then
+                                        if promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].checkMyPermissions and promoteTgAdmin(matches[5], obj_user.user, permissions) ~= langs[msg.lang].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
                                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3]))
                                         else
