@@ -747,6 +747,9 @@ local function pre_process(msg)
             if msg.service_type then
                 -- Check if banned users joins chat
                 if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+                    if #msg.added >= 5 then
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood))
+                    end
                     for k, v in pairs(msg.added) do
                         print('Checking invited user ' .. v.id)
                         if isBanned(v.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(v.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, v.id))) then

@@ -261,6 +261,7 @@ return {
         reasonFlame = 'Flame.',
         reasonInviteRealm = 'Aggiunta di utente/i in un regno.',
         reasonWarnMax = 'Raggiunto limite warn.',
+        reasonInviteFlood = 'Troppi membri aggiunti in una sola volta.',
 
         -- seedbot.lua --
         sender = 'Mittente: ',
@@ -1459,6 +1460,7 @@ return {
         reasonFlame = 'Flame.',
         reasonInviteRealm = 'Added user(s) in realm.',
         reasonWarnMax = 'Warn limit reached.',
+        reasonInviteFlood = 'Too much members added at the same time.',
 
         -- seedbot.lua --
         sender = 'Sender: ',
