@@ -748,7 +748,9 @@ local function pre_process(msg)
                 -- Check if banned users joins chat
                 if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
                     if #msg.added >= 5 then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood))
+                        if not is_owner(msg) then
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood))
+                        end
                     end
                     for k, v in pairs(msg.added) do
                         print('Checking invited user ' .. v.id)
