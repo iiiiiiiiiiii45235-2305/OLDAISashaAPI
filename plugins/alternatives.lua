@@ -332,6 +332,67 @@ local function run(msg, matches)
             return text
         end
     end
+    if matches[1]:lower() == 'previewalternative' and matches[2] then
+        mystat('/previewalternative')
+        if alternatives[tostring(msg.chat.id)] then
+            for k, v in pairs(alternatives[tostring(msg.chat.id)].altCmd) do
+                if k == matches[2] then
+                    if string.match(k, '^media:photo') then
+                        sendPhotoId(msg.chat.id, string.match(k, '^media:photo(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:video') then
+                        sendVideoId(msg.chat.id, string.match(k, '^media:video(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:video_note') then
+                        sendVideoNoteId(msg.chat.id, string.match(k, '^media:video_note(.*)'), msg.message_id)
+                    elseif string.match(k, '^media:audio') then
+                        sendAudioId(msg.chat.id, string.match(k, '^media:audio(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:voice_note') or string.match(k, '^media:voice') then
+                        if string.match(k, '^media:voice_note(.*)') then
+                            sendVoiceId(msg.chat.id, string.match(k, '^media:voice_note(.*)'), '', msg.message_id)
+                        elseif string.match(k, '^media:voice(.*)') then
+                            sendVoiceId(msg.chat.id, string.match(k, '^media:voice(.*)'), '', msg.message_id)
+                        end
+                    elseif string.match(k, '^media:gif') then
+                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:document') then
+                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:sticker') then
+                        sendStickerId(msg.chat.id, string.match(k, '^media:sticker(.*)'), msg.message_id)
+                    else
+                        sendReply(msg, v)
+                    end
+                end
+            end
+        end
+        if alternatives.global then
+            for k, v in pairs(alternatives.global.altCmd) do
+                if k == matches[2] then
+                    if string.match(k, '^media:photo') then
+                        sendPhotoId(msg.chat.id, string.match(k, '^media:photo(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:video') then
+                        sendVideoId(msg.chat.id, string.match(k, '^media:video(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:video_note') then
+                        sendVideoNoteId(msg.chat.id, string.match(k, '^media:video_note(.*)'), msg.message_id)
+                    elseif string.match(k, '^media:audio') then
+                        sendAudioId(msg.chat.id, string.match(k, '^media:audio(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:voice_note') or string.match(k, '^media:voice') then
+                        if string.match(k, '^media:voice_note(.*)') then
+                            sendVoiceId(msg.chat.id, string.match(k, '^media:voice_note(.*)'), '', msg.message_id)
+                        elseif string.match(k, '^media:voice(.*)') then
+                            sendVoiceId(msg.chat.id, string.match(k, '^media:voice(.*)'), '', msg.message_id)
+                        end
+                    elseif string.match(k, '^media:gif') then
+                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:document') then
+                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                    elseif string.match(k, '^media:sticker') then
+                        sendStickerId(msg.chat.id, string.match(k, '^media:sticker(.*)'), msg.message_id)
+                    else
+                        sendReply(msg, v)
+                    end
+                end
+            end
+        end
+    end
     if matches[1]:lower() == 'setalternative' and matches[2] then
         if msg.from.is_mod then
             mystat('/setalternative')
@@ -681,7 +742,7 @@ local function pre_process(msg)
                                 file_id = msg.video_note.file_id
                             elseif msg.media_type == 'audio' then
                                 file_id = msg.audio.file_id
-                            elseif msg.media_type == 'voice_note' then
+                            elseif msg.media_type == 'voice_note' or msg.media_type == 'voice' then
                                 file_id = msg.voice.file_id
                             elseif msg.media_type == 'gif' then
                                 file_id = msg.document.file_id
@@ -732,7 +793,7 @@ local function pre_process(msg)
                                 file_id = msg.video_note.file_id
                             elseif msg.media_type == 'audio' then
                                 file_id = msg.audio.file_id
-                            elseif msg.media_type == 'voice_note' then
+                            elseif msg.media_type == 'voice_note' or msg.media_type == 'voice' then
                                 file_id = msg.voice.file_id
                             elseif msg.media_type == 'gif' then
                                 file_id = msg.document.file_id
@@ -772,6 +833,7 @@ return {
     patterns =
     {
         "^[#!/]([Gg][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([#!/][^%s]+)$",
+        "^[#!/]([Pp][Rr][Ee][Vv][Ii][Ee][Ww][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee])$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Aa][Ll][Tt][Ee][Rr][Nn][Aa][Tt][Ii][Vv][Ee][Ss]) ([#!/].*)$",
@@ -791,6 +853,7 @@ return {
     {
         "USER",
         "#getalternatives /<command>",
+        "#previewalternative <alternative>",
         "MOD",
         "#setalternative /<command> <alternative>|<reply_media>",
         "#unsetalternative <alternative>|<reply_media>",
