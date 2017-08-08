@@ -44,11 +44,9 @@ function create_config()
             'anti_spam',
             'alternatives',
             'msg_checks',
-            'onservice',
             'administrator',
             'banhammer',
             'bot',
-            'broadcast',
             'check_tag',
             'database',
             'fakecommand',
@@ -771,17 +769,17 @@ function pre_process_msg(msg)
     plugins.goodbyewelcome.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.msg_checks.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'onservice')
-    plugins.onservice.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'administrator')
+    plugins.administrator.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
-            if plugin.description ~= 'ALTERNATIVES' and
+            if plugin.description ~= 'ADMINISTRATOR' and
+                plugin.description ~= 'ALTERNATIVES' and
                 plugin.description ~= 'ANTI_SPAM' and
                 plugin.description ~= 'DATABASE' and
                 plugin.description ~= 'DELWORD' and
                 plugin.description ~= 'GOODBYEWELCOME' and
-                plugin.description ~= 'MSG_CHECKS' and
-                plugin.description ~= 'ONSERVICE' then
+                plugin.description ~= 'MSG_CHECKS' then
                 print(clr.white .. 'Preprocess', name)
                 msg = plugin.pre_process(msg)
             end

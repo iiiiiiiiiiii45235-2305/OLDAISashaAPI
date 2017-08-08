@@ -131,6 +131,37 @@ local function run(msg, matches)
             return langs[msg.lang].tagalertRegistrationNeeded
         end
     end
+
+    --[[if matches[1]:lower() == 'tagall' then
+        if msg.from.is_owner then
+            return langs[msg.lang].useAISasha
+            local text = ''
+            if matches[2] then
+                mystat('/tagall <text>')
+                text = matches[2] .. "\n"
+            elseif msg.reply then
+                mystat('/tagall <reply_text>')
+                text = msg.reply_to_message.text .. "\n"
+            end
+            local participants = getChatParticipants(msg.chat.id)
+            for k, v in pairs(participants) do
+                if v.user then
+                    v = v.user
+                    if v.username then
+                        text = text .. "@" .. v.username .. " "
+                    else
+                        local print_name =(v.first_name or '') ..(v.last_name or '')
+                        if print_name ~= '' then
+                            text = text .. print_name .. " "
+                        end
+                    end
+                end
+            end
+            return text
+        else
+            return langs[msg.lang].require_owner
+        end
+    end]]
 end
 
 local function pre_process(msg)
@@ -279,6 +310,8 @@ return {
         "^[#!/]([Uu][Nn][Rr][Ee][Gg][Ii][Ss][Tt][Ee][Rr][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",
         "^[#!/]([Ss][Ee][Tt][Nn][Ii][Cc][Kk][Nn][Aa][Mm][Ee]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Nn][Ii][Cc][Kk][Nn][Aa][Mm][Ee])$",
+        "^[#!/]([Tt][Aa][Gg][Aa][Ll][Ll])$",
+        "^[#!/]([Tt][Aa][Gg][Aa][Ll][Ll]) +(.+)$",
     },
     run = run,
     pre_process = pre_process,
@@ -293,5 +326,6 @@ return {
         "OWNER",
         "#enabletagalert",
         "#disabletagalert",
+        -- "#tagall <text>|<reply_text>",
     },
 }

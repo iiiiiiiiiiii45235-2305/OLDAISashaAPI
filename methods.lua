@@ -317,18 +317,20 @@ function demoteChatMember(chat_id, user_id)
     return promoteChatMember(chat_id, user_id, demote_table)
 end
 
-function restrictChatMember(chat_id, user_id, until_date, permissions)
-    --[[local permissions = { can_send_messages = true,
-    can_send_media_messages = true,
-    can_send_other_messages = true,
-    can_add_web_page_previews = true }]]
+function restrictChatMember(chat_id, user_id, until_date, restrictions)
+    --[[local restrictions = { can_send_messages = true,
+    can_send_media_messages = true, -- implies can_send_messages
+    can_send_other_messages = true, -- implies can_send_media_messages
+    can_add_web_page_previews = true -- implies can_send_media_messages}]]
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
-        '&user_id=' .. user_id ..
-        '&until_date=' .. until_date or '29'
-        for k, v in pairs(permissions) do
-            url = url .. '&' .. k .. '=' .. v
+        '&user_id=' .. user_id
+        if until_date then
+            url = url .. '&until_date=' .. until_date
+        end
+        for k, v in pairs(restrictions) do
+            url = url .. '&' .. k .. '=' .. tostring(restrictions[k])
         end
         local res, code = sendRequest(url)
 

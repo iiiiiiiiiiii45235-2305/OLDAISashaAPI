@@ -330,6 +330,7 @@ return {
         realmListStart = 'Reami:\n',
         groupListCreated = 'Lista gruppi creata.',
         realmListCreated = 'Lista reami creata.',
+        notMyGroup = 'Questo non è un mio gruppo, addio.',
 
         -- alternatives.lua --
         listAlternatives = 'Lista comandi alternativi a X: ',
@@ -436,6 +437,42 @@ return {
         helpIntro = 'Ogni \'#\' può essere sostituito con i simboli \'/\' o \'!\'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale.\nLe parentesi tonde indicano una scelta evidenziata da \'|\' che significa "oppure".\n\n',
         commandNotFound = 'Sintassi comando non trovata.',
         sendHelpPvt = 'Ti ho mandato l\'help in privato.',
+        pluginAdministrator = 'Amministratori bot',
+        pluginAlternatives = 'Comandi alternativi',
+        pluginAnti_spam = 'Anti flood',
+        pluginBanhammer = 'Gestione ban',
+        pluginBot = 'Gestione bot',
+        pluginCheck_tag = 'Tag alert',
+        pluginDatabase = 'Database',
+        pluginDelword = 'Censure',
+        pluginDogify = 'Doge',
+        pluginFakecommand = 'Comandi fittizi',
+        pluginFeedback = 'Feedback',
+        pluginFilemanager = 'File manager',
+        pluginFlame = 'Flame utenti',
+        pluginGetsetunset = 'Get Set Unset variabili',
+        pluginGoodbyewelcome = 'Saluti',
+        pluginGroup_management = 'Gestione gruppo',
+        pluginHelp = 'Aiuto',
+        pluginInfo = 'Info',
+        pluginInteract = 'Interazione di Sasha',
+        pluginLikecounter = 'Mi piace',
+        pluginLua_exec = 'Esecuzione LUA',
+        pluginMe = 'I miei messaggi',
+        pluginMsg_checks = 'Controllo messaggi',
+        pluginMultiple_commands = 'Comandi multipli',
+        pluginNews = 'Notizie di Sasha',
+        pluginPlugins = 'Gestione plugins',
+        pluginPokedex = 'Pokedex',
+        pluginQr = 'Codici QR',
+        pluginShout = 'Urli',
+        pluginStats = 'Statistiche',
+        pluginStrings = 'Lingua',
+        pluginTgcli_to_api_migration = 'Migrazione da @AISasha',
+        pluginTodo = 'Cose da fare',
+        pluginUrbandictionary = 'Urban dictionary',
+        pluginWebshot = 'Webscreenshots',
+        pluginWhitelist = 'Whitelist',
 
         -- getsetunset.lua --
         globalEnable = 'Variabili globali abilitate su questa chat.',
@@ -651,9 +688,6 @@ return {
         -- me.lua --
         meString = 'Hai mandato W (X%) messaggi e questa chat ne ha Z.',
 
-        -- onservice.lua --
-        notMyGroup = 'Questo non è un mio gruppo, addio.',
-
         -- plugins.lua --
         enabled = ' abilitato.',
         disabled = ' disabilitato.',
@@ -827,6 +861,7 @@ return {
             '#commandsstats: Sasha manda gli stats di tutti i comandi.',
             '#ping: Sasha risponde con "Pong".',
             '#laststart: Sasha manda la data dell\'avvio.',
+            '#leave [<group_id>]: Sasha lascia il gruppo.',
             'SUDO',
             '#addadmin <user_id>|<username>: Sasha promuove l\'utente specificato ad amminstratore.',
             '#removeadmin <user_id>|<username>: Sasha degrada l\'utente specificato.',
@@ -837,6 +872,7 @@ return {
             '#backup: Sasha esegue un backup del raspberry e lo invia ai sudo.',
             '#rebootcli: Sasha riavvia la sua versione cli.',
             '#reloaddata: Sasha ricarica i dati dei gruppi.',
+            '#broadcast <text>: Sasha invia <text> a tutti i gruppi.',
         },
 
         alternatives =
@@ -899,16 +935,6 @@ return {
             '#bot|sasha on|off [<group_id>]: Sasha si attiva|disattiva nel gruppo specificato.',
         },
 
-        broadcast =
-        {
-            '🅿️ BROADCAST',
-            'Plugin per mandare messaggi broadcast.',
-            'ADMIN',
-            '#br <group_id> <text>: Sasha invia <text> a <group_id>.',
-            'SUDO',
-            '#broadcast <text>: Sasha invia <text> a tutti i gruppi.',
-        },
-
         check_tag =
         {
             '🅿️ CHECK_TAG',
@@ -922,6 +948,7 @@ return {
             'OWNER',
             '#enabletagalert: Sasha abilita la funzione per il gruppo (disabilitata per default).',
             '#disabletagalert: Sasha disabilita la funzione per il gruppo.',
+            -- '#tagall <text>|<reply_text>: Sasha scrive <text>|<reply_text> e tagga tutti i membri del gruppo.',
         },
 
         database =
@@ -1241,14 +1268,6 @@ return {
             '#stopnews: Sasha smette di mandare le novità.',
         },
 
-        onservice =
-        {
-            '🅿️ ONSERVICE',
-            'Plugin per far abbandonare un gruppo a Sasha.',
-            'ADMIN',
-            '#leave [<group_id>]: Sasha lascia il gruppo.',
-        },
-
         plugins =
         {
             '🅿️ PLUGINS',
@@ -1319,14 +1338,6 @@ return {
             '#setlang (it|en): Sasha imposta la lingua in cui deve parlare in questo gruppo.',
             'SUDO',
             '(#reloadstrings|#reloadlangs): Sasha aggiorna le stringhe di testo.',
-        },
-
-        tagall =
-        {
-            '🅿️ TAGALL',
-            'Plugin per taggare tutti i membri.',
-            'OWNER',
-            -- '#tagall <text>|<reply_text>: Sasha scrive <text>|<reply_text> e tagga tutti i membri del gruppo.',
         },
 
         tex =
@@ -1533,6 +1544,7 @@ return {
         realmListStart = 'Realms:\n',
         groupListCreated = 'Group list created.',
         realmListCreated = 'Realm list created.',
+        notMyGroup = 'This is not one of my groups, bye.',
 
         -- alternatives.lua --
         listAlternatives = 'List of X\'s alternative commands: ',
@@ -1636,9 +1648,45 @@ return {
         pluginListStart = 'ℹ️Plugins list: \n\n',
         helpInfo = 'ℹ️Write "!help <plugin_name>|<plugin_number>" for more info on that plugin.\nℹ️Or "!helpall" to have all commands.',
         errorNoPlugin = 'This plugin doesn\'t exist or doesn\'t have a description.',
-        helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets indicate a choice with \'|\' that means "or".\n\n',
+        helpIntro = 'Every \'#\' can be replaced with \'/\ \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets indicate a choice with \'|\' that means "or".\n\n',
         commandNotFound = 'Command syntax not found.',
         sendHelpPvt = 'I\'ve sent you the help in private.',
+        pluginAdministrator = 'Bot\'s administrators',
+        pluginAlternatives = 'Alternative commands',
+        pluginAnti_spam = 'Anti flood',
+        pluginBanhammer = 'Ban management',
+        pluginBot = 'Bot management',
+        pluginCheck_tag = 'Tag alert',
+        pluginDatabase = 'Database',
+        pluginDelword = 'Censorships',
+        pluginDogify = 'Doge',
+        pluginFakecommand = 'Fake commands',
+        pluginFeedback = 'Feedback',
+        pluginFilemanager = 'File manager',
+        pluginFlame = 'Flame users',
+        pluginGetsetunset = 'Get Set Unset variables',
+        pluginGoodbyewelcome = 'Greetings',
+        pluginGroup_management = 'Group management',
+        pluginHelp = 'Help',
+        pluginInfo = 'Info',
+        pluginInteract = 'Sasha\'s interaction',
+        pluginLikecounter = 'Likes',
+        pluginLua_exec = 'Execute LUA',
+        pluginMe = 'My messages',
+        pluginMsg_checks = 'Check messages',
+        pluginMultiple_commands = 'Multiple commands',
+        pluginNews = 'Sasha\'s news',
+        pluginPlugins = 'Plugins management',
+        pluginPokedex = 'Pokedex',
+        pluginQr = 'QR codes',
+        pluginShout = 'Shouts',
+        pluginStats = 'Stats',
+        pluginStrings = 'Language',
+        pluginTgcli_to_api_migration = 'Migration from @AISasha',
+        pluginTodo = 'Things to do',
+        pluginUrbandictionary = 'Urban dictionary',
+        pluginWebshot = 'Webscreenshots',
+        pluginWhitelist = 'Whitelist',
 
         -- getsetunset.lua --
         globalEnable = 'Global variables enabled on this chat.',
@@ -1861,9 +1909,6 @@ return {
         -- me.lua --
         meString = 'You have sent W (X%) messages and this chat has Z messages.',
 
-        -- onservice.lua --
-        notMyGroup = 'This is not one of my groups, bye.',
-
         -- plugins.lua --
         enabled = ' enabled.',
         disabled = ' disabled.',
@@ -2037,6 +2082,7 @@ return {
             '#commandsstats: Sasha sends commands stats.',
             '#ping: Sasha answers with "Pong".',
             '#laststart: Sasha sends last start date.',
+            '#leave [<group_id>]: Sasha leaves the group.',
             'SUDO',
             '#addadmin <user_id>|<username>: Sasha promotes the specified user to administrator.',
             '#removeadmin <user_id>|<username>: Sasha demotes the specified user from administrator.',
@@ -2047,6 +2093,7 @@ return {
             '#backup: Sasha makes the raspberry backup and sends it to sudoers.',
             '#rebootcli: Sasha reboots her cli version.',
             '#reloaddata: Sasha reloads groups\' data.',
+            '#broadcast <text>: Sasha sends <text> to all groups.',
         },
 
         alternatives =
@@ -2109,16 +2156,6 @@ return {
             '#bot|sasha on|off [<group_id>]: Sasha goes on|off in the specified group.',
         },
 
-        broadcast =
-        {
-            '🅿️ BROADCAST',
-            'Plugin to send broadcast messages.',
-            'ADMIN',
-            '#br <group_id> <text>: Sasha sends <text> to <group_id>.',
-            'SUDO',
-            '#broadcast <text>: Sasha sends <text> to all groups.',
-        },
-
         check_tag =
         {
             '🅿️ CHECK_TAG',
@@ -2132,6 +2169,7 @@ return {
             'OWNER',
             '#enabletagalert: Sasha enables the function for this group (disabled by default).',
             '#disabletagalert: Sasha disables the function for this group.',
+            -- '#tagall <text>|<reply_text>: Sasha writes <text>|<reply_text> tags all group\'s members.',
         },
 
         database =
@@ -2451,14 +2489,6 @@ return {
             '#stopnews: Sasha stops sending her news.',
         },
 
-        onservice =
-        {
-            '🅿️ ONSERVICE',
-            'Plugin to make Sasha leave a group.',
-            'ADMIN',
-            '#leave [<group_id>]: Sasha leaves the group.',
-        },
-
         plugins =
         {
             '🅿️ PLUGINS',
@@ -2529,14 +2559,6 @@ return {
             '#setlang (it|en): Sasha sets the language she has to talk in this group.',
             'SUDO',
             '(#reloadstrings|#reloadlangs): Sasha updates strings.',
-        },
-
-        tagall =
-        {
-            '🅿️ TAGALL',
-            'Plugin to tag all users.',
-            'OWNER',
-            -- '#tagall <text>|<reply_text>: Sasha writes <text>|<reply_text> tags all group\'s members.',
         },
 
         tex =

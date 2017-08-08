@@ -230,7 +230,24 @@ local function run(msg, matches)
             end
             return
         end
+        if matches[1]:lower() == 'leave' then
+            mystat('/leave')
+            if not matches[2] then
+                sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+                return leaveChat(msg.chat.id)
+            else
+                sendMessage(matches[2], langs[msg.lang].notMyGroup)
+                return leaveChat(matches[2])
+            end
+        end
         if is_sudo(msg) then
+            if matches[1] == 'broadcast' then
+                mystat('/broadcast')
+                for k, v in pairs(data['groups']) do
+                    sendMessage(v, matches[2])
+                end
+                return
+            end
             if matches[1]:lower() == 'addadmin' then
                 mystat('/addadmin')
                 if msg.reply then
@@ -327,6 +344,24 @@ local function run(msg, matches)
     end
 end
 
+local function pre_process(msg)
+    if msg then
+        if msg.service then
+            if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+                for k, v in pairs(msg.added) do
+                    if tostring(v.id) == tostring(bot.id) then
+                        if not is_admin(msg) then
+                            sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+                            leaveChat(msg.chat.id)
+                        end
+                    end
+                end
+            end
+        end
+        return msg
+    end
+end
+
 return {
     description = "ADMINISTRATOR",
     patterns =
@@ -350,7 +385,11 @@ return {
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Dd][Aa][Tt][Aa])$",
+        "^[#!/]([Bb][Rr][Oo][Aa][Dd][Cc][Aa][Ss][Tt]) +(.+)$",
+        "^[#!/]([Ll][Ee][Aa][Vv][Ee]) (%-?%d+)$",
+        "^[#!/]([Ll][Ee][Aa][Vv][Ee])$",
     },
+    pre_process = pre_process,
     run = run,
     min_rank = 3,
     syntax =
@@ -365,6 +404,7 @@ return {
         "#commandsstats",
         "#ping",
         "#laststart",
+        "#leave [<group_id>]",
         "SUDO",
         "#addadmin <user_id>|<username>",
         "#removeadmin <user_id>|<username>",
@@ -374,6 +414,7 @@ return {
         "#backup",
         "#rebootcli",
         "#reloaddata",
+        "#broadcast <text>",
     },
 }
 -- By @imandaneshi :)

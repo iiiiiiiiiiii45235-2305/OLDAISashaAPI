@@ -181,6 +181,73 @@ local function syntax_all(chat, rank, filter)
     return text
 end
 
+local function adjust_plugin_names(p)
+    if p == 'administrator' then
+        return 'BOT\'S ADMINS'
+    elseif p == 'alternatives' then
+        return 'COMMAND\'S ALTERNATIVES'
+    elseif p == 'anti_spam' then
+        return 'ANTI FLOOD'
+    elseif p == 'banhammer' then
+        return 'BANS MANAGEMENT'
+    elseif p == 'bot' then
+        return 'BOT MANAGEMENT'
+    elseif p == 'check_tag' then
+        return 'TAG ALERT'
+    elseif p == 'database' then
+        return 'DATABASE'
+    elseif p == 'delword' then
+        return 'CENSORSHIPS'
+    elseif p == 'dogify' then
+        return 'DOGE'
+    elseif p == 'fakecommand' then
+        return 'FAKE COMMANDS'
+    elseif p == 'feedback' then
+        return 'FEEDBACK'
+    elseif p == 'filemanager' then
+        return 'FILEMANAGER'
+    elseif p == 'flame' then
+        return 'FLAME USERS'
+    elseif p == 'getsetunset' then
+        return 'GET SET UNSET'
+    elseif p == 'goodbyewelcome' then
+        return 'GREETINGS'
+    elseif p == 'group_management' then
+        return 'GROUP MANAGEMENT'
+    elseif p == 'help' then
+        return 'HELP'
+    elseif p == 'info' then
+        return 'INFO'
+    elseif p == 'interact' then
+        return 'INTERACT'
+    elseif p == 'likecounter' then
+        return 'LIKES'
+    elseif p == 'lua_exec' then
+        return 'EXECUTE LUA'
+    elseif p == 'me' then
+        return 'MY MESSAGES'
+    elseif p == 'msg_checks' then
+        return 'CHECK MESSAGES'
+    elseif p == 'multiple_commands' then
+        return 'MULTIPLE COMMANDS'
+    elseif p == 'news' then
+    elseif p == 'plugins' then
+    elseif p == 'pokedex' then
+    elseif p == 'qr' then
+    elseif p == 'shout' then
+    elseif p == 'stats' then
+    elseif p == 'strings' then
+    elseif p == 'test' then
+    elseif p == 'tgcli_to_api_migration' then
+    elseif p == 'todo' then
+    elseif p == 'urbandictionary' then
+    elseif p == 'webshot' then
+    elseif p == 'whitelist' then
+        return true
+    end
+    return false
+end
+
 local function keyboard_help_list(chat_id, rank)
     local keyboard = { }
     keyboard.inline_keyboard = { }
