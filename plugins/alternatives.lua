@@ -186,6 +186,7 @@ default_alternatives = {
             'urla'
         },
         ['/setlang'] = { 'lingua' },
+        ['/tagall'] = { 'sasha tagga tutti' },
         ['/tex'] =
         {
             'sasha equazione',
@@ -298,6 +299,7 @@ default_alternatives = {
         ['sasha urla'] = '/shout',
         ['urla'] = '/shout',
         ['lingua'] = '/setlang',
+        ['sasha tagga tutti'] = '/tagall',
         ['sasha equazione'] = '/tex',
         ['equazione'] = '/tex',
         ['sasha webshotta'] = '/webshot',
@@ -524,7 +526,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'setdefaultalternatives' then
         if msg.from.is_owner then
             mystat('/setdefaultalternatives')
-            alternatives[tostring(msg.chat.id)] = clone_table(default_alternatives)
+            alternatives[tostring(msg.chat.id)] = default_alternatives
             save_alternatives()
             return langs[msg.lang].alternativeCommandsRestored
         else
@@ -534,7 +536,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'setdefaultglobalalternatives' then
         if is_admin(msg) then
             mystat('/setdefaultglobalalternatives')
-            alternatives.global = clone_table(default_alternatives)
+            alternatives.global = default_alternatives
             save_alternatives()
             return langs[msg.lang].alternativeCommandsRestored
         else
