@@ -1648,7 +1648,7 @@ return {
         pluginListStart = 'ℹ️Plugins list: \n\n',
         helpInfo = 'ℹ️Write "!help <plugin_name>|<plugin_number>" for more info on that plugin.\nℹ️Or "!helpall" to have all commands.',
         errorNoPlugin = 'This plugin doesn\'t exist or doesn\'t have a description.',
-        helpIntro = 'Every \'#\' can be replaced with \'/\ \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets indicate a choice with \'|\' that means "or".\n\n',
+        helpIntro = 'Every \'#\' can be replaced with \'/\' or \'!\'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional.\nRound brackets indicate a choice with \'|\' that means "or".\n\n',
         commandNotFound = 'Command syntax not found.',
         sendHelpPvt = 'I\'ve sent you the help in private.',
         pluginAdministrator = 'Bot\'s administrators',
