@@ -1,78 +1,78 @@
 local function adjust_plugin_names(p, lang)
     if p == 'administrator' then
-        return langs[lang].pluginAdministrator
+        return langs[lang].pluginAdministrator or ''
     elseif p == 'alternatives' then
-        return langs[lang].pluginAlternatives
+        return langs[lang].pluginAlternatives or ''
     elseif p == 'anti_spam' then
-        return langs[lang].pluginAnti_spam
+        return langs[lang].pluginAnti_spam or ''
     elseif p == 'banhammer' then
-        return langs[lang].pluginBanhammer
+        return langs[lang].pluginBanhammer or ''
     elseif p == 'bot' then
-        return langs[lang].pluginBot
+        return langs[lang].pluginBot or ''
     elseif p == 'check_tag' then
-        return langs[lang].pluginCheck_tag
+        return langs[lang].pluginCheck_tag or ''
     elseif p == 'database' then
-        return langs[lang].pluginDatabase
+        return langs[lang].pluginDatabase or ''
     elseif p == 'delword' then
-        return langs[lang].pluginDelword
+        return langs[lang].pluginDelword or ''
     elseif p == 'dogify' then
-        return langs[lang].pluginDogify
+        return langs[lang].pluginDogify or ''
     elseif p == 'fakecommand' then
-        return langs[lang].pluginFakecommand
+        return langs[lang].pluginFakecommand or ''
     elseif p == 'feedback' then
-        return langs[lang].pluginFeedback
+        return langs[lang].pluginFeedback or ''
     elseif p == 'filemanager' then
-        return langs[lang].pluginFilemanager
+        return langs[lang].pluginFilemanager or ''
     elseif p == 'flame' then
-        return langs[lang].pluginFlame
+        return langs[lang].pluginFlame or ''
     elseif p == 'getsetunset' then
-        return langs[lang].pluginGetsetunset
+        return langs[lang].pluginGetsetunset or ''
     elseif p == 'goodbyewelcome' then
-        return langs[lang].pluginGoodbyewelcome
+        return langs[lang].pluginGoodbyewelcome or ''
     elseif p == 'group_management' then
-        return langs[lang].pluginGroup_management
+        return langs[lang].pluginGroup_management or ''
     elseif p == 'help' then
-        return langs[lang].pluginHelp
+        return langs[lang].pluginHelp or ''
     elseif p == 'info' then
-        return langs[lang].pluginInfo
+        return langs[lang].pluginInfo or ''
     elseif p == 'interact' then
-        return langs[lang].pluginInteract
+        return langs[lang].pluginInteract or ''
     elseif p == 'likecounter' then
-        return langs[lang].pluginLikecounter
+        return langs[lang].pluginLikecounter or ''
     elseif p == 'lua_exec' then
-        return langs[lang].pluginLua_exec
+        return langs[lang].pluginLua_exec or ''
     elseif p == 'me' then
-        return langs[lang].pluginMe
+        return langs[lang].pluginMe or ''
     elseif p == 'msg_checks' then
-        return langs[lang].pluginMsg_checks
+        return langs[lang].pluginMsg_checks or ''
     elseif p == 'multiple_commands' then
-        return langs[lang].pluginMultiple_commands
+        return langs[lang].pluginMultiple_commands or ''
     elseif p == 'news' then
-        return langs[lang].pluginNews
+        return langs[lang].pluginNews or ''
     elseif p == 'plugins' then
-        return langs[lang].pluginPlugins
+        return langs[lang].pluginPlugins or ''
     elseif p == 'pokedex' then
-        return langs[lang].pluginPokedex
+        return langs[lang].pluginPokedex or ''
     elseif p == 'qr' then
-        return langs[lang].pluginQr
+        return langs[lang].pluginQr or ''
     elseif p == 'shout' then
-        return langs[lang].pluginShout
+        return langs[lang].pluginShout or ''
     elseif p == 'stats' then
-        return langs[lang].pluginStats
+        return langs[lang].pluginStats or ''
     elseif p == 'strings' then
-        return langs[lang].pluginStrings
+        return langs[lang].pluginStrings or ''
     elseif p == 'test' then
-        return 'TEST'
+        return 'TEST' or ''
     elseif p == 'tgcli_to_api_migration' then
-        return langs[lang].pluginTgcli_to_api_migration
+        return langs[lang].pluginTgcli_to_api_migration or ''
     elseif p == 'todo' then
-        return langs[lang].pluginTodo
+        return langs[lang].pluginTodo or ''
     elseif p == 'urbandictionary' then
-        return langs[lang].pluginUrbandictionary
+        return langs[lang].pluginUrbandictionary or ''
     elseif p == 'webshot' then
-        return langs[lang].pluginWebshot
+        return langs[lang].pluginWebshot or ''
     elseif p == 'whitelist' then
-        return langs[lang].pluginWhitelist
+        return langs[lang].pluginWhitelist or ''
     end
     return ''
 end
@@ -84,14 +84,13 @@ local function plugin_help(var, chat, rank)
     if tonumber(var) then
         local i = 0
         for name in pairsByKeys(plugins) do
+            local disabled = false
             if config.disabled_plugin_on_chat[chat] then
-                if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
-                    i = i + 1
-                    if i == tonumber(var) then
-                        plugin = plugins[name]
-                    end
+                if config.disabled_plugin_on_chat[chat][name] then
+                    disabled = true
                 end
-            else
+            end
+            if not disabled then
                 i = i + 1
                 if i == tonumber(var) then
                     plugin = plugins[name]
@@ -99,11 +98,13 @@ local function plugin_help(var, chat, rank)
             end
         end
     else
+        local disabled = false
         if config.disabled_plugin_on_chat[chat] then
-            if not config.disabled_plugin_on_chat[chat][var] or config.disabled_plugin_on_chat[chat][var] == false then
-                plugin = plugins[var]
+            if config.disabled_plugin_on_chat[chat][var] then
+                disabled = true
             end
-        else
+        end
+        if not disabled then
             plugin = plugins[var]
         end
     end
@@ -141,14 +142,13 @@ local function telegram_help(chat, rank)
     local text = langs[lang].pluginListStart
     -- Plugins names
     for name in pairsByKeys(plugins) do
+        local disabled = false
         if config.disabled_plugin_on_chat[chat] then
-            if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
-                i = i + 1
-                if plugins[name].min_rank <= tonumber(rank) then
-                    text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
-                end
+            if config.disabled_plugin_on_chat[chat][name] then
+                disabled = true
             end
-        else
+        end
+        if not disabled then
             i = i + 1
             if plugins[name].min_rank <= tonumber(rank) then
                 text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
@@ -182,14 +182,13 @@ local function plugin_syntax(var, chat, rank, filter)
     if tonumber(var) then
         local i = 0
         for name in pairsByKeys(plugins) do
+            local disabled = false
             if config.disabled_plugin_on_chat[chat] then
-                if not config.disabled_plugin_on_chat[chat][name] or config.disabled_plugin_on_chat[chat][name] == false then
-                    i = i + 1
-                    if i == tonumber(var) then
-                        plugin = plugins[name]
-                    end
+                if config.disabled_plugin_on_chat[chat][name] then
+                    disabled = true
                 end
-            else
+            end
+            if not disabled then
                 i = i + 1
                 if i == tonumber(var) then
                     plugin = plugins[name]
@@ -269,24 +268,13 @@ local function keyboard_help_list(chat_id, rank)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for name in pairsByKeys(plugins) do
+        local disabled = false
         if config.disabled_plugin_on_chat[chat_id] then
-            if not config.disabled_plugin_on_chat[chat_id][name] or config.disabled_plugin_on_chat[chat_id][name] == false then
-                i = i + 1
-                if plugins[name].min_rank <= tonumber(rank) then
-                    if flag then
-                        flag = false
-                        row = row + 1
-                        column = 1
-                        keyboard.inline_keyboard[row] = { }
-                    end
-                    keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), get_lang(chat_id)), callback_data = 'help' .. name }
-                    column = column + 1
-                end
-                if column > 2 then
-                    flag = true
-                end
+            if config.disabled_plugin_on_chat[chat_id][name] then
+                disabled = true
             end
-        else
+        end
+        if not disabled then
             i = i + 1
             if plugins[name].min_rank <= tonumber(rank) then
                 if flag then
@@ -306,7 +294,7 @@ local function keyboard_help_list(chat_id, rank)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' .. chat_id }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'helpDELETE' }
     return keyboard
@@ -315,21 +303,23 @@ end
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbhelp' and matches[2] then
-            if matches[2] == 'BACK' then
-                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
-            elseif matches[2] == 'DELETE' then
+            if matches[2] == 'DELETE' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-            else
-                mystat('###cbhelp' .. matches[2])
-                local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-                if temp ~= nil then
-                    if temp ~= '' then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
-                    else
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
-                    end
+            elseif matches[3] then
+                if matches[2] == 'BACK' then
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(matches[3], get_rank(msg.from.id, matches[3], true)))
                 else
-                    return editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                    mystat('###cbhelp' .. matches[2])
+                    local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, matches[3], true))
+                    if temp ~= nil then
+                        if temp ~= '' then
+                            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. matches[3] } } } })
+                        else
+                            return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. matches[3] } } } })
+                        end
+                    else
+                        return editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. matches[3] } } } })
+                    end
                 end
             end
             return
@@ -450,7 +440,7 @@ return {
     description = "HELP",
     patterns =
     {
-        "^(###cbhelp)(.*)$",
+        "^(###cbhelp)(.*)(%-?%d+)$",
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
