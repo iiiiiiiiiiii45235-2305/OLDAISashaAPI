@@ -324,119 +324,118 @@ local function run(msg, matches)
                     return editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' ..(matches[3] or msg.chat.id) } } } })
                 end
             end
+            return
         end
-        return
     end
-end
 
-if matches[1]:lower() == 'sudolist' then
-    mystat('/sudolist')
-    local text = 'SUDO INFO'
-    for v, user in pairs(sudoers) do
-        local lang = get_lang(msg.chat.id)
-        if user.first_name then
-            text = text .. langs[lang].name .. user.first_name
-        end
-        if user.last_name then
-            text = text .. langs[lang].surname .. user.last_name
-        end
-        if user.username then
-            text = text .. langs[lang].username .. '@' .. user.username
-        end
-        local msgs = tonumber(redis:get('msgs:' .. user.id .. ':' .. msg.chat.id) or 0)
-        text = text .. langs[lang].date .. os.date('%c') ..
-        langs[lang].totalMessages .. msgs
-        text = text .. '\n🆔: ' .. user.id .. '\n\n'
-    end
-    return text
-end
-
-table.sort(plugins)
-if matches[1]:lower() == 'helpall' then
-    mystat('/helpall')
-    return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-end
-
-if matches[1]:lower() == 'help' then
-    if not matches[2] then
-        mystat('/help')
-        if msg.chat.type ~= 'private' then
-            sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
-        end
-        return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
-    else
-        mystat('/help <plugin>')
-        if msg.chat.type ~= 'private' then
-            sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
-        end
-        local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-        if temp ~= nil then
-            if temp ~= '' then
-                return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
-            else
-                return sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
+    if matches[1]:lower() == 'sudolist' then
+        mystat('/sudolist')
+        local text = 'SUDO INFO'
+        for v, user in pairs(sudoers) do
+            local lang = get_lang(msg.chat.id)
+            if user.first_name then
+                text = text .. langs[lang].name .. user.first_name
             end
+            if user.last_name then
+                text = text .. langs[lang].surname .. user.last_name
+            end
+            if user.username then
+                text = text .. langs[lang].username .. '@' .. user.username
+            end
+            local msgs = tonumber(redis:get('msgs:' .. user.id .. ':' .. msg.chat.id) or 0)
+            text = text .. langs[lang].date .. os.date('%c') ..
+            langs[lang].totalMessages .. msgs
+            text = text .. '\n🆔: ' .. user.id .. '\n\n'
+        end
+        return text
+    end
+
+    table.sort(plugins)
+    if matches[1]:lower() == 'helpall' then
+        mystat('/helpall')
+        return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+    end
+
+    if matches[1]:lower() == 'help' then
+        if not matches[2] then
+            mystat('/help')
+            if msg.chat.type ~= 'private' then
+                sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+            end
+            return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
         else
-            return sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
-        end
-    end
-end
-
-if matches[1]:lower() == 'textualhelp' then
-    if not matches[2] then
-        mystat('/help')
-        return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-    else
-        mystat('/help <plugin>')
-        local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-        if temp ~= nil then
-            if temp ~= '' then
-                return langs[msg.lang].helpIntro .. temp
+            mystat('/help <plugin>')
+            if msg.chat.type ~= 'private' then
+                sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+            end
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+            if temp ~= nil then
+                if temp ~= '' then
+                    return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
+                else
+                    return sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
+                end
             else
-                return langs[msg.lang].require_higher
+                return sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
             end
+        end
+    end
+
+    if matches[1]:lower() == 'textualhelp' then
+        if not matches[2] then
+            mystat('/help')
+            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
         else
-            return matches[2]:lower() .. langs[msg.lang].notExists
-        end
-    end
-end
-
-if matches[1]:lower() == 'syntaxall' then
-    mystat('/syntaxall')
-    return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-end
-
-if matches[1]:lower() == 'syntax' and matches[2] then
-    mystat('/syntax <command>')
-    matches[2] = matches[2]:gsub('[#!/]', '#')
-    local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
-    if text == '' then
-        return langs[msg.lang].commandNotFound
-    else
-        return langs[msg.lang].helpIntro .. text
-    end
-end
-
-if matches[1]:lower() == 'faq' then
-    if not matches[2] then
-        mystat('/faq')
-        return langs[msg.lang].faqList
-    else
-        mystat('/faq<n>')
-        return langs[msg.lang].faq[tonumber(matches[2])]
-    end
-end
-
-if matches[1]:lower() == 'deletekeyboard' then
-    if msg.reply then
-        if msg.reply_to_message.from.id == bot.id then
-            if msg.reply_to_message.text then
-                mystat('/deletekeyboard')
-                return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text)
+            mystat('/help <plugin>')
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+            if temp ~= nil then
+                if temp ~= '' then
+                    return langs[msg.lang].helpIntro .. temp
+                else
+                    return langs[msg.lang].require_higher
+                end
+            else
+                return matches[2]:lower() .. langs[msg.lang].notExists
             end
         end
     end
-end
+
+    if matches[1]:lower() == 'syntaxall' then
+        mystat('/syntaxall')
+        return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+    end
+
+    if matches[1]:lower() == 'syntax' and matches[2] then
+        mystat('/syntax <command>')
+        matches[2] = matches[2]:gsub('[#!/]', '#')
+        local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
+        if text == '' then
+            return langs[msg.lang].commandNotFound
+        else
+            return langs[msg.lang].helpIntro .. text
+        end
+    end
+
+    if matches[1]:lower() == 'faq' then
+        if not matches[2] then
+            mystat('/faq')
+            return langs[msg.lang].faqList
+        else
+            mystat('/faq<n>')
+            return langs[msg.lang].faq[tonumber(matches[2])]
+        end
+    end
+
+    if matches[1]:lower() == 'deletekeyboard' then
+        if msg.reply then
+            if msg.reply_to_message.from.id == bot.id then
+                if msg.reply_to_message.text then
+                    mystat('/deletekeyboard')
+                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text)
+                end
+            end
+        end
+    end
 end
 
 return {
