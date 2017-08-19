@@ -62,9 +62,9 @@ local function groupsList(msg)
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
                 else
-                    local link = exportChatInviteLink(matches[2])
+                    local link = exportChatInviteLink(v)
                     if link then
-                        data[tostring(matches[2])]['settings']['set_link'] = link
+                        data[tostring(v)]['settings']['set_link'] = link
                         save_data(config.moderation.data, data)
                         group_link = link
                     end
