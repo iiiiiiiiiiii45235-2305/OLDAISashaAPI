@@ -443,6 +443,7 @@ return {
     patterns =
     {
         "^(###cbhelp)(.*)(%-?%d+)$",
+        "^(###cbhelp)(.*)$",
         "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
