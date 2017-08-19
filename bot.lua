@@ -683,9 +683,9 @@ function msg_valid(msg)
                 sendLog('#REMOVEDFROM ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
-            sendLog('#ADDEDTO ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
             for k, v in pairs(msg.added) do
                 if tostring(v.id) == tostring(bot.id) then
+                    sendLog('#ADDEDTO ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
                     if not is_admin(msg) then
                         sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
                     end
