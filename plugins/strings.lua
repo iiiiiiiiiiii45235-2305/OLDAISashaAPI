@@ -18,6 +18,7 @@ local function run(msg, matches)
             local change_lang = true
             if msg.chat.type ~= 'private' then
                 if not is_owner(msg) then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                     change_lang = false
                 end
             end
