@@ -362,6 +362,8 @@ return {
         startMessage = 'Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.',
         botOn = 'Sono tornata. 😏',
         botOff = 'Nulla da fare qui. 🚀',
+        italian = '🇮🇹 Italiano',
+        english = '🇬🇧 Inglese',
 
         -- check_tag.lua --
         tagalertGroupEnabled = 'Tagalert abilitato su questo gruppo.',
@@ -1576,6 +1578,8 @@ return {
         startMessage = 'Hi, I\'m the BOT version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.',
         botOn = 'I\'m back. 😏',
         botOff = 'Nothing to do here. 🚀',
+        italian = '🇮🇹 Italian',
+        english = '🇬🇧 English',
 
         -- check_tag.lua --
         tagalertGroupEnabled = 'Tagalert enabled on this group.',

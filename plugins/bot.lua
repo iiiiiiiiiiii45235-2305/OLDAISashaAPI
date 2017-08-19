@@ -28,9 +28,35 @@ local function disable_channel(chat_id)
     return langs[lang].botOff
 end
 
+local function keyboard_langs(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local i = 0
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].italian, callback_data = 'botIT' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].english, callback_data = 'botEN' }
+    return keyboard
+end
+
 local function run(msg, matches)
+    if msg.cb then
+        if matches[1] == '###cbbot' and matches[2] then
+            if matches[2] == 'IT' then
+                redis:set('lang:' .. msg.chat.id, 'it')
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
+            elseif matches[2] == 'EN' then
+                redis:set('lang:' .. msg.chat.id, 'en')
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
+            end
+            return
+        end
+    end
     if matches[1]:lower() == '/start' and msg.bot then
-        sendMessage(msg.chat.id, langs[msg.lang].startMessage)
+        sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs(msg.chat.id))
         mystat('/start' ..(matches[2] or ''):lower())
         if matches[2] then
             msg.text = '/' .. matches[2]
@@ -72,6 +98,7 @@ return {
     description = "BOT",
     patterns =
     {
+        "^(###cbbot)(..)$",
         "^(/[Ss][Tt][Aa][Rr][Tt])$",
         "^(/[Ss][Tt][Aa][Rr][Tt]) (.*)$",
         "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
