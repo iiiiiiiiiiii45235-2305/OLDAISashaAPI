@@ -305,7 +305,7 @@ local function run(msg, matches)
         if matches[1] == '###cbhelp' and matches[2] then
             if matches[2] == 'DELETE' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-            elseif matches[2] == 'BACK' and not matches[3] then
+            elseif matches[2] == 'BACK' then
                 if matches[3] then
                     return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(matches[3], get_rank(msg.from.id, matches[3], true)))
                 else
