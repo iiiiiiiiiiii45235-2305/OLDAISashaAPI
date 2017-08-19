@@ -839,7 +839,7 @@ local function keyboard_settings_list(chat_id)
     -- start warn part
     keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
     column = column + 1
-    if data[tostring(chat_id)].settings.warn_max ~= 0 then
+    if tonumber(data[tostring(chat_id)].settings.warn_max) ~= 0 then
         -- disable warns
         keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS0' .. chat_id }
     else
