@@ -1,80 +1,80 @@
 local function adjust_plugin_names(p, lang)
     if p == 'administrator' then
-        return langs[lang].pluginAdministrator or ''
+        return langs[lang].pluginAdministrator or 'ERR'
     elseif p == 'alternatives' then
-        return langs[lang].pluginAlternatives or ''
+        return langs[lang].pluginAlternatives or 'ERR'
     elseif p == 'anti_spam' then
-        return langs[lang].pluginAnti_spam or ''
+        return langs[lang].pluginAnti_spam or 'ERR'
     elseif p == 'banhammer' then
-        return langs[lang].pluginBanhammer or ''
+        return langs[lang].pluginBanhammer or 'ERR'
     elseif p == 'bot' then
-        return langs[lang].pluginBot or ''
+        return langs[lang].pluginBot or 'ERR'
     elseif p == 'check_tag' then
-        return langs[lang].pluginCheck_tag or ''
+        return langs[lang].pluginCheck_tag or 'ERR'
     elseif p == 'database' then
-        return langs[lang].pluginDatabase or ''
+        return langs[lang].pluginDatabase or 'ERR'
     elseif p == 'delword' then
-        return langs[lang].pluginDelword or ''
+        return langs[lang].pluginDelword or 'ERR'
     elseif p == 'dogify' then
-        return langs[lang].pluginDogify or ''
+        return langs[lang].pluginDogify or 'ERR'
     elseif p == 'fakecommand' then
-        return langs[lang].pluginFakecommand or ''
+        return langs[lang].pluginFakecommand or 'ERR'
     elseif p == 'feedback' then
-        return langs[lang].pluginFeedback or ''
+        return langs[lang].pluginFeedback or 'ERR'
     elseif p == 'filemanager' then
-        return langs[lang].pluginFilemanager or ''
+        return langs[lang].pluginFilemanager or 'ERR'
     elseif p == 'flame' then
-        return langs[lang].pluginFlame or ''
+        return langs[lang].pluginFlame or 'ERR'
     elseif p == 'getsetunset' then
-        return langs[lang].pluginGetsetunset or ''
+        return langs[lang].pluginGetsetunset or 'ERR'
     elseif p == 'goodbyewelcome' then
-        return langs[lang].pluginGoodbyewelcome or ''
+        return langs[lang].pluginGoodbyewelcome or 'ERR'
     elseif p == 'group_management' then
-        return langs[lang].pluginGroup_management or ''
+        return langs[lang].pluginGroup_management or 'ERR'
     elseif p == 'help' then
-        return langs[lang].pluginHelp or ''
+        return langs[lang].pluginHelp or 'ERR'
     elseif p == 'info' then
-        return langs[lang].pluginInfo or ''
+        return langs[lang].pluginInfo or 'ERR'
     elseif p == 'interact' then
-        return langs[lang].pluginInteract or ''
+        return langs[lang].pluginInteract or 'ERR'
     elseif p == 'likecounter' then
-        return langs[lang].pluginLikecounter or ''
+        return langs[lang].pluginLikecounter or 'ERR'
     elseif p == 'lua_exec' then
-        return langs[lang].pluginLua_exec or ''
+        return langs[lang].pluginLua_exec or 'ERR'
     elseif p == 'me' then
-        return langs[lang].pluginMe or ''
+        return langs[lang].pluginMe or 'ERR'
     elseif p == 'msg_checks' then
-        return langs[lang].pluginMsg_checks or ''
+        return langs[lang].pluginMsg_checks or 'ERR'
     elseif p == 'multiple_commands' then
-        return langs[lang].pluginMultiple_commands or ''
+        return langs[lang].pluginMultiple_commands or 'ERR'
     elseif p == 'news' then
-        return langs[lang].pluginNews or ''
+        return langs[lang].pluginNews or 'ERR'
     elseif p == 'plugins' then
-        return langs[lang].pluginPlugins or ''
+        return langs[lang].pluginPlugins or 'ERR'
     elseif p == 'pokedex' then
-        return langs[lang].pluginPokedex or ''
+        return langs[lang].pluginPokedex or 'ERR'
     elseif p == 'qr' then
-        return langs[lang].pluginQr or ''
+        return langs[lang].pluginQr or 'ERR'
     elseif p == 'shout' then
-        return langs[lang].pluginShout or ''
+        return langs[lang].pluginShout or 'ERR'
     elseif p == 'stats' then
-        return langs[lang].pluginStats or ''
+        return langs[lang].pluginStats or 'ERR'
     elseif p == 'strings' then
-        return langs[lang].pluginStrings or ''
+        return langs[lang].pluginStrings or 'ERR'
     elseif p == 'test' then
-        return 'TEST' or ''
+        return 'TEST' or 'ERR'
     elseif p == 'tgcli_to_api_migration' then
-        return langs[lang].pluginTgcli_to_api_migration or ''
+        return langs[lang].pluginTgcli_to_api_migration or 'ERR'
     elseif p == 'todo' then
-        return langs[lang].pluginTodo or ''
+        return langs[lang].pluginTodo or 'ERR'
     elseif p == 'urbandictionary' then
-        return langs[lang].pluginUrbandictionary or ''
+        return langs[lang].pluginUrbandictionary or 'ERR'
     elseif p == 'webshot' then
-        return langs[lang].pluginWebshot or ''
+        return langs[lang].pluginWebshot or 'ERR'
     elseif p == 'whitelist' then
-        return langs[lang].pluginWhitelist or ''
+        return langs[lang].pluginWhitelist or 'ERR'
     end
-    return ''
+    return 'ERR'
 end
 
 -- Get commands for that plugin
@@ -283,7 +283,7 @@ local function keyboard_help_list(chat_id, rank)
                     column = 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name .. chat_id }
+                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), get_lang(chat_id)), callback_data = 'help' .. name .. chat_id }
                 column = column + 1
             end
             if column > 2 then
