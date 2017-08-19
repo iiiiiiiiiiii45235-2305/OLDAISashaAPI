@@ -840,9 +840,11 @@ local function keyboard_settings_list(chat_id)
     keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
     column = column + 1
     if data[tostring(chat_id)].settings.warn_max ~= 0 then
-        keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNSZERO' .. chat_id }
+        -- disable warns
+        keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS0' .. chat_id }
     else
-        keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNSDEFAULT' .. chat_id }
+        -- default warns
+        keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS3' .. chat_id }
     end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
@@ -1017,17 +1019,13 @@ local function run(msg, matches)
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
-                        elseif matches[2] == 'WARNSZERO' or matches[2] == 'WARNSMINUS' or matches[2] == 'WARNSPLUS' or matches[2] == 'WARNSDEFAULT' then
+                        elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNS' or matches[2] == 'WARNSPLUS' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 local warns = matches[3]
-                                if matches[2] == 'WARNSZERO' then
-                                    warns = 0
-                                elseif matches[2] == 'WARNSMINUS' then
+                                if matches[2] == 'WARNSMINUS' then
                                     warns = warns - 1
                                 elseif matches[2] == 'WARNSPLUS' then
                                     warns = warns + 1
-                                elseif matches[2] == 'WARNSDEFAULT' then
-                                    warns = 3
                                 end
                                 if tonumber(warns) < 0 or tonumber(warns) > 10 then
                                     return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorWarnRange, false)
@@ -2130,6 +2128,9 @@ return {
         "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
         "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)$",
         "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)$",
         "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
 
