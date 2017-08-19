@@ -1,4 +1,30 @@
+local function keyboard_langs()
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local i = 0
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs.italian, callback_data = 'botIT' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs.english, callback_data = 'botEN' }
+    return keyboard
+end
+
 local function run(msg, matches)
+    if msg.cb then
+        if matches[1] == '###cbstrings' and matches[2] then
+            if matches[2] == 'IT' then
+                redis:set('lang:' .. msg.chat.id, 'it')
+                return editMessageText(msg.chat.id, msg.message_id, langs['it'].startMessage)
+            elseif matches[2] == 'EN' then
+                redis:set('lang:' .. msg.chat.id, 'en')
+                return editMessageText(msg.chat.id, msg.message_id, langs['en'].startMessage)
+            end
+            return
+        end
+    end
     if matches[1]:lower() == 'setlang' and matches[2] then
         mystat('/setlang')
         if msg.chat.type == 'private' then
@@ -27,6 +53,7 @@ return {
     description = "STRINGS",
     patterns =
     {
+        "^(###cbstrings)(..)$",
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ii][Tt])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ee][Nn])$',
         '^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Ss][Tt][Rr][Ii][Nn][Gg][Ss])$',

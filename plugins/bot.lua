@@ -28,7 +28,7 @@ local function disable_channel(chat_id)
     return langs[lang].botOff
 end
 
-local function keyboard_langs(chat_id)
+local function keyboard_langs()
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -36,9 +36,9 @@ local function keyboard_langs(chat_id)
     local i = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].italian, callback_data = 'botIT' }
+    keyboard.inline_keyboard[row][column] = { text = langs.italian, callback_data = 'botIT' }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].english, callback_data = 'botEN' }
+    keyboard.inline_keyboard[row][column] = { text = langs.english, callback_data = 'botEN' }
     return keyboard
 end
 
@@ -56,7 +56,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == '/start' and msg.bot then
-        sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs(msg.chat.id))
+        sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs())
         mystat('/start' ..(matches[2] or ''):lower())
         if matches[2] then
             msg.text = '/' .. matches[2]
