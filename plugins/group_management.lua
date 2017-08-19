@@ -830,7 +830,7 @@ local function keyboard_settings_list(chat_id)
         keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '&#43;', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     -- end flood part
 
     row = row + 1
@@ -845,7 +845,7 @@ local function keyboard_settings_list(chat_id)
         keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNSDEFAULT' .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '&#43;', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
     -- end warn part
 
     row = row + 1
