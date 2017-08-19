@@ -6,9 +6,9 @@ local function keyboard_langs()
     local i = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs.italian, callback_data = 'botIT' }
+    keyboard.inline_keyboard[row][column] = { text = langs.italian, callback_data = 'stringsIT' }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs.english, callback_data = 'botEN' }
+    keyboard.inline_keyboard[row][column] = { text = langs.english, callback_data = 'stringsEN' }
     return keyboard
 end
 
@@ -46,7 +46,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_owner
             end
         else
-            sendKeyboard(msg.chat.id, langs.selectLanguage, keyboard_langs())
+            return sendKeyboard(msg.chat.id, langs.selectLanguage, keyboard_langs())
         end
     end
     if matches[1]:lower() == 'reloadstrings' or matches[1]:lower() == 'reloadlangs' then
