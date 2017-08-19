@@ -1034,7 +1034,11 @@ local function run(msg, matches)
                                 data[tostring(matches[4])].settings.warn_max = warns
                                 save_data(config.moderation.data, data)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set warns to [" .. warns .. "]")
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
+                                if tonumber(warns) == 0 then
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].neverWarn, false)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
+                                end
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
