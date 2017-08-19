@@ -84,29 +84,13 @@ local function plugin_help(var, chat, rank)
     if tonumber(var) then
         local i = 0
         for name in pairsByKeys(plugins) do
-            local disabled = false
-            if config.disabled_plugin_on_chat[chat] then
-                if config.disabled_plugin_on_chat[chat][name] then
-                    disabled = true
-                end
-            end
-            if not disabled then
-                i = i + 1
-                if i == tonumber(var) then
-                    plugin = plugins[name]
-                end
+            i = i + 1
+            if i == tonumber(var) then
+                plugin = plugins[name]
             end
         end
     else
-        local disabled = false
-        if config.disabled_plugin_on_chat[chat] then
-            if config.disabled_plugin_on_chat[chat][var] then
-                disabled = true
-            end
-        end
-        if not disabled then
-            plugin = plugins[var]
-        end
+        plugin = plugins[var]
     end
     if not plugin or plugin == "" then
         return nil
@@ -142,17 +126,9 @@ local function telegram_help(chat, rank)
     local text = langs[lang].pluginListStart
     -- Plugins names
     for name in pairsByKeys(plugins) do
-        local disabled = false
-        if config.disabled_plugin_on_chat[chat] then
-            if config.disabled_plugin_on_chat[chat][name] then
-                disabled = true
-            end
-        end
-        if not disabled then
-            i = i + 1
-            if plugins[name].min_rank <= tonumber(rank) then
-                text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
-            end
+        i = i + 1
+        if plugins[name].min_rank <= tonumber(rank) then
+            text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
         end
     end
 
@@ -182,27 +158,13 @@ local function plugin_syntax(var, chat, rank, filter)
     if tonumber(var) then
         local i = 0
         for name in pairsByKeys(plugins) do
-            local disabled = false
-            if config.disabled_plugin_on_chat[chat] then
-                if config.disabled_plugin_on_chat[chat][name] then
-                    disabled = true
-                end
-            end
-            if not disabled then
-                i = i + 1
-                if i == tonumber(var) then
-                    plugin = plugins[name]
-                end
+            i = i + 1
+            if i == tonumber(var) then
+                plugin = plugins[name]
             end
         end
     else
-        if config.disabled_plugin_on_chat[chat] then
-            if not config.disabled_plugin_on_chat[chat][var] or config.disabled_plugin_on_chat[chat][var] == false then
-                plugin = plugins[var]
-            end
-        else
-            plugin = plugins[var]
-        end
+        plugin = plugins[var]
     end
     if not plugin or plugin == "" then
         return nil
@@ -268,33 +230,25 @@ local function keyboard_help_list(chat_id, rank)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for name in pairsByKeys(plugins) do
-        local disabled = false
-        if config.disabled_plugin_on_chat[chat_id] then
-            if config.disabled_plugin_on_chat[chat_id][name] then
-                disabled = true
+        i = i + 1
+        if plugins[name].min_rank <= tonumber(rank) then
+            if flag then
+                flag = false
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
             end
+            keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
+            column = column + 1
         end
-        if not disabled then
-            i = i + 1
-            if plugins[name].min_rank <= tonumber(rank) then
-                if flag then
-                    flag = false
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                end
-                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name .. chat_id }
-                column = column + 1
-            end
-            if column > 2 then
-                flag = true
-            end
+        if column > 2 then
+            flag = true
         end
     end
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACK' }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'helpDELETE' }
     return keyboard
@@ -306,22 +260,18 @@ local function run(msg, matches)
             if matches[2] == 'DELETE' then
                 return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             elseif matches[2] == 'BACK' then
-                if matches[3] then
-                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(matches[3], get_rank(msg.from.id, matches[3], true)))
-                else
-                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
-                end
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
             else
                 mystat('###cbhelp' .. matches[2])
-                local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, matches[3] or msg.chat.id, true))
+                local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
                 if temp ~= nil then
                     if temp ~= '' then
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' ..(matches[3] or msg.chat.id) } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
                     else
-                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' ..(matches[3] or msg.chat.id) } } } })
+                        return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
                     end
                 else
-                    return editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' ..(matches[3] or msg.chat.id) } } } })
+                    return editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
                 end
             end
             return
@@ -371,12 +321,12 @@ local function run(msg, matches)
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
-                    return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
+                    return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
                 else
-                    return sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
+                    return sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
                 end
             else
-                return sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' .. msg.chat.id } } } })
+                return sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
             end
         end
     end
