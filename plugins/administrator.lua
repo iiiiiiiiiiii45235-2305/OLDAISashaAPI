@@ -61,7 +61,7 @@ local function groupsList(msg, get_links)
                 local group_link = "No link"
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
-                elseif get_links and data[tostring(v)]['settings']['group_type']:lower() == 'supergroup' then
+                elseif get_links and data[tostring(v)]['group_type']:lower() == 'supergroup' then
                     local link = exportChatInviteLink(v)
                     if link then
                         data[tostring(v)]['settings']['set_link'] = link
@@ -102,7 +102,7 @@ local function realmsList(msg, get_links)
                 local group_link = "No link"
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
-                elseif get_links and data[tostring(v)]['settings']['group_type']:lower() == 'supergroup' then
+                elseif get_links and data[tostring(v)]['group_type']:lower() == 'supergroup' then
                     local link = exportChatInviteLink(v)
                     if link then
                         data[tostring(v)]['settings']['set_link'] = link
