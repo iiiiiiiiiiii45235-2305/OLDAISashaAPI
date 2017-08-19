@@ -366,27 +366,6 @@ local function run(msg, matches)
     end
 end
 
-local function pre_process(msg)
-    if msg then
-        if msg.service then
-            if msg.service_type == 'chat_del_user' then
-                sendLog('#REMOVEDFROM ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
-            elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
-                sendLog('#ADDEDTO ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
-                for k, v in pairs(msg.added) do
-                    if tostring(v.id) == tostring(bot.id) then
-                        if not is_admin(msg) then
-                            sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
-                            leaveChat(msg.chat.id)
-                        end
-                    end
-                end
-            end
-        end
-        return msg
-    end
-end
-
 return {
     description = "ADMINISTRATOR",
     patterns =
@@ -414,7 +393,6 @@ return {
         "^[#!/]([Ll][Ee][Aa][Vv][Ee]) (%-?%d+)$",
         "^[#!/]([Ll][Ee][Aa][Vv][Ee])$",
     },
-    pre_process = pre_process,
     run = run,
     min_rank = 3,
     syntax =

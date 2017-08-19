@@ -677,6 +677,22 @@ function pre_process_service_msg(msg)
 end
 
 function msg_valid(msg)
+    if msg.service then
+        if msg.service_type == 'chat_del_user' then
+            if tostring(msg.removed.id) == tostring(bot.id) then
+                sendLog('#REMOVEDFROM ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
+            end
+        elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+            sendLog('#ADDEDTO ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
+            for k, v in pairs(msg.added) do
+                if tostring(v.id) == tostring(bot.id) then
+                    if not is_admin(msg) then
+                        sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+                    end
+                end
+            end
+        end
+    end
     if not msg.bot then
         if bot.userVersion then
             if msg.from.id == bot.userVersion.id then
@@ -709,6 +725,7 @@ function msg_valid(msg)
             end
             if not sudoMessage then
                 print(clr.yellow .. 'Not valid: not sudo message' .. clr.reset)
+
                 return false
             end
         end
@@ -769,12 +786,9 @@ function pre_process_msg(msg)
     plugins.goodbyewelcome.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.msg_checks.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'administrator')
-    plugins.administrator.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
-            if plugin.description ~= 'ADMINISTRATOR' and
-                plugin.description ~= 'ALTERNATIVES' and
+            if plugin.description ~= 'ALTERNATIVES' and
                 plugin.description ~= 'ANTI_SPAM' and
                 plugin.description ~= 'DATABASE' and
                 plugin.description ~= 'DELWORD' and
