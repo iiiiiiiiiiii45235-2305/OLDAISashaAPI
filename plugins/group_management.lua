@@ -817,12 +817,12 @@ local function keyboard_settings_list(chat_id)
             end
         end
     end
+
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-
     -- start flood part
-    keyboard.inline_keyboard[row][column] = { text = '➖', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     column = column + 1
     if data[tostring(chat_id)].settings.flood then
         keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
@@ -830,8 +830,23 @@ local function keyboard_settings_list(chat_id)
         keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '➕', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     -- end flood part
+
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    -- start warn part
+    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    column = column + 1
+    if data[tostring(chat_id)].settings.warn_max then
+        keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNSZERO' .. chat_id }
+    else
+        keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNSDEFAULT' .. chat_id }
+    end
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    -- end warn part
 
     row = row + 1
     column = 1
@@ -982,7 +997,7 @@ local function run(msg, matches)
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
-                        elseif matches[2] == 'FLOODPLUS' or matches[2] == 'FLOODMINUS' then
+                        elseif matches[2] == 'FLOODMINUS' or matches[2] == 'FLOODPLUS' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 local flood = matches[3]
                                 if matches[2] == 'FLOODPLUS' then
@@ -998,6 +1013,30 @@ local function run(msg, matches)
                                 save_data(config.moderation.data, data)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                            else
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                            end
+                        elseif matches[2] == 'WARNSZERO' or matches[2] == 'WARNSMINUS' or matches[2] == 'WARNSPLUS' or matches[2] == 'WARNSDEFAULT' then
+                            if is_mod2(msg.from.id, matches[4]) then
+                                local warns = matches[3]
+                                if matches[2] == 'WARNSZERO' then
+                                    warns = 0
+                                elseif matches[2] == 'WARNSMINUS' then
+                                    warns = warns - 1
+                                elseif matches[2] == 'WARNSPLUS' then
+                                    warns = warns + 1
+                                elseif matches[2] == 'WARNSDEFAULT' then
+                                    warns = 3
+                                end
+                                if tonumber(warns) < 0 or tonumber(warns) > 10 then
+                                    return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorWarnRange, false)
+                                end
+                                mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
+                                data[tostring(matches[4])].settings.warn_max = warns
+                                save_data(config.moderation.data, data)
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set warns to [" .. warns .. "]")
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
@@ -1405,14 +1444,20 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setwarn' and matches[2] then
                 if msg.from.is_mod then
                     mystat('/setwarn')
-                    local txt = setWarn(msg.from.id, msg.chat.id, matches[2])
-                    if matches[2] == '0' then
+                    if tonumber(matches[2]) < 0 or tonumber(matches[2]) > 10 then
+                        return langs[msg.lang].errorWarnRange
+                    end
+                    local warn_max = matches[2]
+                    data[tostring(msg.chat.id)].settings.warn_max = warn_max
+                    save_data(config.moderation.data, data)
+                    savelog(msg.chat.id, " [" .. msg.from.id .. "] set warn to [" .. matches[2] .. "]")
+                    if tonumber(matches[2]) == 0 then
                         return langs[msg.lang].neverWarn
                     else
-                        return txt
+                        return langs[msg.lang].warnSet .. matches[2]
                     end
                 else
-                    return langs[msg.lang].require_mod
+                    return langs[msg.msg.lang].require_mod
                 end
             end
             if matches[1]:lower() == 'settitle' then
