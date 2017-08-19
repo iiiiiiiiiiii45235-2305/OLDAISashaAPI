@@ -39,7 +39,7 @@ local function botAdminsList(chat_id)
     return message
 end
 
-local function groupsList(msg)
+local function groupsList(msg, get_links)
     if not data.groups then
         return langs[msg.lang].noGroups
     end
@@ -61,7 +61,7 @@ local function groupsList(msg)
                 local group_link = "No link"
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
-                else
+                elseif get_links then
                     local link = exportChatInviteLink(v)
                     if link then
                         data[tostring(v)]['settings']['set_link'] = link
@@ -80,7 +80,7 @@ local function groupsList(msg)
     return message
 end
 
-local function realmsList(msg)
+local function realmsList(msg, get_links)
     if not data.realms then
         return langs[msg.lang].noRealms
     end
@@ -102,6 +102,13 @@ local function realmsList(msg)
                 local group_link = "No link"
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
+                elseif get_links then
+                    local link = exportChatInviteLink(v)
+                    if link then
+                        data[tostring(v)]['settings']['set_link'] = link
+                        save_data(config.moderation.data, data)
+                        group_link = link
+                    end
                 end
                 message = message .. name .. ' [' .. v .. '] - [' .. group_owner .. ']\n{' .. group_link .. "}\n"
             end
@@ -224,16 +231,25 @@ local function run(msg, matches)
             if matches[2]:lower() == 'admins' then
                 mystat('/list admins')
                 return botAdminsList(msg.chat.id)
-            elseif matches[2]:lower() == 'groups' then
+            elseif matches[2]:lower() == 'groups' or matches[2]:lower() == 'groups createlinks' then
                 mystat('/list groups')
                 -- groupsList(msg)
                 -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
-                return groupsList(msg)
-            elseif matches[2]:lower() == 'realms' then
+                if matches[2]:lower() == 'groups' then
+                    return groupsList(msg, false)
+                elseif matches[2]:lower() == 'groups createlinks' then
+                    return groupsList(msg, true)
+                end
+            elseif matches[2]:lower() == 'realms' or matches[2]:lower() == 'realms createlinks' then
                 mystat('/list realms')
                 -- realmsList(msg)
                 -- sendDocument(msg.from.id, "./groups/lists/realms.txt")
                 return realmsList(msg)
+                if matches[2]:lower() == 'realms' then
+                    return realmsList(msg, false)
+                elseif matches[2]:lower() == 'realms createlinks' then
+                    return realmsList(msg, true)
+                end
             end
             return
         end
@@ -383,7 +399,7 @@ return {
         "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Aa][Dd][Dd][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Rr][Ee][Mm][Oo][Vv][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
-        "^[#!/]([Ll][Ii][Ss][Tt]) ([^%s]+)$",
+        "^[#!/]([Ll][Ii][Ss][Tt]) (.*)$",
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
@@ -408,7 +424,7 @@ return {
         "#pm <id> <msg>",
         "#pmblock <id>|<username>|<reply>|from",
         "#pmunblock <id>|<username>|<reply>|from",
-        "#list admins|groups|realms",
+        "#list admins|groups [createlinks]|realms [createlinks]",
         "#checkspeed",
         "#vardump [<reply>]",
         "#commandsstats",
