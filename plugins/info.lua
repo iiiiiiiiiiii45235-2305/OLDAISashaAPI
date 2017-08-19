@@ -457,7 +457,14 @@ local function run(msg, matches)
         if is_admin(msg) then
             local group_link = data[tostring(matches[2])]['settings']['set_link']
             if not group_link then
-                return langs[msg.lang].noLinkAvailable
+                local link = exportChatInviteLink(msg.chat.id)
+                if link then
+                    data[tostring(matches[2])]['settings']['set_link'] = link
+                    save_data(config.moderation.data, data)
+                    group_link = link
+                else
+                    return langs[msg.lang].noLinkAvailable
+                end
             end
             local obj = getChat(matches[2])
             if type(obj) == 'table' then
