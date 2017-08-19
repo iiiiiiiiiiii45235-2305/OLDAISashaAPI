@@ -283,7 +283,7 @@ local function keyboard_help_list(chat_id, rank)
                     column = 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), get_lang(chat_id)), callback_data = 'help' .. name .. chat_id }
+                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name .. chat_id }
                 column = column + 1
             end
             if column > 2 then
