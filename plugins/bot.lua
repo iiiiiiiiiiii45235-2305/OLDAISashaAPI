@@ -47,10 +47,10 @@ local function run(msg, matches)
         if matches[1] == '###cbbot' and matches[2] then
             if matches[2] == 'IT' then
                 redis:set('lang:' .. msg.chat.id, 'it')
-                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
+                return editMessageText(msg.chat.id, msg.message_id, langs['it'].startMessage)
             elseif matches[2] == 'EN' then
                 redis:set('lang:' .. msg.chat.id, 'en')
-                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
+                return editMessageText(msg.chat.id, msg.message_id, langs['en'].startMessage)
             end
             return
         end
