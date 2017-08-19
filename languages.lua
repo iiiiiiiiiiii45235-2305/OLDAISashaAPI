@@ -3,6 +3,7 @@ return {
     "Multiple_commands: various multiplecommands added to apply various actions to more than one user at the same time (mod^).\n",
     italian = '🇮🇹 Italian',
     english = '🇬🇧 English',
+    selectLanguage = '🏳 Select a language 🏴',
     phrases =
     {
         banhammer =
@@ -1335,9 +1336,9 @@ return {
             '🅿️ STRINGS',
             'Plugin per la gestione delle lingue di Sasha.',
             'USER',
-            '#setlang (it|en): Sasha imposta la lingua in cui deve parlare (funziona solo in privato con l\'utente).',
+            '#setlang [it|en]: Sasha imposta la lingua in cui deve parlare (funziona solo in privato con l\'utente).',
             'OWNER',
-            '#setlang (it|en): Sasha imposta la lingua in cui deve parlare in questo gruppo.',
+            '#setlang [it|en]: Sasha imposta la lingua in cui deve parlare in questo gruppo.',
             'SUDO',
             '(#reloadstrings|#reloadlangs): Sasha aggiorna le stringhe di testo.',
         },
@@ -2557,9 +2558,9 @@ return {
             '🅿️ STRINGS',
             'Plugin for the management of Sasha\'s languages.',
             'USER',
-            '#setlang (it|en): Sasha sets the language she has to talk (works just in private with the user).',
+            '#setlang [it|en]: Sasha sets the language she has to talk (works just in private with the user).',
             'OWNER',
-            '#setlang (it|en): Sasha sets the language she has to talk in this group.',
+            '#setlang [it|en]: Sasha sets the language she has to talk in this group.',
             'SUDO',
             '(#reloadstrings|#reloadlangs): Sasha updates strings.',
         },
