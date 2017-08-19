@@ -74,7 +74,7 @@ local function adjust_plugin_names(p, lang)
     elseif p == 'whitelist' then
         return langs[lang].pluginWhitelist
     end
-    return false
+    return ''
 end
 
 -- Get commands for that plugin
