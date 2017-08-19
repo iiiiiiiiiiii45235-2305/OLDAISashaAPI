@@ -347,7 +347,10 @@ end
 local function pre_process(msg)
     if msg then
         if msg.service then
-            if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+            if msg.service_type == 'chat_del_user' then
+                sendLog('REMOVED FROM ' .. msg.chat.id .. ' ' .. msg.chat.title)
+            elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+                sendLog('ADDED TO ' .. msg.chat.id .. ' ' .. msg.chat.title)
                 for k, v in pairs(msg.added) do
                     if tostring(v.id) == tostring(bot.id) then
                         if not is_admin(msg) then
