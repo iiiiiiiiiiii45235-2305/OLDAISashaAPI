@@ -1366,7 +1366,8 @@ return {
             '🅿️ TODO',
             'Plugin per inviare nella chat di LOG i todo.',
             'ADMIN',
-            '#todo <text> [<reply>]: Sasha invia <text> e l\'eventuale <reply> nella chat di LOG.',
+            '#todo <reply> [<text>]: Sasha inoltra <reply> e invia l\'eventuale <text> nella chat di LOG.',
+            '#todo <text>: Sasha invia <text> nella chat di LOG.',
         },
 
         urbandictionary =
@@ -2587,7 +2588,8 @@ return {
             '🅿️ TODO',
             'Plugin to send todos in the LOG chat.',
             'ADMIN',
-            '#todo <text> [<reply>]: Sasha sends <text> and <reply> if present in the LOG chat.',
+            '#todo <reply> [<text>]: Sasha forward <reply> and sends <text> if present in the LOG chat.',
+            '#todo <text>: Sasha sends <text> in the LOG chat.',
         },
 
         urbandictionary =
