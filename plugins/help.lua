@@ -171,7 +171,7 @@ local function syntax_all(chat, rank, filter)
         temp = plugin_syntax(name, chat, rank, filter)
         if temp ~= nil then
             if not filter then
-                text = text .. '🅿️ ' .. i .. '. ' .. name:upper() .. '\n' .. temp
+                text = text .. '🅿️ ' .. i .. '. ' .. adjust_plugin_names(name, get_lang(chat)) .. '\n' .. temp
             else
                 text = text .. temp
             end
@@ -181,69 +181,81 @@ local function syntax_all(chat, rank, filter)
     return text
 end
 
-local function adjust_plugin_names(p)
+local function adjust_plugin_names(p, lang)
     if p == 'administrator' then
-        return 'BOT\'S ADMINS'
+        return langs[lang].pluginAdministrator
     elseif p == 'alternatives' then
-        return 'COMMAND\'S ALTERNATIVES'
+        return langs[lang].pluginAlternatives
     elseif p == 'anti_spam' then
-        return 'ANTI FLOOD'
+        return langs[lang].pluginAnti_spam
     elseif p == 'banhammer' then
-        return 'BANS MANAGEMENT'
+        return langs[lang].pluginBanhammer
     elseif p == 'bot' then
-        return 'BOT MANAGEMENT'
+        return langs[lang].pluginBot
     elseif p == 'check_tag' then
-        return 'TAG ALERT'
+        return langs[lang].pluginCheck_tag
     elseif p == 'database' then
-        return 'DATABASE'
+        return langs[lang].pluginDatabase
     elseif p == 'delword' then
-        return 'CENSORSHIPS'
+        return langs[lang].pluginDelword
     elseif p == 'dogify' then
-        return 'DOGE'
+        return langs[lang].pluginDogify
     elseif p == 'fakecommand' then
-        return 'FAKE COMMANDS'
+        return langs[lang].pluginFakecommand
     elseif p == 'feedback' then
-        return 'FEEDBACK'
+        return langs[lang].pluginFeedback
     elseif p == 'filemanager' then
-        return 'FILEMANAGER'
+        return langs[lang].pluginFilemanager
     elseif p == 'flame' then
-        return 'FLAME USERS'
+        return langs[lang].pluginFlame
     elseif p == 'getsetunset' then
-        return 'GET SET UNSET'
+        return langs[lang].pluginGetsetunset
     elseif p == 'goodbyewelcome' then
-        return 'GREETINGS'
+        return langs[lang].pluginGoodbyewelcome
     elseif p == 'group_management' then
-        return 'GROUP MANAGEMENT'
+        return langs[lang].pluginGroup_management
     elseif p == 'help' then
-        return 'HELP'
+        return langs[lang].pluginHelp
     elseif p == 'info' then
-        return 'INFO'
+        return langs[lang].pluginInfo
     elseif p == 'interact' then
-        return 'INTERACT'
+        return langs[lang].pluginInteract
     elseif p == 'likecounter' then
-        return 'LIKES'
+        return langs[lang].pluginLikecounter
     elseif p == 'lua_exec' then
-        return 'EXECUTE LUA'
+        return langs[lang].pluginLua_exec
     elseif p == 'me' then
-        return 'MY MESSAGES'
+        return langs[lang].pluginMe
     elseif p == 'msg_checks' then
-        return 'CHECK MESSAGES'
+        return langs[lang].pluginMsg_checks
     elseif p == 'multiple_commands' then
-        return 'MULTIPLE COMMANDS'
+        return langs[lang].pluginMultiple_commands
     elseif p == 'news' then
+        return langs[lang].pluginNews
     elseif p == 'plugins' then
+        return langs[lang].pluginPlugins
     elseif p == 'pokedex' then
+        return langs[lang].pluginPokedex
     elseif p == 'qr' then
+        return langs[lang].pluginQr
     elseif p == 'shout' then
+        return langs[lang].pluginShout
     elseif p == 'stats' then
+        return langs[lang].pluginStats
     elseif p == 'strings' then
+        return langs[lang].pluginStrings
     elseif p == 'test' then
+        return 'TEST'
     elseif p == 'tgcli_to_api_migration' then
+        return langs[lang].pluginTgcli_to_api_migration
     elseif p == 'todo' then
+        return langs[lang].pluginTodo
     elseif p == 'urbandictionary' then
+        return langs[lang].pluginUrbandictionary
     elseif p == 'webshot' then
+        return langs[lang].pluginWebshot
     elseif p == 'whitelist' then
-        return true
+        return langs[lang].pluginWhitelist
     end
     return false
 end
@@ -267,7 +279,7 @@ local function keyboard_help_list(chat_id, rank)
                         column = 1
                         keyboard.inline_keyboard[row] = { }
                     end
-                    keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name, callback_data = 'help' .. name }
+                    keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name, get_lang(chat_id)), callback_data = 'help' .. name }
                     column = column + 1
                 end
                 if column > 2 then
@@ -283,7 +295,7 @@ local function keyboard_help_list(chat_id, rank)
                     column = 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name, callback_data = 'help' .. name }
+                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name, get_lang(chat_id)), callback_data = 'help' .. name }
                 column = column + 1
             end
             if column > 2 then
