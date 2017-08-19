@@ -244,7 +244,6 @@ local function run(msg, matches)
                 mystat('/list realms')
                 -- realmsList(msg)
                 -- sendDocument(msg.from.id, "./groups/lists/realms.txt")
-                return realmsList(msg)
                 if matches[2]:lower() == 'realms' then
                     return realmsList(msg, false)
                 elseif matches[2]:lower() == 'realms createlinks' then
