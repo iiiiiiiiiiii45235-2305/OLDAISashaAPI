@@ -61,6 +61,13 @@ local function groupsList(msg)
                 local group_link = "No link"
                 if data[tostring(v)]['settings']['set_link'] then
                     group_link = data[tostring(v)]['settings']['set_link']
+                else
+                    local link = exportChatInviteLink(matches[2])
+                    if link then
+                        data[tostring(matches[2])]['settings']['set_link'] = link
+                        save_data(config.moderation.data, data)
+                        group_link = link
+                    end
                 end
                 message = message .. name .. ' [' .. v .. '] - [' .. group_owner .. ']\n{' .. group_link .. "}\n"
             end
