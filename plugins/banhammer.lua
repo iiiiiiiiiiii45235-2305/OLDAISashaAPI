@@ -95,6 +95,33 @@ local function adjustRestrictions(param_restrictions)
     return restrictions
 end
 
+local function showRestrictions(chat_id, user_id, lang)
+    local obj_user = getChatMember(chat_id, user_id)
+    if type(obj_user) == 'table' then
+        if obj_user.result then
+            obj_user = obj_user.result
+        else
+            obj_user = nil
+        end
+    else
+        obj_user = nil
+    end
+    if obj_user then
+        if obj_user.status == 'member' then
+            local text = langs[lang].restrictions ..
+            langs[lang].restrictionSendMessages .. tostring(obj_user.can_send_messages or false) ..
+            langs[lang].restrictionSendMediaMessages .. tostring(obj_user.can_send_media_messages or false) ..
+            langs[lang].restrictionSendOtherMessages .. tostring(obj_user.can_send_other_messages or false) ..
+            langs[lang].restrictionAddWebPagePreviews .. tostring(obj_user.can_add_web_page_previews or false)
+            return text
+        else
+            return langs[lang].errorTryAgain
+        end
+    else
+        return langs[lang].errorTryAgain
+    end
+end
+
 local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
     if not param_restrictions then
         local obj_user = getChatMember(chat_id, user_id)
@@ -133,6 +160,14 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         end
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'banhammerBACK' .. user_id .. chat_id }
         column = column + 1
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'banhammerDELETE' }
+        return keyboard
+    else
+        local keyboard = { }
+        keyboard.inline_keyboard = { }
+        local row = 1
+        local column = 1
+        keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'banhammerDELETE' }
         return keyboard
     end
@@ -648,6 +683,108 @@ local function run(msg, matches)
                 return
             else
                 return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'restrictions' then
+            mystat('/restrictions')
+            if msg.reply then
+                if msg.from.is_mod then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    if msg.chat.type ~= 'private' then
+                                        sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                    end
+                                    sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.forward_from.id))
+                                    return
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        if msg.chat.type ~= 'private' then
+                            sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                        end
+                        sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.from.id))
+                        return
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if msg.from.is_mod then
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if msg.chat.type ~= 'private' then
+                                        sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                    end
+                                    sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id))
+                                    return
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if msg.chat.type ~= 'private' then
+                                    sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                end
+                                sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id))
+                                return
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+            return
+        end
+        if matches[1]:lower() == 'textualrestrictions' then
+            mystat('/restrictions')
+            if msg.reply then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                return showRestrictions(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
+                            else
+                                return langs[msg.lang].cantDoThisToChat
+                            end
+                        else
+                            return langs[msg.lang].errorNoForward
+                        end
+                    else
+                        return showRestrictions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
+                    end
+                else
+                    return showRestrictions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if string.match(matches[2], '^%d+$') then
+                    return showRestrictions(msg.chat.id, matches[2], msg.lang)
+                else
+                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    if obj_user then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                            return showRestrictions(msg.chat.id, obj_user.id, msg.lang)
+                        end
+                    else
+                        return langs[msg.lang].noObject
+                    end
+                end
             end
         end
         if matches[1]:lower() == 'kick' then

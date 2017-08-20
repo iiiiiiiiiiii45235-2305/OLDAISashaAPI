@@ -234,39 +234,41 @@ local function showPermissions(chat_id, user_id, lang)
         obj_user = nil
     end
     if obj_user then
-        if obj_user.status ~= 'creator' or obj_user.status ~= 'administrator' then
-            local text = langs[lang].permissions ..
-            langs[lang].permissionCanBeEdited .. tostring(obj_user.can_be_edited or false) ..
-            langs[lang].permissionChangeInfo .. tostring(obj_user.can_change_info or false) ..
-            langs[lang].permissionDeleteMessages .. tostring(obj_user.can_delete_messages or false) ..
-            langs[lang].permissionInviteUsers .. tostring(obj_user.can_invite_users or false) ..
-            langs[lang].permissionPinMessages .. tostring(obj_user.can_pin_messages or false) ..
-            langs[lang].permissionPromoteMembers .. tostring(obj_user.can_promote_members or false) ..
-            langs[lang].permissionRestrictMembers .. tostring(obj_user.can_restrict_members or false)
-            return text
-        else
-            local obj_bot = getChatMember(chat_id, bot.id)
-            if type(obj_bot) == 'table' then
-                if obj_bot.result then
-                    obj_bot = obj_bot.result
+        if obj_user.status ~= 'creator' then
+            if obj_user.status == 'administrator' then
+                local text = langs[lang].permissions ..
+                langs[lang].permissionCanBeEdited .. tostring(obj_user.can_be_edited or false) ..
+                langs[lang].permissionChangeInfo .. tostring(obj_user.can_change_info or false) ..
+                langs[lang].permissionDeleteMessages .. tostring(obj_user.can_delete_messages or false) ..
+                langs[lang].permissionInviteUsers .. tostring(obj_user.can_invite_users or false) ..
+                langs[lang].permissionPinMessages .. tostring(obj_user.can_pin_messages or false) ..
+                langs[lang].permissionPromoteMembers .. tostring(obj_user.can_promote_members or false) ..
+                langs[lang].permissionRestrictMembers .. tostring(obj_user.can_restrict_members or false)
+                return text
+            elseif obj_user.status == 'member' then
+                local obj_bot = getChatMember(chat_id, bot.id)
+                if type(obj_bot) == 'table' then
+                    if obj_bot.result then
+                        obj_bot = obj_bot.result
+                    else
+                        obj_bot = nil
+                    end
                 else
                     obj_bot = nil
                 end
-            else
-                obj_bot = nil
-            end
-            if obj_bot then
-                local text = langs[lang].permissions ..
-                langs[lang].permissionCanBeEdited .. tostring(obj_bot.can_promote_members or false) ..
-                langs[lang].permissionChangeInfo .. tostring(false) ..
-                langs[lang].permissionDeleteMessages .. tostring(false) ..
-                langs[lang].permissionInviteUsers .. tostring(false) ..
-                langs[lang].permissionPinMessages .. tostring(false) ..
-                langs[lang].permissionPromoteMembers .. tostring(false) ..
-                langs[lang].permissionRestrictMembers .. tostring(false)
-                return text
-            else
-                return langs[lang].errorTryAgain
+                if obj_bot then
+                    local text = langs[lang].permissions ..
+                    langs[lang].permissionCanBeEdited .. tostring(obj_bot.can_promote_members or false) ..
+                    langs[lang].permissionChangeInfo .. tostring(false) ..
+                    langs[lang].permissionDeleteMessages .. tostring(false) ..
+                    langs[lang].permissionInviteUsers .. tostring(false) ..
+                    langs[lang].permissionPinMessages .. tostring(false) ..
+                    langs[lang].permissionPromoteMembers .. tostring(false) ..
+                    langs[lang].permissionRestrictMembers .. tostring(false)
+                    return text
+                else
+                    return langs[lang].errorTryAgain
+                end
             end
         end
     else
@@ -787,6 +789,14 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         end
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
         column = column + 1
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+        return keyboard
+    else
+        local keyboard = { }
+        keyboard.inline_keyboard = { }
+        local row = 1
+        local column = 1
+        keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
         return keyboard
     end
