@@ -272,7 +272,6 @@ local function run(msg, matches)
                                             restrictions['can_send_media_messages'] = true
                                             restrictions[restrictionsDictionary[matches[4]:lower()]] = true
                                         end
-                                        restrictions[restrictionsDictionary[matches[4]:lower()]] = true
                                         if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
                                         else
