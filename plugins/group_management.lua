@@ -340,22 +340,22 @@ local function adjustPermissions(param_permissions)
         elseif type(param_permissions) == 'string' then
             param_permissions = param_permissions:lower()
             for k, v in pairs(param_permissions:split(' ')) do
-                if v == 'change_info' then
+                if v == 'can_change_info' or v == 'change_info' then
                     permission_type = 'can_change_info'
                 end
-                if v == 'delete_messages' then
+                if v == 'can_delete_messages' or v == 'delete_messages' then
                     permission_type = 'can_delete_messages'
                 end
-                if v == 'invite_users' then
+                if v == 'can_invite_users' or v == 'invite_users' then
                     permission_type = 'can_invite_users'
                 end
-                if v == 'restrict_members' then
+                if v == 'can_restrict_members' or v == 'restrict_members' then
                     permission_type = 'can_restrict_members'
                 end
-                if v == 'pin_messages' then
+                if v == 'can_pin_messages' or v == 'pin_messages' then
                     permission_type = 'can_pin_messages'
                 end
-                if v == 'promote_members' then
+                if v == 'can_promote_members' or v == 'promote_members' then
                     permission_type = 'can_promote_members'
                 end
                 if permission_type ~= '' then

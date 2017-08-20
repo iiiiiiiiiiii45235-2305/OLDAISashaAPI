@@ -81,24 +81,24 @@ local function adjustRestrictions(param_restrictions)
         elseif type(param_restrictions) == 'string' then
             param_restrictions = param_restrictions:lower()
             for k, v in pairs(param_restrictions:split(' ')) do
-                if v == 'send_messages' then
+                if v == 'can_send_messages' or v == 'send_messages' then
                     restriction_type = 'can_send_messages'
                     restrictions[restriction_type] = false
                     restrictions[restriction_type] = false
                     restrictions[restriction_type] = false
                     restrictions[restriction_type] = false
                 end
-                if v == 'send_media_messages' then
+                if v == 'can_send_media_messages' or v == 'send_media_messages' then
                     restriction_type = 'can_send_media_messages'
                     restrictions[restriction_type] = false
                     restrictions[restriction_type] = false
                     restrictions[restriction_type] = false
                 end
-                if v == 'send_other_messages' then
+                if v == 'can_send_other_messages' or v == 'send_other_messages' then
                     restriction_type = 'can_send_other_messages'
                     restrictions[restriction_type] = false
                 end
-                if v == 'add_web_page_previews' then
+                if v == 'can_add_web_page_previews' or v == 'add_web_page_previews' then
                     restriction_type = 'can_add_web_page_previews'
                     restrictions[restriction_type] = false
                 end
