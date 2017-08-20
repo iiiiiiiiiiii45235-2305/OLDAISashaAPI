@@ -112,10 +112,10 @@ local function showRestrictions(chat_id, user_id, lang)
     if obj_user then
         if obj_user.status == 'member' then
             local text = langs[lang].restrictions ..
-            langs[lang].restrictionSendMessages .. tostring(obj_user.can_send_messages or false) ..
-            langs[lang].restrictionSendMediaMessages .. tostring(obj_user.can_send_media_messages or false) ..
-            langs[lang].restrictionSendOtherMessages .. tostring(obj_user.can_send_other_messages or false) ..
-            langs[lang].restrictionAddWebPagePreviews .. tostring(obj_user.can_add_web_page_previews or false)
+            langs[lang].restrictionSendMessages .. tostring(obj_user.can_send_messages or true) ..
+            langs[lang].restrictionSendMediaMessages .. tostring(obj_user.can_send_media_messages or true) ..
+            langs[lang].restrictionSendOtherMessages .. tostring(obj_user.can_send_other_messages or true) ..
+            langs[lang].restrictionAddWebPagePreviews .. tostring(obj_user.can_add_web_page_previews or true)
             return text
         else
             return langs[lang].errorTryAgain
