@@ -1,7 +1,7 @@
 return {
     news = "SASHA'S NEWS\n" ..
     "Inline keyboard to set the language with !start (private) and !setlang (private and groups(owner^)).\n" ..
-    "",
+    "![Un]Restrict and !Restrictions commands to manage telegram's restrictions (banhammer)",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
@@ -369,6 +369,7 @@ return {
         restrictionSendMediaMessages = "\nInviare audio, documenti, foto, video, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nInviare gifs, giochi, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nAggiungere anteprime di pagine web: ",
+        userUnrestricted = "Utente libero.",
 
         -- bot.lua --
         startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.",
@@ -1603,6 +1604,7 @@ return {
         restrictionSendMediaMessages = "\nSend audios, documents, photos, videos, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nSend gifs, games, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nAdd web page previews: ",
+        userUnrestricted = "User unrestricted.",
 
         -- bot.lua --
         startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.",
