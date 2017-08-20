@@ -308,14 +308,36 @@ local function adjustPermissions(param_permissions)
         ['can_promote_members'] = false,
     }
     if param_permissions then
+        local permission_type = ''
         if type(param_permissions) == 'table' then
             for k, v in pairs(param_permissions) do
-                if k == 'can_change_info' or k == 'can_delete_messages' or k == 'can_invite_users' or k == 'can_restrict_members' or k == 'can_pin_messages' or k == 'can_promote_members' then
-                    permissions[tostring(k)] = param_permissions[tostring(k)]
+                if k == 'can_change_info' or k == 'can_delete_messages' or k == 'can_invite_users' or k == 'can_restrict_members' or k == 'can_pin_messages' or k == 'can_promote_members' or
+                    k == 'change_info' or k == 'delete_messages' or k == 'invite_users' or k == 'restrict_members' or k == 'pin_messages' or k == 'promote_members' then
+                    if k == 'can_change_info' or k == 'change_info' then
+                        permission_type = 'can_change_info'
+                    end
+                    if k == 'can_delete_messages' or k == 'delete_messages' then
+                        permission_type = 'can_delete_messages'
+                    end
+                    if k == 'can_invite_users' or k == 'invite_users' then
+                        permission_type = 'can_invite_users'
+                    end
+                    if k == 'can_restrict_members' or k == 'restrict_members' then
+                        permission_type = 'can_restrict_members'
+                    end
+                    if k == 'can_pin_messages' or k == 'pin_messages' then
+                        permission_type = 'can_pin_messages'
+                    end
+                    if k == 'can_promote_members' or k == 'promote_members' then
+                        permission_type = 'can_promote_members'
+                    end
+                    if permission_type ~= '' then
+                        permissions[tostring(permission_type)] = param_permissions[tostring(permission_type)]
+                    end
+                    permission_type = ''
                 end
             end
         elseif type(param_permissions) == 'string' then
-            local permission_type = ''
             param_permissions = param_permissions:lower()
             for k, v in pairs(param_permissions:split(' ')) do
                 if v == 'change_info' then

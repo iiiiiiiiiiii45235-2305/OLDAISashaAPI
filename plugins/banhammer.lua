@@ -58,14 +58,27 @@ local function adjustRestrictions(param_restrictions)
         can_add_web_page_previews = true
     }
     if param_restrictions then
+        local restriction_type = ''
         if type(param_restrictions) == 'table' then
             for k, v in pairs(param_restrictions) do
-                if k == 'can_send_messages' or k == 'can_send_media_messages' or k == 'can_send_other_messages' or k == 'can_add_web_page_previews' then
-                    restrictions[tostring(k)] = param_restrictions[tostring(k)]
+                if k == 'can_send_messages' or k == 'can_send_media_messages' or k == 'can_send_other_messages' or k == 'can_add_web_page_previews' or
+                    k == 'send_messages' or k == 'send_media_messages' or k == 'send_other_messages' or k == 'add_web_page_previews' then
+                    if k == 'can_send_messages' or k == 'send_messages' then
+                        restriction_type = 'can_send_messages'
+                    end
+                    if k == 'can_send_media_messages' or k == 'send_media_messages' then
+                        restriction_type = 'can_send_media_messages'
+                    end
+                    if k == 'can_send_other_messages' or k == 'send_other_messages' then
+                        restriction_type = 'can_send_other_messages'
+                    end
+                    if k == 'can_add_web_page_previews' or k == 'add_web_page_previews' then
+                        restriction_type = 'can_add_web_page_previews'
+                    end
+                    restrictions[tostring(restriction_type)] = param_restrictions[tostring(restriction_type)]
                 end
             end
         elseif type(param_restrictions) == 'string' then
-            local restriction_type = ''
             param_restrictions = param_restrictions:lower()
             for k, v in pairs(param_restrictions:split(' ')) do
                 if v == 'send_messages' then
@@ -150,9 +163,9 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         for var, value in pairs(restrictions) do
             if type(value) == 'boolean' then
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseAdjustRestrictions(var), callback_data = 'banhammerUNRESTRICT' .. user_id .. var .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseAdjustRestrictions(var), callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseAdjustRestrictions(var) .. chat_id }
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustRestrictions(var), callback_data = 'banhammerRESTRICT' .. user_id .. var .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustRestrictions(var), callback_data = 'banhammerRESTRICT' .. user_id .. reverseAdjustRestrictions(var) .. chat_id }
                 end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
