@@ -929,7 +929,7 @@ return {
             "#restrict <id>|<username>|<reply>|from [<restrictions>]: Sasha applica all'utente specificato le restrizioni specificate  (se non specificate l'utente avrà di default tutte le restrizioni applicate).",
             "<restrictions> può essere: [send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]",
             "#unrestrict <id>|<username>|<reply>|from: Sasha rimuove le restrizioni dell'utente specificato.",
-            "#restrictions <id>|<username>|<reply>|from: Sasha manda una tastiera in privato con le restrizioni dell'utente specificato.",
+            "#[textual]restrictions <id>|<username>|<reply>|from: Sasha manda le restrizioni dell'utente specificato.",
             "#kick <id>|<username>|<reply>|from [<reason>]: Sasha kicka l'utente specificato.",
             "#ban <id>|<username>|<reply>|from [<reason>]: Sasha banna l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
             "#unban <id>|<username>|<reply>|from [<reason>]: Sasha sbanna l'utente specificato.",
