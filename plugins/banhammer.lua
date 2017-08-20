@@ -110,13 +110,24 @@ local function showRestrictions(chat_id, user_id, lang)
         obj_user = nil
     end
     if obj_user then
-        if obj_user.status == 'member' then
-            local text = langs[lang].restrictions ..
-            langs[lang].restrictionSendMessages .. tostring(obj_user.can_send_messages or true) ..
-            langs[lang].restrictionSendMediaMessages .. tostring(obj_user.can_send_media_messages or true) ..
-            langs[lang].restrictionSendOtherMessages .. tostring(obj_user.can_send_other_messages or true) ..
-            langs[lang].restrictionAddWebPagePreviews .. tostring(obj_user.can_add_web_page_previews or true)
-            return text
+        if obj_user.status ~= 'creator' then
+            if obj_user.status == 'restricted' then
+                local text = langs[lang].restrictions ..
+                langs[lang].restrictionSendMessages .. tostring(obj_user.can_send_messages) ..
+                langs[lang].restrictionSendMediaMessages .. tostring(obj_user.can_send_media_messages) ..
+                langs[lang].restrictionSendOtherMessages .. tostring(obj_user.can_send_other_messages) ..
+                langs[lang].restrictionAddWebPagePreviews .. tostring(obj_user.can_add_web_page_previews)
+                return text
+            elseif obj_user.status == 'member' then
+                local text = langs[lang].restrictions ..
+                langs[lang].restrictionSendMessages .. tostring(true) ..
+                langs[lang].restrictionSendMediaMessages .. tostring(true) ..
+                langs[lang].restrictionSendOtherMessages .. tostring(true) ..
+                langs[lang].restrictionAddWebPagePreviews .. tostring(true)
+                return text
+            else
+                return langs[lang].errorTryAgain
+            end
         else
             return langs[lang].errorTryAgain
         end
