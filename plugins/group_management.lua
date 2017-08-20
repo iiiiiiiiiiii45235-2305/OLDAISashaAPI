@@ -276,27 +276,35 @@ local function showPermissions(chat_id, user_id, lang)
     end
 end
 
-local function reverseAdjustPermissions(permission_type)
-    if permission_type == 'can_change_info' then
-        permission_type = 'change_info'
-    end
-    if permission_type == 'can_delete_messages' then
-        permission_type = 'delete_messages'
-    end
-    if permission_type == 'can_invite_users' then
-        permission_type = 'invite_users'
-    end
-    if permission_type == 'can_restrict_members' then
-        permission_type = 'restrict_members'
-    end
-    if permission_type == 'can_pin_messages' then
-        permission_type = 'pin_messages'
-    end
-    if permission_type == 'can_promote_members' then
-        permission_type = 'promote_members'
-    end
-    return permission_type
-end
+local permissionsDictionary = {
+    ["can_change_info"] = "can_change_info",
+    ["change_info"] = "can_change_info",
+    ["can_delete_messages"] = "can_delete_messages",
+    ["delete_messages"] = "can_delete_messages",
+    ["can_invite_users"] = "can_invite_users",
+    ["invite_users"] = "can_invite_users",
+    ["can_restrict_members"] = "can_restrict_members",
+    ["restrict_members"] = "can_restrict_members",
+    ["can_pin_messages"] = "can_pin_messages",
+    ["pin_messages"] = "can_pin_messages",
+    ["can_promote_members"] = "can_promote_members",
+    ["promote_members"] = "can_promote_members",
+}
+
+local reversePermissionsDictionary = {
+    ["can_change_info"] = "change_info",
+    ["change_info"] = "change_info",
+    ["can_delete_messages"] = "delete_messages",
+    ["delete_messages"] = "delete_messages",
+    ["can_invite_users"] = "invite_users",
+    ["invite_users"] = "invite_users",
+    ["can_restrict_members"] = "restrict_members",
+    ["restrict_members"] = "restrict_members",
+    ["can_pin_messages"] = "pin_messages",
+    ["pin_messages"] = "pin_messages",
+    ["can_promote_members"] = "promote_members",
+    ["promote_members"] = "promote_members",
+}
 
 local function adjustPermissions(param_permissions)
     local permissions = {
@@ -308,60 +316,18 @@ local function adjustPermissions(param_permissions)
         ['can_promote_members'] = false,
     }
     if param_permissions then
-        local permission_type = ''
         if type(param_permissions) == 'table' then
             for k, v in pairs(param_permissions) do
-                if k == 'can_change_info' or k == 'can_delete_messages' or k == 'can_invite_users' or k == 'can_restrict_members' or k == 'can_pin_messages' or k == 'can_promote_members' or
-                    k == 'change_info' or k == 'delete_messages' or k == 'invite_users' or k == 'restrict_members' or k == 'pin_messages' or k == 'promote_members' then
-                    if k == 'can_change_info' or k == 'change_info' then
-                        permission_type = 'can_change_info'
-                    end
-                    if k == 'can_delete_messages' or k == 'delete_messages' then
-                        permission_type = 'can_delete_messages'
-                    end
-                    if k == 'can_invite_users' or k == 'invite_users' then
-                        permission_type = 'can_invite_users'
-                    end
-                    if k == 'can_restrict_members' or k == 'restrict_members' then
-                        permission_type = 'can_restrict_members'
-                    end
-                    if k == 'can_pin_messages' or k == 'pin_messages' then
-                        permission_type = 'can_pin_messages'
-                    end
-                    if k == 'can_promote_members' or k == 'promote_members' then
-                        permission_type = 'can_promote_members'
-                    end
-                    if permission_type ~= '' then
-                        permissions[tostring(permission_type)] = param_permissions[tostring(permission_type)]
-                    end
-                    permission_type = ''
+                if permissionsDictionary[k] then
+                    permissions[tostring(permissionsDictionary[k])] = param_permissions[tostring(permissionsDictionary[k])]
                 end
             end
         elseif type(param_permissions) == 'string' then
             param_permissions = param_permissions:lower()
             for k, v in pairs(param_permissions:split(' ')) do
-                if v == 'can_change_info' or v == 'change_info' then
-                    permission_type = 'can_change_info'
+                if permissionsDictionary[v] then
+                    permissions[tostring(permissionsDictionary[v])] = true
                 end
-                if v == 'can_delete_messages' or v == 'delete_messages' then
-                    permission_type = 'can_delete_messages'
-                end
-                if v == 'can_invite_users' or v == 'invite_users' then
-                    permission_type = 'can_invite_users'
-                end
-                if v == 'can_restrict_members' or v == 'restrict_members' then
-                    permission_type = 'can_restrict_members'
-                end
-                if v == 'can_pin_messages' or v == 'pin_messages' then
-                    permission_type = 'can_pin_messages'
-                end
-                if v == 'can_promote_members' or v == 'promote_members' then
-                    permission_type = 'can_promote_members'
-                end
-                if permission_type ~= '' then
-                    permissions[tostring(permission_type)] = true
-                end
-                permission_type = ''
             end
         end
     end
@@ -801,9 +767,9 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         for var, value in pairs(permissions) do
             if type(value) == 'boolean' then
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementDENY' .. user_id .. reverseAdjustPermissions(var) .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustPermissions(var), callback_data = 'group_managementGRANT' .. user_id .. reverseAdjustPermissions(var) .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
                 end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }

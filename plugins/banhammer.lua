@@ -34,21 +34,27 @@ local function kickinactive(executer, chat_id, num)
     return langs[lang].massacre:gsub('X', kicked)
 end
 
-local function reverseAdjustRestrictions(restriction_type)
-    if restriction_type == 'can_send_messages' then
-        restriction_type = 'send_messages'
-    end
-    if restriction_type == 'can_send_media_messages' then
-        restriction_type = 'send_media_messages'
-    end
-    if restriction_type == 'can_send_other_messages' then
-        restriction_type = 'send_other_messages'
-    end
-    if restriction_type == 'can_add_web_page_previews' then
-        restriction_type = 'add_web_page_previews'
-    end
-    return restriction_type
-end
+local restrictionsDictionary = {
+    ["can_send_messages"] = "can_send_messages",
+    ["send_messages"] = "can_send_messages",
+    ["can_send_media_messages"] = "can_send_media_messages",
+    ["send_media_messages"] = "can_send_media_messages",
+    ["can_send_other_messages"] = "can_send_other_messages",
+    ["send_other_messages"] = "can_send_other_messages",
+    ["can_add_web_page_previews"] = "can_add_web_page_previews",
+    ["add_web_page_previews"] = "can_add_web_page_previews",
+}
+
+local reverseRestrictionsDictionary = {
+    ["can_send_messages"] = "send_messages",
+    ["send_messages"] = "send_messages",
+    ["can_send_media_messages"] = "send_media_messages",
+    ["send_media_messages"] = "send_media_messages",
+    ["can_send_other_messages"] = "send_other_messages",
+    ["send_other_messages"] = "send_other_messages",
+    ["can_add_web_page_previews"] = "add_web_page_previews",
+    ["add_web_page_previews"] = "add_web_page_previews",
+}
 
 local function adjustRestrictions(param_restrictions)
     local restrictions = {
@@ -58,49 +64,33 @@ local function adjustRestrictions(param_restrictions)
         can_add_web_page_previews = true
     }
     if param_restrictions then
-        local restriction_type = ''
         if type(param_restrictions) == 'table' then
             for k, v in pairs(param_restrictions) do
-                if k == 'can_send_messages' or k == 'can_send_media_messages' or k == 'can_send_other_messages' or k == 'can_add_web_page_previews' or
-                    k == 'send_messages' or k == 'send_media_messages' or k == 'send_other_messages' or k == 'add_web_page_previews' then
-                    if k == 'can_send_messages' or k == 'send_messages' then
-                        restriction_type = 'can_send_messages'
-                    end
-                    if k == 'can_send_media_messages' or k == 'send_media_messages' then
-                        restriction_type = 'can_send_media_messages'
-                    end
-                    if k == 'can_send_other_messages' or k == 'send_other_messages' then
-                        restriction_type = 'can_send_other_messages'
-                    end
-                    if k == 'can_add_web_page_previews' or k == 'add_web_page_previews' then
-                        restriction_type = 'can_add_web_page_previews'
-                    end
-                    restrictions[tostring(restriction_type)] = param_restrictions[tostring(restriction_type)]
+                if restrictionsDictionary[k] then
+                    restrictions[tostring(restrictionsDictionary[k])] = param_restrictions[tostring(restrictionsDictionary[k])]
                 end
             end
         elseif type(param_restrictions) == 'string' then
             param_restrictions = param_restrictions:lower()
             for k, v in pairs(param_restrictions:split(' ')) do
-                if v == 'can_send_messages' or v == 'send_messages' then
-                    restriction_type = 'can_send_messages'
-                    restrictions[restriction_type] = false
-                    restrictions[restriction_type] = false
-                    restrictions[restriction_type] = false
-                    restrictions[restriction_type] = false
-                end
-                if v == 'can_send_media_messages' or v == 'send_media_messages' then
-                    restriction_type = 'can_send_media_messages'
-                    restrictions[restriction_type] = false
-                    restrictions[restriction_type] = false
-                    restrictions[restriction_type] = false
-                end
-                if v == 'can_send_other_messages' or v == 'send_other_messages' then
-                    restriction_type = 'can_send_other_messages'
-                    restrictions[restriction_type] = false
-                end
-                if v == 'can_add_web_page_previews' or v == 'add_web_page_previews' then
-                    restriction_type = 'can_add_web_page_previews'
-                    restrictions[restriction_type] = false
+                if restrictionsDictionary[v] then
+                    if restrictionsDictionary[v] == 'can_send_messages' then
+                        restrictions[restrictionsDictionary[v]] = false
+                        restrictions['can_send_media_messages'] = false
+                        restrictions['can_send_other_messages'] = false
+                        restrictions['can_add_web_page_previews'] = false
+                    end
+                    if restrictionsDictionary[v] == 'can_send_media_messages' then
+                        restrictions[restrictionsDictionary[v]] = false
+                        restrictions['can_send_other_messages'] = false
+                        restrictions['can_add_web_page_previews'] = false
+                    end
+                    if restrictionsDictionary[v] == 'can_send_other_messages' then
+                        restrictions[restrictionsDictionary[v]] = false
+                    end
+                    if restrictionsDictionary[v] == 'can_add_web_page_previews' then
+                        restrictions[restrictionsDictionary[v]] = false
+                    end
                 end
             end
         end
@@ -163,9 +153,9 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         for var, value in pairs(restrictions) do
             if type(value) == 'boolean' then
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustRestrictions(var), callback_data = 'banhammerRESTRICT' .. user_id .. reverseAdjustRestrictions(var) .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseAdjustRestrictions(var), callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseAdjustRestrictions(var) .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
                 end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
@@ -220,7 +210,7 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local restrictions = adjustRestrictions(obj_user)
-                                        restrictions[matches[4]:lower()] = false
+                                        restrictions[restrictionsDictionary[matches[4]:lower()]] = false
                                         if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
                                         else
@@ -249,7 +239,7 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local restrictions = adjustRestrictions(obj_user)
-                                        restrictions[matches[4]:lower()] = true
+                                        restrictions[restrictionsDictionary[matches[4]:lower()]] = true
                                         if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
                                         else
