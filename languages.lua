@@ -365,10 +365,10 @@ return {
         restrictionsIntro = "Legenda restrizioni:\n✅ Restrizione non applicata\n🚫 Restrizione applicata\nPer maggiori informazioni sulle restrizioni controlla le faqs.",
         sendRestrictionsPvt = "Ti ho mandato le restrizioni dell'utente in privato.",
         restrictions = "Restrizioni: ",
-        restrictionSendMessages = "\nInviare ogni tipo di messaggio: ",
-        restrictionSendMediaMessages = "\nInviare audio, documenti, foto, video, video_notes, voice_notes: ",
-        restrictionSendOtherMessages = "\nInviare gifs, giochi, stickers, inline bots: ",
-        restrictionAddWebPagePreviews = "\nAggiungere anteprime di pagine web: ",
+        restrictionSendMessages = "\nPuò inviare ogni tipo di messaggio: ",
+        restrictionSendMediaMessages = "\nPuò inviare audio, documenti, foto, video, video_notes, voice_notes: ",
+        restrictionSendOtherMessages = "\nPuò inviare gifs, giochi, stickers, inline bots: ",
+        restrictionAddWebPagePreviews = "\nPuò aggiungere anteprime di pagine web: ",
         userUnrestricted = "Utente libero.",
 
         -- bot.lua --
@@ -1600,10 +1600,10 @@ return {
         restrictionsIntro = "Restrictions' legend:\n✅ Unrestricted\n🚫 Restricted\nFor more information on restrictions check faqs.",
         sendRestrictionsPvt = "I've sent you the user's restrictions in private.",
         restrictions = "Restrictions: ",
-        restrictionSendMessages = "\nSend any type of message: ",
-        restrictionSendMediaMessages = "\nSend audios, documents, photos, videos, video_notes, voice_notes: ",
-        restrictionSendOtherMessages = "\nSend gifs, games, stickers, inline bots: ",
-        restrictionAddWebPagePreviews = "\nAdd web page previews: ",
+        restrictionSendMessages = "\nCan send any type of message: ",
+        restrictionSendMediaMessages = "\nCan send audios, documents, photos, videos, video_notes, voice_notes: ",
+        restrictionSendOtherMessages = "\nCan send gifs, games, stickers, inline bots: ",
+        restrictionAddWebPagePreviews = "\nCan add web page previews: ",
         userUnrestricted = "User unrestricted.",
 
         -- bot.lua --
