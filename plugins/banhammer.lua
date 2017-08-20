@@ -550,7 +550,7 @@ local function run(msg, matches)
                                     if matches[3] then
                                         restrictions = adjustRestrictions(matches[3]:lower())
                                     end
-                                    return restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from, restrictions)
+                                    return restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, restrictions)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -561,13 +561,13 @@ local function run(msg, matches)
                             if matches[2] then
                                 restrictions = adjustRestrictions(matches[2]:lower())
                             end
-                            return restrictChatMember(msg.chat.id, msg.reply_to_message.from, restrictions)
+                            return restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions)
                         end
                     else
                         if matches[2] then
                             restrictions = adjustRestrictions(matches[2]:lower())
                         end
-                        return restrictChatMember(msg.chat.id, msg.reply_to_message.from, restrictions)
+                        return restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions)
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
@@ -578,7 +578,7 @@ local function run(msg, matches)
                                     if matches[3] then
                                         restrictions = adjustRestrictions(matches[3]:lower())
                                     end
-                                    return restrictChatMember(msg.chat.id, obj_user, restrictions)
+                                    return restrictChatMember(msg.chat.id, obj_user.id, restrictions)
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -591,7 +591,7 @@ local function run(msg, matches)
                                 if matches[3] then
                                     restrictions = adjustRestrictions(matches[3]:lower())
                                 end
-                                return restrictChatMember(msg.chat.id, obj_user, restrictions)
+                                return restrictChatMember(msg.chat.id, obj_user.id, restrictions)
                             end
                         else
                             return langs[msg.lang].noObject
@@ -611,7 +611,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return unrestrictChatMember(msg.chat.id, msg.reply_to_message.forward_from)
+                                    return unrestrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -620,7 +620,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        return unrestrictChatMember(msg.chat.id, msg.reply_to_message.from)
+                        return unrestrictChatMember(msg.chat.id, msg.reply_to_message.from.id)
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if string.match(matches[2], '^%d+$') then
@@ -628,7 +628,7 @@ local function run(msg, matches)
                         if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return unrestrictChatMember(msg.chat.id, obj_user)
+                                    return unrestrictChatMember(msg.chat.id, obj_user.id)
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -638,7 +638,7 @@ local function run(msg, matches)
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return unrestrictChatMember(msg.chat.id, obj_user)
+                                return unrestrictChatMember(msg.chat.id, obj_user.id)
                             end
                         else
                             return langs[msg.lang].noObject
