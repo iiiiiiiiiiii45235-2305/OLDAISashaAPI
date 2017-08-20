@@ -150,9 +150,9 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         for var, value in pairs(restrictions) do
             if type(value) == 'boolean' then
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseAdjustrestrictions(var), callback_data = 'banhammerUNRESTRICT' .. user_id .. var .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseAdjustRestrictions(var), callback_data = 'banhammerUNRESTRICT' .. user_id .. var .. chat_id }
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustrestrictions(var), callback_data = 'banhammerRESTRICT' .. user_id .. var .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustRestrictions(var), callback_data = 'banhammerRESTRICT' .. user_id .. var .. chat_id }
                 end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
