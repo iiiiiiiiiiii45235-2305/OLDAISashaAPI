@@ -210,7 +210,23 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local restrictions = adjustRestrictions(obj_user)
-                                        restrictions[restrictionsDictionary[matches[4]:lower()]] = false
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = false
+                                            restrictions['can_send_media_messages'] = false
+                                            restrictions['can_send_other_messages'] = false
+                                            restrictions['can_add_web_page_previews'] = false
+                                        end
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_send_media_messages' then
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = false
+                                            restrictions['can_send_other_messages'] = false
+                                            restrictions['can_add_web_page_previews'] = false
+                                        end
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_send_other_messages' then
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = false
+                                        end
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = false
+                                        end
                                         if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
                                         else
@@ -239,6 +255,23 @@ local function run(msg, matches)
                                     end
                                     if obj_user then
                                         local restrictions = adjustRestrictions(obj_user)
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = true
+                                        end
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_send_media_messages' then
+                                            restrictions['can_send_messages'] = true
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = true
+                                        end
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_send_other_messages' then
+                                            restrictions['can_send_messages'] = true
+                                            restrictions['can_send_media_messages'] = true
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = true
+                                        end
+                                        if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
+                                            restrictions['can_send_messages'] = true
+                                            restrictions['can_send_media_messages'] = true
+                                            restrictions[restrictionsDictionary[matches[4]:lower()]] = true
+                                        end
                                         restrictions[restrictionsDictionary[matches[4]:lower()]] = true
                                         if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
