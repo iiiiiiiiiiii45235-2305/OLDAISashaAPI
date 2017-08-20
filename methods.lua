@@ -351,7 +351,7 @@ function unrestrictChatMember(chat_id, user_id)
         can_send_other_messages = true,
         can_add_web_page_previews = true
     }
-    restrictChatMember(chat_id, user_id, unrestrict_table)
+    return restrictChatMember(chat_id, user_id, unrestrict_table)
 end
 
 function leaveChat(chat_id)
