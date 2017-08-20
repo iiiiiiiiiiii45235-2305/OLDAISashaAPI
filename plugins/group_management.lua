@@ -756,6 +756,9 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
             if obj_user.result then
                 -- assign user to permissions
                 obj_user = obj_user.result
+                if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                    obj_user = nil
+                end
             else
                 obj_user = nil
             end
@@ -1051,6 +1054,9 @@ local function run(msg, matches)
                                     if type(obj_user) == 'table' then
                                         if obj_user.result then
                                             obj_user = obj_user.result
+                                            if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                                                obj_user = nil
+                                            end
                                         else
                                             obj_user = nil
                                         end
@@ -1078,6 +1084,9 @@ local function run(msg, matches)
                                     if type(obj_user) == 'table' then
                                         if obj_user.result then
                                             obj_user = obj_user.result
+                                            if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                                                obj_user = nil
+                                            end
                                         else
                                             obj_user = nil
                                         end
@@ -1779,7 +1788,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'promoteadmin' then
                 if msg.from.is_owner then
                     mystat('/promoteadmin')
-                    local permissions = default_permissions
+                    local permissions = clone_table(default_permissions)
                     if msg.reply then
                         if matches[2] then
                             if matches[2]:lower() == 'from' then

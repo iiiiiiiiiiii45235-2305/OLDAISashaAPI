@@ -1,4 +1,10 @@
-local kick_ban_errors = { }
+﻿local kick_ban_errors = { }
+local default_restrictions = {
+    can_send_messages = true,
+    can_send_media_messages = true,
+    can_send_other_messages = true,
+    can_add_web_page_previews = true
+}
 
 local function user_msgs(user_id, chat_id)
     local user_info
@@ -28,9 +34,191 @@ local function kickinactive(executer, chat_id, num)
     return langs[lang].massacre:gsub('X', kicked)
 end
 
+local function reverseAdjustRestrictions(restriction_type)
+    if restriction_type == 'can_send_messages' then
+        restriction_type = 'send_messages'
+    end
+    if restriction_type == 'can_send_media_messages' then
+        restriction_type = 'send_media_messages'
+    end
+    if restriction_type == 'can_send_other_messages' then
+        restriction_type = 'send_other_messages'
+    end
+    if restriction_type == 'can_add_web_page_previews' then
+        restriction_type = 'add_web_page_previews'
+    end
+    return restriction_type
+end
+
+local function adjustRestrictions(param_restrictions)
+    local restrictions = {
+        can_send_messages = true,
+        can_send_media_messages = true,
+        can_send_other_messages = true,
+        can_add_web_page_previews = true
+    }
+    if param_restrictions then
+        if type(param_restrictions) == 'table' then
+            for k, v in pairs(param_restrictions) do
+                if k == 'can_send_messages' or k == 'can_send_media_messages' or k == 'can_send_other_messages' or k == 'can_add_web_page_previews' then
+                    restrictions[tostring(k)] = param_restrictions[tostring(k)]
+                end
+            end
+        elseif type(param_restrictions) == 'string' then
+            local restriction_type = ''
+            param_restrictions = param_restrictions:lower()
+            for k, v in pairs(param_restrictions:split(' ')) do
+                if v == 'send_messages' then
+                    restriction_type = 'can_send_messages'
+                    restrictions[restriction_type] = false
+                    restrictions[restriction_type] = false
+                    restrictions[restriction_type] = false
+                    restrictions[restriction_type] = false
+                end
+                if v == 'send_media_messages' then
+                    restriction_type = 'can_send_media_messages'
+                    restrictions[restriction_type] = false
+                    restrictions[restriction_type] = false
+                    restrictions[restriction_type] = false
+                end
+                if v == 'send_other_messages' then
+                    restriction_type = 'can_send_other_messages'
+                    restrictions[restriction_type] = false
+                end
+                if v == 'add_web_page_previews' then
+                    restriction_type = 'can_add_web_page_previews'
+                    restrictions[restriction_type] = false
+                end
+            end
+        end
+    end
+    return restrictions
+end
+
+local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
+    if not param_restrictions then
+        local obj_user = getChatMember(chat_id, user_id)
+        if type(obj_user) == 'table' then
+            if obj_user.result then
+                -- assign user to restrictions
+                obj_user = obj_user.result
+                if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                    obj_user = nil
+                end
+            else
+                obj_user = nil
+            end
+        else
+            obj_user = nil
+        end
+        param_restrictions = obj_user
+    end
+    if param_restrictions then
+        local restrictions = adjustRestrictions(param_restrictions)
+        local keyboard = { }
+        keyboard.inline_keyboard = { }
+        local row = 1
+        local column = 1
+        keyboard.inline_keyboard[row] = { }
+        for var, value in pairs(restrictions) do
+            if type(value) == 'boolean' then
+                if value then
+                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseAdjustrestrictions(var), callback_data = 'banhammerUNRESTRICT' .. user_id .. var .. chat_id }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseAdjustrestrictions(var), callback_data = 'banhammerRESTRICT' .. user_id .. var .. chat_id }
+                end
+                row = row + 1
+                keyboard.inline_keyboard[row] = { }
+            end
+        end
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'banhammerBACK' .. user_id .. chat_id }
+        column = column + 1
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'banhammerDELETE' }
+        return keyboard
+    end
+end
+
 local function run(msg, matches)
     if msg.service then
         return
+    end
+    if msg.cb then
+        if matches[1] then
+            if matches[1] == '###cbbanhammer' then
+                if matches[2] then
+                    if matches[2] == 'DELETE' then
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    elseif matches[2] == 'BACK' then
+                        if matches[3] and matches[4] then
+                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', matches[4]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[4], matches[3]))
+                        end
+                    elseif matches[3] and matches[4] then
+                        if matches[5] then
+                            if matches[2] == 'RESTRICT' then
+                                if is_mod2(msg.from.id, matches[5]) then
+                                    mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                                    local obj_user = getChatMember(matches[5], matches[3])
+                                    if type(obj_user) == 'table' then
+                                        if obj_user.result then
+                                            obj_user = obj_user.result
+                                            if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                                                obj_user = nil
+                                            end
+                                        else
+                                            obj_user = nil
+                                        end
+                                    else
+                                        obj_user = nil
+                                    end
+                                    if obj_user then
+                                        local restrictions = adjustRestrictions(obj_user)
+                                        restrictions[matches[4]:lower()] = false
+                                        if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
+                                            answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
+                                        else
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
+                                        end
+                                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[5], matches[3], restrictions))
+                                    end
+                                else
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                                end
+                            elseif matches[2] == 'UNRESTRICT' then
+                                if is_mod2(msg.from.id, matches[5]) then
+                                    mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                                    local obj_user = getChatMember(matches[5], matches[3])
+                                    if type(obj_user) == 'table' then
+                                        if obj_user.result then
+                                            obj_user = obj_user.result
+                                            if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                                                obj_user = nil
+                                            end
+                                        else
+                                            obj_user = nil
+                                        end
+                                    else
+                                        obj_user = nil
+                                    end
+                                    if obj_user then
+                                        local restrictions = adjustRestrictions(obj_user)
+                                        restrictions[matches[4]:lower()] = true
+                                        if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
+                                            answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
+                                        else
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
+                                        end
+                                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[5], matches[3], restrictions))
+                                    end
+                                else
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                                end
+                            end
+                        end
+                    end
+                    return
+                end
+            end
+        end
     end
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if matches[1]:lower() == 'kickme' then
@@ -348,6 +536,118 @@ local function run(msg, matches)
                 end
             else
                 return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'restrict' then
+            if msg.from.is_mod then
+                mystat('/restrict')
+                local restrictions = clone_table(default_restrictions)
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    if matches[3] then
+                                        restrictions = adjustRestrictions(matches[3]:lower())
+                                    end
+                                    return restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from, restrictions)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        else
+                            if matches[2] then
+                                restrictions = adjustRestrictions(matches[2]:lower())
+                            end
+                            return restrictChatMember(msg.chat.id, msg.reply_to_message.from, restrictions)
+                        end
+                    else
+                        if matches[2] then
+                            restrictions = adjustRestrictions(matches[2]:lower())
+                        end
+                        return restrictChatMember(msg.chat.id, msg.reply_to_message.from, restrictions)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if matches[3] then
+                                        restrictions = adjustRestrictions(matches[3]:lower())
+                                    end
+                                    return restrictChatMember(msg.chat.id, obj_user, restrictions)
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if matches[3] then
+                                    restrictions = adjustRestrictions(matches[3]:lower())
+                                end
+                                return restrictChatMember(msg.chat.id, obj_user, restrictions)
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'unrestrict' then
+            if msg.from.is_owner then
+                mystat('/unrestrict')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return unrestrictChatMember(msg.chat.id, msg.reply_to_message.forward_from)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        return unrestrictChatMember(msg.chat.id, msg.reply_to_message.from)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    return unrestrictChatMember(msg.chat.id, obj_user)
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return unrestrictChatMember(msg.chat.id, obj_user)
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
             end
         end
         if matches[1]:lower() == 'kick' then
@@ -856,6 +1156,11 @@ return {
     cron = cron,
     patterns =
     {
+        "^(###cbbanhammer)(DELETE)$",
+        "^(###cbbanhammer)(BACK)(%d+)(%-%d+)$",
+        "^(###cbbanhammer)(RESTRICT)(%d+)(.*)(%-%d+)$",
+        "^(###cbbanhammer)(UNRESTRICT)(%d+)(.*)(%-%d+)$",
+
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+) ?(.*)$",
@@ -868,8 +1173,13 @@ return {
         "^[#!/]([Ww][Aa][Rr][Nn]) (.*)$",
         "^[#!/]([Ww][Aa][Rr][Nn])$",
         "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr]) ([^%s]+)$",
-        "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr])",
-        "^[#!/]([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])",
+        "^[#!/]([Mm][Uu][Tt][Ee][Uu][Ss][Ee][Rr])$",
+        "^[#!/]([Mm][Uu][Tt][Ee][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Rr][Ee][Ss][Tt][Rr][Ii][Cc][Tt]) ([^%s]+) (.*)$",
+        "^[#!/]([Rr][Ee][Ss][Tt][Rr][Ii][Cc][Tt]) (.*)$",
+        "^[#!/]([Rr][Ee][Ss][Tt][Rr][Ii][Cc][Tt])$",
+        "^[#!/]([Uu][Nn][Rr][Ee][Ss][Tt][Rr][Ii][Cc][Tt]) ([^%s]+)$",
+        "^[#!/]([Uu][Nn][Rr][Ee][Ss][Tt][Rr][Ii][Cc][Tt])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Mm][Ee])",
         "^[#!/]([Kk][Ii][Cc][Kk][Rr][Aa][Nn][Dd][Oo][Mm])$",
         "^[#!/]([Kk][Ii][Cc][Kk][Nn][Oo][Uu][Ss][Ee][Rr])$",
@@ -907,6 +1217,8 @@ return {
         "#warn <id>|<username>|<reply>|from [<reason>]",
         "#unwarn <id>|<username>|<reply>|from [<reason>]",
         "#unwarnall <id>|<username>|<reply>|from [<reason>]",
+        "#restrict <id>|<username>|<reply>|from [send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]",
+        "#unrestrict <id>|<username>|<reply>|from",
         "#kick <id>|<username>|<reply>|from [<reason>]",
         "#ban <id>|<username>|<reply>|from [<reason>]",
         "#unban <id>|<username>|<reply>|from [<reason>]",
