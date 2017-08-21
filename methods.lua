@@ -1713,7 +1713,7 @@ end
 function unwarnUser(executer, target, chat_id, reason)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local warns = redis:get(chat_id .. ':warn:' .. target)
+        local warns = redis:get(chat_id .. ':warn:' .. target) or 0
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
         if tonumber(warns) <= 0 then
             redis:set(chat_id .. ':warn:' .. target, 0)
