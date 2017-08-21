@@ -106,7 +106,6 @@ function is_sudo(param_msg)
     -- Check users id in config
     for v, user in pairs(sudoers) do
         if tostring(user.id) == tostring(param_msg.from.id) then
-            print(user.id, param_msg.from.id)
             -- bot sudo
             var = true
         end
