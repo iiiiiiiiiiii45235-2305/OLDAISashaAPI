@@ -9,6 +9,14 @@ last_redis_administrator_cron = ''
 
 sudoers = { }
 tmp_msg = { }
+news_table = {
+    chats = { },
+    spam = false,
+    msg_to_update = nil,
+    chat_msg_to_update = nil,
+    counter = 0,
+    tot_chats = 0
+}
 
 -- Save the content of config to config.lua
 function save_config()
