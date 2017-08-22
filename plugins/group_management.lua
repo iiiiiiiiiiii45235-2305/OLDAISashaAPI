@@ -1154,15 +1154,13 @@ local function run(msg, matches)
 
     -- INREALM
     if is_realm(msg) then
-        if matches[1]:lower() == 'rem' and string.match(matches[2], '^%-?%d+$') then
+        if matches[1]:lower() == 'rem' and matches[2] then
             if is_admin(msg) then
                 mystat('/rem <group_id>')
                 -- Group configuration removal
                 data[tostring(matches[2])] = nil
-                save_data(config.moderation.data, data)
                 if not data[tostring('groups')] then
                     data[tostring('groups')] = nil
-                    save_data(config.moderation.data, data)
                 end
                 data[tostring('groups')][tostring(matches[2])] = nil
                 save_data(config.moderation.data, data)
