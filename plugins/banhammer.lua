@@ -196,7 +196,7 @@ local function run(msg, matches)
             if matches[1] == '###cbbanhammer' then
                 if matches[2] then
                     if matches[2] == 'DELETE' then
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        deleteMessage(msg.chat.id, msg.message_id)
                     elseif matches[2] == 'BACK' then
                         if matches[3] and matches[4] then
                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', matches[4]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[4], matches[3]))

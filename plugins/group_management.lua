@@ -954,7 +954,7 @@ local function run(msg, matches)
             if matches[1] == '###cbgroup_management' then
                 if matches[2] then
                     if matches[2] == 'DELETE' then
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        deleteMessage(msg.chat.id, msg.message_id)
                     elseif matches[2] == 'BACKSETTINGS' then
                         if matches[3] then
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3]))
