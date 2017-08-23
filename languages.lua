@@ -1461,7 +1461,7 @@ return {
         updateKeyboard = "UPDATE KEYBOARD.",
         deleteKeyboard = "DELETE KEYBOARD.",
         stop = "STOP",
-        cantSendMessage = "I can't write you in private.",
+        cantSendMessage = "I can't write to you in private.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
