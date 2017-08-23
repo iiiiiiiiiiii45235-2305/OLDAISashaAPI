@@ -374,15 +374,11 @@ local function check_msg(msg, settings)
                     return nil
                 end
                 if lock_bots then
-                    if v.username then
-                        if string.sub(v.username:lower(), -3) == 'bot' then
-                            print('bots locked')
-                            -- Will ban bots added by normal users
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
-                            -- Save to logs
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
-                            return nil
-                        end
+                    if v.is_bot then
+                        print('bots locked')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
+                        sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
+                        return nil
                     end
                 end
             end

@@ -2,10 +2,12 @@ notified = { }
 -- recursive to simplify code
 local function check_tag(msg, user_id, user)
     if msg.entities then
-        -- check if there's a text_mention
-        if msg.entities.type == 'text_mention' and msg.entities.user then
-            if tonumber(msg.entities.user.id) == tonumber(user_id) then
-                return true
+        for k, v in pairs(msg.entities) do
+            -- check if there's a text_mention
+            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                if tonumber(msg.entities[k].user.id) == tonumber(user_id) then
+                    return true
+                end
             end
         end
     end

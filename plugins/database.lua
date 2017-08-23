@@ -20,6 +20,13 @@ local function db_user(user, chat_id)
                 database[tostring(user.id)]['username'] = username
                 database[tostring(user.id)]['old_usernames'] = database[tostring(user.id)]['old_usernames'] .. ' ### ' .. username
             end
+            if user.type then
+                database[tostring(user.id)].type = user.type
+            elseif user.is_bot then
+                database[tostring(user.id)].type = 'bot'
+            else
+                database[tostring(user.id)].type = 'private'
+            end
         else
             print('new user')
             local username = 'NOUSER'
@@ -381,8 +388,10 @@ local function save_to_db(msg)
             end
 
             if msg.entities then
-                if msg.entities.user then
-                    db_user(msg.entities.user, bot.id)
+                for k, v in pairs(msg.entities) do
+                    if msg.entities[k].user then
+                        db_user(msg.entities[k].user, msg.chat.id)
+                    end
                 end
             end
 

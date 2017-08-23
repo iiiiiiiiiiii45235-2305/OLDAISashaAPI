@@ -282,18 +282,12 @@ function update_redis_cron()
     end
 end
 
-function adjust_bot(tab)
-    tab.type = 'private'
-    tab.tg_cli_id = tonumber(tab.id)
-    tab.print_name = tab.first_name
-    if tab.last_name then
-        tab.print_name = tab.print_name .. ' ' .. tab.last_name
-    end
-    return tab
-end
-
 function adjust_user(tab)
-    tab.type = 'private'
+    if tab.is_bot then
+        tab.type = 'bot'
+    else
+        tab.type = 'private'
+    end
     tab.tg_cli_id = tonumber(tab.id)
     tab.print_name = tab.first_name
     if tab.last_name then
@@ -345,11 +339,18 @@ function adjust_msg(msg)
     if msg.removed then
         msg.removed = adjust_user(msg.removed)
     end
+    if msg.entities then
+        for k, v in pairs(msg.entities) do
+            if msg.entities[k].user then
+                adjust_user(msg.entities[k].user)
+            end
+        end
+    end
 
     if msg.chat.type then
         if msg.chat.type == 'private' then
             -- private chat
-            msg.bot = adjust_bot(bot)
+            msg.bot = adjust_user(bot)
             msg.chat = adjust_user(msg.chat)
             msg.receiver = 'user#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'group' then
@@ -600,29 +601,29 @@ function pre_process_service_msg(msg)
         msg.text = '!!tgservice chat_created ' ..(msg.text or '')
         msg.service_type = 'chat_created'
     elseif msg.new_chat_members then
-        msg.adder = msg.from
+        msg.adder = clone_table(msg.from)
         msg.added = { }
         for k, v in pairs(msg.new_chat_members) do
             if msg.from.id == v.id then
-                msg.added[k] = msg.from
+                msg.added[k] = clone_table(msg.from)
             else
-                msg.added[k] = v
+                msg.added[k] = clone_table(v)
             end
         end
     elseif msg.new_chat_member then
-        msg.adder = msg.from
+        msg.adder = clone_table(msg.from)
         msg.added = { }
         if msg.from.id == msg.new_chat_member.id then
-            msg.added[1] = msg.from
+            msg.added[1] = clone_table(msg.from)
         else
-            msg.added[1] = msg.new_chat_member
+            msg.added[1] = clone_table(msg.new_chat_member)
         end
     elseif msg.left_chat_member then
-        msg.remover = msg.from
+        msg.remover = clone_table(msg.from)
         if msg.from.id == msg.left_chat_member.id then
-            msg.removed = msg.from
+            msg.removed = clone_table(msg.from)
         else
-            msg.removed = msg.left_chat_member
+            msg.removed = clone_table(msg.left_chat_member)
         end
     elseif msg.migrate_from_chat_id then
         msg.service = true

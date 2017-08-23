@@ -1297,26 +1297,6 @@ local function pre_process(msg)
                                 end
                             end
                         end
-                        local bots_protection = false
-                        if data[tostring(msg.chat.id)] then
-                            if data[tostring(msg.chat.id)].settings then
-                                if data[tostring(msg.chat.id)].settings.lock_bots then
-                                    bots_protection = data[tostring(msg.chat.id)].settings.lock_bots
-                                end
-                            end
-                        end
-                        if v.username then
-                            if bots_protection then
-                                if not msg.from.is_mod then
-                                    if string.sub(v.username:lower(), -3) == 'bot' then
-                                        --- Will kick bots added by normal users
-                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
-                                        -- Save to logs
-                                        sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id))
-                                    end
-                                end
-                            end
-                        end
                     end
                 end
                 -- Check if banned user joins chat by link
