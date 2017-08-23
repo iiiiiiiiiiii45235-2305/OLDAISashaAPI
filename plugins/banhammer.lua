@@ -775,11 +775,13 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    if msg.chat.type ~= 'private' then
-                                        sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                        if msg.chat.type ~= 'private' then
+                                            return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                        end
+                                    else
+                                        return langs[msg.lang].cantSendMessage
                                     end
-                                    sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.forward_from.id))
-                                    return
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -788,10 +790,14 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        if msg.chat.type ~= 'private' then
-                            sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                            if msg.chat.type ~= 'private' then
+                                return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                            end
+                        else
+                            return langs[msg.lang].cantSendMessage
                         end
-                        sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.from.id))
+
                         return
                     end
                 else
@@ -804,11 +810,13 @@ local function run(msg, matches)
                         if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if msg.chat.type ~= 'private' then
-                                        sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id)) then
+                                        if msg.chat.type ~= 'private' then
+                                            return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                        end
+                                    else
+                                        return langs[msg.lang].cantSendMessage
                                     end
-                                    sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id))
-                                    return
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -818,11 +826,13 @@ local function run(msg, matches)
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                if msg.chat.type ~= 'private' then
-                                    sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id)) then
+                                    if msg.chat.type ~= 'private' then
+                                        return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                    end
+                                else
+                                    return langs[msg.lang].cantSendMessage
                                 end
-                                sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id))
-                                return
                             end
                         else
                             return langs[msg.lang].noObject

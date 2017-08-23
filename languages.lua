@@ -229,6 +229,7 @@ return {
         updateKeyboard = "AGGIORNA TASTIERA.",
         deleteKeyboard = "ELIMINA TASTIERA.",
         stop = "STOP",
+        cantSendMessage = "Non posso scriverti in privato.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -1460,6 +1461,7 @@ return {
         updateKeyboard = "UPDATE KEYBOARD.",
         deleteKeyboard = "DELETE KEYBOARD.",
         stop = "STOP",
+        cantSendMessage = "I can't write you in private.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",

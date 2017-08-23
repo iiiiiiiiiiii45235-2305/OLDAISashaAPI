@@ -335,13 +335,25 @@ local function run(msg, matches)
             if chat_plugins then
                 if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
-                    return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(msg.from.id, false, msg.chat.id))
+                    if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(msg.from.id, false, msg.chat.id)) then
+                        if msg.chat.type ~= 'private' then
+                            return sendReply(msg, langs[msg.lang].sendPluginsPvt)
+                        end
+                    else
+                        return langs[msg.lang].cantSendMessage
+                    end
                 else
                     return langs[msg.lang].useYourGroups
                 end
             else
                 mystat('/plugins')
-                return sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true, msg.chat.id))
+                if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true, msg.chat.id)) then
+                    if msg.chat.type ~= 'private' then
+                        return sendReply(msg, langs[msg.lang].sendPluginsPvt)
+                    end
+                else
+                    return langs[msg.lang].cantSendMessage
+                end
             end
         else
             return langs[msg.lang].require_owner

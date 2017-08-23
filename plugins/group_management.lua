@@ -1215,13 +1215,15 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'muteslist' and matches[2] then
             if is_admin(msg) then
-                if msg.chat.type ~= 'private' then
-                    sendMessage(msg.chat.id, langs[msg.lang].sendMutesPvt)
-                end
                 mystat('/muteslist <group_id>')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
-                sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. matches[2], keyboard_mutes_list(matches[2]))
-                return
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. matches[2], keyboard_mutes_list(matches[2])) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
+                    if msg.chat.type ~= 'private' then
+                        return sendReply(msg, langs[msg.lang].sendMutesPvt)
+                    end
+                else
+                    return langs[msg.lang].cantSendMessage
+                end
             else
                 return langs[msg.lang].require_admin
             end
@@ -1237,13 +1239,15 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'settings' and matches[2] then
             if is_admin(msg) then
-                if msg.chat.type ~= 'private' then
-                    sendReply(msg, langs[msg.lang].sendSettingsPvt)
-                end
                 mystat('/settings <group_id>')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
-                sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[2]))
-                return
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[2])) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
+                    if msg.chat.type ~= 'private' then
+                        return sendReply(msg, langs[msg.lang].sendSettingsPvt)
+                    end
+                else
+                    return langs[msg.lang].cantSendMessage
+                end
             else
                 return langs[msg.lang].require_admin
             end
@@ -1602,13 +1606,15 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'muteslist' then
                 if msg.from.is_mod then
-                    if msg.chat.type ~= 'private' then
-                        sendMessage(msg.chat.id, langs[msg.lang].sendMutesPvt)
-                    end
                     mystat('/muteslist')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                    sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. msg.chat.id, keyboard_mutes_list(msg.chat.id))
-                    return
+                    if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. msg.chat.id, keyboard_mutes_list(msg.chat.id)) then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                        if msg.chat.type ~= 'private' then
+                            return sendReply(msg, langs[msg.lang].sendMutesPvt)
+                        end
+                    else
+                        return langs[msg.lang].cantSendMessage
+                    end
                 else
                     return langs[msg.lang].require_mod
                 end
@@ -1636,13 +1642,15 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'settings' then
                 mystat('/settings')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                 if msg.from.is_mod then
-                    if msg.chat.type ~= 'private' then
-                        sendReply(msg, langs[msg.lang].sendSettingsPvt)
+                    if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(msg.chat.id)) then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+                        if msg.chat.type ~= 'private' then
+                            return sendReply(msg, langs[msg.lang].sendSettingsPvt)
+                        end
+                    else
+                        return langs[msg.lang].cantSendMessage
                     end
-                    sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(msg.chat.id))
-                    return
                 else
                     return showSettings(msg.chat.id, msg.lang)
                 end
@@ -1995,11 +2003,13 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        if msg.chat.type ~= 'private' then
-                                            sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                            if msg.chat.type ~= 'private' then
+                                                return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                            end
+                                        else
+                                            return langs[msg.lang].cantSendMessage
                                         end
-                                        sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id))
-                                        return
                                     else
                                         return langs[msg.lang].cantDoThisToChat
                                     end
@@ -2008,11 +2018,13 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            if msg.chat.type ~= 'private' then
-                                sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                            if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                                if msg.chat.type ~= 'private' then
+                                    return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                end
+                            else
+                                return langs[msg.lang].cantSendMessage
                             end
-                            sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id))
-                            return
                         end
                     else
                         return langs[msg.lang].require_mod
@@ -2024,11 +2036,13 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        if msg.chat.type ~= 'private' then
-                                            sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                            if msg.chat.type ~= 'private' then
+                                                return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                            end
+                                        else
+                                            return langs[msg.lang].cantSendMessage
                                         end
-                                        sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id))
-                                        return
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -2038,11 +2052,13 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if msg.chat.type ~= 'private' then
-                                        sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                        if msg.chat.type ~= 'private' then
+                                            return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                        end
+                                    else
+                                        return langs[msg.lang].cantSendMessage
                                     end
-                                    sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id))
-                                    return
                                 end
                             else
                                 return langs[msg.lang].noObject

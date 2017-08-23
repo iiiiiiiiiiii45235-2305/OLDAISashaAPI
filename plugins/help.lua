@@ -309,24 +309,42 @@ local function run(msg, matches)
     if matches[1]:lower() == 'help' then
         if not matches[2] then
             mystat('/help')
-            if msg.chat.type ~= 'private' then
-                sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+            if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+                if msg.chat.type ~= 'private' then
+                    return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                end
+            else
+                return langs[msg.lang].cantSendMessage
             end
-            return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
         else
             mystat('/help <plugin>')
-            if msg.chat.type ~= 'private' then
-                sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
-            end
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
-                    return sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                    if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
+                        if msg.chat.type ~= 'private' then
+                            return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                        end
+                    else
+                        return langs[msg.lang].cantSendMessage
+                    end
                 else
-                    return sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                    if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
+                        if msg.chat.type ~= 'private' then
+                            return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                        end
+                    else
+                        return langs[msg.lang].cantSendMessage
+                    end
                 end
             else
-                return sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                if sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
+                    if msg.chat.type ~= 'private' then
+                        return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                    end
+                else
+                    return langs[msg.lang].cantSendMessage
+                end
             end
         end
     end
