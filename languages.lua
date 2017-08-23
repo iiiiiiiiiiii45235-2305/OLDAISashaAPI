@@ -1070,11 +1070,11 @@ return {
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "Possono essere usati dei marcatori che verranno sostituiti quando sarà inviata la risposta: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
-            .. "$userid, $firstname, $lastname, $printname, $username, "
-            .. "$replyuserid, $replyfirstname, $replylastname, $replyprintname, $replyusername, "
+            .. "$userid, $firstname, $lastname, $printname, $username, $mention, "
+            .. "$replyuserid, $replyfirstname, $replylastname, $replyprintname, $replyusername, $replymention, "
             .. "$forwardchatid, $forwardchatname, $forwardchatusername, "
-            .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername."
-            .. "\nSe alcuni marcatori non potessero essere risolti (reply, forwardchat, forward) verrebbero usati quelli normali (chat, user).",
+            .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername, $forwardmention."
+            .. "\nSe alcuni marcatori non potessero essere risolti (reply, forwardchat, forward) verranno usati quelli normali (chat, user).",
             "#set <var_name>|<pattern> <text>: Sasha salva <text> come risposta a <var_name>|<pattern>.",
             "#setmedia <var_name>|<pattern> <reply_media> [<caption>]: Sasha salva il <reply_media> (foto, video, video messaggio, audio, nota vocale, gif, documento, sticker) come risposta a <var_name>|<pattern>, se <caption> è presente viene usato come didascalia (non disponibile per tutti i media).",
             "#unset <var_name>|<pattern>: Sasha elimina <var_name>|<pattern>.",
@@ -1093,7 +1093,7 @@ return {
             "MOD",
             "Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l'addio: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
-            .. "$userid, $firstname, $lastname, $printname, $username.",
+            .. "$userid, $firstname, $lastname, $printname, $username, $mention.",
             "#getwelcome: Sasha manda il benvenuto.",
             "#getgoodbye: Sasha manda l'addio.",
             "#previewwelcome: Sasha manda l'esempio di benvenuto.",
@@ -2312,10 +2312,10 @@ return {
             "For more information on patterns see lua.org/pil/20.2.html",
             "There are some markers that will be replaced when the answer is sent: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
-            .. "$userid, $firstname, $lastname, $printname, $username, "
-            .. "$replyuserid, $replyfirstname, $replylastname, $replyprintname, $replyusername, "
+            .. "$userid, $firstname, $lastname, $printname, $username, $mention, "
+            .. "$replyuserid, $replyfirstname, $replylastname, $replyprintname, $replyusername, $replymention, "
             .. "$forwardchatid, $forwardchatname, $forwardchatusername, "
-            .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername."
+            .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername, $forwardmention."
             .. "\nIf some markers can't be solved (reply, forwardchat, forward) normal ones will be used (chat, user).",
             "#set <var_name>|<pattern> <text>: Sasha saves <text> as answer to <var_name>|<pattern>.",
             "#setmedia <var_name>|<pattern> <reply_media> [<caption>]: Sasha saves <reply_media> (photo, video, video message, audio, voice note, gif, document, sticker) as answer to <var_name>|<pattern>, if <caption> is present it will be sent as caption (not available for all media).",
@@ -2335,7 +2335,7 @@ return {
             "MOD",
             "There are some markers that will be replaced when goodbye/welcome is sent: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
-            .. "$userid, $firstname, $lastname, $printname, $username.",
+            .. "$userid, $firstname, $lastname, $printname, $username, $mention.",
             "#getwelcome: Sasha sends welcome.",
             "#getgoodbye: Sasha sends goodbye.",
             "#previewwelcome: Sasha sends welcome sample.",

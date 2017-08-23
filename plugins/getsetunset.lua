@@ -69,7 +69,7 @@ local function get_rules(chat_id)
     return rules
 end
 
-local function adjust_value(value, msg)
+local function adjust_value(value, msg, parse_mode)
     -- chat
     local chat = msg.chat
     if string.find(value, '$chatid') then
@@ -123,6 +123,17 @@ local function adjust_value(value, msg)
             value = value:gsub('$username', 'NO USERNAME')
         end
     end
+    if string.find(value, '$mention') then
+        if not parse_mode then
+            value = value:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
+        else
+            if parse_mode == 'html' then
+                value = value:gsub('$mention', '<a href="tg://user?id=' .. user.id .. '">' .. user.first_name .. '</a>')
+            elseif parse_mode == 'markdown' then
+                value = value:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
+            end
+        end
+    end
 
     -- replyuser
     local replyuser = user
@@ -152,6 +163,17 @@ local function adjust_value(value, msg)
             value = value:gsub('$replyusername', '@' .. replyuser.username)
         else
             value = value:gsub('$replyusername', 'NO USERNAME')
+        end
+    end
+    if string.find(value, '$replymention') then
+        if not parse_mode then
+            value = value:gsub('$replymention', '[' .. replyuser.first_name .. '](tg://user?id=' .. replyuser.id .. ')')
+        else
+            if parse_mode == 'html' then
+                value = value:gsub('$replymention', '<a href="tg://user?id=' .. replyuser.id .. '">' .. replyuser.first_name .. '</a>')
+            elseif parse_mode == 'markdown' then
+                value = value:gsub('$replymention', '[' .. replyuser.first_name .. '](tg://user?id=' .. replyuser.id .. ')')
+            end
         end
     end
 
@@ -202,6 +224,17 @@ local function adjust_value(value, msg)
             value = value:gsub('$forwardusername', '@' .. fwd_user.username)
         else
             value = value:gsub('$forwardusername', 'NO USERNAME')
+        end
+    end
+    if string.find(value, '$forwardmention') then
+        if not parse_mode then
+            value = value:gsub('$forwardmention', '[' .. fwd_user.first_name .. '](tg://user?id=' .. fwd_user.id .. ')')
+        else
+            if parse_mode == 'html' then
+                value = value:gsub('$forwardmention', '<a href="tg://user?id=' .. fwd_user.id .. '">' .. fwd_user.first_name .. '</a>')
+            elseif parse_mode == 'markdown' then
+                value = value:gsub('$forwardmention', '[' .. fwd_user.first_name .. '](tg://user?id=' .. fwd_user.id .. ')')
+            end
         end
     end
     return value
@@ -545,7 +578,15 @@ local function pre_process(msg)
                         sendStickerId(msg.chat.id, media_id, msg.message_id)
                         return msg
                     else
-                        sendReply(msg, adjust_value(answer, msg))
+                        if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
+                            if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
+                                if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
+                                    sendReply(msg, adjust_value(answer, msg))
+                                end
+                            end
+                        else
+                            sendReply(msg, adjust_value(answer, msg))
+                        end
                         return msg
                     end
                 end
@@ -558,7 +599,15 @@ local function pre_process(msg)
             for i, word in pairs(t) do
                 local answer = check_word(msg, word:lower(), true)
                 if answer then
-                    sendReply(msg, adjust_value(answer, msg))
+                    if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
+                        if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
+                            if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
+                                sendReply(msg, adjust_value(answer, msg))
+                            end
+                        end
+                    else
+                        sendReply(msg, adjust_value(answer, msg))
+                    end
                     return msg
                 end
             end

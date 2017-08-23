@@ -95,7 +95,7 @@ local function get_rules(chat_id)
     end
 end
 
-local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
+local function adjust_goodbyewelcome(goodbyewelcome, chat, user, parse_mode)
     -- chat
     if string.find(goodbyewelcome, '$chatid') then
         goodbyewelcome = goodbyewelcome:gsub('$chatid', chat.id)
@@ -147,6 +147,17 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user)
             goodbyewelcome = goodbyewelcome:gsub('$username', 'NO USERNAME')
         end
     end
+    if string.find(goodbyewelcome, '$mention') then
+        if not parse_mode then
+            goodbyewelcome = goodbyewelcome:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
+        else
+            if parse_mode == 'html' then
+                goodbyewelcome = goodbyewelcome:gsub('$mention', '<a href="tg://user?id=' .. user.id .. '">' .. user.first_name .. '</a>')
+            elseif parse_mode == 'markdown' then
+                goodbyewelcome = goodbyewelcome:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
+            end
+        end
+    end
     return goodbyewelcome
 end
 
@@ -194,10 +205,33 @@ local function sendWelcome(chat, added, message_id)
             return sendStickerId(chat.id, media_id, message_id)
         else
             local text = ''
-            for k, v in pairs(added) do
-                text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
+            if string.find(welcome, '$mention') then
+                local tmp_msg = nil
+                for k, v in pairs(added) do
+                    text = text .. adjust_goodbyewelcome(welcome, chat, v, 'markdown') .. '\n'
+                end
+                tmp_msg = sendMessage(chat.id, text, 'markdown', message_id)
+                if not tmp_msg then
+                    text = ''
+                    for k, v in pairs(added) do
+                        text = text .. adjust_goodbyewelcome(welcome, chat, v, 'html') .. '\n'
+                    end
+                    tmp_msg = sendMessage(chat.id, text, 'html', message_id)
+                    if not tmp_msg then
+                        text = ''
+                        for k, v in pairs(added) do
+                            text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
+                        end
+                        tmp_msg = sendMessage(chat.id, text, false, message_id)
+                    end
+                end
+                return tmp_msg
+            else
+                for k, v in pairs(added) do
+                    text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
+                end
+                return sendMessage(chat.id, text, false, message_id)
             end
-            return sendMessage(chat.id, text, false, message_id)
         end
     end
 end
@@ -245,7 +279,19 @@ local function sendGoodbye(chat, removed, message_id)
             local media_id = goodbye:match('^([^%s]+)')
             return sendStickerId(chat.id, media_id, message_id)
         else
-            return sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+            if string.find(goodbye, '$mention') then
+                local tmp_msg = nil
+                tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'markdown'), 'markdown', message_id)
+                if not tmp_msg then
+                    tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'html'), 'html', message_id)
+                    if not tmp_msg then
+                        tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+                    end
+                end
+                return tmp_msg
+            else
+                return sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+            end
         end
     end
 end
@@ -424,7 +470,7 @@ local function pre_process(msg)
                         redis:set(hash, 0)
                     end
                 end
-                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_add_user_leave") and get_goodbye(msg.chat.id) then
+                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then
                     local tmp = last_goodbye[tostring(msg.chat.id)]
                     last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id).result.message_id or nil
                     if tmp then

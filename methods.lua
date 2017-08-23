@@ -447,8 +447,8 @@ function sendMessage_SUDOERS(text, parse_mode)
     end
 end
 
-function sendReply(msg, text, markd, send_sound)
-    sendMessage(msg.chat.id, text, markd, msg.message_id, send_sound)
+function sendReply(msg, text, parse_mode, send_sound)
+    sendMessage(msg.chat.id, text, parse_mode, msg.message_id, send_sound)
 end
 
 function sendLog(text, parse_mode, novardump)
