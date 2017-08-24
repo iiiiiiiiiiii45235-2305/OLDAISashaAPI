@@ -38,7 +38,6 @@ local function system_plugin(p)
         p == 'plugins' or
         p == 'strings' or
         p == 'tgcli_to_api_migration' or
-        p == 'todo' or
         p == 'whitelist' then
         return true
     end

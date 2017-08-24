@@ -65,8 +65,6 @@ local function adjust_plugin_names(p, lang)
         return 'TEST' or 'ERR'
     elseif p == 'tgcli_to_api_migration' then
         return langs[lang].pluginTgcli_to_api_migration or 'ERR'
-    elseif p == 'todo' then
-        return langs[lang].pluginTodo or 'ERR'
     elseif p == 'urbandictionary' then
         return langs[lang].pluginUrbandictionary or 'ERR'
     elseif p == 'webshot' then

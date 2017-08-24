@@ -123,6 +123,16 @@ end
 
 local function run(msg, matches)
     if is_admin(msg) then
+        if matches[1] == 'todo' then
+            mystat('/todo <text>')
+            if msg.reply then
+                forwardLog(msg.chat.id, msg.reply_to_message.message_id)
+                sendLog('#todo ' ..(matches[2] or ''), false, true)
+            elseif matches[2] then
+                sendLog('#todo ' .. matches[2], false, true)
+            end
+            return langs[msg.lang].ok
+        end
         if matches[1] == 'commandsstats' then
             mystat('/commandsstats')
             local text = langs[msg.lang].botStats
@@ -370,6 +380,8 @@ return {
     description = "ADMINISTRATOR",
     patterns =
     {
+        "^[#!/]([Tt][Oo][Dd][Oo])$",
+        "^[#!/]([Tt][Oo][Dd][Oo]) (.*)$",
         "^[#!/]([Pp][Mm]) (%-?%d+) (.*)$",
         "^[#!/]([Pp][Mm][Uu][Nn][Bb][Ll][Oo][Cc][Kk])$",
         "^[#!/]([Pp][Mm][Bb][Ll][Oo][Cc][Kk])$",
@@ -398,6 +410,8 @@ return {
     syntax =
     {
         "ADMIN",
+        "#todo <reply> [<text>]",
+        "#todo <text>",
         "#pm <id> <msg>",
         "#pmblock <id>|<username>|<reply>|from",
         "#pmunblock <id>|<username>|<reply>|from",

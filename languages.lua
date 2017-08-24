@@ -492,7 +492,6 @@ return {
         pluginStats = "Statistiche",
         pluginStrings = "Lingua",
         pluginTgcli_to_api_migration = "Migrazione da @AISasha",
-        pluginTodo = "Cose da fare",
         pluginUrbandictionary = "Urban dictionary",
         pluginWebshot = "Webscreenshots",
         pluginWhitelist = "Whitelist",
@@ -881,6 +880,8 @@ return {
             "🅿️ ADMINISTRATOR",
             "Plugin per amministratori di Sasha.",
             "ADMIN",
+            "#todo <reply> [<text>]: Sasha inoltra <reply> e invia l'eventuale <text> nella chat di LOG.",
+            "#todo <text>: Sasha invia <text> nella chat di LOG.",
             "#pm <user_id> <msg>: Sasha invia <msg> a <user_id>.",
             "#pmblock <id>|<username>|<reply>|from: Sasha blocca l'utente specificato.",
             "#pmunblock <id>|<username>|<reply>|from: Sasha sblocca l'utente specificato.",
@@ -1393,15 +1394,6 @@ return {
             "#sudomigrate: Sasha migra i database e i set globali.",
         },
 
-        todo =
-        {
-            "🅿️ TODO",
-            "Plugin per inviare nella chat di LOG i todo.",
-            "ADMIN",
-            "#todo <reply> [<text>]: Sasha inoltra <reply> e invia l'eventuale <text> nella chat di LOG.",
-            "#todo <text>: Sasha invia <text> nella chat di LOG.",
-        },
-
         urbandictionary =
         {
             "🅿️ URBANDICTIONARY",
@@ -1737,7 +1729,6 @@ return {
         pluginStats = "Stats",
         pluginStrings = "Language",
         pluginTgcli_to_api_migration = "Migration from @AISasha",
-        pluginTodo = "Things to do",
         pluginUrbandictionary = "Urban dictionary",
         pluginWebshot = "Webscreenshots",
         pluginWhitelist = "Whitelist",
@@ -2133,6 +2124,8 @@ return {
             "🅿️ ADMINISTRATOR",
             "Plugin for Sasha's administrators.",
             "ADMIN",
+            "#todo <reply> [<text>]: Sasha forward <reply> and sends <text> if present in the LOG chat.",
+            "#todo <text>: Sasha sends <text> in the LOG chat.",
             "#pm <user_id> <msg>: Sasha writes <msg> to <user_id>.",
             "#pmblock <id>|<username>|<reply>|from: Sasha blocks the specified user.",
             "#pmunblock <id>|<username>|<reply>|from: Sasha unblocks the specified user.",
@@ -2643,15 +2636,6 @@ return {
             "#copysettings: Sasha copies group's settings over @AISasha's ones.",
             "SUDO",
             "#sudomigrate: Sasha migrates databases and global sets.",
-        },
-
-        todo =
-        {
-            "🅿️ TODO",
-            "Plugin to send todos in the LOG chat.",
-            "ADMIN",
-            "#todo <reply> [<text>]: Sasha forward <reply> and sends <text> if present in the LOG chat.",
-            "#todo <text>: Sasha sends <text> in the LOG chat.",
         },
 
         urbandictionary =
