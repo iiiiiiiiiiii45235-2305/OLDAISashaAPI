@@ -21,14 +21,11 @@ end
 -- recursive to simplify code
 local function check_tag(msg, user_id, user)
     if msg.entities then
-        print('entities')
         for k, v in pairs(msg.entities) do
-            print('for', k, vardumptext(v))
             -- check if there's a text_mention
             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                print('in', vardumptext(msg.entities[k].user))
+                print('in', user_id, msg.entities[k].user.id)
                 if tonumber(msg.entities[k].user.id) == tonumber(user_id) then
-                    print('yes')
                     return true
                 end
             end
