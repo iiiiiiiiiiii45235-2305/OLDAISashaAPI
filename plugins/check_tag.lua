@@ -89,8 +89,11 @@ local function run(msg, matches)
                         deleteMessage(msg.chat.id, msg.message_id)
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'DELETEUP' then
-                            deleteMessage(matches[4], matches[3])
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                            if deleteMessage(matches[4], matches[3]) then
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageAlreadyDeleted, false)
+                            end
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } } } })
                         elseif matches[2] == 'GOTO' then
                             if msg.from.username then

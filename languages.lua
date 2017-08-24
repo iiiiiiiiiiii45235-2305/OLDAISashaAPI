@@ -393,6 +393,7 @@ return {
         cantFindMessage = "Non trovo quel messaggio.",
         markedAsRead = "Messaggio contrassegnato come letto.",
         upMessageDeleted = "Messaggio di UP eliminato.",
+        upMessageAlreadyDeleted = "Messaggio di UP già eliminato.",
         repliedToMessage = "Ho risposto a quel messaggio.",
         whatDoYouWantToDo = "Cosa vuoi fare?",
 
@@ -1637,6 +1638,7 @@ return {
         cantFindMessage = "Can't find that message.",
         markedAsRead = "Message marked as read.",
         upMessageDeleted = "UP message deleted.",
+        upMessageAlreadyDeleted = "UP message already deleted.",
         repliedToMessage = "I've replied to that message.",
         whatDoYouWantToDo = "What do you want to do?",
 
