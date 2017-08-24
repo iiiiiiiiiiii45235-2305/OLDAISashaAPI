@@ -189,6 +189,15 @@ local function check_msg(msg, settings)
                     action(msg, strict, langs[msg.lang].reasonLockLink)
                     return nil
                 end
+                while string.match(msg.text, '@[^%s]+') do
+                    if APIgetChat(string.match(msg.text, '@[^%s]+')) then
+                        print('link (channel username) found')
+                        action(msg, strict, langs[msg.lang].reasonLockLink)
+                        return nil
+                    else
+                        msg.text = msg.text:gsub(string.match(msg.text, '@[^%s]+'))
+                    end
+                end
             end
             if lock_arabic then
                 local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
@@ -218,6 +227,15 @@ local function check_msg(msg, settings)
                     print('link found')
                     action(msg, strict, langs[msg.lang].reasonLockLink)
                     return nil
+                end
+                while string.match(msg.caption, '@[^%s]+') do
+                    if APIgetChat(string.match(msg.caption, '@[^%s]+')) then
+                        print('link (channel username) found')
+                        action(msg, strict, langs[msg.lang].reasonLockLink)
+                        return nil
+                    else
+                        msg.caption = msg.caption:gsub(string.match(msg.caption, '@[^%s]+'))
+                    end
                 end
             end
             if lock_arabic then
