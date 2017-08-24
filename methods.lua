@@ -630,6 +630,7 @@ function deleteMessage(chat_id, message_id)
                 savelog('delete_message', code)
             end
         end
+        return res
     end
 end
 
