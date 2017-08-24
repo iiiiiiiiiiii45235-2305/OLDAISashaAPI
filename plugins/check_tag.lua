@@ -94,7 +94,7 @@ local function run(msg, matches)
                             editMessageText(msg.chat.id, msg.message_id, msg.text, { inline_keyboard = { { { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' } } } })
                         elseif matches[2] == 'GOTO' then
                             if msg.from.username then
-                                local res = sendMessage(matches[4], 'UP ' .. msg.from.username, false, matches[3])
+                                local res = sendMessage(matches[4], 'UP @' .. msg.from.username, false, matches[3])
                                 if res then
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
                                     editMessageText(msg.chat.id, msg.message_id, msg.text, keyboard_tag(matches[4], res.result.message_id, true))
@@ -282,7 +282,7 @@ local function pre_process(msg)
                                 end
                             end
                             sendMessage(user.id, text)
-                            sendKeyboard(user.id, langs[lang].whatDoYouWantToDo, keyboard_tag(user.id, msg.message_id))
+                            sendKeyboard(user.id, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                         end
                     end
                 end
@@ -323,7 +323,7 @@ local function pre_process(msg)
                                     end
                                 end
                                 sendMessage(usernames[i], text)
-                                sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(usernames[i], msg.message_id))
+                                sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                             end
                         end
                     end
@@ -363,7 +363,7 @@ local function pre_process(msg)
                                                 end
                                             end
                                             sendMessage(nicknames[i], text)
-                                            sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(nicknames[i], msg.message_id))
+                                            sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                                         end
                                     end
                                 end
