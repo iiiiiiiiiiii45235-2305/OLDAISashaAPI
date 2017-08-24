@@ -121,7 +121,7 @@ function performRequest(url)
     return table.concat(data), c:getinfo_response_code()
 end
 
-function sendRequest(url)
+function sendRequest(url, no_log)
     local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
 
@@ -142,7 +142,9 @@ function sendRequest(url)
         redis:hincrby('bot:errors', code, 1)
 
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-            sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
+            if not no_log then
+                sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
+            end
         end
         return nil, code, tab.description
     end
@@ -168,9 +170,9 @@ function getUpdates(offset)
     return sendRequest(url)
 end
 
-function APIgetChat(id_or_username)
+function APIgetChat(id_or_username, no_log)
     local url = BASE_URL .. '/getChat?chat_id=' .. id_or_username
-    return sendRequest(url)
+    return sendRequest(url, no_log)
 end
 
 function getChatAdministrators(chat_id)

@@ -190,7 +190,7 @@ local function check_msg(msg, settings)
                     return nil
                 end
                 while string.match(msg.text, '@[^%s]+') do
-                    if APIgetChat(string.match(msg.text, '@[^%s]+')) then
+                    if APIgetChat(string.match(msg.text, '@[^%s]+'), true) then
                         print('link (channel username) found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
                         return nil
@@ -229,7 +229,7 @@ local function check_msg(msg, settings)
                     return nil
                 end
                 while string.match(msg.caption, '@[^%s]+') do
-                    if APIgetChat(string.match(msg.caption, '@[^%s]+')) then
+                    if APIgetChat(string.match(msg.caption, '@[^%s]+'), true) then
                         print('link (channel username) found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
                         return nil
