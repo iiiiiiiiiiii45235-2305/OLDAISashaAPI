@@ -325,9 +325,6 @@ local function run(msg, matches)
             elseif not is_sudo(msg) then
                 chat_plugins = true
             end
-            if msg.chat.type ~= 'private' then
-                sendMessage(msg.chat.id, langs[msg.lang].sendPluginsPvt)
-            end
             if chat_plugins then
                 if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
