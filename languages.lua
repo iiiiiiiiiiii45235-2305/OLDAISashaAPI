@@ -394,6 +394,7 @@ return {
         markedAsRead = "Messaggio contrassegnato come letto.",
         upMessageDeleted = "Messaggio di UP eliminato.",
         repliedToMessage = "Ho risposto a quel messaggio.",
+        whatDoYouWantToDo = "Cosa vuoi fare?",
 
         -- database.lua --
         dbCreated = "Database creato.",
@@ -1637,6 +1638,7 @@ return {
         markedAsRead = "Message marked as read.",
         upMessageDeleted = "UP message deleted.",
         repliedToMessage = "I've replied to that message.",
+        whatDoYouWantToDo = "What do you want to do?",
 
         -- database.lua --
         dbCreated = "Database created.",

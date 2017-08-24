@@ -281,7 +281,8 @@ local function pre_process(msg)
                                     text = text .. msg.caption
                                 end
                             end
-                            sendKeyboard(user.id, text, keyboard_tag(user.id, msg.message_id))
+                            sendMessage(user.id, text)
+                            sendKeyboard(user.id, langs[lang].whatDoYouWantToDo, keyboard_tag(user.id, msg.message_id))
                         end
                     end
                 end
@@ -321,7 +322,8 @@ local function pre_process(msg)
                                         text = text .. msg.caption
                                     end
                                 end
-                                sendKeyboard(usernames[i], text, keyboard_tag(usernames[i], msg.message_id))
+                                sendMessage(usernames[i], text)
+                                sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(usernames[i], msg.message_id))
                             end
                         end
                     end
@@ -360,7 +362,8 @@ local function pre_process(msg)
                                                     text = text .. msg.caption
                                                 end
                                             end
-                                            sendKeyboard(nicknames[i], text, keyboard_tag(nicknames[i], msg.message_id))
+                                            sendMessage(nicknames[i], text)
+                                            sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(nicknames[i], msg.message_id))
                                         end
                                     end
                                 end
