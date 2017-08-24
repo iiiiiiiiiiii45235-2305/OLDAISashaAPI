@@ -24,7 +24,6 @@ local function check_tag(msg, user_id, user)
         for k, v in pairs(msg.entities) do
             -- check if there's a text_mention
             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                print('in', user_id, msg.entities[k].user.id)
                 if tonumber(msg.entities[k].user.id) == tonumber(user_id) then
                     return true
                 end
@@ -303,6 +302,7 @@ local function pre_process(msg)
                             if usr == 'true' then
                                 usr = nil
                             end
+                            print(usernames[i], usr)
                             if check_tag(msg, usernames[i], usr) then
                                 local lang = get_lang(usernames[i])
                                 -- set user as notified to not send multiple notifications
