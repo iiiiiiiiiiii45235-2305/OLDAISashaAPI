@@ -21,7 +21,7 @@ local function run(msg, matches)
             news_table.spam = true
             news_table.counter = 0
             news_table.chat_msg_to_update = msg.chat.id
-            news_table.msg_to_update = sendMessage(msg.chat.id, "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats)).result.message_id
+            news_table.msg_to_update = sendMessage(msg.chat.id, "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats)).result.message_id or nil
         else
             return langs[msg.lang].require_sudo
         end

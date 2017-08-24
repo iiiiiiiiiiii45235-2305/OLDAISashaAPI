@@ -229,7 +229,7 @@ return {
         updateKeyboard = "AGGIORNA TASTIERA.",
         deleteKeyboard = "ELIMINA TASTIERA.",
         stop = "STOP",
-        cantSendMessage = "Non posso scriverti in privato.",
+        cantSendPvt = "Non posso scriverti in privato.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -387,6 +387,13 @@ return {
         tagalertRegistrationNeeded = "Registrazione a tagalert necessaria.",
         tagalertAlreadyRegistered = "Utente già registrato.",
         tagalertNicknameTooShort = "Nickname troppo corto, almeno 3 lettere.",
+        gotoMessage = "Vai al messaggio.",
+        alreadyRead = "Già letto.",
+        deleteUp = "Elimina UP",
+        cantFindMessage = "Non trovo quel messaggio.",
+        markedAsRead = "Messaggio contrassegnato come letto.",
+        upMessageDeleted = "Messaggio di UP eliminato.",
+        repliedToMessage = "Ho risposto a quel messaggio.",
 
         -- database.lua --
         dbCreated = "Database creato.",
@@ -1461,7 +1468,7 @@ return {
         updateKeyboard = "UPDATE KEYBOARD.",
         deleteKeyboard = "DELETE KEYBOARD.",
         stop = "STOP",
-        cantSendMessage = "I can't write to you in private.",
+        cantSendPvt = "I can't write to you in private.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
@@ -1623,6 +1630,13 @@ return {
         tagalertRegistrationNeeded = "Tagalert registration needed.",
         tagalertAlreadyRegistered = "User already registered.",
         tagalertNicknameTooShort = "Nickname too short, 3 letters or more.",
+        gotoMessage = "Go to message.",
+        alreadyRead = "Already read.",
+        deleteUp = "Delete UP",
+        cantFindMessage = "Can't find that message.",
+        markedAsRead = "Message marked as read.",
+        upMessageDeleted = "UP message deleted.",
+        repliedToMessage = "I've replied to that message.",
 
         -- database.lua --
         dbCreated = "Database created.",

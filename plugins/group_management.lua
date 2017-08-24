@@ -1222,7 +1222,7 @@ local function run(msg, matches)
                         return sendReply(msg, langs[msg.lang].sendMutesPvt)
                     end
                 else
-                    return langs[msg.lang].cantSendMessage
+                    return langs[msg.lang].cantSendPvt
                 end
             else
                 return langs[msg.lang].require_admin
@@ -1246,7 +1246,7 @@ local function run(msg, matches)
                         return sendReply(msg, langs[msg.lang].sendSettingsPvt)
                     end
                 else
-                    return langs[msg.lang].cantSendMessage
+                    return langs[msg.lang].cantSendPvt
                 end
             else
                 return langs[msg.lang].require_admin
@@ -1613,7 +1613,7 @@ local function run(msg, matches)
                             return sendReply(msg, langs[msg.lang].sendMutesPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendMessage
+                        return langs[msg.lang].cantSendPvt
                     end
                 else
                     return langs[msg.lang].require_mod
@@ -1649,7 +1649,7 @@ local function run(msg, matches)
                             return sendReply(msg, langs[msg.lang].sendSettingsPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendMessage
+                        return langs[msg.lang].cantSendPvt
                     end
                 else
                     return showSettings(msg.chat.id, msg.lang)
@@ -2008,7 +2008,7 @@ local function run(msg, matches)
                                                 return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                             end
                                         else
-                                            return langs[msg.lang].cantSendMessage
+                                            return langs[msg.lang].cantSendPvt
                                         end
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -2023,7 +2023,7 @@ local function run(msg, matches)
                                     return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                 end
                             else
-                                return langs[msg.lang].cantSendMessage
+                                return langs[msg.lang].cantSendPvt
                             end
                         end
                     else
@@ -2041,7 +2041,7 @@ local function run(msg, matches)
                                                 return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                             end
                                         else
-                                            return langs[msg.lang].cantSendMessage
+                                            return langs[msg.lang].cantSendPvt
                                         end
                                     end
                                 else
@@ -2057,7 +2057,7 @@ local function run(msg, matches)
                                             return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                         end
                                     else
-                                        return langs[msg.lang].cantSendMessage
+                                        return langs[msg.lang].cantSendPvt
                                     end
                                 end
                             else

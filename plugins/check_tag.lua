@@ -1,4 +1,23 @@
 notified = { }
+
+local function keyboard_tag(chat_id, message_id, callback)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+
+    if not callback then
+        keyboard.inline_keyboard[1] = { }
+        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].gotoMessage, callback_data = 'check_tagGOTO' .. message_id .. chat_id }
+
+        keyboard.inline_keyboard[2] = { }
+        keyboard.inline_keyboard[2][1] = { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' }
+    else
+        keyboard.inline_keyboard[1] = { }
+        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].deleteUp, callback_data = 'check_tagDELETEUP' .. message_id .. chat_id }
+    end
+
+    return keyboard
+end
+
 -- recursive to simplify code
 local function check_tag(msg, user_id, user)
     if msg.entities then
@@ -61,6 +80,59 @@ local function check_tag(msg, user_id, user)
 end
 
 local function run(msg, matches)
+    if msg.cb then
+        if matches[1] then
+            if matches[1] == '###cbcheck_tag' then
+                if matches[2] then
+                    if matches[2] == 'ALREADYREAD' then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
+                        editMessageText(msg.chat.id, msg.message_id, msg.text)
+                    elseif matches[3] and matches[4] then
+                        if matches[2] == 'DELETEUP' then
+                            deleteMessage(matches[4], matches[3])
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                            editMessageText(msg.chat.id, msg.message_id, msg.text, { inline_keyboard = { { { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' } } } })
+                        elseif matches[2] == 'GOTO' then
+                            if msg.from.username then
+                                local res = sendMessage(matches[4], 'UP ' .. msg.from.username, false, matches[3])
+                                if res then
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
+                                    editMessageText(msg.chat.id, msg.message_id, msg.text, keyboard_tag(matches[4], res.result.message_id, true))
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                                    editMessageText(msg.chat.id, msg.message_id, msg.text)
+                                end
+                            else
+                                local sent = false
+                                local res = sendMessage(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', 'markdown', matches[3])
+                                if res then
+                                    sent = true
+                                else
+                                    res = sendMessage(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', 'html', matches[3])
+                                    if res then
+                                        sent = true
+                                    else
+                                        res = sendMessage(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', false, matches[3])
+                                        if res then
+                                            sent = true
+                                        end
+                                    end
+                                end
+                                if sent then
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
+                                    editMessageText(msg.chat.id, msg.message_id, msg.text, keyboard_tag(matches[4], res.result.message_id, true))
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                                    editMessageText(msg.chat.id, msg.message_id, msg.text)
+                                end
+                            end
+                        end
+                    end
+                    return
+                end
+            end
+        end
+    end
     if matches[1]:lower() == 'enabletagalert' then
         if msg.from.is_owner then
             mystat('/enabletagalert')
@@ -209,7 +281,7 @@ local function pre_process(msg)
                                     text = text .. msg.caption
                                 end
                             end
-                            sendMessage(user.id, text)
+                            sendKeyboard(user.id, text, keyboard_tag(user.id, msg.message_id))
                         end
                     end
                 end
@@ -249,7 +321,7 @@ local function pre_process(msg)
                                         text = text .. msg.caption
                                     end
                                 end
-                                sendMessage(usernames[i], text)
+                                sendKeyboard(usernames[i], text, keyboard_tag(usernames[i], msg.message_id))
                             end
                         end
                     end
@@ -288,7 +360,7 @@ local function pre_process(msg)
                                                     text = text .. msg.caption
                                                 end
                                             end
-                                            sendMessage(nicknames[i], text)
+                                            sendKeyboard(nicknames[i], text, keyboard_tag(nicknames[i], msg.message_id))
                                         end
                                     end
                                 end
@@ -306,6 +378,10 @@ return {
     description = "CHECK_TAG",
     patterns =
     {
+        "^(###cbcheck_tag)(ALREADYREAD)$",
+        "^(###cbcheck_tag)(DELETEUP)(%d+)(%-%d+)$",
+        "^(###cbcheck_tag)(GOTO)(%d+)(%-%d+)$",
+
         "^[#!/]([Ee][Nn][Aa][Bb][Ll][Ee][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Gg][Ii][Ss][Tt][Ee][Rr][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",

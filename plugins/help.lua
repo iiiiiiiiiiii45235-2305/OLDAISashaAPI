@@ -314,7 +314,7 @@ local function run(msg, matches)
                     return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                 end
             else
-                return langs[msg.lang].cantSendMessage
+                return langs[msg.lang].cantSendPvt
             end
         else
             mystat('/help <plugin>')
@@ -326,7 +326,7 @@ local function run(msg, matches)
                             return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendMessage
+                        return langs[msg.lang].cantSendPvt
                     end
                 else
                     if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
@@ -334,7 +334,7 @@ local function run(msg, matches)
                             return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendMessage
+                        return langs[msg.lang].cantSendPvt
                     end
                 end
             else
@@ -343,7 +343,7 @@ local function run(msg, matches)
                         return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                     end
                 else
-                    return langs[msg.lang].cantSendMessage
+                    return langs[msg.lang].cantSendPvt
                 end
             end
         end

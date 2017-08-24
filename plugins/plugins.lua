@@ -337,7 +337,7 @@ local function run(msg, matches)
                             return sendReply(msg, langs[msg.lang].sendPluginsPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendMessage
+                        return langs[msg.lang].cantSendPvt
                     end
                 else
                     return langs[msg.lang].useYourGroups
@@ -349,7 +349,7 @@ local function run(msg, matches)
                         return sendReply(msg, langs[msg.lang].sendPluginsPvt)
                     end
                 else
-                    return langs[msg.lang].cantSendMessage
+                    return langs[msg.lang].cantSendPvt
                 end
             end
         else
