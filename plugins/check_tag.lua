@@ -294,17 +294,14 @@ local function pre_process(msg)
                 -- if group is enabled to tagalert notifications then
                 local usernames = redis:hkeys('tagalert:usernames')
                 for i = 1, #usernames do
-                            print(notified[tostring(usernames[i])])
                     if not notified[tostring(usernames[i])] then
                         -- exclude already notified
-                            print(tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id))
                         if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags of tg-cli version
                             local usr = redis:hget('tagalert:usernames', usernames[i])
                             if usr == 'true' then
                                 usr = nil
                             end
-                            print(usernames[i], usr)
                             if check_tag(msg, usernames[i], usr) then
                                 local lang = get_lang(usernames[i])
                                 -- set user as notified to not send multiple notifications
