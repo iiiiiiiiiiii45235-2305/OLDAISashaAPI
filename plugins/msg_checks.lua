@@ -195,7 +195,7 @@ local function check_msg(msg, settings)
                         action(msg, strict, langs[msg.lang].reasonLockLink)
                         return nil
                     else
-                        msg.text = msg.text:gsub(string.match(msg.text, '@[^%s]+'))
+                        msg.text = msg.text:gsub(string.match(msg.text, '@[^%s]+'), '')
                     end
                 end
             end
@@ -234,7 +234,7 @@ local function check_msg(msg, settings)
                         action(msg, strict, langs[msg.lang].reasonLockLink)
                         return nil
                     else
-                        msg.caption = msg.caption:gsub(string.match(msg.caption, '@[^%s]+'))
+                        msg.caption = msg.caption:gsub(string.match(msg.caption, '@[^%s]+'), '')
                     end
                 end
             end
