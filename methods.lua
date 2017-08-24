@@ -517,7 +517,7 @@ function forwardLog(from_chat_id, message_id)
     end
 end
 
-function sendKeyboard(chat_id, text, keyboard, parse_mode)
+function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id)
     local obj = getChat(chat_id)
     if type(obj) == 'table' then
         local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
@@ -534,6 +534,10 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode)
         url = url .. '&text=' .. URL.escape(text)
         url = url .. '&disable_web_page_preview=true'
         url = url .. '&reply_markup=' .. JSON.encode(keyboard)
+        if reply_to_message_id then
+            url = url .. '&reply_to_message_id=' .. reply_to_message_id
+            reply = true
+        end
         local res, code = sendRequest(url)
 
         if not res and code then
