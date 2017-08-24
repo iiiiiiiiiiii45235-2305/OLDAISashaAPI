@@ -86,7 +86,7 @@ local function run(msg, matches)
                 if matches[2] then
                     if matches[2] == 'ALREADYREAD' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
-                        editMessageText(msg.chat.id, msg.message_id, msg.text)
+                        deleteMessage(msg.chat.id, msg.message_id)
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'DELETEUP' then
                             deleteMessage(matches[4], matches[3])
