@@ -91,16 +91,16 @@ local function run(msg, matches)
                         if matches[2] == 'DELETEUP' then
                             deleteMessage(matches[4], matches[3])
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
-                            editMessageText(msg.chat.id, msg.message_id, msg.text, { inline_keyboard = { { { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' } } } })
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } } } })
                         elseif matches[2] == 'GOTO' then
                             if msg.from.username then
                                 local res = sendMessage(matches[4], 'UP @' .. msg.from.username, false, matches[3])
                                 if res then
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
-                                    editMessageText(msg.chat.id, msg.message_id, msg.text, keyboard_tag(matches[4], res.result.message_id, true))
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, keyboard_tag(matches[4], res.result.message_id, true))
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                                    editMessageText(msg.chat.id, msg.message_id, msg.text)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo)
                                 end
                             else
                                 local sent = false
@@ -120,10 +120,10 @@ local function run(msg, matches)
                                 end
                                 if sent then
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
-                                    editMessageText(msg.chat.id, msg.message_id, msg.text, keyboard_tag(matches[4], res.result.message_id, true))
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, keyboard_tag(matches[4], res.result.message_id, true))
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                                    editMessageText(msg.chat.id, msg.message_id, msg.text)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo)
                                 end
                             end
                         end
