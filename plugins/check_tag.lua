@@ -90,7 +90,7 @@ local function run(msg, matches)
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'DELETEUP' then
                             if tonumber(matches[3]) == tonumber(msg.from.id) then
-                                if deleteMessage(matches[3], msg.message_id) then
+                                if deleteMessage(matches[4], msg.message_id) then
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageAlreadyDeleted, false)
