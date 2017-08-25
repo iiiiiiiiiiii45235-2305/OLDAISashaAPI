@@ -335,7 +335,7 @@ return {
         realmListStart = "Reami:\n",
         groupListCreated = "Lista gruppi creata.",
         realmListCreated = "Lista reami creata.",
-        notMyGroup = "Questo non è un mio gruppo, addio.",
+        notMyGroup = "Questo non è un mio gruppo, addio.\nPer maggiori informazioni contatta il mio creatore, dovresti sapere chi è, se non lo sai chiedi nei miei gruppi.",
 
         -- alternatives.lua --
         listAlternatives = "Lista comandi alternativi a X: ",
@@ -373,7 +373,7 @@ return {
         userUnrestricted = "Utente libero.",
 
         -- bot.lua --
-        startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi, per qualsiasi cosa utilizza pure il comando /help.",
+        startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi (dovresti sapere chi è, se non lo sai chiedi nei miei gruppi), per qualsiasi cosa utilizza pure il comando /help.",
         botOn = "Sono tornata. 😏",
         botOff = "Nulla da fare qui. 🚀",
 
@@ -1572,7 +1572,7 @@ return {
         realmListStart = "Realms:\n",
         groupListCreated = "Group list created.",
         realmListCreated = "Realm list created.",
-        notMyGroup = "This is not one of my groups, bye.",
+        notMyGroup = "This is not one of my groups, bye.\nFor more information contact my creator, you should know who is he, if not just ask in my groups.",
 
         -- alternatives.lua --
         listAlternatives = "List of X's alternative commands: ",
@@ -1610,7 +1610,7 @@ return {
         userUnrestricted = "User unrestricted.",
 
         -- bot.lua --
-        startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group, for anything you need use /help.",
+        startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group (you should know who he is, if not just ask in my groups), for anything you need use /help.",
         botOn = "I'm back. 😏",
         botOff = "Nothing to do here. 🚀",
 
