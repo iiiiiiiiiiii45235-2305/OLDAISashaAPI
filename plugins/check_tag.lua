@@ -100,10 +100,11 @@ local function run(msg, matches)
                             if msg.from.username then
                                 local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
                                 if res then
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                                 else
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                                 end
+                                deleteMessage(msg.chat.id, msg.message_id)
                             else
                                 local sent = false
                                 local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
@@ -121,10 +122,11 @@ local function run(msg, matches)
                                     end
                                 end
                                 if sent then
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                                 else
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                                 end
+                                deleteMessage(msg.chat.id, msg.message_id)
                             end
                         end
                     end
