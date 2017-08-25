@@ -1,6 +1,6 @@
 notified = { }
 
-local function keyboard_tag(chat_id, message_id, callback, other_message_id)
+local function keyboard_tag(chat_id, message_id, callback, user_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
 
@@ -12,7 +12,7 @@ local function keyboard_tag(chat_id, message_id, callback, other_message_id)
         keyboard.inline_keyboard[2][1] = { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' }
     else
         keyboard.inline_keyboard[1] = { }
-        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].deleteUp, callback_data = 'check_tagDELETEUP' .. chat_id }
+        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].deleteUp, callback_data = 'check_tagDELETEUP' .. user_id .. chat_id }
     end
 
     return keyboard
@@ -87,18 +87,18 @@ local function run(msg, matches)
                     if matches[2] == 'ALREADYREAD' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
                         deleteMessage(msg.chat.id, msg.message_id)
-                    elseif matches[3] and not matches[4] then
-                        if matches[2] == 'DELETEUP' then
-                            if deleteMessage(matches[3], msg.message_id) then
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageAlreadyDeleted, false)
-                            end
-                        end
                     elseif matches[3] and matches[4] then
-                        if matches[2] == 'GOTO' then
+                        if matches[2] == 'DELETEUP' then
+                            if tonumber(matches[3]) == tonumber(msg.from.id) then
+                                if deleteMessage(matches[3], msg.message_id) then
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageAlreadyDeleted, false)
+                                end
+                            end
+                        elseif matches[2] == 'GOTO' then
                             if msg.from.username then
-                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username, keyboard_tag(matches[4], matches[3], true), false, matches[3])
+                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
                                 if res then
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
@@ -106,15 +106,15 @@ local function run(msg, matches)
                                 end
                             else
                                 local sent = false
-                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true), 'markdown', matches[3])
+                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
                                 if res then
                                     sent = true
                                 else
-                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', keyboard_tag(matches[4], matches[3], true), 'html', matches[3])
+                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3])
                                     if res then
                                         sent = true
                                     else
-                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true), false, matches[3])
+                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
                                         if res then
                                             sent = true
                                         end
