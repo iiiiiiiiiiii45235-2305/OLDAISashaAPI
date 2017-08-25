@@ -363,7 +363,7 @@ local function test_msg(msg)
             end
         end
     end
-    return msg
+    return text
 end
 
 local function action(msg, strict, reason)
