@@ -1265,6 +1265,14 @@ return {
             "#me: Sasha dice quanti messaggi hai mandato.",
         },
 
+        msg_checks =
+        {
+            "🅿️ MSG_CHECKS",
+            "Plugin per il controllo dei messaggi.",
+            "USER",
+            "#checkmsg <reply>|<text>: Sasha controlla <reply>|<text> e rileva quali blocchi/muti verrebbero attivati.",
+        },
+
         multiple_commands =
         {
             "🅿️ MULTIPLE_COMMANDS",
@@ -2509,6 +2517,14 @@ return {
             "Plugin to know number of sent messages.",
             "USER",
             "#me: Sasha tells you how many messages you've sent.",
+        },
+
+        msg_checks =
+        {
+            "🅿️ MSG_CHECKS",
+            "Plugin to check messages.",
+            "USER",
+            "#checkmsg <reply>|<text>: Sasha checks <reply>|<text> and tells which locks/mutes would be triggered.",
         },
 
         multiple_commands =

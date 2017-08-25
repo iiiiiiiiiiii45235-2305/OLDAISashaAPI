@@ -719,7 +719,12 @@ return {
     },
     pre_process = pre_process,
     run = run,
-    min_rank = 5
+    min_rank = 0,
+    syntax =
+    {
+        "USER",
+        "#checkmsg <reply>|<text>",
+    },
 }
 -- End msg_checks.lua
 -- By @Rondoozle
