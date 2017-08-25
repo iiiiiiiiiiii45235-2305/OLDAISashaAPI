@@ -153,32 +153,32 @@ end
 end]]
 
 local function test_msg(msg)
-    local lock_arabic = test_settings.lock_arabic
-    local lock_bots = test_settings.lock_bots
-    local lock_leave = test_settings.lock_leave
-    local lock_link = test_settings.lock_link
+    local lock_arabic = test_settings.settings.lock_arabic
+    local lock_bots = test_settings.settings.lock_bots
+    local lock_leave = test_settings.settings.lock_leave
+    local lock_link = test_settings.settings.lock_link
     local group_link = nil
-    if test_settings.set_link then
-        group_link = test_settings.set_link
+    if test_settings.settings.set_link then
+        group_link = test_settings.settings.set_link
     end
-    local lock_member = test_settings.lock_member
-    local lock_rtl = test_settings.lock_rtl
-    local lock_spam = test_settings.lock_spam
-    local strict = test_settings.strict
+    local lock_member = test_settings.settings.lock_member
+    local lock_rtl = test_settings.settings.lock_rtl
+    local lock_spam = test_settings.settings.lock_spam
+    local strict = test_settings.settings.strict
 
-    local mute_all = test_settings.mutes['all']
-    local mute_audio = test_settings.mutes['audio']
-    local mute_contact = test_settings.mutes['contact']
-    local mute_document = test_settings.mutes['document']
-    local mute_gif = test_settings.mutes['gif']
-    local mute_location = test_settings.mutes['location']
-    local mute_photo = test_settings.mutes['photo']
-    local mute_sticker = test_settings.mutes['sticker']
-    local mute_text = test_settings.mutes['text']
-    local mute_tgservice = test_settings.mutes['tgservice']
-    local mute_video = test_settings.mutes['video']
-    local mute_video_note = test_settings.mutes['video_note']
-    local mute_voice_note = test_settings.mutes['voice_note']
+    local mute_all = test_settings.settings.mutes['all']
+    local mute_audio = test_settings.settings.mutes['audio']
+    local mute_contact = test_settings.settings.mutes['contact']
+    local mute_document = test_settings.settings.mutes['document']
+    local mute_gif = test_settings.settings.mutes['gif']
+    local mute_location = test_settings.settings.mutes['location']
+    local mute_photo = test_settings.settings.mutes['photo']
+    local mute_sticker = test_settings.settings.mutes['sticker']
+    local mute_text = test_settings.settings.mutes['text']
+    local mute_tgservice = test_settings.settings.mutes['tgservice']
+    local mute_video = test_settings.settings.mutes['video']
+    local mute_video_note = test_settings.settings.mutes['video_note']
+    local mute_voice_note = test_settings.settings.mutes['voice_note']
 
     local text = ''
     if not msg.service then
