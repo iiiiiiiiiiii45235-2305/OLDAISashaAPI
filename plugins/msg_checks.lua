@@ -189,13 +189,14 @@ local function check_msg(msg, settings)
                     action(msg, strict, langs[msg.lang].reasonLockLink)
                     return nil
                 end
-                while string.match(msg.text, '@[^%s]+') do
-                    if APIgetChat(string.match(msg.text, '@[^%s]+'), true) then
+                local tmp = msg.text
+                while string.match(tmp, '@[^%s]+') do
+                    if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         print('link (channel username) found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
                         return nil
                     else
-                        msg.text = msg.text:gsub(string.match(msg.text, '@[^%s]+'), '')
+                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     end
                 end
             end
@@ -228,13 +229,14 @@ local function check_msg(msg, settings)
                     action(msg, strict, langs[msg.lang].reasonLockLink)
                     return nil
                 end
-                while string.match(msg.caption, '@[^%s]+') do
-                    if APIgetChat(string.match(msg.caption, '@[^%s]+'), true) then
+                local tmp = msg.caption
+                while string.match(tmp, '@[^%s]+') do
+                    if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         print('link (channel username) found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
                         return nil
                     else
-                        msg.caption = msg.caption:gsub(string.match(msg.caption, '@[^%s]+'), '')
+                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     end
                 end
             end
