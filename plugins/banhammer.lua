@@ -878,8 +878,8 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'restrictions' then
             mystat('/restrictions')
-            if msg.reply then
-                if msg.from.is_mod then
+            if msg.from.is_mod then
+                if msg.reply then
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
@@ -909,11 +909,7 @@ local function run(msg, matches)
 
                         return
                     end
-                else
-                    return langs[msg.lang].require_mod
-                end
-            elseif matches[2] and matches[2] ~= '' then
-                if msg.from.is_mod then
+                elseif matches[2] and matches[2] ~= '' then
                     if msg.entities then
                         for k, v in pairs(msg.entities) do
                             -- check if there's a text_mention
@@ -972,54 +968,67 @@ local function run(msg, matches)
                             return langs[msg.lang].noObject
                         end
                     end
-                else
-                    return langs[msg.lang].require_mod
                 end
+                return
+            else
+                return langs[msg.lang].require_mod
             end
-            return
         end
         if matches[1]:lower() == 'textualrestrictions' then
             mystat('/restrictions')
-            if msg.reply then
-                if matches[2] then
-                    if matches[2]:lower() == 'from' then
-                        if msg.reply_to_message.forward then
-                            if msg.reply_to_message.forward_from then
-                                return showRestrictions(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
+            if msg.from.is_mod then
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return showRestrictions(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
                             else
-                                return langs[msg.lang].cantDoThisToChat
+                                return langs[msg.lang].errorNoForward
                             end
                         else
-                            return langs[msg.lang].errorNoForward
+                            return showRestrictions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                         end
                     else
                         return showRestrictions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                     end
-                else
-                    return showRestrictions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
-                end
-            elseif matches[2] and matches[2] ~= '' then
-                if msg.entities then
-                    for k, v in pairs(msg.entities) do
-                        -- check if there's a text_mention
-                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                return showRestrictions(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return showRestrictions(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                end
                             end
                         end
                     end
-                end
-                if string.match(matches[2], '^%d+$') then
-                else
-                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                    if obj_user then
-                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            return showRestrictions(msg.chat.id, obj_user.id, msg.lang)
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return showRestrictions(msg.chat.id, obj_user.id, msg.lang)
+                            end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     else
-                        return langs[msg.lang].noObject
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return showRestrictions(msg.chat.id, obj_user.id, msg.lang)
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
                     end
                 end
+                return
+            else
+                return langs[msg.lang].require_mod
             end
         end
         if matches[1]:lower() == 'kick' then

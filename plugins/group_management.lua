@@ -1605,8 +1605,8 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'muteslist' then
+                mystat('/muteslist')
                 if msg.from.is_mod then
-                    mystat('/muteslist')
                     if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. msg.chat.id, keyboard_mutes_list(msg.chat.id)) then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                         if msg.chat.type ~= 'private' then
@@ -1616,17 +1616,14 @@ local function run(msg, matches)
                         return langs[msg.lang].cantSendPvt
                     end
                 else
-                    return langs[msg.lang].require_mod
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                    return mutesList(msg.chat.id)
                 end
             end
             if matches[1]:lower() == 'textualmuteslist' then
-                if msg.from.is_mod then
-                    mystat('/muteslist')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                    return mutesList(msg.chat.id)
-                else
-                    return langs[msg.lang].require_mod
-                end
+                mystat('/muteslist')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                return mutesList(msg.chat.id)
             end
             if matches[1]:lower() == 'del' then
                 if msg.from.is_mod then
@@ -2393,6 +2390,10 @@ return {
         "#link",
         "#settings",
         "#textualsettings",
+        "#muteslist",
+        "#textualmuteslist",
+        "#permissions",
+        "#textualpermissions",
         "MOD",
         "#type",
         "#updategroupinfo",
@@ -2400,8 +2401,6 @@ return {
         "#setwarn <value>",
         "#setflood <value>",
         "#newlink",
-        "#muteslist",
-        "#textualmuteslist",
         "#lock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#unlock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#pin <reply>",
