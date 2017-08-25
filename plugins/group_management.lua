@@ -454,7 +454,7 @@ local function contactMods(msg)
     if list then
         for i, admin in pairs(list.result) do
             already_contacted[tonumber(admin.user.id)] = admin.user.id
-            if sendChatAction(admin.user.id, 'typing') then
+            if sendChatAction(admin.user.id, 'typing', true) then
                 if msg.reply then
                     forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
                 end
@@ -470,7 +470,7 @@ local function contactMods(msg)
     if owner then
         if not already_contacted[tonumber(owner)] then
             already_contacted[tonumber(owner)] = owner
-            if sendChatAction(admin.user.id, 'typing') then
+            if sendChatAction(owner, 'typing', true) then
                 if msg.reply then
                     forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
                 end
@@ -488,7 +488,7 @@ local function contactMods(msg)
     else
         for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
             if not already_contacted[tonumber(k)] then
-                if sendChatAction(admin.user.id, 'typing') then
+                if sendChatAction(k, 'typing', true) then
                     already_contacted[tonumber(k)] = k
                     if msg.reply then
                         forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
