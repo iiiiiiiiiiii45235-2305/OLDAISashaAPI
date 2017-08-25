@@ -183,17 +183,17 @@ local function test_msg(msg)
     local text = ''
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
-            text = text .. langs[msg.lang].reasonMutedUser .. '\n'
+            text = text .. langs[msg.lang].reasonMutedUser
         end
         if mute_all then
-            text = text .. langs[msg.lang].reasonMutedAll .. '\n'
+            text = text .. langs[msg.lang].reasonMutedAll
         end
         if msg.entities then
             for k, v in pairs(msg.entities) do
                 if v.url then
                     if lock_link then
                         if check_if_link(v.url, group_link) then
-                            text = text .. langs[msg.lang].reasonLockLinkEntities .. '\n'
+                            text = text .. langs[msg.lang].reasonLockLinkEntities
                         end
                     end
                 end
@@ -201,24 +201,24 @@ local function test_msg(msg)
         end
         if msg.text then
             if mute_text then
-                text = text .. langs[msg.lang].reasonMutedText .. '\n'
+                text = text .. langs[msg.lang].reasonMutedText
             end
             -- msg.text checks
             if lock_spam then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 local _nl, real_digits = string.gsub(msg.text, '%d', '')
                 if string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
-                    text = text .. langs[msg.lang].reasonLockSpam .. '\n'
+                    text = text .. langs[msg.lang].reasonLockSpam
                 end
             end
             if lock_link then
                 if check_if_link(msg.text, group_link) then
-                    text = text .. langs[msg.lang].reasonLockLink .. '\n'
+                    text = text .. langs[msg.lang].reasonLockLink
                 end
                 local tmp = msg.text
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        text = text .. langs[msg.lang].reasonLockLink .. '\n'
+                        text = text .. langs[msg.lang].reasonLockLink
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
@@ -228,28 +228,28 @@ local function test_msg(msg)
             if lock_arabic then
                 local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
-                    text = text .. langs[msg.lang].reasonLockArabic .. '\n'
+                    text = text .. langs[msg.lang].reasonLockArabic
                 end
             end
             if lock_rtl then
                 local is_rtl = msg.from.print_name:match("‮") or msg.text:match("‮")
                 if is_rtl then
-                    text = text .. langs[msg.lang].reasonLockRTL .. '\n'
+                    text = text .. langs[msg.lang].reasonLockRTL
                 end
             end
         end
         if msg.caption then
             if mute_text then
-                text = text .. langs[msg.lang].reasonMutedText .. '\n'
+                text = text .. langs[msg.lang].reasonMutedText
             end
             if lock_link then
                 if check_if_link(msg.caption, group_link) then
-                    text = text .. langs[msg.lang].reasonLockLink .. '\n'
+                    text = text .. langs[msg.lang].reasonLockLink
                 end
                 local tmp = msg.caption
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        text = text .. langs[msg.lang].reasonLockLink .. '\n'
+                        text = text .. langs[msg.lang].reasonLockLink
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
@@ -259,13 +259,13 @@ local function test_msg(msg)
             if lock_arabic then
                 local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
                 if is_squig_caption then
-                    text = text .. langs[msg.lang].reasonLockArabic .. '\n'
+                    text = text .. langs[msg.lang].reasonLockArabic
                 end
             end
             if lock_rtl then
                 local is_rtl = msg.from.print_name:match("‮") or msg.caption:match("‮")
                 if is_rtl then
-                    text = text .. langs[msg.lang].reasonLockRTL .. '\n'
+                    text = text .. langs[msg.lang].reasonLockRTL
                 end
             end
         end
@@ -273,86 +273,86 @@ local function test_msg(msg)
         if msg.media and msg.media_type then
             if msg.media_type == 'audio' then
                 if mute_audio then
-                    text = text .. langs[msg.lang].reasonMutedAudio .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedAudio
                 end
             elseif msg.media_type == 'contact' then
                 if mute_contact then
-                    text = text .. langs[msg.lang].reasonMutedContacts .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedContacts
                 end
             elseif msg.media_type == 'document' then
                 if mute_document then
-                    text = text .. langs[msg.lang].reasonMutedDocuments .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedDocuments
                 end
             elseif msg.media_type == 'gif' then
                 if mute_gif then
-                    text = text .. langs[msg.lang].reasonMutedGifs .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedGifs
                 end
             elseif msg.media_type == 'location' then
                 if mute_location then
-                    text = text .. langs[msg.lang].reasonMutedLocations .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedLocations
                 end
             elseif msg.media_type == 'photo' then
                 if mute_photo then
-                    text = text .. langs[msg.lang].reasonMutedPhoto .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedPhoto
                 end
             elseif msg.media_type == 'sticker' then
                 if mute_sticker then
-                    text = text .. langs[msg.lang].reasonMutedStickers .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedStickers
                 end
             elseif msg.media_type == 'video' then
                 if mute_video then
-                    text = text .. langs[msg.lang].reasonMutedVideo .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedVideo
                 end
             elseif msg.media_type == 'video_note' then
                 if mute_video_note then
-                    text = text .. langs[msg.lang].reasonMutedVideonotes .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedVideonotes
                 end
             elseif msg.media_type == 'voice_note' then
                 if mute_voice_note then
-                    text = text .. langs[msg.lang].reasonMutedVoicenotes .. '\n'
+                    text = text .. langs[msg.lang].reasonMutedVoicenotes
                 end
             end
         end
     else
         if mute_tgservice then
-            text = text .. langs[msg.lang].reasonMutedTgservice .. '\n'
+            text = text .. langs[msg.lang].reasonMutedTgservice
         end
         if msg.service_type == 'chat_add_user_link' then
             if lock_spam then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
-                    text = text .. langs[msg.lang].reasonLockSpam .. '\n'
+                    text = text .. langs[msg.lang].reasonLockSpam
                 end
             end
             if lock_rtl then
                 local is_rtl_name = msg.from.print_name:match("‮")
                 if is_rtl_name then
-                    text = text .. langs[msg.lang].reasonLockRTL .. '\n'
+                    text = text .. langs[msg.lang].reasonLockRTL
                 end
             end
             if lock_member then
-                text = text .. langs[msg.lang].reasonLockMembers .. '\n'
+                text = text .. langs[msg.lang].reasonLockMembers
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do
                 if lock_spam then
                     local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                     if string.len(v.print_name) > 70 or ctrl_chars > 40 then
-                        text = text .. langs[msg.lang].reasonLockSpam .. '\n'
+                        text = text .. langs[msg.lang].reasonLockSpam
                     end
                 end
                 if lock_rtl then
                     local is_rtl_name = v.print_name:match("‮")
                     if is_rtl_name then
-                        text = text .. langs[msg.lang].reasonLockRTL .. '\n'
+                        text = text .. langs[msg.lang].reasonLockRTL
                     end
                 end
                 if lock_member then
-                    text = text .. langs[msg.lang].reasonLockMembers .. '\n'
+                    text = text .. langs[msg.lang].reasonLockMembers
                 end
                 if lock_bots then
                     if v.is_bot then
-                        text = text .. langs[msg.lang].reasonLockBots .. '\n'
+                        text = text .. langs[msg.lang].reasonLockBots
                     end
                 end
             end
@@ -360,7 +360,7 @@ local function test_msg(msg)
         if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
             if lock_leave then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
-                    text = text .. langs[msg.lang].reasonLockLeave .. '\n'
+                    text = text .. langs[msg.lang].reasonLockLeave
                 end
             end
         end
