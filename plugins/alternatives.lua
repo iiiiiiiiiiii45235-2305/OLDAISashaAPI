@@ -1,4 +1,4 @@
-default_alternatives = {
+local default_alternatives = {
     cmdAlt =
     {
         ['/kickme'] =

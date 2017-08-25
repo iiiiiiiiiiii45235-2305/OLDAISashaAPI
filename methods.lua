@@ -1731,59 +1731,20 @@ function unwarnallUser(executer, target, chat_id, reason)
     end
 end
 
-function setMutes(chat_id)
-    local lang = get_lang(chat_id)
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)].settings then
-            data[tostring(chat_id)].settings.mutes = { ["all"] = false, ["audio"] = false, ["contact"] = false, ["document"] = false, ["gif"] = false, ["location"] = false, ["photo"] = false, ["sticker"] = false, ["text"] = false, ["tgservice"] = false, ["video"] = false, ["video_note"] = false, ["voice_note"] = false }
-            save_data(config.moderation.data, data)
-            return langs[lang].mutesSet
-        end
-    end
-end
-
-function hasMutes(chat_id)
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)].settings.mutes then
-            return true
-        end
-    end
-    if setMutes(chat_id) then
-        return true
-    else
-        return false
-    end
-end
-
-function isMuted(chat_id, msg_type)
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)].settings then
-            if hasMutes(chat_id) then
-                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
-                    return data[tostring(chat_id)].settings.mutes[msg_type:lower()]
-                end
-            end
-        end
-    end
-    return false
-end
-
 function mute(chat_id, msg_type)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            if hasMutes(chat_id) then
-                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
-                    if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
-                        return msg_type:lower() .. langs[lang].alreadyMuted
-                    else
-                        data[tostring(chat_id)].settings.mutes[msg_type:lower()] = true
-                        save_data(config.moderation.data, data)
-                        return msg_type:lower() .. langs[lang].muted
-                    end
+            if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
+                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
+                    return msg_type:lower() .. langs[lang].alreadyMuted
                 else
-                    return langs[lang].noSuchMuteType
+                    data[tostring(chat_id)].settings.mutes[msg_type:lower()] = true
+                    save_data(config.moderation.data, data)
+                    return msg_type:lower() .. langs[lang].muted
                 end
+            else
+                return langs[lang].noSuchMuteType
             end
         end
     end
@@ -1793,18 +1754,16 @@ function unmute(chat_id, msg_type)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            if hasMutes(chat_id) then
-                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
-                    if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
-                        data[tostring(chat_id)].settings.mutes[msg_type:lower()] = false
-                        save_data(config.moderation.data, data)
-                        return msg_type:lower() .. langs[lang].unmuted
-                    else
-                        return msg_type:lower() .. langs[lang].alreadyUnmuted
-                    end
+            if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
+                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
+                    data[tostring(chat_id)].settings.mutes[msg_type:lower()] = false
+                    save_data(config.moderation.data, data)
+                    return msg_type:lower() .. langs[lang].unmuted
                 else
-                    return langs[lang].noSuchMuteType
+                    return msg_type:lower() .. langs[lang].alreadyUnmuted
                 end
+            else
+                return langs[lang].noSuchMuteType
             end
         end
     end
@@ -1833,14 +1792,12 @@ function mutesList(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            if hasMutes(chat_id) then
-                local text = langs[lang].mutedTypesStart .. chat_id .. "\n\n"
-                for k, v in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-                    text = text .. langs[lang].mute .. k .. ': ' .. tostring(v) .. "\n"
-                end
-                text = text .. langs[lang].strictrules .. tostring(data[tostring(chat_id)].settings.strict)
-                return text
+            local text = langs[lang].mutedTypesStart .. chat_id .. "\n\n"
+            for k, v in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
+                text = text .. langs[lang].mute .. k .. ': ' .. tostring(v) .. "\n"
             end
+            text = text .. langs[lang].strictrules .. tostring(data[tostring(chat_id)].settings.strict)
+            return text
         end
     end
 end

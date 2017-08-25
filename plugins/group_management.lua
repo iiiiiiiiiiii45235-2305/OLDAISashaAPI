@@ -1,5 +1,5 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
-default_settings = {
+local default_settings = {
     goodbye = nil,
     group_type = 'Unknown',
     moderators = { },
@@ -43,7 +43,7 @@ default_settings = {
     welcome = nil,
     welcomemembers = 0,
 }
-default_permissions = {
+local default_permissions = {
     ['can_change_info'] = true,
     ['can_delete_messages'] = true,
     ['can_invite_users'] = true,
