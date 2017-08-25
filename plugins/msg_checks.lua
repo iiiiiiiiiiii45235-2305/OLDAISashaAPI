@@ -180,7 +180,7 @@ local function test_msg(msg)
     local mute_video_note = test_settings.settings.mutes['video_note']
     local mute_voice_note = test_settings.settings.mutes['voice_note']
 
-    local text = ''
+    local text = langs[msg.lang].checkMsg
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
             text = text .. langs[msg.lang].reasonMutedUser

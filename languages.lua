@@ -713,6 +713,9 @@ return {
         -- me.lua --
         meString = "Hai mandato W (X%) messaggi e questa chat ne ha Z.",
 
+        -- msg_checks.lua --
+        checkMsg = "Questo messaggio viola i seguenti blocchi/muti:\n",
+
         -- plugins.lua --
         enabled = " abilitato.",
         disabled = " disabilitato.",
@@ -1966,6 +1969,9 @@ return {
 
         -- me.lua --
         meString = "You have sent W (X%) messages and this chat has Z messages.",
+
+        -- msg_checks.lua --
+        checkMsg = "This message violates the following locks/mutes:\n",
 
         -- plugins.lua --
         enabled = " enabled.",
