@@ -221,6 +221,21 @@ local function run(msg, matches)
             end
         elseif matches[2] and matches[2] ~= '' then
             if msg.from.is_mod then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                local obj = getChat(msg.entities[k].user.id)
+                                if obj then
+                                    return obj.id
+                                else
+                                    return langs[msg.lang].noObject
+                                end
+                            end
+                        end
+                    end
+                end
                 local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                 if obj then
                     return obj.id
@@ -278,7 +293,22 @@ local function run(msg, matches)
             end
         elseif matches[2] and matches[2] ~= '' then
             if msg.from.is_mod then
-                local obj = getChat(matches[2])
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                local obj = getChat(msg.entities[k].user.id)
+                                if obj then
+                                    return obj.id
+                                else
+                                    return langs[msg.lang].noObject
+                                end
+                            end
+                        end
+                    end
+                end
+                local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                 if obj then
                     return obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
                 else
@@ -298,7 +328,7 @@ local function run(msg, matches)
                 if matches[2]:lower() == 'from' then
                     if msg.reply_to_message.forward then
                         if msg.reply_to_message.forward_from then
-                            return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id, check_local)
+                            return get_reverse_rank(msg.chat.id, msg.reply_to_message.forward_from.id, true)
                         else
                             return langs[msg.lang].cantDoThisToChat
                         end
@@ -306,26 +336,36 @@ local function run(msg, matches)
                         return langs[msg.lang].errorNoForward
                     end
                 else
-                    return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
+                    return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, true)
                 end
             else
-                return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, check_local)
+                return get_reverse_rank(msg.chat.id, msg.reply_to_message.from.id, true)
             end
         elseif matches[2] and matches[2] ~= '' then
+            if msg.entities then
+                for k, v in pairs(msg.entities) do
+                    -- check if there's a text_mention
+                    if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                        if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                            return get_reverse_rank(msg.chat.id, msg.entities[k].user.id, true)
+                        end
+                    end
+                end
+            end
             if string.match(matches[2], '^%d+$') then
-                return get_reverse_rank(msg.chat.id, matches[2], check_local)
+                return get_reverse_rank(msg.chat.id, matches[2], true)
             else
                 local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                        return get_reverse_rank(msg.chat.id, obj_user.id, check_local)
+                        return get_reverse_rank(msg.chat.id, obj_user.id, true)
                     end
                 else
                     return langs[msg.lang].noObject
                 end
             end
         else
-            return get_reverse_rank(msg.chat.id, msg.from.id, check_local)
+            return get_reverse_rank(msg.chat.id, msg.from.id, true)
         end
     end
     if matches[1]:lower() == 'ishere' then
@@ -349,6 +389,16 @@ local function run(msg, matches)
                 return is_here(msg.chat.id, msg.reply_to_message.from.id)
             end
         elseif matches[2] and matches[2] ~= '' then
+            if msg.entities then
+                for k, v in pairs(msg.entities) do
+                    -- check if there's a text_mention
+                    if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                        if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                            return is_here(msg.chat.id, msg.entities[k].user.id)
+                        end
+                    end
+                end
+            end
             if string.match(matches[2], '^%d+$') then
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
@@ -405,6 +455,16 @@ local function run(msg, matches)
             end
         elseif matches[2] and matches[2] ~= '' then
             if msg.from.is_mod then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return get_object_info(msg.entities[k].user, msg.chat.id)
+                            end
+                        end
+                    end
+                end
                 if msg.entities then
                     if msg.entities[1] then
                         if msg.entities[1].type == 'text_mention' then

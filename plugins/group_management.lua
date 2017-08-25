@@ -1756,6 +1756,26 @@ local function run(msg, matches)
                             return setOwner(msg.reply_to_message.from, msg.chat.id)
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. msg.entities[k].user.id .. "] as owner")
+                                        local obj_user = getChat(msg.entities[k].user.id)
+                                        if type(obj_user) == 'table' then
+                                            if obj_user then
+                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                    return setOwner(obj_user, msg.chat.id)
+                                                end
+                                            else
+                                                return langs[msg.lang].noObject
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
                             local obj_user = getChat(matches[2])
@@ -1821,6 +1841,28 @@ local function run(msg, matches)
                             return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions)
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        local obj_user = getChat(msg.entities[k].user.id)
+                                        if type(obj_user) == 'table' then
+                                            if obj_user then
+                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                    if matches[3] then
+                                                        permissions = adjustPermissions(matches[3]:lower())
+                                                    end
+                                                    return promoteTgAdmin(msg.chat.id, obj_user, permissions)
+                                                end
+                                            else
+                                                return langs[msg.lang].noObject
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1874,6 +1916,25 @@ local function run(msg, matches)
                             return demoteTgAdmin(msg.chat.id, msg.reply_to_message.from)
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        local obj_user = getChat(msg.entities[k].user.id)
+                                        if type(obj_user) == 'table' then
+                                            if obj_user then
+                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                    return demoteTgAdmin(msg.chat.id, obj_user)
+                                                end
+                                            else
+                                                return langs[msg.lang].noObject
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1921,6 +1982,25 @@ local function run(msg, matches)
                             return promoteMod(msg.chat.id, msg.reply_to_message.from)
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        local obj_user = getChat(msg.entities[k].user.id)
+                                        if type(obj_user) == 'table' then
+                                            if obj_user then
+                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                    return promoteMod(msg.chat.id, obj_user)
+                                                end
+                                            else
+                                                return langs[msg.lang].noObject
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1968,6 +2048,25 @@ local function run(msg, matches)
                             return demoteMod(msg.chat.id, msg.reply_to_message.from)
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        local obj_user = getChat(msg.entities[k].user.id)
+                                        if type(obj_user) == 'table' then
+                                            if obj_user then
+                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                    return demoteMod(msg.chat.id, obj_user)
+                                                end
+                                            else
+                                                return langs[msg.lang].noObject
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -2031,6 +2130,31 @@ local function run(msg, matches)
                     end
                 elseif matches[2] and matches[2] ~= '' then
                     if msg.from.is_mod then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        local obj_user = getChat(msg.entities[k].user.id)
+                                        if type(obj_user) == 'table' then
+                                            if obj_user then
+                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                                        if msg.chat.type ~= 'private' then
+                                                            return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
+                                                        end
+                                                    else
+                                                        return langs[msg.lang].cantSendPvt
+                                                    end
+                                                end
+                                            else
+                                                return langs[msg.lang].noObject
+                                            end
+                                        end
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -2093,6 +2217,16 @@ local function run(msg, matches)
                         return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return showPermissions(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return showPermissions(msg.chat.id, matches[2], msg.lang)
                     else

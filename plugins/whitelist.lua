@@ -45,6 +45,16 @@ local function run(msg, matches)
             elseif matches[2] and matches[2] ~= '' then
                 if is_owner(msg) then
                     mystat('/whitelist <user>')
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return whitelist_user(msg.chat.tg_cli_id, msg.entities[k].user.id, msg.lang)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return whitelist_user(msg.chat.tg_cli_id, matches[2], msg.lang)
                     else
@@ -111,6 +121,16 @@ local function run(msg, matches)
             elseif matches[2] and matches[2] ~= '' then
                 if is_owner(msg) then
                     mystat('/whitelistgban <user>')
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return whitegban_user(msg.chat.tg_cli_id, msg.entities[k].user.id, msg.lang)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return whitegban_user(msg.chat.tg_cli_id, matches[2], msg.lang)
                     else

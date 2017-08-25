@@ -170,7 +170,7 @@ local function run(msg, matches)
                 if matches[2]:lower() == 'from' then
                     if msg.reply_to_message.forward then
                         if msg.reply_to_message.forward_from then
-                            if sendChatAction(msg.reply_to_message.forward_from.id, 'typing') then
+                            if sendChatAction(msg.reply_to_message.forward_from.id, 'typing', true) then
                                 return langs[msg.lang].userDidNotBlockBot
                             else
                                 return langs[msg.lang].userBlockedBot
@@ -182,7 +182,7 @@ local function run(msg, matches)
                         return langs[msg.lang].errorNoForward
                     end
                 else
-                    if sendChatAction(msg.reply_to_message.from.id, 'typing') then
+                    if sendChatAction(msg.reply_to_message.from.id, 'typing', true) then
                         return langs[msg.lang].userDidNotBlockBot
                     else
                         return langs[msg.lang].userBlockedBot
@@ -192,13 +192,13 @@ local function run(msg, matches)
                 if msg.reply_to_message.service then
                     if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
                         local text = ''
-                        if sendChatAction(msg.reply_to_message.adder.id, 'typing') then
+                        if sendChatAction(msg.reply_to_message.adder.id, 'typing', true) then
                             text = text .. msg.reply_to_message.adder.id .. ' ' .. langs[msg.lang].userDidNotBlockBot .. '\n'
                         else
                             text = text .. msg.reply_to_message.adder.id .. ' ' .. langs[msg.lang].userBlockedBot .. '\n'
                         end
                         for k, v in pairs(msg.reply_to_message.added) do
-                            if sendChatAction(msg.reply_to_message.from.id, 'typing') then
+                            if sendChatAction(msg.reply_to_message.from.id, 'typing', true) then
                                 text = text .. v.id .. ' ' .. langs[msg.lang].userDidNotBlockBot .. '\n'
                             else
                                 text = text .. v.id .. ' ' .. langs[msg.lang].userBlockedBot .. '\n'
@@ -206,20 +206,20 @@ local function run(msg, matches)
                         end
                         return text ..(matches[2] or '') .. ' ' ..(matches[3] or '')
                     elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                        if sendChatAction(msg.reply_to_message.removed.id, 'typing') then
+                        if sendChatAction(msg.reply_to_message.removed.id, 'typing', true) then
                             return langs[msg.lang].userDidNotBlockBot
                         else
                             return langs[msg.lang].userBlockedBot
                         end
                     else
-                        if sendChatAction(msg.reply_to_message.from.id, 'typing') then
+                        if sendChatAction(msg.reply_to_message.from.id, 'typing', true) then
                             return langs[msg.lang].userDidNotBlockBot
                         else
                             return langs[msg.lang].userBlockedBot
                         end
                     end
                 else
-                    if sendChatAction(msg.reply_to_message.from.id, 'typing') then
+                    if sendChatAction(msg.reply_to_message.from.id, 'typing', true) then
                         return langs[msg.lang].userDidNotBlockBot
                     else
                         return langs[msg.lang].userBlockedBot
@@ -228,7 +228,7 @@ local function run(msg, matches)
             end
         elseif matches[2] and matches[2] ~= '' then
             if string.match(matches[2], '^%d+$') then
-                if sendChatAction(matches[2], 'typing') then
+                if sendChatAction(matches[2], 'typing', true) then
                     return langs[msg.lang].userDidNotBlockBot
                 else
                     return langs[msg.lang].userBlockedBot
@@ -237,7 +237,7 @@ local function run(msg, matches)
                 local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                        if sendChatAction(obj_user.id, 'typing') then
+                        if sendChatAction(obj_user.id, 'typing', true) then
                             return langs[msg.lang].userDidNotBlockBot
                         else
                             return langs[msg.lang].userBlockedBot

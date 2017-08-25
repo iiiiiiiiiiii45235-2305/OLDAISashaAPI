@@ -335,6 +335,16 @@ local function run(msg, matches)
                             return getUserWarns(msg.reply_to_message.from.id, msg.chat.id)
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        return getUserWarns(msg.entities[k].user.id, msg.chat.id)
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             return getUserWarns(matches[2], msg.chat.id)
                         else
@@ -396,6 +406,26 @@ local function run(msg, matches)
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    if compare_ranks(msg.from.id, msg.entities[k].user.id, msg.chat.id) then
+                                        if isMutedUser(msg.chat.id, msg.entities[k].user.id) then
+                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed [" .. msg.entities[k].user.id .. "] from the muted users list")
+                                            return unmuteUser(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                        else
+                                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added [" .. msg.entities[k].user.id .. "] to the muted users list")
+                                            return muteUser(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                        end
+                                    else
+                                        return langs[msg.lang].require_rank
+                                    end
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         -- ignore higher or same rank
                         if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
@@ -484,6 +514,16 @@ local function run(msg, matches)
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        return warnUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[3] or '')
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             return warnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
@@ -542,6 +582,16 @@ local function run(msg, matches)
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        return unwarnUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[3] or '')
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             return unwarnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
@@ -600,6 +650,16 @@ local function run(msg, matches)
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        return unwarnallUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[3] or '')
+                                    end
+                                end
+                            end
+                        end
                         if string.match(matches[2], '^%d+$') then
                             return unwarnallUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
@@ -663,6 +723,32 @@ local function run(msg, matches)
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                if matches[3] then
+                                                    restrictions = adjustRestrictions(matches[3]:lower())
+                                                end
+                                                if restrictChatMember(msg.chat.id, obj_user.id, restrictions) then
+                                                    return matches[3]:lower() .. langs[msg.lang].denied
+                                                else
+                                                    return langs[msg.lang].errorTryAgain
+                                                end
+                                            end
+                                        else
+                                            return langs[msg.lang].noObject
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -732,6 +818,29 @@ local function run(msg, matches)
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                if unrestrictChatMember(msg.chat.id, obj_user.id) then
+                                                    return langs[msg.lang].userUnrestricted
+                                                else
+                                                    return langs[msg.lang].errorTryAgain
+                                                end
+                                            end
+                                        else
+                                            return langs[msg.lang].noObject
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -805,6 +914,31 @@ local function run(msg, matches)
                 end
             elseif matches[2] and matches[2] ~= '' then
                 if msg.from.is_mod then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(msg.chat.id, obj_user.id)) then
+                                                    if msg.chat.type ~= 'private' then
+                                                        return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
+                                                    end
+                                                else
+                                                    return langs[msg.lang].cantSendPvt
+                                                end
+                                            end
+                                        else
+                                            return langs[msg.lang].noObject
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -865,8 +999,17 @@ local function run(msg, matches)
                     return showRestrictions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                 end
             elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return showRestrictions(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                            end
+                        end
+                    end
+                end
                 if string.match(matches[2], '^%d+$') then
-                    return showRestrictions(msg.chat.id, matches[2], msg.lang)
                 else
                     local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                     if obj_user then
@@ -915,6 +1058,16 @@ local function run(msg, matches)
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return kickUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[3] or '')
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                     else
@@ -1056,6 +1209,16 @@ local function run(msg, matches)
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[3] or '')
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return banUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                     else
@@ -1110,6 +1273,16 @@ local function run(msg, matches)
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return unbanUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[3] or '')
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return unbanUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                     else
@@ -1163,6 +1336,16 @@ local function run(msg, matches)
                     end
                 end
             elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return gbanUser(msg.entities[k].user.id, msg.lang)
+                            end
+                        end
+                    end
+                end
                 if string.match(matches[2], '^%d+$') then
                     return gbanUser(matches[2], msg.lang)
                 else
@@ -1215,6 +1398,16 @@ local function run(msg, matches)
                     end
                 end
             elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return ungbanUser(msg.entities[k].user.id, msg.lang)
+                            end
+                        end
+                    end
+                end
                 if string.match(matches[2], '^%d+$') then
                     return ungbanUser(matches[2], msg.lang)
                 else

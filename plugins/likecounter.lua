@@ -129,6 +129,16 @@ local function run(msg, matches)
                         return like(likedata, msg.chat.id, msg.reply_to_message.from.id)
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return like(likedata, msg.chat.id, msg.entities[k].user.id)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return like(likedata, msg.chat.id, matches[2])
                     else
@@ -162,6 +172,16 @@ local function run(msg, matches)
                         return dislike(likedata, msg.chat.id, msg.reply_to_message.from.id)
                     end
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return dislike(likedata, msg.chat.id, msg.entities[k].user.id)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         return dislike(likedata, msg.chat.id, matches[2])
                     else

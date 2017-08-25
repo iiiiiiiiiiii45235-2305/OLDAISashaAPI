@@ -178,6 +178,16 @@ local function run(msg, matches)
                     return blockUser(msg.reply_to_message.from.id, msg.lang)
                 end
             elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return blockUser(msg.entities[k].user.id, msg.lang)
+                            end
+                        end
+                    end
+                end
                 if string.match(matches[2], '^%d+$') then
                     return blockUser(matches[2], msg.lang)
                 else
@@ -214,6 +224,16 @@ local function run(msg, matches)
                     return unblockUser(msg.reply_to_message.from.id, msg.lang)
                 end
             elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return unblockUser(msg.entities[k].user.id, msg.lang)
+                            end
+                        end
+                    end
+                end
                 if string.match(matches[2], '^%d+$') then
                     return unblockUser(matches[2], msg.lang)
                 else
@@ -285,6 +305,16 @@ local function run(msg, matches)
                 if msg.reply then
                     return promoteAdmin(msg.reply_to_message.from, msg.chat.id)
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return promoteAdmin(msg.entities[k].user, msg.chat.id)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -314,6 +344,16 @@ local function run(msg, matches)
                 if msg.reply then
                     return demoteAdmin(msg.reply_to_message.from, msg.chat.id)
                 elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return demoteAdmin(msg.entities[k].user, msg.chat.id)
+                                end
+                            end
+                        end
+                    end
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then

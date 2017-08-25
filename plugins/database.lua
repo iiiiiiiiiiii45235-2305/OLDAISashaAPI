@@ -187,6 +187,20 @@ local function run(msg, matches)
                     end
                 end
             elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                if database[tostring(msg.entities[k].user.id)] then
+                                    return serpent.block(database[tostring(msg.entities[k].user.id)], { sortkeys = false, comment = false })
+                                else
+                                    return msg.entities[k].user.id .. langs[msg.lang].notFound
+                                end
+                            end
+                        end
+                    end
+                end
                 if string.match(matches[2], '^%d+$') then
                     if database[tostring(matches[2])] then
                         return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
