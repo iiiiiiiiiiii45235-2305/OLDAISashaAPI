@@ -1,7 +1,7 @@
 return {
     news = "SASHA'S NEWS\n" ..
-    "Inline keyboard to set the language with !start (private) and !setlang (private and groups(owner^)).\n" ..
-    "![Un]Restrict and !Restrictions commands to manage telegram's restrictions (banhammer)",
+    "Inline keyboard of the tagalert function (check_tag).\n" ..
+    "Now mentions can be used in all commands except multiple ones.",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
