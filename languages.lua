@@ -1,7 +1,8 @@
 return {
     news = "SASHA'S NEWS\n" ..
     "Inline keyboard of the tagalert function (check_tag).\n" ..
-    "Now mentions can be used in all commands except multiple ones.",
+    "Now mentions can be used in all commands except multiple ones.\n" ..
+    "Checkmsg command (msg_checks).\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
