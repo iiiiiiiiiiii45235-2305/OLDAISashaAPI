@@ -187,7 +187,7 @@ end
 
 function getChatMember(chat_id, user_id)
     if not string.match(user_id, '^%*%d') then
-        if sendChatAction(chat_id, 'typing') then
+        if sendChatAction(chat_id, 'typing', true) then
             local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
             return sendRequest(url)
         else
@@ -283,7 +283,7 @@ end
     can_pin_messages = true,  -- supergroups
     can_promote_members = true]]
 function promoteChatMember(chat_id, user_id, permissions)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
         if permissions then
@@ -320,7 +320,7 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date)
     can_send_media_messages = true, -- implies can_send_messages
     can_send_other_messages = true, -- implies can_send_media_messages
     can_add_web_page_previews = true -- implies can_send_media_messages}]]
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/restrictChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
         if until_date then
@@ -357,7 +357,7 @@ function leaveChat(chat_id)
 end
 
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         if text then
             if type(text) ~= 'table' then
                 text = tostring(text)
@@ -466,7 +466,7 @@ function sendLog(text, parse_mode, novardump)
 end
 
 function forwardMessage(chat_id, from_chat_id, message_id)
-    if sendChatAction(chat_id, 'typing') and sendChatAction(from_chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) and sendChatAction(from_chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/forwardMessage?chat_id=' .. chat_id ..
         '&from_chat_id=' .. from_chat_id ..
@@ -514,7 +514,7 @@ function forwardLog(from_chat_id, message_id)
 end
 
 function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
         if parse_mode then
             if parse_mode:lower() == 'html' then
@@ -571,7 +571,7 @@ function answerCallbackQuery(callback_query_id, text, show_alert)
 end
 
 function editMessageText(chat_id, message_id, text, keyboard, parse_mode)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/editMessageText?chat_id=' .. chat_id ..
         '&message_id=' .. message_id ..
@@ -610,16 +610,16 @@ function editMessageText(chat_id, message_id, text, keyboard, parse_mode)
     end
 end
 
-function sendChatAction(chat_id, action)
+function sendChatAction(chat_id, action, no_log)
     -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location, record_videonote, upload_videonote
     local url = BASE_URL ..
     '/sendChatAction?chat_id=' .. chat_id ..
     '&action=' .. action
-    return sendRequest(url)
+    return sendRequest(url, no_log)
 end
 
 function deleteMessage(chat_id, message_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/deleteMessage?chat_id=' .. chat_id ..
         '&message_id=' .. message_id
@@ -636,7 +636,7 @@ function deleteMessage(chat_id, message_id)
 end
 
 function pinChatMessage(chat_id, message_id, send_sound)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/pinChatMessage?chat_id=' .. chat_id ..
         '&message_id=' .. message_id
@@ -656,7 +656,7 @@ function pinChatMessage(chat_id, message_id, send_sound)
 end
 
 function unpinChatMessage(chat_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/unpinChatMessage?chat_id=' .. chat_id
         local res, code = sendRequest(url)
@@ -671,7 +671,7 @@ function unpinChatMessage(chat_id)
 end
 
 function exportChatInviteLink(chat_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/exportChatInviteLink?chat_id=' .. chat_id
         local obj_link = sendRequest(url)
         if type(obj_link) == 'table' then
@@ -684,7 +684,7 @@ function exportChatInviteLink(chat_id)
 end
 
 function setChatTitle(chat_id, title)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/setChatTitle?chat_id=' .. chat_id ..
         '&title=' .. title
         local res, code = sendRequest(url)
@@ -702,7 +702,7 @@ end
 
 -- supergroups/channels only
 function setChatDescription(chat_id, description)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/setChatDescription?chat_id=' .. chat_id ..
         '&description=' .. description
         local res, code = sendRequest(url)
@@ -717,7 +717,7 @@ function setChatDescription(chat_id, description)
 end
 
 function deleteChatPhoto(chat_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/deleteChatPhoto?chat_id=' .. chat_id
         local res, code = sendRequest(url)
 
@@ -733,7 +733,7 @@ end
 ----------------------------By Id-----------------------------------------
 
 function setChatPhotoId(chat_id, file_id)
-    if sendChatAction(chat_id, 'upload_photo') then
+    if sendChatAction(chat_id, 'upload_photo', true) then
         if file_id then
             local download_link = getFile(file_id)
             if download_link.result then
@@ -751,7 +751,7 @@ function setChatPhotoId(chat_id, file_id)
 end
 
 function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'upload_photo') then
+    if sendChatAction(chat_id, 'upload_photo', true) then
         local url = BASE_URL ..
         '/sendPhoto?chat_id=' .. chat_id ..
         '&photo=' .. file_id
@@ -784,7 +784,7 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendStickerId(chat_id, file_id, reply_to_message_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/sendSticker?chat_id=' .. chat_id ..
         '&sticker=' .. file_id
@@ -812,7 +812,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
 end
 
 function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'record_audio') then
+    if sendChatAction(chat_id, 'record_audio', true) then
         local url = BASE_URL ..
         '/sendVoice?chat_id=' .. chat_id ..
         '&voice=' .. file_id
@@ -845,7 +845,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'upload_audio') then
+    if sendChatAction(chat_id, 'upload_audio', true) then
         local url = BASE_URL ..
         '/sendAudio?chat_id=' .. chat_id ..
         '&audio=' .. file_id
@@ -878,7 +878,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
-    if sendChatAction(chat_id, 'record_videonote') then
+    if sendChatAction(chat_id, 'record_videonote', true) then
         local url = BASE_URL ..
         '/sendVideoNote?chat_id=' .. chat_id ..
         '&video_note=' .. file_id
@@ -906,7 +906,7 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
 end
 
 function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'upload_video') then
+    if sendChatAction(chat_id, 'upload_video', true) then
         local url = BASE_URL ..
         '/sendVideo?chat_id=' .. chat_id ..
         '&video=' .. file_id
@@ -939,7 +939,7 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'upload_document') then
+    if sendChatAction(chat_id, 'upload_document', true) then
         local url = BASE_URL ..
         '/sendDocument?chat_id=' .. chat_id ..
         '&document=' .. file_id
@@ -979,7 +979,7 @@ function curlRequest(curl_command)
 end
 
 function setChatPhoto(chat_id, photo)
-    if sendChatAction(chat_id, 'upload_photo') then
+    if sendChatAction(chat_id, 'upload_photo', true) then
         local url = BASE_URL .. '/setChatPhoto'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
         local obj = getChat(chat_id)
@@ -990,7 +990,7 @@ function setChatPhoto(chat_id, photo)
 end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'upload_photo') then
+    if sendChatAction(chat_id, 'upload_photo', true) then
         local url = BASE_URL .. '/sendPhoto'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
         local reply = false
@@ -1009,7 +1009,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
 end
 
 function sendSticker(chat_id, sticker, reply_to_message_id)
-    if sendChatAction(chat_id, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/sendSticker'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
         local reply = false
@@ -1025,7 +1025,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
 end
 
 function sendVoice(chat_id, voice, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'record_audio') then
+    if sendChatAction(chat_id, 'record_audio', true) then
         local url = BASE_URL .. '/sendVoice'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
         if caption then
@@ -1049,7 +1049,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
 end
 
 function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title)
-    if sendChatAction(chat_id, 'upload_audio') then
+    if sendChatAction(chat_id, 'upload_audio', true) then
         local url = BASE_URL .. '/sendAudio'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
         if caption then
@@ -1079,7 +1079,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
 end
 
 function sendVideo(chat_id, video, reply_to_message_id, caption, duration, performer, title)
-    if sendChatAction(chat_id, 'upload_video') then
+    if sendChatAction(chat_id, 'upload_video', true) then
         local url = BASE_URL .. '/sendVideo'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
         local reply = false
@@ -1101,7 +1101,7 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
 end
 
 function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length)
-    if sendChatAction(chat_id, 'record_videonote') then
+    if sendChatAction(chat_id, 'record_videonote', true) then
         local url = BASE_URL .. '/sendVideoNote'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
         local reply = false
@@ -1123,7 +1123,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
 end
 
 function sendDocument(chat_id, document, caption, reply_to_message_id)
-    if sendChatAction(chat_id, 'upload_document') then
+    if sendChatAction(chat_id, 'upload_document', true) then
         local url = BASE_URL .. '/sendDocument'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
         local reply = false
@@ -1139,7 +1139,7 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
 end
 
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
-    if sendChatAction(chat_id, 'find_location') then
+    if sendChatAction(chat_id, 'find_location', true) then
         local url = BASE_URL ..
         '/sendLocation?chat_id=' .. chat_id ..
         '&latitude=' .. latitude ..
@@ -1437,7 +1437,7 @@ end
 
 -- call this to kick
 function kickUser(executer, target, chat_id, reason)
-    if sendChatAction(chat_id, 'typing') and sendChatAction(executer, 'typing') and sendChatAction(target, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) and sendChatAction(executer, 'typing', true) and sendChatAction(target, 'typing', true) then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
@@ -1497,7 +1497,7 @@ end
 
 -- call this to ban
 function banUser(executer, target, chat_id, reason, until_date)
-    if sendChatAction(chat_id, 'typing') and sendChatAction(executer, 'typing') and sendChatAction(target, 'typing') then
+    if sendChatAction(chat_id, 'typing', true) and sendChatAction(executer, 'typing', true) and sendChatAction(target, 'typing', true) then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
