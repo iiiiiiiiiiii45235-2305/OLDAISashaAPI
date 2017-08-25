@@ -98,7 +98,7 @@ local function run(msg, matches)
                             end
                         elseif matches[2] == 'GOTO' then
                             if msg.from.username then
-                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
+                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
                                 if res then
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
@@ -106,15 +106,15 @@ local function run(msg, matches)
                                 end
                             else
                                 local sent = false
-                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
+                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
                                 if res then
                                     sent = true
                                 else
-                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3])
+                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3])
                                     if res then
                                         sent = true
                                     else
-                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
+                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
                                         if res then
                                             sent = true
                                         end
@@ -281,6 +281,7 @@ local function pre_process(msg)
                                     text = text .. msg.caption
                                 end
                             end
+                            text = text .. '\n' .. '\n#tag' .. user.id
                             sendMessage(user.id, text)
                             sendKeyboard(user.id, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                         end
@@ -322,6 +323,7 @@ local function pre_process(msg)
                                         text = text .. msg.caption
                                     end
                                 end
+                                text = text .. '\n' .. '\n#tag' .. usernames[i]
                                 sendMessage(usernames[i], text)
                                 sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                             end
@@ -362,6 +364,7 @@ local function pre_process(msg)
                                                     text = text .. msg.caption
                                                 end
                                             end
+                                            text = text .. '\n' .. '\n#tag' .. nicknames[i]
                                             sendMessage(nicknames[i], text)
                                             sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                                         end
