@@ -1,6 +1,6 @@
 notified = { }
 
-local function keyboard_tag(chat_id, message_id, callback)
+local function keyboard_tag(chat_id, message_id, callback, other_message_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
 
@@ -12,7 +12,7 @@ local function keyboard_tag(chat_id, message_id, callback)
         keyboard.inline_keyboard[2][1] = { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' }
     else
         keyboard.inline_keyboard[1] = { }
-        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].deleteUp, callback_data = 'check_tagDELETEUP' .. message_id .. chat_id }
+        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].deleteUp, callback_data = 'check_tagDELETEUP' .. chat_id }
     end
 
     return keyboard
@@ -87,46 +87,43 @@ local function run(msg, matches)
                     if matches[2] == 'ALREADYREAD' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
                         deleteMessage(msg.chat.id, msg.message_id)
-                    elseif matches[3] and matches[4] then
+                    elseif matches[3] and not matches[4] then
                         if matches[2] == 'DELETEUP' then
-                            if deleteMessage(matches[4], matches[3]) then
+                            if deleteMessage(matches[3], msg.message_id) then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageAlreadyDeleted, false)
                             end
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } } } })
-                        elseif matches[2] == 'GOTO' then
+                        end
+                    elseif matches[3] and matches[4] then
+                        if matches[2] == 'GOTO' then
                             if msg.from.username then
-                                local res = sendMessage(matches[4], 'UP @' .. msg.from.username, false, matches[3])
+                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username, false, keyboard_tag(matches[4], matches[3], true), matches[3])
                                 if res then
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, keyboard_tag(matches[4], res.result.message_id, true))
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
                             else
                                 local sent = false
-                                local res = sendMessage(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', 'markdown', matches[3])
+                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', 'markdown', keyboard_tag(matches[4], matches[3], true), matches[3])
                                 if res then
                                     sent = true
                                 else
-                                    res = sendMessage(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', 'html', matches[3])
+                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', 'html', keyboard_tag(matches[4], matches[3], true), matches[3])
                                     if res then
                                         sent = true
                                     else
-                                        res = sendMessage(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', false, matches[3])
+                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', false, keyboard_tag(matches[4], matches[3], true), matches[3])
                                         if res then
                                             sent = true
                                         end
                                     end
                                 end
                                 if sent then
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, false)
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo, keyboard_tag(matches[4], res.result.message_id, true))
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].whatDoYouWantToDo)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
                             end
                         end
