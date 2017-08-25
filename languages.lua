@@ -715,6 +715,7 @@ return {
 
         -- msg_checks.lua --
         checkMsg = "Questo messaggio viola i seguenti blocchi/muti:\n",
+        checkMsgClean = "Questo messaggio non viola alcun blocco/muto.",
 
         -- plugins.lua --
         enabled = " abilitato.",
@@ -1972,6 +1973,7 @@ return {
 
         -- msg_checks.lua --
         checkMsg = "This message violates the following locks/mutes:\n",
+        checkMsgClean = "This message doesn't violate any lock/mute.",
 
         -- plugins.lua --
         enabled = " enabled.",

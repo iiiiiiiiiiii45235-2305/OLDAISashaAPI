@@ -353,7 +353,11 @@ local function test_msg(msg, settings)
             end
         end
     end
-    return text
+    if text == langs[msg.lang].checkMsg then
+        return langs[msg.lang].checkMsgClean
+    else
+        return text
+    end
 end
 
 local function action(msg, strict, reason)
