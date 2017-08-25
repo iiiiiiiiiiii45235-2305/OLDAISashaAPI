@@ -86,7 +86,6 @@ local function run(msg, matches)
                 if matches[2] then
                     if matches[2] == 'ALREADYREAD' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
-                        deleteMessage(msg.chat.id, msg.message_id)
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'DELETEUP' then
                             if tonumber(matches[3]) == tonumber(msg.from.id) then
@@ -104,7 +103,6 @@ local function run(msg, matches)
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                                 end
-                                deleteMessage(msg.chat.id, msg.message_id)
                             else
                                 local sent = false
                                 local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
@@ -126,7 +124,6 @@ local function run(msg, matches)
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                                 end
-                                deleteMessage(msg.chat.id, msg.message_id)
                             end
                         end
                     end
@@ -284,8 +281,7 @@ local function pre_process(msg)
                                 end
                             end
                             text = text .. '\n#tag' .. user.id
-                            sendMessage(user.id, text)
-                            sendKeyboard(user.id, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
+                            sendKeyboard(user.id, text, keyboard_tag(msg.chat.id, msg.message_id))
                         end
                     end
                 end
@@ -326,8 +322,7 @@ local function pre_process(msg)
                                     end
                                 end
                                 text = text .. '\n#tag' .. usernames[i]
-                                sendMessage(usernames[i], text)
-                                sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
+                                sendKeyboard(usernames[i], text, keyboard_tag(msg.chat.id, msg.message_id))
                             end
                         end
                     end
@@ -367,8 +362,7 @@ local function pre_process(msg)
                                                 end
                                             end
                                             text = text .. '\n#tag' .. nicknames[i]
-                                            sendMessage(nicknames[i], text)
-                                            sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
+                                            sendKeyboard(nicknames[i], text, keyboard_tag(msg.chat.id, msg.message_id))
                                         end
                                     end
                                 end
