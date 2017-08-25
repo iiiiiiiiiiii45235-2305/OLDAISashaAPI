@@ -679,7 +679,7 @@ local function run(msg, matches)
             end
         end
         if msg.reply then
-            return test_msg(msg.reply_to_message, settings)
+            return sendReply(msg.reply_to_message, test_msg(msg.reply_to_message, settings))
         elseif matches[2] then
             return test_msg(msg, settings)
         end
