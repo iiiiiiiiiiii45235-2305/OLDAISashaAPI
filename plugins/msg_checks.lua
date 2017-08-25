@@ -1,47 +1,35 @@
 local test_settings = {
-    goodbye = nil,
-    group_type = 'Unknown',
-    moderators = { },
-    photo = nil,
-    rules = nil,
-    set_name = 'TITLE',
-    set_owner = '41400331',
-    settings =
+    flood = true,
+    flood_max = 5,
+    lock_arabic = true,
+    lock_bots = true,
+    lock_group_link = true,
+    lock_leave = true,
+    lock_link = true,
+    lock_member = true,
+    lock_name = true,
+    lock_photo = true,
+    lock_rtl = true,
+    lock_spam = true,
+    mutes =
     {
-        flood = true,
-        flood_max = 5,
-        lock_arabic = true,
-        lock_bots = true,
-        lock_group_link = true,
-        lock_leave = true,
-        lock_link = true,
-        lock_member = true,
-        lock_name = true,
-        lock_photo = true,
-        lock_rtl = true,
-        lock_spam = true,
-        mutes =
-        {
-            all = true,
-            audio = true,
-            contact = true,
-            document = true,
-            gif = true,
-            location = true,
-            photo = true,
-            sticker = true,
-            text = true,
-            tgservice = true,
-            video = true,
-            video_note = true,
-            voice_note = true,
-        },
-        set_link = nil,
-        strict = true,
-        warn_max = 3,
+        all = true,
+        audio = true,
+        contact = true,
+        document = true,
+        gif = true,
+        location = true,
+        photo = true,
+        sticker = true,
+        text = true,
+        tgservice = true,
+        video = true,
+        video_note = true,
+        voice_note = true,
     },
-    welcome = nil,
-    welcomemembers = 0,
+    set_link = nil,
+    strict = true,
+    warn_max = 3,
 }
 
 local function test_text_link(text, group_link)
@@ -152,33 +140,33 @@ end
     return false
 end]]
 
-local function test_msg(msg)
-    local lock_arabic = test_settings.settings.lock_arabic
-    local lock_bots = test_settings.settings.lock_bots
-    local lock_leave = test_settings.settings.lock_leave
-    local lock_link = test_settings.settings.lock_link
+local function test_msg(msg, settings)
+    local lock_arabic = settings.lock_arabic
+    local lock_bots = settings.lock_bots
+    local lock_leave = settings.lock_leave
+    local lock_link = settings.lock_link
     local group_link = nil
-    if test_settings.settings.set_link then
-        group_link = test_settings.settings.set_link
+    if settings.set_link then
+        group_link = settings.set_link
     end
-    local lock_member = test_settings.settings.lock_member
-    local lock_rtl = test_settings.settings.lock_rtl
-    local lock_spam = test_settings.settings.lock_spam
-    local strict = test_settings.settings.strict
+    local lock_member = settings.lock_member
+    local lock_rtl = settings.lock_rtl
+    local lock_spam = settings.lock_spam
+    local strict = settings.strict
 
-    local mute_all = test_settings.settings.mutes['all']
-    local mute_audio = test_settings.settings.mutes['audio']
-    local mute_contact = test_settings.settings.mutes['contact']
-    local mute_document = test_settings.settings.mutes['document']
-    local mute_gif = test_settings.settings.mutes['gif']
-    local mute_location = test_settings.settings.mutes['location']
-    local mute_photo = test_settings.settings.mutes['photo']
-    local mute_sticker = test_settings.settings.mutes['sticker']
-    local mute_text = test_settings.settings.mutes['text']
-    local mute_tgservice = test_settings.settings.mutes['tgservice']
-    local mute_video = test_settings.settings.mutes['video']
-    local mute_video_note = test_settings.settings.mutes['video_note']
-    local mute_voice_note = test_settings.settings.mutes['voice_note']
+    local mute_all = settings.mutes['all']
+    local mute_audio = settings.mutes['audio']
+    local mute_contact = settings.mutes['contact']
+    local mute_document = settings.mutes['document']
+    local mute_gif = settings.mutes['gif']
+    local mute_location = settings.mutes['location']
+    local mute_photo = settings.mutes['photo']
+    local mute_sticker = settings.mutes['sticker']
+    local mute_text = settings.mutes['text']
+    local mute_tgservice = settings.mutes['tgservice']
+    local mute_video = settings.mutes['video']
+    local mute_video_note = settings.mutes['video_note']
+    local mute_voice_note = settings.mutes['voice_note']
 
     local text = langs[msg.lang].checkMsg
     if not msg.service then
@@ -680,10 +668,16 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'checkmsg' then
+        local settings = clone_table(test_settings)
+        if data[tostring(msg.chat.id)] then
+            if data[tostring(msg.chat.id)].settings then
+                settings = clone_table(data[tostring(msg.chat.id)].settings)
+            end
+        end
         if msg.reply then
-            return test_msg(msg.reply_to_message)
+            return test_msg(msg.reply_to_message, settings)
         elseif matches[2] then
-            return test_msg(msg)
+            return test_msg(msg, settings)
         end
     end
 end
@@ -698,7 +692,7 @@ local function pre_process(msg)
                 local settings = nil
                 if data[tostring(msg.chat.id)] then
                     if data[tostring(msg.chat.id)].settings then
-                        settings = data[tostring(msg.chat.id)].settings
+                        settings = clone_table(data[tostring(msg.chat.id)].settings)
                     end
                 end
                 if settings then
