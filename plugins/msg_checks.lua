@@ -182,6 +182,7 @@ local function test_msg(msg)
 
     local text = ''
     if not msg.service then
+        print('not service')
         if isMutedUser(msg.chat.id, msg.from.id) then
             text = text .. langs[msg.lang].reasonMutedUser .. '\n'
         end
@@ -190,6 +191,7 @@ local function test_msg(msg)
         end
         if msg.entities then
             for k, v in pairs(msg.entities) do
+                print('entities')
                 if v.url then
                     if lock_link then
                         if check_if_link(v.url, group_link) then
@@ -200,6 +202,7 @@ local function test_msg(msg)
             end
         end
         if msg.text then
+            print('text')
             if mute_text then
                 text = text .. langs[msg.lang].reasonMutedText .. '\n'
             end
@@ -217,6 +220,7 @@ local function test_msg(msg)
                 end
                 local tmp = msg.text
                 while string.match(tmp, '@[^%s]+') do
+                    print('check link text')
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         text = text .. langs[msg.lang].reasonLockLink .. '\n'
                     else
@@ -238,6 +242,7 @@ local function test_msg(msg)
             end
         end
         if msg.caption then
+            print('caption')
             if mute_text then
                 text = text .. langs[msg.lang].reasonMutedText .. '\n'
             end
@@ -247,6 +252,7 @@ local function test_msg(msg)
                 end
                 local tmp = msg.caption
                 while string.match(tmp, '@[^%s]+') do
+                    print('check link caption')
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         text = text .. langs[msg.lang].reasonLockLink .. '\n'
                     else
@@ -269,6 +275,7 @@ local function test_msg(msg)
         end
         -- msg.media checks
         if msg.media and msg.media_type then
+            print('media')
             if msg.media_type == 'audio' then
                 if mute_audio then
                     text = text .. langs[msg.lang].reasonMutedAudio .. '\n'
@@ -312,6 +319,7 @@ local function test_msg(msg)
             end
         end
     else
+        print('service')
         if mute_tgservice then
             text = text .. langs[msg.lang].reasonMutedTgservice .. '\n'
         end
