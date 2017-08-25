@@ -1437,7 +1437,7 @@ end
 
 -- call this to kick
 function kickUser(executer, target, chat_id, reason)
-    if sendChatAction(chat_id, 'typing', true) and sendChatAction(executer, 'typing', true) and sendChatAction(target, 'typing', true) then
+    if sendChatAction(chat_id, 'typing', true) then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
@@ -1497,7 +1497,7 @@ end
 
 -- call this to ban
 function banUser(executer, target, chat_id, reason, until_date)
-    if sendChatAction(chat_id, 'typing', true) and sendChatAction(executer, 'typing', true) and sendChatAction(target, 'typing', true) then
+    if sendChatAction(chat_id, 'typing', true) then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
