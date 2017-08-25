@@ -98,7 +98,7 @@ local function run(msg, matches)
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'GOTO' then
                             if msg.from.username then
-                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username, false, keyboard_tag(matches[4], matches[3], true), matches[3])
+                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username, keyboard_tag(matches[4], matches[3], true), false, matches[3])
                                 if res then
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
@@ -106,15 +106,15 @@ local function run(msg, matches)
                                 end
                             else
                                 local sent = false
-                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', 'markdown', keyboard_tag(matches[4], matches[3], true), matches[3])
+                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true), 'markdown', matches[3])
                                 if res then
                                     sent = true
                                 else
-                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', 'html', keyboard_tag(matches[4], matches[3], true), matches[3])
+                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>', keyboard_tag(matches[4], matches[3], true), 'html', matches[3])
                                     if res then
                                         sent = true
                                     else
-                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', false, keyboard_tag(matches[4], matches[3], true), matches[3])
+                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')', keyboard_tag(matches[4], matches[3], true), false, matches[3])
                                         if res then
                                             sent = true
                                         end
