@@ -533,6 +533,7 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
+        print(url)
         local res, code = sendRequest(url)
 
         if not res and code then
