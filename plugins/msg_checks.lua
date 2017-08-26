@@ -140,7 +140,16 @@ end
     return false
 end]]
 
-local function test_msg(msg, settings)
+local function action(msg, strict, reason)
+    deleteMessage(msg.chat.id, msg.message_id)
+    if strict then
+        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
+    else
+        sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
+    end
+end
+
+local function check_msg(msg, settings, pre_process_function)
     local lock_arabic = settings.lock_arabic
     local lock_bots = settings.lock_bots
     local lock_leave = settings.lock_leave
@@ -171,17 +180,35 @@ local function test_msg(msg, settings)
     local text = langs[msg.lang].checkMsg
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
-            text = text .. langs[msg.lang].reasonMutedUser
+            if pre_process_function then
+                print('muted user')
+                deleteMessage(msg.chat.id, msg.message_id)
+                return nil
+            else
+                text = text .. langs[msg.lang].reasonMutedUser
+            end
         end
         if mute_all then
-            text = text .. langs[msg.lang].reasonMutedAll
+            if pre_process_function then
+                print('all muted')
+                deleteMessage(msg.chat.id, msg.message_id)
+                return nil
+            else
+                text = text .. langs[msg.lang].reasonMutedAll
+            end
         end
         if msg.entities then
             for k, v in pairs(msg.entities) do
                 if v.url then
                     if lock_link then
                         if check_if_link(v.url, group_link) then
-                            text = text .. langs[msg.lang].reasonLockLinkEntities
+                            if pre_process_function then
+                                print('link found entities')
+                                action(msg, strict, langs[msg.lang].reasonLockLinkEntities)
+                                return nil
+                            else
+                                text = text .. langs[msg.lang].reasonLockLinkEntities
+                            end
                         end
                     end
                 end
@@ -189,266 +216,49 @@ local function test_msg(msg, settings)
         end
         if msg.text then
             if mute_text then
-                text = text .. langs[msg.lang].reasonMutedText
+                if pre_process_function then
+                    print('text muted')
+                    action(msg, strict, langs[msg.lang].reasonMutedText)
+                    return nil
+                else
+                    text = text .. langs[msg.lang].reasonMutedText
+                end
             end
             -- msg.text checks
             if lock_spam then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 local _nl, real_digits = string.gsub(msg.text, '%d', '')
                 if string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
-                    text = text .. langs[msg.lang].reasonLockSpam
-                end
-            end
-            if lock_link then
-                if check_if_link(msg.text, group_link) then
-                    text = text .. langs[msg.lang].reasonLockLink
-                end
-                local tmp = msg.text
-                while string.match(tmp, '@[^%s]+') do
-                    if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        text = text .. langs[msg.lang].reasonLockLink
-                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
+                    if pre_process_function then
+                        print('spam found')
+                        action(msg, strict, langs[msg.lang].reasonLockSpam)
+                        return nil
                     else
-                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                    end
-                end
-            end
-            if lock_arabic then
-                local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
-                if is_squig_msg then
-                    text = text .. langs[msg.lang].reasonLockArabic
-                end
-            end
-            if lock_rtl then
-                local is_rtl = msg.from.print_name:match("‮") or msg.text:match("‮")
-                if is_rtl then
-                    text = text .. langs[msg.lang].reasonLockRTL
-                end
-            end
-        end
-        if msg.caption then
-            if mute_text then
-                text = text .. langs[msg.lang].reasonMutedText
-            end
-            if lock_link then
-                if check_if_link(msg.caption, group_link) then
-                    text = text .. langs[msg.lang].reasonLockLink
-                end
-                local tmp = msg.caption
-                while string.match(tmp, '@[^%s]+') do
-                    if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        text = text .. langs[msg.lang].reasonLockLink
-                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                    else
-                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                    end
-                end
-            end
-            if lock_arabic then
-                local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
-                if is_squig_caption then
-                    text = text .. langs[msg.lang].reasonLockArabic
-                end
-            end
-            if lock_rtl then
-                local is_rtl = msg.from.print_name:match("‮") or msg.caption:match("‮")
-                if is_rtl then
-                    text = text .. langs[msg.lang].reasonLockRTL
-                end
-            end
-        end
-        -- msg.media checks
-        if msg.media and msg.media_type then
-            if msg.media_type == 'audio' then
-                if mute_audio then
-                    text = text .. langs[msg.lang].reasonMutedAudio
-                end
-            elseif msg.media_type == 'contact' then
-                if mute_contact then
-                    text = text .. langs[msg.lang].reasonMutedContacts
-                end
-            elseif msg.media_type == 'document' then
-                if mute_document then
-                    text = text .. langs[msg.lang].reasonMutedDocuments
-                end
-            elseif msg.media_type == 'gif' then
-                if mute_gif then
-                    text = text .. langs[msg.lang].reasonMutedGifs
-                end
-            elseif msg.media_type == 'location' then
-                if mute_location then
-                    text = text .. langs[msg.lang].reasonMutedLocations
-                end
-            elseif msg.media_type == 'photo' then
-                if mute_photo then
-                    text = text .. langs[msg.lang].reasonMutedPhoto
-                end
-            elseif msg.media_type == 'sticker' then
-                if mute_sticker then
-                    text = text .. langs[msg.lang].reasonMutedStickers
-                end
-            elseif msg.media_type == 'video' then
-                if mute_video then
-                    text = text .. langs[msg.lang].reasonMutedVideo
-                end
-            elseif msg.media_type == 'video_note' then
-                if mute_video_note then
-                    text = text .. langs[msg.lang].reasonMutedVideonotes
-                end
-            elseif msg.media_type == 'voice_note' then
-                if mute_voice_note then
-                    text = text .. langs[msg.lang].reasonMutedVoicenotes
-                end
-            end
-        end
-    else
-        if mute_tgservice then
-            text = text .. langs[msg.lang].reasonMutedTgservice
-        end
-        if msg.service_type == 'chat_add_user_link' then
-            if lock_spam then
-                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
-                    text = text .. langs[msg.lang].reasonLockSpam
-                end
-            end
-            if lock_rtl then
-                local is_rtl_name = msg.from.print_name:match("‮")
-                if is_rtl_name then
-                    text = text .. langs[msg.lang].reasonLockRTL
-                end
-            end
-            if lock_member then
-                text = text .. langs[msg.lang].reasonLockMembers
-            end
-        elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
-            for k, v in pairs(msg.added) do
-                if lock_spam then
-                    local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                    if string.len(v.print_name) > 70 or ctrl_chars > 40 then
                         text = text .. langs[msg.lang].reasonLockSpam
                     end
                 end
-                if lock_rtl then
-                    local is_rtl_name = v.print_name:match("‮")
-                    if is_rtl_name then
-                        text = text .. langs[msg.lang].reasonLockRTL
-                    end
-                end
-                if lock_member then
-                    text = text .. langs[msg.lang].reasonLockMembers
-                end
-                if lock_bots then
-                    if v.is_bot then
-                        text = text .. langs[msg.lang].reasonLockBots
-                    end
-                end
-            end
-        end
-        if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
-            if lock_leave then
-                if not is_mod2(msg.removed.id, msg.chat.id) then
-                    text = text .. langs[msg.lang].reasonLockLeave
-                end
-            end
-        end
-    end
-    if text == langs[msg.lang].checkMsg then
-        return langs[msg.lang].checkMsgClean
-    else
-        return text
-    end
-end
-
-local function action(msg, strict, reason)
-    deleteMessage(msg.chat.id, msg.message_id)
-    if strict then
-        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
-    else
-        sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
-    end
-end
-
-local function check_msg(msg, settings)
-    local lock_arabic = settings.lock_arabic
-    local lock_bots = settings.lock_bots
-    local lock_leave = settings.lock_leave
-    local lock_link = settings.lock_link
-    local group_link = nil
-    if settings.set_link then
-        group_link = settings.set_link
-    end
-    local lock_member = settings.lock_member
-    local lock_rtl = settings.lock_rtl
-    local lock_spam = settings.lock_spam
-    local strict = settings.strict
-
-    local mute_all = settings.mutes['all']
-    local mute_audio = settings.mutes['audio']
-    local mute_contact = settings.mutes['contact']
-    local mute_document = settings.mutes['document']
-    local mute_gif = settings.mutes['gif']
-    local mute_location = settings.mutes['location']
-    local mute_photo = settings.mutes['photo']
-    local mute_sticker = settings.mutes['sticker']
-    local mute_text = settings.mutes['text']
-    local mute_tgservice = settings.mutes['tgservice']
-    local mute_video = settings.mutes['video']
-    local mute_video_note = settings.mutes['video_note']
-    local mute_voice_note = settings.mutes['voice_note']
-
-    if not msg.service then
-        if isMutedUser(msg.chat.id, msg.from.id) then
-            print('muted user')
-            deleteMessage(msg.chat.id, msg.message_id)
-            return nil
-        end
-        if mute_all then
-            print('all muted')
-            deleteMessage(msg.chat.id, msg.message_id)
-            return nil
-        end
-        if msg.entities then
-            for k, v in pairs(msg.entities) do
-                if v.url then
-                    if lock_link then
-                        if check_if_link(v.url, group_link) then
-                            print('link found entities')
-                            action(msg, strict, langs[msg.lang].reasonLockLinkEntities)
-                            return nil
-                        end
-                    end
-                end
-            end
-        end
-        if msg.text then
-            if mute_text then
-                print('text muted')
-                action(msg, strict, langs[msg.lang].reasonMutedText)
-                return nil
-            end
-            -- msg.text checks
-            if lock_spam then
-                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                local _nl, real_digits = string.gsub(msg.text, '%d', '')
-                if string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
-                    print('spam found')
-                    action(msg, strict, langs[msg.lang].reasonLockSpam)
-                    return nil
-                end
             end
             if lock_link then
                 if check_if_link(msg.text, group_link) then
-                    print('link found')
-                    action(msg, strict, langs[msg.lang].reasonLockLink)
-                    return nil
+                    if pre_process_function then
+                        print('link found')
+                        action(msg, strict, langs[msg.lang].reasonLockLink)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockLink
+                    end
                 end
                 local tmp = msg.text
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        print('link (channel username) found')
-                        action(msg, strict, langs[msg.lang].reasonLockLink)
-                        return nil
+                        if pre_process_function then
+                            print('link (channel username) found')
+                            action(msg, strict, langs[msg.lang].reasonLockLink)
+                            return nil
+                        else
+                            text = text .. langs[msg.lang].reasonLockLink
+                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
+                        end
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     end
@@ -457,38 +267,59 @@ local function check_msg(msg, settings)
             if lock_arabic then
                 local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
-                    print('arabic found')
-                    action(msg, strict, langs[msg.lang].reasonLockArabic)
-                    return nil
+                    if pre_process_function then
+                        print('arabic found')
+                        action(msg, strict, langs[msg.lang].reasonLockArabic)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockArabic
+                    end
                 end
             end
             if lock_rtl then
                 local is_rtl = msg.from.print_name:match("‮") or msg.text:match("‮")
                 if is_rtl then
-                    print('rtl found')
-                    action(msg, strict, langs[msg.lang].reasonLockRTL)
-                    return nil
+                    if pre_process_function then
+                        print('rtl found')
+                        action(msg, strict, langs[msg.lang].reasonLockRTL)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockRTL
+                    end
                 end
             end
         end
         if msg.caption then
             if mute_text then
-                print('text muted')
-                action(msg, strict, langs[msg.lang].reasonMutedText)
-                return nil
+                if pre_process_function then
+                    print('text muted')
+                    action(msg, strict, langs[msg.lang].reasonMutedText)
+                    return nil
+                else
+                    text = text .. langs[msg.lang].reasonMutedText
+                end
             end
             if lock_link then
                 if check_if_link(msg.caption, group_link) then
-                    print('link found')
-                    action(msg, strict, langs[msg.lang].reasonLockLink)
-                    return nil
+                    if pre_process_function then
+                        print('link found')
+                        action(msg, strict, langs[msg.lang].reasonLockLink)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockLink
+                    end
                 end
                 local tmp = msg.caption
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        print('link (channel username) found')
-                        action(msg, strict, langs[msg.lang].reasonLockLink)
-                        return nil
+                        if pre_process_function then
+                            print('link (channel username) found')
+                            action(msg, strict, langs[msg.lang].reasonLockLink)
+                            return nil
+                        else
+                            text = text .. langs[msg.lang].reasonLockLink
+                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
+                        end
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     end
@@ -497,17 +328,25 @@ local function check_msg(msg, settings)
             if lock_arabic then
                 local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
                 if is_squig_caption then
-                    print('arabic found')
-                    action(msg, strict, langs[msg.lang].reasonLockArabic)
-                    return nil
+                    if pre_process_function then
+                        print('arabic found')
+                        action(msg, strict, langs[msg.lang].reasonLockArabic)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockArabic
+                    end
                 end
             end
             if lock_rtl then
                 local is_rtl = msg.from.print_name:match("‮") or msg.caption:match("‮")
                 if is_rtl then
-                    print('rtl found')
-                    action(msg, strict, langs[msg.lang].reasonLockRTL)
-                    return nil
+                    if pre_process_function then
+                        print('rtl found')
+                        action(msg, strict, langs[msg.lang].reasonLockRTL)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockRTL
+                    end
                 end
             end
         end
@@ -515,144 +354,216 @@ local function check_msg(msg, settings)
         if msg.media and msg.media_type then
             if msg.media_type == 'audio' then
                 if mute_audio then
-                    print('audio muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedAudio)
-                    return nil
+                    if pre_process_function then
+                        print('audio muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedAudio)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedAudio
+                    end
                 end
             elseif msg.media_type == 'contact' then
                 if mute_contact then
-                    print('contact muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedContacts)
-                    return nil
+                    if pre_process_function then
+                        print('contact muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedContacts)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedContacts
+                    end
                 end
             elseif msg.media_type == 'document' then
                 if mute_document then
-                    print('document muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedDocuments)
-                    return nil
+                    if pre_process_function then
+                        print('document muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedDocuments)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedDocuments
+                    end
                 end
             elseif msg.media_type == 'gif' then
                 if mute_gif then
-                    print('gif muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedGifs)
-                    return nil
+                    if pre_process_function then
+                        print('gif muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedGifs)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedGifs
+                    end
                 end
             elseif msg.media_type == 'location' then
                 if mute_location then
-                    print('location muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedLocations)
-                    return nil
+                    if pre_process_function then
+                        print('location muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedLocations)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedLocations
+                    end
                 end
             elseif msg.media_type == 'photo' then
                 if mute_photo then
-                    print('photo muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedPhoto)
-                    return nil
+                    if pre_process_function then
+                        print('photo muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedPhoto)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedPhoto
+                    end
                 end
             elseif msg.media_type == 'sticker' then
                 if mute_sticker then
-                    print('sticker muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedStickers)
-                    return nil
+                    if pre_process_function then
+                        print('sticker muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedStickers)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedStickers
+                    end
                 end
             elseif msg.media_type == 'video' then
                 if mute_video then
-                    print('video muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedVideo)
-                    return nil
+                    if pre_process_function then
+                        print('video muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedVideo)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedVideo
+                    end
                 end
             elseif msg.media_type == 'video_note' then
                 if mute_video_note then
-                    print('video_note muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedVideo)
-                    return nil
+                    if pre_process_function then
+                        print('video_note muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedVideonotes)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedVideonotes
+                    end
                 end
             elseif msg.media_type == 'voice_note' then
                 if mute_voice_note then
-                    print('voice_note muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedVoicenotes)
-                    return nil
+                    if pre_process_function then
+                        print('voice_note muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedVoicenotes)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedVoicenotes
+                    end
                 end
             end
         end
     else
         if mute_tgservice then
-            print('tgservice muted')
-            deleteMessage(msg.chat.id, msg.message_id)
-            return nil
+            if pre_process_function then
+                print('tgservice muted')
+                deleteMessage(msg.chat.id, msg.message_id)
+                return nil
+            else
+                text = text .. langs[msg.lang].reasonMutedTgservice
+            end
         end
         if msg.service_type == 'chat_add_user_link' then
             if lock_spam then
                 local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
-                    print('name spam found')
-                    deleteMessage(msg.chat.id, msg.message_id)
-                    if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
+                    if pre_process_function then
+                        print('name spam found')
+                        deleteMessage(msg.chat.id, msg.message_id)
+                        if strict then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
+                        end
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockSpam
                     end
-                    return nil
                 end
             end
             if lock_rtl then
                 local is_rtl_name = msg.from.print_name:match("‮")
                 if is_rtl_name then
-                    print('rtl name found')
-                    deleteMessage(msg.chat.id, msg.message_id)
-                    if strict then
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
+                    if pre_process_function then
+                        print('rtl name found')
+                        deleteMessage(msg.chat.id, msg.message_id)
+                        if strict then
+                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
+                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
+                        end
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockRTL
                     end
-                    return nil
                 end
             end
             if lock_member then
-                print('member locked')
-                deleteMessage(msg.chat.id, msg.message_id)
-                savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
-                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                return nil
+                if pre_process_function then
+                    print('member locked')
+                    deleteMessage(msg.chat.id, msg.message_id)
+                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
+                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
+                    return nil
+                else
+                    text = text .. langs[msg.lang].reasonLockMembers
+                end
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do
                 if lock_spam then
                     local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
                     if string.len(v.print_name) > 70 or ctrl_chars > 40 then
-                        print('name spam found')
-                        deleteMessage(msg.chat.id, msg.message_id)
-                        if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
+                        if pre_process_function then
+                            print('name spam found')
+                            deleteMessage(msg.chat.id, msg.message_id)
+                            if strict then
+                                savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
+                                sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
+                            end
+                            return nil
+                        else
+                            text = text .. langs[msg.lang].reasonLockSpam
                         end
-                        return nil
                     end
                 end
                 if lock_rtl then
                     local is_rtl_name = v.print_name:match("‮")
                     if is_rtl_name then
-                        print('rtl name found')
-                        deleteMessage(msg.chat.id, msg.message_id)
-                        if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
+                        if pre_process_function then
+                            print('rtl name found')
+                            deleteMessage(msg.chat.id, msg.message_id)
+                            if strict then
+                                savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
+                                sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
+                            end
+                            return nil
+                        else
+                            text = text .. langs[msg.lang].reasonLockRTL
                         end
-                        return nil
                     end
                 end
                 if lock_member then
-                    print('member locked')
-                    deleteMessage(msg.chat.id, msg.message_id)
-                    sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
-                    sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                    return nil
+                    if pre_process_function then
+                        print('member locked')
+                        deleteMessage(msg.chat.id, msg.message_id)
+                        sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
+                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
+                        sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockMembers
+                    end
                 end
                 if lock_bots then
                     if v.is_bot then
-                        print('bots locked')
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
-                        sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
-                        return nil
+                        if pre_process_function then
+                            print('bots locked')
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
+                            return nil
+                        else
+                            text = text .. langs[msg.lang].reasonLockBots
+                        end
                     end
                 end
             end
@@ -660,14 +571,26 @@ local function check_msg(msg, settings)
         if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
             if lock_leave then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
-                    print('leave locked')
-                    sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id, langs[msg.lang].reasonLockLeave))
-                    return nil
+                    if pre_process_function then
+                        print('leave locked')
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id, langs[msg.lang].reasonLockLeave))
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonLockLeave
+                    end
                 end
             end
         end
     end
-    return msg
+    if pre_process_function then
+        return msg
+    else
+        if text == langs[msg.lang].checkMsg then
+            return langs[msg.lang].checkMsgClean
+        else
+            return text
+        end
+    end
 end
 
 local function run(msg, matches)
@@ -679,9 +602,9 @@ local function run(msg, matches)
             end
         end
         if msg.reply then
-            return sendReply(msg.reply_to_message, test_msg(msg.reply_to_message, settings))
+            return sendReply(msg.reply_to_message, check_msg(msg.reply_to_message, settings), false)
         elseif matches[2] then
-            return test_msg(msg, settings)
+            return check_msg(msg, settings, false)
         end
     end
 end
@@ -700,7 +623,7 @@ local function pre_process(msg)
                     end
                 end
                 if settings then
-                    return check_msg(msg, settings)
+                    return check_msg(msg, settings, true)
                 end
             end
         end
