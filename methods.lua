@@ -589,7 +589,7 @@ function editMessageText(chat_id, message_id, text, keyboard, parse_mode)
         end
         url = url .. '&disable_web_page_preview=true'
         if keyboard then
-            url = url .. '&reply_markup=' .. JSON.encode(keyboard)
+            url = url .. '&reply_markup=' .. URL.escape(JSON.encode(keyboard))
         end
         local res, code = sendRequest(url)
 
