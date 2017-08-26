@@ -823,7 +823,7 @@ local function keyboard_settings_list(chat_id)
     column = 1
     keyboard.inline_keyboard[row] = { }
     -- start flood part
-    keyboard.inline_keyboard[row][column] = { text = '<', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     column = column + 1
     if data[tostring(chat_id)].settings.flood then
         keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
@@ -831,14 +831,14 @@ local function keyboard_settings_list(chat_id)
         keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '>', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     -- end flood part
 
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
     -- start warn part
-    keyboard.inline_keyboard[row][column] = { text = '<', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
     column = column + 1
     if tonumber(data[tostring(chat_id)].settings.warn_max) ~= 0 then
         -- disable warns
@@ -848,7 +848,7 @@ local function keyboard_settings_list(chat_id)
         keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS3' .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '>', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
     -- end warn part
 
     row = row + 1
