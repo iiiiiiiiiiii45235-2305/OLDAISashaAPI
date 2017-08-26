@@ -559,7 +559,29 @@ end
 function sendKeyboardExperimental(chat_id, text, keyboard, parse_mode, reply_to_message_id)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/sendMessage'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id
+        local curl_command = 'curl -X POST ' .. url .. ' -H "content_type=application/json'
+        local params = { }
+        params['chat_id'] = chat_id
+        if parse_mode then
+            if parse_mode:lower() == 'html' then
+                params['parse_mode'] = 'HTML'
+            elseif parse_mode:lower() == 'markdown' then
+                params['parse_mode'] = 'Markdown'
+            else
+                -- no parse_mode
+            end
+        end
+        text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
+        params['text'] = URL.escape(text)
+        params['disable_web_page_preview'] = true
+        params['reply_markup'] = JSON.encode(keyboard)
+        local reply = false
+        if reply_to_message_id then
+            params['reply_to_message_id'] = reply_to_message_id
+            reply = true
+        end
+        curl_command = curl_command .. '" -d ' .. JSON.encode(params)
+        --[[
         if parse_mode then
             if parse_mode:lower() == 'html' then
                 curl_command = curl_command .. '" -F "parse_mode=HTML'
@@ -577,8 +599,8 @@ function sendKeyboardExperimental(chat_id, text, keyboard, parse_mode, reply_to_
         if reply_to_message_id then
             curl_command = curl_command .. '" -F "reply_to_message_id=' .. reply_to_message_id
             reply = true
-        end
-        print(url)
+        end]]
+        print(curl_command)
         local obj = getChat(chat_id)
         local sent_msg = { from = bot, chat = obj, text = text, cb = true, reply = reply }
         print_msg(sent_msg)
