@@ -24,7 +24,7 @@ local function get_object_info(obj, chat_id)
     printvardump(obj)
     if obj then
         local text = langs[lang].infoWord
-        if obj.type == 'bot' then
+        if obj.type == 'bot' or obj.is_bot then
             text = text .. langs[lang].chatType .. langs[lang].botWord
             if obj.first_name then
                 if obj.first_name == '' then
