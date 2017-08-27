@@ -465,15 +465,6 @@ local function run(msg, matches)
                         end
                     end
                 end
-                if msg.entities then
-                    if msg.entities[1] then
-                        if msg.entities[1].type == 'text_mention' then
-                            local obj = msg.entities[1].user
-                            obj.type = 'private'
-                            return get_object_info(obj, msg.chat.id)
-                        end
-                    end
-                end
                 if string.match(matches[2], '^%-?%d+$') then
                     return get_object_info(getChat(matches[2]), msg.chat.id)
                 else
