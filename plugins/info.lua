@@ -646,70 +646,62 @@ local function run(msg, matches)
     if matches[1]:lower() == 'id' then
         mystat('/id')
         if msg.reply then
-            if msg.from.is_mod then
-                if matches[2] then
-                    if matches[2]:lower() == 'from' then
-                        if msg.reply_to_message.forward then
-                            if msg.reply_to_message.forward_from then
-                                return msg.reply_to_message.forward_from.id
-                            else
-                                return msg.reply_to_message.forward_from_chat.id
-                            end
+            if matches[2] then
+                if matches[2]:lower() == 'from' then
+                    if msg.reply_to_message.forward then
+                        if msg.reply_to_message.forward_from then
+                            return msg.reply_to_message.forward_from.id
                         else
-                            return langs[msg.lang].errorNoForward
+                            return msg.reply_to_message.forward_from_chat.id
                         end
+                    else
+                        return langs[msg.lang].errorNoForward
+                    end
+                else
+                    return msg.reply_to_message.from.id
+                end
+            else
+                if msg.reply_to_message.service then
+                    if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                        local text = msg.reply_to_message.adder.id .. '\n'
+                        for k, v in pairs(msg.reply_to_message.added) do
+                            text = text .. v.id .. '\n'
+                        end
+                        return text
+                    elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
+                        return msg.reply_to_message.from.id
+                    elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                        return msg.reply_to_message.remover.id .. '\n' .. msg.reply_to_message.removed.id
+                    elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
+                        return msg.reply_to_message.removed.id
                     else
                         return msg.reply_to_message.from.id
                     end
                 else
-                    if msg.reply_to_message.service then
-                        if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                            local text = msg.reply_to_message.adder.id .. '\n'
-                            for k, v in pairs(msg.reply_to_message.added) do
-                                text = text .. v.id .. '\n'
-                            end
-                            return text
-                        elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
-                            return msg.reply_to_message.from.id
-                        elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            return msg.reply_to_message.remover.id .. '\n' .. msg.reply_to_message.removed.id
-                        elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
-                            return msg.reply_to_message.removed.id
-                        else
-                            return msg.reply_to_message.from.id
-                        end
-                    else
-                        return msg.reply_to_message.from.id
-                    end
+                    return msg.reply_to_message.from.id
                 end
-            else
-                return langs[msg.lang].require_mod
             end
         elseif matches[2] and matches[2] ~= '' then
-            if msg.from.is_mod then
-                if msg.entities then
-                    for k, v in pairs(msg.entities) do
-                        -- check if there's a text_mention
-                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                local obj = getChat(msg.entities[k].user.id)
-                                if obj then
-                                    return obj.id
-                                else
-                                    return langs[msg.lang].noObject
-                                end
+            if msg.entities then
+                for k, v in pairs(msg.entities) do
+                    -- check if there's a text_mention
+                    if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                        if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                            local obj = getChat(msg.entities[k].user.id)
+                            if obj then
+                                return obj.id
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
                 end
-                local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                if obj then
-                    return obj.id
-                else
-                    return langs[msg.lang].noObject
-                end
+            end
+            local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+            if obj then
+                return obj.id
             else
-                return langs[msg.lang].require_mod
+                return langs[msg.lang].noObject
             end
         else
             return msg.from.id .. '\n' .. msg.chat.id
@@ -718,70 +710,62 @@ local function run(msg, matches)
     if matches[1]:lower() == 'username' then
         mystat('/username')
         if msg.reply then
-            if msg.from.is_mod then
-                if matches[2] then
-                    if matches[2]:lower() == 'from' then
-                        if msg.reply_to_message.forward then
-                            if msg.reply_to_message.forward_from then
-                                return msg.reply_to_message.forward_from.username or('NOUSER ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))
-                            else
-                                return msg.reply_to_message.forward_from_chat.username or 'NOUSER ' .. msg.reply_to_message.forward_from_chat.title
-                            end
+            if matches[2] then
+                if matches[2]:lower() == 'from' then
+                    if msg.reply_to_message.forward then
+                        if msg.reply_to_message.forward_from then
+                            return msg.reply_to_message.forward_from.username or('NOUSER ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))
                         else
-                            return langs[msg.lang].errorNoForward
+                            return msg.reply_to_message.forward_from_chat.username or 'NOUSER ' .. msg.reply_to_message.forward_from_chat.title
                         end
+                    else
+                        return langs[msg.lang].errorNoForward
+                    end
+                else
+                    return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
+                end
+            else
+                if msg.reply_to_message.service then
+                    if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
+                        local text =(msg.reply_to_message.adder.username or('NOUSER ' .. msg.reply_to_message.adder.first_name .. ' ' ..(msg.reply_to_message.adder.last_name or ''))) .. '\n'
+                        for k, v in pairs(msg.reply_to_message.added) do
+                            text = text ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
+                        end
+                        return text
+                    elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
+                        return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
+                    elseif msg.reply_to_message.service_type == 'chat_del_user' then
+                        return(msg.reply_to_message.remover.username or('NOUSER ' .. msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))) .. '\n' ..(msg.reply_to_message.removed.username or('NOUSER ' .. msg.reply_to_message.removed.first_name .. ' ' ..(msg.reply_to_message.removed.last_name or '')))
+                    elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
+                        return msg.reply_to_message.removed.username or('NOUSER ' .. msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))
                     else
                         return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                     end
                 else
-                    if msg.reply_to_message.service then
-                        if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                            local text =(msg.reply_to_message.adder.username or('NOUSER ' .. msg.reply_to_message.adder.first_name .. ' ' ..(msg.reply_to_message.adder.last_name or ''))) .. '\n'
-                            for k, v in pairs(msg.reply_to_message.added) do
-                                text = text ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
-                            end
-                            return text
-                        elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
-                            return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
-                        elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            return(msg.reply_to_message.remover.username or('NOUSER ' .. msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))) .. '\n' ..(msg.reply_to_message.removed.username or('NOUSER ' .. msg.reply_to_message.removed.first_name .. ' ' ..(msg.reply_to_message.removed.last_name or '')))
-                        elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
-                            return msg.reply_to_message.removed.username or('NOUSER ' .. msg.reply_to_message.remover.first_name .. ' ' ..(msg.reply_to_message.remover.last_name or ''))
-                        else
-                            return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
-                        end
-                    else
-                        return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
-                    end
+                    return msg.reply_to_message.from.username or('NOUSER ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))
                 end
-            else
-                return langs[msg.lang].require_mod
             end
         elseif matches[2] and matches[2] ~= '' then
-            if msg.from.is_mod then
-                if msg.entities then
-                    for k, v in pairs(msg.entities) do
-                        -- check if there's a text_mention
-                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                local obj = getChat(msg.entities[k].user.id)
-                                if obj then
-                                    return obj.id
-                                else
-                                    return langs[msg.lang].noObject
-                                end
+            if msg.entities then
+                for k, v in pairs(msg.entities) do
+                    -- check if there's a text_mention
+                    if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                        if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                            local obj = getChat(msg.entities[k].user.id)
+                            if obj then
+                                return obj.id
+                            else
+                                return langs[msg.lang].noObject
                             end
                         end
                     end
                 end
-                local obj = getChat(matches[2])
-                if obj then
-                    return obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
-                else
-                    return langs[msg.lang].noObject
-                end
+            end
+            local obj = getChat(matches[2])
+            if obj then
+                return obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
             else
-                return langs[msg.lang].require_mod
+                return langs[msg.lang].noObject
             end
         else
             return(msg.from.username or('NOUSER ' .. msg.from.first_name .. ' ' ..(msg.from.last_name or ''))) .. '\n' ..(msg.chat.username or('NOUSER ' .. msg.chat.title))
@@ -1263,15 +1247,13 @@ return {
     syntax =
     {
         "USER",
-        "#id",
-        "#username",
+        "#id [<username>|<reply>|from]",
+        "#username [<id>|<reply>|from]",
         "#getrank [<id>|<username>|<reply>|from]",
         "#whoami",
         "#[textual]info",
         "#ishere <id>|<username>|<reply>|from",
         "MOD",
-        "#id <username>|<reply>|from",
-        "#username <id>|<reply>|from",
         "#[textual]info <id>|<username>|<reply>|from",
         -- "(#who|#members)",
         "ADMIN",
