@@ -226,7 +226,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'WHITELISTED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
                 end
             end
             if obj.is_owner then
@@ -237,7 +237,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'GBANWHITELISTED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
                 end
             end
             if obj.is_admin then
@@ -248,7 +248,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'GBANNED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED' .. reverseAdjustSettingType(var), callback_data = 'infoGBAN' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
                 end
             end
             if obj.is_mod then
@@ -259,7 +259,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'BANNED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED' .. reverseAdjustSettingType(var), callback_data = 'infoBAN' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
                 end
             end
             if obj.is_mod then
@@ -270,7 +270,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'MUTED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED' .. reverseAdjustSettingType(var), callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
                 end
             end
             if string.match(getUserWarns(obj.id, chat_id), '%d+') then
@@ -342,7 +342,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'WHITELISTED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
                 end
             end
             if obj.is_owner then
@@ -353,7 +353,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'GBANWHITELISTED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
                 end
             end
             if obj.is_admin then
@@ -364,7 +364,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'GBANNED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED' .. reverseAdjustSettingType(var), callback_data = 'infoGBAN' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
                 end
             end
             if obj.is_mod then
@@ -375,7 +375,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'BANNED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED' .. reverseAdjustSettingType(var), callback_data = 'infoBAN' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
                 end
             end
             if obj.is_mod then
@@ -386,7 +386,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
                     otherinfo = otherinfo .. 'MUTED '
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED' .. reverseAdjustSettingType(var), callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
                 end
             end
             if obj.is_admin then
