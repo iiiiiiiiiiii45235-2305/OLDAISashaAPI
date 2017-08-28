@@ -957,22 +957,22 @@ local function run(msg, matches)
                         deleteMessage(msg.chat.id, msg.message_id)
                     elseif matches[2] == 'BACKSETTINGS' then
                         if matches[3] then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[3] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3]))
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' ..(data[tostring(matches[3])].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3]))
                         end
                     elseif matches[2] == 'BACKMUTES' then
                         if matches[3] then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[3], keyboard_mutes_list(matches[3]))
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' ..(data[tostring(matches[3])].set_name or ''), keyboard_mutes_list(matches[3]))
                         end
                     elseif matches[2] == 'BACKPERMISSIONS' then
                         if matches[3] and matches[4] then
-                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[4]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[4], matches[3]))
+                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or '')), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[4], matches[3]))
                         end
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'LOCK' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
@@ -980,7 +980,7 @@ local function run(msg, matches)
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
@@ -988,7 +988,7 @@ local function run(msg, matches)
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or ''), keyboard_mutes_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
@@ -996,7 +996,7 @@ local function run(msg, matches)
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
                                 answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. matches[4], keyboard_mutes_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or ''), keyboard_mutes_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                             end
@@ -1016,7 +1016,7 @@ local function run(msg, matches)
                                 save_data(config.moderation.data, data)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
@@ -1040,7 +1040,7 @@ local function run(msg, matches)
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
                                 end
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. matches[4] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' ..(data[tostring(matches[4])].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[4]))
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                             end
@@ -1067,7 +1067,7 @@ local function run(msg, matches)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[get_lang(matches[5])].checkMyPermissions and res ~= langs[get_lang(matches[5])].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
-                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
+                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' ..(data[tostring(matches[5])].set_name or '')), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
                                         else
                                             answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                                         end
@@ -1097,7 +1097,7 @@ local function run(msg, matches)
                                         local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
                                         if res ~= langs[get_lang(matches[5])].checkMyPermissions and res ~= langs[get_lang(matches[5])].notMyGroup then
                                             answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
-                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', matches[5]), 'X', tostring(matches[3])) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
+                                            editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' ..(data[tostring(matches[5])].set_name or '')), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[5], matches[3], permissions))
                                         else
                                             answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                                         end
@@ -1216,7 +1216,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'muteslist' and matches[2] then
             if is_admin(msg) then
                 mystat('/muteslist <group_id>')
-                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. matches[2], keyboard_mutes_list(matches[2])) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' ..(data[tostring(matches[2])].set_name or ''), keyboard_mutes_list(matches[2])) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
                     if msg.chat.type ~= 'private' then
                         return sendReply(msg, langs[msg.lang].sendMutesPvt)
@@ -1240,7 +1240,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'settings' and matches[2] then
             if is_admin(msg) then
                 mystat('/settings <group_id>')
-                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. matches[2] .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[2])) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' ..(data[tostring(matches[2])].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[2])) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
                     if msg.chat.type ~= 'private' then
                         return sendReply(msg, langs[msg.lang].sendSettingsPvt)
@@ -1607,7 +1607,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'muteslist' then
                 mystat('/muteslist')
                 if msg.from.is_mod then
-                    if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. msg.chat.id, keyboard_mutes_list(msg.chat.id)) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or ''), keyboard_mutes_list(msg.chat.id)) then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                         if msg.chat.type ~= 'private' then
                             return sendReply(msg, langs[msg.lang].sendMutesPvt)
@@ -1640,7 +1640,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'settings' then
                 mystat('/settings')
                 if msg.from.is_mod then
-                    if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. msg.chat.id .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(msg.chat.id)) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or '') .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(msg.chat.id)) then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                         if msg.chat.type ~= 'private' then
                             return sendReply(msg, langs[msg.lang].sendSettingsPvt)
@@ -2099,7 +2099,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.forward_from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or '')), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' ..(database[tostring(msg.reply_to_message.forward_from.id)]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                             end
@@ -2114,7 +2114,7 @@ local function run(msg, matches)
                                 end
                             end
                         else
-                            if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(msg.reply_to_message.from.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                            if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or '')), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
                                 if msg.chat.type ~= 'private' then
                                     return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                 end
@@ -2136,7 +2136,7 @@ local function run(msg, matches)
                                         if type(obj_user) == 'table' then
                                             if obj_user then
                                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or '')), 'X', tostring('(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                                         if msg.chat.type ~= 'private' then
                                                             return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                                         end
@@ -2157,7 +2157,7 @@ local function run(msg, matches)
                             if type(obj_user) == 'table' then
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or '')), 'X', tostring('(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                             end
@@ -2173,7 +2173,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', msg.chat.id), 'X', tostring(obj_user.id)) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' ..(data[tostring(msg.chat.id)].set_name or '')), 'X', tostring('(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                         if msg.chat.type ~= 'private' then
                                             return sendReply(msg, langs[msg.lang].sendPermissionsPvt)
                                         end
