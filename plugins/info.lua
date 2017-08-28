@@ -524,14 +524,18 @@ local function run(msg, matches)
                         elseif matches[2] == 'WHITELIST' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang), false)
+                                local text = whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang)
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                             end
                         elseif matches[2] == 'GBANWHITELIST' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang), false)
+                                local text = whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang)
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                             end
@@ -540,9 +544,13 @@ local function run(msg, matches)
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                                 if compare_ranks(msg.from.id, matches[3], matches[4]) then
                                     if isMutedUser(matches[4], matches[3]) then
-                                        answerCallbackQuery(msg.cb_id, unmuteUser(matches[4], matches[3], msg.lang), false)
+                                        local text = unmuteUser(matches[4], matches[3], msg.lang)
+                                        answerCallbackQuery(msg.cb_id, text, false)
+                                        sendMessage(matches[4], text)
                                     else
-                                        answerCallbackQuery(msg.cb_id, muteUser(matches[4], matches[3], msg.lang), false)
+                                        local text = muteUser(matches[4], matches[3], msg.lang)
+                                        answerCallbackQuery(msg.cb_id, text, false)
+                                        sendMessage(matches[4], text)
                                     end
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, false)
@@ -554,9 +562,13 @@ local function run(msg, matches)
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                                 if matches[2] == 'WARNSMINUS' then
-                                    answerCallbackQuery(msg.cb_id, unwarnUser(msg.from.id, matches[3], matches[4]), false)
+                                    local text = unwarnUser(msg.from.id, matches[3], matches[4])
+                                    answerCallbackQuery(msg.cb_id, text, false)
+                                    sendMessage(matches[4], text)
                                 elseif matches[2] == 'WARNSPLUS' then
-                                    answerCallbackQuery(msg.cb_id, warnUser(msg.from.id, matches[3], matches[4]), false)
+                                    local text = warnUser(msg.from.id, matches[3], matches[4])
+                                    answerCallbackQuery(msg.cb_id, text, false)
+                                    sendMessage(matches[4], text)
                                 end
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -564,42 +576,54 @@ local function run(msg, matches)
                         elseif matches[2] == 'BAN' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, banUser(msg.from.id, matches[3], matches[4]), false)
+                                local text = banUser(msg.from.id, matches[3], matches[4])
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                             end
                         elseif matches[2] == 'UNBAN' then
                             if is_mod2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, unbanUser(msg.from.id, matches[3], matches[4]), false)
+                                local text = unbanUser(msg.from.id, matches[3], matches[4])
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                             end
                         elseif matches[2] == 'GBAN' then
                             if is_admin2(msg.from.id) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, gbanUser(matches[3], msg.lang), false)
+                                local text = gbanUser(matches[3], msg.lang)
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                             end
                         elseif matches[2] == 'UNGBAN' then
                             if is_admin2(msg.from.id) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, ungbanUser(matches[3], msg.lang), false)
+                                local text = ungbanUser(matches[3], msg.lang)
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                             end
                         elseif matches[2] == 'PMBLOCK' then
                             if is_admin2(msg.from.id) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, blockUser(matches[3], msg.lang), false)
+                                local text = blockUser(matches[3], msg.lang)
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                             end
                         elseif matches[2] == 'PMUNBLOCK' then
                             if is_admin2(msg.from.id) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, unblockUser(matches[3], msg.lang), false)
+                                local text = unblockUser(matches[3], msg.lang)
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                             end
