@@ -183,7 +183,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
         local row = 1
         local column = 1
         keyboard.inline_keyboard[row] = { }
-        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', obj.id), 'X', tostring(chat_id))
+        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', chat_id), 'X', tostring(obj.id))
         if obj.type == 'bot' or obj.is_bot then
             text = text .. langs[lang].chatType .. langs[lang].botWord
             if obj.first_name then
