@@ -44,7 +44,7 @@ local function get_object_info(obj, chat_id)
             end
             text = text .. langs[lang].date .. os.date('%c')
             local otherinfo = langs[lang].otherInfo
-            if chat_id ~= bot.id then
+            if tonumber(chat_id) < 0 then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
                     if chat_member.result then
@@ -102,7 +102,7 @@ local function get_object_info(obj, chat_id)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
-            if chat_id ~= bot.id then
+            if tonumber(chat_id) < 0 then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
                     if chat_member.result then
