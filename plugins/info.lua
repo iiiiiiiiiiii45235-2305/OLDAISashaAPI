@@ -204,6 +204,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
             obj.is_owner = is_owner2(executer, chat_id, true)
             obj.is_mod = is_mod2(executer, chat_id, true)
             local otherinfo = langs[lang].otherInfo
+            local status = ''
             if obj.id ~= bot.id then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
@@ -211,6 +212,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                         chat_member = chat_member.result
                         if chat_member.status then
                             otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            status = chat_member.status
                             if chat_member.status == 'creator' then
                                 obj.is_owner = true
                                 obj.is_mod = true
@@ -274,7 +276,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                 end
             end
             if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                if obj.is_mod then
+                if obj.is_mod and status ~= 'kicked' and status ~= 'left' then
                     row = row + 1
                     column = 1
                     keyboard.inline_keyboard[row] = { }
@@ -320,6 +322,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
             obj.is_owner = is_owner2(executer, chat_id, true)
             obj.is_mod = is_mod2(executer, chat_id, true)
             local otherinfo = langs[lang].otherInfo
+            local status = ''
             if obj.id ~= bot.id then
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
@@ -327,6 +330,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                         chat_member = chat_member.result
                         if chat_member.status then
                             otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            status = chat_member.status
                             if chat_member.status == 'creator' then
                                 obj.is_owner = true
                                 obj.is_mod = true
@@ -401,7 +405,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                 end
             end
             if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                if obj.is_mod then
+                if obj.is_mod and status ~= 'kicked' and status ~= 'left' then
                     row = row + 1
                     column = 1
                     keyboard.inline_keyboard[row] = { }
@@ -530,17 +534,7 @@ local function run(msg, matches)
                                 if matches[2] == 'WARNSMINUS' then
                                     answerCallbackQuery(msg.cb_id, unwarnUser(msg.from.id, matches[3], matches[4]), false)
                                 elseif matches[2] == 'WARNSPLUS' then
-                                    local chat_member = getChatMember(matches[4], matches[3])
-                                    if type(chat_member) == 'table' then
-                                        if chat_member.result then
-                                            chat_member = chat_member.result
-                                            if chat_member.status then
-                                                if chat_member.status ~= 'kicked' and chat_member.status ~= 'left' then
-                                                    answerCallbackQuery(msg.cb_id, warnUser(msg.from.id, matches[3], matches[4]), false)
-                                                end
-                                            end
-                                        end
-                                    end
+                                    answerCallbackQuery(msg.cb_id, warnUser(msg.from.id, matches[3], matches[4]), false)
                                 end
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
