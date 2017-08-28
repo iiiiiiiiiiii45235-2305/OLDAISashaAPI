@@ -489,7 +489,7 @@ local function run(msg, matches)
                         local updated = false
                         if matches[2] == 'BACK' then
                             updated = true
-                            local tab = get_object_info_keyboard(msg.from.id, APIgetChat(matches[3]), matches[4])
+                            local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
                             if tab then
                                 editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
                             else
@@ -580,7 +580,7 @@ local function run(msg, matches)
                         end
                         if not updated then
                             updated = true
-                            local tab = get_object_info_keyboard(msg.from.id, APIgetChat(matches[3]), matches[4])
+                            local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
                             if tab then
                                 editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
                             else
