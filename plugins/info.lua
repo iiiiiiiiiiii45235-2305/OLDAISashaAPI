@@ -183,7 +183,11 @@ local function get_object_info_keyboard(executer, obj, chat_id)
         local row = 1
         local column = 1
         keyboard.inline_keyboard[row] = { }
-        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', '(' .. chat_id .. ') ' ..(data[tostring(chat_id)].set_name or '')), 'X', tostring('(' .. obj.id .. ') ' ..(database[tostring(obj.id)]['print_name'] or '')))
+        local chat_name = ''
+        if data[tostring(chat_id)] then
+            chat_name = data[tostring(chat_id)].set_name or ''
+        end
+        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', '(' .. chat_id .. ') ' .. chat_name), 'X', tostring('(' .. obj.id .. ') ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or '')))
         if obj.type == 'bot' or obj.is_bot then
             text = text .. langs[lang].chatType .. langs[lang].botWord
             if obj.first_name then
@@ -982,7 +986,7 @@ local function run(msg, matches)
                         -- check if there's a text_mention
                         if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                             if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                local tab = get_object_info_keyboard(msg.from.id, getChat(msg.entities[k].user), msg.chat.id)
+                                local tab = get_object_info_keyboard(msg.from.id, msg.entities[k].user, msg.chat.id)
                                 if tab then
                                     if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                         if msg.chat.type ~= 'private' then
