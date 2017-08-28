@@ -4,7 +4,7 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'spamnews' then
         if is_sudo(msg) then
-            news_table.news = matches[2]
+            news_table.news = matches[2] or langs.news
             news_table.tot_chats = 0
             news_table.chats = { }
             for k, v in pairs(data.groups) do
@@ -63,6 +63,7 @@ return {
     patterns =
     {
         "^[#!/]([Nn][Ee][Ww][Ss])$",
+        "^[#!/]([Ss][Pp][Aa][Mm][Nn][Ee][Ww][Ss])$",
         "^[#!/]([Ss][Pp][Aa][Mm][Nn][Ee][Ww][Ss]) (.*)$",
         "^[#!/]([Ss][Tt][Oo][Pp][Nn][Ee][Ww][Ss])$",
     },
@@ -74,7 +75,7 @@ return {
         "USER",
         "#news",
         "SUDO",
-        "#spamnews <news>",
+        "#spamnews [<news>]",
         "#stopnews",
     },
 }
