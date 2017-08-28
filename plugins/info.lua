@@ -192,7 +192,23 @@ local function get_object_info_keyboard(executer, obj, chat_id)
             text = text .. langs[lang].chatType .. langs[lang].botWord
             if obj.first_name then
                 if obj.first_name == '' then
-                    text = text .. '\n$Deleted Account$'
+                    if database[tostring(obj.id)] then
+                        return {
+                            text = serpent.block(database[tostring(obj.id)],{ sortkeys = false, comment = false }),
+                            keyboard =
+                            {
+                                inline_keyboard =
+                                {
+                                    {
+                                        { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id },
+                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' }
+                                    }
+                                }
+                            }
+                        }
+                    else
+                        text = text .. '\n$Deleted Account$'
+                    end
                 else
                     text = text .. langs[lang].name .. obj.first_name
                 end
@@ -300,7 +316,19 @@ local function get_object_info_keyboard(executer, obj, chat_id)
             if obj.first_name then
                 if obj.first_name == '' then
                     if database[tostring(obj.id)] then
-                        return serpent.block(database[tostring(obj.id)], { sortkeys = false, comment = false })
+                        return {
+                            text = serpent.block(database[tostring(obj.id)],{ sortkeys = false, comment = false }),
+                            keyboard =
+                            {
+                                inline_keyboard =
+                                {
+                                    {
+                                        { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id },
+                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' }
+                                    }
+                                }
+                            }
+                        }
                     else
                         text = text .. '\n$Deleted Account$'
                     end
