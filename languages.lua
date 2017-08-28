@@ -1317,7 +1317,7 @@ return {
             "USER",
             "#news: Sasha manda le novità di se stessa.",
             "SUDO",
-            "#spamnews: Sasha manda le novità ad ogni gruppo appena riceve un messaggio dallo stesso.",
+            "#spamnews <news>: Sasha manda le novità ad ogni gruppo appena riceve un messaggio dallo stesso.",
             "#stopnews: Sasha smette di mandare le novità.",
         },
 
@@ -2576,7 +2576,7 @@ return {
             "USER",
             "#news: Sasha sends her news.",
             "SUDO",
-            "#spamnews: Sasha sends her news to every group as soon as she receives a message from it.",
+            "#spamnews <news>: Sasha sends her news to every group as soon as she receives a message from it.",
             "#stopnews: Sasha stops sending her news.",
         },
 
