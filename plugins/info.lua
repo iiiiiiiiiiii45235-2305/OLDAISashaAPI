@@ -839,7 +839,7 @@ local function run(msg, matches)
                             if msg.reply_to_message.forward_from then
                                 local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from, msg.chat.id)
                                 if tab then
-                                    if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                         if msg.chat.type ~= 'private' then
                                             return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                         end
@@ -852,7 +852,7 @@ local function run(msg, matches)
                             else
                                 local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from_chat, msg.chat.id)
                                 if tab then
-                                    if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                         if msg.chat.type ~= 'private' then
                                             return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                         end
@@ -873,7 +873,7 @@ local function run(msg, matches)
                             local text = ''
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.adder, msg.chat.id)
                             if tab then
-                                if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
                                         text = text .. langs[msg.lang].sendInfoPvt .. '\n'
                                     end
@@ -886,7 +886,7 @@ local function run(msg, matches)
                             for k, v in pairs(msg.reply_to_message.added) do
                                 local tab = get_object_info_keyboard(msg.from.id, v, msg.chat.id)
                                 if tab then
-                                    if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                         if msg.chat.type ~= 'private' then
                                             text = text .. langs[msg.lang].sendInfoPvt .. '\n'
                                         end
@@ -901,7 +901,7 @@ local function run(msg, matches)
                         elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)
                             if tab then
-                                if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
@@ -914,7 +914,7 @@ local function run(msg, matches)
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.remover, msg.chat.id)
                             if tab then
-                                if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
                                         sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
@@ -926,7 +926,7 @@ local function run(msg, matches)
                             end
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)
                             if tab then
-                                if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
@@ -939,7 +939,7 @@ local function run(msg, matches)
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)
                             if tab then
-                                if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
@@ -952,7 +952,7 @@ local function run(msg, matches)
                         else
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)
                             if tab then
-                                if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
@@ -966,7 +966,7 @@ local function run(msg, matches)
                     else
                         local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)
                         if tab then
-                            if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                            if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                 if msg.chat.type ~= 'private' then
                                     return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                 end
@@ -990,7 +990,7 @@ local function run(msg, matches)
                             if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
                                 local tab = get_object_info_keyboard(msg.from.id, getChat(msg.entities[k].user), msg.chat.id)
                                 if tab then
-                                    if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                         if msg.chat.type ~= 'private' then
                                             return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                         end
@@ -1007,7 +1007,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%-?%d+$') then
                     local tab = get_object_info_keyboard(msg.from.id, getChat(matches[2]), msg.chat.id)
                     if tab then
-                        if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                        if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                             if msg.chat.type ~= 'private' then
                                 return sendReply(msg, langs[msg.lang].sendInfoPvt)
                             end
@@ -1020,7 +1020,7 @@ local function run(msg, matches)
                 else
                     local tab = get_object_info_keyboard(msg.from.id, getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')), msg.chat.id)
                     if tab then
-                        if sendKeyboard(msg.chat.id, tab.text, tab.keyboard) then
+                        if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                             if msg.chat.type ~= 'private' then
                                 return sendReply(msg, langs[msg.lang].sendInfoPvt)
                             end
