@@ -175,7 +175,7 @@ local function get_object_info(obj, chat_id)
     end
 end
 
-local function get_object_info_keyboard(obj, chat_id)
+local function get_object_info_keyboard(executer, obj, chat_id)
     local lang = get_lang(chat_id)
     if obj then
         local keyboard = { }
@@ -212,60 +212,72 @@ local function get_object_info_keyboard(obj, chat_id)
                     end
                 end
             end
-            if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. var .. chat_id }
-                otherinfo = otherinfo .. 'WHITELISTED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoWHITELIST' .. var .. chat_id }
+            if is_owner2(executer, chat_id) then
+                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'WHITELISTED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                end
             end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. var .. chat_id }
-                otherinfo = otherinfo .. 'GBANWHITELISTED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoGBANWHITELIST' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isGbanned(obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. var .. chat_id }
-                otherinfo = otherinfo .. 'GBANNED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED' .. reverseAdjustSettingType(var), callback_data = 'infoGBAN' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isBanned(obj.id, chat_id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. var .. chat_id }
-                otherinfo = otherinfo .. 'BANNED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED' .. reverseAdjustSettingType(var), callback_data = 'infoBAN' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isMutedUser(chat_id, obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. var .. chat_id }
-                otherinfo = otherinfo .. 'MUTED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED' .. reverseAdjustSettingType(var), callback_data = 'infoMUTEUSER' .. var .. chat_id }
-            end
-            if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+            if is_owner2(executer, chat_id) then
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                -- start warn part
-                keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-                column = column + 1
-                keyboard.inline_keyboard[row][column] = { text = string.match(getUserWarns(obj.id, chat_id), '%d+'), callback_data = 'infoWARNS' .. chat_id }
-                column = column + 1
-                keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-                -- end warn part
-                otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'GBANWHITELISTED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                end
+            end
+            if is_admin2(executer) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isGbanned(obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'GBANNED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED' .. reverseAdjustSettingType(var), callback_data = 'infoGBAN' .. obj.id .. chat_id }
+                end
+            end
+            if is_mod2(executer, chat_id) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isBanned(obj.id, chat_id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'BANNED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED' .. reverseAdjustSettingType(var), callback_data = 'infoBAN' .. obj.id .. chat_id }
+                end
+            end
+            if is_mod2(executer, chat_id) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isMutedUser(chat_id, obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'MUTED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED' .. reverseAdjustSettingType(var), callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                end
+            end
+            if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+                if is_mod2(executer, chat_id) then
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
+                    -- start warn part
+                    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNS' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. 'MINUS' .. obj.id .. chat_id }
+                    column = column + 1
+                    keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+'), callback_data = 'infoWARNS' .. obj.id .. chat_id }
+                    column = column + 1
+                    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNS' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. 'PLUS' .. obj.id .. chat_id }
+                    -- end warn part
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                end
             end
             if otherinfo == langs[lang].otherInfo then
                 otherinfo = otherinfo .. langs[lang].noOtherInfo
@@ -307,67 +319,81 @@ local function get_object_info_keyboard(obj, chat_id)
                     end
                 end
             end
-            if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. var .. chat_id }
-                otherinfo = otherinfo .. 'WHITELISTED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoWHITELIST' .. var .. chat_id }
+            if is_owner2(executer, chat_id) then
+                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'WHITELISTED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                end
             end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. var .. chat_id }
-                otherinfo = otherinfo .. 'GBANWHITELISTED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoGBANWHITELIST' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isGbanned(obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. var .. chat_id }
-                otherinfo = otherinfo .. 'GBANNED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED' .. reverseAdjustSettingType(var), callback_data = 'infoGBAN' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isBanned(obj.id, chat_id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. var .. chat_id }
-                otherinfo = otherinfo .. 'BANNED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED' .. reverseAdjustSettingType(var), callback_data = 'infoBAN' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isMutedUser(chat_id, obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. var .. chat_id }
-                otherinfo = otherinfo .. 'MUTED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED' .. reverseAdjustSettingType(var), callback_data = 'infoMUTEUSER' .. var .. chat_id }
-            end
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-            if isBlocked(obj.id) then
-                keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMUNBLOCK' .. var .. chat_id }
-                otherinfo = otherinfo .. 'PM BLOCKED '
-            else
-                keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMBLOCK' .. var .. chat_id }
-            end
-            if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+            if is_owner2(executer, chat_id) then
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-                column = column + 1
-                keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+'), callback_data = 'infoWARNS' .. chat_id }
-                column = column + 1
-                keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-                otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'GBANWHITELISTED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED' .. reverseAdjustSettingType(var), callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                end
+            end
+            if is_admin(executer) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isGbanned(obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'GBANNED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED' .. reverseAdjustSettingType(var), callback_data = 'infoGBAN' .. obj.id .. chat_id }
+                end
+            end
+            if is_mod2(executer, chat_id) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isBanned(obj.id, chat_id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'BANNED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED' .. reverseAdjustSettingType(var), callback_data = 'infoBAN' .. obj.id .. chat_id }
+                end
+            end
+            if is_mod2(executer, chat_id) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isMutedUser(chat_id, obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'MUTED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED' .. reverseAdjustSettingType(var), callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                end
+            end
+            if is_admin(executer) then
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+                if isBlocked(obj.id) then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMUNBLOCK' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. 'PM BLOCKED '
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMBLOCK' .. obj.id .. chat_id }
+                end
+            end
+            if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+                if is_mod2(executer, chat_id) then
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
+                    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNS' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. 'MINUS' .. obj.id .. chat_id }
+                    column = column + 1
+                    keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+'), callback_data = 'infoWARNS' .. obj.id .. chat_id }
+                    column = column + 1
+                    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNS' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. 'PLUS' .. obj.id .. chat_id }
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                end
             end
             if otherinfo == langs[lang].otherInfo then
                 otherinfo = otherinfo .. langs[lang].noOtherInfo
