@@ -498,14 +498,14 @@ local function run(msg, matches)
                         elseif matches[2] == 'WHITELIST' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, whitelist_user(matches[4], matches[3], msg.lang), false)
+                                answerCallbackQuery(msg.cb_id, whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang), false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                             end
                         elseif matches[2] == 'GBANWHITELIST' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                answerCallbackQuery(msg.cb_id, whitegban_user(matches[4], matches[3], msg.lang), false)
+                                answerCallbackQuery(msg.cb_id, whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang), false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                             end
