@@ -1677,7 +1677,7 @@ end
 function warnUser(executer, target, chat_id, reason)
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local warn_chat = data[tostring(chat_id)].settings.warn_max or 0
+        local warn_chat = tonumber(data[tostring(chat_id)].settings.warn_max or 0)
         redis:incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis:get(chat_id .. ':warn:' .. target)
         if not hashonredis then
@@ -1685,7 +1685,7 @@ function warnUser(executer, target, chat_id, reason)
             hashonredis = 1
         end
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
-        if tonumber(warn_chat) ~= 0 then
+        if tonumber(warn_chat) > 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 return banUser(executer, target, chat_id, langs[lang].reasonWarnMax)

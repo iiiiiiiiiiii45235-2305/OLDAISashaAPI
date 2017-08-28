@@ -530,7 +530,11 @@ local function run(msg, matches)
                                 if matches[2] == 'WARNSMINUS' then
                                     answerCallbackQuery(msg.cb_id, unwarnUser(msg.from.id, matches[3], matches[4]), false)
                                 elseif matches[2] == 'WARNSPLUS' then
-                                    answerCallbackQuery(msg.cb_id, warnUser(msg.from.id, matches[3], matches[4]), false)
+                                    if tonumber(data[tostring(matches[4])].settings.warn_max) > 0 then
+                                        answerCallbackQuery(msg.cb_id, warnUser(msg.from.id, matches[3], matches[4]), false)
+                                    else
+                                        answerCallbackQuery(msg.cb_id, banUser(msg.from.id, matches[3], matches[4]), false)
+                                    end
                                 end
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
