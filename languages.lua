@@ -1,7 +1,7 @@
 return {
-    news = "SASHA'S NEWS\n" ..
+    news = "SASHA'S NEWS\n#sashasnews\n" ..
     "Checkmsg command (msg_checks).\n" ..
-    "Info command became a keyboard with a lot of options (info) (mod^).\n" ..
+    "Info command became a keyboard with a lot of commands in it (info) (mod^).\n" ..
     "Delreactions (interact).\n" ..
     "Id and Username commands are now for users (info).\n" ..
     "Removed !helpall and !syntaxall commands to prevent flood_wait errors (help).\n",

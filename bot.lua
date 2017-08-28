@@ -15,7 +15,8 @@ news_table = {
     msg_to_update = nil,
     chat_msg_to_update = nil,
     counter = 0,
-    tot_chats = 0
+    tot_chats = 0,
+    news = nil,
 }
 
 -- Save the content of config to config.lua
