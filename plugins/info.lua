@@ -531,11 +531,11 @@ local function run(msg, matches)
                                     answerCallbackQuery(msg.cb_id, unwarnUser(msg.from.id, matches[3], matches[4]), false)
                                 elseif matches[2] == 'WARNSPLUS' then
                                     if tonumber(data[tostring(matches[4])].settings.warn_max) > 0 then
-                                        if not isBanned(matches[3], matches[4]) then
+                                        if getChatMember(matches[4], matches[3]).ok then
                                             answerCallbackQuery(msg.cb_id, warnUser(msg.from.id, matches[3], matches[4]), false)
                                         end
                                     else
-                                        if not isBanned(matches[3], matches[4]) then
+                                        if getChatMember(matches[4], matches[3]).ok then
                                             answerCallbackQuery(msg.cb_id, banUser(msg.from.id, matches[3], matches[4]), false)
                                         end
                                     end

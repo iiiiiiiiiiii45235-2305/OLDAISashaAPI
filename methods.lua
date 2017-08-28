@@ -190,8 +190,6 @@ function getChatMember(chat_id, user_id)
         if sendChatAction(chat_id, 'typing', true) then
             local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
             return sendRequest(url)
-        else
-            return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
         end
     else
         local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
