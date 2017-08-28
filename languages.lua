@@ -696,6 +696,7 @@ return {
         ishereYes = "Si.",
         ishereNo = "No.",
         noLinkAvailable = "Nessun link disponibile.",
+        sendInfoPvt = "Ti ho mandato le info dell'oggetto in privato.",
 
         -- interact.lua
         userBlockedBot = "L'utente specificato ha bloccato il bot.",
@@ -1954,6 +1955,7 @@ return {
         ishereYes = "Yes.",
         ishereNo = "No.",
         noLinkAvailable = "No link available.",
+        sendInfoPvt = "I've sent you the object's info in private.",
 
         -- interact.lua
         userBlockedBot = "The specifided user blocked the bot.",
