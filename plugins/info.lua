@@ -1178,6 +1178,8 @@ return {
     description = "INFO",
     patterns =
     {
+        "^(###cbinfo)(DELETE)$",
+        "^(###cbinfo)(BACK)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(MUTEUSER)(%d+)(%-%d+)$",
