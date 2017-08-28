@@ -299,10 +299,10 @@ local function run(msg, matches)
     end
 
     table.sort(plugins)
-    if matches[1]:lower() == 'helpall' then
+    --[[if matches[1]:lower() == 'helpall' then
         mystat('/helpall')
         return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-    end
+    end]]
 
     if matches[1]:lower() == 'help' then
         if not matches[2] then
@@ -366,10 +366,10 @@ local function run(msg, matches)
         end
     end
 
-    if matches[1]:lower() == 'syntaxall' then
+    --[[if matches[1]:lower() == 'syntaxall' then
         mystat('/syntaxall')
         return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-    end
+    end]]
 
     if matches[1]:lower() == 'syntax' and matches[2] then
         mystat('/syntax <command>')
@@ -410,12 +410,12 @@ return {
     {
         "^(###cbhelp)(.*)(%-?%d+)$",
         "^(###cbhelp)(.*)$",
-        "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
+        -- "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp]) ([^%s]+)$",
-        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
+        -- "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Dd][Ee][Ll][Ee][Tt][Ee][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
@@ -433,9 +433,9 @@ return {
         "#help <plugin_name>|<plugin_number>",
         "#textualhelp",
         "#textualhelp <plugin_name>|<plugin_number>",
-        "#helpall",
+        -- "#helpall",
         "#syntax <filter>",
-        "#syntaxall",
+        -- "#syntaxall",
         "#faq[<n>]",
         "#deletekeyboard <reply>",
     },
