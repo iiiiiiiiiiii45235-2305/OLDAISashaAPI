@@ -687,12 +687,7 @@ local function run(msg, matches)
                     -- check if there's a text_mention
                     if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                         if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                            local obj = getChat(msg.entities[k].user.id)
-                            if obj then
-                                return obj.id
-                            else
-                                return langs[msg.lang].noObject
-                            end
+                            return msg.entities[k].user.id
                         end
                     end
                 end
@@ -751,12 +746,7 @@ local function run(msg, matches)
                     -- check if there's a text_mention
                     if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                         if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                            local obj = getChat(msg.entities[k].user.id)
-                            if obj then
-                                return obj.id
-                            else
-                                return langs[msg.lang].noObject
-                            end
+                            return msg.entities[k].user.username or('NOUSER ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or ''))
                         end
                     end
                 end

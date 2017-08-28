@@ -2,7 +2,8 @@ return {
     news = "SASHA'S NEWS\n" ..
     "Checkmsg command (msg_checks).\n" ..
     "Info command became a keyboard with a lot of options (info) (mod^).\n" ..
-    "Delreactions.\n" ..
+    "Delreactions (interact).\n" ..
+    "Id and Username commands are now for users (info).\n" ..
     "Removed !helpall and !syntaxall commands to prevent flood_wait errors (help).\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
