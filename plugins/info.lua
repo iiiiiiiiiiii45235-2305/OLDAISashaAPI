@@ -868,7 +868,7 @@ local function run(msg, matches)
                                             return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                         end
                                     else
-                                        return langs[msg.lang].cantSendPvt
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -881,7 +881,7 @@ local function run(msg, matches)
                                             return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                         end
                                     else
-                                        return langs[msg.lang].cantSendPvt
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -902,11 +902,12 @@ local function run(msg, matches)
                                         text = text .. langs[msg.lang].sendInfoPvt .. '\n'
                                     end
                                 else
-                                    return langs[msg.lang].cantSendPvt
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
                                 text = text .. langs[msg.lang].noObject .. '\n'
                             end
+                            local keyboard_sent = false
                             for k, v in pairs(msg.reply_to_message.added) do
                                 local tab = get_object_info_keyboard(msg.from.id, v, msg.chat.id)
                                 if tab then
@@ -915,7 +916,10 @@ local function run(msg, matches)
                                             text = text .. langs[msg.lang].sendInfoPvt .. '\n'
                                         end
                                     else
-                                        return langs[msg.lang].cantSendPvt
+                                        keyboard_sent = true
+                                        if not keyboard_sent then
+                                            sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                        end
                                     end
                                 else
                                     text = text .. langs[msg.lang].noObject .. '\n'
@@ -930,7 +934,7 @@ local function run(msg, matches)
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
                                 else
-                                    return langs[msg.lang].cantSendPvt
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -940,13 +944,13 @@ local function run(msg, matches)
                             if tab then
                                 if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
                                     if msg.chat.type ~= 'private' then
-                                        sendReply(msg, langs[msg.lang].sendInfoPvt)
+                                        return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
                                 else
-                                    sendMessage(msg.chat.id, langs[msg.lang].cantSendPvt)
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
-                                sendMessage(msg.chat.id, langs[msg.lang].noObject)
+                                return langs[msg.lang].noObject
                             end
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)
                             if tab then
@@ -955,10 +959,10 @@ local function run(msg, matches)
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
                                 else
-                                    sendMessage(msg.chat.id, langs[msg.lang].cantSendPvt)
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
-                                sendMessage(msg.chat.id, langs[msg.lang].noObject)
+                                return langs[msg.lang].noObject
                             end
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
                             local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)
@@ -968,7 +972,7 @@ local function run(msg, matches)
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
                                 else
-                                    return langs[msg.lang].cantSendPvt
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -981,7 +985,7 @@ local function run(msg, matches)
                                         return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                     end
                                 else
-                                    return langs[msg.lang].cantSendPvt
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
                                 return langs[msg.lang].noObject
@@ -995,7 +999,7 @@ local function run(msg, matches)
                                     return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                 end
                             else
-                                return langs[msg.lang].cantSendPvt
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                             end
                         else
                             return langs[msg.lang].noObject
@@ -1019,7 +1023,7 @@ local function run(msg, matches)
                                             return sendReply(msg, langs[msg.lang].sendInfoPvt)
                                         end
                                     else
-                                        return langs[msg.lang].cantSendPvt
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                     end
                                 else
                                     return langs[msg.lang].noObject
@@ -1036,7 +1040,7 @@ local function run(msg, matches)
                                 return sendReply(msg, langs[msg.lang].sendInfoPvt)
                             end
                         else
-                            return langs[msg.lang].cantSendPvt
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                         end
                     else
                         return langs[msg.lang].noObject
@@ -1049,7 +1053,7 @@ local function run(msg, matches)
                                 return sendReply(msg, langs[msg.lang].sendInfoPvt)
                             end
                         else
-                            return langs[msg.lang].cantSendPvt
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                         end
                     else
                         return langs[msg.lang].noObject

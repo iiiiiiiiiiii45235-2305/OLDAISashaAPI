@@ -232,7 +232,7 @@ return {
         updateKeyboard = "AGGIORNA TASTIERA.",
         deleteKeyboard = "ELIMINA TASTIERA.",
         stop = "STOP",
-        cantSendPvt = "Non posso scriverti in privato.",
+        cantSendPvt = "Non posso scriverti in privato se prima non lo fai tu.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -1480,7 +1480,7 @@ return {
         updateKeyboard = "UPDATE KEYBOARD.",
         deleteKeyboard = "DELETE KEYBOARD.",
         stop = "STOP",
-        cantSendPvt = "I can't write to you in private.",
+        cantSendPvt = "I can't write to you in private if you don't first.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",

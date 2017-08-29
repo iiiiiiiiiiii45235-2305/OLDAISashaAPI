@@ -312,7 +312,7 @@ local function run(msg, matches)
                     return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                 end
             else
-                return langs[msg.lang].cantSendPvt
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
             end
         else
             mystat('/help <plugin>')
@@ -324,7 +324,7 @@ local function run(msg, matches)
                             return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendPvt
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 else
                     if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
@@ -332,7 +332,7 @@ local function run(msg, matches)
                             return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendPvt
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 end
             else
@@ -341,7 +341,7 @@ local function run(msg, matches)
                         return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
                     end
                 else
-                    return langs[msg.lang].cantSendPvt
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                 end
             end
         end

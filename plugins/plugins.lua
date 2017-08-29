@@ -333,7 +333,7 @@ local function run(msg, matches)
                             return sendReply(msg, langs[msg.lang].sendPluginsPvt)
                         end
                     else
-                        return langs[msg.lang].cantSendPvt
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 else
                     return langs[msg.lang].useYourGroups
@@ -345,7 +345,7 @@ local function run(msg, matches)
                         return sendReply(msg, langs[msg.lang].sendPluginsPvt)
                     end
                 else
-                    return langs[msg.lang].cantSendPvt
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                 end
             end
         else

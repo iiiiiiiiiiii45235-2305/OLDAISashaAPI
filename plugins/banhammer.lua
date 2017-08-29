@@ -905,7 +905,7 @@ local function run(msg, matches)
                                             return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
                                         end
                                     else
-                                        return langs[msg.lang].cantSendPvt
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                     end
                                 else
                                     return langs[msg.lang].cantDoThisToChat
@@ -920,9 +920,8 @@ local function run(msg, matches)
                                 return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
                             end
                         else
-                            return langs[msg.lang].cantSendPvt
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                         end
-
                         return
                     end
                 elseif matches[2] and matches[2] ~= '' then
@@ -940,7 +939,7 @@ local function run(msg, matches)
                                                         return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
                                                     end
                                                 else
-                                                    return langs[msg.lang].cantSendPvt
+                                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                                 end
                                             end
                                         else
@@ -961,7 +960,7 @@ local function run(msg, matches)
                                             return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
                                         end
                                     else
-                                        return langs[msg.lang].cantSendPvt
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                     end
                                 end
                             else
@@ -977,7 +976,7 @@ local function run(msg, matches)
                                         return sendReply(msg, langs[msg.lang].sendRestrictionsPvt)
                                     end
                                 else
-                                    return langs[msg.lang].cantSendPvt
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             end
                         else
