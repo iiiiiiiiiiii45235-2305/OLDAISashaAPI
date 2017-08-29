@@ -4,7 +4,7 @@
     if type(chat_member) == 'table' then
         if chat_member.result then
             chat_member = chat_member.result
-            if chat_member.status == 'creator' or chat_member.status == 'administrator' or chat_member.status == 'member' then
+            if chat_member.status == 'creator' or chat_member.status == 'administrator' or chat_member.status == 'member' or chat_member.status == 'restricted' then
                 return langs[lang].ishereYes
             else
                 return langs[lang].ishereNo

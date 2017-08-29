@@ -4,7 +4,7 @@ local function is_here(chat_id, user_id)
     if type(chat_member) == 'table' then
         if chat_member.result then
             chat_member = chat_member.result
-            if chat_member.status == 'creator' or chat_member.status == 'administrator' or chat_member.status == 'member' then
+            if chat_member.status == 'creator' or chat_member.status == 'administrator' or chat_member.status == 'member' or chat_member.status == 'restricted' then
                 return langs[lang].ishereYes
             else
                 return langs[lang].ishereNo
@@ -45,34 +45,36 @@ local function get_object_info(obj, chat_id)
             end
             text = text .. langs[lang].date .. os.date('%c')
             local otherinfo = langs[lang].otherInfo
-            if obj.id ~= bot.id then
-                local chat_member = getChatMember(chat_id, obj.id)
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+            if tonumber(chat_id) < 0 then
+                if obj.id ~= bot.id then
+                    local chat_member = getChatMember(chat_id, obj.id)
+                    if type(chat_member) == 'table' then
+                        if chat_member.result then
+                            chat_member = chat_member.result
+                            if chat_member.status then
+                                otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            end
                         end
                     end
                 end
-            end
-            if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                otherinfo = otherinfo .. 'WHITELISTED '
-            end
-            if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                otherinfo = otherinfo .. 'GBANWHITELISTED '
+                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                    otherinfo = otherinfo .. 'WHITELISTED '
+                end
+                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                    otherinfo = otherinfo .. 'GBANWHITELISTED '
+                end
+                if isBanned(obj.id, chat_id) then
+                    otherinfo = otherinfo .. 'BANNED '
+                end
+                if isMutedUser(chat_id, obj.id) then
+                    otherinfo = otherinfo .. 'MUTED '
+                end
+                if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                end
             end
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
-            end
-            if isBanned(obj.id, chat_id) then
-                otherinfo = otherinfo .. 'BANNED '
-            end
-            if isMutedUser(chat_id, obj.id) then
-                otherinfo = otherinfo .. 'MUTED '
-            end
-            if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
             end
             if otherinfo == langs[lang].otherInfo then
                 otherinfo = otherinfo .. langs[lang].noOtherInfo
@@ -103,37 +105,39 @@ local function get_object_info(obj, chat_id)
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
-            if obj.id ~= bot.id then
-                local chat_member = getChatMember(chat_id, obj.id)
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+            if tonumber(chat_id) < 0 then
+                if obj.id ~= bot.id then
+                    local chat_member = getChatMember(chat_id, obj.id)
+                    if type(chat_member) == 'table' then
+                        if chat_member.result then
+                            chat_member = chat_member.result
+                            if chat_member.status then
+                                otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            end
                         end
                     end
                 end
-            end
-            if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                otherinfo = otherinfo .. 'WHITELISTED '
-            end
-            if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                otherinfo = otherinfo .. 'GBANWHITELISTED '
+                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                    otherinfo = otherinfo .. 'WHITELISTED '
+                end
+                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                    otherinfo = otherinfo .. 'GBANWHITELISTED '
+                end
+                if isBanned(obj.id, chat_id) then
+                    otherinfo = otherinfo .. 'BANNED '
+                end
+                if isMutedUser(chat_id, obj.id) then
+                    otherinfo = otherinfo .. 'MUTED '
+                end
+                if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                end
             end
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
             end
-            if isBanned(obj.id, chat_id) then
-                otherinfo = otherinfo .. 'BANNED '
-            end
-            if isMutedUser(chat_id, obj.id) then
-                otherinfo = otherinfo .. 'MUTED '
-            end
             if isBlocked(obj.id) then
                 otherinfo = otherinfo .. 'PM BLOCKED '
-            end
-            if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
             end
             if otherinfo == langs[lang].otherInfo then
                 otherinfo = otherinfo .. langs[lang].noOtherInfo
@@ -183,15 +187,30 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleid' then
             if msg.from.is_mod then
                 mystat('/multipleid')
+                local found = false
                 for k, username in pairs(tab) do
-                    txt = txt .. username .. ' '
-                    local obj = getChat('@' ..(string.match(username, '^[^%s]+'):gsub('@', '') or ''))
-                    if obj then
-                        txt = txt .. obj.id
-                    else
-                        txt = txt .. langs[msg.lang].noObject
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, username) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. username .. ' ' .. msg.entities[k].user.id
+                                end
+                            end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. username .. ' '
+                        local obj = getChat('@' ..(string.match(username, '^[^%s]+'):gsub('@', '') or ''))
+                        if obj then
+                            txt = txt .. obj.id
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -201,15 +220,30 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleusername' then
             if msg.from.is_mod then
                 mystat('/multipleusername')
+                local found = false
                 for k, id in pairs(tab) do
-                    txt = txt .. id .. ' '
-                    local obj = getChat(id)
-                    if obj then
-                        txt = txt .. obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
-                    else
-                        txt = txt .. langs[msg.lang].noObject
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, id) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. id .. ' ' ..(msg.entities[k].user.username or('NOUSER ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or '')))
+                                end
+                            end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. id .. ' '
+                        local obj = getChat(id)
+                        if obj then
+                            txt = txt .. obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
+                        else
+                            txt = txt .. langs[msg.lang].noObject
+                        end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -219,21 +253,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleishere' then
             if msg.from.is_mod then
                 mystat('/multipleishere')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. is_here(msg.chat.id, tonumber(user))
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. is_here(msg.chat.id, obj_user.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. is_here(msg.chat.id, msg.entities[k].user.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. is_here(msg.chat.id, tonumber(user))
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. is_here(msg.chat.id, obj_user.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -243,21 +292,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplegetrank' then
             if msg.from.is_mod then
                 mystat('/multiplegetrank')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. get_reverse_rank(msg.chat.id, user, check_local)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. get_reverse_rank(msg.chat.id, obj_user.id, check_local)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. get_reverse_rank(msg.chat.id, msg.entities[k].user.id, true)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. get_reverse_rank(msg.chat.id, user, true)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. get_reverse_rank(msg.chat.id, obj_user.id, true)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -267,14 +331,29 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleinfo' then
             if msg.from.is_mod then
                 mystat('/multipleinfo')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%-?%d+$') then
-                        txt = txt .. get_object_info(getChat(user), msg.chat.id) .. '\n'
-                    else
-                        txt = txt .. get_object_info(getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id) .. '\n'
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. get_object_info(msg.entities[k].user, msg.chat.id) .. '\n'
+                                end
+                            end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%-?%d+$') then
+                            txt = txt .. get_object_info(getChat(user), msg.chat.id) .. '\n'
+                        else
+                            txt = txt .. get_object_info(getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id) .. '\n'
+                        end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -284,21 +363,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplegetuserwarns' then
             if msg.from.is_mod then
                 mystat('/multiplegetuserwarns')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. getUserWarns(user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. getUserWarns(obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. getUserWarns(msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. getUserWarns(user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. getUserWarns(obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -308,39 +402,62 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplemuteuser' then
             if msg.from.is_mod then
                 mystat('/multiplemuteuser')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        -- ignore higher or same rank
-                        if compare_ranks(msg.from.id, user, msg.chat.id) then
-                            if isMutedUser(msg.chat.id, user) then
-                                txt = txt .. unmuteUser(msg.chat.id, user, msg.lang)
-                            else
-                                txt = txt .. muteUser(msg.chat.id, user, msg.lang)
-                            end
-                        else
-                            txt = txt .. langs[msg.lang].require_rank
-                        end
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                -- ignore higher or same rank
-                                if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
-                                    if isMutedUser(msg.chat.id, obj_user.id) then
-                                        txt = txt .. unmuteUser(msg.chat.id, obj_user.id, msg.lang)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    if compare_ranks(msg.from.id, msg.entities[k].user.id, msg.chat.id) then
+                                        if isMutedUser(msg.chat.id, user) then
+                                            txt = txt .. user .. ' ' .. unmuteUser(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                        else
+                                            txt = txt .. user .. ' ' .. muteUser(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                        end
                                     else
-                                        txt = txt .. muteUser(msg.chat.id, obj_user.id, msg.lang)
+                                        txt = txt .. user .. ' ' .. langs[msg.lang].require_rank
                                     end
-                                else
-                                    txt = txt .. langs[msg.lang].require_rank
                                 end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            -- ignore higher or same rank
+                            if compare_ranks(msg.from.id, user, msg.chat.id) then
+                                if isMutedUser(msg.chat.id, user) then
+                                    txt = txt .. unmuteUser(msg.chat.id, user, msg.lang)
+                                else
+                                    txt = txt .. muteUser(msg.chat.id, user, msg.lang)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].require_rank
+                            end
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    -- ignore higher or same rank
+                                    if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
+                                        if isMutedUser(msg.chat.id, obj_user.id) then
+                                            txt = txt .. unmuteUser(msg.chat.id, obj_user.id, msg.lang)
+                                        else
+                                            txt = txt .. muteUser(msg.chat.id, obj_user.id, msg.lang)
+                                        end
+                                    else
+                                        txt = txt .. langs[msg.lang].require_rank
+                                    end
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -350,21 +467,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplewarn' then
             if msg.from.is_owner then
                 mystat('/multiplewarn')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. warnUser(msg.from.id, user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. warnUser(msg.from.id, msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. warnUser(msg.from.id, user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. warnUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -374,21 +506,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleunwarn' then
             if msg.from.is_owner then
                 mystat('/multipleunwarn')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. unwarnUser(msg.from.id, user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. unwarnUser(msg.from.id, msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. unwarnUser(msg.from.id, user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. unwarnUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -398,21 +545,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleunwarnall' then
             if msg.from.is_owner then
                 mystat('/multipleunwarnall')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. unwarnallUser(msg.from.id, user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. unwarnallUser(msg.from.id, msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. unwarnallUser(msg.from.id, user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. unwarnallUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -422,21 +584,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplekick' then
             if msg.from.is_owner then
                 mystat('/multiplekick')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. kickUser(msg.from.id, user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. kickUser(msg.from.id, msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. kickUser(msg.from.id, user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. kickUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -446,21 +623,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleban' then
             if msg.from.is_owner then
                 mystat('/multipleban')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. banUser(msg.from.id, user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. banUser(msg.from.id, obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. banUser(msg.from.id, user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. banUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -470,21 +662,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleunban' then
             if msg.from.is_owner then
                 mystat('/multipleunban')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. unbanUser(msg.from.id, user, msg.chat.id)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. unbanUser(msg.from.id, msg.entities[k].user.id, msg.chat.id)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. unbanUser(msg.from.id, user, msg.chat.id)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. unbanUser(msg.from.id, obj_user.id, msg.chat.id)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -494,29 +701,48 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipledbsearch' then
             if is_sudo(msg) then
                 mystat('/multipledbsearch')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        if database[tostring(user)] then
-                            txt = txt .. serpent.block(database[tostring(user)], { sortkeys = false, comment = false })
-                        else
-                            txt = txt .. langs[msg.lang].notFound
-                        end
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                if database[tostring(obj_user.id)] then
-                                    txt = txt .. serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false })
-                                else
-                                    txt = txt .. langs[msg.lang].notFound
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    if database[tostring(msg.entities[k].user.id)] then
+                                        txt = txt .. ' ' .. serpent.block(database[tostring(msg.entities[k].user.id)], { sortkeys = false, comment = false })
+                                    else
+                                        txt = txt .. ' ' .. langs[msg.lang].notFound
+                                    end
                                 end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            if database[tostring(user)] then
+                                txt = txt .. serpent.block(database[tostring(user)], { sortkeys = false, comment = false })
+                            else
+                                txt = txt .. langs[msg.lang].notFound
+                            end
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if database[tostring(obj_user.id)] then
+                                        txt = txt .. serpent.block(database[tostring(obj_user.id)], { sortkeys = false, comment = false })
+                                    else
+                                        txt = txt .. langs[msg.lang].notFound
+                                    end
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -526,17 +752,49 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipledbdelete' then
             if is_sudo(msg) then
                 mystat('/multipledbdelete')
-                for k, id in pairs(tab) do
-                    if string.match(id, '^%d+$') then
-                        txt = txt .. id .. ' '
-                        if database[tostring(id)] then
-                            database[tostring(id)] = nil
-                            txt = txt .. langs[msg.lang].recordDeleted
-                        else
-                            txt = txt .. langs[msg.lang].notFound
+                local found = false
+                for k, user in pairs(tab) do
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    if database[tostring(msg.entities[k].user.id)] then
+                                        database[tostring(msg.entities[k].user.id)] = nil
+                                        txt = txt .. user .. ' ' .. langs[msg.lang].recordDeleted
+                                    else
+                                        txt = txt .. user .. ' ' .. langs[msg.lang].notFound
+                                    end
+                                end
+                            end
                         end
-                        txt = txt .. '\n'
                     end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            if database[tostring(user)] then
+                                database[tostring(user)] = nil
+                                txt = txt .. langs[msg.lang].recordDeleted
+                            else
+                                txt = txt .. langs[msg.lang].notFound
+                            end
+                        else
+                            local obj = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj then
+                                if database[tostring(obj.id)] then
+                                    database[tostring(obj.id)] = nil
+                                    txt = txt .. langs[msg.lang].recordDeleted
+                                else
+                                    txt = txt .. langs[msg.lang].notFound
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
+                        end
+                    end
+                    txt = txt .. '\n'
+                    found = false
                 end
                 save_data(config.database.db, database)
                 return txt
@@ -569,21 +827,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplepmblock' then
             if is_sudo(msg) then
                 mystat('/multiplepmblock')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. blockUser(user, msg.lang)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. blockUser(obj_user.id, msg.lang)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. blockUser(msg.entities[k].user.id, msg.lang)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. blockUser(user, msg.lang)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. blockUser(obj_user.id, msg.lang)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -593,21 +866,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplepmunblock' then
             if is_sudo(msg) then
                 mystat('/multiplepmunblock')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. unblockUser(user, msg.lang)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. unblockUser(obj_user.id, msg.lang)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. unblockUser(msg.entities[k].user.id, msg.lang)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. unblockUser(user, msg.lang)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. unblockUser(obj_user.id, msg.lang)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -617,21 +905,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multiplegban' then
             if is_sudo(msg) then
                 mystat('/multiplegban')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. gbanUser(user, msg.lang)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. gbanUser(obj_user.id, msg.lang)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, msg.lang)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. gbanUser(user, msg.lang)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. gbanUser(obj_user.id, msg.lang)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else
@@ -641,21 +944,36 @@ local function run(msg, matches)
         if matches[1]:lower() == 'multipleungban' then
             if is_sudo(msg) then
                 mystat('/multipleungban')
+                local found = false
                 for k, user in pairs(tab) do
-                    txt = txt .. user .. ' '
-                    if string.match(user, '^%d+$') then
-                        txt = txt .. ungbanUser(user, msg.lang)
-                    else
-                        local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                txt = txt .. ungbanUser(obj_user.id, msg.lang)
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
+                                    found = true
+                                    txt = txt .. user .. ' ' .. ungbanUser(msg.entities[k].user.id, msg.lang)
+                                end
                             end
+                        end
+                    end
+                    if not found then
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. ungbanUser(user, msg.lang)
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    txt = txt .. ungbanUser(obj_user.id, msg.lang)
+                                end
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
+                    found = false
                 end
                 return txt
             else

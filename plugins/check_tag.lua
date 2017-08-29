@@ -343,7 +343,7 @@ local function pre_process(msg)
                                 if type(obj) == 'table' then
                                     if obj.ok and obj.result then
                                         obj = obj.result
-                                        if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' then
+                                        if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
                                             local lang = get_lang(nicknames[i])
                                             -- set user as notified to not send multiple notifications
                                             notified[tostring(nicknames[i])] = true

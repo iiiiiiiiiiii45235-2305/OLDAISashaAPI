@@ -245,7 +245,7 @@ local function showPermissions(chat_id, user_id, lang)
                 langs[lang].permissionPromoteMembers .. tostring(obj_user.can_promote_members or false) ..
                 langs[lang].permissionRestrictMembers .. tostring(obj_user.can_restrict_members or false)
                 return text
-            elseif obj_user.status == 'member' then
+            elseif obj_user.status == 'member' or obj_user.status == 'restricted' then
                 local obj_bot = getChatMember(chat_id, bot.id)
                 if type(obj_bot) == 'table' then
                     if obj_bot.result then

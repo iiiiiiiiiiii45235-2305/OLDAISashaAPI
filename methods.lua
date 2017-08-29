@@ -1413,7 +1413,7 @@ function sudoInChat(chat_id)
             local member = getChatMember(chat_id, user.id)
             if type(member) == 'table' then
                 if member.ok and member.result then
-                    if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
+                    if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' or member.status == 'restricted' then
                         return true
                     end
                 end
@@ -1427,7 +1427,7 @@ function userVersionInChat(chat_id)
     local member = getChatMember(chat_id, bot.userVersion.id)
     if type(member) == 'table' then
         if member.ok and member.result then
-            if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' then
+            if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' or member.status == 'restricted' then
                 return true, member.result.status
             end
         end
