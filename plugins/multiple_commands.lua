@@ -70,7 +70,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'MUTED '
                 end
                 if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0) .. ' WARN '
                 end
             end
             if isGbanned(obj.id) then
@@ -130,7 +130,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'MUTED '
                 end
                 if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0) .. ' WARN '
                 end
             end
             if isGbanned(obj.id) then

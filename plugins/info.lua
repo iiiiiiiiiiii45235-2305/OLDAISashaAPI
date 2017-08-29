@@ -70,7 +70,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'MUTED '
                 end
                 if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0) .. ' WARN '
                 end
             end
             if otherinfo == langs[lang].otherInfo then
@@ -131,7 +131,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'MUTED '
                 end
                 if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0) .. ' WARN '
                 end
             end
             if otherinfo == langs[lang].otherInfo then
@@ -297,7 +297,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                             -- start warn part
                             keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
                             column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+'), callback_data = 'infoWARNS' .. obj.id .. chat_id }
+                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
                             column = column + 1
                             keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
                             -- end warn part
@@ -431,7 +431,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                             keyboard.inline_keyboard[row] = { }
                             keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
                             column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+'), callback_data = 'infoWARNS' .. obj.id .. chat_id }
+                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
                             column = column + 1
                             keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
                             otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
