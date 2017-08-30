@@ -474,7 +474,7 @@ function forwardMessage(chat_id, from_chat_id, message_id)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('forward_msg', code .. '\n' .. text)
+                savelog('forward_msg', code)
             end
         end
         if print_res_msg(res) then
