@@ -618,12 +618,12 @@ function sendChatAction(chat_id, action, no_log)
     return sendRequest(url, no_log)
 end
 
-function deleteMessage(chat_id, message_id)
+function deleteMessage(chat_id, message_id, no_log)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/deleteMessage?chat_id=' .. chat_id ..
         '&message_id=' .. message_id
-        local res, code = sendRequest(url)
+        local res, code = sendRequest(url, no_log)
 
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)

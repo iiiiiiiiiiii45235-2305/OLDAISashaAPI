@@ -954,7 +954,9 @@ local function run(msg, matches)
             if matches[1] == '###cbgroup_management' then
                 if matches[2] then
                     if matches[2] == 'DELETE' then
-                        deleteMessage(msg.chat.id, msg.message_id)
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        end
                     elseif matches[2] == 'BACKSETTINGS' then
                         if matches[3] then
                             local chat_name = ''
@@ -1685,10 +1687,15 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     mystat('/del')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
-                    if msg.reply then
-                        deleteMessage(msg.chat.id, msg.reply_to_message.message_id)
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        return langs[msg.lang].cantDeleteMessage
                     end
-                    return deleteMessage(msg.chat.id, msg.message_id)
+                    if msg.reply then
+                        if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                            return sendReply(msg.reply_to_message, langs[msg.lang].cantDeleteMessage)
+                        end
+                    end
+                    return
                 else
                     return langs[msg.lang].require_mod
                 end

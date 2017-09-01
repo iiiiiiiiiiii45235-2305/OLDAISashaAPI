@@ -86,14 +86,17 @@ local function run(msg, matches)
                 if matches[2] then
                     if matches[2] == 'ALREADYREAD' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
-                        deleteMessage(msg.chat.id, msg.message_id)
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
+                        end
                     elseif matches[3] and matches[4] then
                         if matches[2] == 'DELETEUP' then
                             if tonumber(matches[3]) == tonumber(msg.from.id) then
                                 if deleteMessage(matches[4], msg.message_id) then
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
                                 else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageAlreadyDeleted, false)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                 end
                             end
                         elseif matches[2] == 'GOTO' then
@@ -104,7 +107,13 @@ local function run(msg, matches)
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                                 end
-                                deleteMessage(msg.chat.id, msg.message_id)
+                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                    if res then
+                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    else
+                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    end
+                                end
                             else
                                 local sent = false
                                 local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
@@ -126,7 +135,14 @@ local function run(msg, matches)
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                                 end
-                                deleteMessage(msg.chat.id, msg.message_id)
+                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                    if sent then
+                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    else
+                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    end
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                end
                             end
                         end
                     end

@@ -43,7 +43,9 @@ local function run(msg, matches)
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
-            deleteMessage(msg.chat.id, msg.message_id)
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+            end
             if msg.reply then
                 if not sendReply(msg.reply_to_message, matches[2], 'markdown') then
                     return langs[msg.lang].errorTryAgain
@@ -101,7 +103,9 @@ local function run(msg, matches)
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
-            deleteMessage(msg.chat.id, msg.message_id)
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+            end
             if msg.reply then
                 if not sendReply(msg.reply_to_message, matches[2], 'html') then
                     return langs[msg.lang].errorTryAgain
@@ -153,7 +157,9 @@ local function run(msg, matches)
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
-            deleteMessage(msg.chat.id, msg.message_id)
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+            end
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])
             else
@@ -253,7 +259,9 @@ local function run(msg, matches)
     if matches[1]:lower() == 'deltyping' or matches[1]:lower() == 'delupload_photo' or matches[1]:lower() == 'delrecord_video' or matches[1]:lower() == 'delupload_video' or matches[1]:lower() == 'delrecord_audio' or matches[1]:lower() == 'delupload_audio' or matches[1]:lower() == 'delupload_document' or matches[1]:lower() == 'delfind_location' or matches[1]:lower() == 'delrecord_videonote' or matches[1]:lower() == 'delupload_videonote' then
         mystat('/reactions')
         print(matches[1]:lower())
-        deleteMessage(msg.chat.id, msg.message_id)
+        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+            sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+        end
         sendChatAction(msg.chat.id,(matches[1]:lower()):gsub('del', ''))
         return
     end

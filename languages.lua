@@ -233,6 +233,7 @@ return {
         deleteKeyboard = "ELIMINA TASTIERA.",
         stop = "STOP",
         cantSendPvt = "Non posso scriverti in privato se prima non lo fai tu.",
+        cantDeleteMessage = "Non posso eliminare questo messaggio, ciò può succedere per tre ragioni:\n1) Il messaggio è troppo vecchio (48h).\n2) Il messaggio è già stato eliminato\n3) Non ho il permesso di eliminare messaggi.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -398,7 +399,6 @@ return {
         cantFindMessage = "Non trovo quel messaggio.",
         markedAsRead = "Messaggio contrassegnato come letto.",
         upMessageDeleted = "Messaggio di UP eliminato.",
-        upMessageAlreadyDeleted = "Messaggio di UP già eliminato.",
         repliedToMessage = "Ho risposto a quel messaggio.",
         whatDoYouWantToDo = "Cosa vuoi fare?",
 
@@ -1481,6 +1481,7 @@ return {
         deleteKeyboard = "DELETE KEYBOARD.",
         stop = "STOP",
         cantSendPvt = "I can't write to you in private if you don't first.",
+        cantDeleteMessage = "I can't delete this message, this happens for three reasons:\n1) The message is too old (48h).\n2) The message has already been deleted\n3) I don't have the permission to delete messages.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
@@ -1650,7 +1651,6 @@ return {
         cantFindMessage = "Can't find that message.",
         markedAsRead = "Message marked as read.",
         upMessageDeleted = "UP message deleted.",
-        upMessageAlreadyDeleted = "UP message already deleted.",
         repliedToMessage = "I've replied to that message.",
         whatDoYouWantToDo = "What do you want to do?",
 

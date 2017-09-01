@@ -196,7 +196,9 @@ local function run(msg, matches)
             if matches[1] == '###cbbanhammer' then
                 if matches[2] then
                     if matches[2] == 'DELETE' then
-                        deleteMessage(msg.chat.id, msg.message_id)
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        end
                     elseif matches[2] == 'BACK' then
                         if matches[3] and matches[4] then
                             local chat_name = ''
