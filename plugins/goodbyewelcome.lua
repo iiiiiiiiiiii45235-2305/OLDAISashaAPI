@@ -161,6 +161,28 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user, parse_mode)
     return goodbyewelcome
 end
 
+local function unescapeGoodbyeWelcome(goodbyewelcome)
+    if string.match(goodbyewelcome, '^photo') then
+        goodbyewelcome = goodbyewelcome:gsub('^photo', '')
+    elseif string.match(goodbyewelcome, '^video') then
+        goodbyewelcome = goodbyewelcome:gsub('^video', '')
+    elseif string.match(goodbyewelcome, '^video_note') then
+        goodbyewelcome = goodbyewelcome:gsub('^video_note', '')
+    elseif string.match(goodbyewelcome, '^audio') then
+        goodbyewelcome = goodbyewelcome:gsub('^audio', '')
+    elseif string.match(goodbyewelcome, '^voice_note') or string.match(goodbyewelcome, '^voice') then
+        goodbyewelcome = goodbyewelcome:gsub('^voice_note', '')
+        goodbyewelcome = goodbyewelcome:gsub('^voice', '')
+    elseif string.match(goodbyewelcome, '^gif') then
+        goodbyewelcome = goodbyewelcome:gsub('^gif', '')
+    elseif string.match(goodbyewelcome, '^document') then
+        goodbyewelcome = goodbyewelcome:gsub('^document', '')
+    elseif string.match(goodbyewelcome, '^sticker') then
+        goodbyewelcome = goodbyewelcome:gsub('^sticker', '')
+    end
+    return goodbyewelcome
+end
+
 local function sendWelcome(chat, added, message_id)
     local welcome = get_welcome(chat.id)
     if welcome then
@@ -360,13 +382,13 @@ local function run(msg, matches)
                         end
                         return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
                     else
-                        return set_welcome(msg.chat.id, msg.reply_to_message.text)
+                        return set_welcome(msg.chat.id, unescapeGoodbyeWelcome(msg.reply_to_message.text))
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                         return langs[msg.lang].crossexecDenial
                     end
-                    return set_welcome(msg.chat.id, matches[2])
+                    return set_welcome(msg.chat.id, unescapeGoodbyeWelcome(matches[2]))
                 end
             end
             if matches[1]:lower() == 'setgoodbye' then
@@ -407,13 +429,13 @@ local function run(msg, matches)
                         end
                         return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
                     else
-                        return set_goodbye(msg.chat.id, msg.reply_to_message.text)
+                        return set_goodbye(msg.chat.id, unescapeGoodbyeWelcome(msg.reply_to_message.text))
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                         return langs[msg.lang].crossexecDenial
                     end
-                    return set_goodbye(msg.chat.id, matches[2])
+                    return set_goodbye(msg.chat.id, unescapeGoodbyeWelcome(matches[2]))
                 end
             end
             if matches[1]:lower() == 'unsetwelcome' then
