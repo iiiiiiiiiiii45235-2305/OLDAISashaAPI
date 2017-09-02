@@ -421,7 +421,7 @@ local function run(msg, matches)
             mystat('/faq')
             if sendKeyboard(msg.from.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id)) then
                 if msg.chat.type ~= 'private' then
-                    return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                    return sendMessage(msg.chat.id, langs[msg.lang].sendFAQPvt)
                 end
             else
                 return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
