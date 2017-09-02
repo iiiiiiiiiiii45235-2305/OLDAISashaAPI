@@ -267,6 +267,7 @@ return {
         reasonRandom = "Kick casuale.",
         reasonDeletedUser = "Account eliminato.",
         reasonBannedUser = "Utente bannato.",
+        reasonGbannedUser = "Utente bannato globalmente.",
         reasonFlood = "Flood.",
         reasonCensorship = "Censura violata.",
         reasonFlame = "Flame.",
@@ -805,6 +806,7 @@ return {
         .. "/faq17 significato restrizioni.\n",
         faq =
         {
+            [0] = "FAQ Inesistente.",
             [1] = "D: Limiti sasha utente (@AISasha)?\n"
             .. "R: *Freeze\n"
             .. "*Comandi per risposta a volte non funzionanti (soluzione = inoltra e usa <command> from).\n"
@@ -1145,6 +1147,8 @@ return {
             "#[textual]muteslist: Sasha manda la lista dei muti della chat.",
             "#[textual]permissions: Sasha manda i tuoi permessi.",
             "MOD",
+            "#del [<reply>]: Sasha elimina il messaggio del comando e <reply>.",
+            "#deletekeyboard <reply>: Sasha elimina la keyboard in <reply>.",
             "#type: Sasha mostra il tipo del gruppo.",
             "#updategroupinfo: Sasha aggiorna nome e moderatori del gruppo.",
             "#setrules <text>: Sasha imposta <text> come regole.",
@@ -1200,8 +1204,7 @@ return {
             -- "#helpall: Sasha mostra tutti i comandi di tutti i plugin.",
             "#syntax <filter>: Sasha mostra la sintassi dei comandi che corrispondono a <filter>.",
             -- "#syntaxall: Sasha mostra la sintassi di tutti i comandi di tutti i plugin.",
-            "#faq[<n>]: Sasha mostra le Frequently asked questions, se <n> è specificato manda la risposta.",
-            "#deletekeyboard <reply>: Sasha elimina la keyboard in <reply>.",
+            "#[textual]faq[<n>]: Sasha mostra le Frequently asked questions, se <n> è specificato manda la risposta.",
         },
 
         info =
@@ -1515,6 +1518,7 @@ return {
         reasonRandom = "Random kick.",
         reasonDeletedUser = "Deleted account.",
         reasonBannedUser = "Banned user.",
+        reasonGbannedUser = "Globally banned user.",
         reasonFlood = "Flood.",
         reasonCensorship = "Violation of censorship.",
         reasonFlame = "Flame.",
@@ -2064,6 +2068,7 @@ return {
         .. "/faq17 restrictions meaning.\n",
         faq =
         {
+            [0] = "No such FAQ.",
             [1] = "D: Sasha user's limits (@AISasha)?\n"
             .. "R: *Freeze\n"
             .. "*Commands by reply sometimes don't work (solution = forward and use <command> from).\n"
@@ -2404,6 +2409,8 @@ return {
             "#[textual]muteslist: Sasha sends group's mutes.",
             "#[textual]permissions: Sasha sends your permissions.",
             "MOD",
+            "#del [<reply>]: Sasha deletes the message of the command and <reply>.",
+            "#deletekeyboard <reply>: Sasha deletes the keyboard in <reply>.",
             "#type: Sasha sends group type.",
             "#updategroupinfo: Sasha updates group name and mods.",
             "#setrules <text>: Sasha changes group's rules with <text>.",
@@ -2459,8 +2466,7 @@ return {
             -- "#helpall: Sasha sends help of all plugins.",
             "#syntax <filter>: Sasha sends syntax of all commands that matches with <filter>.",
             -- "#syntaxall: Sasha sends syntax of all commands of all plugins.",
-            "#faq[<n>]: Sasha shows Frequently asked questions, if <n> the specified she sends the answer.",
-            "#deletekeyboard <reply>: Sasha deletes the keyboard in <reply>.",
+            "#[textual]faq[<n>]: Sasha shows Frequently asked questions, if <n> the specified she sends the answer.",
         },
 
         info =

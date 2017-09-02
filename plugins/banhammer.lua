@@ -1495,30 +1495,47 @@ local function pre_process(msg)
             if msg.service_type then
                 -- Check if banned users joins chat
                 if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+                    local text = ''
+                    local inviteFlood = false
                     if #msg.added >= 5 then
                         if not is_owner(msg) then
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood))
+                            inviteFlood = true
+                            text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood)
                         end
                     end
+                    local ban = false
+                    local reason = ''
                     for k, v in pairs(msg.added) do
                         print('Checking invited user ' .. v.id)
-                        if isBanned(v.id, msg.chat.id) and not msg.from.is_mod or(isGbanned(v.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, v.id))) then
-                            -- Check it with redis
+                        if inviteFlood then
+                            ban = true
+                            reason = langs[msg.lang].reasonInviteFlood
+                        end
+                        if isBanned(v.id, msg.chat.id) and not msg.from.is_mod then
                             print('User is banned!')
+                            ban = true
+                            reason = langs[msg.lang].reasonBannedUser
+                        end
+                        if isGbanned(v.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, v.id)) then
+                            print('User is gbanned!')
+                            ban = true
+                            reason = langs[msg.lang].reasonGbannedUser
+                        end
+                        if ban then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user >" .. v.id)
                             -- Save to logs
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonBannedUser))
+                            text = text .. banUser(bot.id, v.id, msg.chat.id, reason)
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                             redis:incr(banhash)
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                             local banaddredis = redis:get(banhash)
                             if banaddredis then
                                 if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
-                                    sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned))
+                                    text = text .. kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned)
                                     -- Kick user who adds ban ppl more than 3 times
                                 end
                                 if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned))
+                                    text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned)
                                     -- Ban user who adds ban ppl more than 7 times
                                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                                     redis:set(banhash, 0)
@@ -1526,20 +1543,32 @@ local function pre_process(msg)
                                 end
                             end
                         end
+                        ban = false
+                        reason = ''
+                    end
+                    if text ~= '' then
+                        sendMessage(msg.chat.id, text)
                     end
                 end
                 -- Check if banned user joins chat by link
                 if msg.service_type == 'chat_add_user_link' then
+                    local ban = false
+                    local reason = ''
                     print('Checking invited user ' .. msg.from.id)
-                    if isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id) then
-                        return msg
-                    end
-                    if isBanned(msg.from.id, msg.chat.id) or(isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
-                        -- Check it with redis
+                    if isBanned(msg.from.id, msg.chat.id) and not msg.from.is_mod then
                         print('User is banned!')
+                        ban = true
+                        reason = langs[msg.lang].reasonBannedUser
+                    end
+                    if isGbanned(msg.from.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
+                        print('User is gbanned!')
+                        ban = true
+                        reason = langs[msg.lang].reasonGbannedUser
+                    end
+                    if ban then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
                         -- Save to logs
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id))
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
                     end
                 end
                 -- No further checks
@@ -1548,12 +1577,23 @@ local function pre_process(msg)
         end
         -- banned user is talking !
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if isBanned(msg.from.id, msg.chat.id) or(isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
-                -- Check it with redis
+            local ban = false
+            local reason = ''
+            if isBanned(msg.from.id, msg.chat.id) then
                 print('Banned user talking!')
+                ban = true
+                reason = langs[msg.lang].reasonBannedUser
+            end
+            if isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id) then
+                print('Gbanned user talking!')
+                ban = true
+                reason = langs[msg.lang].reasonGbannedUser
+            end
+            if ban then
+                -- Check it with redis
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs
-                local txt = banUser(bot.id, msg.from.id, msg.chat.id)
+                local txt = banUser(bot.id, msg.from.id, msg.chat.id, reason)
                 if txt == langs[msg.lang].errors[1] or txt == langs[msg.lang].errors[2] or txt == langs[msg.lang].errors[3] or txt == langs[msg.lang].errors[4] then
                     if kick_ban_errors[tostring(chat_id)] then
                         if txt ~= kick_ban_errors[tostring(chat_id)] then

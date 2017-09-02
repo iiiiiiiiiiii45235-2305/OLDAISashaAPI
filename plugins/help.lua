@@ -252,6 +252,35 @@ local function keyboard_help_list(chat_id, rank)
     return keyboard
 end
 
+local function keyboard_faq_list(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    for k, v in langs[get_lang(chat_id)].faq do
+        if flag then
+            flag = false
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+        end
+        keyboard.inline_keyboard[row][column] = { text = 'FAQ' .. k, callback_data = 'helpFAQ' .. k }
+        column = column + 1
+        if column > 3 then
+            flag = true
+        end
+    end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'helpBACKFAQ' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'helpDELETE' }
+    return keyboard
+end
+
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbhelp' and matches[2] then
@@ -261,6 +290,14 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'BACK' then
                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
+            elseif matches[2] == 'BACKFAQ' then
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
+            elseif matches[2] == 'FAQ' and matches[3] then
+                if langs[msg.lang].faq[tonumber(matches[3])] then
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+                else
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+                end
             else
                 mystat('###cbhelp' .. matches[2])
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
@@ -277,7 +314,6 @@ local function run(msg, matches)
             return
         end
     end
-
     if matches[1]:lower() == 'sudolist' then
         mystat('/sudolist')
         local text = 'SUDO INFO'
@@ -299,13 +335,11 @@ local function run(msg, matches)
         end
         return text
     end
-
     table.sort(plugins)
     --[[if matches[1]:lower() == 'helpall' then
         mystat('/helpall')
         return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
     end]]
-
     if matches[1]:lower() == 'help' then
         if not matches[2] then
             mystat('/help')
@@ -348,7 +382,6 @@ local function run(msg, matches)
             end
         end
     end
-
     if matches[1]:lower() == 'textualhelp' then
         if not matches[2] then
             mystat('/help')
@@ -367,12 +400,10 @@ local function run(msg, matches)
             end
         end
     end
-
     --[[if matches[1]:lower() == 'syntaxall' then
         mystat('/syntaxall')
         return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
     end]]
-
     if matches[1]:lower() == 'syntax' and matches[2] then
         mystat('/syntax <command>')
         matches[2] = matches[2]:gsub('[#!/]', '#')
@@ -383,8 +414,20 @@ local function run(msg, matches)
             return langs[msg.lang].helpIntro .. text
         end
     end
-
     if matches[1]:lower() == 'faq' then
+        if not matches[2] then
+            mystat('/faq')
+            return sendKeyboard(msg.chat.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
+        else
+            mystat('/faq<n>')
+            if langs[msg.lang].faq[tonumber(matches[2])] then
+                return sendKeyboard(msg.chat.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+            else
+                return sendKeyboard(msg.chat.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+            end
+        end
+    end
+    if matches[1]:lower() == 'textualfaq' then
         if not matches[2] then
             mystat('/faq')
             return langs[msg.lang].faqList
@@ -393,23 +436,16 @@ local function run(msg, matches)
             return langs[msg.lang].faq[tonumber(matches[2])]
         end
     end
-
-    if matches[1]:lower() == 'deletekeyboard' then
-        if msg.reply then
-            if msg.reply_to_message.from.id == bot.id then
-                if msg.reply_to_message.text then
-                    mystat('/deletekeyboard')
-                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text)
-                end
-            end
-        end
-    end
 end
 
 return {
     description = "HELP",
     patterns =
     {
+        "^(###cbhelp)(DELETE)$",
+        "^(###cbhelp)(BACKFAQ)$",
+        "^(###cbhelp)(BACK)$",
+        "^(###cbhelp)(FAQ)(%d+)$",
         "^(###cbhelp)(.*)(%-?%d+)$",
         "^(###cbhelp)(.*)$",
         -- "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
@@ -420,10 +456,12 @@ return {
         -- "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
-        "^[#!/]([Dd][Ee][Ll][Ee][Tt][Ee][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
         "^[#!/]([Ff][Aa][Qq])$",
         "^[#!/]([Ff][Aa][Qq])(%d+)$",
         "^[#!/]([Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])(%d+)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
     },
     run = run,
     min_rank = 0,
@@ -439,6 +477,6 @@ return {
         "#syntax <filter>",
         -- "#syntaxall",
         "#faq[<n>]",
-        "#deletekeyboard <reply>",
+        "#textualfaq[<n>]",
     },
 }

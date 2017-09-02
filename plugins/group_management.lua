@@ -1700,6 +1700,20 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
+            if matches[1]:lower() == 'deletekeyboard' then
+                if msg.reply then
+                    if msg.reply_to_message.from.id == bot.id then
+                        if msg.reply_to_message.text or msg.reply_to_message.caption then
+                            if msg.from.is_mod then
+                                mystat('/deletekeyboard')
+                                return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
+                            else
+                                return langs[msg.lang].require_mod
+                            end
+                        end
+                    end
+                end
+            end
             if matches[1]:lower() == 'settings' then
                 mystat('/settings')
                 if msg.from.is_mod then
@@ -2400,6 +2414,7 @@ return {
 
         -- COMMON
         "^[#!/]([Dd][Ee][Ll])$",
+        "^[#!/]([Dd][Ee][Ll][Ee][Tt][Ee][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
         "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
         "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss])",
@@ -2466,6 +2481,8 @@ return {
         "#permissions",
         "#textualpermissions",
         "MOD",
+        "#del",
+        "#deletekeyboard <reply>",
         "#type",
         "#updategroupinfo",
         "#setrules <text>",
