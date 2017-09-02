@@ -18,6 +18,28 @@ local function run(msg, matches)
             return langs[msg.lang].require_mod
         end
     end
+    if matches[1]:lower() == 'delmarkdownedit' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/delmarkdownedit')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+            end
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
+                        return langs[msg.lang].errorTryAgain
+                    end
+                else
+                    return langs[msg.lang].cantEditOthersMessages
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
     if matches[1]:lower() == 'markdownecho' and matches[2] then
         if msg.from.is_mod then
             mystat('/markdownecho')
@@ -44,7 +66,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                sendReply(msg, langs[msg.lang].cantDeleteMessage)
             end
             if msg.reply then
                 if not sendReply(msg.reply_to_message, matches[2], 'markdown') then
@@ -64,6 +86,28 @@ local function run(msg, matches)
             mystat('/htmledit')
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
+            end
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
+                        return langs[msg.lang].errorTryAgain
+                    end
+                else
+                    return langs[msg.lang].cantEditOthersMessages
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'delhtmledit' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/delhtmledit')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                sendReply(msg, langs[msg.lang].cantDeleteMessage)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
@@ -104,7 +148,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                sendReply(msg, langs[msg.lang].cantDeleteMessage)
             end
             if msg.reply then
                 if not sendReply(msg.reply_to_message, matches[2], 'html') then
@@ -124,6 +168,26 @@ local function run(msg, matches)
             mystat('/edit')
             if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
+            end
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    return editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                else
+                    return langs[msg.lang].cantEditOthersMessages
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'deledit' and matches[2] then
+        if msg.from.is_mod then
+            mystat('/deledit')
+            if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
+                return langs[msg.lang].crossexecDenial
+            end
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                sendReply(msg, langs[msg.lang].cantDeleteMessage)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
@@ -158,7 +222,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                sendReply(msg, langs[msg.lang].cantDeleteMessage)
             end
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])
@@ -260,7 +324,7 @@ local function run(msg, matches)
         mystat('/reactions')
         print(matches[1]:lower())
         if not deleteMessage(msg.chat.id, msg.message_id, true) then
-            sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+            sendReply(msg, langs[msg.lang].cantDeleteMessage)
         end
         sendChatAction(msg.chat.id,(matches[1]:lower()):gsub('del', ''))
         return
@@ -304,8 +368,11 @@ return {
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr]) (.*)$",
         "^[#!/]([Tt][Ee][Ss][Tt][Uu][Ss][Ee][Rr])$",
         "^[#!/]([Ee][Dd][Ii][Tt]) (.+)$",
+        "^[#!/]([Dd][Ee][Ll][Ee][Dd][Ii][Tt]) (.+)$",
         "^[#!/]([Hh][Tt][Mm][Ll][Ee][Dd][Ii][Tt]) (.+)$",
+        "^[#!/]([Dd][Ee][Ll][Hh][Tt][Mm][Ll][Ee][Dd][Ii][Tt]) (.+)$",
         "^[#!/]([Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Dd][Ii][Tt]) (.+)$",
+        "^[#!/]([Dd][Ee][Ll][Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn][Ee][Dd][Ii][Tt]) (.+)$",
         -- react
         "^(@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt])$",
         "^([Ss][Aa][Ss][Hh][Aa] [Cc][Oo][Mm][Ee] [Vv][Aa]%?)$",
@@ -354,11 +421,14 @@ return {
         "#echo [<reply>]<text>",
         "#edit <reply> <text>",
         "#delecho [<reply>]<text>",
+        "#deledit <reply> <text>",
         "#markdownecho [<reply>]<text>",
         "#markdownedit <reply> <text>",
         "#delmarkdownecho [<reply>]<text>",
+        "#delmarkdownedit <reply> <text>",
         "#htmlecho [<reply>]<text>",
         "#htmledit <reply> <text>",
         "#delhtmlecho [<reply>]<text>",
+        "#delhtmledit <reply> <text>",
     },
 }

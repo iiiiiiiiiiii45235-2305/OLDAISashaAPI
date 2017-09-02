@@ -1244,7 +1244,7 @@ return {
             "#testuser <id>|<username>|<reply>|from: Sasha controlla se l'utente specificato ha bloccato il bot.",
             "MOD",
             "#[del][markdown|html]echo [<reply>]<text>: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio, se \"del\" elimina il comando, se \"html\" o \"markdown\" usa la formattazione specificata.",
-            "#[markdown|html]edit <reply> <text>: Sasha modifica <reply>, se \"markdown\" o \"html\" usa la formattazione specificata.",
+            "#[del][markdown|html]edit <reply> <text>: Sasha modifica <reply>, se \"markdown\" o \"html\" usa la formattazione specificata.",
         },
 
         likecounter =
@@ -2507,7 +2507,7 @@ return {
             "#testuser <id>|<username>|<reply>|from: Sasha tests if the specified user has blocked the bot.",
             "MOD",
             "#[del][markdown|html]echo [<reply>]<text>: Sasha repeats <text>, if in reply of a message she replies to that message, if \"del\" she deletes the command, if \"html\" or \"markdown\" she uses the specified format.",
-            "#[markdown|html]edit <reply> <text>: Sasha edits <reply>, if \"html\" or \"markdown\" she uses the specified format.",
+            "#[del][markdown|html]edit <reply> <text>: Sasha edits <reply>, if \"html\" or \"markdown\" she uses the specified format.",
         },
 
         likecounter =
