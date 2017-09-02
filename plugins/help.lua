@@ -259,7 +259,7 @@ local function keyboard_faq_list(chat_id)
     local column = 1
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    for k, v in langs[get_lang(chat_id)].faq do
+    for k, v in pairsByKeys(langs[get_lang(chat_id)].faq) do
         if flag then
             flag = false
             row = row + 1
@@ -417,13 +417,31 @@ local function run(msg, matches)
     if matches[1]:lower() == 'faq' then
         if not matches[2] then
             mystat('/faq')
-            return sendKeyboard(msg.chat.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
+            if sendKeyboard(msg.from.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id)) then
+                if msg.chat.type ~= 'private' then
+                    return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                end
+            else
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+            end
         else
             mystat('/faq<n>')
             if langs[msg.lang].faq[tonumber(matches[2])] then
-                return sendKeyboard(msg.chat.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+                if sendKeyboard(msg.from.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } }) then
+                    if msg.chat.type ~= 'private' then
+                        return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                end
             else
-                return sendKeyboard(msg.chat.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+                if sendKeyboard(msg.from.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } }) then
+                    if msg.chat.type ~= 'private' then
+                        return sendMessage(msg.chat.id, langs[msg.lang].sendHelpPvt)
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                end
             end
         end
     end
