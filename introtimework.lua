@@ -1,5 +1,15 @@
 clr = require "term.colors"
 
+last_cron = os.date('%M')
+last_db_cron = os.date('%H')
+last_administrator_cron = os.date('%d')
+last_redis_cron = ''
+last_redis_db_cron = ''
+last_redis_administrator_cron = ''
+
+sudoers = { }
+tmp_msg = { }
+
 -- Save the content of config to config.lua
 function save_config()
     serialize_to_file(config, './config.lua', false)
@@ -96,6 +106,27 @@ function bot_init()
     require("methods")
     require("ranks")
 
+    while not bot do
+        -- Get bot info and retry if unable to connect.
+        local obj = getMe()
+        if obj then
+            if obj.result then
+                bot = obj.result
+            end
+        end
+    end
+    local obj = getChat(149998353)
+    if type(obj) == 'table' then
+        bot.userVersion = obj
+    end
+
+    for v, user in pairs(config.sudo_users) do
+        local obj_user = getChat(user)
+        if type(obj_user) == 'table' then
+            sudoers[tostring(obj_user.id)] = obj_user
+        end
+    end
+
     last_update = last_update or 0
     -- Set loop variables: Update offset,
     last_cron = last_cron or os.time()
@@ -103,6 +134,304 @@ function bot_init()
     is_started = true
     -- whether the bot should be running or not.
     start_time = os.date('%c')
+end
+
+function adjust_user(tab)
+    if tab.is_bot then
+        tab.type = 'bot'
+    else
+        tab.type = 'private'
+    end
+    tab.tg_cli_id = tonumber(tab.id)
+    tab.print_name = tab.first_name
+    if tab.last_name then
+        tab.print_name = tab.print_name .. ' ' .. tab.last_name
+    end
+    return tab
+end
+
+function adjust_group(tab)
+    tab.type = 'group'
+    local id_without_minus = tostring(tab.id):gsub('-', '')
+    tab.tg_cli_id = tonumber(id_without_minus)
+    tab.print_name = tab.title
+    return tab
+end
+
+function adjust_supergroup(tab)
+    local id_without_minus = tostring(tab.id):gsub('-100', '')
+    tab.type = 'supergroup'
+    tab.tg_cli_id = tonumber(id_without_minus)
+    tab.print_name = tab.title
+    return tab
+end
+
+function adjust_channel(tab)
+    local id_without_minus = tostring(tab.id):gsub('-100', '')
+    tab.type = 'channel'
+    tab.tg_cli_id = tonumber(id_without_minus)
+    tab.print_name = tab.title
+    return tab
+end
+
+-- adjust message for cli plugins
+-- recursive to simplify code
+function adjust_msg(msg)
+    -- sender print_name and tg_cli_id
+    msg.from = adjust_user(msg.from)
+    if msg.adder then
+        msg.adder = adjust_user(msg.adder)
+    end
+    if msg.added then
+        for k, v in pairs(msg.added) do
+            msg.added[k] = adjust_user(v)
+        end
+    end
+    if msg.remover then
+        msg.remover = adjust_user(msg.remover)
+    end
+    if msg.removed then
+        msg.removed = adjust_user(msg.removed)
+    end
+    if msg.entities then
+        for k, v in pairs(msg.entities) do
+            if msg.entities[k].user then
+                adjust_user(msg.entities[k].user)
+            end
+        end
+    end
+
+    if msg.chat.type then
+        if msg.chat.type == 'private' then
+            -- private chat
+            msg.bot = adjust_user(bot)
+            msg.chat = adjust_user(msg.chat)
+            msg.receiver = 'user#id' .. msg.chat.tg_cli_id
+        elseif msg.chat.type == 'group' then
+            -- group
+            msg.chat = adjust_group(msg.chat)
+            msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
+        elseif msg.chat.type == 'supergroup' then
+            -- supergroup
+            msg.chat = adjust_supergroup(msg.chat)
+            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
+        elseif msg.chat.type == 'channel' then
+            -- channel
+            msg.chat = adjust_channel(msg.chat)
+            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
+        end
+    end
+
+    -- if forward adjust forward
+    if msg.forward then
+        if msg.forward_from then
+            msg.forward_from = adjust_user(msg.forward_from)
+        elseif msg.forward_from_chat then
+            msg.forward_from_chat = adjust_channel(msg.forward_from_chat)
+        end
+    end
+
+    -- if reply adjust reply
+    if msg.reply then
+        msg.reply_to_message = adjust_msg(msg.reply_to_message)
+    end
+
+    -- group language
+    msg.lang = get_lang(msg.chat.id)
+    return msg
+end
+
+local function update_sudoers(msg)
+    if sudoers[tostring(msg.from.id)] then
+        sudoers[tostring(msg.from.id)] = clone_table(msg.from)
+    end
+end
+
+function pre_process_reply(msg)
+    if msg.reply_to_message then
+        msg.reply = true
+    end
+    return msg
+end
+
+function pre_process_callback(msg)
+    if msg.cb_id then
+        msg.cb = true
+        msg.text = "###cb" .. msg.data
+        msg.target_id = msg.data:match('(-%d+)$')
+    end
+    if msg.reply then
+        msg.reply_to_message = pre_process_callback(msg.reply_to_message)
+    end
+    return msg
+end
+
+-- recursive to simplify code
+function pre_process_forward(msg)
+    if msg.forward_from or msg.forward_from_chat then
+        msg.forward = true
+    end
+    if msg.reply then
+        msg.reply_to_message = pre_process_forward(msg.reply_to_message)
+    end
+    return msg
+end
+
+-- recursive to simplify code
+function pre_process_media_msg(msg)
+    msg.media = false
+    if msg.audio then
+        msg.media = true
+        msg.text = "%[audio%]"
+        msg.media_type = 'audio'
+    elseif msg.contact then
+        msg.media = true
+        msg.text = "%[contact%]"
+        msg.media_type = 'contact'
+    elseif msg.document then
+        msg.media = true
+        msg.text = "%[document%]"
+        msg.media_type = 'document'
+        if msg.document.mime_type == 'video/mp4' then
+            msg.text = "%[gif%]"
+            msg.media_type = 'gif'
+        end
+    elseif msg.location then
+        msg.media = true
+        msg.text = "%[location%]"
+        msg.media_type = 'location'
+    elseif msg.photo then
+        msg.media = true
+        msg.text = "%[photo%]"
+        msg.media_type = 'photo'
+    elseif msg.sticker then
+        msg.media = true
+        msg.text = "%[sticker%]"
+        msg.media_type = 'sticker'
+    elseif msg.video then
+        msg.media = true
+        msg.text = "%[video%]"
+        msg.media_type = 'video'
+    elseif msg.video_note then
+        msg.media = true
+        msg.text = "%[video_note%]"
+        msg.media_type = 'video_note'
+    elseif msg.voice then
+        msg.media = true
+        msg.text = "%[voice_note%]"
+        msg.media_type = 'voice_note'
+    end
+
+    if msg.entities then
+        for i, entity in pairs(msg.entities) do
+            if entity.type == 'url' or entity.type == 'text_link' then
+                msg.url = true
+                msg.media = true
+                msg.media_type = 'link'
+                break
+            end
+        end
+        if not msg.url then
+            msg.media = false
+        end
+        -- if the entity it's not an url (username/bot command), set msg.media as false
+    end
+    if msg.reply then
+        pre_process_media_msg(msg.reply_to_message)
+    end
+    return msg
+end
+
+-- recursive to simplify code
+function pre_process_service_msg(msg)
+    msg.service = false
+    if msg.group_chat_created then
+        msg.service = true
+        msg.text = '!!tgservice chat_created ' ..(msg.text or '')
+        msg.service_type = 'chat_created'
+    elseif msg.new_chat_members then
+        msg.adder = clone_table(msg.from)
+        msg.added = { }
+        for k, v in pairs(msg.new_chat_members) do
+            if msg.from.id == v.id then
+                msg.added[k] = clone_table(msg.from)
+            else
+                msg.added[k] = clone_table(v)
+            end
+        end
+    elseif msg.new_chat_member then
+        msg.adder = clone_table(msg.from)
+        msg.added = { }
+        if msg.from.id == msg.new_chat_member.id then
+            msg.added[1] = clone_table(msg.from)
+        else
+            msg.added[1] = clone_table(msg.new_chat_member)
+        end
+    elseif msg.left_chat_member then
+        msg.remover = clone_table(msg.from)
+        if msg.from.id == msg.left_chat_member.id then
+            msg.removed = clone_table(msg.from)
+        else
+            msg.removed = clone_table(msg.left_chat_member)
+        end
+    elseif msg.migrate_from_chat_id then
+        msg.service = true
+        msg.text = '!!tgservice migrated_from ' ..(msg.text or '')
+        msg.service_type = 'migrated_from'
+        migrate_to_supergroup(msg)
+    elseif msg.pinned_message then
+        msg.service = true
+        msg.text = '!!tgservice pinned_message ' ..(msg.text or '')
+        msg.service_type = 'pinned_message'
+    elseif msg.delete_chat_photo then
+        msg.service = true
+        msg.text = '!!tgservice delete_chat_photo ' ..(msg.text or '')
+        msg.service_type = 'delete_chat_photo'
+    elseif msg.new_chat_photo then
+        msg.service = true
+        msg.text = '!!tgservice chat_change_photo ' ..(msg.text or '')
+        msg.service_type = 'chat_change_photo'
+    elseif msg.new_chat_title then
+        msg.service = true
+        msg.text = '!!tgservice chat_rename ' ..(msg.text or '')
+        msg.service_type = 'chat_rename'
+    end
+    if msg.adder and msg.added then
+        msg.service = true
+        -- add_user
+        if #msg.new_chat_members == 1 then
+            if msg.adder.id == msg.added[1].id then
+                msg.text = '!!tgservice chat_add_user_link ' ..(msg.text or '')
+                msg.service_type = 'chat_add_user_link'
+            else
+                msg.text = '!!tgservice chat_add_user ' ..(msg.text or '')
+                msg.service_type = 'chat_add_user'
+            end
+        else
+            msg.text = '!!tgservice chat_add_users ' ..(msg.text or '')
+            msg.service_type = 'chat_add_users'
+        end
+        msg.new_chat_member = nil
+        msg.new_chat_members = nil
+        msg.new_chat_participant = nil
+    end
+    if msg.remover and msg.removed then
+        msg.service = true
+        -- del_user
+        if msg.remover.id == msg.removed.id then
+            msg.text = '!!tgservice chat_del_user_leave ' ..(msg.text or '')
+            msg.service_type = 'chat_del_user_leave'
+        else
+            msg.text = '!!tgservice chat_del_user ' ..(msg.text or '')
+            msg.service_type = 'chat_del_user'
+        end
+        msg.left_chat_member = nil
+        msg.left_chat_participant = nil
+    end
+    if msg.reply then
+        pre_process_service_msg(msg.reply_to_message)
+    end
+    return msg
 end
 
 ---------WHEN THE BOT IS STARTED FROM THE TERMINAL, THIS IS THE FIRST FUNCTION HE FOUNDS
