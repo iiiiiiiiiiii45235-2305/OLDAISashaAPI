@@ -25,7 +25,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                return langs[msg.lang].cantDeleteMessage
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
@@ -66,7 +66,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                return langs[msg.lang].cantDeleteMessage
             end
             if msg.reply then
                 if not sendReply(msg.reply_to_message, matches[2], 'markdown') then
@@ -107,7 +107,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                return langs[msg.lang].cantDeleteMessage
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
@@ -148,7 +148,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                return langs[msg.lang].cantDeleteMessage
             end
             if msg.reply then
                 if not sendReply(msg.reply_to_message, matches[2], 'html') then
@@ -187,7 +187,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                return langs[msg.lang].cantDeleteMessage
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
@@ -222,7 +222,7 @@ local function run(msg, matches)
                 return langs[msg.lang].crossexecDenial
             end
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                return langs[msg.lang].cantDeleteMessage
             end
             if msg.reply then
                 return sendReply(msg.reply_to_message, matches[2])
@@ -324,7 +324,7 @@ local function run(msg, matches)
         mystat('/reactions')
         print(matches[1]:lower())
         if not deleteMessage(msg.chat.id, msg.message_id, true) then
-            sendReply(msg, langs[msg.lang].cantDeleteMessage)
+            return langs[msg.lang].cantDeleteMessage
         end
         sendChatAction(msg.chat.id,(matches[1]:lower()):gsub('del', ''))
         return
