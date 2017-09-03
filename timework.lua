@@ -1,6 +1,6 @@
 require("introtimework")
-local bot, sudoers, a, b = ...
+local _bot, _sudoers, a, b = ...
 sendMessage(41400331, vardumptext(bot) .. '\n' .. vardumptext(sudoers) .. '\n' .. a .. b)
-bot = loadstring(bot)()
-sudoers = loadstring(sudoers)()
+bot = assert(loadstring(_bot)()))
+sudoers = assert(loadstring(_sudoers))()
 sendMessage(41400331, vardumptext(bot) .. '\n' .. vardumptext(sudoers) .. '\n' .. a .. b)
