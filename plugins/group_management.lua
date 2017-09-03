@@ -1692,7 +1692,7 @@ local function run(msg, matches)
                     end
                     if msg.reply then
                         if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            return langs[msg.lang].cantDeleteMessage
+                            return sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                         end
                     end
                     return
