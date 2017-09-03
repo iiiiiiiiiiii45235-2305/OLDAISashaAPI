@@ -6,7 +6,7 @@ end
 
 return {
     description = "TEST",
-    patterns = { },
+    patterns = { "^[#!/]([Tt][Ee][Ss][Tt])$", },
     run = run,
     min_rank = 4,
     syntax = { }
