@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
-        loadfile("timework.lua")(20, 30, 40, vardumptext)
+        io.popen("lua timework.lua 30 40 \"porco dio\" " .. vardumptext)
     end
 end
 
