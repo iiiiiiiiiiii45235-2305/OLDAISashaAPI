@@ -1,5 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
+        loadfile("timework.lua")(20, 30, 40, vardumptext)
     end
 end
 
