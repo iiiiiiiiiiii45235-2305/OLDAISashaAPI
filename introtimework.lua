@@ -1,3 +1,4 @@
+local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', title = 'FAKE USER CHAT', id = 'FAKE ID' }
 clr = require "term.colors"
 
 last_cron = os.date('%M')
@@ -116,41 +117,57 @@ function bot_init()
 end
 
 function adjust_user(tab)
-    if tab.is_bot then
-        tab.type = 'bot'
+    if tab then
+        if tab.is_bot then
+            tab.type = 'bot'
+        else
+            tab.type = 'private'
+        end
+        tab.tg_cli_id = tonumber(tab.id)
+        tab.print_name = tab.first_name
+        if tab.last_name then
+            tab.print_name = tab.print_name .. ' ' .. tab.last_name
+        end
+        return tab
     else
-        tab.type = 'private'
+        return adjust_user(fake_user_chat)
     end
-    tab.tg_cli_id = tonumber(tab.id)
-    tab.print_name = tab.first_name
-    if tab.last_name then
-        tab.print_name = tab.print_name .. ' ' .. tab.last_name
-    end
-    return tab
 end
 
 function adjust_group(tab)
-    tab.type = 'group'
-    local id_without_minus = tostring(tab.id):gsub('-', '')
-    tab.tg_cli_id = tonumber(id_without_minus)
-    tab.print_name = tab.title
-    return tab
+    if tab then
+        tab.type = 'group'
+        local id_without_minus = tostring(tab.id):gsub('-', '')
+        tab.tg_cli_id = tonumber(id_without_minus)
+        tab.print_name = tab.title
+        return tab
+    else
+        return adjust_group(fake_user_chat)
+    end
 end
 
 function adjust_supergroup(tab)
-    local id_without_minus = tostring(tab.id):gsub('-100', '')
-    tab.type = 'supergroup'
-    tab.tg_cli_id = tonumber(id_without_minus)
-    tab.print_name = tab.title
-    return tab
+    if tab then
+        local id_without_minus = tostring(tab.id):gsub('-100', '')
+        tab.type = 'supergroup'
+        tab.tg_cli_id = tonumber(id_without_minus)
+        tab.print_name = tab.title
+        return tab
+    else
+        return adjust_supergroup(fake_user_chat)
+    end
 end
 
 function adjust_channel(tab)
-    local id_without_minus = tostring(tab.id):gsub('-100', '')
-    tab.type = 'channel'
-    tab.tg_cli_id = tonumber(id_without_minus)
-    tab.print_name = tab.title
-    return tab
+    if tab then
+        local id_without_minus = tostring(tab.id):gsub('-100', '')
+        tab.type = 'channel'
+        tab.tg_cli_id = tonumber(id_without_minus)
+        tab.print_name = tab.title
+        return tab
+    else
+        return adjust_channel(fake_user_chat)
+    end
 end
 
 -- adjust message for cli plugins
