@@ -1,7 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
-        io.popen("lua timework.lua 30 40 \"porco dio\"")
-        io.popen("lua timework.lua 40 \"porco dio\" 30")
+        io.popen("lua timework.lua \"" .. vardumptext(bot):gsub("\"", "\\\"") .. "\" \"" .. vardumptext(sudoers):gsub("\"", "\\\"") .. "\" 30 40")
     end
 end
 

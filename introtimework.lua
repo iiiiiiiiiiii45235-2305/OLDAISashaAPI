@@ -106,27 +106,6 @@ function bot_init()
     require("methods")
     require("ranks")
 
-    while not bot do
-        -- Get bot info and retry if unable to connect.
-        local obj = getMe()
-        if obj then
-            if obj.result then
-                bot = obj.result
-            end
-        end
-    end
-    local obj = getChat(149998353)
-    if type(obj) == 'table' then
-        bot.userVersion = obj
-    end
-
-    for v, user in pairs(config.sudo_users) do
-        local obj_user = getChat(user)
-        if type(obj_user) == 'table' then
-            sudoers[tostring(obj_user.id)] = obj_user
-        end
-    end
-
     last_update = last_update or 0
     -- Set loop variables: Update offset,
     last_cron = last_cron or os.time()

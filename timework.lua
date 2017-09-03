@@ -1,7 +1,5 @@
 require("introtimework")
-local a, b, c, d = ...
-sendMessage(41400331, a .. ' ' .. b .. ' ' .. c .. ' ' .. vardumptext(a))
-os.execute("sleep " .. 5)
-sendMessage(41400331, a .. ' ' .. b .. ' ' .. c .. ' ' .. vardumptext(a))
-os.execute("sleep " .. 10)
-sendMessage(41400331, a .. ' ' .. b .. ' ' .. c .. ' ' .. vardumptext(a))
+local bot, sudoers, a, b = ...
+bot = loadstring(bot)()
+sudoers = loadstring(sudoers)()
+sendMessage(41400331, vardumptext(bot) .. '\n' .. vardumptext(sudoers) .. '\n' .. a .. b)
