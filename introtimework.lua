@@ -109,8 +109,6 @@ end
 
 bot_init() -- Actually start the script. Run the bot_init function.
 
-print(clr.white .. 'Halted.' .. clr.reset)
-
 --[[COLORS
   black = "\27[30m",
   blink = "\27[5m",

@@ -1,8 +1,7 @@
 require("introtimework")
 local a, b, c, d = ...
-os.execute("sleep " .. 3)
-printvardump(a)
-printvardump(b)
-printvardump(c)
+sendMessage(41400331, a .. ' ' .. b .. ' ' .. c .. ' ' .. vardumptext(a))
+os.execute("sleep " .. 5)
+sendMessage(41400331, a .. ' ' .. b .. ' ' .. c .. ' ' .. vardumptext(a))
 os.execute("sleep " .. 10)
-printvardump(vardumptext(a))
+sendMessage(41400331, a .. ' ' .. b .. ' ' .. c .. ' ' .. vardumptext(a))
