@@ -1343,8 +1343,10 @@ local function run(msg, matches)
         if msg.from.is_mod then
             mystat('/del')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
-            if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                return langs[msg.lang].cantDeleteMessage
+            if msg.chat.type ~= 'private' then
+                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                    return langs[msg.lang].cantDeleteMessage
+                end
             end
             if msg.reply then
                 if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
