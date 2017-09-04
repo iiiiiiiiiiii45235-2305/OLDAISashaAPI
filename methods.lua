@@ -436,9 +436,9 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
 end
 
 function sendMessage_SUDOERS(text, parse_mode)
-    for v, user in pairs(sudoers) do
-        if user.id ~= bot.userVersion.id then
-            sendMessage(user.id, text, parse_mode, false, true)
+    for k, v in pairs(config.sudo_users) do
+        if k ~= bot.userVersion.id then
+            sendMessage(k, text, parse_mode, false, true)
         end
     end
 end
@@ -496,9 +496,9 @@ function forwardMessage(chat_id, from_chat_id, message_id)
 end
 
 function forwardMessage_SUDOERS(from_chat_id, message_id)
-    for v, user in pairs(sudoers) do
-        if user.id ~= bot.userVersion.id then
-            forwardMessage(user.id, from_chat_id, message_id)
+    for k, v in pairs(config.sudo_users) do
+        if k ~= bot.userVersion.id then
+            forwardMessage(k, from_chat_id, message_id)
         end
     end
 end
@@ -1168,9 +1168,9 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
 end
 
 function sendDocument_SUDOERS(document)
-    for v, user in pairs(sudoers) do
-        if user.id ~= bot.userVersion.id then
-            sendDocument(user.id, document)
+    for k, v in pairs(config.sudo_users) do
+        if k ~= bot.userVersion.id then
+            sendDocument(k, document)
         end
     end
 end
@@ -1408,9 +1408,9 @@ function getChatParticipants(chat_id)
 end
 
 function sudoInChat(chat_id)
-    for v, user in pairs(sudoers) do
-        if user.id ~= bot.userVersion.id then
-            local member = getChatMember(chat_id, user.id)
+    for k, v in pairs(config.sudo_users) do
+        if k ~= bot.userVersion.id then
+            local member = getChatMember(chat_id, k)
             if type(member) == 'table' then
                 if member.ok and member.result then
                     if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' or member.status == 'restricted' then

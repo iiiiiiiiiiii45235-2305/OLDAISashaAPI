@@ -7,7 +7,6 @@ last_redis_cron = ''
 last_redis_db_cron = ''
 last_redis_administrator_cron = ''
 
-sudoers = { }
 tmp_msg = { }
 news_table = {
     chats = { },
@@ -37,8 +36,8 @@ function load_config()
         f:close()
     end
     local config = loadfile("./config.lua")()
-    for v, user in pairs(config.sudo_users) do
-        print(clr.green .. "Sudo user: " .. user .. clr.reset)
+    for k, v in pairs(config.sudo_users) do
+        print(clr.green .. "Sudo user: " .. k .. clr.reset)
     end
     return config
 end
@@ -79,7 +78,7 @@ function create_config()
             'whitelist',
         },
         disabled_plugin_on_chat = { },
-        sudo_users = { 41400331, },
+        sudo_users = { ["41400331"] = 41400331, },
         alternatives = { db = 'data/alternatives.json' },
         moderation = { data = 'data/moderation.json' },
         likecounter = { db = 'data/likecounterdb.json' },
@@ -221,10 +220,10 @@ function bot_init()
     print(clr.white .. 'Loading moderation.json' .. clr.reset)
     data = load_data(config.moderation.data)
 
-    for v, user in pairs(config.sudo_users) do
-        local obj_user = getChat(user)
+    for k, v in pairs(config.sudo_users) do
+        local obj_user = getChat(k)
         if type(obj_user) == 'table' then
-            sudoers[tostring(obj_user.id)] = obj_user
+            config.sudo_users[tostring(k)] = obj_user
         end
     end
 
@@ -437,8 +436,8 @@ local function collect_stats(msg)
 end
 
 local function update_sudoers(msg)
-    if sudoers[tostring(msg.from.id)] then
-        sudoers[tostring(msg.from.id)] = clone_table(msg.from)
+    if config.sudo_users[tostring(msg.from.id)] then
+        config.sudo_users[tostring(msg.from.id)] = clone_table(msg.from)
     end
 end
 
@@ -728,8 +727,8 @@ function msg_valid(msg)
             plugins.database.pre_process(msg)
             -- if not a known group receive messages just from sudo
             local sudoMessage = false
-            for v, user in pairs(sudoers) do
-                if tostring(msg.from.id) == tostring(user.id) then
+            for k, v in pairs(config.sudo_users) do
+                if tostring(msg.from.id) == tostring(k) then
                     sudoMessage = true
                 end
             end

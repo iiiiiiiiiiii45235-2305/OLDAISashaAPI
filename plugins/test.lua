@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
-        io.popen(('lua timework.lua %q'):format(vardumptext(bot):gsub('\n', '')) ..(' %q'):format(vardumptext(sudoers):gsub('\n', '')) .. ' 30 40')
+        io.popen('lua timework.lua 30 40')
     end
 end
 

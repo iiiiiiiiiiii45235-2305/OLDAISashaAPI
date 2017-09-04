@@ -8,7 +8,6 @@ last_redis_cron = ''
 last_redis_db_cron = ''
 last_redis_administrator_cron = ''
 
-sudoers = { }
 tmp_msg = { }
 
 -- Save the content of config to config.lua
@@ -29,8 +28,8 @@ function load_config()
         f:close()
     end
     local config = loadfile("./config.lua")()
-    for v, user in pairs(config.sudo_users) do
-        print(clr.green .. "Sudo user: " .. user .. clr.reset)
+    for k, v in pairs(config.sudo_users) do
+        print(clr.green .. "Sudo user: " .. k .. clr.reset)
     end
     return config
 end
@@ -106,6 +105,20 @@ function bot_init()
     end
     require("methods")
     require("ranks")
+
+    while not bot do
+        -- Get bot info and retry if unable to connect.
+        local obj = getMe()
+        if obj then
+            if obj.result then
+                bot = obj.result
+            end
+        end
+    end
+    local obj = getChat(149998353)
+    if type(obj) == 'table' then
+        bot.userVersion = obj
+    end
 
     last_update = last_update or 0
     -- Set loop variables: Update offset,
@@ -238,8 +251,8 @@ function adjust_msg(msg)
 end
 
 local function update_sudoers(msg)
-    if sudoers[tostring(msg.from.id)] then
-        sudoers[tostring(msg.from.id)] = clone_table(msg.from)
+    if config.sudo_users[tostring(msg.from.id)] then
+        config.sudo_users[tostring(msg.from.id)] = clone_table(msg.from)
     end
 end
 

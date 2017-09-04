@@ -104,8 +104,8 @@ function is_sudo(param_msg)
     local var = false
 
     -- Check users id in config
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(param_msg.from.id) then
+    for k, v in pairs(config.sudo_users) do
+        if tostring(k) == tostring(param_msg.from.id) then
             -- bot sudo
             var = true
         end
@@ -117,8 +117,8 @@ function is_sudo2(user_id)
     local var = false
 
     -- Check users id in config
-    for v, user in pairs(sudoers) do
-        if tostring(user.id) == tostring(user_id) then
+    for k, v in pairs(config.sudo_users) do
+        if tostring(k) == tostring(user_id) then
             -- bot sudo
             var = true
         end

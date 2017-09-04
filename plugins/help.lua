@@ -319,21 +319,24 @@ local function run(msg, matches)
     if matches[1]:lower() == 'sudolist' then
         mystat('/sudolist')
         local text = 'SUDO INFO'
-        for v, user in pairs(sudoers) do
+        for k, v in pairs(config.sudo_users) do
             local lang = get_lang(msg.chat.id)
-            if user.first_name then
-                text = text .. langs[lang].name .. user.first_name
+            if type(v) == 'table' then
+                if v.first_name then
+                    text = text .. langs[lang].name .. v.first_name
+                end
+                if v.last_name then
+                    text = text .. langs[lang].surname .. v.last_name
+                end
+                if v.username then
+                    text = text .. langs[lang].username .. '@' .. v.username
+                end
+                local msgs = tonumber(redis:get('msgs:' .. v.id .. ':' .. msg.chat.id) or 0)
+                text = text .. langs[lang].date .. os.date('%c') ..
+                langs[lang].totalMessages .. msgs
+            else
+                text = text .. '\n🆔: ' .. k .. '\n\n'
             end
-            if user.last_name then
-                text = text .. langs[lang].surname .. user.last_name
-            end
-            if user.username then
-                text = text .. langs[lang].username .. '@' .. user.username
-            end
-            local msgs = tonumber(redis:get('msgs:' .. user.id .. ':' .. msg.chat.id) or 0)
-            text = text .. langs[lang].date .. os.date('%c') ..
-            langs[lang].totalMessages .. msgs
-            text = text .. '\n🆔: ' .. user.id .. '\n\n'
         end
         return text
     end

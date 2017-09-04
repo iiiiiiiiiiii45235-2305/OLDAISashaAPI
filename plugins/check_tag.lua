@@ -271,17 +271,17 @@ local function pre_process(msg)
         end
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             -- exclude private chats with bot
-            for v, user in pairs(sudoers) do
-                if not notified[tostring(user.id)] then
+            for k, v in pairs(config.sudo_users) do
+                if not notified[tostring(k)] then
                     -- exclude already notified
-                    if tonumber(msg.from.id) ~= tonumber(user.id) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
+                    if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
                         -- exclude autotags and tags of tg-cli version
-                        if check_tag(msg, user.id, user) then
-                            local lang = get_lang(user.id)
+                        if check_tag(msg, k, v) then
+                            local lang = get_lang(k)
                             -- set user as notified to not send multiple notifications
-                            notified[tostring(user.id)] = true
+                            notified[tostring(k)] = true
                             if msg.reply then
-                                forwardMessage(user.id, msg.chat.id, msg.reply_to_message.message_id)
+                                forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
                             end
                             local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
                             if msg.from.username then
@@ -299,9 +299,9 @@ local function pre_process(msg)
                                     text = text .. msg.caption
                                 end
                             end
-                            text = text .. '\n#tag' .. user.id
-                            sendMessage(user.id, text)
-                            sendKeyboard(user.id, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
+                            text = text .. '\n#tag' .. k
+                            sendMessage(k, text)
+                            sendKeyboard(k, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id))
                         end
                     end
                 end
