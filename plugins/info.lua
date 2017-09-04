@@ -274,6 +274,9 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     end
                 end
                 if obj.is_mod then
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
                     if isBanned(obj.id, chat_id) then
                         keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
                         otherinfo = otherinfo .. 'BANNED '
@@ -409,6 +412,9 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     end
                 end
                 if obj.is_mod then
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
                     if isBanned(obj.id, chat_id) then
                         keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
                         otherinfo = otherinfo .. 'BANNED '
