@@ -1457,6 +1457,14 @@ local function run(msg, matches)
             end
         end
         if data[tostring(msg.chat.id)] then
+            if matches[1]:lower() == 'createkeyboard' and matches[2] then
+                if msg.from.is_mod then
+                    mystat('/createkeyboard')
+
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if matches[1]:lower() == 'rules' then
                 mystat('/rules')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
