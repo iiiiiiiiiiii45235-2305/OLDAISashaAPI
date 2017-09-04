@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
-        io.popen('lua timework.lua "' .. matches[1] .. '" "' .. matches[2] .. '" "' .. matches[3] .. '"')
+        io.popen('lua timework.lua "' .. matches[2] .. '" "' .. matches[3] .. '" "' .. matches[4] .. '"')
     end
 end
 
