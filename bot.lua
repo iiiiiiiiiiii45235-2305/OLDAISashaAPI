@@ -35,7 +35,7 @@ function load_config()
     else
         f:close()
     end
-    local config = assert(loadfile("./config.lua"))()
+    local config = loadfile("./config.lua")()
     for k, v in pairs(config.sudo_users) do
         print(clr.green .. "Sudo user: " .. k .. clr.reset)
     end
