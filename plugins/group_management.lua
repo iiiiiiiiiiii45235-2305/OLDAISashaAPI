@@ -1339,6 +1339,38 @@ local function run(msg, matches)
         end
     end
 
+    if matches[1]:lower() == 'del' then
+        if msg.from.is_mod then
+            mystat('/del')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                return langs[msg.lang].cantDeleteMessage
+            end
+            if msg.reply then
+                if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                    return sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                end
+            end
+            return
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'deletekeyboard' then
+        if msg.reply then
+            if msg.reply_to_message.from.id == bot.id then
+                if msg.reply_to_message.text or msg.reply_to_message.caption then
+                    if msg.from.is_mod then
+                        mystat('/deletekeyboard')
+                        return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
+                    else
+                        return langs[msg.lang].require_mod
+                    end
+                end
+            end
+        end
+    end
+
     -- INGROUP/SUPERGROUP
     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
         if matches[1]:lower() == 'add' and not matches[2] then
@@ -1682,37 +1714,6 @@ local function run(msg, matches)
                 mystat('/muteslist')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                 return mutesList(msg.chat.id)
-            end
-            if matches[1]:lower() == 'del' then
-                if msg.from.is_mod then
-                    mystat('/del')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        return langs[msg.lang].cantDeleteMessage
-                    end
-                    if msg.reply then
-                        if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            return sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
-                        end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'deletekeyboard' then
-                if msg.reply then
-                    if msg.reply_to_message.from.id == bot.id then
-                        if msg.reply_to_message.text or msg.reply_to_message.caption then
-                            if msg.from.is_mod then
-                                mystat('/deletekeyboard')
-                                return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
-                            else
-                                return langs[msg.lang].require_mod
-                            end
-                        end
-                    end
-                end
             end
             if matches[1]:lower() == 'settings' then
                 mystat('/settings')
