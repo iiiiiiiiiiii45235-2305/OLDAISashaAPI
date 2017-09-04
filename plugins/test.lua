@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if is_sudo(msg) then
-        io.popen('lua timework.lua 10 deleteMessage(-167065200,132088) 41400331')
+        io.popen('lua timework.lua "10" "deleteMessage(-167065200,132088)" "41400331"')
     end
 end
 
