@@ -164,7 +164,7 @@ return {
         "^(###cbtempmessage)(%d+)(DONE)(%-%d+)$",
 
         -- X hour Y minutes Z seconds
-        "^[#!/]([Tt][Ee][Mm][Pp][Mm][Ss][Gg]) ([1234]?%d) ([12345]?%d) ([12345]%d) (.*)$",
+        "^[#!/]([Tt][Ee][Mm][Pp][Mm][Ss][Gg]) (%d+) (%d+) (%d+) (.*)$",
         -- private keyboard
         "^[#!/]([Tt][Ee][Mm][Pp][Mm][Ss][Gg]) (.*)$",
     },
