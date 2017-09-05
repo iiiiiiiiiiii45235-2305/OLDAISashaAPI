@@ -770,7 +770,7 @@ return {
 
         -- tempmessage.lua --
         tempmessageIntro = "Tastiera del tempo:\nPuoi eliminare messaggi fino a 48 ore dopo l'invio.",
-        errorTimeRange = "Errore, non puoi specificare un tempo superiore alle 48 ore o negativo.",
+        errorTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
         secondsReset = "Secondi azzerati.",
         minutesReset = "Minuti azzerati.",
         hoursReset = "Ore azzerate.",
@@ -2068,7 +2068,7 @@ return {
 
         -- tempmessage.lua --
         tempmessageIntro = "Time keyboard:\nYou can delete messages up to 48 hours after they've been sent.",
-        errorTimeRange = "Error, you can't select exceed 48 hours or specify a negative value.",
+        errorTimeRange = "Error, the value must be included between 0 and 47 hours 59 minutes and 59 seconds.",
         secondsReset = "Seconds reset.",
         minutesReset = "Minutes reset.",
         hoursReset = "Hours reset.",
