@@ -158,9 +158,9 @@ return {
     {
         "^(###cbtempmessage)(DELETE)$",
         "^(###cbtempmessage)(%d+)(BACK)(%-%d+)$",
-        "^(###cbtempmessage)(%d+)(SECONDS)([%+%-]%d?%d)(%-%d+)$",
-        "^(###cbtempmessage)(%d+)(MINUTES)([%+%-]%d?%d)(%-%d+)$",
-        "^(###cbtempmessage)(%d+)(HOURS)([%+%-]%d?%d)(%-%d+)$",
+        "^(###cbtempmessage)(%d+)(SECONDS)([%+%-]%d+)(%-%d+)$",
+        "^(###cbtempmessage)(%d+)(MINUTES)([%+%-]%d+)(%-%d+)$",
+        "^(###cbtempmessage)(%d+)(HOURS)([%+%-]%d+)(%-%d+)$",
         "^(###cbtempmessage)(%d+)(DONE)(%-%d+)$",
 
         -- X hour Y minutes Z seconds
