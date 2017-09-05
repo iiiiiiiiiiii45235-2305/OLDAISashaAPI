@@ -83,25 +83,37 @@ local function run(msg, matches)
                                     if matches[3] == 'SECONDS' then
                                         if tonumber(matches[4]) == 0 then
                                             time = time - seconds
+                                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
                                         else
                                             if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
                                                 time = time + tonumber(matches[4])
+                                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
                                             end
                                         end
                                     elseif matches[3] == 'MINUTES' then
                                         if tonumber(matches[4]) == 0 then
                                             time = time -(minutes * 60)
+                                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
                                         else
                                             if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                                 time = time +(tonumber(matches[4]) * 60)
+                                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
                                             end
                                         end
                                     elseif matches[3] == 'HOURS' then
                                         if tonumber(matches[4]) == 0 then
                                             time = time -(hours * 60 * 60)
+                                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
                                         else
                                             if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
                                                 time = time +(tonumber(matches[4]) * 60 * 60)
+                                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
                                             end
                                         end
                                     end
