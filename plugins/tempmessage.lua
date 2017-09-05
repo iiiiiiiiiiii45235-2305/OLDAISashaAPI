@@ -83,7 +83,7 @@ local function run(msg, matches)
                                         if tonumber(matches[4]) == 0 then
                                             time = time - seconds
                                         else
-                                            if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
+                                            if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
                                                 time = time + tonumber(matches[4])
                                             end
                                         end
