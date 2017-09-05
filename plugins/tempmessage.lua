@@ -24,7 +24,7 @@ local function keyboard_tempmessage(chat_id, time)
         keyboard.inline_keyboard[i] = { }
     end
 
-    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'tempmessage' .. time .. 'BACK' .. chat_id }
+    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'tempmessage' .. time .. 'SECONDS0' .. chat_id }
     keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'tempmessage' .. time .. 'SECONDS-10' .. chat_id }
     keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'tempmessage' .. time .. 'SECONDS-5' .. chat_id }
     keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'tempmessage' .. time .. 'SECONDS-1' .. chat_id }
@@ -32,7 +32,7 @@ local function keyboard_tempmessage(chat_id, time)
     keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'tempmessage' .. time .. 'SECONDS+5' .. chat_id }
     keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'tempmessage' .. time .. 'SECONDS+10' .. chat_id }
 
-    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'tempmessage' .. time .. 'BACK' .. chat_id }
+    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'tempmessage' .. time .. 'MINUTES0' .. chat_id }
 
     keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'tempmessage' .. time .. 'MINUTES-10' .. chat_id }
     keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'tempmessage' .. time .. 'MINUTES-5' .. chat_id }
@@ -41,7 +41,7 @@ local function keyboard_tempmessage(chat_id, time)
     keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'tempmessage' .. time .. 'MINUTES+5' .. chat_id }
     keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'tempmessage' .. time .. 'MINUTES+10' .. chat_id }
 
-    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'tempmessage' .. time .. 'BACK' .. chat_id }
+    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'tempmessage' .. time .. 'HOURS0' .. chat_id }
 
     keyboard.inline_keyboard[6][1] = { text = "-5", callback_data = 'tempmessage' .. time .. 'HOURS-5' .. chat_id }
     keyboard.inline_keyboard[6][2] = { text = "-3", callback_data = 'tempmessage' .. time .. 'HOURS-3' .. chat_id }
@@ -68,10 +68,6 @@ local function run(msg, matches)
                         end
                     elseif string.match(matches[2], '^%d+$') and matches[3] then
                         local time = tonumber(matches[2])
-                        local hours, minutes, seconds = 0
-                        hours = string.format("%02.f", math.floor(time / 3600))
-                        minutes = string.format("%02.f", math.floor((time / 60) -(hours * 60)))
-                        seconds = string.format("%02.f", math.floor(time -(hours * 3600) -(minutes * 60)))
                         if matches[3] == 'BACK' then
                             if matches[4] then
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
@@ -79,17 +75,33 @@ local function run(msg, matches)
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                             if matches[4] and matches[5] then
                                 if is_mod2(msg.from.id, matches[5], false) then
+                                    local hours, minutes, seconds = 0
+                                    hours = string.format("%02.f", math.floor(time / 3600))
+                                    minutes = string.format("%02.f", math.floor((time / 60) -(hours * 60)))
+                                    seconds = string.format("%02.f", math.floor(time -(hours * 3600) -(minutes * 60)))
                                     if matches[3] == 'SECONDS' then
-                                        if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
-                                            time = time + tonumber(matches[4])
+                                        if tonumber(matches[4]) == 0 then
+                                            time = time - seconds
+                                        else
+                                            if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
+                                                time = time + tonumber(matches[4])
+                                            end
                                         end
                                     elseif matches[3] == 'MINUTES' then
-                                        if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
-                                            time = time +(tonumber(matches[4]) * 60)
+                                        if tonumber(matches[4]) == 0 then
+                                            time = time - minutes
+                                        else
+                                            if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
+                                                time = time +(tonumber(matches[4]) * 60)
+                                            end
                                         end
                                     elseif matches[3] == 'HOURS' then
-                                        if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
-                                            time = time +(tonumber(matches[4]) * 60 * 60)
+                                        if tonumber(matches[4]) == 0 then
+                                            time = time - hours
+                                        else
+                                            if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
+                                                time = time +(tonumber(matches[4]) * 60 * 60)
+                                            end
                                         end
                                     end
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[5], time))
