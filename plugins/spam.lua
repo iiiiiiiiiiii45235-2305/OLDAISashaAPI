@@ -17,7 +17,7 @@ end
 local function run(msg, matches)
     if matches[1]:lower() == 'spam' then
         if is_admin(msg) then
-            if type(msg.reply_id) ~= "nil" then
+            if msg.reply then
                 if matches[2] and matches[3] then
                     spamForward(msg.chat.id, msg.reply_id, matches[2], matches[3])
                 else
