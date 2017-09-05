@@ -1,10 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Checkmsg command (msg_checks).\n" ..
-    "Info command became a keyboard with a lot of commands in it (info) (mod^).\n" ..
-    "Delreactions (interact).\n" ..
-    "Id and Username commands are now for users (info).\n" ..
-    "Removed !helpall and !syntaxall commands to prevent flood_wait errors (help).\n",
+    "Tempmessage plugin to send messages that will be deleted after some time.\n" ..
+    "General fixes.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",

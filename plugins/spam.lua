@@ -2,7 +2,7 @@ local function spamText(chat_id, text, messages, time_between_messages)
     local i = 0
     while i <(tonumber(messages or 5) /(0.5 / tonumber(time_between_messages or 2))) / 2 do
         i = i + tonumber(time_between_messages or 2)
-        io.popen('lua timework.lua "spamtext" "' .. chat_id .. '" "' .. i .. '" "' ..('%q'):format(text) .. '"')
+        io.popen('lua timework.lua "spamtext" "' .. chat_id .. '" "' .. i .. '" "' .. text:gsub('"', '\"') .. '"')
     end
 end
 
