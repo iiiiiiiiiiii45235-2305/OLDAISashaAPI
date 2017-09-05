@@ -10,7 +10,7 @@ local function spamForward(chat_id, message_to_forward, messages, time_between_m
     local i = 0
     while i <(tonumber(messages or 5) /(0.5 / tonumber(time_between_messages or 2))) / 2 do
         i = i + tonumber(time_between_messages or 2)
-        io.popen('lua timework.lua "spamforward" "' .. chat_id .. '" "' .. i .. '" "' .. message_id .. '"')
+        io.popen('lua timework.lua "spamforward" "' .. chat_id .. '" "' .. i .. '" "' .. message_to_forward .. '"')
     end
 end
 
