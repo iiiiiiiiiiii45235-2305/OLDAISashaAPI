@@ -19,9 +19,9 @@ local function run(msg, matches)
         if is_admin(msg) then
             if msg.reply then
                 if matches[2] and matches[3] then
-                    spamForward(msg.chat.id, msg.reply_id, matches[2], matches[3])
+                    spamForward(msg.chat.id, msg.reply_to_message.message_id, matches[2], matches[3])
                 else
-                    spamForward(msg.chat.id, msg.reply_id)
+                    spamForward(msg.chat.id, msg.reply_to_message.message_id)
                 end
             else
                 if matches[3] and matches[4] then
