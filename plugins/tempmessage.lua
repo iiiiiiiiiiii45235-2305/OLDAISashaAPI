@@ -71,6 +71,7 @@ local function run(msg, matches)
                         if matches[3] == 'BACK' then
                             if matches[4] then
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             end
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                             if matches[4] and matches[5] then
@@ -117,8 +118,9 @@ local function run(msg, matches)
                                     if message_id then
                                         io.popen('lua timework.lua "delete" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
                                     end
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                                 end
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                deleteMessage(msg.chat.id, msg.message_id)
                             end
                         end
                     end

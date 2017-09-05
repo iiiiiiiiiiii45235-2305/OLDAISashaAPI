@@ -529,6 +529,7 @@ local function run(msg, matches)
                             else
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
                             end
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         elseif matches[2] == 'WHITELIST' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])

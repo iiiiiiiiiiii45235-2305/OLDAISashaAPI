@@ -294,8 +294,10 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'BACK' then
                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'BACKFAQ' then
                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'FAQ' and matches[3] then
                 if langs[msg.lang].faq[tonumber(matches[3])] then
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })

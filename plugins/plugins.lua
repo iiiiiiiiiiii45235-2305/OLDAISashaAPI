@@ -274,6 +274,7 @@ local function run(msg, matches)
                         editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
                 end
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'DELETE' then
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)

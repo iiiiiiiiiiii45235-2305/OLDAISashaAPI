@@ -244,6 +244,7 @@ return {
         hoursWord = " Ore ",
         daysWord = " Giorni ",
         monthsWord = " Mesi ",
+        keyboardUpdated = "Tastiera Aggiornata.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -769,6 +770,7 @@ return {
         -- tempmessage.lua --
         tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.",
         sendTimeKeyboardPvt = "Ti ho mandato la tastiera del tempo in privato.",
+        done = "Fatto.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migrazione completata.",
@@ -1526,6 +1528,7 @@ return {
         hoursWord = " Hours ",
         daysWord = " Days ",
         monthsWord = " Months ",
+        keyboardUpdated = "Keyboard Updated.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
@@ -2062,6 +2065,7 @@ return {
         -- tempmessage.lua --
         tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.",
         sendTimeKeyboardPvt = "I've sent you the time keyboard in private.",
+        done = "Done.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migration completed.",

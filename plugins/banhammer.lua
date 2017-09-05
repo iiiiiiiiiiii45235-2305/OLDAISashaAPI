@@ -206,6 +206,7 @@ local function run(msg, matches)
                                 chat_name = data[tostring(matches[4])].set_name or ''
                             end
                             editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[4], matches[3]))
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         end
                     elseif matches[3] and matches[4] then
                         if matches[5] then
