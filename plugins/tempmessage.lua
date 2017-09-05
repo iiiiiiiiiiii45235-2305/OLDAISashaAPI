@@ -131,7 +131,7 @@ local function run(msg, matches)
                     local time = seconds +(minutes * 60) +(hours * 60 * 60)
                     local message_id = sendMessage(msg.chat.id, matches[5]).result.message_id
                     if message_id then
-                        io.popen('lua timework.lua "delete" "' .. chat_id .. '" "' .. time .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "' .. time .. '" "' .. message_id .. '"')
                     end
                 elseif matches[2] then
                     text_table[tostring(msg.from.id)] = matches[2]
