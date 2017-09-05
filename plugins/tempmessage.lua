@@ -89,7 +89,7 @@ local function run(msg, matches)
                                         end
                                     elseif matches[3] == 'MINUTES' then
                                         if tonumber(matches[4]) == 0 then
-                                            time = time - minutes
+                                            time = time -(minutes * 60)
                                         else
                                             if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                                 time = time +(tonumber(matches[4]) * 60)
@@ -97,7 +97,7 @@ local function run(msg, matches)
                                         end
                                     elseif matches[3] == 'HOURS' then
                                         if tonumber(matches[4]) == 0 then
-                                            time = time - hours
+                                            time = time -(hours * 60 * 60)
                                         else
                                             if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
                                                 time = time +(tonumber(matches[4]) * 60 * 60)
