@@ -1,6 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "Tempmessage plugin to send messages that will be deleted after some time.\n" ..
+    "Delete send keyboard pvt messages and their commands after 1 minute.\n" ..
     "General fixes.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
