@@ -80,15 +80,15 @@ local function run(msg, matches)
                             if matches[4] and matches[5] then
                                 if is_mod2(msg.from.id, matches[5], false) then
                                     if matches[3] == 'SECONDS' then
-                                        if ((seconds + tonumber(matches[4])) >= 0) or((seconds + tonumber(matches[4])) < 60) then
+                                        if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                             time = time + tonumber(matches[4])
                                         end
                                     elseif matches[3] == 'MINUTES' then
-                                        if ((minutes + tonumber(matches[4])) >= 0) or((minutes + tonumber(matches[4])) < 60) then
+                                        if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                             time = time +(tonumber(matches[4]) * 60)
                                         end
                                     elseif matches[3] == 'HOURS' then
-                                        if ((hours + tonumber(matches[4])) >= 0) or((hours + tonumber(matches[4])) < 48) then
+                                        if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
                                             time = time +(tonumber(matches[4]) * 60 * 60)
                                         end
                                     end
@@ -112,6 +112,7 @@ local function run(msg, matches)
     if msg.chat.type ~= 'private' then
         if matches[1]:lower() == 'tempmsg' then
             if msg.from.is_mod then
+                deleteMessage(msg.chat.id, msg.message_id)
                 if matches[2] and matches[3] and matches[4] and matches[5] then
                     local hours = tonumber(matches[2])
                     local minutes = tonumber(matches[3])
