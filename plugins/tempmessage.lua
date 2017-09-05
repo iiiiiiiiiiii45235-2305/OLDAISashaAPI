@@ -50,7 +50,7 @@ local function keyboard_tempmessage(chat_id, time)
     keyboard.inline_keyboard[6][5] = { text = "+3", callback_data = 'tempmessage' .. time .. 'HOURS+3' .. chat_id }
     keyboard.inline_keyboard[6][6] = { text = "+5", callback_data = 'tempmessage' .. time .. 'HOURS+5' .. chat_id }
 
-    keyboard.inline_keyboard[7][1] = { text = "OK " .. langs[lang].hoursWord .. hours .. langs[lang].minutesWord .. minutes .. langs[lang].secondsWord .. seconds, callback_data = 'tempmessage' .. time .. 'DONE' .. chat_id }
+    keyboard.inline_keyboard[7][1] = { text = "OK " .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'tempmessage' .. time .. 'DONE' .. chat_id }
 
     keyboard.inline_keyboard[8][1] = { text = langs[lang].updateKeyboard, callback_data = 'tempmessage' .. time .. 'BACK' .. chat_id }
     keyboard.inline_keyboard[8][2] = { text = langs[lang].deleteKeyboard, callback_data = 'tempmessageDELETE' }
@@ -68,6 +68,10 @@ local function run(msg, matches)
                         end
                     elseif string.match(matches[2], '^%d+$') and matches[3] then
                         local time = tonumber(matches[2])
+                        local hours, minutes, seconds = 0
+                        hours = string.format("%02.f", math.floor(time / 3600))
+                        minutes = string.format("%02.f", math.floor((time / 60) -(hours * 60)))
+                        seconds = string.format("%02.f", math.floor(time -(hours * 3600) -(minutes * 60)))
                         if matches[3] == 'BACK' then
                             if matches[4] then
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
@@ -76,11 +80,17 @@ local function run(msg, matches)
                             if matches[4] and matches[5] then
                                 if is_mod2(msg.from.id, matches[5], false) then
                                     if matches[3] == 'SECONDS' then
-                                        time = time + tonumber(matches[4])
+                                        if ((seconds + tonumber(matches[4])) >= 0) or((seconds + tonumber(matches[4])) < 60) then
+                                            time = time + tonumber(matches[4])
+                                        end
                                     elseif matches[3] == 'MINUTES' then
-                                        time = time +(tonumber(matches[4]) * 60)
+                                        if ((minutes + tonumber(matches[4])) >= 0) or((minutes + tonumber(matches[4])) < 60) then
+                                            time = time +(tonumber(matches[4]) * 60)
+                                        end
                                     elseif matches[3] == 'HOURS' then
-                                        time = time +(tonumber(matches[4]) * 60 * 60)
+                                        if ((hours + tonumber(matches[4])) >= 0) or((hours + tonumber(matches[4])) < 48) then
+                                            time = time +(tonumber(matches[4]) * 60 * 60)
+                                        end
                                     end
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
                                 else
@@ -153,10 +163,10 @@ return {
         "^(###cbtempmessage)(%d+)(HOURS)([%+%-]%d?%d)(%-%d+)$",
         "^(###cbtempmessage)(%d+)(DONE)(%-%d+)$",
 
+        -- X hour Y minutes Z seconds
+        "^[#!/]([Tt][Ee][Mm][Pp][Mm][Ss][Gg]) ([1234]?%d) ([12345]?%d) ([12345]%d) (.*)$",
         -- private keyboard
         "^[#!/]([Tt][Ee][Mm][Pp][Mm][Ss][Gg]) (.*)$",
-        -- X hour Y minutes Z seconds
-        "^[#!/]([Tt][Ee][Mm][Pp][Mm][Ss][Gg]) (%d?%d) (%d?%d) (%d?%d) (.*)$",
     },
     run = run,
     min_rank = 1,
