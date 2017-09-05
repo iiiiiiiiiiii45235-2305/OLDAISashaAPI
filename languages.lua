@@ -871,8 +871,8 @@ return {
             .. "R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
             [14] = "D: Cos'è l'api_patch?\n"
             .. "R: L'api_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.",
-            [15] = "D: Perchè non porti spam anche su @AISashaAPI?\n"
-            .. "R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti, inoltre inviare messaggi dopo tot tempo non è così semplice in LUA.",
+            [15] = "D: Perchè spam su @AISashaAPI è per soli admin?\n"
+            .. "R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
             [16] = "D: Cosa significano i permessi?\n"
             .. "R: Change_info => Cambiare info come nome gruppo, foto e altre impostazioni.\n"
             .. "Delete_messages => Eliminare messaggi di altri utenti.\n"
@@ -1367,6 +1367,14 @@ return {
             "Plugin per urlare delle parole.",
             "USER",
             "#shout <text>: Sasha \"urla\" <text>.",
+        },
+
+        spam =
+        {
+            "🅿️ SPAM",
+            "Plugin per spammare fastidiosamente.",
+            "ADMIN",
+            "#spam [<messages> <seconds>] <reply>|<text>: Sasha inzia a spammare <reply>|<text>, se specificato <messages> messaggi uno ogni <seconds> secondi, altrimenti 5 messaggi uno ogni 2 secondi.",
         },
 
         stats =
@@ -2134,8 +2142,8 @@ return {
             .. "R: Because I'm 90% sure that kicks number would be high enough to hit telegram limits causing problems.",
             [14] = "D: What is the api_patch?\n"
             .. "R: The api_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.",
-            [15] = "D: Why don't you port spam on @AISashaAPI?\n"
-            .. "R: Because I'm 90% sure that sent messages number would be high enough to hit telegram limits and so causing problems, also sending messages every x time is not so simple in LUA.",
+            [15] = "D: Why spam on @AISashaAPI is only for admins?\n"
+            .. "R: Because I'm 90% sure that sent messages number would be high enough to hit telegram limits and so causing problems.",
             [16] = "D: What do permissions mean?\n"
             .. "R: Change_info => Change info as group's name, pic and other settings.\n"
             .. "Delete_messages => Delete other's messages.\n"
@@ -2630,6 +2638,14 @@ return {
             "Plugin to shout words.",
             "USER",
             "#shout <text>: Sasha \"shouts\" <text>.",
+        },
+
+        spam =
+        {
+            "🅿️ SPAM",
+            "Plugin for spamming.",
+            "ADMIN",
+            "#spam [<messages> <seconds>] <reply>|<text>: Sasha starts spamming <reply>|<text> if the specified for <messages> times every <seconds> seconds, otherwise 5 messages one every 2 seconds.",
         },
 
         stats =
