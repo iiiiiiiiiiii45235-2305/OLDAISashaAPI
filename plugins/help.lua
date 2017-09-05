@@ -57,6 +57,8 @@ local function adjust_plugin_names(p, lang)
         return langs[lang].pluginQr or 'ERR'
     elseif p == 'shout' then
         return langs[lang].pluginShout or 'ERR'
+    elseif p == 'spam' then
+        return langs[lang].pluginSpam or 'ERR'
     elseif p == 'stats' then
         return langs[lang].pluginStats or 'ERR'
     elseif p == 'strings' then
@@ -480,9 +482,11 @@ return {
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ff][Aa][Qq])$",
+        "^[#!/]([Ff][Aa][Qq])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
         "^[#!/]([Ff][Aa][Qq])(%d+)$",
         "^[#!/]([Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])(%d+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ff][Aa][Qq])(%d+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
     },
