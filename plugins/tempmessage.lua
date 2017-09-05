@@ -156,11 +156,7 @@ local function run(msg, matches)
                     end
                 elseif matches[2] then
                     text_table[tostring(msg.from.id)] = matches[2]
-                    if sendKeyboard(msg.from.id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(msg.chat.id)) then
-                        if msg.chat.type ~= 'private' then
-                            return sendMessage(msg.chat.id, langs[msg.lang].sendTimeKeyboardPvt)
-                        end
-                    else
+                    if not sendKeyboard(msg.from.id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(msg.chat.id)) then
                         return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 end
