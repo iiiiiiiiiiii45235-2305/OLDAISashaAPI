@@ -128,6 +128,8 @@ local function run(msg, matches)
                                         io.popen('lua timework.lua "delete" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
                                     end
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, false)
                                 end
                                 deleteMessage(msg.chat.id, msg.message_id)
                             end
