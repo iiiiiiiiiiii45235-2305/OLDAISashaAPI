@@ -111,10 +111,12 @@ local function run(msg, matches)
                             end
                         elseif matches[3] == 'DONE' then
                             if matches[4] then
-                                local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
-                                text_table[tostring(msg.from.id)] = nil
-                                if message_id then
-                                    io.popen('lua timework.lua "delete" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
+                                if text_table[tostring(msg.from.id)] then
+                                    local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
+                                    text_table[tostring(msg.from.id)] = nil
+                                    if message_id then
+                                        io.popen('lua timework.lua "delete" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
+                                    end
                                 end
                                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
