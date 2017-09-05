@@ -11,7 +11,7 @@ end
 
 local function keyboard_tempmessage(chat_id, time)
     if not time then
-        time = 88260
+        time = 88230
     end
     local hours, minutes, seconds = 0
     hours = string.format("%02.f", math.floor(time / 3600))
@@ -98,7 +98,7 @@ local function run(msg, matches)
                                 end
                             end
                         elseif matches[3] == 'DONE' then
-                            local message_id = sendMessage(matches[5], text_table[tostring(msg.from.id)]).result.message_id
+                            local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
                             if message_id then
                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "' .. time .. '" "' .. message_id .. '"')
                             end
