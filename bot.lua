@@ -787,21 +787,21 @@ function pre_process_msg(msg)
     msg = plugins.alternatives.pre_process(msg)
     print(clr.white .. 'Preprocess', 'database')
     msg = plugins.database.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'banhammer')
+    msg = plugins.banhammer.pre_process(msg)
     print(clr.white .. 'Preprocess', 'anti_spam')
     msg = plugins.anti_spam.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'delword')
-    msg = plugins.delword.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'goodbyewelcome')
-    plugins.goodbyewelcome.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.msg_checks.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'delword')
+    msg = plugins.delword.pre_process(msg)
     for name, plugin in pairs(plugins) do
         if plugin.pre_process and msg then
             if plugin.description ~= 'ALTERNATIVES' and
                 plugin.description ~= 'ANTI_SPAM' and
+                plugin.description ~= 'BANHAMMER' and
                 plugin.description ~= 'DATABASE' and
                 plugin.description ~= 'DELWORD' and
-                plugin.description ~= 'GOODBYEWELCOME' and
                 plugin.description ~= 'MSG_CHECKS' then
                 print(clr.white .. 'Preprocess', name)
                 msg = plugin.pre_process(msg)

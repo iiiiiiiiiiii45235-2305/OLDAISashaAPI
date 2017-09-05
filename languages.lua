@@ -342,7 +342,7 @@ return {
         realmListStart = "Reami:\n",
         groupListCreated = "Lista gruppi creata.",
         realmListCreated = "Lista reami creata.",
-        notMyGroup = "Questo non è un mio gruppo, addio.\nPer maggiori informazioni contatta il mio creatore, dovresti sapere chi è, se non lo sai chiedi nei miei gruppi.",
+        notMyGroup = "Questo non è un mio gruppo.\nPer maggiori informazioni contatta il mio creatore, dovresti sapere chi è, se non lo sai chiedi nei miei gruppi.",
 
         -- alternatives.lua --
         listAlternatives = "Lista comandi alternativi a X: ",
@@ -1149,7 +1149,7 @@ return {
             "#[textual]permissions: Sasha manda i tuoi permessi.",
             "MOD",
             "#del [<reply>]: Sasha elimina il messaggio del comando e <reply>.",
-            "#deletekeyboard <reply>: Sasha elimina la keyboard in <reply>.",
+            "#delkeyboard <reply>: Sasha elimina la keyboard in <reply>.",
             "#type: Sasha mostra il tipo del gruppo.",
             "#updategroupinfo: Sasha aggiorna nome e moderatori del gruppo.",
             "#setrules <text>: Sasha imposta <text> come regole.",
@@ -1598,7 +1598,7 @@ return {
         realmListStart = "Realms:\n",
         groupListCreated = "Group list created.",
         realmListCreated = "Realm list created.",
-        notMyGroup = "This is not one of my groups, bye.\nFor more information contact my creator, you should know who is he, if not just ask in my groups.",
+        notMyGroup = "This is not one of my groups.\nFor more information contact my creator, you should know who is he, if not just ask in my groups.",
 
         -- alternatives.lua --
         listAlternatives = "List of X's alternative commands: ",
@@ -2412,7 +2412,7 @@ return {
             "#[textual]permissions: Sasha sends your permissions.",
             "MOD",
             "#del [<reply>]: Sasha deletes the message of the command and <reply>.",
-            "#deletekeyboard <reply>: Sasha deletes the keyboard in <reply>.",
+            "#delkeyboard <reply>: Sasha deletes the keyboard in <reply>.",
             "#type: Sasha sends group type.",
             "#updategroupinfo: Sasha updates group name and mods.",
             "#setrules <text>: Sasha changes group's rules with <text>.",
