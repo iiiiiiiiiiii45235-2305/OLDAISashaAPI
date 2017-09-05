@@ -113,9 +113,9 @@ local function run(msg, matches)
         if matches[1]:lower() == 'tempmsg' then
             if msg.from.is_mod then
                 if matches[2] and matches[3] and matches[4] and matches[5] then
-                    local hours = tonumber(matches[1])
-                    local minutes = tonumber(matches[2])
-                    local seconds = tonumber(matches[3])
+                    local hours = tonumber(matches[2])
+                    local minutes = tonumber(matches[3])
+                    local seconds = tonumber(matches[4])
                     if hours >= 48 then
                         hours = 47
                         minutes = 59
@@ -129,7 +129,7 @@ local function run(msg, matches)
                         seconds = 59
                     end
                     local time = seconds +(minutes * 60) +(hours * 60 * 60)
-                    local message_id = sendMessage(msg.chat.id, matches[4]).result.message_id
+                    local message_id = sendMessage(msg.chat.id, matches[5]).result.message_id
                     if message_id then
                         io.popen('lua timework.lua "delete" "' .. chat_id .. '" "' .. time .. '" "' .. message_id .. '"')
                     end
