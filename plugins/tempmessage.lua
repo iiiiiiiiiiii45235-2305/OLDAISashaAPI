@@ -92,7 +92,7 @@ local function run(msg, matches)
                                             time = time +(tonumber(matches[4]) * 60 * 60)
                                         end
                                     end
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[5], time))
                                 else
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                                 end
