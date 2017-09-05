@@ -2068,7 +2068,7 @@ return {
 
         -- tempmessage.lua --
         tempmessageIntro = "Time keyboard:\nYou can delete messages up to 48 hours after they've been sent.",
-        errorTimeRange = "Error, the value must be included between 0 and 47 hours 59 minutes and 59 seconds.",
+        errorTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
         secondsReset = "Seconds reset.",
         minutesReset = "Minutes reset.",
         hoursReset = "Hours reset.",
