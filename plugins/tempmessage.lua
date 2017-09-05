@@ -100,7 +100,7 @@ local function run(msg, matches)
                         elseif matches[3] == 'DONE' then
                             local message_id = sendMessage(matches[5], text_table[tostring(msg.from.id)]).result.message_id
                             if message_id then
-                                io.popen('lua timework.lua "delete" "' .. chat_id .. '" "' .. time .. '" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "' .. time .. '" "' .. message_id .. '"')
                             end
                         end
                     end
