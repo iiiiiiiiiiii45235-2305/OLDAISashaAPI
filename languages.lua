@@ -234,6 +234,16 @@ return {
         stop = "STOP",
         cantSendPvt = "Non posso scriverti in privato se prima non lo fai tu.",
         cantDeleteMessage = "Non posso eliminare questo messaggio, ciò può succedere per tre ragioni:\n1) Il messaggio è troppo vecchio (48h).\n2) Il messaggio è già stato eliminato\n3) Non ho il permesso di eliminare messaggi.",
+        seconds = "Secondi (X)",
+        minutes = "Minuti (X)",
+        hours = "Ore (X)",
+        days = "Giorni (X)",
+        months = "Mesi (X)",
+        secondsWord = " Secondi ",
+        minutesWord = " Minuti ",
+        hoursWord = " Ore ",
+        daysWord = " Giorni ",
+        monthsWord = " Mesi ",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -755,6 +765,10 @@ return {
         -- strings.lua --
         langUpdate = "ℹ️ Stringhe aggiornate.",
         langSet = "ℹ️ Lingua impostata.",
+
+        -- tempmessage.lua --
+        tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.",
+        sendTimeKeyboardPvt = "Ti ho mandato la tastiera del tempo in privato.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migrazione completata.",
@@ -1405,6 +1419,14 @@ return {
             "(#reloadstrings|#reloadlangs): Sasha aggiorna le stringhe di testo.",
         },
 
+        tempmessage =
+        {
+            "🅿️ TEMPMESSAGE",
+            "Plugin per temporizzare i messaggi.",
+            "MOD",
+            "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manderà una tastiera in privato.",
+        },
+
         tex =
         {
             "🅿️ TEX",
@@ -1494,6 +1516,16 @@ return {
         stop = "STOP",
         cantSendPvt = "I can't write to you in private if you don't first.",
         cantDeleteMessage = "I can't delete this message, this happens for three reasons:\n1) The message is too old (48h).\n2) The message has already been deleted\n3) I don't have the permission to delete messages.",
+        seconds = "Seconds (X)",
+        minutes = "Minutes (X)",
+        hours = "Hours (X)",
+        days = "Days (X)",
+        months = "Months (X)",
+        secondsWord = " Seconds ",
+        minutesWord = " Minutes ",
+        hoursWord = " Hours ",
+        daysWord = " Days ",
+        monthsWord = " Months ",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
@@ -2026,6 +2058,10 @@ return {
         -- strings.lua --
         langUpdate = "ℹ️ Strings updated.",
         langSet = "ℹ️ Language set.",
+
+        -- tempmessage.lua --
+        tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.",
+        sendTimeKeyboardPvt = "I've sent you the time keyboard in private.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migration completed.",
@@ -2674,6 +2710,14 @@ return {
             "#setlang [it|en]: Sasha sets the language she has to talk in this group.",
             "SUDO",
             "(#reloadstrings|#reloadlangs): Sasha updates strings.",
+        },
+
+        tempmessage =
+        {
+            "🅿️ TEMPMESSAGE",
+            "Plugin to temporize messages.",
+            "MOD",
+            "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha will delete that message after <hours> <minutes> <seconds> if specified, otherwise she will send a keyboard in private.",
         },
 
         tex =
