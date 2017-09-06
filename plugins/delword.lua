@@ -146,7 +146,7 @@ local function run(msg, matches)
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
                                 mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4])
-                                local tmp = { chat = { id = matches[4], type = '' } }
+                                local tmp = { chat = { id = matches[4], type = '' }, lang = msg.lang }
                                 if matches[4]:starts('-100') then
                                     tmp.chat.type = 'supergroup'
                                 elseif matches[4]:starts('-') then
