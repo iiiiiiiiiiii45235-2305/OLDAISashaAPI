@@ -362,7 +362,7 @@ local function run(msg, matches)
                     end
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempBanIntro, keyboard_time(matches[6], matches[7], time))
                 elseif matches[4] == 'DONE' then
-                    local text = banUser(msg.from.id, matches[5], matches[6], '#tempban #executer' .. msg.from.id, os.time() + time)
+                    local text = banUser(msg.from.id, matches[5], matches[6], '#tempban until ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time) .. ' #executer' .. msg.from.id, os.time() + time)
                     answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
                     deleteMessage(msg.chat.id, msg.message_id)
