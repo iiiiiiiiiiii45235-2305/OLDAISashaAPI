@@ -261,7 +261,7 @@ local function keyboard_time(chat_id, user_id, time)
     keyboard.inline_keyboard[10][5] = { text = "+5", callback_data = 'banhammerTEMPBAN' .. time .. 'WEEKS+5' .. chat_id .. '$' .. user_id }
     keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'banhammerTEMPBAN' .. time .. 'WEEKS+10' .. chat_id .. '$' .. user_id }
 
-    if time >= 31622400 then
+    if time >= 31622401 then
         keyboard.inline_keyboard[11][1] = { text = "BAN FOREVER", callback_data = 'banhammerTEMPBAN' .. time .. 'DONE' .. user_id .. chat_id }
     else
         keyboard.inline_keyboard[11][1] = { text = "BAN " ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammerTEMPBAN' .. time .. 'DONE' .. user_id .. chat_id }
