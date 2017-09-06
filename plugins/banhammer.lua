@@ -467,7 +467,7 @@ local function run(msg, matches)
                     else
                         text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
                     end
-                    answerCallbackQuery(msg.cb_id, text, false)
+                    answerCallbackQuery(msg.cb_id, text, true)
                     sendMessage(matches[6], text)
                     deleteMessage(msg.chat.id, msg.message_id)
                 end
@@ -563,19 +563,29 @@ local function run(msg, matches)
                         local restrictions = restrictions_table[tostring(matches[5])]
                         if time < 30 or time > 31622400 then
                             if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
-                                text = vardumptext(restrictions) .. '\n' .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #restrict'
+                                for k, v in pairs(restrictions) do
+                                    if not restrictions[k] then
+                                        text = text .. reverseRestrictionsDictionary[k]
+                                    end
+                                end
+                                text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #restrict'
                             else
                                 text = langs[msg.lang].errorTryAgain
                             end
                         else
                             if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
-                                text = vardumptext(restrictions) .. '\n' .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
+                                for k, v in pairs(restrictions) do
+                                    if not restrictions[k] then
+                                        text = text .. reverseRestrictionsDictionary[k]
+                                    end
+                                end
+                                text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                             else
                                 text = langs[msg.lang].errorTryAgain
                             end
                         end
                         restrictions_table[tostring(matches[5])] = nil
-                        answerCallbackQuery(msg.cb_id, text, false)
+                        answerCallbackQuery(msg.cb_id, text, true)
                         sendMessage(matches[6], text)
                         deleteMessage(msg.chat.id, msg.message_id)
                     else
@@ -968,6 +978,9 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 mystat('/restrict')
                 local restrictions = clone_table(default_restrictions)
+                for k, v in pairs(restrictions) do
+                    restrictions[k] = false
+                end
                 local chat_name = ''
                 if data[tostring(msg.chat.id)] then
                     chat_name = data[tostring(msg.chat.id)].set_name or ''
