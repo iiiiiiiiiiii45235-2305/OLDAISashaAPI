@@ -238,18 +238,14 @@ local function pre_process(msg)
                 for i, word in pairs(t) do
                     local temp = word:lower()
                     if msg.text then
-                        if not string.match(msg.text, "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$") then
-                            if string.match(msg.text:lower(), temp) then
-                                found = true
-                            end
+                        if string.match(msg.text:lower(), temp) then
+                            found = true
                         end
                     end
                     if msg.media then
                         if msg.caption then
-                            if not string.match(msg.caption, "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$") then
-                                if string.match(msg.caption:lower(), temp) then
-                                    found = true
-                                end
+                            if string.match(msg.caption:lower(), temp) then
+                                found = true
                             end
                         end
                     end
