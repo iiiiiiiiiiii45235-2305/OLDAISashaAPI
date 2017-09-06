@@ -155,6 +155,7 @@ local function run(msg, matches)
                                 local text = setunset_delword(tmp, delword_table[tostring(msg.from.id)], time)
                                 delword_table[tostring(msg.from.id)] = nil
                                 answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                 end
