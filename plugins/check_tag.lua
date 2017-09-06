@@ -83,71 +83,71 @@ local function run(msg, matches)
     if msg.cb then
         if matches[1] then
             if matches[1] == '###cbcheck_tag' then
-                if matches[2] then
-                    if matches[2] == 'ALREADYREAD' then
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
-                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
+                if matches[2] == 'ALREADYREAD' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
+                    end
+                else
+                    if matches[2] == 'DELETEUP' then
+                        mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
+                        if tonumber(matches[3]) == tonumber(msg.from.id) then
+                            if deleteMessage(matches[4], msg.message_id) then
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                            end
                         end
-                    elseif matches[3] and matches[4] then
-                        if matches[2] == 'DELETEUP' then
-                            if tonumber(matches[3]) == tonumber(msg.from.id) then
-                                if deleteMessage(matches[4], msg.message_id) then
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                    elseif matches[2] == 'GOTO' then
+                        mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
+                        if msg.from.username then
+                            local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
+                            if res then
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                            end
+                            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                if res then
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
                             end
-                        elseif matches[2] == 'GOTO' then
-                            if msg.from.username then
-                                local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
-                                if res then
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
-                                else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                                end
-                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                    if res then
-                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
-                                    else
-                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
-                                    end
-                                end
+                        else
+                            local sent = false
+                            local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
+                            if res then
+                                sent = true
                             else
-                                local sent = false
-                                local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
+                                res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3])
                                 if res then
                                     sent = true
                                 else
-                                    res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3])
+                                    res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
                                     if res then
                                         sent = true
-                                    else
-                                        res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
-                                        if res then
-                                            sent = true
-                                        end
                                     end
                                 end
+                            end
+                            if sent then
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                            end
+                            if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                 if sent then
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
-                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                    if sent then
-                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
-                                    else
-                                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
-                                    end
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                                end
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
                     end
-                    return
                 end
+                return
             end
         end
     end

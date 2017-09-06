@@ -236,14 +236,21 @@ return {
         minutes = "Minuti (X)",
         hours = "Ore (X)",
         days = "Giorni (X)",
-        months = "Mesi (X)",
+        weeks = "Settimane (X)",
         secondsWord = " Secondi ",
         minutesWord = " Minuti ",
         hoursWord = " Ore ",
         daysWord = " Giorni ",
-        monthsWord = " Mesi ",
+        weeksWord = " Settimane ",
+        secondsReset = "Secondi azzerati.",
+        minutesReset = "Minuti azzerati.",
+        hoursReset = "Ore azzerate.",
+        daysReset = "Giorni azzerati.",
+        weeksReset = "Settimane azzerate.",
         keyboardUpdated = "Tastiera Aggiornata.",
         done = "Fatto.",
+        timeKeyboard = "Tastiera del tempo:",
+        sendKeyboardPvt = "Ti ho mandato la tastiera in privato.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -388,6 +395,8 @@ return {
         restrictionSendOtherMessages = "\nPuò inviare gifs, giochi, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nPuò aggiungere anteprime di pagine web: ",
         userUnrestricted = "Utente libero.",
+        tempBanIntro = "Puoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:",
+        errorBanhammerTimeRange = "Errore, il valore non può essere negativo.",
 
         -- bot.lua --
         startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi (dovresti sapere chi è, se non lo sai chiedi nei miei gruppi), per qualsiasi cosa utilizza pure il comando /help.",
@@ -767,11 +776,8 @@ return {
         langSet = "ℹ️ Lingua impostata.",
 
         -- tempmessage.lua --
-        tempmessageIntro = "Tastiera del tempo:\nPuoi eliminare messaggi fino a 48 ore dopo l'invio.",
-        errorTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
-        secondsReset = "Secondi azzerati.",
-        minutesReset = "Minuti azzerati.",
-        hoursReset = "Ore azzerate.",
+        tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.\nTastiera del tempo:",
+        errorTempmessageTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migrazione completata.",
@@ -1523,14 +1529,21 @@ return {
         minutes = "Minutes (X)",
         hours = "Hours (X)",
         days = "Days (X)",
-        months = "Months (X)",
+        weeks = "Weeks (X)",
         secondsWord = " Seconds ",
         minutesWord = " Minutes ",
         hoursWord = " Hours ",
         daysWord = " Days ",
-        monthsWord = " Months ",
+        weeksWord = " Weeks ",
+        secondsReset = "Seconds reset.",
+        minutesReset = "Minutes reset.",
+        hoursReset = "Hours reset.",
+        daysReset = "Days reset.",
+        weeksReset = "Weeks reset.",
         keyboardUpdated = "Keyboard Updated.",
         done = "Done.",
+        timeKeyboard = "Time keyboard:",
+        sendKeyboardPvt = "I've sent you the keyboard in private.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
@@ -1679,6 +1692,8 @@ return {
         restrictionSendOtherMessages = "\nCan send gifs, games, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nCan add web page previews: ",
         userUnrestricted = "User unrestricted.",
+        tempBanIntro = "You can temporary ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be banned forever.\nTime keyboard:",
+        errorBanhammerTimeRange = "Error, the value can't be negative.",
 
         -- bot.lua --
         startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group (you should know who he is, if not just ask in my groups), for anything you need use /help.",
@@ -2065,11 +2080,8 @@ return {
         langSet = "ℹ️ Language set.",
 
         -- tempmessage.lua --
-        tempmessageIntro = "Time keyboard:\nYou can delete messages up to 48 hours after they've been sent.",
-        errorTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
-        secondsReset = "Seconds reset.",
-        minutesReset = "Minutes reset.",
-        hoursReset = "Hours reset.",
+        tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.\nTime keyboard:",
+        errorTempmessageTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migration completed.",

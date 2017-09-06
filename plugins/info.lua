@@ -48,12 +48,14 @@ local function get_object_info(obj, chat_id)
                 otherinfo = otherinfo .. 'GBANNED '
             end
             if tonumber(chat_id) < 0 then
+                local status = ''
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
                     if chat_member.result then
                         chat_member = chat_member.result
                         if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            status = chat_member.status
+                            otherinfo = otherinfo .. chat_member.status:upper():gsub('KICKED', 'BANNED') .. ' '
                         end
                     end
                 end
@@ -64,7 +66,9 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'GBANWHITELISTED '
                 end
                 if isBanned(obj.id, chat_id) then
-                    otherinfo = otherinfo .. 'BANNED '
+                    if status ~= 'kicked' then
+                        otherinfo = otherinfo .. 'PREBANNED '
+                    end
                 end
                 if isMutedUser(chat_id, obj.id) then
                     otherinfo = otherinfo .. 'MUTED '
@@ -109,12 +113,14 @@ local function get_object_info(obj, chat_id)
                 otherinfo = otherinfo .. 'PM BLOCKED '
             end
             if tonumber(chat_id) < 0 then
+                local status = ''
                 local chat_member = getChatMember(chat_id, obj.id)
                 if type(chat_member) == 'table' then
                     if chat_member.result then
                         chat_member = chat_member.result
                         if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            status = chat_member.status
+                            otherinfo = otherinfo .. chat_member.status:upper():gsub('KICKED', 'BANNED') .. ' '
                         end
                     end
                 end
@@ -125,7 +131,9 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'GBANWHITELISTED '
                 end
                 if isBanned(obj.id, chat_id) then
-                    otherinfo = otherinfo .. 'BANNED '
+                    if status ~= 'kicked' then
+                        otherinfo = otherinfo .. 'PREBANNED '
+                    end
                 end
                 if isMutedUser(chat_id, obj.id) then
                     otherinfo = otherinfo .. 'MUTED '
@@ -242,7 +250,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     if chat_member.result then
                         chat_member = chat_member.result
                         if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            otherinfo = otherinfo .. chat_member.status:upper():gsub('KICKED', 'BANNED') .. ' '
                             status = chat_member.status
                             if chat_member.status == 'creator' then
                                 obj.is_owner = true
@@ -279,7 +287,9 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row] = { }
                     if isBanned(obj.id, chat_id) then
                         keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'BANNED '
+                        if status ~= 'kicked' then
+                            otherinfo = otherinfo .. 'PREBANNED '
+                        end
                     else
                         keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
                     end
@@ -380,7 +390,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     if chat_member.result then
                         chat_member = chat_member.result
                         if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper() .. ' '
+                            otherinfo = otherinfo .. chat_member.status:upper():gsub('KICKED', 'BANNED') .. ' '
                             status = chat_member.status
                             if chat_member.status == 'creator' then
                                 obj.is_owner = true
@@ -417,7 +427,9 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                     keyboard.inline_keyboard[row] = { }
                     if isBanned(obj.id, chat_id) then
                         keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'BANNED '
+                        if status ~= 'kicked' then
+                            otherinfo = otherinfo .. 'PREBANNED '
+                        end
                     else
                         keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
                     end
@@ -514,141 +526,139 @@ local function run(msg, matches)
     if msg.cb then
         if matches[1] then
             if matches[1] == '###cbinfo' then
-                if matches[2] then
-                    if matches[2] == 'DELETE' then
-                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                if matches[2] == 'DELETE' then
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    end
+                else
+                    local updated = false
+                    if matches[2] == 'BACK' then
+                        updated = true
+                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
+                        if tab then
+                            editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
+                        else
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
                         end
-                    elseif matches[3] and matches[4] then
-                        local updated = false
-                        if matches[2] == 'BACK' then
-                            updated = true
-                            local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
-                            if tab then
-                                editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
-                            else
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
-                            end
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                        elseif matches[2] == 'WHITELIST' then
-                            if is_owner2(msg.from.id, matches[4]) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang)
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
-                            end
-                        elseif matches[2] == 'GBANWHITELIST' then
-                            if is_owner2(msg.from.id, matches[4]) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang)
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
-                            end
-                        elseif matches[2] == 'MUTEUSER' then
-                            if is_mod2(msg.from.id, matches[4]) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                if compare_ranks(msg.from.id, matches[3], matches[4]) then
-                                    if isMutedUser(matches[4], matches[3]) then
-                                        local text = unmuteUser(matches[4], matches[3], msg.lang)
-                                        answerCallbackQuery(msg.cb_id, text, false)
-                                        sendMessage(matches[4], text)
-                                    else
-                                        local text = muteUser(matches[4], matches[3], msg.lang)
-                                        answerCallbackQuery(msg.cb_id, text, false)
-                                        sendMessage(matches[4], text)
-                                    end
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                    elseif matches[2] == 'WHITELIST' then
+                        if is_owner2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang)
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                        end
+                    elseif matches[2] == 'GBANWHITELIST' then
+                        if is_owner2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang)
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                        end
+                    elseif matches[2] == 'MUTEUSER' then
+                        if is_mod2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            if compare_ranks(msg.from.id, matches[3], matches[4]) then
+                                if isMutedUser(matches[4], matches[3]) then
+                                    local text = unmuteUser(matches[4], matches[3], msg.lang)
+                                    answerCallbackQuery(msg.cb_id, text, false)
+                                    sendMessage(matches[4], text)
                                 else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, false)
-                                end
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
-                            end
-                        elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNSPLUS' then
-                            if is_mod2(msg.from.id, matches[4]) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                if matches[2] == 'WARNSMINUS' then
-                                    local text = unwarnUser(msg.from.id, matches[3], matches[4])
-                                    answerCallbackQuery(msg.cb_id, text, false)
-                                    sendMessage(matches[4], text)
-                                elseif matches[2] == 'WARNSPLUS' then
-                                    local text = warnUser(msg.from.id, matches[3], matches[4])
+                                    local text = muteUser(matches[4], matches[3], msg.lang)
                                     answerCallbackQuery(msg.cb_id, text, false)
                                     sendMessage(matches[4], text)
                                 end
                             else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, false)
                             end
-                        elseif matches[2] == 'BAN' then
-                            if is_mod2(msg.from.id, matches[4]) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = banUser(msg.from.id, matches[3], matches[4])
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
-                            end
-                        elseif matches[2] == 'UNBAN' then
-                            if is_mod2(msg.from.id, matches[4]) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = unbanUser(msg.from.id, matches[3], matches[4])
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
-                            end
-                        elseif matches[2] == 'GBAN' then
-                            if is_admin2(msg.from.id) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = gbanUser(matches[3], msg.lang)
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
-                            end
-                        elseif matches[2] == 'UNGBAN' then
-                            if is_admin2(msg.from.id) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = ungbanUser(matches[3], msg.lang)
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
-                            end
-                        elseif matches[2] == 'PMBLOCK' then
-                            if is_admin2(msg.from.id) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = blockUser(matches[3], msg.lang)
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
-                            end
-                        elseif matches[2] == 'PMUNBLOCK' then
-                            if is_admin2(msg.from.id) then
-                                mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                                local text = unblockUser(matches[3], msg.lang)
-                                answerCallbackQuery(msg.cb_id, text, false)
-                                sendMessage(matches[4], text)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
-                            end
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
-                        if not updated then
-                            updated = true
-                            local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
-                            if tab then
-                                editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
-                            else
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
+                    elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNSPLUS' then
+                        if is_mod2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            if matches[2] == 'WARNSMINUS' then
+                                local text = unwarnUser(msg.from.id, matches[3], matches[4])
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
+                            elseif matches[2] == 'WARNSPLUS' then
+                                local text = warnUser(msg.from.id, matches[3], matches[4])
+                                answerCallbackQuery(msg.cb_id, text, false)
+                                sendMessage(matches[4], text)
                             end
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
+                    elseif matches[2] == 'BAN' then
+                        if is_mod2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = banUser(msg.from.id, matches[3], matches[4])
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
+                    elseif matches[2] == 'UNBAN' then
+                        if is_mod2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = unbanUser(msg.from.id, matches[3], matches[4])
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
+                    elseif matches[2] == 'GBAN' then
+                        if is_admin2(msg.from.id) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = gbanUser(matches[3], msg.lang)
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
+                        end
+                    elseif matches[2] == 'UNGBAN' then
+                        if is_admin2(msg.from.id) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = ungbanUser(matches[3], msg.lang)
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
+                        end
+                    elseif matches[2] == 'PMBLOCK' then
+                        if is_admin2(msg.from.id) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = blockUser(matches[3], msg.lang)
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
+                        end
+                    elseif matches[2] == 'PMUNBLOCK' then
+                        if is_admin2(msg.from.id) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            local text = unblockUser(matches[3], msg.lang)
+                            answerCallbackQuery(msg.cb_id, text, false)
+                            sendMessage(matches[4], text)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
                     end
-                    return
+                    if not updated then
+                        updated = true
+                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
+                        if tab then
+                            editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
+                        else
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
+                        end
+                    end
                 end
+                return
             end
         end
     end

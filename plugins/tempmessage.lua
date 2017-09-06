@@ -13,10 +13,11 @@ local function keyboard_tempmessage(chat_id, time)
     if not time then
         time = 88230
     end
-    local hours, minutes, seconds = 0
-    hours = string.format("%02.f", math.floor(time / 3600))
-    minutes = string.format("%02.f", math.floor((time / 60) -(hours * 60)))
-    seconds = string.format("%02.f", math.floor(time -(hours * 3600) -(minutes * 60)))
+    local remainder, hours, minutes, seconds = 0
+    hours = math.floor(remainder / 3600)
+    remainder = time % 3600
+    minutes = math.floor(remainder / 60)
+    seconds = remainder % 60
     local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
@@ -61,78 +62,71 @@ local function run(msg, matches)
     if msg.cb then
         if matches[1] then
             if matches[1] == '###cbtempmessage' then
-                if matches[2] then
-                    if matches[2] == 'DELETE' then
-                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                if matches[2] == 'DELETE' then
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    end
+                elseif string.match(matches[2], '^%d+$') then
+                    local time = tonumber(matches[2])
+                    if matches[3] == 'BACK' then
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                    elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
+                        mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                        local remainder, hours, minutes, seconds = 0
+                        hours = math.floor(remainder / 3600)
+                        remainder = time % 3600
+                        minutes = math.floor(remainder / 60)
+                        seconds = remainder % 60
+                        if matches[3] == 'SECONDS' then
+                            if tonumber(matches[4]) == 0 then
+                                time = time - seconds
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                            else
+                                if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
+                                    time = time + tonumber(matches[4])
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTempmessageTimeRange, true)
+                                end
+                            end
+                        elseif matches[3] == 'MINUTES' then
+                            if tonumber(matches[4]) == 0 then
+                                time = time -(minutes * 60)
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                            else
+                                if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
+                                    time = time +(tonumber(matches[4]) * 60)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTempmessageTimeRange, true)
+                                end
+                            end
+                        elseif matches[3] == 'HOURS' then
+                            if tonumber(matches[4]) == 0 then
+                                time = time -(hours * 60 * 60)
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                            else
+                                if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
+                                    time = time +(tonumber(matches[4]) * 60 * 60)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTempmessageTimeRange, true)
+                                end
+                            end
                         end
-                    elseif string.match(matches[2], '^%d+$') and matches[3] then
-                        local time = tonumber(matches[2])
-                        if matches[3] == 'BACK' then
-                            if matches[4] then
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                            end
-                        elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
-                            if matches[4] and matches[5] then
-                                if is_mod2(msg.from.id, matches[5], false) then
-                                    local hours, minutes, seconds = 0
-                                    hours = string.format("%02.f", math.floor(time / 3600))
-                                    minutes = string.format("%02.f", math.floor((time / 60) -(hours * 60)))
-                                    seconds = string.format("%02.f", math.floor(time -(hours * 3600) -(minutes * 60)))
-                                    if matches[3] == 'SECONDS' then
-                                        if tonumber(matches[4]) == 0 then
-                                            time = time - seconds
-                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
-                                        else
-                                            if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
-                                                time = time + tonumber(matches[4])
-                                            else
-                                                answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
-                                            end
-                                        end
-                                    elseif matches[3] == 'MINUTES' then
-                                        if tonumber(matches[4]) == 0 then
-                                            time = time -(minutes * 60)
-                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
-                                        else
-                                            if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
-                                                time = time +(tonumber(matches[4]) * 60)
-                                            else
-                                                answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
-                                            end
-                                        end
-                                    elseif matches[3] == 'HOURS' then
-                                        if tonumber(matches[4]) == 0 then
-                                            time = time -(hours * 60 * 60)
-                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
-                                        else
-                                            if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
-                                                time = time +(tonumber(matches[4]) * 60 * 60)
-                                            else
-                                                answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
-                                            end
-                                        end
-                                    end
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[5], time))
-                                else
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[5], time))
+                    elseif matches[3] == 'DONE' then
+                        if is_mod2(msg.from.id, matches[4], false) then
+                            mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4])
+                            if text_table[tostring(msg.from.id)] then
+                                local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
+                                text_table[tostring(msg.from.id)] = nil
+                                if message_id then
+                                    io.popen('lua timework.lua "delete" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
                                 end
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, false)
                             end
-                        elseif matches[3] == 'DONE' then
-                            if matches[4] then
-                                if text_table[tostring(msg.from.id)] then
-                                    local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
-                                    text_table[tostring(msg.from.id)] = nil
-                                    if message_id then
-                                        io.popen('lua timework.lua "delete" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
-                                    end
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
-                                else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, false)
-                                end
-                                deleteMessage(msg.chat.id, msg.message_id)
-                            end
+                            deleteMessage(msg.chat.id, msg.message_id)
                         end
                     end
                 end

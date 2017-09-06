@@ -1510,8 +1510,6 @@ function banUser(executer, target, chat_id, reason, until_date)
                 savelog(chat_id, "[" .. executer .. "] banned user " .. target)
                 redis:hincrby('bot:general', 'ban', 1)
                 -- general: save how many kicks
-                local hash = 'banned:' .. chat_id
-                redis:sadd(hash, tostring(target))
                 local obj_chat = getChat(chat_id)
                 local obj_remover = getChat(executer)
                 local obj_removed = getChat(target)
@@ -1522,10 +1520,8 @@ function banUser(executer, target, chat_id, reason, until_date)
                 '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
                 '\n#user' .. target .. ' #ban ' ..(reason or '')
             else
-                if code == 106 then
-                    local hash = 'banned:' .. chat_id
-                    redis:sadd(hash, tostring(target))
-                end
+                local hash = 'banned:' .. chat_id
+                redis:sadd(hash, tostring(target))
                 return code2text(code, get_lang(chat_id))
             end
         else

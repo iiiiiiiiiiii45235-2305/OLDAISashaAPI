@@ -14,7 +14,7 @@ end
 
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] == '###cbstrings' and matches[2] then
+        if matches[1] == '###cbstrings' then
             local change_lang = true
             if msg.chat.type ~= 'private' then
                 if not is_owner(msg) then

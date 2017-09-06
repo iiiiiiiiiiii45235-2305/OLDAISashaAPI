@@ -287,7 +287,7 @@ end
 
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] == '###cbhelp' and matches[2] then
+        if matches[1] == '###cbhelp' then
             if matches[2] == 'DELETE' then
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
@@ -298,7 +298,8 @@ local function run(msg, matches)
             elseif matches[2] == 'BACKFAQ' then
                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-            elseif matches[2] == 'FAQ' and matches[3] then
+            elseif matches[2] == 'FAQ' then
+                mystat('###cbhelp' .. matches[2] .. matches[3])
                 if langs[msg.lang].faq[tonumber(matches[3])] then
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
                 else
