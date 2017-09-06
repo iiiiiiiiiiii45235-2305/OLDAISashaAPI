@@ -981,13 +981,13 @@ return {
             "#warn <id>|<username>|<reply>|from [<reason>]: Sasha avverte l'utente.",
             "#unwarn <id>|<username>|<reply>|from [<reason>]: Sasha diminuisce di uno gli avvertimenti dell'utente.",
             "#unwarnall <id>|<username>|<reply>|from [<reason>]: Sasha azzera gli avvertimenti dell'utente.",
-            "#temprestrict <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<restrictions>]: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate) per <weeks> <days> <hours> <minutes> <seconds> se specificati, altrimenti manderà una tastiera in privato.",
+            "#temprestrict <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<restrictions>]: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate) per <weeks> <days> <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
             "#restrict <id>|<username>|<reply>|from [<restrictions>]: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate).",
             "<restrictions> può essere: [send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]",
             "#unrestrict <id>|<username>|<reply>|from: Sasha rimuove le restrizioni dell'utente specificato.",
             "#[textual]restrictions <id>|<username>|<reply>|from: Sasha manda le restrizioni dell'utente specificato.",
             "#kick <id>|<username>|<reply>|from [<reason>]: Sasha kicka l'utente specificato.",
-            "#tempban <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<reason>]: Sasha banna l'utente specificato per <weeks> <days> <hours> <minutes> <seconds> se specificati, altrimenti manderà una tastiera in privato.",
+            "#tempban <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<reason>]: Sasha banna l'utente specificato per <weeks> <days> <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
             "#ban <id>|<username>|<reply>|from [<reason>]: Sasha banna l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
             "#unban <id>|<username>|<reply>|from [<reason>]: Sasha sbanna l'utente specificato.",
             "#banlist: Sasha mostra la lista di utenti bannati dal gruppo.",
@@ -1057,7 +1057,7 @@ return {
             "MOD",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "#delword <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio.",
-            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manderà una tastiera in privato.",
+            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         dogify =
@@ -1444,7 +1444,7 @@ return {
             "🅿️ TEMPMESSAGE",
             "Plugin per temporizzare i messaggi.",
             "MOD",
-            "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manderà una tastiera in privato.",
+            "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         tex =
@@ -2295,13 +2295,13 @@ return {
             "#warn <id>|<username>|<reply>|from [<reason>]: Sasha warns the specified user.",
             "#unwarn <id>|<username>|<reply>|from [<reason>]: Sasha removes one warn from the specified user.",
             "#unwarnall <id>|<username>|<reply>|from [<reason>]: Sasha removes all warns from the specified user.",
-            "#temprestrict <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<restrictions>]: Sasha restrict the specified user as specified (if not specified the user will have all the restrictions) for <weeks> <days> <hours> <minutes> <seconds> if specified, otherwise she sends a keyboard in private.",
+            "#temprestrict <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<restrictions>]: Sasha restrict the specified user as specified (if not specified the user will have all the restrictions) for <weeks> <days> <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
             "#restrict <id>|<username>|<reply>|from [<restrictions>]: Sasha restrict the specified user as specified (if not specified the user will have all the restrictions).",
             "<restrictions> can be: [send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]",
             "#unrestrict <id>|<username>|<reply>|from [<reason>]: Sasha unrestrict the specified user.",
             "#[textual]restrictions <id>|<username>|<reply>|from: Sasha sends an inline keyboard with the restrictions of the specified user.",
             "#kick <id>|<username>|<reply>|from [<reason>]: Sasha kicks the specified user.",
-            "#tempban <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<reason>]: Sasha kicks and bans the specified user for <weeks> <days> <hours> <minutes> <seconds> if specified, otherwise she sends a keyboard in private.",
+            "#tempban <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<reason>]: Sasha kicks and bans the specified user for <weeks> <days> <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
             "#ban <id>|<username>|<reply>|from [<reason>]: Sasha kicks and bans the specified user, if he tries to join again it's automatically kicked.",
             "#unban <id>|<username>|<reply>|from [<reason>]: Sasha unbans the specified user.",
             "#banlist: Sasha sends bans list of the group.",
@@ -2371,7 +2371,7 @@ return {
             "MOD",
             "For more information on patterns see lua.org/pil/20.2.html",
             "#delword <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted.",
-            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a keyboard in private.",
+            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
         },
 
         dogify =
@@ -2758,7 +2758,7 @@ return {
             "🅿️ TEMPMESSAGE",
             "Plugin to temporize messages.",
             "MOD",
-            "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha will delete that message after <hours> <minutes> <seconds> if specified, otherwise she sends a keyboard in private.",
+            "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha will delete that message after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
         },
 
         tex =
