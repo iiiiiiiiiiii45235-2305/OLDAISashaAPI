@@ -1687,7 +1687,7 @@ local function run(msg, matches)
                                                 return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                             end
                                         else
-                                            return langs[get_lang(chat_id)].require_rank
+                                            return langs[msg.lang].require_rank
                                         end
                                     end
                                 else
@@ -1707,6 +1707,20 @@ local function run(msg, matches)
                                 time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
                                 return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
                             else
+                                if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
+                                    if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
+                                        if msg.chat.type ~= 'private' then
+                                            local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                            return
+                                        end
+                                    else
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                    end
+                                else
+                                    return langs[msg.lang].require_rank
+                                end
                             end
                         end
                     else
@@ -1732,19 +1746,95 @@ local function run(msg, matches)
                                 end
                             else
                                 if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                                    local text = banUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id, '', time) .. '\n'
-                                    for k, v in pairs(msg.reply_to_message.added) do
-                                        text = text .. banUser(msg.from.id, v.id, msg.chat.id, '', time) .. '\n'
+                                    local text = ''
+                                    if compare_ranks(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.adder.id)) then
+                                            if msg.chat.type ~= 'private' then
+                                                text = text .. langs[msg.lang].sendKeyboardPvt .. '\n'
+                                            end
+                                        else
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                        end
+                                    else
+                                        text = text .. langs[msg.lang].require_rank .. '\n'
                                     end
-                                    return text .. ''
+                                    for k, v in pairs(msg.reply_to_message.added) do
+                                        if compare_ranks(msg.from.id, v.id, msg.chat.id) then
+                                            if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, v.id)) then
+                                                if msg.chat.type ~= 'private' then
+                                                    text = text .. langs[msg.lang].sendKeyboardPvt .. '\n'
+                                                end
+                                            else
+                                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                            end
+                                        else
+                                            text = text .. langs[msg.lang].require_rank .. '\n'
+                                        end
+                                    end
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = sendReply(msg, text).result.message_id
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                        return
+                                    end
                                 elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                    return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id, '', time)
+                                    if compare_ranks(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.removed.id)) then
+                                            if msg.chat.type ~= 'private' then
+                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                                return
+                                            end
+                                        else
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                        end
+                                    else
+                                        return langs[msg.lang].require_rank
+                                    end
                                 else
-                                    return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id, '', time)
+                                    if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
+                                            if msg.chat.type ~= 'private' then
+                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                                return
+                                            end
+                                        else
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                        end
+                                    else
+                                        return langs[msg.lang].require_rank
+                                    end
                                 end
                             end
                         else
-                            return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
+                            local time, weeks, days, hours, minutes, seconds = 0
+                            if matches[2] and matches[3] and matches[4] and matches[5] and matches[6] then
+                                weeks = tonumber(matches[2])
+                                days = tonumber(matches[3])
+                                hours = tonumber(matches[4])
+                                minutes = tonumber(matches[5])
+                                seconds = tonumber(matches[6])
+                                time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
+                            else
+                                if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
+                                    if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
+                                        if msg.chat.type ~= 'private' then
+                                            local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                            return
+                                        end
+                                    else
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                    end
+                                else
+                                    return langs[msg.lang].require_rank
+                                end
+                            end
                         end
                     end
                 elseif matches[2] and matches[2] ~= '' then
@@ -1779,24 +1869,62 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
                         if msg.entities then
                             for k, v in pairs(msg.entities) do
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        return banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, '', time)
+                                        if compare_ranks(msg.from.id, msg.entities[k].user.id, msg.chat.id) then
+                                            if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.entities[k].user.id)) then
+                                                if msg.chat.type ~= 'private' then
+                                                    local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                                    return
+                                                end
+                                            else
+                                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                            end
+                                        else
+                                            return langs[msg.lang].require_rank
+                                        end
                                     end
                                 end
                             end
                         end
                         if string.match(matches[2], '^%d+$') then
-                            return banUser(msg.from.id, matches[2], msg.chat.id, '', time)
+                            if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
+                                if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, matches[2])) then
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                        return
+                                    end
+                                else
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                end
+                            else
+                                return langs[msg.lang].require_rank
+                            end
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return banUser(msg.from.id, obj_user.id, msg.chat.id, '', time)
+                                    if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, obj_user.id)) then
+                                            if msg.chat.type ~= 'private' then
+                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                                return
+                                            end
+                                        else
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                        end
+                                    else
+                                        return langs[msg.lang].require_rank
+                                    end
                                 end
                             else
                                 return langs[msg.lang].noObject
