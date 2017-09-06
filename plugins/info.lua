@@ -500,6 +500,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
         row = row + 1
         column = 1
+        keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'infoDELETE' }
         return { text = text, keyboard = keyboard }
     end
