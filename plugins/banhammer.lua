@@ -1680,7 +1680,7 @@ local function run(msg, matches)
                                         return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[8] or '', time)
                                     else
                                         if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
-                                            if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                            if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1712,7 +1712,7 @@ local function run(msg, matches)
                                 return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
                             else
                                 if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
-                                    if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
+                                    if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1752,7 +1752,7 @@ local function run(msg, matches)
                                 if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
                                     local text = ''
                                     if compare_ranks(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) then
-                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.adder.id)) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.adder.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 text = text .. langs[msg.lang].sendKeyboardPvt .. '\n'
                                             end
@@ -1764,7 +1764,7 @@ local function run(msg, matches)
                                     end
                                     for k, v in pairs(msg.reply_to_message.added) do
                                         if compare_ranks(msg.from.id, v.id, msg.chat.id) then
-                                            if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, v.id)) then
+                                            if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, v.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     text = text .. langs[msg.lang].sendKeyboardPvt .. '\n'
                                                 end
@@ -1783,7 +1783,7 @@ local function run(msg, matches)
                                     end
                                 elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                     if compare_ranks(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id) then
-                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.removed.id)) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.removed.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1798,7 +1798,7 @@ local function run(msg, matches)
                                     end
                                 else
                                     if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
-                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1825,7 +1825,7 @@ local function run(msg, matches)
                                 return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
                             else
                                 if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
-                                    if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
+                                    if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1879,7 +1879,7 @@ local function run(msg, matches)
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
                                         if compare_ranks(msg.from.id, msg.entities[k].user.id, msg.chat.id) then
-                                            if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, msg.entities[k].user.id)) then
+                                            if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.entities[k].user.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1898,7 +1898,7 @@ local function run(msg, matches)
                         end
                         if string.match(matches[2], '^%d+$') then
                             if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
-                                if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, matches[2])) then
+                                if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, matches[2])) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -1916,7 +1916,7 @@ local function run(msg, matches)
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
-                                        if sendKeyboard(msg.from.id, langs[msg.lang].timeKeyboard, keyboard_time(msg.chat.id, obj_user.id)) then
+                                        if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, obj_user.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
