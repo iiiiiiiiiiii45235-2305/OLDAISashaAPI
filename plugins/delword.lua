@@ -197,7 +197,7 @@ local function run(msg, matches)
                 local time = seconds +(minutes * 60) +(hours * 60 * 60)
                 return setunset_delword(msg, matches[5]:lower(), time)
             else
-                text_table[tostring(msg.from.id)] = matches[2]:lower()
+                delword_table[tostring(msg.from.id)] = matches[2]:lower()
                 if not sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_tempdelword(msg.chat.id)) then
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                 end
