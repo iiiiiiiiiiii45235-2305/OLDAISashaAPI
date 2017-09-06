@@ -1031,7 +1031,7 @@ local function run(msg, matches)
                                         restrictions_table[tostring(msg.reply_to_message.forward_from.id)] = restrictions
                                         if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.forward_from.id .. ') ' ..(database[tostring(msg.reply_to_message.forward_from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return
@@ -1083,7 +1083,7 @@ local function run(msg, matches)
                                 restrictions_table[tostring(msg.reply_to_message.from.id)] = restrictions
                                 if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.from.id)) then
                                     if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                        local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                         return
@@ -1130,7 +1130,7 @@ local function run(msg, matches)
                             restrictions_table[tostring(msg.reply_to_message.from.id)] = restrictions
                             if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.from.id)) then
                                 if msg.chat.type ~= 'private' then
-                                    local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                    local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                     return
@@ -1243,7 +1243,7 @@ local function run(msg, matches)
                                         restrictions_table[tostring(msg.entities[k].user.id)] = restrictions
                                         if sendKeyboard(msg.from.id, '(' .. msg.entities[k].user.id .. ') ' ..(database[tostring(msg.entities[k].user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.entities[k].user.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return
@@ -1262,7 +1262,7 @@ local function run(msg, matches)
                             restrictions_table[tostring(matches[2])] = restrictions
                             if sendKeyboard(msg.from.id, '(' .. matches[2] .. ') ' ..(database[tostring(matches[2])]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, matches[2])) then
                                 if msg.chat.type ~= 'private' then
-                                    local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                    local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                     return
@@ -1280,7 +1280,7 @@ local function run(msg, matches)
                                     restrictions_table[tostring(obj_user.id)] = restrictions
                                     if sendKeyboard(msg.from.id, '(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, obj_user.id)) then
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                            local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                             return
@@ -1850,7 +1850,7 @@ local function run(msg, matches)
                                         if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
                                             if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.forward_from.id .. ') ' ..(database[tostring(msg.reply_to_message.forward_from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                                 if msg.chat.type ~= 'private' then
-                                                    local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                    local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                     return
@@ -1882,7 +1882,7 @@ local function run(msg, matches)
                                 if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                                     if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.from.id)) then
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                            local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                             return
@@ -1922,7 +1922,7 @@ local function run(msg, matches)
                                     if compare_ranks(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id) then
                                         if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.adder.id .. ') ' ..(database[tostring(msg.reply_to_message.adder.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.adder.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                text = text .. langs[msg.lang].sendKeyboardPvt .. '\n'
+                                                text = text .. langs[msg.lang].sendTimeKeyboardPvt .. '\n'
                                             end
                                         else
                                             return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
@@ -1934,7 +1934,7 @@ local function run(msg, matches)
                                         if compare_ranks(msg.from.id, v.id, msg.chat.id) then
                                             if sendKeyboard(msg.from.id, '(' .. v.id .. ') ' ..(database[tostring(v.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, v.id)) then
                                                 if msg.chat.type ~= 'private' then
-                                                    text = text .. langs[msg.lang].sendKeyboardPvt .. '\n'
+                                                    text = text .. langs[msg.lang].sendTimeKeyboardPvt .. '\n'
                                                 end
                                             else
                                                 return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
@@ -1954,7 +1954,7 @@ local function run(msg, matches)
                                     if compare_ranks(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id) then
                                         if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.removed.id .. ') ' ..(database[tostring(msg.reply_to_message.removed.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.removed.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return
@@ -1969,7 +1969,7 @@ local function run(msg, matches)
                                     if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                                         if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.from.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return
@@ -1996,7 +1996,7 @@ local function run(msg, matches)
                                 if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                                     if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.from.id)) then
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                            local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                             return
@@ -2050,7 +2050,7 @@ local function run(msg, matches)
                                         if compare_ranks(msg.from.id, msg.entities[k].user.id, msg.chat.id) then
                                             if sendKeyboard(msg.from.id, '(' .. msg.entities[k].user.id .. ') ' ..(database[tostring(msg.entities[k].user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.entities[k].user.id)) then
                                                 if msg.chat.type ~= 'private' then
-                                                    local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                    local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                     return
@@ -2069,7 +2069,7 @@ local function run(msg, matches)
                             if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
                                 if sendKeyboard(msg.from.id, '(' .. matches[2] .. ') ' ..(database[tostring(matches[2])]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, matches[2])) then
                                     if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                        local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                         return
@@ -2087,7 +2087,7 @@ local function run(msg, matches)
                                     if compare_ranks(msg.from.id, obj_user.id, msg.chat.id) then
                                         if sendKeyboard(msg.from.id, '(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, obj_user.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return

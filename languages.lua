@@ -253,6 +253,7 @@ return {
         done = "Fatto.",
         timeKeyboard = "Tastiera del tempo:",
         sendKeyboardPvt = "Ti ho mandato la tastiera in privato.",
+        sendTimeKeyboardPvt = "Ti ho mandato la tastiera del tempo in privato.",
         errorTempTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- warn/kick/ban reasons --
@@ -1555,6 +1556,7 @@ return {
         done = "Done.",
         timeKeyboard = "Time keyboard:",
         sendKeyboardPvt = "I've sent you the keyboard in private.",
+        sendTimeKeyboardPvt = "I've sent you the time keyboard in private.",
         errorTempTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- warn/kick/ban reasons --

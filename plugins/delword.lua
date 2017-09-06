@@ -210,7 +210,7 @@ local function run(msg, matches)
                     else
                         if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_tempdelword(msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
-                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                 io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                 return
