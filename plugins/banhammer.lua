@@ -1291,7 +1291,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return
+                return text
             else
                 return langs[msg.lang].require_mod
             end
@@ -1418,7 +1418,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                return
+                return text
             else
                 return langs[msg.lang].require_owner
             end
@@ -1945,6 +1945,7 @@ local function run(msg, matches)
                                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                         return
                                     end
+                                    return text
                                 elseif msg.reply_to_message.service_type == 'chat_del_user' then
                                     if compare_ranks(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id) then
                                         if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.removed.id .. ') ' ..(database[tostring(msg.reply_to_message.removed.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, msg.reply_to_message.removed.id)) then
