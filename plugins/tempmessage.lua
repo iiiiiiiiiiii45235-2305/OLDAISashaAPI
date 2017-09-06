@@ -54,7 +54,7 @@ local function keyboard_tempmessage(chat_id, time)
     keyboard.inline_keyboard[7][1] = { text = "OK " .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'tempmessage' .. time .. 'DONE' .. chat_id }
 
     keyboard.inline_keyboard[8][1] = { text = langs[lang].updateKeyboard, callback_data = 'tempmessage' .. time .. 'BACK' .. chat_id }
-    keyboard.inline_keyboard[8][2] = { text = langs[lang].deleteKeyboard, callback_data = 'tempmessageDELETE' }
+    keyboard.inline_keyboard[8][2] = { text = langs[lang].deleteMessage, callback_data = 'tempmessageDELETE' }
     return keyboard
 end
 

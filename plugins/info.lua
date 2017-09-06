@@ -209,7 +209,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                                 {
                                     {
                                         { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id },
-                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' }
+                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
                                     }
                                 }
                             }
@@ -337,7 +337,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
                                 {
                                     {
                                         { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id },
-                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' }
+                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
                                     }
                                 }
                             }
@@ -497,7 +497,7 @@ local function get_object_info_keyboard(executer, obj, chat_id)
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
         column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
         return { text = text, keyboard = keyboard }
     end
 end
@@ -527,9 +527,7 @@ local function run(msg, matches)
         if matches[1] then
             if matches[1] == '###cbinfo' then
                 if matches[2] == 'DELETE' then
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                    end
+                    editMessageText(msg.chat.id, msg.message_id, get_object_info(getChat(matches[3]), matches[4]))
                 else
                     local updated = false
                     if matches[2] == 'BACK' then

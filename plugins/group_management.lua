@@ -777,7 +777,7 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         end
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
         column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
         return keyboard
     else
         local keyboard = { }
@@ -785,7 +785,7 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         local row = 1
         local column = 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
         return keyboard
     end
 end
@@ -856,7 +856,7 @@ local function keyboard_settings_list(chat_id)
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 
@@ -889,7 +889,7 @@ local function keyboard_mutes_list(chat_id)
     keyboard.inline_keyboard[row] = { }
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'group_managementDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 

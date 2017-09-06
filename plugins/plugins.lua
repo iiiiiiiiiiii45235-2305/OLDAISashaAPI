@@ -253,7 +253,7 @@ local function keyboard_plugins_list(user_id, privileged, chat_id)
         keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteKeyboard, callback_data = 'pluginsDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteMessage, callback_data = 'pluginsDELETE' }
     return keyboard
 end
 

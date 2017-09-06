@@ -92,7 +92,7 @@ local function run(msg, matches)
                     if matches[2] == 'DELETEUP' then
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
                         if tonumber(matches[3]) == tonumber(msg.from.id) then
-                            if deleteMessage(matches[4], msg.message_id) then
+                            if deleteMessage(msg.chat.id, msg.message_id) then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)

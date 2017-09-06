@@ -179,7 +179,7 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         end
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'banhammerBACK' .. user_id .. chat_id }
         column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'banhammerDELETE' }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'banhammerDELETE' }
         return keyboard
     else
         local keyboard = { }
@@ -187,7 +187,7 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         local row = 1
         local column = 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'banhammerDELETE' }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'banhammerDELETE' }
         return keyboard
     end
 end
@@ -263,7 +263,7 @@ local function keyboard_time(op, chat_id, user_id, time)
     end
 
     keyboard.inline_keyboard[12][1] = { text = langs[lang].updateKeyboard, callback_data = 'banhammer' .. op .. time .. 'BACK' .. user_id .. chat_id }
-    keyboard.inline_keyboard[12][2] = { text = langs[lang].deleteKeyboard, callback_data = 'banhammerDELETE' }
+    keyboard.inline_keyboard[12][2] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
     return keyboard
 end
 
