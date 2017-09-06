@@ -180,7 +180,14 @@ local function run(msg, matches)
     if matches[1]:lower() == 'dellist' then
         return list_censorships(msg)
     end
-    if matches[1]:lower() == 'delword' or matches[1]:lower() == 'scheduledelword' then
+    if matches[1]:lower() == 'delword' then
+        if msg.from.is_mod then
+            return setunset_delword(msg, matches[2]:lower())
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'scheduledelword' then
         if msg.from.is_mod then
             if matches[2] and matches[3] and matches[4] and matches[5] then
                 local hours = tonumber(matches[2])
@@ -277,7 +284,6 @@ return {
         "^(###cbdelword)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)$",
         "^(###cbdelword)(%d+)(DONE)(%-%d+)$",
 
-        "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
@@ -291,6 +297,7 @@ return {
         "USER",
         "#dellist",
         "MOD",
-        "#[schedule]delword [<hours> <minutes> <seconds>] <word>|<pattern>",
+        "#delword <word>|<pattern>",
+        "#scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>",
     },
 }
