@@ -202,15 +202,23 @@ local function run(msg, matches)
                 return setunset_delword(msg, matches[5]:lower(), time)
             else
                 delword_table[tostring(msg.from.id)] = matches[2]:lower()
-                if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_tempdelword(msg.chat.id)) then
-                    if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
-                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                        return
+                local hash = get_censorships_hash(msg)
+                if hash then
+                    if redis:hget(hash, matches[2]:lower()) then
+                        redis:hdel(hash, matches[2]:lower())
+                        return langs[msg.lang].delwordRemoved .. matches[2]:lower()
+                    else
+                        if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_tempdelword(msg.chat.id)) then
+                            if msg.chat.type ~= 'private' then
+                                local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt).result.message_id
+                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                return
+                            end
+                        else
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                        end
                     end
-                else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                 end
             end
         else
