@@ -116,7 +116,7 @@ local function run(msg, matches)
                                     if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
                                         time = time + tonumber(matches[4])
                                     else
-                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errordelwordTimeRange, true)
+                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errorDelwordTimeRange, true)
                                     end
                                 end
                             elseif matches[3] == 'MINUTES' then
@@ -127,7 +127,7 @@ local function run(msg, matches)
                                     if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                         time = time +(tonumber(matches[4]) * 60)
                                     else
-                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errordelwordTimeRange, true)
+                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errorDelwordTimeRange, true)
                                     end
                                 end
                             elseif matches[3] == 'HOURS' then
@@ -138,7 +138,7 @@ local function run(msg, matches)
                                     if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
                                         time = time +(tonumber(matches[4]) * 60 * 60)
                                     else
-                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errordelwordTimeRange, true)
+                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errorDelwordTimeRange, true)
                                     end
                                 end
                             end
