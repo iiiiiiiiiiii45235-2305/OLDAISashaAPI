@@ -324,11 +324,11 @@ local function run(msg, matches)
     if matches[1]:lower() == 'converttime' then
         if matches[2] and matches[3] and matches[4] and matches[5] and matches[6] then
             local time, weeks, days, hours, minutes, seconds = 0
-            weeks = tonumber(matches[3])
-            days = tonumber(matches[4])
-            hours = tonumber(matches[5])
-            minutes = tonumber(matches[6])
-            seconds = tonumber(matches[7])
+            weeks = tonumber(matches[2])
+            days = tonumber(matches[3])
+            hours = tonumber(matches[4])
+            minutes = tonumber(matches[5])
+            seconds = tonumber(matches[6])
             time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
             return time .. langs[msg.lang].secondsWord
         else
