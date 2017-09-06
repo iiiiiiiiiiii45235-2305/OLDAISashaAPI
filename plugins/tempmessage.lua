@@ -70,7 +70,7 @@ local function run(msg, matches)
                     if text_table[tostring(msg.from.id)] then
                         local time = tonumber(matches[2])
                         if matches[3] == 'BACK' then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[4], time))
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro:gsub('X', text_table[tostring(msg.from.id)]), keyboard_tempmessage(matches[4], time))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                             mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
@@ -113,7 +113,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(matches[5], time))
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro:gsub('X', text_table[tostring(msg.from.id)]), keyboard_tempmessage(matches[5], time))
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
                                 mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4])
@@ -161,7 +161,7 @@ local function run(msg, matches)
                     end
                 elseif matches[2] then
                     text_table[tostring(msg.from.id)] = matches[2]
-                    if not sendKeyboard(msg.from.id, langs[msg.lang].tempmessageIntro, keyboard_tempmessage(msg.chat.id)) then
+                    if not sendKeyboard(msg.from.id, langs[msg.lang].tempmessageIntro:gsub('X', matches[2]), keyboard_tempmessage(msg.chat.id)) then
                         return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 end
