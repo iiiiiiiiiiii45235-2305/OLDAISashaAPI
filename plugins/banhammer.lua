@@ -202,8 +202,8 @@ local function keyboard_time(chat_id, user_id, time)
         time = 15811200
     end
     local remainder, weeks, days, hours, minutes, seconds = 0
-    weeks = math.floor(secondsArg / 604800)
-    remainder = secondsArg % 604800
+    weeks = math.floor(time / 604800)
+    remainder = time % 604800
     days = math.floor(remainder / 86400)
     remainder = remainder % 86400
     hours = math.floor(remainder / 3600)
@@ -292,8 +292,8 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     local remainder, weeks, days, hours, minutes, seconds = 0
-                    weeks = math.floor(secondsArg / 604800)
-                    remainder = secondsArg % 604800
+                    weeks = math.floor(time / 604800)
+                    remainder = time % 604800
                     days = math.floor(remainder / 86400)
                     remainder = remainder % 86400
                     hours = math.floor(remainder / 3600)
