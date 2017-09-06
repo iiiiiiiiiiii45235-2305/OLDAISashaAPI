@@ -764,7 +764,7 @@ local function keyboard_permissions_list(chat_id, user_id, param_permissions)
         local row = 1
         local column = 1
         keyboard.inline_keyboard[row] = { }
-        for var, value in pairs(permissions) do
+        for var, value in pairsByKeys(permissions) do
             if type(value) == 'boolean' then
                 if value then
                     keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
@@ -797,7 +797,7 @@ local function keyboard_settings_list(chat_id)
     local column = 1
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    for var, value in pairs(data[tostring(chat_id)].settings) do
+    for var, value in pairsByKeys(data[tostring(chat_id)].settings) do
         if reverseAdjustSettingType(var) ~= 'flood' then
             if type(value) == 'boolean' then
                 if flag then
@@ -867,7 +867,7 @@ local function keyboard_mutes_list(chat_id)
     local column = 1
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    for var, value in pairs(data[tostring(chat_id)].settings.mutes) do
+    for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
         if flag then
             flag = false
             row = row + 1

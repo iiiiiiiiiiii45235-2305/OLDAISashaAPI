@@ -166,7 +166,7 @@ local function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         local row = 1
         local column = 1
         keyboard.inline_keyboard[row] = { }
-        for var, value in pairs(restrictions) do
+        for var, value in pairsByKeys(restrictions) do
             if type(value) == 'boolean' then
                 if value then
                     keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
