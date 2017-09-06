@@ -261,8 +261,8 @@ local function keyboard_time(chat_id, user_id, time)
     keyboard.inline_keyboard[10][5] = { text = "+5", callback_data = 'banhammerTEMPBAN' .. time .. 'WEEKS+5' .. chat_id .. '$' .. user_id }
     keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'banhammerTEMPBAN' .. time .. 'WEEKS+10' .. chat_id .. '$' .. user_id }
 
-    if time >= 31622401 then
-        keyboard.inline_keyboard[11][1] = { text = "BAN FOREVER", callback_data = 'banhammerTEMPBAN' .. time .. 'DONE' .. user_id .. chat_id }
+    if time < 30 or time >= 31622401 then
+        keyboard.inline_keyboard[11][1] = { text = "BAN " .. langs[lang].forever, callback_data = 'banhammerTEMPBAN' .. time .. 'DONE' .. user_id .. chat_id }
     else
         keyboard.inline_keyboard[11][1] = { text = "BAN " ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammerTEMPBAN' .. time .. 'DONE' .. user_id .. chat_id }
     end
@@ -362,7 +362,7 @@ local function run(msg, matches)
                     end
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempBanIntro, keyboard_time(matches[6], matches[7], time))
                 elseif matches[4] == 'DONE' then
-                    local text = banUser(msg.from.id, matches[5], matches[6], '#tempban until ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time) .. ' #executer' .. msg.from.id, os.time() + time)
+                    local text = banUser(msg.from.id, matches[5], matches[6], '#tempban ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time) .. ' #executer' .. msg.from.id, os.time() + time)
                     answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
                     deleteMessage(msg.chat.id, msg.message_id)

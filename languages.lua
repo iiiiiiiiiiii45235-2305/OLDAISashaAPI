@@ -397,6 +397,8 @@ return {
         userUnrestricted = "Utente libero.",
         tempBanIntro = "Puoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:",
         errorBanhammerTimeRange = "Errore, il valore non può essere negativo.",
+        forever = "∞",
+        untilWord = "fino a",
 
         -- bot.lua --
         startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi (dovresti sapere chi è, se non lo sai chiedi nei miei gruppi), per qualsiasi cosa utilizza pure il comando /help.",
@@ -1695,6 +1697,8 @@ return {
         userUnrestricted = "User unrestricted.",
         tempBanIntro = "You can temporary ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be banned forever.\nTime keyboard:",
         errorBanhammerTimeRange = "Error, the value can't be negative.",
+        forever = "∞",
+        untilWord = "until",
 
         -- bot.lua --
         startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group (you should know who he is, if not just ask in my groups), for anything you need use /help.",
