@@ -362,7 +362,7 @@ local function run(msg, matches)
                     end
                     editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].tempBanIntro, keyboard_time(matches[6], matches[7], time))
                 elseif matches[4] == 'DONE' then
-                    local text = banUser(msg.from.id, matches[5], matches[6], '#tempban #executer' .. msg.from.id, time)
+                    local text = banUser(msg.from.id, matches[5], matches[6], '#tempban #executer' .. msg.from.id, os.time() + time)
                     answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
                     deleteMessage(msg.chat.id, msg.message_id)
@@ -1677,7 +1677,7 @@ local function run(msg, matches)
                                         minutes = tonumber(matches[6])
                                         seconds = tonumber(matches[7])
                                         time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
-                                        return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[8] or '', time)
+                                        return banUser(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id, matches[8] or '', os.time() + time)
                                     else
                                         if compare_ranks(msg.from.id, msg.reply_to_message.forward_from.id, msg.chat.id) then
                                             if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.forward_from.id)) then
@@ -1709,7 +1709,7 @@ local function run(msg, matches)
                                 minutes = tonumber(matches[5])
                                 seconds = tonumber(matches[6])
                                 time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
-                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), os.time() + time)
                             else
                                 if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                                     if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
@@ -1738,15 +1738,15 @@ local function run(msg, matches)
                                 seconds = tonumber(matches[6])
                                 time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
                                 if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
-                                    local text = banUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id, '', time) .. '\n'
+                                    local text = banUser(msg.from.id, msg.reply_to_message.adder.id, msg.chat.id, '', os.time() + time) .. '\n'
                                     for k, v in pairs(msg.reply_to_message.added) do
-                                        text = text .. banUser(msg.from.id, v.id, msg.chat.id, '', time) .. '\n'
+                                        text = text .. banUser(msg.from.id, v.id, msg.chat.id, '', os.time() + time) .. '\n'
                                     end
                                     return text ..(matches[7] or '') .. ' ' ..(matches[8] or '')
                                 elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                                    return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
+                                    return banUser(msg.from.id, msg.reply_to_message.removed.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), os.time() + time)
                                 else
-                                    return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
+                                    return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), os.time() + time)
                                 end
                             else
                                 if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
@@ -1822,7 +1822,7 @@ local function run(msg, matches)
                                 minutes = tonumber(matches[5])
                                 seconds = tonumber(matches[6])
                                 time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
-                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), time)
+                                return banUser(msg.from.id, msg.reply_to_message.from.id, msg.chat.id,(matches[7] or '') .. ' ' ..(matches[8] or ''), os.time() + time)
                             else
                                 if compare_ranks(msg.from.id, msg.reply_to_message.from.id, msg.chat.id) then
                                     if sendKeyboard(msg.from.id, langs[msg.lang].tempBanIntro, keyboard_time(msg.chat.id, msg.reply_to_message.from.id)) then
@@ -1855,18 +1855,18 @@ local function run(msg, matches)
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        return banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[8] or '', time)
+                                        return banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, matches[8] or '', os.time() + time)
                                     end
                                 end
                             end
                         end
                         if string.match(matches[2], '^%d+$') then
-                            return banUser(msg.from.id, matches[2], msg.chat.id, matches[8] or '', time)
+                            return banUser(msg.from.id, matches[2], msg.chat.id, matches[8] or '', os.time() + time)
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return banUser(msg.from.id, obj_user.id, msg.chat.id, matches[8] or '', time)
+                                    return banUser(msg.from.id, obj_user.id, msg.chat.id, matches[8] or '', os.time() + time)
                                 end
                             else
                                 return langs[msg.lang].noObject
