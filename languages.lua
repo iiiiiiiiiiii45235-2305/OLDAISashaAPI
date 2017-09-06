@@ -1,7 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "Tempban and Temprestrict commands that use telegram's time management (mod^)(banhammer).\n" ..
-    "Tempdelword command to delete forbidden words/patterns not instantly but after some time (mod^)(delword).\n" ..
+    "Delword command to delete forbidden words/patterns not instantly but after some time (mod^)(delword).\n" ..
     "Langs updated.\n" ..
     "Various improvements.\n",
     italian = "🇮🇹 Italian",
@@ -1056,8 +1056,7 @@ return {
             "#dellist: Sasha manda una lista di parole o pattern censurati.",
             "MOD",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
-            "#delword <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio.",
-            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
+            "#delword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         dogify =
@@ -2370,8 +2369,7 @@ return {
             "#dellist: Sasha sends a list of censored words or patterns.",
             "MOD",
             "For more information on patterns see lua.org/pil/20.2.html",
-            "#delword <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted.",
-            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
+            "#delword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
         },
 
         dogify =

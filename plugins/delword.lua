@@ -19,7 +19,15 @@ local function setunset_delword(msg, var_name, time)
             redis:hdel(hash, var_name)
             return langs[msg.lang].delwordRemoved .. var_name
         else
-            redis:hset(hash, var_name, time or true)
+            if time then
+                if tonumber(time) == 0 then
+                    redis:hset(hash, var_name, true)
+                else
+                    redis:hset(hash, var_name, time)
+                end
+            else
+                redis:hset(hash, var_name, true)
+            end
             return langs[msg.lang].delwordAdded .. var_name
         end
     end
@@ -40,7 +48,7 @@ end
 
 local function keyboard_tempdelword(chat_id, time)
     if not time then
-        time = 88230
+        time = 0
     end
     local remainder, hours, minutes, seconds = 0
     hours = math.floor(time / 3600)
@@ -174,13 +182,6 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'delword' then
         if msg.from.is_mod then
-            return setunset_delword(msg, matches[2]:lower())
-        else
-            return langs[msg.lang].require_mod
-        end
-    end
-    if matches[1]:lower() == 'tempdelword' then
-        if msg.from.is_mod then
             if matches[2] and matches[3] and matches[4] and matches[5] then
                 local hours = tonumber(matches[2])
                 local minutes = tonumber(matches[3])
@@ -272,8 +273,7 @@ return {
         "^(###cbdelword)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)$",
         "^(###cbdelword)(%d+)(DONE)(%-%d+)$",
 
-        "^[#!/]([Tt][Ee][Mm][Pp][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
-        "^[#!/]([Tt][Ee][Mm][Pp][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
+        "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ll][Ii][Ss][Tt])$",
     },
@@ -285,7 +285,6 @@ return {
         "USER",
         "#dellist",
         "MOD",
-        "#delword <word>|<pattern>",
-        "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>",
+        "#delword [<hours> <minutes> <seconds>] <word>|<pattern>",
     },
 }
