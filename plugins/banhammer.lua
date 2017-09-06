@@ -257,9 +257,9 @@ local function keyboard_time(op, chat_id, user_id, time)
     keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'WEEKS+10' .. chat_id .. '$' .. user_id }
 
     if time < 30 or time > 31622400 then
-        keyboard.inline_keyboard[11][1] = { text = op .. ' ' .. langs[lang].forever, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
+        keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' .. langs[lang].forever, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
     else
-        keyboard.inline_keyboard[11][1] = { text = op .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
+        keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
     end
 
     keyboard.inline_keyboard[12][1] = { text = langs[lang].updateKeyboard, callback_data = 'banhammer' .. op .. time .. 'BACK' .. user_id .. chat_id }
