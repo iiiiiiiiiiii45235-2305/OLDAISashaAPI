@@ -562,13 +562,13 @@ local function run(msg, matches)
                         local text = ''
                         local restrictions = restrictions_table[tostring(matches[5])]
                         if time < 30 or time > 31622400 then
-                            if restrictChatMember(msg.chat.id, matches[5], restrictions, os.time() + time) then
+                            if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
                                 text = vardumptext(restrictions) .. '\n' .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #restrict'
                             else
                                 text = langs[msg.lang].errorTryAgain
                             end
                         else
-                            if restrictChatMember(msg.chat.id, matches[5], restrictions, os.time() + time) then
+                            if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
                                 text = vardumptext(restrictions) .. '\n' .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                             else
                                 text = langs[msg.lang].errorTryAgain
