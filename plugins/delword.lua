@@ -146,13 +146,13 @@ local function run(msg, matches)
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
                                 mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4])
-                                msg.chat.id = matches[4]
+                                local tmp = { chat = { id = matches[4], type = '' } }
                                 if matches[4]:starts('-100') then
-                                    msg.chat.type = 'supergroup'
+                                    tmp.chat.type = 'supergroup'
                                 elseif matches[4]:starts('-') then
-                                    msg.chat.type = 'group'
+                                    tmp.chat.type = 'group'
                                 end
-                                local text = setunset_delword(msg, delword_table[tostring(msg.from.id)], time)
+                                local text = setunset_delword(tmp, delword_table[tostring(msg.from.id)], time)
                                 delword_table[tostring(msg.from.id)] = nil
                                 answerCallbackQuery(msg.cb_id, text, false)
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
