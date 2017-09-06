@@ -469,7 +469,9 @@ local function run(msg, matches)
                     end
                     answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
-                    deleteMessage(msg.chat.id, msg.message_id)
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    end
                 end
             elseif matches[2] == 'TEMPRESTRICT' then
                 local time = tonumber(matches[3])
@@ -587,7 +589,9 @@ local function run(msg, matches)
                         restrictions_table[tostring(matches[5])] = nil
                         answerCallbackQuery(msg.cb_id, text, false)
                         sendMessage(matches[6], text)
-                        deleteMessage(msg.chat.id, msg.message_id)
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        end
                     else
                         editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
