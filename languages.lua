@@ -252,6 +252,7 @@ return {
         done = "Fatto.",
         timeKeyboard = "Tastiera del tempo:",
         sendKeyboardPvt = "Ti ho mandato la tastiera in privato.",
+        errorTempTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -448,7 +449,6 @@ return {
         delwordAdded = "Censura aggiunta su ",
         delwordRemoved = "Censura rimossa da ",
         delwordIntro = "Puoi far eliminare messaggi con parole proibite fino a 48 ore dopo l'invio.\nParola/e proibita/e: X\nTastiera del tempo:",
-        errorTempmessageTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- fakecommand.lua --
         fakecommandYouTried = "Ci hai provato pezzente, non eseguirai un comando che richiede un rango superiore al tuo.",
@@ -783,7 +783,6 @@ return {
 
         -- tempmessage.lua --
         tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.\nMessaggio da inviare: X\nTastiera del tempo:",
-        errorTempmessageTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migrazione completata.",
@@ -1555,6 +1554,7 @@ return {
         done = "Done.",
         timeKeyboard = "Time keyboard:",
         sendKeyboardPvt = "I've sent you the keyboard in private.",
+        errorTempTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
@@ -1755,7 +1755,6 @@ return {
         delwordAdded = "Censorship added on ",
         delwordRemoved = "Censorship removed from ",
         delwordIntro = "You can delete messages with forbidden word(s) up to 48 hours after they've been sent.\nForbidden word(s): X\nTime keyboard:",
-        errorTempmessageTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- fakecommand.lua --
         fakecommandYouTried = "You tried asshole, you won't execute a command that requires a rank higher than yours.",
@@ -2097,7 +2096,6 @@ return {
 
         -- tempmessage.lua --
         tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.\nMessage to send: X\nTime keyboard:",
-        errorTempmessageTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- tgcli_to_api_migration.lua --
         migrationCompleted = "Migration completed.",
