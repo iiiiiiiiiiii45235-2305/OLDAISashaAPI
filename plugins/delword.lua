@@ -180,7 +180,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'dellist' then
         return list_censorships(msg)
     end
-    if matches[1]:lower() == 'delword' then
+    if matches[1]:lower() == 'delword' or matches[1]:lower() == 'scheduledelword' then
         if msg.from.is_mod then
             if matches[2] and matches[3] and matches[4] and matches[5] then
                 local hours = tonumber(matches[2])
@@ -283,6 +283,8 @@ return {
 
         "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
+        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
+        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
         "^[#!/]([Dd][Ee][Ll][Ll][Ii][Ss][Tt])$",
     },
     pre_process = pre_process,
@@ -293,6 +295,6 @@ return {
         "USER",
         "#dellist",
         "MOD",
-        "#delword [<hours> <minutes> <seconds>] <word>|<pattern>",
+        "#[schedule]delword [<hours> <minutes> <seconds>] <word>|<pattern>",
     },
 }
