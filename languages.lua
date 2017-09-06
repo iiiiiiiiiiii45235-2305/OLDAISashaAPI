@@ -1056,7 +1056,8 @@ return {
             "#dellist: Sasha manda una lista di parole o pattern censurati.",
             "MOD",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
-            "#delword <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata nei supergruppi Sasha eliminerà il messaggio mentre nei gruppi bannerà il membro.",
+            "#delword <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio.",
+            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti invia una tastiera in privato.",
         },
 
         dogify =
@@ -2369,7 +2370,8 @@ return {
             "#dellist: Sasha sends a list of censored words or patterns.",
             "MOD",
             "For more information on patterns see lua.org/pil/20.2.html",
-            "#delword <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it in supergroups the message is deleted and in normal groups the user is kicked.",
+            "#delword <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted.",
+            "#tempdelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a keyboard in private.",
         },
 
         dogify =
