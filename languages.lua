@@ -1,6 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Tempban and Temprestrict commands that use telegram's time management (mod^).\n" ..
+    "Tempban and Temprestrict commands that use telegram's time management (mod^)(banhammer).\n" ..
+    "Tempdelword command to delete forbidden words/patterns not instantly but after some time (mod^)(delword).\n" ..
     "Langs updated.\n" ..
     "Various improvements.\n",
     italian = "🇮🇹 Italian",
