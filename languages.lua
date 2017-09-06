@@ -1241,6 +1241,8 @@ return {
             "#syntax <filter>: Sasha mostra la sintassi dei comandi che corrispondono a <filter>.",
             -- "#syntaxall: Sasha mostra la sintassi di tutti i comandi di tutti i plugin.",
             "#[textual]faq[<n>]: Sasha mostra le Frequently asked questions, se <n> è specificato manda la risposta.",
+            "#converttime <seconds>: Sasha converte <seconds> in Settimane, Giorni, Ore, Minuti, Secondi.",
+            "#converttime <weeks> <days> <hours> <minutes> <seconds>: Sasha converte <weeks> <days> <hours> <minutes> <seconds> in Secondi.",
         },
 
         info =
@@ -2556,6 +2558,8 @@ return {
             "#syntax <filter>: Sasha sends syntax of all commands that matches with <filter>.",
             -- "#syntaxall: Sasha sends syntax of all commands of all plugins.",
             "#[textual]faq[<n>]: Sasha shows Frequently asked questions, if <n> the specified she sends the answer.",
+            "#converttime <seconds>: Sasha converts <seconds> in Weeks, Days, Hours, Minutes, Seconds.",
+            "#converttime <weeks> <days> <hours> <minutes> <seconds>: Sasha converts <weeks> <days> <hours> <minutes> <seconds> in Seconds.",
         },
 
         info =

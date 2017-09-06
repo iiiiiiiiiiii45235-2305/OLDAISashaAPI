@@ -321,6 +321,29 @@ local function run(msg, matches)
             return
         end
     end
+    if matches[1]:lower() == 'converttime' then
+        if matches[2] and matches[3] and matches[4] and matches[5] and matches[6] then
+            local time, weeks, days, hours, minutes, seconds = 0
+            weeks = tonumber(matches[3])
+            days = tonumber(matches[4])
+            hours = tonumber(matches[5])
+            minutes = tonumber(matches[6])
+            seconds = tonumber(matches[7])
+            time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
+            return time .. langs[msg.lang].secondsWord
+        else
+            local remainder, weeks, days, hours, minutes, seconds = 0
+            weeks = math.floor(time / 604800)
+            remainder = time % 604800
+            days = math.floor(remainder / 86400)
+            remainder = remainder % 86400
+            hours = math.floor(remainder / 3600)
+            remainder = remainder % 3600
+            minutes = math.floor(remainder / 60)
+            seconds = remainder % 60
+            return weeks .. langs[msg.lang].weeksWord .. days .. langs[msg.lang].daysWord .. hours .. langs[msg.lang].hoursWord .. minutes .. langs[msg.lang].minutesWord .. seconds .. langs[msg.lang].secondsWord
+        end
+    end
     if matches[1]:lower() == 'sudolist' then
         mystat('/sudolist')
         local text = 'SUDO INFO'
@@ -497,6 +520,9 @@ return {
         "^(###cbhelp)(FAQ)(%d+)$",
         "^(###cbhelp)(.*)(%-?%d+)$",
         "^(###cbhelp)(.*)$",
+
+        "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+) (%d+) (%d+) (%d+) (%d+)$",
+        "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+)$",
         -- "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
@@ -529,5 +555,7 @@ return {
         -- "#syntaxall",
         "#faq[<n>]",
         "#textualfaq[<n>]",
+        "#converttime <seconds>",
+        "#converttime <weeks> <days> <hours> <minutes> <seconds>",
     },
 }
