@@ -199,7 +199,7 @@ end
 
 local function keyboard_time(chat_id, user_id, time)
     if not time then
-        time = 15811200
+        time = 16115430
     end
     local remainder, weeks, days, hours, minutes, seconds = 0
     weeks = math.floor(time / 604800)
@@ -245,12 +245,12 @@ local function keyboard_time(chat_id, user_id, time)
 
     keyboard.inline_keyboard[7][1] = { text = langs[lang].days:gsub('X', days), callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS0' .. chat_id .. '$' .. user_id }
 
-    keyboard.inline_keyboard[8][1] = { text = "-10", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS-10' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][2] = { text = "-5", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS-5' .. chat_id .. '$' .. user_id }
+    keyboard.inline_keyboard[8][1] = { text = "-5", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS-5' .. chat_id .. '$' .. user_id }
+    keyboard.inline_keyboard[8][2] = { text = "-3", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS-3' .. chat_id .. '$' .. user_id }
     keyboard.inline_keyboard[8][3] = { text = "-1", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS-1' .. chat_id .. '$' .. user_id }
     keyboard.inline_keyboard[8][4] = { text = "+1", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS+1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][5] = { text = "+5", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS+5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][6] = { text = "+10", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS+10' .. chat_id .. '$' .. user_id }
+    keyboard.inline_keyboard[8][5] = { text = "+3", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS+3' .. chat_id .. '$' .. user_id }
+    keyboard.inline_keyboard[8][6] = { text = "+5", callback_data = 'banhammerTEMPBAN' .. time .. 'DAYS+5' .. chat_id .. '$' .. user_id }
 
     keyboard.inline_keyboard[9][1] = { text = langs[lang].weeks:gsub('X', weeks), callback_data = 'banhammerTEMPBAN' .. time .. 'WEEKS0' .. chat_id .. '$' .. user_id }
 
