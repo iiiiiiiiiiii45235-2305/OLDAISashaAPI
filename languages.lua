@@ -395,10 +395,11 @@ return {
         restrictionSendOtherMessages = "\nPuò inviare gifs, giochi, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nPuò aggiungere anteprime di pagine web: ",
         userUnrestricted = "Utente libero.",
-        tempBanIntro = "Puoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:",
+        tempBanIntro = "Puoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:\n",
         errorBanhammerTimeRange = "Errore, il valore non può essere negativo.",
         forever = "∞",
         untilWord = "fino a",
+        tempRestrictIntro = "Puoi applicare restrizioni temporaneamente alle persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range le restrizioni verranno applicate per sempre.\nTastiera del tempo:\n",
 
         -- bot.lua --
         startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi (dovresti sapere chi è, se non lo sai chiedi nei miei gruppi), per qualsiasi cosa utilizza pure il comando /help.",
@@ -778,7 +779,7 @@ return {
         langSet = "ℹ️ Lingua impostata.",
 
         -- tempmessage.lua --
-        tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.\nTastiera del tempo:",
+        tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.\nMessaggio da inviare: X\nTastiera del tempo:",
         errorTempmessageTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- tgcli_to_api_migration.lua --
@@ -1695,10 +1696,11 @@ return {
         restrictionSendOtherMessages = "\nCan send gifs, games, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nCan add web page previews: ",
         userUnrestricted = "User unrestricted.",
-        tempBanIntro = "You can temporary ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be banned forever.\nTime keyboard:",
+        tempBanIntro = "You can temporary ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be banned forever.\nTime keyboard:\n",
         errorBanhammerTimeRange = "Error, the value can't be negative.",
         forever = "∞",
         untilWord = "until",
+        tempRestrictIntro = "You can temporary restrict people from 30 seconds to 366 days, if the specified value is not in the range the user will be restricted forever.\nTime keyboard:\n",
 
         -- bot.lua --
         startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group (you should know who he is, if not just ask in my groups), for anything you need use /help.",
@@ -2085,7 +2087,7 @@ return {
         langSet = "ℹ️ Language set.",
 
         -- tempmessage.lua --
-        tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.\nTime keyboard:",
+        tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.\nMessage to send: X\nTime keyboard:",
         errorTempmessageTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- tgcli_to_api_migration.lua --

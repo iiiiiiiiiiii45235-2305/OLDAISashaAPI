@@ -566,11 +566,11 @@ local function run(msg, matches)
                                 if isMutedUser(matches[4], matches[3]) then
                                     local text = unmuteUser(matches[4], matches[3], msg.lang)
                                     answerCallbackQuery(msg.cb_id, text, false)
-                                    sendMessage(matches[4], text)
+                                    sendMessage(matches[4], text .. '\n#executer' .. msg.from.id)
                                 else
                                     local text = muteUser(matches[4], matches[3], msg.lang)
                                     answerCallbackQuery(msg.cb_id, text, false)
-                                    sendMessage(matches[4], text)
+                                    sendMessage(matches[4], text .. '\n#executer' .. msg.from.id)
                                 end
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, false)
@@ -582,11 +582,11 @@ local function run(msg, matches)
                         if is_mod2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             if matches[2] == 'WARNSMINUS' then
-                                local text = unwarnUser(msg.from.id, matches[3], matches[4])
+                                local text = unwarnUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
                                 answerCallbackQuery(msg.cb_id, text, false)
                                 sendMessage(matches[4], text)
                             elseif matches[2] == 'WARNSPLUS' then
-                                local text = warnUser(msg.from.id, matches[3], matches[4])
+                                local text = warnUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
                                 answerCallbackQuery(msg.cb_id, text, false)
                                 sendMessage(matches[4], text)
                             end
@@ -596,7 +596,7 @@ local function run(msg, matches)
                     elseif matches[2] == 'BAN' then
                         if is_mod2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                            local text = banUser(msg.from.id, matches[3], matches[4])
+                            local text = banUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
                             answerCallbackQuery(msg.cb_id, text, false)
                             sendMessage(matches[4], text)
                         else
@@ -605,7 +605,7 @@ local function run(msg, matches)
                     elseif matches[2] == 'UNBAN' then
                         if is_mod2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                            local text = unbanUser(msg.from.id, matches[3], matches[4])
+                            local text = unbanUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
                             answerCallbackQuery(msg.cb_id, text, false)
                             sendMessage(matches[4], text)
                         else
