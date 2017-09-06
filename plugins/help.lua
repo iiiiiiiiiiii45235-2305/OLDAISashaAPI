@@ -333,8 +333,8 @@ local function run(msg, matches)
             return time .. langs[msg.lang].secondsWord
         else
             local remainder, weeks, days, hours, minutes, seconds = 0
-            weeks = math.floor(time / 604800)
-            remainder = time % 604800
+            weeks = math.floor(matches[2] / 604800)
+            remainder = matches[2] % 604800
             days = math.floor(remainder / 86400)
             remainder = remainder % 86400
             hours = math.floor(remainder / 3600)
