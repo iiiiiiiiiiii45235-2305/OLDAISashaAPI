@@ -159,7 +159,7 @@ local function run(msg, matches)
                     if message_id then
                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "' .. time .. '" "' .. message_id .. '"')
                     end
-                elseif matches[2] then
+                else
                     text_table[tostring(msg.from.id)] = matches[2]
                     if not sendKeyboard(msg.from.id, langs[msg.lang].tempmessageIntro:gsub('X', matches[2]), keyboard_tempmessage(msg.chat.id)) then
                         return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)

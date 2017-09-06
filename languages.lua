@@ -1,8 +1,8 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Tempmessage plugin to send messages that will be deleted after some time (mod^).\n" ..
-    "Delete send keyboard pvt messages and their commands after 1 minute.\n" ..
-    "General fixes.\n",
+    "Tempban and Temprestrict commands that use telegram's time management (mod^).\n" ..
+    "Langs updated.\n" ..
+    "Various improvements.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
@@ -447,6 +447,8 @@ return {
         delwordList = "Lista censure:\n",
         delwordAdded = "Censura aggiunta su ",
         delwordRemoved = "Censura rimossa da ",
+        delwordIntro = "Puoi far eliminare messaggi con parole proibite fino a 48 ore dopo l'invio.\nParola/e proibita/e: X\nTastiera del tempo:",
+        errorTempmessageTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
 
         -- fakecommand.lua --
         fakecommandYouTried = "Ci hai provato pezzente, non eseguirai un comando che richiede un rango superiore al tuo.",
@@ -1752,6 +1754,8 @@ return {
         delwordList = "Censorship list:\n",
         delwordAdded = "Censorship added on ",
         delwordRemoved = "Censorship removed from ",
+        delwordIntro = "You can delete messages with forbidden word(s) up to 48 hours after they've been sent.\nForbidden word(s): X\nTime keyboard:",
+        errorTempmessageTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
 
         -- fakecommand.lua --
         fakecommandYouTried = "You tried asshole, you won't execute a command that requires a rank higher than yours.",
