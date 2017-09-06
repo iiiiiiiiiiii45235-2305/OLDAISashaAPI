@@ -14,7 +14,7 @@ local function keyboard_tempmessage(chat_id, time)
         time = 88230
     end
     local remainder, hours, minutes, seconds = 0
-    hours = math.floor(remainder / 3600)
+    hours = math.floor(time / 3600)
     remainder = time % 3600
     minutes = math.floor(remainder / 60)
     seconds = remainder % 60
@@ -75,7 +75,7 @@ local function run(msg, matches)
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                             mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                             local remainder, hours, minutes, seconds = 0
-                            hours = math.floor(remainder / 3600)
+                            hours = math.floor(time / 3600)
                             remainder = time % 3600
                             minutes = math.floor(remainder / 60)
                             seconds = remainder % 60
