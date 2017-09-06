@@ -467,7 +467,7 @@ local function run(msg, matches)
                     else
                         text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
                     end
-                    answerCallbackQuery(msg.cb_id, text, true)
+                    answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
                     deleteMessage(msg.chat.id, msg.message_id)
                 end
@@ -565,7 +565,7 @@ local function run(msg, matches)
                             if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
                                 for k, v in pairs(restrictions) do
                                     if not restrictions[k] then
-                                        text = text .. reverseRestrictionsDictionary[k]
+                                        text = text .. reverseRestrictionsDictionary[k] .. ' '
                                     end
                                 end
                                 text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #restrict'
@@ -576,7 +576,7 @@ local function run(msg, matches)
                             if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
                                 for k, v in pairs(restrictions) do
                                     if not restrictions[k] then
-                                        text = text .. reverseRestrictionsDictionary[k]
+                                        text = text .. reverseRestrictionsDictionary[k] .. ' '
                                     end
                                 end
                                 text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
@@ -585,7 +585,7 @@ local function run(msg, matches)
                             end
                         end
                         restrictions_table[tostring(matches[5])] = nil
-                        answerCallbackQuery(msg.cb_id, text, true)
+                        answerCallbackQuery(msg.cb_id, text, false)
                         sendMessage(matches[6], text)
                         deleteMessage(msg.chat.id, msg.message_id)
                     else
