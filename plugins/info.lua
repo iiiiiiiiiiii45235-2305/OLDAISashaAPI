@@ -530,7 +530,13 @@ local function run(msg, matches)
         if matches[1] then
             if matches[1] == '###cbinfo' then
                 if matches[2] == 'DELETE' then
-                    editMessageText(msg.chat.id, msg.message_id, get_object_info(getChat(matches[3]), matches[4]))
+                    if matches[3] and matches[4] then
+                        editMessageText(msg.chat.id, msg.message_id, get_object_info(getChat(matches[3]), matches[4]))
+                    else
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        end
+                    end
                 else
                     local updated = false
                     if matches[2] == 'BACK' then
