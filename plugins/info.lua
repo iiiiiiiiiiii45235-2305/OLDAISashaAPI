@@ -262,10 +262,10 @@ local function run(msg, matches)
                             if data[tostring(matches[3])] then
                                 chat_name = data[tostring(matches[3])].set_name or ''
                             end
-                            local keyboard = keyboard_settings_list(matches[3])
-                            local row = #keyboard + 1
-                            keyboard[row] = { }
-                            keyboard[row][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
+                            local keyboard = keyboard_settings_list(matches[3], true)
+                            local row = #keyboard.inline_keyboard + 1
+                            keyboard.inline_keyboard[row] = { }
+                            keyboard.inline_keyboard[row][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -279,10 +279,10 @@ local function run(msg, matches)
                             if data[tostring(matches[3])] then
                                 chat_name = data[tostring(matches[3])].set_name or ''
                             end
-                            local keyboard = keyboard_mutes_list(matches[3])
-                            local row = #keyboard + 1
-                            keyboard[row] = { }
-                            keyboard[row][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
+                            local keyboard = keyboard_mutes_list(matches[3], true)
+                            local row = #keyboard.inline_keyboard + 1
+                            keyboard.inline_keyboard[9] = { }
+                            keyboard.inline_keyboard[9][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name, keyboard)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
