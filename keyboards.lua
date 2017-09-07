@@ -394,7 +394,7 @@ function keyboard_settings_list(chat_id, from_info)
         row = row + 1
         column = 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].goBack, callback_data = 'infoBACK' .. chat_id }
     end
     return keyboard
 end
@@ -436,7 +436,7 @@ function keyboard_mutes_list(chat_id, from_info)
         row = row + 1
         column = 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].goBack, callback_data = 'infoBACK' .. chat_id }
     end
     return keyboard
 end
