@@ -336,9 +336,17 @@ function keyboard_settings_list(chat_id, from_info)
                     keyboard.inline_keyboard[row] = { }
                 end
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                    if from_info then
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id .. 'I' }
+                    else
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                    end
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+                    if from_info then
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id .. 'I' }
+                    else
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
+                    end
                 end
                 column = column + 1
                 if column > 2 then
@@ -352,39 +360,71 @@ function keyboard_settings_list(chat_id, from_info)
     column = 1
     keyboard.inline_keyboard[row] = { }
     -- start flood part
-    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
-    column = column + 1
-    if data[tostring(chat_id)].settings.flood then
-        keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
+    if from_info then
+        keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id .. 'I' }
     else
-        keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    if data[tostring(chat_id)].settings.flood then
+        if from_info then
+            keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
+        end
+    else
+        if from_info then
+            keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
+        end
+    end
+    column = column + 1
+    if from_info then
+        keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id .. 'I' }
+    else
+        keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+    end
     -- end flood part
 
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
     -- start warn part
-    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    if from_info then
+        keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id .. 'I' }
+    else
+        keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    end
     column = column + 1
     if tonumber(data[tostring(chat_id)].settings.warn_max) ~= 0 then
         -- disable warns
-        keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS0' .. chat_id }
+        if from_info then
+            keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS0' .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS0' .. chat_id }
+        end
     else
         -- default warns
-        keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS3' .. chat_id }
+        if from_info then
+            keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS3' .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS3' .. chat_id }
+        end
     end
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    if from_info then
+        keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id .. 'I' }
+    else
+        keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+    end
     -- end warn part
 
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_info then
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACKSETTINGS' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id .. 'I' }
     else
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
     end
@@ -413,9 +453,17 @@ function keyboard_mutes_list(chat_id, from_info)
             keyboard.inline_keyboard[row] = { }
         end
         if value then
-            keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id }
+            if from_info then
+                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id .. 'I' }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id }
+            end
         else
-            keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id }
+            if from_info then
+                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id .. 'I' }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id }
+            end
         end
         column = column + 1
         if column > 2 then
@@ -426,7 +474,7 @@ function keyboard_mutes_list(chat_id, from_info)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_info then
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACKMUTES' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id .. 'I' }
     else
         keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
     end
@@ -736,11 +784,11 @@ function get_object_info_keyboard(executer, obj, chat_id)
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'infoMUTES' .. obj.id }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementMUTES' .. obj.id .. 'I' }
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'infoSETTINGS' .. obj.id }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementSETTINGS' .. obj.id .. 'I' }
             end
         elseif obj.type == 'supergroup' then
             text = text .. langs[lang].chatType .. langs[lang].supergroupWord
@@ -760,11 +808,11 @@ function get_object_info_keyboard(executer, obj, chat_id)
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'infoMUTES' .. obj.id }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementMUTES' .. obj.id .. 'I' }
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'infoSETTINGS' .. obj.id }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementSETTINGS' .. obj.id .. 'I' }
             end
         elseif obj.type == 'channel' then
             text = text .. langs[lang].chatType .. langs[lang].channelWord

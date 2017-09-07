@@ -254,31 +254,6 @@ local function run(msg, matches)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
-                    elseif matches[2] == 'SETTINGS' or matches[2] == 'BACKSETTINGS' then
-                        if is_mod2(msg.from.id, matches[3]) then
-                            updated = true
-                            mystat('###cbinfo' .. matches[2] .. matches[3])
-                            local chat_name = ''
-                            if data[tostring(matches[3])] then
-                                chat_name = data[tostring(matches[3])].set_name or ''
-                            end
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3], true))
-                        else
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
-                        end
-                    elseif matches[2] == 'MUTES' or matches[2] == 'BACKMUTES' then
-                        updated = true
-                        if is_mod2(msg.from.id, matches[3]) then
-                            updated = true
-                            mystat('###cbinfo' .. matches[2] .. matches[3])
-                            local chat_name = ''
-                            if data[tostring(matches[3])] then
-                                chat_name = data[tostring(matches[3])].set_name or ''
-                            end
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name, keyboard_mutes_list(matches[3], true))
-                        else
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
-                        end
                     elseif matches[2] == 'WHITELIST' then
                         if is_owner2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
@@ -995,10 +970,6 @@ return {
         "^(###cbinfo)(DELETE)$",
         "^(###cbinfo)(DELETE)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
-        "^(###cbinfo)(BACKMUTES)(%-%d+)$",
-        "^(###cbinfo)(BACKSETTINGS)(%-%d+)$",
-        "^(###cbinfo)(MUTES)(%-%d+)$",
-        "^(###cbinfo)(SETTINGS)(%-%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%d+)(%-%d+)$",
