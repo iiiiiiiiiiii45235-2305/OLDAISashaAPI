@@ -361,7 +361,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                 text = tostring(text)
                 if text ~= '' then
                     text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
-                    local text_max = 4096
+                    local text_max = 4090
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
                     local url = BASE_URL ..
@@ -405,8 +405,8 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                             print_msg(sent_msg)
                         end
                     else
-                        local my_text = string.sub(text, 1, 4096)
-                        local rest = string.sub(text, 4096, text_len)
+                        local my_text = string.sub(text, 1, 4090)
+                        local rest = string.sub(text, 4090, text_len)
                         url = url .. '&text=' .. URL.escape(my_text)
 
                         local res, code = sendRequest(url)
