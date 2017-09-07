@@ -2139,7 +2139,11 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'clean' then
                 if msg.from.is_owner then
-                    if matches[2]:lower() == 'modlist' then
+                    if matches[2]:lower() == 'banlist' then
+                        mystat('/clean banlist')
+                        redis:del('banned:' .. msg.chat.id)
+                        return langs[msg.lang].banlistCleaned
+                    elseif matches[2]:lower() == 'modlist' then
                         if next(data[tostring(msg.chat.id)].moderators) == nil then
                             -- fix way
                             return langs[msg.lang].noGroupMods
@@ -2151,12 +2155,21 @@ local function run(msg, matches)
                             save_data(config.moderation.data, data)
                         end
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
-                    end
-                    if matches[2]:lower() == 'rules' then
+                        return langs[msg.lang].modlistCleaned
+                    elseif matches[2]:lower() == 'rules' then
                         mystat('/clean rules')
                         data[tostring(msg.chat.id)].rules = nil
                         save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned rules")
+                        return langs[msg.lang].rulesCleaned
+                    elseif matches[2]:lower() == 'whitelist' then
+                        mystat('/clean whitelist')
+                        redis:del('whitelist:' .. msg.chat.tg_cli_id)
+                        return langs[msg.lang].whitelistCleaned
+                    elseif matches[2]:lower() == 'whitelistgban' then
+                        mystat('/clean whitelistgban')
+                        redis:del('whitelist:gban:' .. msg.chat.tg_cli_id)
+                        return langs[msg.lang].whitelistGbanCleaned
                     end
                     return
                 else
@@ -2172,31 +2185,20 @@ return {
     patterns =
     {
         -- from_info
-        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(I)$",
-        "^(###cbgroup_management)(BACKMUTES)(%-%d+)(I)$",
-        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)(I)$",
 
         "^(###cbgroup_management)(DELETE)$",
-        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
-        "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
+        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(BACKMUTES)(%-%d+)(I)?$",
         "^(###cbgroup_management)(BACKPERMISSIONS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)(I)?$",
+        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)(I)?$",
         "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
 
@@ -2338,7 +2340,7 @@ return {
         "#setowner <id>|<username>|<reply>",
         "#mute all|text",
         "#unmute all|text",
-        "#clean modlist|rules",
+        "#clean banlist|modlist|rules|whitelist|whitelistgban",
         "ADMIN",
         "#add",
         "#rem",

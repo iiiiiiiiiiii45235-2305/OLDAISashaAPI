@@ -87,15 +87,6 @@ local function run(msg, matches)
                 return text
             end
         end
-        if matches[1]:lower() == "clean whitelist" then
-            if is_owner(msg) then
-                mystat('/clean whitelist')
-                redis:del('whitelist:' .. msg.chat.tg_cli_id)
-                return langs[msg.lang].whitelistCleaned
-            else
-                return langs[msg.lang].require_owner
-            end
-        end
         if matches[1]:lower() == "whitelistgban" then
             if msg.reply then
                 if is_owner(msg) then
@@ -163,15 +154,6 @@ local function run(msg, matches)
                 return text
             end
         end
-        if matches[1]:lower() == "clean whitelistgban" then
-            if is_owner(msg) then
-                mystat('/clean whitelistgban')
-                redis:del('whitelist:gban:' .. msg.chat.tg_cli_id)
-                return langs[msg.lang].whitelistGbanCleaned
-            else
-                return langs[msg.lang].require_owner
-            end
-        end
     end
 end
 
@@ -183,8 +165,6 @@ return {
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn])$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn]) ([^%s]+)$",
-        "^[#!/]([Cc][Ll][Ee][Aa][Nn] [Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt])$",
-        "^[#!/]([Cc][Ll][Ee][Aa][Nn] [Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn])$",
     },
     run = run,
     min_rank = 0,
@@ -196,7 +176,5 @@ return {
         "OWNER",
         "#whitelist <id>|<username>|<reply>",
         "#whitelistgban <id>|<username>|<reply>",
-        "#clean whitelist",
-        "#clean whitelistgban",
     },
 }
