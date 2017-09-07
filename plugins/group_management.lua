@@ -2184,8 +2184,6 @@ return {
     description = "GROUP_MANAGEMENT",
     patterns =
     {
-        -- from_info
-
         "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(I?)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)(I?)$",

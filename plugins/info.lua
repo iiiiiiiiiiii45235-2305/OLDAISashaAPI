@@ -22,7 +22,11 @@ end
 local function get_object_info(obj, chat_id)
     local lang = get_lang(chat_id)
     if obj then
-        local text = langs[lang].infoWord
+        local chat_name = ''
+        if data[tostring(chat_id)] then
+            chat_name = data[tostring(chat_id)].set_name or ''
+        end
+        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', '(' .. chat_id .. ') ' .. chat_name), 'X', tostring('(' .. obj.id .. ') ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or '')))
         if obj.type == 'bot' or obj.is_bot then
             text = text .. langs[lang].chatType .. langs[lang].botWord
             if obj.first_name then
@@ -219,12 +223,8 @@ local function run(msg, matches)
                     local updated = false
                     if matches[2] == 'BACK' then
                         updated = true
-                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4] or matches[3])
-                        if tab then
-                            editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
-                        else
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
-                        end
+                        local obj = getChat(matches[3])
+                        editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     elseif matches[2] == 'LINK' then
                         if is_mod2(msg.from.id, matches[3]) then
@@ -383,12 +383,8 @@ local function run(msg, matches)
                     end
                     if not updated then
                         updated = true
-                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4] or matches[3])
-                        if tab then
-                            editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
-                        else
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
-                        end
+                        local obj = getChat(matches[3])
+                        editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
                     end
                 end
                 return
@@ -613,36 +609,26 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from, msg.chat.id)
-                                if tab then
-                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                        if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                            return
-                                        end
-                                    else
-                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.forward_from, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from, msg.chat.id)) then
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                        return
                                     end
                                 else
-                                    return langs[msg.lang].noObject
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             else
-                                local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from_chat, msg.chat.id)
-                                if tab then
-                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                        if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                            return
-                                        end
-                                    else
-                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.forward_from_chat, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from_chat, msg.chat.id)) then
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                        return
                                     end
                                 else
-                                    return langs[msg.lang].noObject
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             end
                         else
@@ -653,121 +639,61 @@ local function run(msg, matches)
                     if msg.reply_to_message.service then
                         if msg.reply_to_message.service_type == 'chat_add_user' or msg.reply_to_message.service_type == 'chat_add_users' then
                             local text = ''
-                            local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.adder, msg.chat.id)
-                            if tab then
-                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
+                            if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.adder, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.adder, msg.chat.id)) then
+                                if msg.chat.type ~= 'private' then
+                                    text = text .. langs[msg.lang].sendInfoPvt .. '\n'
+                                end
+                            else
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                            end
+                            local keyboard_sent = false
+                            for k, v in pairs(msg.reply_to_message.added) do
+                                if sendKeyboard(msg.from.id, get_object_info(v, msg.chat.id), get_object_info_keyboard(msg.from.id, v, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         text = text .. langs[msg.lang].sendInfoPvt .. '\n'
                                     end
                                 else
-                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
-                                end
-                            else
-                                text = text .. langs[msg.lang].noObject .. '\n'
-                            end
-                            local keyboard_sent = false
-                            for k, v in pairs(msg.reply_to_message.added) do
-                                local tab = get_object_info_keyboard(msg.from.id, v, msg.chat.id)
-                                if tab then
-                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                        if msg.chat.type ~= 'private' then
-                                            text = text .. langs[msg.lang].sendInfoPvt .. '\n'
-                                        end
-                                    else
-                                        keyboard_sent = true
-                                        if not keyboard_sent then
-                                            sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
-                                        end
+                                    keyboard_sent = true
+                                    if not keyboard_sent then
+                                        sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                     end
-                                else
-                                    text = text .. langs[msg.lang].noObject .. '\n'
                                 end
                             end
                             return text
                         elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
-                            local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)
-                            if tab then
-                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                    if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                        return
-                                    end
-                                else
-                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                            if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.from, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)) then
+                                if msg.chat.type ~= 'private' then
+                                    local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                    return
                                 end
                             else
-                                return langs[msg.lang].noObject
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                             end
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
-                            local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.remover, msg.chat.id)
-                            if tab then
-                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                    if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                        return
-                                    end
-                                else
-                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                            if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.remover, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.remover, msg.chat.id)) then
+                                if msg.chat.type ~= 'private' then
+                                    local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                    return
                                 end
                             else
-                                return langs[msg.lang].noObject
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                             end
-                            local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)
-                            if tab then
-                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                    if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                        return
-                                    end
-                                else
-                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                            if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.removed, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)) then
+                                if msg.chat.type ~= 'private' then
+                                    local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                    return
                                 end
                             else
-                                return langs[msg.lang].noObject
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                             end
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
-                            local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)
-                            if tab then
-                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                    if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                        return
-                                    end
-                                else
-                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
-                                end
-                            else
-                                return langs[msg.lang].noObject
-                            end
-                        else
-                            local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)
-                            if tab then
-                                if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                    if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                        return
-                                    end
-                                else
-                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
-                                end
-                            else
-                                return langs[msg.lang].noObject
-                            end
-                        end
-                    else
-                        local tab = get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)
-                        if tab then
-                            if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
+                            if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.removed, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)) then
                                 if msg.chat.type ~= 'private' then
                                     local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
                                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -778,7 +704,27 @@ local function run(msg, matches)
                                 return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                             end
                         else
-                            return langs[msg.lang].noObject
+                            if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.from, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)) then
+                                if msg.chat.type ~= 'private' then
+                                    local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                    return
+                                end
+                            else
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                            end
+                        end
+                    else
+                        if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.from, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)) then
+                            if msg.chat.type ~= 'private' then
+                                local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                return
+                            end
+                        else
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                         end
                     end
                 end
@@ -792,56 +738,43 @@ local function run(msg, matches)
                         -- check if there's a text_mention
                         if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                             if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                local tab = get_object_info_keyboard(msg.from.id, msg.entities[k].user, msg.chat.id)
-                                if tab then
-                                    if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                                        if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                            return
-                                        end
-                                    else
-                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                if sendKeyboard(msg.from.id, get_object_info(msg.entities[k].user, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.entities[k].user, msg.chat.id)) then
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                        io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                        return
                                     end
                                 else
-                                    return langs[msg.lang].noObject
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                                 end
                             end
                         end
                     end
                 end
                 if string.match(matches[2], '^%-?%d+$') then
-                    local tab = get_object_info_keyboard(msg.from.id, getChat(matches[2]), msg.chat.id)
-                    if tab then
-                        if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                            if msg.chat.type ~= 'private' then
-                                local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                return
-                            end
-                        else
-                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    local obj_user = getChat(matches[2])
+                    if sendKeyboard(msg.from.id, get_object_info(obj, msg.chat.id), get_object_info_keyboard(msg.from.id, obj, msg.chat.id)) then
+                        if msg.chat.type ~= 'private' then
+                            local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                            return
                         end
                     else
-                        return langs[msg.lang].noObject
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 else
-                    local tab = get_object_info_keyboard(msg.from.id, getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')), msg.chat.id)
-                    if tab then
-                        if sendKeyboard(msg.from.id, tab.text, tab.keyboard) then
-                            if msg.chat.type ~= 'private' then
-                                local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
-                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                return
-                            end
-                        else
-                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    if sendKeyboard(msg.from.id, get_object_info(obj, msg.chat.id), get_object_info_keyboard(msg.from.id, obj, msg.chat.id)) then
+                        if msg.chat.type ~= 'private' then
+                            local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                            return
                         end
                     else
-                        return langs[msg.lang].noObject
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 end
             else
