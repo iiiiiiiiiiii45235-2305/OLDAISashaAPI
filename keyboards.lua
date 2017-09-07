@@ -726,7 +726,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         keyboard.inline_keyboard[row][1] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         return keyboard
     else
-        return { inline_keyboard = { { { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }, { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' } } } }
+        return { inline_keyboard = { { { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. chat_id .. chat_id }, { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' } } } }
     end
 end
 
