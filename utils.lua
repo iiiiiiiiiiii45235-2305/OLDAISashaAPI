@@ -728,7 +728,7 @@ reverseRestrictionsDictionary = {
     ["can_add_web_page_previews"] = "add_web_page_previews",
     ["add_web_page_previews"] = "add_web_page_previews",
 }
-local function adjustRestrictions(param_restrictions)
+function adjustRestrictions(param_restrictions)
     local restrictions = {
         can_send_messages = true,
         can_send_media_messages = true,
