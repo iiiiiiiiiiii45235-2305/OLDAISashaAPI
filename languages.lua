@@ -741,6 +741,7 @@ return {
         promotionsCommands = "🔪 Punizioni. 🔪",
         punishmentsCommands = "🌈 Promozioni. 🌈",
         adminCommands = "🌍 Comandi globali. 🌍",
+        permissionsWord = "Permessi.",
 
         -- interact.lua
         userBlockedBot = "L'utente specificato ha bloccato il bot.",
@@ -2073,6 +2074,7 @@ return {
         promotionsCommands = "🔪 Punishments. 🔪",
         punishmentsCommands = "🌈 Promotions. 🌈",
         adminCommands = "🌍 Global commands. 🌍",
+        permissionsWord = "Permissions.",
 
         -- interact.lua
         userBlockedBot = "The specifided user blocked the bot.",
