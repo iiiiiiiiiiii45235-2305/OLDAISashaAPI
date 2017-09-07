@@ -327,6 +327,49 @@ function plugins_names()
     end
     return files
 end
+-- Returns the key (index) in the config.enabled_plugins table
+function plugin_enabled(plugin_name)
+    for k, v in pairs(config.enabled_plugins) do
+        if plugin_name == v then
+            return k
+        end
+    end
+    return false
+end
+-- Returns true if it is a system plugin
+function system_plugin(p)
+    if p == 'administrator' or
+        p == 'alternatives' or
+        p == 'anti_spam' or
+        p == 'banhammer' or
+        p == 'bot' or
+        p == 'check_tag' or
+        p == 'database' or
+        p == 'feedback' or
+        p == 'filemanager' or
+        p == 'goodbyewelcome' or
+        p == 'group_management' or
+        p == 'info' or
+        p == 'lua_exec' or
+        p == 'msg_checks' or
+        p == 'multiple_commands' or
+        p == 'plugins' or
+        p == 'strings' or
+        p == 'tgcli_to_api_migration' or
+        p == 'whitelist' then
+        return true
+    end
+    return false
+end
+function plugin_disabled_on_chat(plugin_name, chat_id)
+    if not config.disabled_plugin_on_chat then
+        return false
+    end
+    if not config.disabled_plugin_on_chat[chat_id] then
+        return false
+    end
+    return config.disabled_plugin_on_chat[chat_id][plugin_name]
+end
 
 -- Function name explains what it does.
 function file_exists(name)
@@ -567,4 +610,162 @@ function doSendBackup()
         end
         sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
     end
+end
+
+permissionsDictionary = {
+    ["can_change_info"] = "can_change_info",
+    ["change_info"] = "can_change_info",
+    ["can_delete_messages"] = "can_delete_messages",
+    ["delete_messages"] = "can_delete_messages",
+    ["can_invite_users"] = "can_invite_users",
+    ["invite_users"] = "can_invite_users",
+    ["can_restrict_members"] = "can_restrict_members",
+    ["restrict_members"] = "can_restrict_members",
+    ["can_pin_messages"] = "can_pin_messages",
+    ["pin_messages"] = "can_pin_messages",
+    ["can_promote_members"] = "can_promote_members",
+    ["promote_members"] = "can_promote_members",
+}
+reversePermissionsDictionary = {
+    ["can_change_info"] = "change_info",
+    ["change_info"] = "change_info",
+    ["can_delete_messages"] = "delete_messages",
+    ["delete_messages"] = "delete_messages",
+    ["can_invite_users"] = "invite_users",
+    ["invite_users"] = "invite_users",
+    ["can_restrict_members"] = "restrict_members",
+    ["restrict_members"] = "restrict_members",
+    ["can_pin_messages"] = "pin_messages",
+    ["pin_messages"] = "pin_messages",
+    ["can_promote_members"] = "promote_members",
+    ["promote_members"] = "promote_members",
+}
+function adjustPermissions(param_permissions)
+    local permissions = {
+        ['can_change_info'] = false,
+        ['can_delete_messages'] = false,
+        ['can_invite_users'] = false,
+        ['can_restrict_members'] = false,
+        ['can_pin_messages'] = false,
+        ['can_promote_members'] = false,
+    }
+    if param_permissions then
+        if type(param_permissions) == 'table' then
+            for k, v in pairs(param_permissions) do
+                if permissionsDictionary[k] then
+                    permissions[tostring(permissionsDictionary[k])] = param_permissions[tostring(permissionsDictionary[k])]
+                end
+            end
+        elseif type(param_permissions) == 'string' then
+            param_permissions = param_permissions:lower()
+            for k, v in pairs(param_permissions:split(' ')) do
+                if permissionsDictionary[v] then
+                    permissions[tostring(permissionsDictionary[v])] = true
+                end
+            end
+        end
+    end
+    return permissions
+end
+
+function reverseAdjustSettingType(setting_type)
+    if setting_type == 'lock_arabic' then
+        setting_type = 'arabic'
+    end
+    if setting_type == 'lock_bots' then
+        setting_type = 'bots'
+    end
+    if setting_type == 'flood' then
+        setting_type = 'flood'
+    end
+    if setting_type == 'lock_group_link' then
+        setting_type = 'grouplink'
+    end
+    if setting_type == 'lock_leave' then
+        setting_type = 'leave'
+    end
+    if setting_type == 'lock_link' then
+        setting_type = 'link'
+    end
+    if setting_type == 'lock_member' then
+        setting_type = 'member'
+    end
+    if setting_type == 'lock_name' then
+        setting_type = 'name'
+    end
+    if setting_type == 'lock_photo' then
+        setting_type = 'photo'
+    end
+    if setting_type == 'lock_rtl' then
+        setting_type = 'rtl'
+    end
+    if setting_type == 'lock_spam' then
+        setting_type = 'spam'
+    end
+    if setting_type == 'strict' then
+        setting_type = 'strict'
+    end
+    return setting_type
+end
+
+restrictionsDictionary = {
+    ["can_send_messages"] = "can_send_messages",
+    ["send_messages"] = "can_send_messages",
+    ["can_send_media_messages"] = "can_send_media_messages",
+    ["send_media_messages"] = "can_send_media_messages",
+    ["can_send_other_messages"] = "can_send_other_messages",
+    ["send_other_messages"] = "can_send_other_messages",
+    ["can_add_web_page_previews"] = "can_add_web_page_previews",
+    ["add_web_page_previews"] = "can_add_web_page_previews",
+}
+reverseRestrictionsDictionary = {
+    ["can_send_messages"] = "send_messages",
+    ["send_messages"] = "send_messages",
+    ["can_send_media_messages"] = "send_media_messages",
+    ["send_media_messages"] = "send_media_messages",
+    ["can_send_other_messages"] = "send_other_messages",
+    ["send_other_messages"] = "send_other_messages",
+    ["can_add_web_page_previews"] = "add_web_page_previews",
+    ["add_web_page_previews"] = "add_web_page_previews",
+}
+local function adjustRestrictions(param_restrictions)
+    local restrictions = {
+        can_send_messages = true,
+        can_send_media_messages = true,
+        can_send_other_messages = true,
+        can_add_web_page_previews = true
+    }
+    if param_restrictions then
+        if type(param_restrictions) == 'table' then
+            for k, v in pairs(param_restrictions) do
+                if restrictionsDictionary[k] then
+                    restrictions[tostring(restrictionsDictionary[k])] = param_restrictions[tostring(restrictionsDictionary[k])]
+                end
+            end
+        elseif type(param_restrictions) == 'string' then
+            param_restrictions = param_restrictions:lower()
+            for k, v in pairs(param_restrictions:split(' ')) do
+                if restrictionsDictionary[v] then
+                    if restrictionsDictionary[v] == 'can_send_messages' then
+                        restrictions[restrictionsDictionary[v]] = false
+                        restrictions['can_send_media_messages'] = false
+                        restrictions['can_send_other_messages'] = false
+                        restrictions['can_add_web_page_previews'] = false
+                    end
+                    if restrictionsDictionary[v] == 'can_send_media_messages' then
+                        restrictions[restrictionsDictionary[v]] = false
+                        restrictions['can_send_other_messages'] = false
+                        restrictions['can_add_web_page_previews'] = false
+                    end
+                    if restrictionsDictionary[v] == 'can_send_other_messages' then
+                        restrictions[restrictionsDictionary[v]] = false
+                    end
+                    if restrictionsDictionary[v] == 'can_add_web_page_previews' then
+                        restrictions[restrictionsDictionary[v]] = false
+                    end
+                end
+            end
+        end
+    end
+    return restrictions
 end

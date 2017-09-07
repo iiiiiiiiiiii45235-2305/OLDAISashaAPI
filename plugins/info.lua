@@ -183,329 +183,6 @@ local function get_object_info(obj, chat_id)
     end
 end
 
-local function get_object_info_keyboard(executer, obj, chat_id)
-    local lang = get_lang(chat_id)
-    if obj then
-        local keyboard = { }
-        keyboard.inline_keyboard = { }
-        local row = 1
-        local column = 1
-        keyboard.inline_keyboard[row] = { }
-        local chat_name = ''
-        if data[tostring(chat_id)] then
-            chat_name = data[tostring(chat_id)].set_name or ''
-        end
-        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', '(' .. chat_id .. ') ' .. chat_name), 'X', tostring('(' .. obj.id .. ') ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or '')))
-        if obj.type == 'bot' or obj.is_bot then
-            text = text .. langs[lang].chatType .. langs[lang].botWord
-            if obj.first_name then
-                if obj.first_name == '' then
-                    if database[tostring(obj.id)] then
-                        return {
-                            text = serpent.block(database[tostring(obj.id)],{ sortkeys = false, comment = false }),
-                            keyboard =
-                            {
-                                inline_keyboard =
-                                {
-                                    {
-                                        { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id },
-                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
-                                    }
-                                }
-                            }
-                        }
-                    else
-                        text = text .. '\n$Deleted Account$'
-                    end
-                else
-                    text = text .. langs[lang].name .. obj.first_name
-                end
-            end
-            if obj.last_name then
-                text = text .. langs[lang].surname .. obj.last_name
-            end
-            if obj.username then
-                text = text .. langs[lang].username .. '@' .. obj.username
-            end
-            text = text .. langs[lang].date .. os.date('%c')
-            obj.is_admin = is_admin2(executer)
-            obj.is_owner = is_owner2(executer, chat_id, true)
-            obj.is_mod = is_mod2(executer, chat_id, true)
-            local otherinfo = langs[lang].otherInfo
-            if obj.is_admin then
-                row = row + 1
-                column = 1
-                keyboard.inline_keyboard[row] = { }
-                if isGbanned(obj.id) then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
-                    otherinfo = otherinfo .. 'GBANNED '
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
-                end
-            end
-            if tonumber(chat_id) < 0 then
-                local status = ''
-                local chat_member = getChatMember(chat_id, obj.id)
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper():gsub('KICKED', 'BANNED') .. ' '
-                            status = chat_member.status
-                            if chat_member.status == 'creator' then
-                                obj.is_owner = true
-                                obj.is_mod = true
-                            elseif chat_member.status == 'administrator' then
-                                obj.is_mod = true
-                            end
-                        end
-                    end
-                end
-                if obj.is_owner then
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'WHITELISTED '
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                    end
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'GBANWHITELISTED '
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                    end
-                end
-                if obj.is_mod then
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isBanned(obj.id, chat_id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
-                        if status ~= 'kicked' then
-                            otherinfo = otherinfo .. 'PREBANNED '
-                        end
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
-                    end
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isMutedUser(chat_id, obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'MUTED '
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                    end
-                    if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                        if status ~= 'kicked' and status ~= 'left' then
-                            row = row + 1
-                            column = 1
-                            keyboard.inline_keyboard[row] = { }
-                            -- start warn part
-                            keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
-                            -- end warn part
-                            otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
-                        end
-                    end
-                end
-            end
-            if otherinfo == langs[lang].otherInfo then
-                otherinfo = otherinfo .. langs[lang].noOtherInfo
-            end
-            text = text .. otherinfo ..
-            langs[lang].long_id .. obj.id
-        elseif obj.type == 'private' or obj.type == 'user' then
-            text = text .. langs[lang].chatType .. langs[lang].userWord
-            if obj.first_name then
-                if obj.first_name == '' then
-                    if database[tostring(obj.id)] then
-                        return {
-                            text = serpent.block(database[tostring(obj.id)],{ sortkeys = false, comment = false }),
-                            keyboard =
-                            {
-                                inline_keyboard =
-                                {
-                                    {
-                                        { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id },
-                                        { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
-                                    }
-                                }
-                            }
-                        }
-                    else
-                        text = text .. '\n$Deleted Account$'
-                    end
-                else
-                    text = text .. langs[lang].name .. obj.first_name
-                end
-            end
-            if obj.last_name then
-                text = text .. langs[lang].surname .. obj.last_name
-            end
-            if obj.username then
-                text = text .. langs[lang].username .. '@' .. obj.username
-            end
-            local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
-            text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true) + 1] ..
-            langs[lang].date .. os.date('%c') ..
-            langs[lang].totalMessages .. msgs
-            obj.is_admin = is_admin2(executer)
-            obj.is_owner = is_owner2(executer, chat_id, true)
-            obj.is_mod = is_mod2(executer, chat_id, true)
-            local otherinfo = langs[lang].otherInfo
-            if obj.is_admin then
-                row = row + 1
-                column = 1
-                keyboard.inline_keyboard[row] = { }
-                if isGbanned(obj.id) then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
-                    otherinfo = otherinfo .. 'GBANNED '
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
-                end
-                row = row + 1
-                column = 1
-                keyboard.inline_keyboard[row] = { }
-                if isBlocked(obj.id) then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMUNBLOCK' .. obj.id .. chat_id }
-                    otherinfo = otherinfo .. 'PM BLOCKED '
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ PM BLOCKED', callback_data = 'infoPMBLOCK' .. obj.id .. chat_id }
-                end
-            end
-            if tonumber(chat_id) < 0 then
-                local status = ''
-                local chat_member = getChatMember(chat_id, obj.id)
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            otherinfo = otherinfo .. chat_member.status:upper():gsub('KICKED', 'BANNED') .. ' '
-                            status = chat_member.status
-                            if chat_member.status == 'creator' then
-                                obj.is_owner = true
-                                obj.is_mod = true
-                            elseif chat_member.status == 'administrator' then
-                                obj.is_mod = true
-                            end
-                        end
-                    end
-                end
-                if obj.is_owner then
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'WHITELISTED '
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                    end
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'GBANWHITELISTED '
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                    end
-                end
-                if obj.is_mod then
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isBanned(obj.id, chat_id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
-                        if status ~= 'kicked' then
-                            otherinfo = otherinfo .. 'PREBANNED '
-                        end
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
-                    end
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isMutedUser(chat_id, obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                        otherinfo = otherinfo .. 'MUTED '
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                    end
-                    if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                        if status ~= 'kicked' and status ~= 'left' then
-                            row = row + 1
-                            column = 1
-                            keyboard.inline_keyboard[row] = { }
-                            keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
-                            otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. ' WARN '
-                        end
-                    end
-                end
-            end
-            if otherinfo == langs[lang].otherInfo then
-                otherinfo = otherinfo .. langs[lang].noOtherInfo
-            end
-            text = text .. otherinfo ..
-            langs[lang].long_id .. obj.id
-        elseif obj.type == 'group' then
-            text = text .. langs[lang].chatType .. langs[lang].groupWord
-            if obj.title then
-                text = text .. langs[lang].groupName .. obj.title
-            end
-            text = text .. langs[lang].date .. os.date('%c') ..
-            langs[lang].long_id .. obj.id
-        elseif obj.type == 'supergroup' then
-            text = text .. langs[lang].chatType .. langs[lang].supergroupWord
-            if obj.title then
-                text = text .. langs[lang].supergroupName .. obj.title
-            end
-            if obj.username then
-                text = text .. langs[lang].username .. '@' .. obj.username
-            end
-            text = text .. langs[lang].date .. os.date('%c') ..
-            langs[lang].long_id .. obj.id
-        elseif obj.type == 'channel' then
-            text = text .. langs[lang].chatType .. langs[lang].channelWord
-            if obj.title then
-                text = text .. langs[lang].channelName .. obj.title
-            end
-            if obj.username then
-                text = text .. langs[lang].username .. '@' .. obj.username
-            end
-            text = text .. langs[lang].date .. os.date('%c') ..
-            langs[lang].long_id .. obj.id
-        else
-            text = langs[lang].peerTypeUnknown
-        end
-        row = row + 1
-        column = 1
-        keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
-        column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
-        row = row + 1
-        column = 1
-        keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'infoDELETE' }
-        return { text = text, keyboard = keyboard }
-    end
-end
-
 local function whitelist_user(group_id, user_id, lang)
     if isWhitelisted(group_id, user_id) then
         redis:srem('whitelist:' .. group_id, user_id)
@@ -549,6 +226,64 @@ local function run(msg, matches)
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
                         end
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                    elseif matches[2] == 'LINK' then
+                        if is_mod2(msg.from.id, matches[3]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3])
+                            local chat_name = ''
+                            if data[tostring(matches[3])] then
+                                chat_name = data[tostring(matches[3])].set_name or ''
+                            end
+                            local group_link = data[tostring(matches[3])]['settings']['set_link']
+                            if not group_link then
+                                local link = exportChatInviteLink(matches[3])
+                                if link then
+                                    updated = true
+                                    data[tostring(matches[3])]['settings']['set_link'] = link
+                                    save_data(config.moderation.data, data)
+                                    group_link = link
+                                    savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
+                                    editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] } } } })
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
+                                end
+                            else
+                                updated = true
+                                savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
+                                editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] } } } })
+                            end
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
+                    elseif matches[2] == 'SETTINGS' then
+                        if is_mod2(msg.from.id, matches[3]) then
+                            updated = true
+                            mystat('###cbinfo' .. matches[2] .. matches[3])
+                            local chat_name = ''
+                            if data[tostring(matches[3])] then
+                                chat_name = data[tostring(matches[3])].set_name or ''
+                            end
+                            local keyboard = keyboard_settings_list(matches[3])
+                            keyboard[#keyboard + 1] = { }
+                            keyboard[#keyboard + 1][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
+                    elseif matches[2] == 'MUTESLIST' then
+                        if is_mod2(msg.from.id, matches[3]) then
+                            updated = true
+                            mystat('###cbinfo' .. matches[2] .. matches[3])
+                            local chat_name = ''
+                            if data[tostring(matches[3])] then
+                                chat_name = data[tostring(matches[3])].set_name or ''
+                            end
+                            local keyboard = keyboard_mutes_list(matches[3])
+                            keyboard[#keyboard + 1] = { }
+                            keyboard[#keyboard + 1][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
                     elseif matches[2] == 'WHITELIST' then
                         if is_owner2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])

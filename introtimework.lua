@@ -105,6 +105,7 @@ function bot_init()
     end
     require("methods")
     require("ranks")
+    require("keyboards")
 
     while not bot do
         -- Get bot info and retry if unable to connect.

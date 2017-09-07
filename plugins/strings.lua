@@ -1,17 +1,3 @@
-local function keyboard_langs()
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local i = 0
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs.italian, callback_data = 'stringsIT' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs.english, callback_data = 'stringsEN' }
-    return keyboard
-end
-
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbstrings' then

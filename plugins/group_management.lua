@@ -276,64 +276,6 @@ local function showPermissions(chat_id, user_id, lang)
     end
 end
 
-local permissionsDictionary = {
-    ["can_change_info"] = "can_change_info",
-    ["change_info"] = "can_change_info",
-    ["can_delete_messages"] = "can_delete_messages",
-    ["delete_messages"] = "can_delete_messages",
-    ["can_invite_users"] = "can_invite_users",
-    ["invite_users"] = "can_invite_users",
-    ["can_restrict_members"] = "can_restrict_members",
-    ["restrict_members"] = "can_restrict_members",
-    ["can_pin_messages"] = "can_pin_messages",
-    ["pin_messages"] = "can_pin_messages",
-    ["can_promote_members"] = "can_promote_members",
-    ["promote_members"] = "can_promote_members",
-}
-
-local reversePermissionsDictionary = {
-    ["can_change_info"] = "change_info",
-    ["change_info"] = "change_info",
-    ["can_delete_messages"] = "delete_messages",
-    ["delete_messages"] = "delete_messages",
-    ["can_invite_users"] = "invite_users",
-    ["invite_users"] = "invite_users",
-    ["can_restrict_members"] = "restrict_members",
-    ["restrict_members"] = "restrict_members",
-    ["can_pin_messages"] = "pin_messages",
-    ["pin_messages"] = "pin_messages",
-    ["can_promote_members"] = "promote_members",
-    ["promote_members"] = "promote_members",
-}
-
-local function adjustPermissions(param_permissions)
-    local permissions = {
-        ['can_change_info'] = false,
-        ['can_delete_messages'] = false,
-        ['can_invite_users'] = false,
-        ['can_restrict_members'] = false,
-        ['can_pin_messages'] = false,
-        ['can_promote_members'] = false,
-    }
-    if param_permissions then
-        if type(param_permissions) == 'table' then
-            for k, v in pairs(param_permissions) do
-                if permissionsDictionary[k] then
-                    permissions[tostring(permissionsDictionary[k])] = param_permissions[tostring(permissionsDictionary[k])]
-                end
-            end
-        elseif type(param_permissions) == 'string' then
-            param_permissions = param_permissions:lower()
-            for k, v in pairs(param_permissions:split(' ')) do
-                if permissionsDictionary[v] then
-                    permissions[tostring(permissionsDictionary[v])] = true
-                end
-            end
-        end
-    end
-    return permissions
-end
-
 -- begin RANKS MANAGEMENT
 local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
@@ -569,46 +511,6 @@ local function adjustSettingType(setting_type)
     return setting_type
 end
 
-local function reverseAdjustSettingType(setting_type)
-    if setting_type == 'lock_arabic' then
-        setting_type = 'arabic'
-    end
-    if setting_type == 'lock_bots' then
-        setting_type = 'bots'
-    end
-    if setting_type == 'flood' then
-        setting_type = 'flood'
-    end
-    if setting_type == 'lock_group_link' then
-        setting_type = 'grouplink'
-    end
-    if setting_type == 'lock_leave' then
-        setting_type = 'leave'
-    end
-    if setting_type == 'lock_link' then
-        setting_type = 'link'
-    end
-    if setting_type == 'lock_member' then
-        setting_type = 'member'
-    end
-    if setting_type == 'lock_name' then
-        setting_type = 'name'
-    end
-    if setting_type == 'lock_photo' then
-        setting_type = 'photo'
-    end
-    if setting_type == 'lock_rtl' then
-        setting_type = 'rtl'
-    end
-    if setting_type == 'lock_spam' then
-        setting_type = 'spam'
-    end
-    if setting_type == 'strict' then
-        setting_type = 'strict'
-    end
-    return setting_type
-end
-
 function lockSetting(target, setting_type)
     local lang = get_lang(target)
     setting_type = adjustSettingType(setting_type)
@@ -739,160 +641,6 @@ local function checkMatchesMuteUnmute(txt)
     return false
 end
 
-local function keyboard_permissions_list(chat_id, user_id, param_permissions)
-    if not param_permissions then
-        local obj_user = getChatMember(chat_id, user_id)
-        if type(obj_user) == 'table' then
-            if obj_user.result then
-                -- assign user to permissions
-                obj_user = obj_user.result
-                if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
-                    obj_user = nil
-                end
-            else
-                obj_user = nil
-            end
-        else
-            obj_user = nil
-        end
-        param_permissions = obj_user
-    end
-    if param_permissions then
-        local permissions = adjustPermissions(param_permissions)
-        local keyboard = { }
-        keyboard.inline_keyboard = { }
-        local row = 1
-        local column = 1
-        keyboard.inline_keyboard[row] = { }
-        for var, value in pairsByKeys(permissions) do
-            if type(value) == 'boolean' then
-                if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
-                end
-                row = row + 1
-                keyboard.inline_keyboard[row] = { }
-            end
-        end
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
-        column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
-        return keyboard
-    else
-        local keyboard = { }
-        keyboard.inline_keyboard = { }
-        local row = 1
-        local column = 1
-        keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
-        return keyboard
-    end
-end
-
-local function keyboard_settings_list(chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    for var, value in pairsByKeys(data[tostring(chat_id)].settings) do
-        if reverseAdjustSettingType(var) ~= 'flood' then
-            if type(value) == 'boolean' then
-                if flag then
-                    flag = false
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                end
-                if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementUNLOCK' .. var .. chat_id }
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var), callback_data = 'group_managementLOCK' .. var .. chat_id }
-                end
-                column = column + 1
-                if column > 2 then
-                    flag = true
-                end
-            end
-        end
-    end
-
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    -- start flood part
-    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
-    column = column + 1
-    if data[tostring(chat_id)].settings.flood then
-        keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementUNLOCKflood' .. chat_id }
-    else
-        keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ')', callback_data = 'group_managementLOCKflood' .. chat_id }
-    end
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
-    -- end flood part
-
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    -- start warn part
-    keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-    column = column + 1
-    if tonumber(data[tostring(chat_id)].settings.warn_max) ~= 0 then
-        -- disable warns
-        keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS0' .. chat_id }
-    else
-        -- default warns
-        keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ')', callback_data = 'group_managementWARNS3' .. chat_id }
-    end
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-    -- end warn part
-
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
-    return keyboard
-end
-
-local function keyboard_mutes_list(chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-        if flag then
-            flag = false
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-        end
-        if value then
-            keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var, callback_data = 'group_managementUNMUTE' .. var .. chat_id }
-        else
-            keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var, callback_data = 'group_managementMUTE' .. var .. chat_id }
-        end
-        column = column + 1
-        if column > 2 then
-            flag = true
-        end
-    end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
-    return keyboard
-end
-
 local function run(msg, matches)
     if msg.service then
         print('service')
@@ -1003,28 +751,44 @@ local function run(msg, matches)
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                         end
                     elseif matches[2] == 'MUTE' then
-                        if is_owner2(msg.from.id, matches[4]) then
+                        if is_mod2(msg.from.id, matches[4]) then
                             mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                            answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
+                            if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
+                                if is_owner2(msg.from.id, matches[4]) then
+                                    answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                                end
+                            else
+                                answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
+                            end
                             local chat_name = ''
                             if data[tostring(matches[4])] then
                                 chat_name = data[tostring(matches[4])].set_name or ''
                             end
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name, keyboard_mutes_list(matches[4]))
                         else
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                         end
                     elseif matches[2] == 'UNMUTE' then
-                        if is_owner2(msg.from.id, matches[4]) then
+                        if is_mod2(msg.from.id, matches[4]) then
                             mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4])
-                            answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
+                            if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
+                                if is_owner2(msg.from.id, matches[4]) then
+                                    answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
+                                else
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                                end
+                            else
+                                answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
+                            end
                             local chat_name = ''
                             if data[tostring(matches[4])] then
                                 chat_name = data[tostring(matches[4])].set_name or ''
                             end
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name, keyboard_mutes_list(matches[4]))
                         else
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                         end
                     elseif matches[2] == 'FLOODMINUS' or matches[2] == 'FLOODPLUS' then
                         if is_mod2(msg.from.id, matches[4]) then
@@ -1677,25 +1441,41 @@ local function run(msg, matches)
                 end
             end
             if matches[1]:lower() == 'mute' then
-                if msg.from.is_owner then
+                if msg.from.is_mod then
                     if checkMatchesMuteUnmute(matches[2]) then
                         mystat('/mute ' .. matches[2]:lower())
-                        return mute(msg.chat.id, matches[2]:lower())
+                        if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
+                            if msg.from.is_owner then
+                                return mute(msg.chat.id, matches[2]:lower())
+                            else
+                                return langs[msg.lang].require_owner
+                            end
+                        else
+                            return mute(msg.chat.id, matches[2]:lower())
+                        end
                     end
                     return
                 else
-                    return langs[msg.lang].require_owner
+                    return langs[msg.lang].require_mod
                 end
             end
             if matches[1]:lower() == 'unmute' then
-                if msg.from.is_owner then
+                if msg.from.is_mod then
                     if checkMatchesMuteUnmute(matches[2]) then
                         mystat('/unmute ' .. matches[2]:lower())
-                        return unmute(msg.chat.id, matches[2]:lower())
+                        if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
+                            if msg.from.is_owner then
+                                return unmute(msg.chat.id, matches[2]:lower())
+                            else
+                                return langs[msg.lang].require_owner
+                            end
+                        else
+                            return unmute(msg.chat.id, matches[2]:lower())
+                        end
                     end
                     return
                 else
-                    return langs[msg.lang].require_owner
+                    return langs[msg.lang].require_mod
                 end
             end
             if matches[1]:lower() == 'muteslist' then
@@ -2527,6 +2307,8 @@ return {
         "#newlink",
         "#lock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#unlock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "#mute audio|contact|document|gif|location|photo|sticker|tgservice|video|video_note|voice_note",
+        "#unmute audio|contact|document|gif|location|photo|sticker|tgservice|video|video_note|voice_note",
         "#pin <reply>",
         "#silentpin <reply>",
         "#unpin",
@@ -2545,8 +2327,8 @@ return {
         "#promoteadmin <id>|<username>|<reply>|from [change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]",
         "#demoteadmin <id>|<username>|<reply>|from",
         "#setowner <id>|<username>|<reply>",
-        "#mute all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "#unmute all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "#mute all|text",
+        "#unmute all|text",
         "#clean modlist|rules",
         "ADMIN",
         "#add",

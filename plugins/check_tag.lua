@@ -1,23 +1,5 @@
 notified = { }
 
-local function keyboard_tag(chat_id, message_id, callback, user_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-
-    if not callback then
-        keyboard.inline_keyboard[1] = { }
-        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].gotoMessage, callback_data = 'check_tagGOTO' .. message_id .. chat_id }
-
-        keyboard.inline_keyboard[2] = { }
-        keyboard.inline_keyboard[2][1] = { text = langs[get_lang(chat_id)].alreadyRead, callback_data = 'check_tagALREADYREAD' }
-    else
-        keyboard.inline_keyboard[1] = { }
-        keyboard.inline_keyboard[1][1] = { text = langs[get_lang(chat_id)].deleteUp, callback_data = 'check_tagDELETEUP' .. user_id .. chat_id }
-    end
-
-    return keyboard
-end
-
 -- recursive to simplify code
 local function check_tag(msg, user_id, user)
     if msg.entities then

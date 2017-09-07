@@ -28,20 +28,6 @@ local function disable_channel(chat_id)
     return langs[lang].botOff
 end
 
-local function keyboard_langs()
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local i = 0
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs.italian, callback_data = 'botIT' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs.english, callback_data = 'botEN' }
-    return keyboard
-end
-
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbbot' and matches[2] then

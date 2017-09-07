@@ -1,13 +1,3 @@
--- Returns the key (index) in the config.enabled_plugins table
-local function plugin_enabled(plugin_name)
-    for k, v in pairs(config.enabled_plugins) do
-        if plugin_name == v then
-            return k
-        end
-    end
-    return false
-end
-
 -- Returns true if file exists in plugins folder
 local function plugin_exists(plugin_name)
     for k, v in pairs(plugins_names()) do
@@ -16,42 +6,6 @@ local function plugin_exists(plugin_name)
         end
     end
     return false
-end
-
--- Returns true if it is a system plugin
-local function system_plugin(p)
-    if p == 'administrator' or
-        p == 'alternatives' or
-        p == 'anti_spam' or
-        p == 'banhammer' or
-        p == 'bot' or
-        p == 'check_tag' or
-        p == 'database' or
-        p == 'feedback' or
-        p == 'filemanager' or
-        p == 'goodbyewelcome' or
-        p == 'group_management' or
-        p == 'info' or
-        p == 'lua_exec' or
-        p == 'msg_checks' or
-        p == 'multiple_commands' or
-        p == 'plugins' or
-        p == 'strings' or
-        p == 'tgcli_to_api_migration' or
-        p == 'whitelist' then
-        return true
-    end
-    return false
-end
-
-local function plugin_disabled_on_chat(plugin_name, chat_id)
-    if not config.disabled_plugin_on_chat then
-        return false
-    end
-    if not config.disabled_plugin_on_chat[chat_id] then
-        return false
-    end
-    return config.disabled_plugin_on_chat[chat_id][plugin_name]
 end
 
 local function list_plugins_sudo()
