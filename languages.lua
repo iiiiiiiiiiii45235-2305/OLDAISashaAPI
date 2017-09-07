@@ -1896,7 +1896,7 @@ return {
         rules = "Chat rules:\n",
         sendNewGroupPic = "Send the new group picture.",
         photoSaved = "Picture saved.",
-        settingsOf = "Impostazioni di ",
+        settingsOf = "Settings of ",
         groupSettings = "Group settings: ",
         supergroupSettings = "Supergroup settings: ",
         errorFloodRange = "Error, range is [3-20]",
