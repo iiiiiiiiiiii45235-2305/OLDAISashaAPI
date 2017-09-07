@@ -1523,7 +1523,7 @@ function banUser(executer, target, chat_id, reason, until_date)
                 if tempban then
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #tempban ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', until_date) ..(reason or '')
+                    '\n#user' .. target .. ' #executer' .. executer .. ' #tempban ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', until_date) ..(reason or '')
                 else
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
