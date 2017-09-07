@@ -972,7 +972,7 @@ return {
         "^(###cbinfo)(BACK)(%-%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
-        "^(###cbinfo)(BACK)(%d+)(%-%d+)$",
+        "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(MUTEUSER)(%d+)(%-%d+)$",

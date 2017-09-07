@@ -2171,6 +2171,19 @@ return {
     description = "GROUP_MANAGEMENT",
     patterns =
     {
+        -- from_info
+        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(I)$",
+        "^(###cbgroup_management)(BACKMUTES)(%-%d+)(I)$",
+        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)(I)$",
+        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)(I)$",
+        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)(I)$",
+        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)(I)$",
+        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)(I)$",
+        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)(I)$",
+        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)(I)$",
+        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)(I)$",
+        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)(I)$",
+
         "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
@@ -2186,18 +2199,6 @@ return {
         "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)$",
         "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
-        -- from_info
-        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(I)$",
-        "^(###cbgroup_management)(BACKMUTES)(%-%d+)(I)$",
-        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)(I)$",
-        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)(I)$",
-        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)(I)$",
 
         "!!tgservice chat_add_user_link",
         "!!tgservice chat_add_users",
