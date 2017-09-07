@@ -176,10 +176,10 @@ function load_plugins()
 end
 
 function reload_bot()
-    require("utils")
-    require("methods")
-    require("ranks")
-    require("keyboards")
+    loadfile("./utils.lua")()
+    loadfile("./methods.lua")()
+    loadfile("./ranks.lua")()
+    loadfile("./keyboards.lua")()
     load_plugins()
 end
 
@@ -191,7 +191,7 @@ function bot_init()
     data = nil
     alternatives = { }
 
-    require("utils")
+    loadfile("./utils.lua")()
     config = load_config()
     alternatives = load_alternatives()
     local file = io.open('bot_api_key.txt', "r")
@@ -204,9 +204,9 @@ function bot_init()
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return
     end
-    require("methods")
-    require("ranks")
-    require("keyboards")
+    loadfile("./methods.lua")()
+    loadfile("./ranks.lua")()
+    loadfile("./keyboards.lua")()
 
     while not bot do
         -- Get bot info and retry if unable to connect.

@@ -87,11 +87,19 @@ function create_config()
     print(clr.white .. 'saved config into ./config.lua' .. clr.reset)
 end
 
+function reload_bot()
+    loadfile("./utils.lua")()
+    loadfile("./methods.lua")()
+    loadfile("./ranks.lua")()
+    loadfile("./keyboards.lua")()
+    load_plugins()
+end
+
 function bot_init()
     config = { }
     bot = nil
 
-    require("utils")
+    loadfile("./utils.lua")()
     config = load_config()
     local file = io.open('bot_api_key.txt', "r")
     if file then
@@ -103,9 +111,9 @@ function bot_init()
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)
         return
     end
-    require("methods")
-    require("ranks")
-    require("keyboards")
+    loadfile("./methods.lua")()
+    loadfile("./ranks.lua")()
+    loadfile("./keyboards.lua")()
 
     while not bot do
         -- Get bot info and retry if unable to connect.

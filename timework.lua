@@ -1,4 +1,4 @@
-require("introtimework")
+loadfile("./introtimework.lua")()
 local action, chat_id, sleep_time = ...
 os.execute('sleep ' .. sleep_time)
 if action == 'spamtext' then
