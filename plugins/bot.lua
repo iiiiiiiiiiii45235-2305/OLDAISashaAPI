@@ -55,19 +55,50 @@ local function run(msg, matches)
             return
         end
     end
-    if matches[1]:lower() == '/start' and msg.bot then
-        sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs())
-        mystat('/start' ..(matches[2] or ''):lower())
-        if matches[2] then
-            msg.text = '/' .. matches[2]
-            if msg_valid(msg) then
-                msg = pre_process_msg(msg)
-                if msg then
-                    match_plugins(msg)
+    if msg.bot then
+        if matches[1]:lower() == '/start' then
+            sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs())
+            mystat('/start' ..(matches[2] or ''):lower())
+            if matches[2] then
+                msg.text = '/' .. matches[2]
+                if msg_valid(msg) then
+                    msg = pre_process_msg(msg)
+                    if msg then
+                        match_plugins(msg)
+                    end
                 end
             end
         end
-    elseif msg.from.is_owner then
+        if matches[1]:lower() == 'del' then
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    mystat('/del')
+                    if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                        return langs[msg.lang].cantDeleteMessage
+                    end
+                else
+                    return langs[msg.lang].cantDeleteMessage
+                end
+            else
+                return langs[msg.lang].needReply
+            end
+        end
+        if matches[1]:lower() == 'delkeyboard' then
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    if msg.reply_to_message.text or msg.reply_to_message.caption then
+                        mystat('/delkeyboard')
+                        return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
+                    end
+                else
+                    return langs[msg.lang].cantDeleteMessage
+                end
+            else
+                return langs[msg.lang].needReply
+            end
+        end
+    end
+    if msg.from.is_owner then
         if not matches[2] then
             if matches[1]:lower() == 'on' then
                 mystat('/bot on')
@@ -99,10 +130,13 @@ return {
     patterns =
     {
         "^(###cbbot)(..)$",
+
         "^(/[Ss][Tt][Aa][Rr][Tt])$",
         "^(/[Ss][Tt][Aa][Rr][Tt]) (.*)$",
         "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
         "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] (.*)$",
+        "^[#!/]([Dd][Ee][Ll])$",
+        "^[#!/]([Dd][Ee][Ll][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Ff][Ff])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn]) (%-?%d+)$",
@@ -119,6 +153,8 @@ return {
     {
         "USER",
         "/start[@AISashaBot]",
+        "#del <reply>",
+        "#delkeyboard <reply>",
         "OWNER",
         "#bot|sasha on|off",
         "ADMIN",
