@@ -270,7 +270,7 @@ local function run(msg, matches)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
-                    elseif matches[2] == 'MUTESLIST' then
+                    elseif matches[2] == 'MUTES' then
                         updated = true
                         if is_mod2(msg.from.id, matches[3]) then
                             updated = true
@@ -283,7 +283,7 @@ local function run(msg, matches)
                             local row = #keyboard + 1
                             keyboard[row] = { }
                             keyboard[row][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name, keyboard)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
