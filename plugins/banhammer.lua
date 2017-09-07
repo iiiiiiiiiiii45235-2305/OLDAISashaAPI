@@ -1635,6 +1635,15 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
+        if matches[1]:lower() == 'countbanlist' and not matches[2] then
+            if msg.from.is_mod then
+                mystat('/countbanlist')
+                local list = redis:smembers('banned:' .. msg.chat.id)
+                return #list
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
         if matches[1]:lower() == 'tempban' then
             if msg.from.is_mod then
                 mystat('/ban')
@@ -2181,6 +2190,15 @@ local function run(msg, matches)
             return langs[msg.lang].require_admin
         end
     end
+    if matches[1]:lower() == 'countbanlist' and matches[2] then
+        if is_admin(msg) then
+            mystat('/countbanlist <group_id>')
+            local list = redis:smembers('banned:' .. matches[2])
+            return #list
+        else
+            return langs[msg.lang].require_admin
+        end
+    end
     if matches[1]:lower() == 'gbanlist' then
         if is_admin(msg) then
             mystat('/gbanlist')
@@ -2203,6 +2221,15 @@ local function run(msg, matches)
             file:close()
             return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
             -- return sendMessage(msg.chat.id, gbanlist)
+        else
+            return langs[msg.lang].require_admin
+        end
+    end
+    if matches[1]:lower() == 'countgbanlist' then
+        if is_admin(msg) then
+            mystat('/countgbanlist')
+            local list = redis:smembers('gbanned')
+            return #list
         else
             return langs[msg.lang].require_admin
         end
@@ -2404,8 +2431,10 @@ return {
         "^[#!/]([Kk][Ii][Cc][Kk]) ([^%s]+) ?(.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk]) (.*)$",
         "^[#!/]([Kk][Ii][Cc][Kk])$",
-        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) ([^%s]+)$",
+        "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt]) (%-%d+)$",
         "^[#!/]([Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Cc][Oo][Uu][Nn][Tt][Bb][Aa][Nn][Ll][Ii][Ss][Tt]) (%-%d+)$",
+        "^[#!/]([Cc][Oo][Uu][Nn][Tt][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Bb][Aa][Nn]) ([^%s]+) ?(.*)$",
         "^[#!/]([Bb][Aa][Nn]) (.*)$",
         "^[#!/]([Bb][Aa][Nn])$",
@@ -2423,6 +2452,7 @@ return {
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn]) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Gg][Bb][Aa][Nn])$",
         "^[#!/]([Gg][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Cc][Oo][Uu][Nn][Tt][Gg][Bb][Aa][Nn][Ll][Ii][Ss][Tt])$",
     },
     run = run,
     pre_process = pre_process,
@@ -2446,16 +2476,16 @@ return {
         "#tempban <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<reason>]",
         "#ban <id>|<username>|<reply>|from [<reason>]",
         "#unban <id>|<username>|<reply>|from [<reason>]",
-        "#banlist",
+        "#[count]banlist",
         -- "#kickrandom",
         -- "#kickdeleted",
         "OWNER",
         -- "#kicknouser",
         -- "#kickinactive [<msgs>]",
         "ADMIN",
-        "#banlist <group_id>",
+        "#[count]banlist <group_id>",
         "#gban <id>|<username>|<reply>|from",
         "#ungban <id>|<username>|<reply>|from",
-        "#gbanlist",
+        "#[count]gbanlist",
     },
 }

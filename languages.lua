@@ -998,6 +998,7 @@ return {
             "#ban <id>|<username>|<reply>|from [<reason>]: Sasha banna l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
             "#unban <id>|<username>|<reply>|from [<reason>]: Sasha sbanna l'utente specificato.",
             "#banlist: Sasha mostra la lista di utenti bannati dal gruppo.",
+            "#countbanlist: Sasha manda il numero di utenti bannati.",
             -- "#kickrandom: Sasha sceglie un utente a caso e lo kicka.",
             -- "#kickdeleted: Sasha kicka tutti gli account eliminati.",
             "OWNER",
@@ -1005,9 +1006,11 @@ return {
             -- "#kickinactive [<msgs>]: Sasha kicka tutti gli utenti inattivi sotto <msgs> messaggi.",
             "ADMIN",
             "#banlist <group_id>: Sasha mostra la lista di utenti bannati da <group_id>.",
+            "#countbanlist <group_id>: Sasha manda il numero di utenti bannati da <group_id>.",
             "#gban <id>|<username>|<reply>|from: Sasha banna globalmente l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
             "#ungban <id>|<username>|<reply>|from: Sasha sbanna globalmente l'utente specificato.",
             "#gbanlist: Sasha mostra la lista di utenti bannati globalmente.",
+            "#countgbanlist: Sasha manda il numero di utenti bannati globalmente.",
         },
 
         bot =
@@ -2321,6 +2324,7 @@ return {
             "#ban <id>|<username>|<reply>|from [<reason>]: Sasha kicks and bans the specified user, if he tries to join again it's automatically kicked.",
             "#unban <id>|<username>|<reply>|from [<reason>]: Sasha unbans the specified user.",
             "#banlist: Sasha sends bans list of the group.",
+            "#countbanlist: Sasha sends the number of banned users.",
             -- "#kickrandom: Sasha chooses a random user and kicks it.",
             -- "#kickdeleted: Sasha kicks all deleted accounts.",
             "OWNER",
@@ -2328,9 +2332,11 @@ return {
             -- "#kickinactive [<msgs>]: Sasha kicks inactive users under <msgs> messages.",
             "ADMIN",
             "#banlist <group_id>: Sasha sends bans list of <group_id>.",
+            "#countbanlist <group_id>: Sasha sends the number of banned users of <group_id>.",
             "#gban <id>|<username>|<reply>|from: Sasha kicks and gbans the specified user, if he tries to join again it's automatically kicked.",
             "#ungban <id>|<username>|<reply>|from: Sasha ungbans the specified user.",
             "#gbanlist: Sasha sends gbans list.",
+            "#countgbanlist: Sasha sends the number of gbanned users.",
         },
 
         bot =
