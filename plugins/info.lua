@@ -254,6 +254,26 @@ local function run(msg, matches)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
+                    elseif matches[2] == 'NEWLINK' then
+                        if is_mod2(msg.from.id, matches[3]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3])
+                            local chat_name = ''
+                            if data[tostring(matches[3])] then
+                                chat_name = data[tostring(matches[3])].set_name or ''
+                            end
+                            local link = exportChatInviteLink(matches[3])
+                            if link then
+                                updated = true
+                                data[tostring(matches[3])]['settings']['set_link'] = link
+                                save_data(config.moderation.data, data)
+                                savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
+                                editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].sendMeLink, true)
+                            end
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
                     elseif matches[2] == 'WHITELIST' then
                         if is_owner2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
@@ -971,6 +991,7 @@ return {
         "^(###cbinfo)(DELETE)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
+        "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",

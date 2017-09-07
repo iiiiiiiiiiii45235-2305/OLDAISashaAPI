@@ -175,6 +175,14 @@ function load_plugins()
     return index
 end
 
+function reload_bot()
+    require("utils")
+    require("methods")
+    require("ranks")
+    require("keyboards")
+    load_plugins()
+end
+
 function bot_init()
     config = { }
     bot = nil
