@@ -1001,11 +1001,12 @@ return {
     patterns =
     {
         "^(###cbinfo)(DELETE)$",
-        "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
+        "^(###cbinfo)(DELETE)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
         "^(###cbinfo)(MUTES)(%-%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(SETTINGS)(%-%d+)$",
+        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
