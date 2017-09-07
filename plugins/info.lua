@@ -850,6 +850,27 @@ local function run(msg, matches)
         end
         return
     end
+    if matches[1]:lower() == 'groupinfo' then
+        mystat('/groupinfo')
+        if msg.from.is_mod then
+            if sendKeyboard(msg.from.id, get_object_info(msg.chat, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.chat, msg.chat.id)) then
+                if msg.chat.type ~= 'private' then
+                    local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
+                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                    io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                    return
+                end
+            else
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+            end
+        else
+            return get_object_info(msg.bot or msg.chat, msg.chat.id)
+        end
+    end
+    if matches[1]:lower() == 'textualgroupinfo' then
+        mystat('/groupinfo')
+        return get_object_info(msg.bot or msg.chat, msg.chat.id)
+    end
     --[[if matches[1]:lower() == 'who' or matches[1]:lower() == 'members' then
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             if msg.from.is_mod then
@@ -955,6 +976,8 @@ return {
         "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo]) ([^%s]+)$",
+        "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
         -- "^[#!/]([Ww][Hh][Oo])$",
         -- who
         -- "^[#!/]([Mm][Ee][Mm][Bb][Ee][Rr][Ss])$",
@@ -970,6 +993,7 @@ return {
         "#getrank [<id>|<username>|<reply>|from]",
         "#whoami",
         "#[textual]info",
+        "#[textual]groupinfo",
         "#ishere <id>|<username>|<reply>|from",
         "MOD",
         "#[textual]info <id>|<username>|<reply>|from",
