@@ -219,7 +219,7 @@ local function run(msg, matches)
                     local updated = false
                     if matches[2] == 'BACK' then
                         updated = true
-                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
+                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4] or matches[3])
                         if tab then
                             editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
                         else
@@ -227,7 +227,6 @@ local function run(msg, matches)
                         end
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     elseif matches[2] == 'LINK' then
-                        updated = true
                         if is_mod2(msg.from.id, matches[3]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3])
                             local chat_name = ''
@@ -238,6 +237,7 @@ local function run(msg, matches)
                             if not group_link then
                                 local link = exportChatInviteLink(matches[3])
                                 if link then
+                                    updated = true
                                     data[tostring(matches[3])]['settings']['set_link'] = link
                                     save_data(config.moderation.data, data)
                                     group_link = link
@@ -247,6 +247,7 @@ local function run(msg, matches)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
                                 end
                             else
+                                updated = true
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
                                 editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] } } } })
                             end
@@ -254,8 +255,8 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
                     elseif matches[2] == 'SETTINGS' then
-                        updated = true
                         if is_mod2(msg.from.id, matches[3]) then
+                            updated = true
                             mystat('###cbinfo' .. matches[2] .. matches[3])
                             local chat_name = ''
                             if data[tostring(matches[3])] then
@@ -271,6 +272,7 @@ local function run(msg, matches)
                     elseif matches[2] == 'MUTESLIST' then
                         updated = true
                         if is_mod2(msg.from.id, matches[3]) then
+                            updated = true
                             mystat('###cbinfo' .. matches[2] .. matches[3])
                             local chat_name = ''
                             if data[tostring(matches[3])] then
@@ -392,7 +394,7 @@ local function run(msg, matches)
                     end
                     if not updated then
                         updated = true
-                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4])
+                        local tab = get_object_info_keyboard(msg.from.id, getChat(matches[3]), matches[4] or matches[3])
                         if tab then
                             editMessageText(msg.chat.id, msg.message_id, tab.text, tab.keyboard)
                         else
