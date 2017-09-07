@@ -1158,18 +1158,13 @@ local function run(msg, matches)
         if msg.from.is_mod then
             mystat('/type')
             if data[tostring(msg.chat.id)] then
-                if not data[tostring(msg.chat.id)]['group_type'] then
-                    if msg.chat.type == 'group' and not is_realm(msg) then
-                        data[tostring(msg.chat.id)]['group_type'] = 'Group'
-                        save_data(config.moderation.data, data)
-                    elseif msg.chat.type == 'supergroup' then
-                        data[tostring(msg.chat.id)]['group_type'] = 'SuperGroup'
-                        save_data(config.moderation.data, data)
-                    end
+                if data[tostring(msg.chat.id)]['group_type'] then
+                    return data[tostring(msg.chat.id)]['group_type']
+                else
+                    return langs[msg.lang].chatTypeNotFound
                 end
-                return data[tostring(msg.chat.id)]['group_type']
             else
-                return langs[msg.lang].chatTypeNotFound
+                return langs[msg.lang].useYourGroups
             end
         else
             return langs[msg.lang].require_mod
@@ -2570,7 +2565,6 @@ return {
         "#unlock <group_id> arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "#settings <group_id>",
         "#textualsettings <group_id>",
-        "#type",
         "#rem <group_id>",
     },
 }
