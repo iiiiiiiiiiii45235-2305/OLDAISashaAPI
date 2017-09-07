@@ -753,7 +753,7 @@ local function run(msg, matches)
                     end
                 end
                 if string.match(matches[2], '^%-?%d+$') then
-                    local obj_user = getChat(matches[2])
+                    local obj = getChat(matches[2])
                     if sendKeyboard(msg.from.id, get_object_info(obj, msg.chat.id), get_object_info_keyboard(msg.from.id, obj, msg.chat.id)) then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt).result.message_id
