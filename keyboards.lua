@@ -784,11 +784,11 @@ function get_object_info_keyboard(executer, obj, chat_id)
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementMUTES' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementBACKMUTES' .. obj.id .. 'I' }
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementSETTINGS' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
             end
         elseif obj.type == 'supergroup' then
             text = text .. langs[lang].chatType .. langs[lang].supergroupWord
@@ -808,11 +808,11 @@ function get_object_info_keyboard(executer, obj, chat_id)
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementMUTES' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementBACKMUTES' .. obj.id .. 'I' }
                 row = row + 1
                 column = 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementSETTINGS' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
             end
         elseif obj.type == 'channel' then
             text = text .. langs[lang].chatType .. langs[lang].channelWord
