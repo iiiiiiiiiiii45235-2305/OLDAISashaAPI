@@ -515,81 +515,140 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                     end
                 end
             end
-            if deeper == 'ADMIN COMMANDS' then
+            if not deeper then
                 local is_executer_admin = is_admin2(executer)
                 if is_executer_admin then
                     row = row + 1
                     keyboard.inline_keyboard[row] = { }
-                    if isGbanned(obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
-                    end
+                    keyboard.inline_keyboard[row][column] = { text = langs[lang].adminCommands, callback_data = 'infoADMINCOMMANDS' .. obj.id .. chat_id }
                 end
-            elseif deeper == 'IN GROUP COMMANDS' then
-            end
-            if tonumber(chat_id) < 0 then
-                local status = ''
-                local chat_member = getChatMember(chat_id, obj.id)
-                local is_executer_owner = false
-                local is_executer_mod = false
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            status = chat_member.status
-                            if chat_member.status == 'creator' then
-                                is_executer_owner = true
-                                is_executer_mod = true
-                            elseif chat_member.status == 'administrator' then
-                                is_executer_mod = true
+                if tonumber(chat_id) < 0 then
+                    local status = ''
+                    local chat_member = getChatMember(chat_id, obj.id)
+                    local is_executer_owner = false
+                    local is_executer_mod = false
+                    if type(chat_member) == 'table' then
+                        if chat_member.result then
+                            chat_member = chat_member.result
+                            if chat_member.status then
+                                status = chat_member.status
+                                if chat_member.status == 'creator' then
+                                    is_executer_owner = true
+                                    is_executer_mod = true
+                                elseif chat_member.status == 'administrator' then
+                                    is_executer_mod = true
+                                end
                             end
-                        end
-                    end
-                end
-                if is_executer_mod or is_mod2(executer, chat_id, true) then
-                    row = row + 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isBanned(obj.id, chat_id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
-                    end
-                    row = row + 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isMutedUser(chat_id, obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                    end
-                    if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                        if status ~= 'kicked' and status ~= 'left' then
-                            row = row + 1
-                            keyboard.inline_keyboard[row] = { }
-                            -- start warn part
-                            keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
-                            -- end warn part
                         end
                     end
                     if is_executer_owner or is_owner2(executer, chat_id, true) then
                         row = row + 1
-                        column = 1
                         keyboard.inline_keyboard[row] = { }
-                        if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                        else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                        end
+                        keyboard.inline_keyboard[row][column] = { text = langs[lang].promotionsCommands, callback_data = 'infoPROMOTIONS' .. obj.id .. chat_id }
+                    end
+                    if is_executer_mod or is_mod2(executer, chat_id, true) then
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
-                        if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = langs[lang].punishmentsCommands, callback_data = 'infoPUNISHMENTS' .. obj.id .. chat_id }
+                    end
+                end
+            else
+                if deeper == 'ADMINCOMMANDS' then
+                    local is_executer_admin = is_admin2(executer)
+                    if is_executer_admin then
+                        row = row + 1
+                        keyboard.inline_keyboard[row] = { }
+                        if isGbanned(obj.id) then
+                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
                         else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
+                        end
+                    end
+                else
+                    if tonumber(chat_id) < 0 then
+                        local status = ''
+                        local chat_member = getChatMember(chat_id, obj.id)
+                        local is_executer_owner = false
+                        local is_executer_mod = false
+                        if type(chat_member) == 'table' then
+                            if chat_member.result then
+                                chat_member = chat_member.result
+                                if chat_member.status then
+                                    status = chat_member.status
+                                    if chat_member.status == 'creator' then
+                                        is_executer_owner = true
+                                        is_executer_mod = true
+                                    elseif chat_member.status == 'administrator' then
+                                        is_executer_mod = true
+                                    end
+                                end
+                            end
+                        end
+                        if deeper == 'PUNISHMENTS' then
+                            if is_executer_mod or is_mod2(executer, chat_id, true) then
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isMutedUser(chat_id, obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                                end
+                                if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+                                    if status ~= 'kicked' and status ~= 'left' then
+                                        row = row + 1
+                                        keyboard.inline_keyboard[row] = { }
+                                        -- start warn part
+                                        keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
+                                        column = column + 1
+                                        keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
+                                        column = column + 1
+                                        keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
+                                        -- end warn part
+                                    end
+                                end
+                                row = row + 1
+                                column = 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isBanned(obj.id, chat_id) or status == 'kicked' then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
+                                end
+                                if tostring(chat_id):starts('-100') then
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'TEMPBAN', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'RESTRICTIONS', callback_data = 'banhammerBACK' .. obj.id .. chat_id .. 'I' }
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'TEMPRESTRICT', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
+                                end
+                            elseif deeper == 'PROMOTIONS' then
+                                if is_executer_owner or is_owner2(executer, chat_id, true) then
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                                        keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                    else
+                                        keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                    end
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                    else
+                                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                    end
+                                    if tostring(chat_id):starts('-100') then
+                                        -- supergroup
+                                        row = row + 1
+                                        keyboard.inline_keyboard[row] = { }
+                                        keyboard.inline_keyboard[row][column] = { text = 'PERMISSIONS', callback_data = 'group_managementBACKPERMISSIONS' .. obj.id .. chat_id .. 'I' }
+                                    end
+                                end
+                            end
                         end
                     end
                 end
@@ -604,83 +663,152 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                     end
                 end
             end
-            local is_executer_admin = is_admin2(executer)
-            if is_executer_admin then
-                row = row + 1
-                keyboard.inline_keyboard[row] = { }
-                if isGbanned(obj.id) then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
+            if not deeper then
+                local is_executer_admin = is_admin2(executer)
+                if is_executer_admin then
+                    row = row + 1
+                    keyboard.inline_keyboard[row] = { }
+                    keyboard.inline_keyboard[row][column] = { text = langs[lang].adminCommands, callback_data = 'infoADMINCOMMANDS' .. obj.id .. chat_id }
                 end
-                row = row + 1
-                keyboard.inline_keyboard[row] = { }
-                if isBlocked(obj.id) then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMUNBLOCK' .. obj.id .. chat_id }
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ PM BLOCKED', callback_data = 'infoPMBLOCK' .. obj.id .. chat_id }
-                end
-            end
-            if tonumber(chat_id) < 0 then
-                local status = ''
-                local chat_member = getChatMember(chat_id, obj.id)
-                local is_executer_owner = false
-                local is_executer_mod = false
-                if type(chat_member) == 'table' then
-                    if chat_member.result then
-                        chat_member = chat_member.result
-                        if chat_member.status then
-                            status = chat_member.status
-                            if chat_member.status == 'creator' then
-                                is_executer_owner = true
-                                is_executer_mod = true
-                            elseif chat_member.status == 'administrator' then
-                                is_executer_mod = true
+                if tonumber(chat_id) < 0 then
+                    local status = ''
+                    local chat_member = getChatMember(chat_id, obj.id)
+                    local is_executer_owner = false
+                    local is_executer_mod = false
+                    if type(chat_member) == 'table' then
+                        if chat_member.result then
+                            chat_member = chat_member.result
+                            if chat_member.status then
+                                status = chat_member.status
+                                if chat_member.status == 'creator' then
+                                    is_executer_owner = true
+                                    is_executer_mod = true
+                                elseif chat_member.status == 'administrator' then
+                                    is_executer_mod = true
+                                end
                             end
-                        end
-                    end
-                end
-                if is_executer_mod or is_mod2(executer, chat_id, true) then
-                    row = row + 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isBanned(obj.id, chat_id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
-                    end
-                    row = row + 1
-                    keyboard.inline_keyboard[row] = { }
-                    if isMutedUser(chat_id, obj.id) then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
-                    end
-                    if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                        if status ~= 'kicked' and status ~= 'left' then
-                            row = row + 1
-                            keyboard.inline_keyboard[row] = { }
-                            keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
-                            column = column + 1
-                            keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
                         end
                     end
                     if is_executer_owner or is_owner2(executer, chat_id, true) then
                         row = row + 1
-                        column = 1
                         keyboard.inline_keyboard[row] = { }
-                        if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = langs[lang].inGroupCommands, callback_data = 'infoPROMOTIONS' .. obj.id .. chat_id }
+                    end
+                    if is_executer_mod or is_mod2(executer, chat_id, true) then
+                        row = row + 1
+                        keyboard.inline_keyboard[row] = { }
+                        keyboard.inline_keyboard[row][column] = { text = langs[lang].inGroupCommands, callback_data = 'infoPUNISHMENTS' .. obj.id .. chat_id }
+                    end
+                end
+            else
+                if deeper == 'ADMINCOMMANDS' then
+                    local is_executer_admin = is_admin2(executer)
+                    if is_executer_admin then
+                        row = row + 1
+                        keyboard.inline_keyboard[row] = { }
+                        if isGbanned(obj.id) then
+                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
                         else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED', callback_data = 'infoGBAN' .. obj.id .. chat_id }
                         end
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
-                        if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                        if isBlocked(obj.id) then
+                            keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED', callback_data = 'infoPMUNBLOCK' .. obj.id .. chat_id }
                         else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                            keyboard.inline_keyboard[row][column] = { text = '☑️ PM BLOCKED', callback_data = 'infoPMBLOCK' .. obj.id .. chat_id }
+                        end
+                    end
+                else
+                    if tonumber(chat_id) < 0 then
+                        local status = ''
+                        local chat_member = getChatMember(chat_id, obj.id)
+                        local is_executer_owner = false
+                        local is_executer_mod = false
+                        if type(chat_member) == 'table' then
+                            if chat_member.result then
+                                chat_member = chat_member.result
+                                if chat_member.status then
+                                    status = chat_member.status
+                                    if chat_member.status == 'creator' then
+                                        is_executer_owner = true
+                                        is_executer_mod = true
+                                    elseif chat_member.status == 'administrator' then
+                                        is_executer_mod = true
+                                    end
+                                end
+                            end
+                        end
+                        if deeper == 'PUNISHMENTS' then
+                            if is_executer_mod or is_mod2(executer, chat_id, true) then
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isMutedUser(chat_id, obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ MUTED', callback_data = 'infoMUTEUSER' .. obj.id .. chat_id }
+                                end
+                                if string.match(getUserWarns(obj.id, chat_id), '%d+') then
+                                    if status ~= 'kicked' and status ~= 'left' then
+                                        row = row + 1
+                                        keyboard.inline_keyboard[row] = { }
+                                        keyboard.inline_keyboard[row][column] = { text = '-', callback_data = 'infoWARNSMINUS' .. obj.id .. chat_id }
+                                        column = column + 1
+                                        keyboard.inline_keyboard[row][column] = { text = 'WARN ' .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0), callback_data = 'infoWARNS' .. obj.id .. chat_id }
+                                        column = column + 1
+                                        keyboard.inline_keyboard[row][column] = { text = '+', callback_data = 'infoWARNSPLUS' .. obj.id .. chat_id }
+                                    end
+                                end
+                                row = row + 1
+                                column = 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isBanned(obj.id, chat_id) or status == 'kicked' then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ BANNED', callback_data = 'infoUNBAN' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED', callback_data = 'infoBAN' .. obj.id .. chat_id }
+                                end
+                                if tostring(chat_id):starts('-100') then
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'TEMPBAN', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'RESTRICTIONS', callback_data = 'banhammerBACK' .. obj.id .. chat_id .. 'I' }
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'TEMPRESTRICT', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
+                                end
+                            end
+                        elseif deeper == 'PROMOTIONS' then
+                            if is_executer_owner or is_owner2(executer, chat_id, true) then
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                end
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                end
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ MODERATOR', callback_data = 'infoDEMOTE' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ MODERATOR', callback_data = 'infoPROMOTE' .. obj.id .. chat_id }
+                                end
+                                if tostring(chat_id):starts('-100') then
+                                    -- supergroup
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = 'PERMISSIONS', callback_data = 'group_managementBACKPERMISSIONS' .. obj.id .. chat_id .. 'I' }
+                                end
+                            end
                         end
                     end
                 end

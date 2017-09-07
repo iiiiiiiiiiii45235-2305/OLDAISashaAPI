@@ -294,7 +294,8 @@ local function run(msg, matches)
                         editMessageText(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     else
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].opsError, true)
+                        restrictions_table[tostring(matches[5])] = default_restrictions
                     end
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     if restrictions_table[tostring(matches[7])] then
@@ -2373,23 +2374,23 @@ return {
     patterns =
     {
         "^(###cbbanhammer)(DELETE)$",
-        "^(###cbbanhammer)(BACK)(%d+)(%-%d+)$",
-        "^(###cbbanhammer)(RESTRICT)(%d+)(.*)(%-%d+)$",
-        "^(###cbbanhammer)(UNRESTRICT)(%d+)(.*)(%-%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(BACK)(%d+)(%-%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPBAN)(%d+)(DONE)(%d+)(%-%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(BACK)(%d+)(%-%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)%$(%d+)$",
-        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(DONE)(%d+)(%-%d+)$",
+        "^(###cbbanhammer)(BACK)(%d+)(%-%d+)(.?)$",
+        "^(###cbbanhammer)(RESTRICT)(%d+)(.*)(%-%d+)(.?)$",
+        "^(###cbbanhammer)(UNRESTRICT)(%d+)(.*)(%-%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(BACK)(%d+)(%-%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPBAN)(%d+)(DONE)(%d+)(%-%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(BACK)(%d+)(%-%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)%$(%d+)(.?)$",
+        "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(DONE)(%d+)(%-%d+)(.?)$",
 
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",

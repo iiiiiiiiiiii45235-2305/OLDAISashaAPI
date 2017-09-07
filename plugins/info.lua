@@ -207,6 +207,32 @@ local function whitegban_user(group_id, user_id, lang)
     end
 end
 
+local function promoteMod(chat_id, user)
+    local lang = get_lang(chat_id)
+    if not data[tostring(chat_id)] then
+        return langs[lang].groupNotAdded
+    end
+    if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
+        return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyMod
+    end
+    data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
+    save_data(config.moderation.data, data)
+    return(user.username or user.print_name or user.first_name) .. langs[lang].promoteMod
+end
+
+local function demoteMod(chat_id, user)
+    local lang = get_lang(chat_id)
+    if not data[tostring(chat_id)] then
+        return langs[lang].groupNotAdded
+    end
+    if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
+        return(user.username or user.print_name or user.first_name) .. langs[lang].notMod
+    end
+    data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
+    save_data(config.moderation.data, data)
+    return(user.username or user.print_name or user.first_name) .. langs[lang].demoteMod
+end
+
 local function run(msg, matches)
     if msg.cb then
         if matches[1] then
@@ -221,11 +247,42 @@ local function run(msg, matches)
                     end
                 else
                     local updated = false
+                    local deeper = nil
                     if matches[2] == 'BACK' then
                         updated = true
                         local obj = getChat(matches[3])
                         editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                    elseif matches[2] == 'ADMINCOMMANDS' then
+                        if is_admin(msg) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            updated = true
+                            local obj = getChat(matches[3])
+                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
+                        end
+                    elseif matches[2] == 'PROMOTIONS' then
+                        if is_owner2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            updated = true
+                            local obj = getChat(matches[3])
+                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                        end
+                    elseif matches[2] == 'PUNISHMENTS' then
+                        if is_mod2(msg.from.id, matches[4]) then
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            updated = true
+                            local obj = getChat(matches[3])
+                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
+                        end
                     elseif matches[2] == 'LINK' then
                         if is_mod2(msg.from.id, matches[3]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3])
@@ -276,6 +333,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'WHITELIST' then
                         if is_owner2(msg.from.id, matches[4]) then
+                            deeper = 'PROMOTIONS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -285,6 +343,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'GBANWHITELIST' then
                         if is_owner2(msg.from.id, matches[4]) then
+                            deeper = 'PROMOTIONS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -292,8 +351,25 @@ local function run(msg, matches)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
+                    elseif matches[2] == 'PROMOTE' then
+                        if is_owner2(msg.from.id, matches[4]) then
+                            deeper = 'PROMOTIONS'
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            answerCallbackQuery(msg.cb_id, promoteMod(matches[4], getChat(matches[3])), true)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                        end
+                    elseif matches[2] == 'DEMOTE' then
+                        if is_owner2(msg.from.id, matches[4]) then
+                            deeper = 'PROMOTIONS'
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            answerCallbackQuery(msg.cb_id, demoteMod(matches[4], getChat(matches[3])), true)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                        end
                     elseif matches[2] == 'MUTEUSER' then
                         if is_mod2(msg.from.id, matches[4]) then
+                            deeper = 'PUNISHMENTS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             if compare_ranks(msg.from.id, matches[3], matches[4]) then
                                 if isMutedUser(matches[4], matches[3]) then
@@ -313,6 +389,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNSPLUS' then
                         if is_mod2(msg.from.id, matches[4]) then
+                            deeper = 'PUNISHMENTS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             if matches[2] == 'WARNSMINUS' then
                                 local text = unwarnUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
@@ -328,6 +405,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'BAN' then
                         if is_mod2(msg.from.id, matches[4]) then
+                            deeper = 'PUNISHMENTS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = banUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -337,6 +415,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'UNBAN' then
                         if is_mod2(msg.from.id, matches[4]) then
+                            deeper = 'PUNISHMENTS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = unbanUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -346,6 +425,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'GBAN' then
                         if is_admin2(msg.from.id) then
+                            deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = gbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -355,6 +435,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'UNGBAN' then
                         if is_admin2(msg.from.id) then
+                            deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = ungbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -364,6 +445,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'PMBLOCK' then
                         if is_admin2(msg.from.id) then
+                            deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = blockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -373,6 +455,7 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'PMUNBLOCK' then
                         if is_admin2(msg.from.id) then
+                            deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = unblockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, false)
@@ -384,7 +467,11 @@ local function run(msg, matches)
                     if not updated then
                         updated = true
                         local obj = getChat(matches[3])
-                        editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
+                        if deeper then
+                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], deeper))
+                        else
+                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
+                        end
                     end
                 end
                 return
@@ -961,6 +1048,11 @@ return {
         "^(###cbinfo)(GBAN)(%d+)(%-%d+)$",
         "^(###cbinfo)(PMUNBLOCK)(%d+)(%-%d+)$",
         "^(###cbinfo)(PMBLOCK)(%d+)(%-%d+)$",
+        "^(###cbinfo)(DEMOTE)(%d+)(%-%d+)$",
+        "^(###cbinfo)(PROMOTE)(%d+)(%-%d+)$",
+        "^(###cbinfo)(ADMINCOMMANDS)(%d+)(%-%d+)$",
+        "^(###cbinfo)(PUNISHMENTS)(%d+)(%-%d+)$",
+        "^(###cbinfo)(PROMOTIONS)(%d+)(%-%d+)$",
 
         "^[#!/]([Ii][Dd])$",
         "^[#!/]([Ii][Dd]) ([^%s]+)$",
