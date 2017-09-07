@@ -845,13 +845,24 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         else
             -- nothing
         end
-        row = row + 1
-        keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][1] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
-        keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
-        row = row + 1
-        keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][1] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
+        if deeper then
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].goBack, callback_data = 'info' .. deeper .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
+        else
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
+        end
         return keyboard
     else
         return { inline_keyboard = { { { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' } } } }
