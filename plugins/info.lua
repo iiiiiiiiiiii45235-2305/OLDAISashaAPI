@@ -242,19 +242,19 @@ local function run(msg, matches)
                                     save_data(config.moderation.data, data)
                                     group_link = link
                                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                    editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] } } } })
+                                    editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
                                 end
                             else
                                 updated = true
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] } } } })
+                                editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
                             end
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
-                    elseif matches[2] == 'SETTINGS' then
+                    elseif matches[2] == 'SETTINGS' or matches[2] == 'BACKSETTINGS' then
                         if is_mod2(msg.from.id, matches[3]) then
                             updated = true
                             mystat('###cbinfo' .. matches[2] .. matches[3])
@@ -262,15 +262,11 @@ local function run(msg, matches)
                             if data[tostring(matches[3])] then
                                 chat_name = data[tostring(matches[3])].set_name or ''
                             end
-                            local keyboard = keyboard_settings_list(matches[3])
-                            local row = #keyboard.inline_keyboard + 1
-                            keyboard.inline_keyboard[row] = { }
-                            keyboard.inline_keyboard[row][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro, keyboard_settings_list(matches[3], true))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
-                    elseif matches[2] == 'MUTES' then
+                    elseif matches[2] == 'MUTES' or matches[2] == 'BACKMUTES' then
                         updated = true
                         if is_mod2(msg.from.id, matches[3]) then
                             updated = true
@@ -279,11 +275,7 @@ local function run(msg, matches)
                             if data[tostring(matches[3])] then
                                 chat_name = data[tostring(matches[3])].set_name or ''
                             end
-                            local keyboard = keyboard_mutes_list(matches[3])
-                            local row = #keyboard.inline_keyboard + 1
-                            keyboard.inline_keyboard[row] = { }
-                            keyboard.inline_keyboard[row][1] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] .. matches[3] }
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name, keyboard)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name, keyboard_mutes_list(matches[3], true))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -1003,11 +995,13 @@ return {
         "^(###cbinfo)(DELETE)$",
         "^(###cbinfo)(DELETE)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
+        "^(###cbinfo)(BACKMUTES)(%-%d+)$",
+        "^(###cbinfo)(BACKSETTINGS)(%-%d+)$",
         "^(###cbinfo)(MUTES)(%-%d+)$",
-        "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(SETTINGS)(%-%d+)$",
-        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)$",
-        "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
+        "^(###cbinfo)(LINK)(%-%d+)$",
+        "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
+        "^(###cbinfo)(BACK)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(MUTEUSER)(%d+)(%-%d+)$",

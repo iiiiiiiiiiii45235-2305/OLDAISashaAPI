@@ -319,7 +319,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions)
         return keyboard
     end
 end
-function keyboard_settings_list(chat_id)
+function keyboard_settings_list(chat_id, from_info)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -383,12 +383,22 @@ function keyboard_settings_list(chat_id)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
+    if from_info then
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACKSETTINGS' .. chat_id }
+    else
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
+    end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
+    if from_info then
+        row = row + 1
+        column = 1
+        keyboard.inline_keyboard[row] = { }
+        keyboard.inline_keyboard[row][column] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. chat_id }
+    end
     return keyboard
 end
-function keyboard_mutes_list(chat_id)
+function keyboard_mutes_list(chat_id, from_info)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -415,9 +425,19 @@ function keyboard_mutes_list(chat_id)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
+    if from_info then
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'infoBACKMUTES' .. chat_id }
+    else
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
+    end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(chat_id)].deleteMessage, callback_data = 'group_managementDELETE' }
+    if from_info then
+        row = row + 1
+        column = 1
+        keyboard.inline_keyboard[row] = { }
+        keyboard.inline_keyboard[row][column] = { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. chat_id }
+    end
     return keyboard
 end
 
