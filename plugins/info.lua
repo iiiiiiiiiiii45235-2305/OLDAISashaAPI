@@ -989,6 +989,7 @@ return {
     {
         "^(###cbinfo)(DELETE)$",
         "^(###cbinfo)(DELETE)(%-%d+)$",
+        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
