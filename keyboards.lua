@@ -849,6 +849,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
             row = row + 1
             keyboard.inline_keyboard[row] = { }
             keyboard.inline_keyboard[row][1] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            print(keyboard.inline_keyboard[row][1].callback_data)
             keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
             row = row + 1
             keyboard.inline_keyboard[row] = { }
