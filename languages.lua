@@ -738,8 +738,8 @@ return {
         noLinkAvailable = "Nessun link disponibile.",
         sendInfoPvt = "Ti ho mandato le info dell'oggetto in privato.",
         infoOf = "INFO di X in Y:",
-        promotionsCommands = "🔪 Punizioni. 🔪",
-        punishmentsCommands = "🌈 Promozioni. 🌈",
+        punishmentsCommands = "🔪 Punizioni. 🔪",
+        promotionsCommands = "🌈 Promozioni. 🌈",
         adminCommands = "🌍 Comandi globali. 🌍",
         permissionsWord = "Permessi.",
 
@@ -2071,8 +2071,8 @@ return {
         noLinkAvailable = "No link available.",
         sendInfoPvt = "I've sent you the object's info in private.",
         infoOf = "INFO of X in Y:",
-        promotionsCommands = "🔪 Punishments. 🔪",
-        punishmentsCommands = "🌈 Promotions. 🌈",
+        punishmentsCommands = "🔪 Punishments. 🔪",
+        promotionsCommands = "🌈 Promotions. 🌈",
         adminCommands = "🌍 Global commands. 🌍",
         permissionsWord = "Permissions.",
 
