@@ -723,7 +723,7 @@ local function run(msg, matches)
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].set_name or ''
                     end
-                    editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[4], matches[3], matches[5] or false))
+                    editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro, keyboard_permissions_list(matches[4], matches[3], nil, matches[5] or false))
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'LOCK' then
                     if is_mod2(msg.from.id, matches[4]) then
