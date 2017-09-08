@@ -80,6 +80,7 @@ local function pre_process(msg)
                     if found then
                         local hash = get_censorships_hash(msg)
                         local time = redis:hget(hash, temp)
+                        print(temp, time, type(time))
                         if type(time) == 'boolean' then
                             deleteMessage(msg.chat.id, msg.message_id)
                         else
