@@ -1,6 +1,8 @@
 loadfile("./introtimework.lua")()
 local action, chat_id, sleep_time = ...
-os.execute('sleep ' .. sleep_time)
+if sleep_time > 0 then
+    os.execute('sleep ' .. sleep_time)
+end
 if action == 'spamtext' then
     action, chat_id, sleep_time, text = ...
     text = text:gsub('\\"', '"')
