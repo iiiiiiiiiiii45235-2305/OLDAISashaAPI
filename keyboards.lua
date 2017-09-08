@@ -52,9 +52,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
         if from_other_plugin then
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
+            column = column + 1
             keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
         end
         return keyboard
@@ -66,9 +64,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
         if from_other_plugin then
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
+            column = column + 1
             keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
         end
         return keyboard
@@ -205,10 +201,7 @@ function keyboard_time(op, chat_id, user_id, time, from_other_plugin)
     end
     keyboard.inline_keyboard[12][2] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
     if from_other_plugin then
-        row = #keyboard.inline_keyboard + 1
-        column = 1
-        keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+        keyboard.inline_keyboard[12][3] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
     end
     return keyboard
 end
@@ -414,9 +407,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
         if from_other_plugin then
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
+            column = column + 1
             keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
         end
         return keyboard
@@ -428,9 +419,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
         if from_other_plugin then
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
+            column = column + 1
             keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
         end
         return keyboard
@@ -549,9 +538,7 @@ function keyboard_settings_list(chat_id, from_other_plugin)
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
     if from_other_plugin then
-        row = row + 1
-        column = 1
-        keyboard.inline_keyboard[row] = { }
+        column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
     end
     return keyboard
@@ -600,9 +587,7 @@ function keyboard_mutes_list(chat_id, from_other_plugin)
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
     if from_other_plugin then
-        row = row + 1
-        column = 1
-        keyboard.inline_keyboard[row] = { }
+        column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
     end
     return keyboard
@@ -962,18 +947,14 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
             keyboard.inline_keyboard[row] = { }
             keyboard.inline_keyboard[row][1] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
-            row = row + 1
-            keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
-            keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
+            keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][4] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         else
             row = row + 1
             keyboard.inline_keyboard[row] = { }
             keyboard.inline_keyboard[row][1] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
-            row = row + 1
-            keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
+            keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         end
         return keyboard
     else
