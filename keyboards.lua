@@ -1,5 +1,5 @@
 -- banhammer
-function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
+function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_other_plugin)
     local lang = get_lang(chat_id)
     if not param_restrictions then
         local obj_user = getChatMember(chat_id, user_id)
@@ -28,17 +28,35 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         for var, value in pairsByKeys(restrictions) do
             if type(value) == 'boolean' then
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
+                    if from_other_plugin then
+                        keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id .. 'I' }
+                    else
+                        keyboard.inline_keyboard[row][column] = { text = '✅' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
+                    end
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
+                    if from_other_plugin then
+                        keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id .. 'I' }
+                    else
+                        keyboard.inline_keyboard[row][column] = { text = '🚫' .. reverseRestrictionsDictionary[var], callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
+                    end
                 end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
             end
         end
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'banhammerBACK' .. user_id .. chat_id }
+        if from_other_plugin then
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'banhammerBACK' .. user_id .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'banhammerBACK' .. user_id .. chat_id }
+        end
         column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
+        if from_other_plugin then
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        end
         return keyboard
     else
         local keyboard = { }
@@ -47,10 +65,16 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions)
         local column = 1
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
+        if from_other_plugin then
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        end
         return keyboard
     end
 end
-function keyboard_time(op, chat_id, user_id, time)
+function keyboard_time(op, chat_id, user_id, time, from_other_plugin)
     if not time then
         time = 16115430
     end
@@ -70,58 +94,122 @@ function keyboard_time(op, chat_id, user_id, time)
         keyboard.inline_keyboard[i] = { }
     end
 
-    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'banhammer' .. op .. time .. 'SECONDS0' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'SECONDS-10' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'SECONDS-5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'SECONDS-1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'SECONDS+1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'SECONDS+5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'SECONDS+10' .. chat_id .. '$' .. user_id }
+    if from_other_plugin then
+        keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'banhammer' .. op .. time .. 'SECONDS0' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'SECONDS-10' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'SECONDS-5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'SECONDS-1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'SECONDS+1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'SECONDS+5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'SECONDS+10' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'banhammer' .. op .. time .. 'MINUTES0' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'banhammer' .. op .. time .. 'MINUTES0' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'MINUTES-10' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'MINUTES-5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'MINUTES-1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'MINUTES+1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'MINUTES+5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'MINUTES+10' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'MINUTES-10' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'MINUTES-5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'MINUTES-1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'MINUTES+1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'MINUTES+5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'MINUTES+10' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'banhammer' .. op .. time .. 'HOURS0' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'banhammer' .. op .. time .. 'HOURS0' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[6][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'HOURS-10' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[6][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'HOURS-5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'HOURS-1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'HOURS+1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[6][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'HOURS+5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[6][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'HOURS+10' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[6][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'HOURS-10' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[6][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'HOURS-5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'HOURS-1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'HOURS+1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[6][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'HOURS+5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[6][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'HOURS+10' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[7][1] = { text = langs[lang].days:gsub('X', days), callback_data = 'banhammer' .. op .. time .. 'DAYS0' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[7][1] = { text = langs[lang].days:gsub('X', days), callback_data = 'banhammer' .. op .. time .. 'DAYS0' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[8][1] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'DAYS-5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][2] = { text = "-3", callback_data = 'banhammer' .. op .. time .. 'DAYS-3' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'DAYS-1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'DAYS+1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][5] = { text = "+3", callback_data = 'banhammer' .. op .. time .. 'DAYS+3' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[8][6] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'DAYS+5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[8][1] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'DAYS-5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[8][2] = { text = "-3", callback_data = 'banhammer' .. op .. time .. 'DAYS-3' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[8][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'DAYS-1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[8][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'DAYS+1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[8][5] = { text = "+3", callback_data = 'banhammer' .. op .. time .. 'DAYS+3' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[8][6] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'DAYS+5' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[9][1] = { text = langs[lang].weeks:gsub('X', weeks), callback_data = 'banhammer' .. op .. time .. 'WEEKS0' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[9][1] = { text = langs[lang].weeks:gsub('X', weeks), callback_data = 'banhammer' .. op .. time .. 'WEEKS0' .. chat_id .. '$' .. user_id .. 'I' }
 
-    keyboard.inline_keyboard[10][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'WEEKS-10' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[10][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'WEEKS-5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[10][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'WEEKS-1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[10][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'WEEKS+1' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[10][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'WEEKS+5' .. chat_id .. '$' .. user_id }
-    keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'WEEKS+10' .. chat_id .. '$' .. user_id }
-
-    if time < 30 or time > 31622400 then
-        keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' .. langs[lang].forever, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
+        keyboard.inline_keyboard[10][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'WEEKS-10' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[10][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'WEEKS-5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[10][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'WEEKS-1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[10][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'WEEKS+1' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[10][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'WEEKS+5' .. chat_id .. '$' .. user_id .. 'I' }
+        keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'WEEKS+10' .. chat_id .. '$' .. user_id .. 'I' }
     else
-        keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
+        keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'banhammer' .. op .. time .. 'SECONDS0' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'SECONDS-10' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'SECONDS-5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'SECONDS-1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'SECONDS+1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'SECONDS+5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'SECONDS+10' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'banhammer' .. op .. time .. 'MINUTES0' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'MINUTES-10' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'MINUTES-5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'MINUTES-1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'MINUTES+1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'MINUTES+5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'MINUTES+10' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'banhammer' .. op .. time .. 'HOURS0' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[6][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'HOURS-10' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[6][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'HOURS-5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'HOURS-1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'HOURS+1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[6][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'HOURS+5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[6][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'HOURS+10' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[7][1] = { text = langs[lang].days:gsub('X', days), callback_data = 'banhammer' .. op .. time .. 'DAYS0' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[8][1] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'DAYS-5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[8][2] = { text = "-3", callback_data = 'banhammer' .. op .. time .. 'DAYS-3' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[8][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'DAYS-1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[8][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'DAYS+1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[8][5] = { text = "+3", callback_data = 'banhammer' .. op .. time .. 'DAYS+3' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[8][6] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'DAYS+5' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[9][1] = { text = langs[lang].weeks:gsub('X', weeks), callback_data = 'banhammer' .. op .. time .. 'WEEKS0' .. chat_id .. '$' .. user_id }
+
+        keyboard.inline_keyboard[10][1] = { text = "-10", callback_data = 'banhammer' .. op .. time .. 'WEEKS-10' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[10][2] = { text = "-5", callback_data = 'banhammer' .. op .. time .. 'WEEKS-5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[10][3] = { text = "-1", callback_data = 'banhammer' .. op .. time .. 'WEEKS-1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[10][4] = { text = "+1", callback_data = 'banhammer' .. op .. time .. 'WEEKS+1' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[10][5] = { text = "+5", callback_data = 'banhammer' .. op .. time .. 'WEEKS+5' .. chat_id .. '$' .. user_id }
+        keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'banhammer' .. op .. time .. 'WEEKS+10' .. chat_id .. '$' .. user_id }
     end
 
-    keyboard.inline_keyboard[12][1] = { text = langs[lang].updateKeyboard, callback_data = 'banhammer' .. op .. time .. 'BACK' .. user_id .. chat_id }
+    if time < 30 or time > 31622400 then
+        if from_other_plugin then
+            keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' .. langs[lang].forever, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' .. langs[lang].forever, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
+        end
+    else
+        if from_other_plugin then
+            keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[11][1] = { text = op:gsub('TEMP', '') .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'banhammer' .. op .. time .. 'DONE' .. user_id .. chat_id }
+        end
+    end
+
+    if from_other_plugin then
+        keyboard.inline_keyboard[12][1] = { text = langs[lang].updateKeyboard, callback_data = 'banhammer' .. op .. time .. 'BACK' .. user_id .. chat_id .. 'I' }
+    else
+        keyboard.inline_keyboard[12][1] = { text = langs[lang].updateKeyboard, callback_data = 'banhammer' .. op .. time .. 'BACK' .. user_id .. chat_id }
+    end
     keyboard.inline_keyboard[12][2] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
+    if from_other_plugin then
+        row = #keyboard.inline_keyboard + 1
+        column = 1
+        keyboard.inline_keyboard[row] = { }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+    end
     return keyboard
 end
 
@@ -273,7 +361,7 @@ function keyboard_faq_list(chat_id)
 end
 
 -- group_management
-function keyboard_permissions_list(chat_id, user_id, param_permissions)
+function keyboard_permissions_list(chat_id, user_id, param_permissions, from_other_plugin)
     local lang = get_lang(chat_id)
     if not param_permissions then
         local obj_user = getChatMember(chat_id, user_id)
@@ -302,17 +390,35 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions)
         for var, value in pairsByKeys(permissions) do
             if type(value) == 'boolean' then
                 if value then
-                    keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
+                    if from_other_plugin then
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id .. 'I' }
+                    else
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
+                    end
                 else
-                    keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
+                    if from_other_plugin then
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id .. 'I' }
+                    else
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var], callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
+                    end
                 end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
             end
         end
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
+        if from_other_plugin then
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKPERMISSIONS' .. user_id .. chat_id }
+        end
         column = column + 1
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
+        if from_other_plugin then
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        end
         return keyboard
     else
         local keyboard = { }
@@ -321,6 +427,12 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions)
         local column = 1
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
+        if from_other_plugin then
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        end
         return keyboard
     end
 end
