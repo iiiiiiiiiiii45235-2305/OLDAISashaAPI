@@ -738,10 +738,10 @@ return {
         noLinkAvailable = "Nessun link disponibile.",
         sendInfoPvt = "Ti ho mandato le info dell'oggetto in privato.",
         infoOf = "INFO di X in Y:",
-        punishmentsCommands = "🔪 Punizioni. 🔪",
-        promotionsCommands = "🌈 Promozioni. 🌈",
-        adminCommands = "🌍 Comandi globali. 🌍",
-        permissionsWord = "⌨️ Permessi. ⌨️",
+        adminCommands = "🌍 COMANDI GLOBALI. 🌍",
+        promotionsCommands = "🌈 PROMOZIONI. 🌈",
+        punishmentsCommands = "🔪 PUNIZIONI. 🔪",
+        permissionsWord = "⌨️ PERMESSI. ⌨️",
 
         -- interact.lua
         userBlockedBot = "L'utente specificato ha bloccato il bot.",
@@ -2071,10 +2071,10 @@ return {
         noLinkAvailable = "No link available.",
         sendInfoPvt = "I've sent you the object's info in private.",
         infoOf = "INFO of X in Y:",
-        punishmentsCommands = "🔪 Punishments. 🔪",
-        promotionsCommands = "🌈 Promotions. 🌈",
-        adminCommands = "🌍 Global commands. 🌍",
-        permissionsWord = "⌨️ Permissions. ⌨️",
+        adminCommands = "🌍 GLOBAL COMMANDS. 🌍",
+        promotionsCommands = "🌈 PROMOTIONS. 🌈",
+        punishmentsCommands = "🔪 PUNISHMENTS. 🔪",
+        permissionsWord = "⌨️ PERMISSIONS. ⌨️",
 
         -- interact.lua
         userBlockedBot = "The specifided user blocked the bot.",
