@@ -294,7 +294,7 @@ local function run(msg, matches)
                         editMessageText(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     else
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].opsError, true)
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
                         restrictions_table[tostring(matches[5])] = default_restrictions
                     end
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
