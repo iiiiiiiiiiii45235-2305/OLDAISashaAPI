@@ -897,7 +897,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 end
                                 row = row + 1
                                 keyboard.inline_keyboard[row] = { }
-                                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                                if is_mod2(obj.id, chat_id, true) then
                                     keyboard.inline_keyboard[row][column] = { text = '✅ MODERATOR ✅', callback_data = 'infoDEMOTE' .. obj.id .. chat_id }
                                 else
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ MODERATOR ☑️', callback_data = 'infoPROMOTE' .. obj.id .. chat_id }
