@@ -737,28 +737,28 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                     keyboard.inline_keyboard[row] = { }
                                     keyboard.inline_keyboard[row][column] = { text = 'TEMPRESTRICT', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
                                 end
-                            elseif deeper == 'PROMOTIONS' then
-                                if is_executer_owner or is_owner2(executer, chat_id, true) then
+                            end
+                        elseif deeper == 'PROMOTIONS' then
+                            if is_executer_owner or is_owner2(executer, chat_id, true) then
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                end
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                else
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                end
+                                if tostring(chat_id):starts('-100') then
+                                    -- supergroup
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
-                                    if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                                        keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                                    else
-                                        keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                                    end
-                                    row = row + 1
-                                    keyboard.inline_keyboard[row] = { }
-                                    if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                                    else
-                                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                                    end
-                                    if tostring(chat_id):starts('-100') then
-                                        -- supergroup
-                                        row = row + 1
-                                        keyboard.inline_keyboard[row] = { }
-                                        keyboard.inline_keyboard[row][column] = { text = 'PERMISSIONS', callback_data = 'group_managementBACKPERMISSIONS' .. obj.id .. chat_id .. 'I' }
-                                    end
+                                    keyboard.inline_keyboard[row][column] = { text = 'PERMISSIONS', callback_data = 'group_managementBACKPERMISSIONS' .. obj.id .. chat_id .. 'I' }
                                 end
                             end
                         end
