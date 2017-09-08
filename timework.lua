@@ -1,9 +1,10 @@
 loadfile("./introtimework.lua")()
 local action, chat_id, sleep_time = ...
-sendMessage(chat_id, action .. '\n' .. chat_id .. '\n' .. sleep_time)
 if sleep_time then
-    if tonumber(sleep_time) > 0 then
-        os.execute('sleep ' .. sleep_time)
+    if tonumber(sleep_time) then
+        if tonumber(sleep_time) > 0 then
+            os.execute('sleep ' .. sleep_time)
+        end
     end
 end
 if action == 'spamtext' then
