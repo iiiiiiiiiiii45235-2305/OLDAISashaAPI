@@ -56,7 +56,6 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'del' then
-            print('wrong del')
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
                     mystat('/del')
