@@ -622,8 +622,10 @@ function deleteMessage(chat_id, message_id, no_log)
         local url = BASE_URL ..
         '/deleteMessage?chat_id=' .. chat_id ..
         '&message_id=' .. message_id
+        print(url)
         local res, code = sendRequest(url, no_log)
-
+        
+        print(res, code)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
