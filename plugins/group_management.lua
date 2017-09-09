@@ -1384,11 +1384,11 @@ local function run(msg, matches)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
                     if msg.reply then
                         if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            return sendReply(msg.reply_to_message, langs[msg.lang].cantDeleteMessage)
+                            sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage .. ' ' .. msg.reply_to_message.message_id)
                         end
                     end
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        return sendReply(msg, langs[msg.lang].cantDeleteMessage)
+                        sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage .. ' ' .. msg.message_id)
                     end
                 else
                     return langs[msg.lang].require_mod
