@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] == '###cbstrings' then
+        if matches[1] == '###cblangs' then
             local change_lang = true
             if msg.chat.type ~= 'private' then
                 if not is_owner(msg) then
@@ -11,10 +11,14 @@ local function run(msg, matches)
             if change_lang then
                 if matches[2] == 'IT' then
                     redis:set('lang:' .. msg.chat.id, 'it')
-                    return editMessageText(msg.chat.id, msg.message_id, langs['it'].langSet)
                 elseif matches[2] == 'EN' then
                     redis:set('lang:' .. msg.chat.id, 'en')
-                    return editMessageText(msg.chat.id, msg.message_id, langs['en'].langSet)
+                end
+                local lang = get_lang(msg.chat.id)
+                if matches[3] == 'B' then
+                    return editMessageText(msg.chat.id, msg.message_id, langs[lang].startMessage)
+                elseif matches[3] == 'S' then
+                    return editMessageText(msg.chat.id, msg.message_id, langs[lang].langSet)
                 end
             end
             return
@@ -33,7 +37,7 @@ local function run(msg, matches)
                 return langs[msg.lang].require_owner
             end
         else
-            return sendKeyboard(msg.chat.id, langs.selectLanguage, keyboard_langs())
+            return sendKeyboard(msg.chat.id, langs.selectLanguage, keyboard_langs('S'))
         end
     end
     if matches[1]:lower() == 'reloadstrings' or matches[1]:lower() == 'reloadlangs' then
@@ -52,7 +56,7 @@ return {
     description = "STRINGS",
     patterns =
     {
-        "^(###cbstrings)(..)$",
+        "^(###cblangs)(..)(.)$",
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ii][Tt])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ee][Nn])$',

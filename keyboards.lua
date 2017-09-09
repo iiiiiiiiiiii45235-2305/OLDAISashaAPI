@@ -211,12 +211,12 @@ end
 
 -- bot
 -- strings
-function keyboard_langs()
+function keyboard_langs(plugin)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     keyboard.inline_keyboard[1] = { }
-    keyboard.inline_keyboard[1][1] = { text = langs.italian, callback_data = 'botIT' }
-    keyboard.inline_keyboard[1][2] = { text = langs.english, callback_data = 'botEN' }
+    keyboard.inline_keyboard[1][1] = { text = langs.italian, callback_data = 'langsIT' ..(plugin or 'B') }
+    keyboard.inline_keyboard[1][2] = { text = langs.english, callback_data = 'langsEN' ..(plugin or 'B') }
     return keyboard
 end
 

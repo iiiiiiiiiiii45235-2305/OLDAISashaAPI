@@ -29,21 +29,9 @@ local function disable_channel(chat_id)
 end
 
 local function run(msg, matches)
-    if msg.cb then
-        if matches[1] == '###cbbot' and matches[2] then
-            if matches[2] == 'IT' then
-                redis:set('lang:' .. msg.chat.id, 'it')
-                return editMessageText(msg.chat.id, msg.message_id, langs['it'].startMessage)
-            elseif matches[2] == 'EN' then
-                redis:set('lang:' .. msg.chat.id, 'en')
-                return editMessageText(msg.chat.id, msg.message_id, langs['en'].startMessage)
-            end
-            return
-        end
-    end
     if msg.chat.type == 'private' then
         if matches[1]:lower() == '/start' then
-            sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs())
+            sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs('B'))
             mystat('/start' ..(matches[2] or ''):lower())
             if matches[2] then
                 msg.text = '/' .. matches[2]
@@ -115,8 +103,6 @@ return {
     description = "BOT",
     patterns =
     {
-        "^(###cbbot)(..)$",
-
         "^(/[Ss][Tt][Aa][Rr][Tt])$",
         "^(/[Ss][Tt][Aa][Rr][Tt]) (.*)$",
         "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
