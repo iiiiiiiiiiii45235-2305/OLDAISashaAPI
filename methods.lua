@@ -124,7 +124,13 @@ end
 function sendRequest(url, no_log)
     local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
-    print(vardumptext(dat), vardumptext(code), vardumptext(tab))
+    if string.find(url, 'deleteMessage') then
+        print(vardumptext(dat))
+        print('||||||||||||||||||||||||||||||||||||||||||||||')
+        print(vardumptext(code))
+        print('||||||||||||||||||||||||||||||||||||||||||||||')
+        print(vardumptext(tab))
+    end
 
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
