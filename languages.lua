@@ -1,8 +1,8 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Info command became an advanced keyboard with a lot of commands in it (mod^)(info).\n" ..
+    "Info command has become an advanced keyboard with a lot of commands in it (mod^)(info).\n" ..
     "Groupinfo command to manage the group (mod^)(info).\n" ..
-    "Tempdelword command became Scheduledelword (delword).\n" ..
+    "Tempdelword command has become Scheduledelword (delword).\n" ..
     "Mute/Unmute commands are now available for mods with the exception of ALL and TEXT (group_management).\n" ..
     "Converttime command for future use ;).\n" ..
     "Keyboards are better readable with emojis (meh).\n",
