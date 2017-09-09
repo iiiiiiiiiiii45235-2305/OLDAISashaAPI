@@ -124,6 +124,7 @@ end
 function sendRequest(url, no_log)
     local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
+    print(vardumptext(dat), vardumptext(code), vardumptext(tab))
 
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
@@ -132,7 +133,6 @@ function sendRequest(url, no_log)
     end
 
     if code ~= 200 then
-
         if code == 400 then
             -- error code 400 is general: try to specify
             code = getCode(tab.description)
@@ -622,10 +622,8 @@ function deleteMessage(chat_id, message_id, no_log)
         local url = BASE_URL ..
         '/deleteMessage?chat_id=' .. chat_id ..
         '&message_id=' .. message_id
-        print(url)
         local res, code = sendRequest(url, no_log)
-        
-        print(res, code)
+
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
