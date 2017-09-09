@@ -41,7 +41,7 @@ local function run(msg, matches)
             return
         end
     end
-    if msg.bot then
+    if msg.chat.type == 'private' then
         if matches[1]:lower() == '/start' then
             sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs())
             mystat('/start' ..(matches[2] or ''):lower())
