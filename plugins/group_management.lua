@@ -1383,12 +1383,16 @@ local function run(msg, matches)
                     mystat('/del')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
                     if msg.reply then
-                        if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage .. ' ' .. msg.reply_to_message.message_id)
+                        local res = deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true)
+                        print(res)
+                        if not res then
+                            sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                         end
                     end
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage .. ' ' .. msg.message_id)
+                    local res = deleteMessage(msg.chat.id, msg.message_id, true)
+                    print(res)
+                    if not res then
+                        sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                     end
                 else
                     return langs[msg.lang].require_mod
