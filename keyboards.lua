@@ -45,7 +45,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
             end
         end
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
         if from_other_plugin then
@@ -62,7 +62,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         local row = 1
         local column = 1
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
         keyboard.inline_keyboard[row] = { }
@@ -196,7 +196,7 @@ function keyboard_time(op, chat_id, user_id, time, from_other_plugin)
 
     local column = 1
     if from_other_plugin then
-        keyboard.inline_keyboard[12][column] = { text = langs[lang].goBack, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+        keyboard.inline_keyboard[12][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -291,7 +291,42 @@ function keyboard_scheduledelword(chat_id, time)
 end
 
 -- help
-function keyboard_help_list(chat_id, rank)
+-- function keyboard_help_list(chat_id, rank)
+--     local lang = get_lang(chat_id)
+--     local keyboard = { }
+--     keyboard.inline_keyboard = { }
+--     local row = 1
+--     local column = 1
+--     local i = 0
+--     local flag = false
+--     keyboard.inline_keyboard[row] = { }
+--     for name in pairsByKeys(plugins) do
+--         i = i + 1
+--         if plugins[name].min_rank <= tonumber(rank) then
+--             if flag then
+--                 flag = false
+--                 row = row + 1
+--                 column = 1
+--                 keyboard.inline_keyboard[row] = { }
+--             end
+--             -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
+--             keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name }
+--             column = column + 1
+--         end
+--         if column > 2 then
+--             flag = true
+--         end
+--     end
+--     row = row + 1
+--     column = 1
+--     keyboard.inline_keyboard[row] = { }
+--     keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' }
+--     column = column + 1
+--     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
+--     return keyboard
+-- end
+local max_buttons = 10
+function keyboard_help_pages(chat_id, rank, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
@@ -300,29 +335,43 @@ function keyboard_help_list(chat_id, rank)
     local i = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
+    local max_pages = math.floor(#plugins / max_buttons)
+    if #plugins / max_buttons > math.floor(#plugins / max_buttons) then
+        max_pages = max_pages + 1
+    end
+    if page > max_pages then
+        page = max_pages
+    end
     for name in pairsByKeys(plugins) do
         i = i + 1
-        if plugins[name].min_rank <= tonumber(rank) then
-            if flag then
-                flag = false
-                row = row + 1
-                column = 1
-                keyboard.inline_keyboard[row] = { }
+        -- i between the last plugin of the previous page and the last plugin of this page
+        if i >=((page - 1) * max_buttons) + 1 and i <=(max_buttons * page) then
+            if plugins[name].min_rank <= tonumber(rank) then
+                if flag then
+                    flag = false
+                    row = row + 1
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
+                end
+                -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
+                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name .. page }
+                column = column + 1
             end
-            -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
-            keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name }
-            column = column + 1
-        end
-        if column > 2 then
-            flag = true
+            if column > 2 then
+                flag = true
+            end
         end
     end
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' }
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'helpPAGEMINUS' .. page }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' .. page }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'helpPAGEPLUS' .. page }
     return keyboard
 end
 function keyboard_faq_list(chat_id)
@@ -404,7 +453,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
             end
         end
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
         end
         if from_other_plugin then
@@ -422,7 +471,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         local column = 1
         keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
@@ -535,7 +584,7 @@ function keyboard_settings_list(chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -584,7 +633,7 @@ function keyboard_mutes_list(chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -949,7 +998,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         if deeper then
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].goBack, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][4] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }

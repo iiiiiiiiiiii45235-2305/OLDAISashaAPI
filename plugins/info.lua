@@ -299,14 +299,14 @@ local function run(msg, matches)
                                     save_data(config.moderation.data, data)
                                     group_link = link
                                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                    editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                                    editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } })
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
                                 end
                             else
                                 updated = true
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                                editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } })
                             end
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -324,7 +324,7 @@ local function run(msg, matches)
                                 data[tostring(matches[3])]['settings']['set_link'] = link
                                 save_data(config.moderation.data, data)
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                                editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. link, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } })
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].sendMeLink, true)
                             end

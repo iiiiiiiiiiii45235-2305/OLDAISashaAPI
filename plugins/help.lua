@@ -151,29 +151,33 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
             elseif matches[2] == 'BACK' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1))
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+            elseif matches[2] == 'PAGEMINUS' then
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3]) -1))
+            elseif matches[2] == 'PAGEPLUS' then
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3]) + 1))
             elseif matches[2] == 'BACKFAQ' then
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'FAQ' then
                 mystat('###cbhelp' .. matches[2] .. matches[3])
                 if langs[msg.lang].faq[tonumber(matches[3])] then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } })
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
                 end
             else
                 mystat('###cbhelp' .. matches[2])
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
                 if temp ~= nil then
                     if temp ~= '' then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' .. matches[3] or 1 } } } })
                     else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' .. matches[3] or 1 } } } })
                     end
                 else
-                    editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } })
+                    editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' .. matches[3] or 1 } } } })
                 end
             end
             return
@@ -234,7 +238,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'help' then
         if not matches[2] then
             mystat('/help')
-            if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_list(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+            if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
                 if msg.chat.type ~= 'private' then
                     local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                     io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -249,7 +253,7 @@ local function run(msg, matches)
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
-                    if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -260,7 +264,7 @@ local function run(msg, matches)
                         return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                     end
                 else
-                    if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                             io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -272,7 +276,7 @@ local function run(msg, matches)
                     end
                 end
             else
-                if sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACK' } } } }) then
+                if sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -333,7 +337,7 @@ local function run(msg, matches)
         else
             mystat('/faq<n>')
             if langs[msg.lang].faq[tonumber(matches[2])] then
-                if sendKeyboard(msg.from.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } }) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } }) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt).result.message_id
                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -344,7 +348,7 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                 end
             else
-                if sendKeyboard(msg.from.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'helpBACKFAQ' } } } }) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } }) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt).result.message_id
                         io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -374,10 +378,9 @@ return {
     {
         "^(###cbhelp)(DELETE)$",
         "^(###cbhelp)(BACKFAQ)$",
-        "^(###cbhelp)(BACK)$",
+        "^(###cbhelp)(BACK)(%d+)?$",
         "^(###cbhelp)(FAQ)(%d+)$",
-        "^(###cbhelp)(.*)(%-?%d+)$",
-        "^(###cbhelp)(.*)$",
+        "^(###cbhelp)(.*)(%d+)?$",
 
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+) (%d+) (%d+) (%d+) (%d+)$",
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+)$",
