@@ -121,7 +121,7 @@ local function run(msg, matches)
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
                     elseif string.match(matches[2], '^%d+$') then
-                        if delword_table[tostring(msg.from.id)] then
+                        if schedule_table[tostring(msg.from.id)] then
                             local time = tonumber(matches[2])
                             if matches[3] == 'BACK' then
                                 editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[4], time))
