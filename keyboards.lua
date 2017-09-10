@@ -335,6 +335,7 @@ function keyboard_help_pages(chat_id, rank, page)
     local i = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
+    print(page)
     if not page then
         print('not page')
         page = 1
