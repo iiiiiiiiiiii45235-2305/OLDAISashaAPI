@@ -417,7 +417,6 @@ local function run(msg, matches)
         if is_sudo(msg) then
             mystat('/reloadbot')
             print("Reloading bot")
-            sendMessage(msg.chat.id, langs[msg.lang].reloadingBot)
             reload_bot()
             print("Bot reloaded")
             return langs[msg.lang].botReloaded

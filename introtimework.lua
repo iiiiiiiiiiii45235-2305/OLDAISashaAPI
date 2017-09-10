@@ -92,6 +92,7 @@ function reload_bot()
     loadfile("./methods.lua")()
     loadfile("./ranks.lua")()
     loadfile("./keyboards.lua")()
+    langs = dofile('languages.lua')
     load_plugins()
 end
 
