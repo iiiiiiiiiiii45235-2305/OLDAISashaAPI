@@ -2,10 +2,8 @@ local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', title = '
 clr = require "term.colors"
 
 last_cron = os.date('%M')
-last_db_cron = os.date('%H')
 last_administrator_cron = os.date('%d')
 last_redis_cron = ''
-last_redis_db_cron = ''
 last_redis_administrator_cron = ''
 
 tmp_msg = { }

@@ -590,6 +590,7 @@ function doSendBackup()
     '/var/lib/redis'
     -- save redis db
     redis:bgsave()
+    save_data(config.database.db, database)
     local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
     local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
     file:write(log)

@@ -1,10 +1,8 @@
 clr = require "term.colors"
 
 last_cron = os.date('%M')
-last_db_cron = os.date('%H')
 last_administrator_cron = os.date('%d')
 last_redis_cron = ''
-last_redis_db_cron = ''
 last_redis_administrator_cron = ''
 
 tmp_msg = { }
@@ -265,18 +263,6 @@ function update_redis_cron()
         local value = os.date('%M')
         redis:set('api:last_redis_cron', value)
         last_redis_cron = redis:get('api:last_redis_cron')
-    end
-
-    if redis:get('api:last_redis_db_cron') then
-        if redis:get('api:last_redis_db_cron') ~= os.date('%H') then
-            local value = os.date('%H')
-            redis:set('api:last_redis_db_cron', value)
-        end
-        last_redis_db_cron = redis:get('api:last_redis_db_cron')
-    else
-        local value = os.date('%H')
-        redis:set('api:last_redis_db_cron', value)
-        last_redis_db_cron = redis:get('api:last_redis_db_cron')
     end
 
     if redis:get('api:last_redis_administrator_cron') then
@@ -953,15 +939,6 @@ function cron_plugins()
     end
 end
 
-function cron_database()
-    if last_db_cron ~= last_redis_db_cron then
-        -- Run cron jobs every hour.
-        last_db_cron = last_redis_db_cron
-        print('SAVING USERS/GROUPS DATABASE')
-        save_data(config.database.db, database)
-    end
-end
-
 function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- Run cron jobs every day.
@@ -1037,7 +1014,6 @@ while is_started do
     end
     update_redis_cron()
     cron_plugins()
-    cron_database()
     cron_administrator()
 end
 
