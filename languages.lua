@@ -1081,7 +1081,6 @@ return {
             "MOD",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "#delword <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio.",
-            "#scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         dogify =
@@ -1420,6 +1419,15 @@ return {
             "Notazione Esadecimale => (\"a56729\" è marrone).",
             "Notazione Decimale => (\"255-192-203\" è rosa).",
             "#qr [\"<background_color>\" \"<data_color>\"] <text>: Sasha crea il QR Code di <text>, se specificato colora il QR Code.",
+        },
+
+        scheduled_commands =
+        {
+            "🅿️ SCHEDULED_COMMANDS",
+            "Plugin per programmare comandi.",
+            "MOD",
+            "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
+            "#scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha mette|toglie una censura su <word>|<pattern>, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         shout =
@@ -2418,7 +2426,6 @@ return {
             "MOD",
             "For more information on patterns see lua.org/pil/20.2.html",
             "#delword <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted.",
-            "#scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
         },
 
         dogify =
@@ -2757,6 +2764,15 @@ return {
             "Hexadecimal => (\"a56729\" it's brown).",
             "Decimal => (\"255-192-203\" it's pink).",
             "#qr [\"<background_color>\" \"<data_color>\"] <text>: Sasha creates QR Code of <text>, if the specified it colors QR Code.",
+        },
+
+        scheduled_commands =
+        {
+            "🅿️ SCHEDULED_COMMANDS",
+            "Plugin to schedule commands.",
+            "MOD",
+            "For more information on patterns see lua.org/pil/20.2.html",
+            "#scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>: Sasha puts|removes a censorship on <word>|<pattern>, when someone writes it the message is deleted after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
         },
 
         shout =
