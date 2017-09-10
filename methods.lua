@@ -122,8 +122,9 @@ function performRequest(url)
 end
 
 function sendRequest(url, no_log)
-    if url:match(BASE_URL .. '/(.*)%?') ~= 'sendChatAction' then
-        savelog('requests', url:match(BASE_URL .. '/(.*)%?'))
+    local method = url:match(BASE_URL .. '/(.*)%?')
+    if method ~= 'sendChatAction' and method ~= 'getUpdates' then
+        savelog('requests', method)
     end
     local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
