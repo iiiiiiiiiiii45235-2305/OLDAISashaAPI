@@ -1,11 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Info command has become an advanced keyboard with a lot of commands in it (mod^)(info).\n" ..
-    "Groupinfo command to manage the group (mod^)(info).\n" ..
-    "Tempdelword command has become Scheduledelword (delword).\n" ..
-    "Mute/Unmute commands are now available for mods with the exception of ALL and TEXT (group_management).\n" ..
-    "Converttime command for future use ;).\n" ..
-    "Keyboards are better readable with emojis (meh).\n",
+    "Better help keyboard with pages\n" ..
+    "Now links/usernames to public channels/supergroups are analyzed as private links.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
