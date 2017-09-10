@@ -336,6 +336,7 @@ function keyboard_help_pages(chat_id, rank, page)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     if not page then
+        print('not page')
         page = 1
     end
     local max_pages = math.floor(#plugins / max_buttons)
@@ -345,11 +346,12 @@ function keyboard_help_pages(chat_id, rank, page)
     if tonumber(page) > max_pages then
         page = max_pages
     end
+    print(page, max_pages)
     for name in pairsByKeys(plugins) do
         i = i + 1
         -- i between the last plugin of the previous page and the last plugin of this page
-        if i >=(((tonumber(page) -1) * max_buttons) + 1) and i <=(max_buttons * tonumber(page)) then
-            if plugins[name].min_rank <= tonumber(rank) then
+        if plugins[name].min_rank <= tonumber(rank) then
+            if i >=(((tonumber(page) -1) * max_buttons) + 1) and i <=(max_buttons * tonumber(page)) then
                 if flag then
                     flag = false
                     row = row + 1
@@ -359,9 +361,9 @@ function keyboard_help_pages(chat_id, rank, page)
                 -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
                 keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name .. page }
                 column = column + 1
-            end
-            if column > 2 then
-                flag = true
+                if column > 2 then
+                    flag = true
+                end
             end
         end
     end
