@@ -289,8 +289,8 @@ return {
 
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
-        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) (%d+) (%d+) (%d+) (^%s) (%-?%d+) (.*)$",
-        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) (^%s) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) (%d+) (%d+) (%d+) ([^%s]+) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) ([^%s]+) (%-?%d+) (.*)$",
     },
     run = run,
     min_rank = 1,
