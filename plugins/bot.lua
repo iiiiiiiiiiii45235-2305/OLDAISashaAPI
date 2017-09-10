@@ -34,11 +34,13 @@ local function run(msg, matches)
             sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs('B'))
             mystat('/start' ..(matches[2] or ''):lower())
             if matches[2] then
-                msg.text = '/' .. matches[2]
-                if msg_valid(msg) then
-                    msg = pre_process_msg(msg)
-                    if msg then
-                        match_plugins(msg)
+                local copied_msg = clone_table(msg)
+                msg = nil
+                copied_msg.text = '/' .. matches[2]
+                if msg_valid(copied_msg) then
+                    copied_msg = pre_process_msg(copied_msg)
+                    if copied_msg then
+                        match_plugins(copied_msg)
                     end
                 end
             end
