@@ -16,9 +16,9 @@ local function run(msg, matches)
                 end
                 local lang = get_lang(msg.chat.id)
                 if matches[3] == 'B' then
-                    return editMessageText(msg.chat.id, msg.message_id, langs[lang].startMessage)
+                    return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage)
                 elseif matches[3] == 'S' then
-                    return editMessageText(msg.chat.id, msg.message_id, langs[lang].langSet)
+                    return editMessage(msg.chat.id, msg.message_id, langs[lang].langSet)
                 end
             end
             return

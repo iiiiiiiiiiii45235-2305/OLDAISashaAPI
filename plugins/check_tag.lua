@@ -68,7 +68,7 @@ local function run(msg, matches)
                 if matches[2] == 'ALREADYREAD' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
                     end
                 else
                     if matches[2] == 'DELETEUP' then
@@ -78,7 +78,7 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
                     elseif matches[2] == 'GOTO' then
@@ -92,9 +92,9 @@ local function run(msg, matches)
                             end
                             if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                 if res then
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
                             end
                         else
@@ -120,11 +120,11 @@ local function run(msg, matches)
                             end
                             if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                 if sent then
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
-                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
                     end

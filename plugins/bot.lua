@@ -62,7 +62,7 @@ local function run(msg, matches)
                 if msg.reply_to_message.from.id == bot.id then
                     if msg.reply_to_message.text or msg.reply_to_message.caption then
                         mystat('/delkeyboard')
-                        return editMessageText(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
+                        return editMessage(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
                     end
                 else
                     return langs[msg.lang].cantDeleteMessage

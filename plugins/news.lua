@@ -51,7 +51,7 @@ local function pre_process(msg)
                         text = text .. data[tostring(k)].set_name .. '\n'
                     end
                 end
-                editMessageText(news_table.chat_msg_to_update, news_table.msg_to_update, text)
+                editMessage(news_table.chat_msg_to_update, news_table.msg_to_update, text)
             end
         end
         return msg

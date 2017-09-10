@@ -85,14 +85,14 @@ local function run(msg, matches)
         if matches[1] == '###cbbanhammer' then
             if matches[2] == 'DELETE' then
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
             elseif matches[2] == 'BACK' then
                 local chat_name = ''
                 if data[tostring(matches[4])] then
                     chat_name = data[tostring(matches[4])].set_name or ''
                 end
-                editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
+                editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'RESTRICT' then
                 if is_mod2(msg.from.id, matches[5]) then
@@ -138,10 +138,10 @@ local function run(msg, matches)
                         if data[tostring(matches[5])] then
                             chat_name = data[tostring(matches[5])].set_name or ''
                         end
-                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
+                        editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
                     end
                 else
-                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                 end
             elseif matches[2] == 'UNRESTRICT' then
                 if is_mod2(msg.from.id, matches[5]) then
@@ -187,10 +187,10 @@ local function run(msg, matches)
                         if data[tostring(matches[5])] then
                             chat_name = data[tostring(matches[5])].set_name or ''
                         end
-                        editMessageText(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
+                        editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro, keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
                     end
                 else
-                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                 end
             elseif matches[2] == 'TEMPBAN' then
                 local time = tonumber(matches[3])
@@ -199,7 +199,7 @@ local function run(msg, matches)
                     chat_name = data[tostring(matches[6])].set_name or ''
                 end
                 if matches[4] == 'BACK' then
-                    editMessageText(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
+                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     local remainder, weeks, days, hours, minutes, seconds = 0
@@ -268,7 +268,7 @@ local function run(msg, matches)
                             end
                         end
                     end
-                    editMessageText(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
+                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
                 elseif matches[4] == 'DONE' then
                     mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                     local text = ''
@@ -280,7 +280,7 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 end
             elseif matches[2] == 'TEMPRESTRICT' then
@@ -291,7 +291,7 @@ local function run(msg, matches)
                 end
                 if matches[4] == 'BACK' then
                     if restrictions_table[tostring(matches[5])] then
-                        editMessageText(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
+                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
@@ -365,9 +365,9 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        editMessageText(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
+                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
                     else
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 elseif matches[4] == 'DONE' then
                     if restrictions_table[tostring(matches[5])] then
@@ -401,10 +401,10 @@ local function run(msg, matches)
                         answerCallbackQuery(msg.cb_id, text, false)
                         sendMessage(matches[6], text)
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
                     else
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 end
             end

@@ -239,10 +239,10 @@ local function run(msg, matches)
             if matches[1] == '###cbinfo' then
                 if matches[2] == 'DELETE' then
                     if matches[3] and matches[4] then
-                        editMessageText(msg.chat.id, msg.message_id, get_object_info(getChat(matches[3]), matches[4]))
+                        editMessage(msg.chat.id, msg.message_id, get_object_info(getChat(matches[3]), matches[4]))
                     else
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
                     end
                 else
@@ -251,14 +251,14 @@ local function run(msg, matches)
                     if matches[2] == 'BACK' then
                         updated = true
                         local obj = getChat(matches[3])
-                        editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
+                        editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     elseif matches[2] == 'ADMINCOMMANDS' then
                         if is_admin(msg) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                             local obj = getChat(matches[3])
-                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
+                            editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -268,7 +268,7 @@ local function run(msg, matches)
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                             local obj = getChat(matches[3])
-                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
+                            editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
@@ -278,7 +278,7 @@ local function run(msg, matches)
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                             local obj = getChat(matches[3])
-                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
+                            editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -299,14 +299,14 @@ local function run(msg, matches)
                                     save_data(config.moderation.data, data)
                                     group_link = link
                                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                    editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                                    editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
                                 else
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
                                 end
                             else
                                 updated = true
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                                editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. group_link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
                             end
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -324,7 +324,7 @@ local function run(msg, matches)
                                 data[tostring(matches[3])]['settings']['set_link'] = link
                                 save_data(config.moderation.data, data)
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessageText(msg.chat.id, msg.message_id, chat_name .. '\n' .. link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
+                                editMessage(msg.chat.id, msg.message_id, chat_name .. '\n' .. link, { inline_keyboard = { { { text = langs[msg.lang].goBack, callback_data = 'infoBACK' .. matches[3] } } } })
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].sendMeLink, true)
                             end
@@ -468,9 +468,9 @@ local function run(msg, matches)
                         updated = true
                         local obj = getChat(matches[3])
                         if deeper then
-                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], deeper))
+                            editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], deeper))
                         else
-                            editMessageText(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
+                            editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3]))
                         end
                     end
                 end

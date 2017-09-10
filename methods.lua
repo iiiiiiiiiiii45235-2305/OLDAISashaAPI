@@ -568,7 +568,7 @@ function answerCallbackQuery(callback_query_id, text, show_alert)
     end
 end
 
-function editMessageText(chat_id, message_id, text, keyboard, parse_mode)
+function editMessage(chat_id, message_id, text, keyboard, parse_mode)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/editMessageText?chat_id=' .. chat_id ..

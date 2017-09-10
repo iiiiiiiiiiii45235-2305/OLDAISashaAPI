@@ -39,13 +39,13 @@ local function run(msg, matches)
             if matches[1] == '###cbdelword' then
                 if matches[2] == 'DELETE' then
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif string.match(matches[2], '^%d+$') then
                     if delword_table[tostring(msg.from.id)] then
                         local time = tonumber(matches[2])
                         if matches[3] == 'BACK' then
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[4], time))
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[4], time))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                             mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
@@ -88,7 +88,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[5], time))
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[5], time))
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
                                 mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4])
@@ -103,12 +103,12 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, text, false)
                                 sendMessage(matches[4], text)
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                 end
                             end
                         end
                     else
-                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 end
                 return
