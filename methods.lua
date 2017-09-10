@@ -122,6 +122,7 @@ function performRequest(url)
 end
 
 function sendRequest(url, no_log)
+    savelog('requests', url:match(BASE_URL .. '/(.*)%?'))
     local dat, code = performRequest(url)
     local tab = JSON.decode(dat)
 

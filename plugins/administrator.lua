@@ -249,6 +249,10 @@ local function run(msg, matches)
             end
             return
         end
+        if matches[1]:lower() == 'requestslog' then
+            mystat('/requestslog')
+            return sendDocument(msg.chat.id, "./groups/logs/requestslog.txt")
+        end
         if matches[1]:lower() == 'vardump' then
             mystat('/vardump')
             return 'VARDUMP (<msg>)\n' .. serpent.block(msg, { sortkeys = false, comment = false })
@@ -432,6 +436,7 @@ return {
         "^[#!/]([Ll][Ii][Ss][Tt]) (.*)$",
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
+        "^[#!/]([Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
@@ -457,6 +462,7 @@ return {
         "#pmunblock <id>|<username>|<reply>|from",
         "#list admins|groups [createlinks]|realms [createlinks]",
         "#checkspeed",
+        "#requestslog",
         "#vardump [<reply>]",
         "#commandsstats",
         "#ping",
