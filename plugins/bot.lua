@@ -44,6 +44,7 @@ local function run(msg, matches)
                     end
                 end
             end
+            return
         end
         if matches[1]:lower() == 'del' then
             if msg.reply then
