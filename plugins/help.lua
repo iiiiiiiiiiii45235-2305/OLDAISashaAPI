@@ -132,7 +132,7 @@ local function telegram_help(chat, rank)
     for name in pairsByKeys(plugins) do
         i = i + 1
         if plugins[name].min_rank <= tonumber(rank) then
-            text = text .. '🅿️ ' .. i .. '. ' .. adjust_plugin_names(name, lang) .. '\n'
+            text = text .. '🅿️ ' .. i .. '. ' .. adjust_plugin_names(name:lower(), lang) .. '\n'
             -- text = text .. '🅿️ ' .. i .. '. ' .. name .. '\n'
         end
     end
