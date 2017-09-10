@@ -280,6 +280,12 @@ return {
         "^(###cbdelword)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)$",
         "^(###cbdelword)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)$",
         "^(###cbdelword)(%d+)(DONE)(%-%d+)$",
+        "^(###cbschedule)(DELETE)$",
+        "^(###cbschedule)(%d+)(BACK)(%-%d+)$",
+        "^(###cbschedule)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbschedule)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbschedule)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbschedule)(%d+)(DONE)(%-%d+)$",
 
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
