@@ -337,9 +337,7 @@ function keyboard_help_pages(chat_id, rank, page)
     local k = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    print(page)
     if not page then
-        print('not page')
         page = 1
     end
     for name in pairsByKeys(plugins) do
@@ -348,18 +346,13 @@ function keyboard_help_pages(chat_id, rank, page)
         end
     end
     local max_pages = math.floor(plugins_available_for_rank / max_buttons)
-    print(max_pages)
     if (plugins_available_for_rank / max_buttons) >= math.floor(plugins_available_for_rank / max_buttons) then
-        print('overflow')
         max_pages = max_pages + 1
-        print(max_pages)
     end
     if tonumber(page) > max_pages then
-        print(page)
         page = max_pages
     end
     plugins_available_for_rank = 0
-    print(plugins_available_for_rank, page, max_pages)
     for name in pairsByKeys(plugins) do
         index = index + 1
         -- index between the last plugin of the previous page and the last plugin of this page

@@ -240,7 +240,6 @@ function kickChatMember(user_id, chat_id, until_date)
 
     if res ~= 200 then
         -- if error, return false and the custom error code
-        print(tab.description)
         return false, getCode(tab.description)
     end
 
