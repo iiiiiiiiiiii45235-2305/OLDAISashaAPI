@@ -340,9 +340,10 @@ function keyboard_help_pages(chat_id, rank, page)
         print('not page')
         page = 1
     end
-    local max_pages = math.floor(#plugins / max_buttons)
+    local plugins_names = plugins_names()
+    local max_pages = math.floor(#plugins_names / max_buttons)
     print(max_pages)
-    if (#plugins / max_buttons) > math.floor(#plugins / max_buttons) then
+    if (#plugins_names / max_buttons) > math.floor(#plugins_names / max_buttons) then
         print('overflow')
         max_pages = max_pages + 1
         print(max_pages)
@@ -351,7 +352,7 @@ function keyboard_help_pages(chat_id, rank, page)
         print(page)
         page = max_pages
     end
-    print(#plugins, page, max_pages)
+    print(#plugins_names, page, max_pages)
     for name in pairsByKeys(plugins) do
         i = i + 1
         -- i between the last plugin of the previous page and the last plugin of this page
