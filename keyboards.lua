@@ -332,8 +332,9 @@ function keyboard_help_pages(chat_id, rank, page)
     keyboard.inline_keyboard = { }
     local row = 1
     local column = 1
-    local i = 0
-    local j = 0
+    local index = 0
+    local plugins_available_for_rank = 0
+    local k = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
     print(page)
@@ -341,10 +342,14 @@ function keyboard_help_pages(chat_id, rank, page)
         print('not page')
         page = 1
     end
-    local plugins_names = plugins_names()
-    local max_pages = math.floor(#plugins_names / max_buttons)
+    for name in pairsByKeys(plugins) do
+        if plugins[name].min_rank <= tonumber(rank) then
+            plugins_available_for_rank = plugins_available_for_rank + 1
+        end
+    end
+    local max_pages = math.floor(plugins_available_for_rank / max_buttons)
     print(max_pages)
-    if (#plugins_names / max_buttons) >= math.floor(#plugins_names / max_buttons) then
+    if (plugins_available_for_rank / max_buttons) >= math.floor(plugins_available_for_rank / max_buttons) then
         print('overflow')
         max_pages = max_pages + 1
         print(max_pages)
@@ -353,21 +358,22 @@ function keyboard_help_pages(chat_id, rank, page)
         print(page)
         page = max_pages
     end
-    print(#plugins_names, page, max_pages)
+    plugins_available_for_rank = 0
+    print(plugins_available_for_rank, page, max_pages)
     for name in pairsByKeys(plugins) do
-        i = i + 1
-        -- i between the last plugin of the previous page and the last plugin of this page
+        index = index + 1
+        -- index between the last plugin of the previous page and the last plugin of this page
         if plugins[name].min_rank <= tonumber(rank) then
-            j = j + 1
-            if j >=(((tonumber(page) -1) * max_buttons) + 1) and j <=(max_buttons * tonumber(page)) then
+            plugins_available_for_rank = plugins_available_for_rank + 1
+            if plugins_available_for_rank >=(((tonumber(page) -1) * max_buttons) + 1) and plugins_available_for_rank <=(max_buttons * tonumber(page)) then
                 if flag then
                     flag = false
                     row = row + 1
                     column = 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
-                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name .. page }
+                -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] index .. '. ' .. name:lower(), callback_data = 'help' .. name }
+                keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] index .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name .. page }
                 column = column + 1
                 if column > 2 then
                     flag = true
