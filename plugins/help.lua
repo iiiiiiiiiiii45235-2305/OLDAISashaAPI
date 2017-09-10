@@ -378,9 +378,11 @@ return {
     {
         "^(###cbhelp)(DELETE)$",
         "^(###cbhelp)(BACKFAQ)$",
-        "^(###cbhelp)(BACK)(%d+)?$",
+        "^(###cbhelp)(BACK)(%d+)$",
+        "^(###cbhelp)(BACK)$",
         "^(###cbhelp)(FAQ)(%d+)$",
-        "^(###cbhelp)(.*)(%d+)?$",
+        "^(###cbhelp)(.*)(%d+)$",
+        "^(###cbhelp)(.*)$",
 
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+) (%d+) (%d+) (%d+) (%d+)$",
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+)$",
