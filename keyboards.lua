@@ -344,7 +344,7 @@ function keyboard_help_pages(chat_id, rank, page)
     local plugins_names = plugins_names()
     local max_pages = math.floor(#plugins_names / max_buttons)
     print(max_pages)
-    if (#plugins_names / max_buttons) > math.floor(#plugins_names / max_buttons) then
+    if (#plugins_names / max_buttons) >= math.floor(#plugins_names / max_buttons) then
         print('overflow')
         max_pages = max_pages + 1
         print(max_pages)
