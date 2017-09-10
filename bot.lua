@@ -881,7 +881,9 @@ function match_plugin(plugin, plugin_name, msg)
                 local res, err = pcall( function()
                     local result = plugin.run(msg, matches)
                     if result then
-                        sendReply(msg, result)
+                        if not sendReply(msg, result) then
+                            sendMessage(msg.chat.id, result)
+                        end
                     end
                 end )
                 if not res then
