@@ -83,7 +83,7 @@ local function pre_process(msg)
                         if time == 'true' or time == '0' then
                             deleteMessage(msg.chat.id, msg.message_id)
                         else
-                            io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "' .. time .. '" "' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. time .. '" "' .. msg.message_id .. '"')
                         end
                         return nil
                     end

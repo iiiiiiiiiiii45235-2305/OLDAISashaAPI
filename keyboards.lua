@@ -240,56 +240,6 @@ function keyboard_tag(chat_id, message_id, callback, user_id)
     return keyboard
 end
 
--- delword
-function keyboard_scheduledelword(chat_id, time)
-    if not time then
-        time = 0
-    end
-    local remainder, hours, minutes, seconds = 0
-    hours = math.floor(time / 3600)
-    remainder = time % 3600
-    minutes = math.floor(remainder / 60)
-    seconds = remainder % 60
-    local lang = get_lang(chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    for i = 1, 8 do
-        keyboard.inline_keyboard[i] = { }
-    end
-
-    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'delword' .. time .. 'SECONDS0' .. chat_id }
-    keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'delword' .. time .. 'SECONDS-10' .. chat_id }
-    keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'delword' .. time .. 'SECONDS-5' .. chat_id }
-    keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'delword' .. time .. 'SECONDS-1' .. chat_id }
-    keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'delword' .. time .. 'SECONDS+1' .. chat_id }
-    keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'delword' .. time .. 'SECONDS+5' .. chat_id }
-    keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'delword' .. time .. 'SECONDS+10' .. chat_id }
-
-    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'delword' .. time .. 'MINUTES0' .. chat_id }
-
-    keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'delword' .. time .. 'MINUTES-10' .. chat_id }
-    keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'delword' .. time .. 'MINUTES-5' .. chat_id }
-    keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'delword' .. time .. 'MINUTES-1' .. chat_id }
-    keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'delword' .. time .. 'MINUTES+1' .. chat_id }
-    keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'delword' .. time .. 'MINUTES+5' .. chat_id }
-    keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'delword' .. time .. 'MINUTES+10' .. chat_id }
-
-    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'delword' .. time .. 'HOURS0' .. chat_id }
-
-    keyboard.inline_keyboard[6][1] = { text = "-5", callback_data = 'delword' .. time .. 'HOURS-5' .. chat_id }
-    keyboard.inline_keyboard[6][2] = { text = "-3", callback_data = 'delword' .. time .. 'HOURS-3' .. chat_id }
-    keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'delword' .. time .. 'HOURS-1' .. chat_id }
-    keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'delword' .. time .. 'HOURS+1' .. chat_id }
-    keyboard.inline_keyboard[6][5] = { text = "+3", callback_data = 'delword' .. time .. 'HOURS+3' .. chat_id }
-    keyboard.inline_keyboard[6][6] = { text = "+5", callback_data = 'delword' .. time .. 'HOURS+5' .. chat_id }
-
-    keyboard.inline_keyboard[7][1] = { text = "OK " .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'delword' .. time .. 'DONE' .. chat_id }
-
-    keyboard.inline_keyboard[8][1] = { text = langs[lang].updateKeyboard, callback_data = 'delword' .. time .. 'BACK' .. chat_id }
-    keyboard.inline_keyboard[8][2] = { text = langs[lang].deleteMessage, callback_data = 'delwordDELETE' }
-    return keyboard
-end
-
 -- help
 -- function keyboard_help_list(chat_id, rank)
 --     local lang = get_lang(chat_id)
@@ -1087,6 +1037,104 @@ function keyboard_plugins_list(user_id, privileged, chat_id)
     end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteMessage, callback_data = 'pluginsDELETE' }
+    return keyboard
+end
+
+-- scheduled_commands
+function keyboard_scheduledelword(chat_id, time)
+    if not time then
+        time = 0
+    end
+    local remainder, hours, minutes, seconds = 0
+    hours = math.floor(time / 3600)
+    remainder = time % 3600
+    minutes = math.floor(remainder / 60)
+    seconds = remainder % 60
+    local lang = get_lang(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    for i = 1, 8 do
+        keyboard.inline_keyboard[i] = { }
+    end
+
+    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'delword' .. time .. 'SECONDS0' .. chat_id }
+    keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'delword' .. time .. 'SECONDS-10' .. chat_id }
+    keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'delword' .. time .. 'SECONDS-5' .. chat_id }
+    keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'delword' .. time .. 'SECONDS-1' .. chat_id }
+    keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'delword' .. time .. 'SECONDS+1' .. chat_id }
+    keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'delword' .. time .. 'SECONDS+5' .. chat_id }
+    keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'delword' .. time .. 'SECONDS+10' .. chat_id }
+
+    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'delword' .. time .. 'MINUTES0' .. chat_id }
+
+    keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'delword' .. time .. 'MINUTES-10' .. chat_id }
+    keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'delword' .. time .. 'MINUTES-5' .. chat_id }
+    keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'delword' .. time .. 'MINUTES-1' .. chat_id }
+    keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'delword' .. time .. 'MINUTES+1' .. chat_id }
+    keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'delword' .. time .. 'MINUTES+5' .. chat_id }
+    keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'delword' .. time .. 'MINUTES+10' .. chat_id }
+
+    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'delword' .. time .. 'HOURS0' .. chat_id }
+
+    keyboard.inline_keyboard[6][1] = { text = "-5", callback_data = 'delword' .. time .. 'HOURS-5' .. chat_id }
+    keyboard.inline_keyboard[6][2] = { text = "-3", callback_data = 'delword' .. time .. 'HOURS-3' .. chat_id }
+    keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'delword' .. time .. 'HOURS-1' .. chat_id }
+    keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'delword' .. time .. 'HOURS+1' .. chat_id }
+    keyboard.inline_keyboard[6][5] = { text = "+3", callback_data = 'delword' .. time .. 'HOURS+3' .. chat_id }
+    keyboard.inline_keyboard[6][6] = { text = "+5", callback_data = 'delword' .. time .. 'HOURS+5' .. chat_id }
+
+    keyboard.inline_keyboard[7][1] = { text = "OK " .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'delword' .. time .. 'DONE' .. chat_id }
+
+    keyboard.inline_keyboard[8][1] = { text = langs[lang].updateKeyboard, callback_data = 'delword' .. time .. 'BACK' .. chat_id }
+    keyboard.inline_keyboard[8][2] = { text = langs[lang].deleteMessage, callback_data = 'delwordDELETE' }
+    return keyboard
+end
+function keyboard_schedule(chat_id, time)
+    if not time then
+        time = 0
+    end
+    local remainder, hours, minutes, seconds = 0
+    hours = math.floor(time / 3600)
+    remainder = time % 3600
+    minutes = math.floor(remainder / 60)
+    seconds = remainder % 60
+    local lang = get_lang(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    for i = 1, 8 do
+        keyboard.inline_keyboard[i] = { }
+    end
+
+    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'schedule' .. time .. 'SECONDS0' .. chat_id }
+    keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'schedule' .. time .. 'SECONDS-10' .. chat_id }
+    keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'schedule' .. time .. 'SECONDS-5' .. chat_id }
+    keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'schedule' .. time .. 'SECONDS-1' .. chat_id }
+    keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'schedule' .. time .. 'SECONDS+1' .. chat_id }
+    keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'schedule' .. time .. 'SECONDS+5' .. chat_id }
+    keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'schedule' .. time .. 'SECONDS+10' .. chat_id }
+
+    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'schedule' .. time .. 'MINUTES0' .. chat_id }
+
+    keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'schedule' .. time .. 'MINUTES-10' .. chat_id }
+    keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'schedule' .. time .. 'MINUTES-5' .. chat_id }
+    keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'schedule' .. time .. 'MINUTES-1' .. chat_id }
+    keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'schedule' .. time .. 'MINUTES+1' .. chat_id }
+    keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'schedule' .. time .. 'MINUTES+5' .. chat_id }
+    keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'schedule' .. time .. 'MINUTES+10' .. chat_id }
+
+    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'schedule' .. time .. 'HOURS0' .. chat_id }
+
+    keyboard.inline_keyboard[6][1] = { text = "-5", callback_data = 'schedule' .. time .. 'HOURS-5' .. chat_id }
+    keyboard.inline_keyboard[6][2] = { text = "-3", callback_data = 'schedule' .. time .. 'HOURS-3' .. chat_id }
+    keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'schedule' .. time .. 'HOURS-1' .. chat_id }
+    keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'schedule' .. time .. 'HOURS+1' .. chat_id }
+    keyboard.inline_keyboard[6][5] = { text = "+3", callback_data = 'schedule' .. time .. 'HOURS+3' .. chat_id }
+    keyboard.inline_keyboard[6][6] = { text = "+5", callback_data = 'schedule' .. time .. 'HOURS+5' .. chat_id }
+
+    keyboard.inline_keyboard[7][1] = { text = "OK " .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'schedule' .. time .. 'DONE' .. chat_id }
+
+    keyboard.inline_keyboard[8][1] = { text = langs[lang].updateKeyboard, callback_data = 'schedule' .. time .. 'BACK' .. chat_id }
+    keyboard.inline_keyboard[8][2] = { text = langs[lang].deleteMessage, callback_data = 'scheduleDELETE' }
     return keyboard
 end
 

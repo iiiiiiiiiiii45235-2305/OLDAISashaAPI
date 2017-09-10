@@ -1,3 +1,6 @@
+local schedule_table = {
+    -- chat_id = command
+}
 local delword_table = {
     -- chat_id = word|pattern
 }
@@ -111,8 +114,75 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 end
-                return
+            elseif matches[1]:lower() == '###cbschedule' then
+                if is_sudo(msg) then
+                    if matches[2] == 'DELETE' then
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        end
+                    elseif string.match(matches[2], '^%d+$') then
+                        if delword_table[tostring(msg.from.id)] then
+                            local time = tonumber(matches[2])
+                            if matches[3] == 'BACK' then
+                                editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[4], time))
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                            elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
+                                local remainder, hours, minutes, seconds = 0
+                                hours = math.floor(time / 3600)
+                                remainder = time % 3600
+                                minutes = math.floor(remainder / 60)
+                                seconds = remainder % 60
+                                if matches[3] == 'SECONDS' then
+                                    if tonumber(matches[4]) == 0 then
+                                        time = time - seconds
+                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                                    else
+                                        if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
+                                            time = time + tonumber(matches[4])
+                                        else
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTempTimeRange, true)
+                                        end
+                                    end
+                                elseif matches[3] == 'MINUTES' then
+                                    if tonumber(matches[4]) == 0 then
+                                        time = time -(minutes * 60)
+                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                                    else
+                                        if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
+                                            time = time +(tonumber(matches[4]) * 60)
+                                        else
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTempTimeRange, true)
+                                        end
+                                    end
+                                elseif matches[3] == 'HOURS' then
+                                    if tonumber(matches[4]) == 0 then
+                                        time = time -(hours * 60 * 60)
+                                        answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                                    else
+                                        if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
+                                            time = time +(tonumber(matches[4]) * 60 * 60)
+                                        else
+                                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTempTimeRange, true)
+                                        end
+                                    end
+                                end
+                                editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[5], time))
+                            elseif matches[3] == 'DONE' then
+                                io.popen('lua timework.lua "' .. schedule_table[tostring(msg.from.id)].method .. '" "' .. schedule_table[tostring(msg.from.id)].chat_id .. '" "' .. time .. '" "' .. schedule_table[tostring(msg.from.id)].text .. '"')
+                                schedule_table[tostring(msg.from.id)] = nil
+                                answerCallbackQuery(msg.cb_id, 'SCHEDULED', false)
+                                sendMessage(matches[4], 'SCHEDULED')
+                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                end
+                            end
+                        else
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        end
+                    end
+                end
             end
+            return
         end
     end
     if matches[1]:lower() == 'scheduledelword' then
@@ -146,14 +216,52 @@ local function run(msg, matches)
                         if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_scheduledelword(msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
                                 local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
-                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                io.popen('lua timework.lua "delete" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                 return
                             end
                         else
                             return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                         end
                     end
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
+    if matches[1]:lower() == 'schedule' then
+        if is_sudo(msg) then
+            if matches[2] and matches[3] and matches[4] and matches[5] and matches[6] and matches[7] and matches[8] then
+                local hours = tonumber(matches[2])
+                local minutes = tonumber(matches[3])
+                local seconds = tonumber(matches[4])
+                if hours >= 48 then
+                    hours = 47
+                    minutes = 59
+                    seconds = 59
+                end
+                if minutes >= 60 then
+                    minutes = 59
+                    seconds = 59
+                end
+                if seconds >= 60 then
+                    seconds = 59
+                end
+                local time = seconds +(minutes * 60) +(hours * 60 * 60)
+                io.popen('lua timework.lua "' .. matches[6]:lower() .. '" "' .. matches[7]:lower() .. '" "' .. time .. '" "' .. matches[8]:lower() .. '"')
+                return 'SCHEDULED'
+            else
+                schedule_table[tostring(msg.from.id)] = matches[2]:lower()
+                if sendKeyboard(msg.from.id, 'SCHEDULE', keyboard_schedule(msg.chat.id)) then
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                        return
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
                 end
             end
         else
@@ -175,6 +283,8 @@ return {
 
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (%d+) (%d+) (%d+) (.*)$",
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee][Dd][Ee][Ll][Ww][Oo][Rr][Dd]) (.*)$",
+        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) (%d+) (%d+) (%d+) (^%s) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) (^%s) (%-?%d+) (.*)$",
     },
     run = run,
     min_rank = 1,
@@ -182,5 +292,7 @@ return {
     {
         "MOD",
         "#scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>",
+        "SUDO",
+        "#schedule [<hours> <minutes> <seconds>] <method> <chat_id> <text>",
     },
 }

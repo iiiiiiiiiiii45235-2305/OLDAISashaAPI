@@ -7,14 +7,14 @@ if sleep_time then
         end
     end
 end
-if action == 'spamtext' then
+if action == 'sendmessage' then
     action, chat_id, sleep_time, text = ...
     text = text:gsub('\\"', '"')
     sendMessage(chat_id, text)
-elseif action == 'spamforward' then
+elseif action == 'forwardmessage' then
     action, chat_id, sleep_time, message_id = ...
     forwardMessage(chat_id, chat_id, message_id)
-elseif action == 'delete' then
+elseif action == 'deletemessage' then
     action, chat_id, sleep_time, message_id = ...
     if not deleteMessage(chat_id, message_id, true) then
         sendMessage(chat_id, langs[msg.lang].cantDeleteMessage, false, message_id)
