@@ -335,6 +335,9 @@ function keyboard_help_pages(chat_id, rank, page)
     local i = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
+    if not page then
+        page = 1
+    end
     local max_pages = math.floor(#plugins / max_buttons)
     if #plugins / max_buttons > math.floor(#plugins / max_buttons) then
         max_pages = max_pages + 1
