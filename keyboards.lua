@@ -368,13 +368,17 @@ function keyboard_help_pages(chat_id, rank, page)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'helpPAGEMINUS' .. page }
-    column = column + 1
+    if page > 1 then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'helpPAGEMINUS' .. page }
+        column = column + 1
+    end
     keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' .. page }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'helpPAGEPLUS' .. page }
+    if page < max_pages then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'helpPAGEPLUS' .. page }
+    end
     return keyboard
 end
 function keyboard_faq_list(chat_id)
