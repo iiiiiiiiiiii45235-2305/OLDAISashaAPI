@@ -257,8 +257,9 @@ local function check_msg(msg, settings, pre_process_function)
                 end
                 local tmp = msg.text:lower()
                 tmp = links_to_tdotme(tmp)
-                tmp = tmp:gsub('http://t.me/joinchat/([^%s]+)', '')
-                tmp = tmp:gsub('http://t.me/', '@')
+                tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+                tmp = tmp:gsub('t.me/joinchat/([^%s]+)', '')
+                tmp = tmp:gsub('t.me/', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
@@ -319,10 +320,11 @@ local function check_msg(msg, settings, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                local tmp = msg.caption
+                local tmp = msg.caption:lower()
                 tmp = links_to_tdotme(tmp)
-                tmp = tmp:gsub('http://t.me/joinchat/([^%s]+)', '')
-                tmp = tmp:gsub('http://t.me/', '@')
+                tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+                tmp = tmp:gsub('t.me/joinchat/([^%s]+)', '')
+                tmp = tmp:gsub('t.me/', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
