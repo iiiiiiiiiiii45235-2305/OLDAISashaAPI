@@ -32,9 +32,16 @@ local test_settings = {
     warn_max = 3,
 }
 
+local function links_to_tdotme(text)
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt]%.[Mm][Ee]/')
+    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt]%.[Mm][Ee]/')
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt]%.[Mm][Ee]/')
+    return text
+end
+
 local function test_text_link(text, group_link)
     -- remove group_link and test if link again
-    text = text:gsub(group_link:lower(), '')
+    text = text:gsub(links_to_tdotme(group_link:lower()), '')
 
     local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
@@ -248,11 +255,14 @@ local function check_msg(msg, settings, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                local tmp = msg.text
+                local tmp = msg.text:lower()
+                tmp = links_to_tdotme(tmp)
+                tmp = tmp:gsub('http://t.me/joinchat/([^%s]+)', '')
+                tmp = tmp:gsub('http://t.me/([%a][%w_]+)', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
-                            print('link (channel username) found')
+                            print('link (public channel/supergroup username) found')
                             action(msg, strict, langs[msg.lang].reasonLockLink)
                             return nil
                         else
@@ -310,10 +320,13 @@ local function check_msg(msg, settings, pre_process_function)
                     end
                 end
                 local tmp = msg.caption
+                tmp = links_to_tdotme(tmp)
+                tmp = tmp:gsub('http://t.me/joinchat/([^%s]+)', '')
+                tmp = tmp:gsub('http://t.me/([%a][%w_]+)', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
-                            print('link (channel username) found')
+                            print('link (public channel/supergroup username) found')
                             action(msg, strict, langs[msg.lang].reasonLockLink)
                             return nil
                         else
