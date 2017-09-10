@@ -509,7 +509,7 @@ function forwardLog(from_chat_id, message_id)
     end
 end
 
-function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id)
+function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, no_log)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
         if parse_mode then
@@ -530,7 +530,7 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id)
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local res, code = sendRequest(url)
+        local res, code = sendRequest(url, no_log)
 
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)

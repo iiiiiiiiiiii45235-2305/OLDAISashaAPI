@@ -84,7 +84,7 @@ local function run(msg, matches)
                     elseif matches[2] == 'GOTO' then
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
                         if msg.from.username then
-                            local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
+                            local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
                             if res then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                             else
@@ -99,15 +99,15 @@ local function run(msg, matches)
                             end
                         else
                             local sent = false
-                            local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3])
+                            local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3], true)
                             if res then
                                 sent = true
                             else
-                                res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3])
+                                res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. msg.from.first_name .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3], true)
                                 if res then
                                     sent = true
                                 else
-                                    res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3])
+                                    res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
                                     if res then
                                         sent = true
                                     end
