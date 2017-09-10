@@ -32,14 +32,16 @@ local test_settings = {
     warn_max = 3,
 }
 
+local function links_to_tdotme(text)
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", 't.me/')
+    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", 't.me/')
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", 't.me/')
+    return text
+end
+
 local function test_text_link(text, group_link)
     -- remove group_link and test if link again
-    group_link = group_link:lower()
-    group_link = group_link:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
-    group_link = group_link:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
-    group_link = group_link:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt].[Mm][Ee]/')
-
-    text = text:gsub(group_link, '')
+    text = text:gsub(links_to_tdotme(group_link:lower()), '')
 
     local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
@@ -210,12 +212,10 @@ local function check_msg(msg, settings, pre_process_function)
                     end
                 end
                 local tmp = msg.text:lower()
-                tmp = tmp:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
-                tmp = tmp:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
-                tmp = tmp:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt].[Mm][Ee]/')
+                tmp = links_to_tdotme(tmp)
                 tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
-                tmp = tmp:gsub('t%.me/joinchat/([^%s]+)', '')
-                tmp = tmp:gsub('t%.me/', '@')
+                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
@@ -277,12 +277,10 @@ local function check_msg(msg, settings, pre_process_function)
                     end
                 end
                 local tmp = msg.caption:lower()
-                tmp = tmp:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
-                tmp = tmp:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
-                tmp = tmp:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt].[Mm][Ee]/')
+                tmp = links_to_tdotme(tmp)
                 tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
-                tmp = tmp:gsub('t%.me/joinchat/([^%s]+)', '')
-                tmp = tmp:gsub('t%.me/', '@')
+                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
