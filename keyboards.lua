@@ -368,7 +368,7 @@ function keyboard_help_pages(chat_id, rank, page)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
-    if page > 1 then
+    if tonumber(page) > 1 then
         keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'helpPAGEMINUS' .. page }
         column = column + 1
     end
@@ -376,7 +376,7 @@ function keyboard_help_pages(chat_id, rank, page)
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
     column = column + 1
-    if page < max_pages then
+    if tonumber(page) < max_pages then
         keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'helpPAGEPLUS' .. page }
     end
     return keyboard
