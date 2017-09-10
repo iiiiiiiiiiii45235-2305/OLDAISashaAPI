@@ -333,6 +333,7 @@ function keyboard_help_pages(chat_id, rank, page)
     local row = 1
     local column = 1
     local i = 0
+    local j = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
     print(page)
@@ -357,7 +358,8 @@ function keyboard_help_pages(chat_id, rank, page)
         i = i + 1
         -- i between the last plugin of the previous page and the last plugin of this page
         if plugins[name].min_rank <= tonumber(rank) then
-            if i >=(((tonumber(page) -1) * max_buttons) + 1) and i <=(max_buttons * tonumber(page)) then
+            j = j + 1
+            if j >=(((tonumber(page) -1) * max_buttons) + 1) and j <=(max_buttons * tonumber(page)) then
                 if flag then
                     flag = false
                     row = row + 1
