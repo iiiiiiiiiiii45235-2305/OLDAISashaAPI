@@ -837,10 +837,12 @@ function adjust_plugin_names(p, lang)
         return langs[lang].pluginStats or 'ERR'
     elseif p == 'strings' then
         return langs[lang].pluginStrings or 'ERR'
-    elseif p == 'test' then
-        return 'TEST' or 'ERR'
     elseif p == 'tempmessage' then
         return langs[lang].pluginTempmessage or 'ERR'
+    elseif p == 'test' then
+        return 'TEST' or 'ERR'
+    elseif p == 'tex' then
+        return langs[lang].pluginTex or 'ERR'
     elseif p == 'tgcli_to_api_migration' then
         return langs[lang].pluginTgcli_to_api_migration or 'ERR'
     elseif p == 'urbandictionary' then
