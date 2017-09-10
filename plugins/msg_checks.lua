@@ -33,9 +33,9 @@ local test_settings = {
 }
 
 local function links_to_tdotme(text)
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt]%.[Mm][Ee]/')
-    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt]%.[Mm][Ee]/')
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt]%.[Mm][Ee]/')
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
+    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt].[Mm][Ee]/')
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt].[Mm][Ee]/')
     return text
 end
 
@@ -102,50 +102,6 @@ local function check_if_link(text, group_link)
     end
     return false
 end
-
---[[local function check_if_username(text, chat_username)
-    -- change all of these into t.me
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", '[Tt]%.[Mm][Ee]/')
-    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", '[Tt]%.[Mm][Ee]/')
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", '[Tt]%.[Mm][Ee]/')
-
-    local is_text_username = text:match("@(%w_)+") or
-    text:match("[Tt]%.[Mm][Ee]/[%w_]+")
-    local matches = { string.match(text, "@(%w_)+") }
-    if not matches[1] then
-        matches = { string.match(text, "[Tt]%.[Mm][Ee]/([%w_]+)") }
-        if not matches[1] then
-            return false
-        end
-    end
-    if is_text_username then
-        local test_more = false
-        local is_bot = text:match("?[Ss][Tt][Aa][Rr][Tt]=")
-        if is_bot then
-            -- if bot link test if removing that there are other links
-            test_more = test_bot_link(text:lower())
-        else
-            -- if not bot link then test if there are links
-            test_more = true
-        end
-        if test_more then
-            -- if there could be other links check
-            if group_link then
-                if not string.find(text:lower(), group_link:lower()) then
-                    -- if group link but not in text then link
-                    return true
-                else
-                    -- test if removing group link there are other links
-                    return test_text_link(text:lower(), group_link:lower())
-                end
-            else
-                -- if no group_link then link
-                return true
-            end
-        end
-    end
-    return false
-end]]
 
 local function action(msg, strict, reason)
     deleteMessage(msg.chat.id, msg.message_id)
