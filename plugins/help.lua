@@ -55,6 +55,8 @@ local function adjust_plugin_names(p, lang)
         return langs[lang].pluginPokedex or 'ERR'
     elseif p == 'qr' then
         return langs[lang].pluginQr or 'ERR'
+    elseif p == 'scheduled_commands' then
+        return langs[lang].pluginScheduled_commands or 'ERR'
     elseif p == 'shout' then
         return langs[lang].pluginShout or 'ERR'
     elseif p == 'spam' then
@@ -65,6 +67,8 @@ local function adjust_plugin_names(p, lang)
         return langs[lang].pluginStrings or 'ERR'
     elseif p == 'test' then
         return 'TEST' or 'ERR'
+    elseif p == 'tempmessage' then
+        return langs[lang].pluginTempmessage or 'ERR'
     elseif p == 'tgcli_to_api_migration' then
         return langs[lang].pluginTgcli_to_api_migration or 'ERR'
     elseif p == 'urbandictionary' then
@@ -109,7 +113,8 @@ local function plugin_help(var, chat, rank)
                     end
                 end
                 if help_permission then
-                    text = text .. langs[lang][plugin.description:lower()][i] .. '\n'
+                    text = text .. adjust_plugin_names(plugin.description:lower(), lang) .. '\n'
+                    -- text = text .. langs[lang][plugin.description:lower()][i] .. '\n'
                 end
             end
         end
