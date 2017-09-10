@@ -325,7 +325,7 @@ end
 --     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
 --     return keyboard
 -- end
-local max_buttons = 10
+local max_buttons = 13
 function keyboard_help_pages(chat_id, rank, page)
     local lang = get_lang(chat_id)
     local keyboard = { }

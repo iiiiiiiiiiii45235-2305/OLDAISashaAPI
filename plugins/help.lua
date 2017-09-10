@@ -381,6 +381,8 @@ return {
         "^(###cbhelp)(BACK)(%d+)$",
         "^(###cbhelp)(BACK)$",
         "^(###cbhelp)(FAQ)(%d+)$",
+        "^(###cbhelp)(PAGEMINUS)(%d+)$",
+        "^(###cbhelp)(PAGEPLUS)(%d+)$",
         "^(###cbhelp)(.*)(%d+)$",
         "^(###cbhelp)(.*)$",
 
