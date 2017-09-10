@@ -342,13 +342,13 @@ function keyboard_help_pages(chat_id, rank, page)
     if (#plugins / max_buttons) > math.floor(#plugins / max_buttons) then
         max_pages = max_pages + 1
     end
-    if page > max_pages then
+    if tonumber(page) > max_pages then
         page = max_pages
     end
     for name in pairsByKeys(plugins) do
         i = i + 1
         -- i between the last plugin of the previous page and the last plugin of this page
-        if i >=(((page - 1) * max_buttons) + 1) and i <=(max_buttons * page) then
+        if i >=(((tonumber(page) -1) * max_buttons) + 1) and i <=(max_buttons * tonumber(page)) then
             if plugins[name].min_rank <= tonumber(rank) then
                 if flag then
                     flag = false
