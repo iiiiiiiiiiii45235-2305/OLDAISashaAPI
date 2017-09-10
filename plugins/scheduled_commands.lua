@@ -252,7 +252,7 @@ local function run(msg, matches)
                 io.popen('lua timework.lua "' .. matches[6]:lower() .. '" "' .. matches[7]:lower() .. '" "' .. time .. '" "' .. matches[8]:lower() .. '"')
                 return 'SCHEDULED'
             else
-                schedule_table[tostring(msg.from.id)] = matches[2]:lower()
+                schedule_table[tostring(msg.from.id)] = { method = matches[2]:lower(), chat_id = matches[3], text = matches[4] }
                 if sendKeyboard(msg.from.id, 'SCHEDULE', keyboard_schedule(msg.chat.id)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
@@ -265,7 +265,7 @@ local function run(msg, matches)
                 end
             end
         else
-            return langs[msg.lang].require_mod
+            return langs[msg.lang].require_sudo
         end
     end
 end
