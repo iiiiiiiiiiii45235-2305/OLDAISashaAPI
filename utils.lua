@@ -775,6 +775,13 @@ function adjustRestrictions(param_restrictions)
     return restrictions
 end
 
+function links_to_tdotme(text)
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", 't.me/')
+    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", 't.me/')
+    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", 't.me/')
+    return text
+end
+
 function adjust_plugin_names(p, lang)
     if p == 'administrator' then
         return langs[lang].pluginAdministrator or 'ERR'

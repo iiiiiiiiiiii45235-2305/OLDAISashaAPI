@@ -32,13 +32,6 @@ local test_settings = {
     warn_max = 3,
 }
 
-local function links_to_tdotme(text)
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", 't.me/')
-    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", 't.me/')
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", 't.me/')
-    return text
-end
-
 local function test_text_link(text, group_link)
     -- remove group_link and test if link again
     text = text:gsub(links_to_tdotme(group_link:lower()), '')

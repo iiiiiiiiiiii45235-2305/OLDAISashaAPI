@@ -1,47 +1,48 @@
 local function db_user(user, chat_id)
-    if user.print_name then
-        if database[tostring(user.id)] then
-            if database[tostring(user.id)]['groups'] then
-                if not database[tostring(user.id)]['groups'][tostring(chat_id)] then
-                    database[tostring(user.id)]['groups'][tostring(chat_id)] = tonumber(chat_id)
-                end
-            else
-                database[tostring(user.id)]['groups'] = { [tostring(chat_id)] = tonumber(chat_id) }
-            end
-            if database[tostring(user.id)]['print_name'] ~= user.print_name:gsub("_", " ") then
-                database[tostring(user.id)]['print_name'] = user.print_name:gsub("_", " ")
-                database[tostring(user.id)]['old_print_names'] = database[tostring(user.id)]['old_print_names'] .. ' ### ' .. user.print_name:gsub("_", " ")
-            end
-            local username = 'NOUSER'
-            if user.username then
-                username = '@' .. user.username
-            end
-            if database[tostring(user.id)]['username'] ~= username then
-                database[tostring(user.id)]['username'] = username
-                database[tostring(user.id)]['old_usernames'] = database[tostring(user.id)]['old_usernames'] .. ' ### ' .. username
-            end
-            if user.type then
-                database[tostring(user.id)].type = user.type
-            elseif user.is_bot then
-                database[tostring(user.id)].type = 'bot'
-            else
-                database[tostring(user.id)].type = 'private'
+    if not user.print_name then
+        user.print_name = user.first_name .. ' ' ..(user.last_name or '')
+    end
+    if database[tostring(user.id)] then
+        if database[tostring(user.id)]['groups'] then
+            if not database[tostring(user.id)]['groups'][tostring(chat_id)] then
+                database[tostring(user.id)]['groups'][tostring(chat_id)] = tonumber(chat_id)
             end
         else
-            print('new user')
-            local username = 'NOUSER'
-            if user.username then
-                username = '@' .. user.username
-            end
-            database[tostring(user.id)] = {
-                print_name = user.print_name:gsub("_"," "),
-                old_print_names = user.print_name:gsub("_"," "),
-                type = user.type,
-                username = username,
-                old_usernames = username,
-                groups = { [tostring(chat_id)] = tonumber(chat_id) },
-            }
+            database[tostring(user.id)]['groups'] = { [tostring(chat_id)] = tonumber(chat_id) }
         end
+        if database[tostring(user.id)]['print_name'] ~= user.print_name:gsub("_", " ") then
+            database[tostring(user.id)]['print_name'] = user.print_name:gsub("_", " ")
+            database[tostring(user.id)]['old_print_names'] = database[tostring(user.id)]['old_print_names'] .. ' ### ' .. user.print_name:gsub("_", " ")
+        end
+        local username = 'NOUSER'
+        if user.username then
+            username = '@' .. user.username
+        end
+        if database[tostring(user.id)]['username'] ~= username then
+            database[tostring(user.id)]['username'] = username
+            database[tostring(user.id)]['old_usernames'] = database[tostring(user.id)]['old_usernames'] .. ' ### ' .. username
+        end
+        if user.type then
+            database[tostring(user.id)].type = user.type
+        elseif user.is_bot then
+            database[tostring(user.id)].type = 'bot'
+        else
+            database[tostring(user.id)].type = 'private'
+        end
+    else
+        print('new user')
+        local username = 'NOUSER'
+        if user.username then
+            username = '@' .. user.username
+        end
+        database[tostring(user.id)] = {
+            print_name = user.print_name:gsub("_"," "),
+            old_print_names = user.print_name:gsub("_"," "),
+            type = user.type,
+            username = username,
+            old_usernames = username,
+            groups = { [tostring(chat_id)] = tonumber(chat_id) },
+        }
     end
 end
 
@@ -407,6 +408,48 @@ local function save_to_db(msg)
                         db_user(msg.entities[k].user, msg.chat.id)
                     end
                 end
+            end
+
+            local tmp = ''
+            if msg.text then
+                tmp = msg.text:lower()
+            end
+            if msg.media then
+                if msg.caption then
+                    tmp = msg.caption:lower()
+                end
+            end
+            -- make all the telegram's links t.me
+            tmp = links_to_tdotme(tmp)
+            -- remove http(s)
+            tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+            -- remove joinchat links
+            tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+            -- remove ?start=blabla and things like that
+            tmp = tmp:gsub('%?([^%s]+)', '')
+            -- make links usernames
+            tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+            while string.match(tmp, '@[^%s]+') do
+                local obj = getChat(string.match(tmp, '@[^%s]+'), true)
+                if obj then
+                    if obj.result then
+                        obj = obj.result
+                        if obj.type == 'private' then
+                            if msg.bot then
+                                db_user(obj, bot.id)
+                            else
+                                db_user(obj, msg.chat.id)
+                            end
+                        elseif obj.type == 'group' then
+                            db_group(obj)
+                        elseif obj.type == 'supergroup' then
+                            db_supergroup(obj)
+                        elseif obj.type == 'channel' then
+                            db_channel(obj)
+                        end
+                    end
+                end
+                tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
             end
 
             -- if forward save forward
