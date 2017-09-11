@@ -1,7 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Better help keyboard with pages\n" ..
-    "Now links/usernames to public channels/supergroups are analyzed when strict is enabled, otherwise they would just be marked as links.\n",
+    "Better help keyboard with pages.\n" ..
+    "Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed when strict is enabled and punished with ban.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
