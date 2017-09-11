@@ -75,30 +75,38 @@ local function run(msg, matches)
             end
         end
     end
-    if msg.from.is_owner then
-        if not matches[2] then
-            if matches[1]:lower() == 'on' then
-                mystat('/bot on')
-                return enable_channel(msg.chat.id)
-            end
-            if matches[1]:lower() == 'off' then
-                mystat('/bot off')
-                return disable_channel(msg.chat.id)
-            end
-        elseif is_admin(msg) then
-            if matches[1]:lower() == 'on' then
-                mystat('/bot on <group_id>')
-                return enable_channel(matches[2])
-            end
-            if matches[1]:lower() == 'off' then
+    if matches[1]:lower() == 'off' then
+        if matches[2] then
+            if is_admin(msg) then
                 mystat('/bot off <group_id>')
                 return disable_channel(matches[2])
+            else
+                return langs[msg.lang].require_admin
             end
         else
-            return langs[msg.lang].require_admin
+            if msg.from.is_owner then
+                mystat('/bot off')
+                return disable_channel(msg.chat.id)
+            else
+                return langs[msg.lang].require_owner
+            end
         end
-    else
-        return langs[msg.lang].require_owner
+    elseif matches[1]:lower() == 'on' then
+        if matches[2] then
+            if is_admin(msg) then
+                mystat('/bot on <group_id>')
+                return enable_channel(matches[2])
+            else
+                return langs[msg.lang].require_admin
+            end
+        else
+            if msg.from.is_owner then
+                mystat('/bot on')
+                return enable_channel(msg.chat.id)
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
     end
 end
 
