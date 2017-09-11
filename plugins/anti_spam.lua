@@ -153,7 +153,7 @@ local function pre_process(msg)
                         if gbanspamonredis then
                             if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
                                 -- Global ban that user
-                                gbanUser(msg.from.id)
+                                gbanUser(msg.from.id, msg.lang)
                                 local gbanspam = 'gban:spam' .. msg.from.id
                                 -- reset the counter
                                 redis:set(gbanspam, 0)
