@@ -948,8 +948,6 @@ function cron_administrator()
 
         sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
         -- AISASHAAPI
-        -- deletes all files in tmp folder
-        io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
         -- save database
         save_data(config.database.db, database)
         -- send database
@@ -961,14 +959,11 @@ function cron_administrator()
         if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
             sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
         end
-        -- save crontab
-        io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
         -- send the whole backup
         doSendBackup()
-
-        -- sync time
-        local sync_time = io.popen('sudo ntpdate pool.ntp.org'):read('*all')
-        sendMessage_SUDOERS(sync_time)
+        -- deletes all files in log folder
+        io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
+        io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
     end
 end
 

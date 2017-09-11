@@ -576,6 +576,13 @@ function id_to_cli(id)
 end
 
 function doSendBackup()
+    -- save redis db
+    redis:bgsave()
+    -- deletes all files in tmp folder
+    io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
+    -- save crontab
+    io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
+
     local time = os.time()
     local tar_command = 'tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- desktop
@@ -588,9 +595,6 @@ function doSendBackup()
     '/home/pi/MyBotForReported  --exclude=/home/pi/MyBotForReported/.git ' ..
     -- redis database
     '/var/lib/redis'
-    -- save redis db
-    redis:bgsave()
-    save_data(config.database.db, database)
     local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
     local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
     file:write(log)
