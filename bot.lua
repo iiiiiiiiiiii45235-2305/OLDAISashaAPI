@@ -540,7 +540,7 @@ function migrate_to_supergroup(msg)
         return false
     end
 
-    data[tostring(new)] = data[tostring(old)]
+    data[tostring(new)] = clone_table(data[tostring(old)])
     data[tostring(old)] = nil
     data['groups'][tostring(new)] = tonumber(new)
     data['groups'][tostring(old)] = nil
@@ -578,7 +578,7 @@ function migrate_to_supergroup(msg)
         for id_string in pairs(database) do
             -- if there are any groups move their data from cli to api db
             if id_string == tostring(old) then
-                database[tostring(new)] = database[tostring(old)]
+                database[tostring(new)] = clone_table(database[tostring(old)])
                 database[tostring(new)].old_usernames = 'NOUSER'
                 database[tostring(new)].username = 'NOUSER'
                 database[tostring(old)] = nil
