@@ -671,10 +671,10 @@ function unpinChatMessage(chat_id)
     end
 end
 
-function exportChatInviteLink(chat_id)
+function exportChatInviteLink(chat_id, no_log)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/exportChatInviteLink?chat_id=' .. chat_id
-        local obj_link = sendRequest(url)
+        local obj_link = sendRequest(url, no_log)
         if type(obj_link) == 'table' then
             if obj_link.result then
                 obj_link = obj_link.result
