@@ -207,12 +207,12 @@ return {
     it =
     {
         -- global --
-        require_sudo = "🚫 Questo comando richiede i privilegi di sudo.",
-        require_admin = "🚫 Questo comando richiede privilegi da admin o superiori.",
-        require_owner = "🚫 Questo comando richiede privilegi da owner o superiori.",
-        require_mod = "🚫 Questo comando richiede privilegi da moderatore o superiori.",
-        require_rank = "🚫 Non puoi eseguire questo comando su qualcuno che ha privilegi superiori o uguali ai tuoi!",
-        require_private = "🚫 Questo comando deve essere dato in privato.",
+        require_sudo = "🚫 Questo comando richiede i privilegi di sudo. 🚫",
+        require_admin = "🚫 Questo comando richiede privilegi da admin o superiori. 🚫",
+        require_owner = "🚫 Questo comando richiede privilegi da owner o superiori. 🚫",
+        require_mod = "🚫 Questo comando richiede privilegi da moderatore o superiori. 🚫",
+        require_rank = "🚫 Non puoi eseguire questo comando su qualcuno che ha privilegi superiori o uguali ai tuoi! 🚫",
+        require_private = "🚫 Questo comando deve essere dato in privato. 🚫",
         errorTryAgain = "Errore, prova di nuovo.",
         opsError = "Ops, errore.",
         useYourGroups = "Usalo nei tuoi gruppi!",
@@ -485,10 +485,10 @@ return {
         errorParameter = "Errore variabile redis mancante.",
 
         -- help.lua --
-        require_higher = "🚫 Questo plugin richiede privilegi superiori a quelli che possiedi.\n",
-        pluginListStart = "ℹ️Lista plugin: \n\n",
-        -- helpInfo = "ℹ️Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin.\nℹ️O \"!helpall\" per mostrare tutte le informazioni.",
-        helpInfo = "ℹ️Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin.",
+        require_higher = "🚫 Questo plugin richiede privilegi superiori a quelli che possiedi. 🚫\n",
+        pluginListStart = "ℹ️ Lista plugin: \n\n",
+        -- helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin.\nℹ️ O \"!helpall\" per mostrare tutte le informazioni.",
+        helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️",
         errorNoPlugin = "Questo plugin non esiste o non ha una descrizione.",
         helpIntro = "Ogni '#' può essere sostituito con i simboli '/' o '!'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale (E NON DEVI METTERLE).\nLe parentesi tonde indicano una scelta evidenziata da '|' che significa \"oppure\" (E NON DEVI METTERLE).\nSe hai domande consulta prima le /faq.\n\n",
         commandNotFound = "Sintassi comando non trovata.",
@@ -640,10 +640,6 @@ return {
         granted = " garantito.",
         denied = " negato.",
         sendLinkPvt = "Ti ho mandato il link in privato poichè è abilitato il blocco del link del gruppo.",
-        settingsWord = "⚙️ IMPOSTAZIONI ⚙️",
-        muteslistWord = "🔇 MUTI 🔇",
-        linkWord = "🔗 LINK 🔗",
-        newlinkWord = "🍄 NUOVO LINK 🍄",
         -- ex inrealm.lua --
         none = "Nessuno",
         realm = "Regno ",
@@ -745,6 +741,10 @@ return {
         promotionsCommands = "🌈 PROMOZIONI. 🌈",
         punishmentsCommands = "🔪 PUNIZIONI. 🔪",
         permissionsWord = "⌨️ PERMESSI. ⌨️",
+        settingsWord = "⚙️ IMPOSTAZIONI ⚙️",
+        muteslistWord = "🔇 MUTI 🔇",
+        linkWord = "🔗 LINK 🔗",
+        newlinkWord = "🍄 NUOVO LINK 🍄",
 
         -- interact.lua
         userBlockedBot = "L'utente specificato ha bloccato il bot.",
@@ -772,10 +772,10 @@ return {
         alreadyEnabled = " già abilitato.",
         alreadyDisabled = " già disabilitato.",
         notExists = " non esiste o è disabilitato.",
-        systemPlugin = "⛔️ Plugin di sistema, impossibile disabilitarlo.",
+        systemPlugin = "⛔️ Plugin di sistema, impossibile disabilitarlo. ⛔️",
         disabledOnChat = " disabilitato su questa chat.",
-        noDisabledPlugin = "❔ Nessun plugin disabilitato su questa chat.",
-        pluginNotDisabled = "✔️ Questo plugin non è disabilitato su questa chat.",
+        noDisabledPlugin = "❔ Nessun plugin disabilitato su questa chat. ❔",
+        pluginNotDisabled = "✔️ Questo plugin non è disabilitato su questa chat. ✔️",
         pluginEnabledAgain = " nuovamente abilitato.",
         pluginsReloaded = "💊 Plugins ricaricati. 💊",
         reloadingBot = "🔄 Ricaricando il bot. 🔄",
@@ -797,8 +797,8 @@ return {
         statsCleaned = "Statistiche azzerate.",
 
         -- strings.lua --
-        langUpdate = "ℹ️ Stringhe aggiornate.",
-        langSet = "ℹ️ Lingua impostata.",
+        langUpdate = "ℹ️ Stringhe aggiornate. ℹ️",
+        langSet = "ℹ️ Lingua impostata. ℹ️",
 
         -- tempmessage.lua --
         tempmessageIntro = "Puoi eliminare messaggi fino a 48 ore dopo l'invio.\nMessaggio da inviare: X\nTastiera del tempo:",
@@ -936,7 +936,7 @@ return {
         ------------
         administrator =
         {
-            "🅿️ ADMINISTRATOR",
+            "🅿️ ADMINISTRATOR 🅿️",
             "Plugin per amministratori di Sasha.",
             "ADMIN",
             "#todo <reply> [<text>]: Sasha inoltra <reply> e invia l'eventuale <text> nella chat di LOG.",
@@ -967,7 +967,7 @@ return {
 
         alternatives =
         {
-            "🅿️ ALTERNATIVES",
+            "🅿️ ALTERNATIVES 🅿️",
             "Plugin per l'utilizzo di comandi alternativi.",
             "USER",
             "#getalternatives /<command>: Sasha manda le alternative a <command>.",
@@ -986,7 +986,7 @@ return {
 
         banhammer =
         {
-            "🅿️ BANHAMMER",
+            "🅿️ BANHAMMER 🅿️",
             "Plugin per la gestione dei kick e dei ban.",
             "USER",
             "#kickme: Sasha kicka l'utente.",
@@ -1024,7 +1024,7 @@ return {
 
         bot =
         {
-            "🅿️ BOT",
+            "🅿️ BOT 🅿️",
             "Plugin per attivare e disattivare Sasha sul gruppo.",
             "USER",
             "/start[@AISashaBot]: Sasha manda il messaggio di start.",
@@ -1038,7 +1038,7 @@ return {
 
         check_tag =
         {
-            "🅿️ CHECK_TAG",
+            "🅿️ CHECK_TAG 🅿️",
             "Plugin per mandare le notifiche di tags e mentions (NOTIFICHE ABILITATE ANCHE PER GLI UTENTI ESTERNI AL GRUPPO).",
             "AVVIA IL BOT IN PRIVATO O NON POTRA' MANDARTI MESSAGGI.",
             "USER",
@@ -1054,7 +1054,7 @@ return {
 
         database =
         {
-            "🅿️ DATABASE",
+            "🅿️ DATABASE 🅿️",
             "Plugin per il salvataggio delle informazioni di utenti e gruppi.",
             "SUDO",
             "#createdatabase: Sasha crea il database.",
@@ -1071,7 +1071,7 @@ return {
 
         delword =
         {
-            "🅿️ DELWORD",
+            "🅿️ DELWORD 🅿️",
             "Plugin per la censura delle parole.",
             "USER",
             "#dellist: Sasha manda una lista di parole o pattern censurati.",
@@ -1082,7 +1082,7 @@ return {
 
         dogify =
         {
-            "🅿️ DOGIFY",
+            "🅿️ DOGIFY 🅿️",
             "Plugin per la creazione di immagini col doge.",
             "USER",
             "#dogify <your/words/with/slashes>: Sasha crea un'immagine col doge e le parole specificate.",
@@ -1090,7 +1090,7 @@ return {
 
         fakecommand =
         {
-            "🅿️ FAKECOMMAND",
+            "🅿️ FAKECOMMAND 🅿️",
             "Plugin per testare i comandi.",
             "MOD",
             "(#user|#mod|#owner|#admin) <command>: Sasha esegue <command> come se fosse stato inviato da un utente con il rango specificato.",
@@ -1098,7 +1098,7 @@ return {
 
         feedback =
         {
-            "🅿️ FEEDBACK",
+            "🅿️ FEEDBACK 🅿️",
             "Plugin per mandare feedback.",
             "USER",
             "#feedback <text>: Sasha invia <text> come feedback.",
@@ -1106,7 +1106,7 @@ return {
 
         filemanager =
         {
-            "🅿️ FILEMANAGER",
+            "🅿️ FILEMANAGER 🅿️",
             "Plugin per la gestione del server di Sasha.",
             "SUDO",
             "#folder: Sasha manda la directory attuale.",
@@ -1127,7 +1127,7 @@ return {
 
         flame =
         {
-            "🅿️ FLAME",
+            "🅿️ FLAME 🅿️",
             "Plugin per flammare gli utenti.",
             "MOD",
             "#startflame <id>|<username>|<reply>|from: Sasha flamma l'utente specificato.",
@@ -1137,7 +1137,7 @@ return {
 
         getsetunset =
         {
-            "🅿️ GETSETUNSET",
+            "🅿️ GETSETUNSET 🅿️",
             "Plugin per ottenere/settare/unsettare cose.",
             "USER",
             "#get <var_name>: Sasha manda la risposta a <var_name>.",
@@ -1166,7 +1166,7 @@ return {
 
         goodbyewelcome =
         {
-            "🅿️ GOODBYEWELCOME",
+            "🅿️ GOODBYEWELCOME 🅿️",
             "Plugin per il benvenuto e l'addio dei membri.",
             "MOD",
             "Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l'addio: "
@@ -1186,7 +1186,7 @@ return {
 
         group_management =
         {
-            "🅿️ GROUP_MANAGEMENT",
+            "🅿️ GROUP_MANAGEMENT 🅿️",
             "Plugin per la gestione dei gruppi.",
             -- COMMON
             "USER",
@@ -1250,7 +1250,7 @@ return {
 
         help =
         {
-            "🅿️ HELP",
+            "🅿️ HELP 🅿️",
             "Plugin di aiuto, USATELO!",
             "USER",
             "#sudolist: Sasha manda la lista dei sudo.",
@@ -1266,7 +1266,7 @@ return {
 
         info =
         {
-            "🅿️ INFO",
+            "🅿️ INFO 🅿️",
             "Plugin per ottenere informazioni.",
             "USER",
             "#id [<username>|<reply>|from]: Sasha manda l'id dell'utente/della chat specificato/a, altrimenti l'id dell'utente e l'id del gruppo.",
@@ -1284,7 +1284,7 @@ return {
 
         interact =
         {
-            "🅿️ INTERACT",
+            "🅿️ INTERACT 🅿️",
             "Plugin per l'interazione con gli utenti.",
             "USER",
             "#[del]typing: Sasha finge di scrivere.",
@@ -1305,7 +1305,7 @@ return {
 
         likecounter =
         {
-            "🅿️ LIKECOUNTER",
+            "🅿️ LIKECOUNTER 🅿️",
             "Plugin per il conteggio dei likes.",
             "USER",
             "#like|#1up <id>|<username>|<reply>|from: Sasha aggiunge un like all'utente specificato.",
@@ -1319,7 +1319,7 @@ return {
 
         lua_exec =
         {
-            "🅿️ LUA_EXEC",
+            "🅿️ LUA_EXEC 🅿️",
             "Plugin per l'esecuzione di codice LUA.",
             "SUDO",
             "#lua <command>: Sasha esegue <command>.",
@@ -1327,7 +1327,7 @@ return {
 
         me =
         {
-            "🅿️ ME",
+            "🅿️ ME 🅿️",
             "Plugin per sapere i messaggi mandati.",
             "USER",
             "#me: Sasha dice quanti messaggi hai mandato.",
@@ -1335,7 +1335,7 @@ return {
 
         msg_checks =
         {
-            "🅿️ MSG_CHECKS",
+            "🅿️ MSG_CHECKS 🅿️",
             "Plugin per il controllo dei messaggi.",
             "USER",
             "#checkmsg <reply>|<text>: Sasha controlla <reply>|<text> e rileva quali blocchi/muti verrebbero attivati.",
@@ -1343,7 +1343,7 @@ return {
 
         multiple_commands =
         {
-            "🅿️ MULTIPLE_COMMANDS",
+            "🅿️ MULTIPLE_COMMANDS 🅿️",
             "Plugin per eseguire azioni multiple.",
             "MOD",
             "#multipleid <username1> <username2> ...: Sasha manda gli id di tutti gli <usernames> specificati nella lista.",
@@ -1372,7 +1372,7 @@ return {
 
         news =
         {
-            "🅿️ NEWS",
+            "🅿️ NEWS 🅿️",
             "Plugin per le news di Sasha.",
             "USER",
             "#news: Sasha manda le novità di se stessa.",
@@ -1383,7 +1383,7 @@ return {
 
         plugins =
         {
-            "🅿️ PLUGINS",
+            "🅿️ PLUGINS 🅿️",
             "Plugin per attivare e disattivare plugin.",
             "OWNER",
             "#[textual]plugins: Sasha manda la lista dei plugin.",
@@ -1400,7 +1400,7 @@ return {
 
         pokedex =
         {
-            "🅿️ POKEDEX",
+            "🅿️ POKEDEX 🅿️",
             "Plugin per ottenere informazioni su un pokémon.",
             "USER",
             "(#pokedex|#pokemon) <name>|<id>: Sasha cerca il pokémon specificato e ne invia le informazioni.",
@@ -1408,7 +1408,7 @@ return {
 
         qr =
         {
-            "🅿️ QR",
+            "🅿️ QR 🅿️",
             "Plugin per creare QR Code.",
             "USER",
             "I colori possono essere specificati come segue:",
@@ -1420,7 +1420,7 @@ return {
 
         scheduled_commands =
         {
-            "🅿️ SCHEDULED_COMMANDS",
+            "🅿️ SCHEDULED_COMMANDS 🅿️",
             "Plugin per programmare comandi.",
             "MOD",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
@@ -1429,7 +1429,7 @@ return {
 
         shout =
         {
-            "🅿️ SHOUT",
+            "🅿️ SHOUT 🅿️",
             "Plugin per urlare delle parole.",
             "USER",
             "#shout <text>: Sasha \"urla\" <text>.",
@@ -1437,7 +1437,7 @@ return {
 
         spam =
         {
-            "🅿️ SPAM",
+            "🅿️ SPAM 🅿️",
             "Plugin per spammare fastidiosamente.",
             "ADMIN",
             "#spam [<messages> <seconds>] <reply>|<text>: Sasha inzia a spammare <reply>|<text>, se specificato <messages> messaggi uno ogni <seconds> secondi, altrimenti 5 messaggi uno ogni 2 secondi.",
@@ -1445,7 +1445,7 @@ return {
 
         stats =
         {
-            "🅿️ STATS",
+            "🅿️ STATS 🅿️",
             "Plugin per ottenere statistiche sui gruppi e su Sasha.",
             "USER",
             "[#]aisashabot: Sasha invia la propria descrizione.",
@@ -1461,7 +1461,7 @@ return {
 
         strings =
         {
-            "🅿️ STRINGS",
+            "🅿️ STRINGS 🅿️",
             "Plugin per la gestione delle lingue di Sasha.",
             "USER",
             "#setlang [it|en]: Sasha imposta la lingua in cui deve parlare (funziona solo in privato con l'utente).",
@@ -1473,7 +1473,7 @@ return {
 
         tempmessage =
         {
-            "🅿️ TEMPMESSAGE",
+            "🅿️ TEMPMESSAGE 🅿️",
             "Plugin per temporizzare i messaggi.",
             "MOD",
             "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha eliminerà il messaggio dopo <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
@@ -1481,7 +1481,7 @@ return {
 
         tex =
         {
-            "🅿️ TEX",
+            "🅿️ TEX 🅿️",
             "Plugin per generare equazioni.",
             "USER",
             "#tex <equation>: Sasha converte <equation> in immagine.",
@@ -1489,7 +1489,7 @@ return {
 
         tgcli_to_api_migration =
         {
-            "🅿️ TGCLI_TO_API_MIGRATION",
+            "🅿️ TGCLI_TO_API_MIGRATION 🅿️",
             "Plugin per la migrazione da tgcli.",
             "OWNER",
             "#migrate: Sasha migra le impostazioni del gruppo, i ban, le variabili settate e i likes.",
@@ -1500,7 +1500,7 @@ return {
 
         urbandictionary =
         {
-            "🅿️ URBANDICTIONARY",
+            "🅿️ URBANDICTIONARY 🅿️",
             "Plugin per interagire con l'Urban Dictionary.",
             "USER",
             "(#urbandictionary|#urban|#ud) <text>: Sasha mostra la definizione di <text> dall'Urban Dictionary.",
@@ -1508,7 +1508,7 @@ return {
 
         webshot =
         {
-            "🅿️ WEBSHOT",
+            "🅿️ WEBSHOT 🅿️",
             "Plugin per fare screenshots di siti.",
             "MOD",
             "#webshot <url> [<size>]: Sasha esegue uno screenshot di <url> e lo invia, se <size> è specificata di quella dimensione.",
@@ -1528,7 +1528,7 @@ return {
 
         whitelist =
         {
-            "🅿️ WHITELIST",
+            "🅿️ WHITELIST 🅿️",
             "Plugin per la gestione delle whitelist.",
             "USER",
             "#whitelist: Sasha manda la whitelist.",
@@ -1542,12 +1542,12 @@ return {
     en =
     {
         -- global --
-        require_sudo = "🚫 This plugin requires sudo privileges.",
-        require_admin = "🚫 This plugin requires admin privileges or higher.",
-        require_owner = "🚫 This plugin requires owner privileges or higher.",
-        require_mod = "🚫 This plugin requires mod privileges or higher.",
-        require_rank = "🚫 You can't do this to someone who's higher than you or at your same rank!",
-        require_private = "🚫 This command needs to be executed in private.",
+        require_sudo = "🚫 This plugin requires sudo privileges. 🚫",
+        require_admin = "🚫 This plugin requires admin privileges or higher. 🚫",
+        require_owner = "🚫 This plugin requires owner privileges or higher. 🚫",
+        require_mod = "🚫 This plugin requires mod privileges or higher. 🚫",
+        require_rank = "🚫 You can't do this to someone who's higher than you or at your same rank! 🚫",
+        require_private = "🚫 This command needs to be executed in private. 🚫",
         errorTryAgain = "Error, try again.",
         opsError = "Ops, error.",
         useYourGroups = "Use it in your groups!",
@@ -1824,10 +1824,10 @@ return {
         errorParameter = "Redis variable missing.",
 
         -- help.lua --
-        require_higher = "🚫 This plugin requires higher privileges.\n",
-        pluginListStart = "ℹ️Plugins list: \n\n",
-        -- helpInfo = "ℹ️Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin.\nℹ️Or \"!helpall\" to have all commands.",
-        helpInfo = "ℹ️Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin.",
+        require_higher = "🚫 This plugin requires higher privileges. 🚫\n",
+        pluginListStart = "ℹ️ Plugins list: \n\n",
+        -- helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin.\nℹ️ Or \"!helpall\" to have all commands.",
+        helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin. ℹ️",
         errorNoPlugin = "This plugin doesn't exist or doesn't have a description.",
         helpIntro = "Every '#' can be replaced with '/' or '!'.\nAll commands are Case Insensitive.\nSquare brackets means that is an optional (AND YOU MUST NOT WRITE THEM).\nRound brackets indicate a choice with '|' that means \"or\" (AND YOU MUST NOT WRITE THEM).\nIf you have questions see /faq first.\n\n",
         commandNotFound = "Command syntax not found.",
@@ -1977,10 +1977,6 @@ return {
         granted = " granted.",
         denied = " denied.",
         sendLinkPvt = "I've sent you the grouplink in private because the lock of it is enabled.",
-        settingsWord = "⚙️ SETTINGS ⚙️",
-        muteslistWord = "🔇 MUTES 🔇",
-        linkWord = "🔗 LINK 🔗",
-        newlinkWord = "🍄 NEW LINK 🍄",
         -- ex inpm.lua --
         groupsJoin = "Groups:\nUse /join <group_id> to join\n\n",
         realmsJoin = "Realm:\nUse /join <realm_id> to join\n\n",
@@ -2091,6 +2087,10 @@ return {
         promotionsCommands = "🌈 PROMOTIONS. 🌈",
         punishmentsCommands = "🔪 PUNISHMENTS. 🔪",
         permissionsWord = "⌨️ PERMISSIONS. ⌨️",
+        settingsWord = "⚙️ SETTINGS ⚙️",
+        muteslistWord = "🔇 MUTES 🔇",
+        linkWord = "🔗 LINK 🔗",
+        newlinkWord = "🍄 NEW LINK 🍄",
 
         -- interact.lua
         userBlockedBot = "The specifided user blocked the bot.",
@@ -2118,10 +2118,10 @@ return {
         alreadyEnabled = " already enabled.",
         alreadyDisabled = " already disabled.",
         notExists = " not exists or is disabled.",
-        systemPlugin = "⛔️ System plugin, can't disable it.",
+        systemPlugin = "⛔️ System plugin, can't disable it. ⛔️",
         disabledOnChat = " disabled on chat.",
-        noDisabledPlugin = "❔ No plugins disabled on chat.",
-        pluginNotDisabled = "✔️ This plugin is not disabled on chat.",
+        noDisabledPlugin = "❔ No plugins disabled on chat. ❔",
+        pluginNotDisabled = "✔️ This plugin is not disabled on chat. ✔️",
         pluginEnabledAgain = " enabled on chat again.",
         pluginsReloaded = "💊 Plugins reloaded. 💊",
         reloadingBot = "🔄 Reloading bot. 🔄",
@@ -2143,8 +2143,8 @@ return {
         statsCleaned = "Stats cleaned.",
 
         -- strings.lua --
-        langUpdate = "ℹ️ Strings updated.",
-        langSet = "ℹ️ Language set.",
+        langUpdate = "ℹ️ Strings updated. ℹ️",
+        langSet = "ℹ️ Language set. ℹ️",
 
         -- tempmessage.lua --
         tempmessageIntro = "You can delete messages up to 48 hours after they've been sent.\nMessage to send: X\nTime keyboard:",
@@ -2282,7 +2282,7 @@ return {
         ------------
         administrator =
         {
-            "🅿️ ADMINISTRATOR",
+            "🅿️ ADMINISTRATOR 🅿️",
             "Plugin for Sasha's administrators.",
             "ADMIN",
             "#todo <reply> [<text>]: Sasha forward <reply> and sends <text> if present in the LOG chat.",
@@ -2313,7 +2313,7 @@ return {
 
         alternatives =
         {
-            "🅿️ ALTERNATIVES",
+            "🅿️ ALTERNATIVES 🅿️",
             "Plugin for using alternative commands.",
             "USER",
             "#getalternatives /<command>: Sasha sends <command>'s alternatives.",
@@ -2332,7 +2332,7 @@ return {
 
         banhammer =
         {
-            "🅿️ BANHAMMER",
+            "🅿️ BANHAMMER 🅿️",
             "Plugin for the management of kick and bans.",
             "USER",
             "#kickme: Sasha kicks sender.",
@@ -2370,7 +2370,7 @@ return {
 
         bot =
         {
-            "🅿️ BOT",
+            "🅿️ BOT 🅿️",
             "Plugin to enable or disable Sasha on the group.",
             "USER",
             "/start[@AISashaBot]: Sasha sends the start message (works only in private chat).",
@@ -2384,7 +2384,7 @@ return {
 
         check_tag =
         {
-            "🅿️ CHECK_TAG",
+            "🅿️ CHECK_TAG 🅿️",
             "Plugin to send tags and mentions notifications (NOTIFICATIONS ARE ENABLED ALSO FOR USERS NOT IN THIS GROUP).",
             "START THE BOT IN PRIVATE OR IT WILL NOT SEND MESSAGES TO YOU.",
             "USER",
@@ -2400,7 +2400,7 @@ return {
 
         database =
         {
-            "🅿️ DATABASE",
+            "🅿️ DATABASE 🅿️",
             "Plugin to save all users and groups info.",
             "SUDO",
             "#createdatabase: Sasha creates the database.",
@@ -2417,7 +2417,7 @@ return {
 
         delword =
         {
-            "🅿️ DELWORD",
+            "🅿️ DELWORD 🅿️",
             "Plugin for the management of censorships.",
             "USER",
             "#dellist: Sasha sends a list of censored words or patterns.",
@@ -2428,7 +2428,7 @@ return {
 
         dogify =
         {
-            "🅿️ DOGIFY",
+            "🅿️ DOGIFY 🅿️",
             "Plugin to create picture with doge.",
             "USER",
             "#dogify <your/words/with/slashes>: Sasha creates a pic with doge and the specified words.",
@@ -2436,7 +2436,7 @@ return {
 
         fakecommand =
         {
-            "🅿️ FAKECOMMAND",
+            "🅿️ FAKECOMMAND 🅿️",
             "Plugin to test commands.",
             "MOD",
             "(#user|#mod|#owner|#admin) <command>: Sasha executes <command> as it would be sent by a user with the specified rank.",
@@ -2444,7 +2444,7 @@ return {
 
         feedback =
         {
-            "🅿️ FEEDBACK",
+            "🅿️ FEEDBACK 🅿️",
             "Plugin for feedbacks.",
             "USER",
             "#feedback <text>: Sasha sends <text> as feedback.",
@@ -2452,7 +2452,7 @@ return {
 
         filemanager =
         {
-            "🅿️ FILEMANAGER",
+            "🅿️ FILEMANAGER 🅿️",
             "Plugin for the management of Sasha's server.",
             "SUDO",
             "#folder: Sasha sends actual directory.",
@@ -2473,7 +2473,7 @@ return {
 
         flame =
         {
-            "🅿️ FLAME",
+            "🅿️ FLAME 🅿️",
             "Plugin to start flames.",
             "MOD",
             "#startflame <id>|<username>|<reply>|from: Sasha flames the specified user.",
@@ -2483,7 +2483,7 @@ return {
 
         getsetunset =
         {
-            "🅿️ GETSETUNSET",
+            "🅿️ GETSETUNSET 🅿️",
             "Plugin to get/set/unset things.",
             "USER",
             "#get <var_name>: Sasha sends the answer to <var_name>.",
@@ -2512,7 +2512,7 @@ return {
 
         goodbyewelcome =
         {
-            "🅿️ GOODBYEWELCOME",
+            "🅿️ GOODBYEWELCOME 🅿️",
             "Plugin for welcome and goodbye.",
             "MOD",
             "There are some markers that will be replaced when goodbye/welcome is sent: "
@@ -2532,7 +2532,7 @@ return {
 
         group_management =
         {
-            "🅿️ GROUP_MANAGEMENT",
+            "🅿️ GROUP_MANAGEMENT 🅿️",
             "Plugin for the management of groups.",
             -- COMMON
             "USER",
@@ -2596,7 +2596,7 @@ return {
 
         help =
         {
-            "🅿️ HELP",
+            "🅿️ HELP 🅿️",
             "Plugin to help users with commands, USE IT!",
             "USER",
             "#sudolist: Sasha sends sudo list.",
@@ -2612,7 +2612,7 @@ return {
 
         info =
         {
-            "🅿️ INFO",
+            "🅿️ INFO 🅿️",
             "Plugin to obtain info.",
             "USER",
             "#id [<username>|<reply>|from]: Sasha sends the id of the specified user/chat, otherwise the id of the user and the id of the chat.",
@@ -2630,7 +2630,7 @@ return {
 
         interact =
         {
-            "🅿️ INTERACT",
+            "🅿️ INTERACT 🅿️",
             "Plugin for the interaction with users.",
             "USER",
             "#[del]typing: Sasha pretends to write.",
@@ -2651,7 +2651,7 @@ return {
 
         likecounter =
         {
-            "🅿️ LIKECOUNTER",
+            "🅿️ LIKECOUNTER 🅿️",
             "Plugin for the management of likes.",
             "USER",
             "#like|#1up <id>|<username>|<reply>|from: Sasha adds a like to the specified user.",
@@ -2665,7 +2665,7 @@ return {
 
         lua_exec =
         {
-            "🅿️ LUA_EXEC",
+            "🅿️ LUA_EXEC 🅿️",
             "Plugin for executing LUA code.",
             "SUDO",
             "#lua <command>: Sasha executes <command>.",
@@ -2673,7 +2673,7 @@ return {
 
         me =
         {
-            "🅿️ ME",
+            "🅿️ ME 🅿️",
             "Plugin to know number of sent messages.",
             "USER",
             "#me: Sasha tells you how many messages you've sent.",
@@ -2681,7 +2681,7 @@ return {
 
         msg_checks =
         {
-            "🅿️ MSG_CHECKS",
+            "🅿️ MSG_CHECKS 🅿️",
             "Plugin to check messages.",
             "USER",
             "#checkmsg <reply>|<text>: Sasha checks <reply>|<text> and tells which locks/mutes would be triggered.",
@@ -2689,7 +2689,7 @@ return {
 
         multiple_commands =
         {
-            "🅿️ ME",
+            "🅿️ ME 🅿️",
             "Plugin to do multiple actions.",
             "MOD",
             "#multipleid <username1> <username2> ...: Sasha sends the id of all the <usernames> in the list.",
@@ -2718,7 +2718,7 @@ return {
 
         news =
         {
-            "🅿️ NEWS",
+            "🅿️ NEWS 🅿️",
             "Plugin for Sasha's news.",
             "USER",
             "#news: Sasha sends her news.",
@@ -2729,7 +2729,7 @@ return {
 
         plugins =
         {
-            "🅿️ PLUGINS",
+            "🅿️ PLUGINS 🅿️",
             "Plugin to enable or disable plugins.",
             "OWNER",
             "#[textual]plugins: Sasha sends a list of plugins.",
@@ -2746,7 +2746,7 @@ return {
 
         pokedex =
         {
-            "🅿️ POKEDEX",
+            "🅿️ POKEDEX 🅿️",
             "Plugin to obtain info on pokémons.",
             "USER",
             "(#pokedex|#pokemon) <name>|<id>: Sasha searches the specified pokemon and sends its info.",
@@ -2754,7 +2754,7 @@ return {
 
         qr =
         {
-            "🅿️ QR",
+            "🅿️ QR 🅿️",
             "Plugin to create QR Codes.",
             "USER",
             "Colors can be the specified as follows:",
@@ -2766,7 +2766,7 @@ return {
 
         scheduled_commands =
         {
-            "🅿️ SCHEDULED_COMMANDS",
+            "🅿️ SCHEDULED_COMMANDS 🅿️",
             "Plugin to schedule commands.",
             "MOD",
             "For more information on patterns see lua.org/pil/20.2.html",
@@ -2775,7 +2775,7 @@ return {
 
         shout =
         {
-            "🅿️ SHOUT",
+            "🅿️ SHOUT 🅿️",
             "Plugin to shout words.",
             "USER",
             "#shout <text>: Sasha \"shouts\" <text>.",
@@ -2783,7 +2783,7 @@ return {
 
         spam =
         {
-            "🅿️ SPAM",
+            "🅿️ SPAM 🅿️",
             "Plugin for spamming.",
             "ADMIN",
             "#spam [<messages> <seconds>] <reply>|<text>: Sasha starts spamming <reply>|<text> if the specified for <messages> times every <seconds> seconds, otherwise 5 messages one every 2 seconds.",
@@ -2791,7 +2791,7 @@ return {
 
         stats =
         {
-            "🅿️ STATS",
+            "🅿️ STATS 🅿️",
             "Plugin to obtain stats on groups and Sasha.",
             "USER",
             "[#]aisashabot: Sasha sends her description.",
@@ -2807,7 +2807,7 @@ return {
 
         strings =
         {
-            "🅿️ STRINGS",
+            "🅿️ STRINGS 🅿️",
             "Plugin for the management of Sasha's languages.",
             "USER",
             "#setlang [it|en]: Sasha sets the language she has to talk (works just in private with the user).",
@@ -2819,7 +2819,7 @@ return {
 
         tempmessage =
         {
-            "🅿️ TEMPMESSAGE",
+            "🅿️ TEMPMESSAGE 🅿️",
             "Plugin to temporize messages.",
             "MOD",
             "#tempmsg [<hours> <minutes> <seconds>] <text>: Sasha will delete that message after <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
@@ -2827,7 +2827,7 @@ return {
 
         tex =
         {
-            "🅿️ TEX",
+            "🅿️ TEX 🅿️",
             "Plugin to create equations.",
             "USER",
             "#tex <equation>: Sasha converts <equation> in image.",
@@ -2835,7 +2835,7 @@ return {
 
         tgcli_to_api_migration =
         {
-            "🅿️ TGCLI_TO_API_MIGRATION",
+            "🅿️ TGCLI_TO_API_MIGRATION 🅿️",
             "Plugin for the migration from tgcli.",
             "OWNER",
             "#migrate: Sasha migrates group's settings, bans, variables set and likes.",
@@ -2846,7 +2846,7 @@ return {
 
         urbandictionary =
         {
-            "🅿️ URBANDICTIONARY",
+            "🅿️ URBANDICTIONARY 🅿️",
             "Plugin for the interaction with the Urban Dictionary.",
             "USER",
             "(#urbandictionary|#urban|#ud) <text>: Sasha searches <text> in the Urban Dictionary.",
@@ -2854,7 +2854,7 @@ return {
 
         webshot =
         {
-            "🅿️ WEBSHOT",
+            "🅿️ WEBSHOT 🅿️",
             "Plugin to make screenshots of websites.",
             "MOD",
             "#webshot <url> [<size>]: Sasha does a screenshot of <url> and sends it, if <size> is the specified it sends of that dimension.",
@@ -2874,7 +2874,7 @@ return {
 
         whitelist =
         {
-            "🅿️ WHITELIST",
+            "🅿️ WHITELIST 🅿️",
             "Plugin for the management of the whitelists.",
             "USER",
             "#whitelist: Sasha sends the whitelist",
