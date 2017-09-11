@@ -226,14 +226,24 @@ local function check_msg(msg, settings, pre_process_function)
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
                             print('link (public channel/supergroup username) found')
-                            action(msg, strict, langs[msg.lang].reasonLockLink)
-                            return nil
+                            if strict then
+                                action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
+                                return nil
+                            end
                         else
-                            text = text .. langs[msg.lang].reasonLockLink
+                            text = text .. langs[msg.lang].reasonLockLinkUsername
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         end
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
+                    end
+                end
+                if msg.forward then
+                    if msg.forward_from_chat then
+                        if strict then
+                            action(msg, strict, langs[msg.lang].reasonLockLinkForward)
+                            return nil
+                        end
                     end
                 end
             end
@@ -297,14 +307,24 @@ local function check_msg(msg, settings, pre_process_function)
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
                             print('link (public channel/supergroup username) found')
-                            action(msg, strict, langs[msg.lang].reasonLockLink)
-                            return nil
+                            if strict then
+                                action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
+                                return nil
+                            end
                         else
-                            text = text .. langs[msg.lang].reasonLockLink
+                            text = text .. langs[msg.lang].reasonLockLinkUsername
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         end
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
+                    end
+                end
+                if msg.forward then
+                    if msg.forward_from_chat then
+                        if strict then
+                            action(msg, strict, langs[msg.lang].reasonLockLinkForward)
+                            return nil
+                        end
                     end
                 end
             end

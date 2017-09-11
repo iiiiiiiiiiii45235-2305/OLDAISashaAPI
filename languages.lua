@@ -1,7 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "Better help keyboard with pages\n" ..
-    "Now links/usernames to public channels/supergroups are analyzed as private links.\n",
+    "Now links/usernames to public channels/supergroups are analyzed when strict is enabled, otherwise they would just be marked as links.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
@@ -278,7 +278,9 @@ return {
         reasonLockBots = "\nBlocco bots abilitato.",
         reasonLockLeave = "\nBlocco abbandono abilitato.",
         reasonLockLink = "\nBlocco link abilitato.",
+        reasonLockLinkUsername = "\nBlocco link abilitato (username di gruppo/canale pubblico).",
         reasonLockLinkEntities = "\nBlocco link abilitato (link nascosto).",
+        reasonLockLinkForward = "\nBlocco link abilitato (messaggio inoltrato da un canale).",
         reasonLockMembers = "\nBlocco membri abilitato.",
         reasonLockRTL = "\nBlocco RTL abilitato.",
         reasonLockSpam = "\nBlocco spam abilitato.",
@@ -1613,7 +1615,9 @@ return {
         reasonLockBots = "\nLock bots enabled.",
         reasonLockLeave = "\nLock leave enabled.",
         reasonLockLink = "\nLock link enabled.",
+        reasonLockLinkUsername = "\nLock link enabled (username of public group/channel).",
         reasonLockLinkEntities = "\nLock link enabled (hidden link).",
+        reasonLockLinkForward = "\nLock link enabled (forwarded message of channel).",
         reasonLockMembers = "\nLock members enabled.",
         reasonLockRTL = "\nLock RTL enabled.",
         reasonLockSpam = "\nLock spam enabled.",
