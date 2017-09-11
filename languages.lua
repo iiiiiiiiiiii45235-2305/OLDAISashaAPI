@@ -390,7 +390,7 @@ return {
         badLuck = "Sfortuna.",
         kickinactiveWarning = "Comando disattivato.\nE' ASSOLUTAMENTE SCONSIGLIATO utilizzare questo comando con @AISasha su gruppi con membri >= 200.",
         restrictionsOf = "Restrizioni di X in Y:",
-        restrictionsIntro = "Legenda restrizioni:\n✅ Restrizione non applicata\n🚫 Restrizione applicata\nPer maggiori informazioni sulle restrizioni controlla le faqs.",
+        restrictionsIntro = "Legenda restrizioni:\n✅ Restrizione non applicata\n🚫 Restrizione applicata\n",
         sendRestrictionsPvt = "Ti ho mandato le restrizioni dell'utente in privato.",
         restrictions = "Restrizioni: ",
         restrictionSendMessages = "\nPuò inviare ogni tipo di messaggio: ",
@@ -620,7 +620,7 @@ return {
         cantContact = "Se non mi scrive per primo/a non posso contattare ",
         groupInfoUpdated = "Nome gruppo e moderatori aggiornati.",
         modListSynced = "Lista moderatori sincronizzata con quella di telegram.",
-        locksIntro = "Legenda blocchi:\n✅ Blocco attivato\n☑️ Blocco disattivato",
+        locksIntro = "Legenda blocchi:\n✅ Blocco attivato\n☑️ Blocco disattivato\n",
         checkMyPermissions = "Errore, controlla i miei permessi.",
         promoteModAdmin = " è stato promosso a moderatore e amministratore di telegram con i permessi specificati.",
         demoteModAdmin = " è stato degradato da moderatore e amministratore di telegram.",
@@ -629,7 +629,7 @@ return {
         sendPermissionsPvt = "Ti ho mandato i permessi dell'utente in privato.",
         permissions = "Permessi: ",
         permissionsOf = "Permessi di X in Y",
-        permissionsIntro = "Legenda permessi:\n✅ Permesso garantito\n☑️ Permesso negato\nPer maggiori informazioni sui permessi controlla le faqs.",
+        permissionsIntro = "Legenda permessi:\n✅ Permesso garantito\n☑️ Permesso negato\n",
         permissionChangeInfo = "\nCambiare informazioni del gruppo: ",
         permissionDeleteMessages = "\nEliminare messaggi: ",
         permissionInviteUsers = "\nInvitare utenti: ",
@@ -907,11 +907,10 @@ return {
             .. "Photo => Foto.\n"
             .. "Sticker => Stickers.\n"
             .. "Text => Testo sia normale che sotto i media.\n"
-            .. "Tgservice => Messaggi di servizio (non funzionante per @AISashaBot nei supergruppi*).\n"
+            .. "Tgservice => Messaggi di servizio.\n"
             .. "Video => Video (non video messaggi).\n"
             .. "Video_note => Video messaggi.\n"
-            .. "Voice_note => Note vocali.\n"
-            .. "* = limitazione di telegram.",
+            .. "Voice_note => Note vocali.\n",
             [13] = "D: Perchè non porti ruleta anche su @AISashaAPI?\n"
             .. "R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
             [14] = "D: Cos'è l'api_patch?\n"
@@ -1730,7 +1729,7 @@ return {
         badLuck = "Bad luck.",
         kickinactiveWarning = "Deactivated command.\nIt is STRONGLY SUGGESTED NOT TO USE this command with @AISasha in groups with members >= 200.",
         restrictionsOf = "Restrictions of X in Y:",
-        restrictionsIntro = "Restrictions' legend:\n✅ Unrestricted\n🚫 Restricted\nFor more information on restrictions check faqs.",
+        restrictionsIntro = "Restrictions' legend:\n✅ Unrestricted\n🚫 Restricted\n",
         sendRestrictionsPvt = "I've sent you the user's restrictions in private.",
         restrictions = "Restrictions: ",
         restrictionSendMessages = "\nCan send any type of message: ",
@@ -1958,7 +1957,7 @@ return {
         cantContact = "If (s)he doesn't write me first I can't contact ",
         groupInfoUpdated = "Group name and mods updated.",
         modListSynced = "Modlist synced with telegram's one.",
-        locksIntro = "Locks' legend:\n✅ Locked\n☑️ Unlocked",
+        locksIntro = "Locks' legend:\n✅ Locked\n☑️ Unlocked\n",
         checkMyPermissions = "Error, check my permissions.",
         promoteModAdmin = " promoted to moderator and telegram's administrator with the specified permissions.",
         demoteModAdmin = " demoted from moderator and telegram's administrator.",
@@ -1967,7 +1966,7 @@ return {
         sendPermissionsPvt = "I've sent you the user's permissions in private.",
         permissions = "Permissions: ",
         permissionsOf = "Permissions of X in Y",
-        permissionsIntro = "Permissions' legend:\n✅ Permission granted\n☑️ Permission denied\nFor more information on permissions check faqs.",
+        permissionsIntro = "Permissions' legend:\n✅ Permission granted\n☑️ Permission denied\n",
         permissionChangeInfo = "\nChange information: ",
         permissionDeleteMessages = "\nDelete messages: ",
         permissionInviteUsers = "\nInvite users: ",
@@ -2254,11 +2253,10 @@ return {
             .. "Photo => Photos.\n"
             .. "Sticker => Stickers.\n"
             .. "Text => Normal text or captions.\n"
-            .. "Tgservice => Service messages (not working for @AISashaBot on supergroups*).\n"
+            .. "Tgservice => Service messages.\n"
             .. "Video => Videos (not video messages).\n"
             .. "Video_note => Video messages.\n"
-            .. "Voice_note => Voice notes.\n"
-            .. "* = telegram's limitation.",
+            .. "Voice_note => Voice notes.\n",
             [13] = "D: Why don't you port ruleta on @AISashaAPI?\n"
             .. "R: Because I'm 90% sure that kicks number would be high enough to hit telegram limits causing problems.",
             [14] = "D: What is the api_patch?\n"
