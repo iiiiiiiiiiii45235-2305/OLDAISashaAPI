@@ -17,6 +17,6 @@ elseif action == 'forwardmessage' then
 elseif action == 'deletemessage' then
     action, chat_id, sleep_time, message_id = ...
     if not deleteMessage(chat_id, message_id, true) then
-        sendMessage(chat_id, langs[msg.lang].cantDeleteMessage, false, message_id)
+        sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, message_id)
     end
 end
