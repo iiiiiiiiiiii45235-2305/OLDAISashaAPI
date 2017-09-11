@@ -61,11 +61,11 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         keyboard.inline_keyboard = { }
         local row = 1
         local column = 1
+        keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
             keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
-        keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
         return keyboard
     end
