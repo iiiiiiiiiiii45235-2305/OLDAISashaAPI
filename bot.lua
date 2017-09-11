@@ -533,8 +533,8 @@ function pre_process_media_msg(msg)
 end
 
 function migrate_to_supergroup(msg)
-    local old = msg.chat.id
-    local new = msg.migrate_to_chat_id
+    local old = msg.migrate_from_chat_id
+    local new = msg.chat.id
     if not old or not new then
         print('A group id is missing')
         return false
