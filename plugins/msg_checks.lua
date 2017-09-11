@@ -212,9 +212,15 @@ local function check_msg(msg, settings, pre_process_function)
                     end
                 end
                 local tmp = msg.text:lower()
+                -- make all the telegram's links t.me
                 tmp = links_to_tdotme(tmp)
+                -- remove http(s)
                 tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+                -- remove joinchat links
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+                -- remove ?start=blabla and things like that
+                tmp = tmp:gsub('%?([^%s]+)', '')
+                -- make links usernames
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
@@ -277,9 +283,15 @@ local function check_msg(msg, settings, pre_process_function)
                     end
                 end
                 local tmp = msg.caption:lower()
+                -- make all the telegram's links t.me
                 tmp = links_to_tdotme(tmp)
+                -- remove http(s)
                 tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+                -- remove joinchat links
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+                -- remove ?start=blabla and things like that
+                tmp = tmp:gsub('%?([^%s]+)', '')
+                -- make links usernames
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
