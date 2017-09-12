@@ -244,6 +244,6 @@ return {
         "OWNER",
         "#whitelist <id>|<username>|<reply>",
         "#whitelistgban <id>|<username>|<reply>",
-        "#whitelistlink <link>",
+        "#whitelistlink <link>|<username>",
     },
 }
