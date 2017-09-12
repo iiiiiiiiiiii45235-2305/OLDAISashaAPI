@@ -35,7 +35,9 @@ local test_settings = {
 local function remove_whitelisted_links(text, links_whitelist, group_link)
     if links_whitelist then
         for k, v in pairs(links_whitelist) do
-            text = text:gsub(v, '')
+            if string.find(text, v .. '$') then
+                text = text:gsub(v .. '$', '')
+            end
         end
     end
     if group_link then
