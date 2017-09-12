@@ -73,9 +73,9 @@ local function test_bot_link(text)
     return is_now_link
 end
 
-local function check_if_link(text, group_link)
+local function check_if_link(text, links_whitelist, group_link)
     text = pre_process_links(text)
-    text = remove_whitelisted_links(text, links_whitelist, pre_process_links(group_link))
+    text = remove_whitelisted_links(text, links_whitelist, group_link)
     local is_text_link = text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
     -- or text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
@@ -111,6 +111,8 @@ local function check_msg(msg, settings, pre_process_function)
     local group_link = nil
     if settings.set_link then
         group_link = settings.set_link
+        group_link = links_to_tdotme(group_link)
+        group_link = pre_process_links(group_link)
     end
     local lock_member = settings.lock_member
     local lock_rtl = settings.lock_rtl
@@ -156,7 +158,7 @@ local function check_msg(msg, settings, pre_process_function)
                 if v.url then
                     if lock_link then
                         local tmp = v.url
-                        if check_if_link(tmp, links_whitelist, pre_process_links(group_link)) then
+                        if check_if_link(tmp, links_whitelist, group_link) then
                             if pre_process_function then
                                 print('link found entities')
                                 action(msg, strict, langs[msg.lang].reasonLockLinkEntities)
@@ -218,7 +220,7 @@ local function check_msg(msg, settings, pre_process_function)
             end
             if lock_link then
                 local tmp = msg.text
-                if check_if_link(tmp, pre_process_links(group_link)) then
+                if check_if_link(tmp, links_whitelist, group_link) then
                     if pre_process_function then
                         print('link found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
@@ -293,7 +295,7 @@ local function check_msg(msg, settings, pre_process_function)
             end
             if lock_link then
                 local tmp = msg.caption
-                if check_if_link(tmp, pre_process_links(group_link)) then
+                if check_if_link(tmp, links_whitelist, group_link) then
                     if pre_process_function then
                         print('link found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)

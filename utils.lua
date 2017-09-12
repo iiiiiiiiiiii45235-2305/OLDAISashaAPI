@@ -776,9 +776,11 @@ function adjustRestrictions(param_restrictions)
 end
 
 function links_to_tdotme(text)
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", 't.me/')
-    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", 't.me/')
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", 't.me/')
+    if text then
+        text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/", 't.me/')
+        text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/", 't.me/')
+        text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/", 't.me/')
+    end
     return text
 end
 
