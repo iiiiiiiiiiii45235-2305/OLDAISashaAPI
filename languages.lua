@@ -2255,7 +2255,7 @@ return {
             .. "Flood => N messages in 2 seconds.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
             .. "Leave => Group leave.\n"
-            .. "Link => Other groups'\channels' links, if Strict also forwarded messages and usernames.\n"
+            .. "Link => Other groups'/channels' links, if Strict also forwarded messages and usernames.\n"
             .. "Member => New members.\n"
             .. "RTL => Right to left characters (those that reverse messages).\n"
             .. "Spam => Message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n"
