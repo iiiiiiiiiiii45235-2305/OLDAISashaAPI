@@ -866,3 +866,14 @@ function adjust_plugin_names(p, lang)
     end
     return 'ERR'
 end
+
+function punishment_plus_plus(punishment)
+    if not punishment then
+        punishment = 'warn'
+    elseif punishment == 'warn' then
+        punishment = 'kick'
+    elseif punishment == 'kick' then
+        punishment = 'ban'
+    end
+    return punishment
+end

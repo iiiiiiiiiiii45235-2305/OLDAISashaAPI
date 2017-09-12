@@ -429,8 +429,8 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            while string.match(tmp, '@[^%s]+') do
-                local obj = getChat(string.match(tmp, '@[^%s]+'), true)
+            while string.match(tmp, '(@[^%s]+)') do
+                local obj = getChat(string.match(tmp, '(@[^%s]+)'), true)
                 if obj then
                     if obj.result then
                         obj = obj.result
@@ -449,7 +449,7 @@ local function save_to_db(msg)
                         end
                     end
                 end
-                tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
+                tmp = tmp:gsub(string.match(tmp, '(@[^%s]+)'), '')
             end
 
             -- if forward save forward

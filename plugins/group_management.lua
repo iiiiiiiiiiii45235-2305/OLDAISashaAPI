@@ -25,24 +25,12 @@ local default_settings = {
     set_owner = '41400331',
     settings =
     {
-        -- #todo
-        -- setting = false, 'warn', 'kick', 'ban'
-        flood = true,
         flood_max = 5,
         links_whitelist =
         {
             -- whitelisted links, usernames, channel ids
+            "@username",
         },
-        lock_arabic = false,
-        lock_bots = false,
-        lock_group_link = true,
-        lock_leave = false,
-        lock_link = false,
-        lock_member = false,
-        lock_name = false,
-        lock_photo = false,
-        lock_rtl = false,
-        lock_spam = false,
         mutes =
         {
             all = false,
@@ -61,6 +49,19 @@ local default_settings = {
         },
         strict = false,
         warn_max = 3,
+        -- #todo
+        -- setting = false, 'warn', 'kick', 'ban'
+        flood = true,
+        lock_arabic = false,
+        lock_bots = false,
+        lock_group_link = true,
+        lock_leave = false,
+        lock_link = false,
+        lock_member = false,
+        lock_name = false,
+        lock_photo = false,
+        lock_rtl = false,
+        lock_spam = false,
     },
     welcome = nil,
     welcomemembers = 0,
