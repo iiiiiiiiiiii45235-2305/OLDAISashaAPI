@@ -194,26 +194,31 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == "whitelistlink" then
-            if is_owner(msg) then
-                mystat('/whitelistlink <link>')
-                return whitelist_link(msg.chat.id, matches[2])
+            if matches[2] then
+                if is_owner(msg) then
+                    mystat('/whitelistlink <link>')
+                    return whitelist_link(msg.chat.id, matches[2])
+                end
             else
-                mystat('/whitelistlink')
-                local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
-                if data[tostring(chat_id)] then
-                    if data[tostring(chat_id)].settings then
-                        if data[tostring(chat_id)].settings.links_whitelist then
-                            for k, v in pairs(data[tostring(chat_id)].settings.links_whitelist) do
-                                -- already whitelisted
-                                text = text .. k .. ". " .. v .. "\n"
-                            end
+                return langs[msg.lang].require_owner
+            end
+        else
+            mystat('/whitelistlink')
+            local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
+            if data[tostring(chat_id)] then
+                if data[tostring(chat_id)].settings then
+                    if data[tostring(chat_id)].settings.links_whitelist then
+                        for k, v in pairs(data[tostring(chat_id)].settings.links_whitelist) do
+                            -- already whitelisted
+                            text = text .. k .. ". " .. v .. "\n"
                         end
                     end
                 end
-                return text
             end
+            return text
         end
     end
+end
 end
 
 return {
