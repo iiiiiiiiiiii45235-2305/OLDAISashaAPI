@@ -204,7 +204,9 @@ local function check_msg(msg, settings, pre_process_function)
                 -- make links usernames
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
                 -- remove all whitelisted links
+                print(tmp)
                 tmp = remove_whitelisted_links(tmp, links_whitelisted, group_link)
+                print(tmp)
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
