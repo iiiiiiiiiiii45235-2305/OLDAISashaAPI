@@ -47,7 +47,7 @@ end
 local function pre_process_links(text)
     if text then
         -- make all the telegram's links t.me
-        text = links_to_tdotme(link)
+        text = links_to_tdotme(text)
         -- remove http(s)
         text = text:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
         -- remove www.
