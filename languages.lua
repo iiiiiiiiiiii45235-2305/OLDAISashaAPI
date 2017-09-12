@@ -46,7 +46,7 @@ return {
             "Centro 🎯",
             "💥",
             "☠",
-            "AVADA KEDABAN","La parte migliore di te è quella che vuole suicidarsi.",
+            "AVADA KEDABAN",
         },
         flame =
         {
@@ -69,9 +69,10 @@ return {
             "Ma zitto che mi pari un incrocio uscito male tra Luca Giurato e l'italiano.",
             "Per favore calate il banhammer sulla sua testa.",
             "Parla parla scemo del cazzo.",
-            "SEI SICURO DI VOLERTI METTERE CONTRO UNA BOTTESSA?",
+            "La parte migliore di te è quella che vuole suicidarsi.",
             "Vai a farti una vita reale sennò giuro che ti squarto.",
             "Dimmi un po', per caso hai i genitori parenti?",
+            "SEI SICURO DI VOLERTI METTERE CONTRO UNA BOTTESSA?",
             "CON CHE CORAGGIO PARLI ANCORA BRUTTA FOGNA?",
             "Ok adesso mi prenderò un attimo di tempo per te, dimmi, cosa ti turba?",
             "Finito il tempo, ops.",
