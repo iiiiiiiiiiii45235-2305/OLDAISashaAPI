@@ -204,10 +204,10 @@ local function run(msg, matches)
             else
                 mystat('/whitelistlink')
                 local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
-                if data[tostring(chat_id)] then
-                    if data[tostring(chat_id)].settings then
-                        if data[tostring(chat_id)].settings.links_whitelist then
-                            for k, v in pairs(data[tostring(chat_id)].settings.links_whitelist) do
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].settings then
+                        if data[tostring(msg.chat.id)].settings.links_whitelist then
+                            for k, v in pairs(data[tostring(msg.chat.id)].settings.links_whitelist) do
                                 -- already whitelisted
                                 text = text .. k .. ". " .. v .. "\n"
                             end
