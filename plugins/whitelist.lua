@@ -32,6 +32,9 @@ local function whitelist_link(chat_id, link)
             link = link:gsub('%?([^%s]+)', '')
             -- make links usernames
             link = link:gsub('[Tt]%.[Mm][Ee]/', '@')
+            if not APIgetChat(link, true) then
+                return link .. langs[lang].notLink
+            end
         end
         -- else
         -- private link
@@ -208,7 +211,6 @@ local function run(msg, matches)
                     if data[tostring(msg.chat.id)].settings then
                         if data[tostring(msg.chat.id)].settings.links_whitelist then
                             for k, v in pairs(data[tostring(msg.chat.id)].settings.links_whitelist) do
-                                -- already whitelisted
                                 text = text .. k .. ". " .. v .. "\n"
                             end
                         end
