@@ -32,16 +32,16 @@ local test_settings = {
     warn_max = 3,
 }
 
-local function remove_whitelisted_links(tmp, links_whitelist, group_link)
+local function remove_whitelisted_links(text, links_whitelist, group_link)
     if links_whitelist then
         for k, v in pairs(links_whitelist) do
-            tmp:gsub(v, '')
+            text = text:gsub(v, '')
         end
     end
     if group_link then
-        tmp:gsub(group_link, '')
+        text = text:gsub(group_link, '')
     end
-    return tmp
+    return text
 end
 
 local function pre_process_links(text)
