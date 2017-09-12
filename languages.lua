@@ -900,7 +900,7 @@ return {
             .. "Flood => N messaggi in 2 secondi.\n"
             .. "Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n"
             .. "Leave => Abbandono del gruppo.\n"
-            .. "Link => Link di altri gruppi.\n"
+            .. "Link => Link di altri gruppi/canali, se Strict anche messaggi inoltrati e username.\n"
             .. "Member => Entrata di nuovi membri.\n"
             .. "RTL => Caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n"
             .. "Spam => Messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n"
@@ -1546,7 +1546,7 @@ return {
             "OWNER",
             "#whitelist <id>|<username>|<reply>: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist.",
             "#whitelistgban <id>|<username>|<reply>: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist dei gban.",
-            "#whitelistlink <link>|<username>: Sasha aggiunge|rimuove <link>|<username> alla|dalla whitelist dei link.",
+            "#whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>: Sasha aggiunge|rimuove <link>|<public_(channel|supergroup)_username>|<channel_id> alla|dalla whitelist dei link.",
         },
     },
     -- ####
@@ -2255,7 +2255,7 @@ return {
             .. "Flood => N messages in 2 seconds.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
             .. "Leave => Group leave.\n"
-            .. "Link => Other groups' links.\n"
+            .. "Link => Other groups'\channels' links, if Strict also forwarded messages and usernames.\n"
             .. "Member => New members.\n"
             .. "RTL => Right to left characters (those that reverse messages).\n"
             .. "Spam => Message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n"
@@ -2901,7 +2901,7 @@ return {
             "OWNER",
             "#whitelist <id>|<username>|<reply>: adds|removes the specified user to|from the whitelist.",
             "#whitelistgban <id>|<username>|<reply>: adds|removes the specified user to|from the gban whitelist.",
-            "#whitelistlink <link>|<username>: adds|removes <link>|<username> to/from the links' whitelist.",
+            "#whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>: adds|removes <link>|<public_(channel|supergroup)_username>|<channel_id> to/from the links' whitelist.",
         },
     },
 }

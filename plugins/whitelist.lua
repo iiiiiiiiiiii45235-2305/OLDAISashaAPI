@@ -27,13 +27,24 @@ local function whitelist_link(chat_id, link)
     link = link:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
     if link:match("^[Tt]%.[Mm][Ee]/") or link:match("^@([%a][%w_]+)") then
         if not(link:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or link:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")) then
-            -- public link/username
-            -- remove ?start=blabla and things like that
-            link = link:gsub('%?([^%s]+)', '')
-            -- make links usernames
-            link = link:gsub('[Tt]%.[Mm][Ee]/', '@')
-            if not APIgetChat(link, true) then
-                return link .. langs[lang].notLink
+            if string.match(link, '^(%d+)$') then
+                -- channel id
+                local obj = getChat(link, true)
+                if not obj then
+                    return link .. langs[lang].notLink
+                end
+                if obj.type ~= 'channel' then
+                    return link .. langs[lang].notLink
+                end
+            else
+                -- public link/username
+                -- remove ?start=blabla and things like that
+                link = link:gsub('%?([^%s]+)', '')
+                -- make links usernames
+                link = link:gsub('[Tt]%.[Mm][Ee]/', '@')
+                if not APIgetChat(link, true) then
+                    return link .. langs[lang].notLink
+                end
             end
         end
         -- else
@@ -244,6 +255,6 @@ return {
         "OWNER",
         "#whitelist <id>|<username>|<reply>",
         "#whitelistgban <id>|<username>|<reply>",
-        "#whitelistlink <link>|<username>",
+        "#whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>",
     },
 }
