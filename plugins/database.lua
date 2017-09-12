@@ -424,7 +424,7 @@ local function save_to_db(msg)
             -- remove http(s)
             tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
             -- remove www.
-            text = text:gsub("[Ww][Ww][Ww]%.", '')
+            tmp = tmp:gsub("[Ww][Ww][Ww]%.", '')
             -- remove joinchat links
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
             -- remove ?start=blabla and things like that
