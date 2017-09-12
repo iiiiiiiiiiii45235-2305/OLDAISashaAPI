@@ -1,7 +1,9 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "Better help keyboard with pages.\n" ..
-    "Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed when strict is enabled and punished with ban.\n",
+    "(HELP) Better help keyboard with pages.\n" ..
+    "(WHITELIST) Whitelistlink <link>|<username> to whitelist links of groups/channels or usernames of public groups/channels so when they're sent sasha doesn't kick (owner^).\n" ..
+    "(WHITELIST) Whitelistlink to see the whitelisted links|usernames (user^).\n" ..
+    "(MSG_CHECKS) Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed when strict is enabled and punished with ban.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
@@ -1544,7 +1546,7 @@ return {
             "OWNER",
             "#whitelist <id>|<username>|<reply>: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist.",
             "#whitelistgban <id>|<username>|<reply>: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist dei gban.",
-            "#whitelistlink <link>: Sasha aggiunge|rimuove <link> alla|dalla whitelist dei link.",
+            "#whitelistlink <link>|<username>: Sasha aggiunge|rimuove <link>|<username> alla|dalla whitelist dei link.",
         },
     },
     -- ####
@@ -2899,7 +2901,7 @@ return {
             "OWNER",
             "#whitelist <id>|<username>|<reply>: adds|removes the specified user to|from the whitelist.",
             "#whitelistgban <id>|<username>|<reply>: adds|removes the specified user to|from the gban whitelist.",
-            "#whitelistlink <link>: adds|removes <link> to|from the links' whitelist.",
+            "#whitelistlink <link>|<username>: adds|removes <link>|<username> to/from the links' whitelist.",
         },
     },
 }
