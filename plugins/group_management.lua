@@ -1,8 +1,24 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
+local default_permissions = {
+    ['can_change_info'] = true,
+    ['can_delete_messages'] = true,
+    ['can_invite_users'] = true,
+    ['can_restrict_members'] = true,
+    ['can_pin_messages'] = true,
+    ['can_promote_members'] = false,
+}
 local default_settings = {
     goodbye = nil,
     group_type = 'Unknown',
-    moderators = { },
+    moderators =
+    {
+        -- user_id = username or printname
+        -- todo
+        -- user_id = {
+        -- username or printname
+        -- various permissions
+        -- }
+    },
     photo = nil,
     rules = nil,
     set_name = 'TITLE',
@@ -11,6 +27,10 @@ local default_settings = {
     {
         flood = true,
         flood_max = 5,
+        links_whitelist =
+        {
+            -- links
+        },
         lock_arabic = false,
         lock_bots = false,
         lock_group_link = true,
@@ -42,14 +62,6 @@ local default_settings = {
     },
     welcome = nil,
     welcomemembers = 0,
-}
-local default_permissions = {
-    ['can_change_info'] = true,
-    ['can_delete_messages'] = true,
-    ['can_invite_users'] = true,
-    ['can_restrict_members'] = true,
-    ['can_pin_messages'] = true,
-    ['can_promote_members'] = false,
 }
 
 -- INREALM
@@ -2142,18 +2154,12 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'banlist' then
                         mystat('/clean banlist')
                         redis:del('banned:' .. msg.chat.id)
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned banlist")
                         return langs[msg.lang].banlistCleaned
                     elseif matches[2]:lower() == 'modlist' then
-                        if next(data[tostring(msg.chat.id)].moderators) == nil then
-                            -- fix way
-                            return langs[msg.lang].noGroupMods
-                        end
                         mystat('/clean modlist')
-                        local message = langs[msg.lang].modListStart .. string.gsub(msg.chat.print_name, '_', ' ') .. ':\n'
-                        for k, v in pairs(data[tostring(msg.chat.id)].moderators) do
-                            data[tostring(msg.chat.id)].moderators[tostring(k)] = nil
-                            save_data(config.moderation.data, data)
-                        end
+                        data[tostring(msg.chat.id)].moderators = { }
+                        save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
                         return langs[msg.lang].modlistCleaned
                     elseif matches[2]:lower() == 'rules' then
@@ -2165,11 +2171,20 @@ local function run(msg, matches)
                     elseif matches[2]:lower() == 'whitelist' then
                         mystat('/clean whitelist')
                         redis:del('whitelist:' .. msg.chat.tg_cli_id)
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelist")
                         return langs[msg.lang].whitelistCleaned
                     elseif matches[2]:lower() == 'whitelistgban' then
                         mystat('/clean whitelistgban')
                         redis:del('whitelist:gban:' .. msg.chat.tg_cli_id)
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelistgban")
                         return langs[msg.lang].whitelistGbanCleaned
+                    elseif matches[2]:lower() == 'whitelistlink' then
+                        mystat('/clean whitelistlink')
+                        data[tostring(msg.chat.id)].settings.links_whitelist = { }
+                        save_data(config.moderation.data, data)
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned links_whitelist")
+                        --
+                        return langs[msg.lang].whitelistLinkCleaned
                     end
                     return
                 else
@@ -2338,7 +2353,7 @@ return {
         "#setowner <id>|<username>|<reply>",
         "#mute all|text",
         "#unmute all|text",
-        "#clean banlist|modlist|rules|whitelist|whitelistgban",
+        "#clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink",
         "ADMIN",
         "#add",
         "#rem",

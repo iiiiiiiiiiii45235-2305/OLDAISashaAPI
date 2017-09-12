@@ -1,20 +1,59 @@
-﻿local function whitelist_user(group_id, user_id, lang)
-    if isWhitelisted(group_id, user_id) then
-        redis:srem('whitelist:' .. group_id, user_id)
+﻿local function whitelist_user(tgcli_chat_id, user_id, lang)
+    if isWhitelisted(tgcli_chat_id, user_id) then
+        redis:srem('whitelist:' .. tgcli_chat_id, user_id)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
     else
-        redis:sadd('whitelist:' .. group_id, user_id)
+        redis:sadd('whitelist:' .. tgcli_chat_id, user_id)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
     end
 end
 
-local function whitegban_user(group_id, user_id, lang)
-    if isWhitelistedGban(group_id, user_id) then
-        redis:srem('whitelist:gban:' .. group_id, user_id)
+local function whitegban_user(tgcli_chat_id, user_id, lang)
+    if isWhitelistedGban(tgcli_chat_id, user_id) then
+        redis:srem('whitelist:gban:' .. tgcli_chat_id, user_id)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
     else
-        redis:sadd('whitelist:gban:' .. group_id, user_id)
+        redis:sadd('whitelist:gban:' .. tgcli_chat_id, user_id)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
+    end
+end
+
+local function whitelist_link(chat_id, link)
+    local lang = get_lang(chat_id)
+    link = link:lower()
+    -- make all the telegram's links t.me
+    link = links_to_tdotme(link)
+    -- remove http(s)
+    link = link:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+    if link:match("^[Tt]%.[Mm][Ee]/") or link:match("^@([%a][%w_]+)") then
+        if not(link:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or link:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")) then
+            -- public link/username
+            -- remove ?start=blabla and things like that
+            link = link:gsub('%?([^%s]+)', '')
+            -- make links usernames
+            link = link:gsub('[Tt]%.[Mm][Ee]/', '@')
+        end
+        -- else
+        -- private link
+        if data[tostring(chat_id)] then
+            if data[tostring(chat_id)].settings then
+                if data[tostring(chat_id)].settings.links_whitelist then
+                    for k, v in pairs(data[tostring(chat_id)].settings.links_whitelist) do
+                        if v == link then
+                            -- already whitelisted
+                            data[tostring(chat_id)].settings.links_whitelist[k] = nil
+                            save_data(config.moderation.data, data)
+                            return link .. langs[msg.lang].whitelistLinkRemoved
+                        end
+                    end
+                end
+            end
+        end
+        table.insert(data[tostring(chat_id)].settings.links_whitelist, link)
+        save_data(config.moderation.data, data)
+        return link .. langs[msg.lang].whitelistLinkAdded
+    else
+        return link .. langs[msg.lang].notLink
     end
 end
 
@@ -154,6 +193,26 @@ local function run(msg, matches)
                 return text
             end
         end
+        if matches[1]:lower() == "whitelistlink" then
+            if is_owner(msg) then
+                mystat('/whitelistlink <link>')
+                return whitelist_link(msg.chat.id, matches[2])
+            else
+                mystat('/whitelistlink')
+                local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
+                if data[tostring(chat_id)] then
+                    if data[tostring(chat_id)].settings then
+                        if data[tostring(chat_id)].settings.links_whitelist then
+                            for k, v in pairs(data[tostring(chat_id)].settings.links_whitelist) do
+                                -- already whitelisted
+                                text = text .. k .. ". " .. v .. "\n"
+                            end
+                        end
+                    end
+                end
+                return text
+            end
+        end
     end
 end
 
@@ -163,8 +222,10 @@ return {
     {
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn])$",
+        "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn]) ([^%s]+)$",
+        "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Ll][Ii][Nn][Kk]) ([^%s]+)$",
     },
     run = run,
     min_rank = 0,
@@ -173,8 +234,10 @@ return {
         "USER",
         "#whitelist",
         "#whitelistgban",
+        "#whitelistlink",
         "OWNER",
         "#whitelist <id>|<username>|<reply>",
         "#whitelistgban <id>|<username>|<reply>",
+        "#whitelistlink <link>",
     },
 }

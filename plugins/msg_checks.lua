@@ -32,65 +32,54 @@ local test_settings = {
     warn_max = 3,
 }
 
-local function test_text_link(text, group_link)
-    -- remove group_link and test if link again
-    text = text:gsub(links_to_tdotme(group_link:lower()), '')
+local function remove_whitelisted_links(tmp, links_whitelist, group_link)
+    if links_whitelist then
+        for k, v in pairs(links_whitelist) do
+            tmp:gsub(v, '')
+        end
+    end
+    if group_link then
+        tmp:gsub(group_link, '')
+    end
+    return tmp
+end
 
-    local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
-    return is_now_link
+local function pre_process_links(text)
+    if text then
+        -- make all the telegram's links t.me
+        text = links_to_tdotme(link)
+        -- remove http(s)
+        text = text:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+        -- remove www.
+        text = text:gsub("[Ww][Ww][Ww]%.", '')
+        return text:lower()
+    end
 end
 
 local function test_bot_link(text)
     -- remove all possible bot's links and test if link again
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[%w_]+%?[Ss][Tt][Aa][Rr][Tt]=", '')
-    text = text:gsub("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[%w_]+%?[Ss][Tt][Aa][Rr][Tt]=", '')
-    text = text:gsub("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/[%w_]+%?[Ss][Tt][Aa][Rr][Tt]=", '')
     text = text:gsub("[Tt]%.[Mm][Ee]/[%w_]+%?[Ss][Tt][Aa][Rr][Tt]=", '')
 
-    local is_now_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
+    local is_now_link = text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
     return is_now_link
 end
 
 local function check_if_link(text, group_link)
-    local is_text_link = text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt][Ll][Gg][Rr][Mm]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
-    text:match("[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm]%.[Dd][Oo][Gg]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
+    text = pre_process_links(text)
+    text = remove_whitelisted_links(text, links_whitelist, pre_process_links(group_link))
+    local is_text_link = text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
     -- or text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
 
     if is_text_link then
-        local test_more = false
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
         if is_bot then
             -- if bot link test if removing that there are other links
-            test_more = test_bot_link(text:lower())
+            return test_bot_link(text:lower())
         else
             -- if not bot link then test if there are links
-            test_more = true
-        end
-        if test_more then
-            -- if there could be other links check
-            if group_link then
-                if not string.find(text:lower(), group_link:lower()) then
-                    -- if group link but not in text then link
-                    return true
-                else
-                    -- test if removing group link there are other links
-                    return test_text_link(text:lower(), group_link:lower())
-                end
-            else
-                -- if no group_link then link
-                return true
-            end
+            return true
         end
     end
     return false
@@ -106,6 +95,7 @@ local function action(msg, strict, reason)
 end
 
 local function check_msg(msg, settings, pre_process_function)
+    local links_whitelist = settings.links_whitelist
     local lock_arabic = settings.lock_arabic
     local lock_bots = settings.lock_bots
     local lock_leave = settings.lock_leave
@@ -157,7 +147,8 @@ local function check_msg(msg, settings, pre_process_function)
             for k, v in pairs(msg.entities) do
                 if v.url then
                     if lock_link then
-                        if check_if_link(v.url, group_link) then
+                        local tmp = v.url
+                        if check_if_link(tmp, links_whitelist, pre_process_links(group_link)) then
                             if pre_process_function then
                                 print('link found entities')
                                 action(msg, strict, langs[msg.lang].reasonLockLinkEntities)
@@ -195,7 +186,8 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
             if lock_link then
-                if check_if_link(msg.text, group_link) then
+                local tmp = msg.text
+                if check_if_link(tmp, pre_process_links(group_link)) then
                     if pre_process_function then
                         print('link found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
@@ -204,17 +196,15 @@ local function check_msg(msg, settings, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                local tmp = msg.text:lower()
-                -- make all the telegram's links t.me
-                tmp = links_to_tdotme(tmp)
-                -- remove http(s)
-                tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+                tmp = tmp:lower()
                 -- remove joinchat links
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
                 -- remove ?start=blabla and things like that
                 tmp = tmp:gsub('%?([^%s]+)', '')
                 -- make links usernames
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+                -- remove all whitelisted links
+                tmp = remove_whitelisted_links(tmp, links_whitelisted, group_link)
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
@@ -277,7 +267,8 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
             if lock_link then
-                if check_if_link(msg.caption, group_link) then
+                local tmp = msg.caption
+                if check_if_link(tmp, pre_process_links(group_link)) then
                     if pre_process_function then
                         print('link found')
                         action(msg, strict, langs[msg.lang].reasonLockLink)
@@ -286,17 +277,15 @@ local function check_msg(msg, settings, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                local tmp = msg.caption:lower()
-                -- make all the telegram's links t.me
-                tmp = links_to_tdotme(tmp)
-                -- remove http(s)
-                tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+                tmp = tmp:lower()
                 -- remove joinchat links
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
                 -- remove ?start=blabla and things like that
                 tmp = tmp:gsub('%?([^%s]+)', '')
                 -- make links usernames
                 tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+                -- remove all whitelisted links
+                tmp = remove_whitelisted_links(tmp, links_whitelisted, group_link)
                 while string.match(tmp, '@[^%s]+') do
                     if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
                         if pre_process_function then
