@@ -13,7 +13,7 @@ local default_settings = {
     moderators =
     {
         -- user_id = username or printname
-        -- todo
+        -- #todo
         -- user_id = {
         -- username or printname
         -- various permissions
@@ -25,11 +25,13 @@ local default_settings = {
     set_owner = '41400331',
     settings =
     {
+        -- #todo
+        -- setting = false, 'warn', 'kick', 'ban'
         flood = true,
         flood_max = 5,
         links_whitelist =
         {
-            -- links
+            -- whitelisted links, usernames, channel ids
         },
         lock_arabic = false,
         lock_bots = false,
@@ -64,7 +66,6 @@ local default_settings = {
     welcomemembers = 0,
 }
 
--- INREALM
 -- begin ADD/REM GROUPS
 local function addGroup(msg)
     if is_group(msg) then
