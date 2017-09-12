@@ -43,7 +43,7 @@ local function whitelist_link(chat_id, link)
                             -- already whitelisted
                             data[tostring(chat_id)].settings.links_whitelist[k] = nil
                             save_data(config.moderation.data, data)
-                            return link .. langs[msg.lang].whitelistLinkRemoved
+                            return link .. langs[lang].whitelistLinkRemoved
                         end
                     end
                 end
@@ -51,9 +51,9 @@ local function whitelist_link(chat_id, link)
         end
         table.insert(data[tostring(chat_id)].settings.links_whitelist, link)
         save_data(config.moderation.data, data)
-        return link .. langs[msg.lang].whitelistLinkAdded
+        return link .. langs[lang].whitelistLinkAdded
     else
-        return link .. langs[msg.lang].notLink
+        return link .. langs[lang].notLink
     end
 end
 
