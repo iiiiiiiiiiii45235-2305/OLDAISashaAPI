@@ -223,6 +223,7 @@ local function check_msg(msg, settings, pre_process_function)
                                 action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
                                 return nil
                             end
+                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         else
                             text = text .. langs[msg.lang].reasonLockLinkUsername
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
@@ -304,6 +305,7 @@ local function check_msg(msg, settings, pre_process_function)
                                 action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
                                 return nil
                             end
+                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         else
                             text = text .. langs[msg.lang].reasonLockLinkUsername
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')

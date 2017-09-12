@@ -1283,7 +1283,7 @@ end
 -- *** END API FUNCTIONS ***
 
 -- *** START PWRTELEGRAM API FUNCTIONS ***
-function resolveChat(id_or_username)
+function resolveChat(id_or_username, no_log)
     local url = PWR_URL .. '/getChat?chat_id=' .. id_or_username
     local dat, code = HTTPS.request(url)
 
@@ -1297,7 +1297,9 @@ function resolveChat(id_or_username)
         if not tab then
             return false
         else
-            sendLog('#BadRequest PWRTelegram API\n' .. vardumptext(tab) .. '\n' .. code)
+            if not no_log then
+                sendLog('#BadRequest PWRTelegram API\n' .. vardumptext(tab) .. '\n' .. code)
+            end
             return false
         end
     end
@@ -1322,7 +1324,7 @@ function saveUsername(obj, chat_id)
 end
 
 -- call this to get the chat
-function getChat(id_or_username)
+function getChat(id_or_username, no_log)
     if not string.match(id_or_username, '^%*%d') then
         if tostring(id_or_username) ~= '@' then
             local obj = nil
@@ -1331,7 +1333,7 @@ function getChat(id_or_username)
             if not ok then
                 if not tostring(id_or_username):match('^@') then
                     -- getChat if not a username
-                    obj = APIgetChat(id_or_username)
+                    obj = APIgetChat(id_or_username, no_log)
                     if type(obj) == 'table' then
                         if obj.result then
                             obj = obj.result
@@ -1352,7 +1354,7 @@ function getChat(id_or_username)
                 end
                 if stored then
                     -- check API
-                    obj = APIgetChat(stored)
+                    obj = APIgetChat(stored, no_log)
                     if type(obj) == 'table' then
                         if obj.result then
                             obj = obj.result
@@ -1362,7 +1364,7 @@ function getChat(id_or_username)
                     end
                 else
                     -- check API if not in redis db, it could be a channel username that was not checked before
-                    obj = APIgetChat(id_or_username)
+                    obj = APIgetChat(id_or_username, no_log)
                     if type(obj) == 'table' then
                         if obj.result then
                             obj = obj.result
@@ -1375,7 +1377,7 @@ function getChat(id_or_username)
             --[[
             -- PWR API
             if not ok then
-                obj = resolveChat(id_or_username)
+                obj = resolveChat(id_or_username, no_log)
                 if type(obj) == 'table' then
                     if obj.result then
                         obj = obj.result
