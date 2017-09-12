@@ -169,6 +169,29 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
         end
+        if msg.forward then
+            if msg.forward_from_chat then
+                local whitelisted = false
+                for k, v in pairs(links_whitelist) do
+                    if tostring(v) == tostring(msg.forward_from_chat.id) then
+                        whitelisted = true
+                    end
+                end
+                if not whitelisted then
+                    if pre_process_function then
+                        print('link (forward) found')
+                        if strict then
+                            action(msg, strict, langs[msg.lang].reasonLockLinkForward)
+                            return nil
+                        end
+                    else
+                        if strict then
+                            text = text .. langs[msg.lang].reasonLockLinkForward
+                        end
+                    end
+                end
+            end
+        end
         if msg.text then
             if mute_text then
                 if pre_process_function then
@@ -223,19 +246,13 @@ local function check_msg(msg, settings, pre_process_function)
                             end
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         else
-                            text = text .. langs[msg.lang].reasonLockLinkUsername
+                            if strict then
+                                text = text .. langs[msg.lang].reasonLockLinkUsername
+                            end
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         end
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                    end
-                end
-                if msg.forward then
-                    if msg.forward_from_chat then
-                        if strict then
-                            action(msg, strict, langs[msg.lang].reasonLockLinkForward)
-                            return nil
-                        end
                     end
                 end
             end
@@ -304,19 +321,13 @@ local function check_msg(msg, settings, pre_process_function)
                             end
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         else
-                            text = text .. langs[msg.lang].reasonLockLinkUsername
+                            if strict then
+                                text = text .. langs[msg.lang].reasonLockLinkUsername
+                            end
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         end
                     else
                         tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                    end
-                end
-                if msg.forward then
-                    if msg.forward_from_chat then
-                        if strict then
-                            action(msg, strict, langs[msg.lang].reasonLockLinkForward)
-                            return nil
-                        end
                     end
                 end
             end
