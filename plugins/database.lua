@@ -423,14 +423,16 @@ local function save_to_db(msg)
             tmp = links_to_tdotme(tmp)
             -- remove http(s)
             tmp = tmp:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+            -- remove www.
+            text = text:gsub("[Ww][Ww][Ww]%.", '')
             -- remove joinchat links
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
             -- remove ?start=blabla and things like that
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            while string.match(tmp, '(@[^%s]+)') do
-                local obj = getChat(string.match(tmp, '(@[^%s]+)'), true)
+            while string.match(tmp, '(@[%w_]+)') do
+                local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
                         obj = obj.result
@@ -449,7 +451,7 @@ local function save_to_db(msg)
                         end
                     end
                 end
-                tmp = tmp:gsub(string.match(tmp, '(@[^%s]+)'), '')
+                tmp = tmp:gsub(string.match(tmp, '(@[%w_]+)'), '')
             end
 
             -- if forward save forward
