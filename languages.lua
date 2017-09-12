@@ -1,9 +1,9 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "(HELP) Better help keyboard with pages.\n" ..
-    "(WHITELIST) Whitelistlink <link>|<username> to whitelist links of groups/channels or usernames of public groups/channels so when they're sent sasha doesn't kick (owner^).\n" ..
-    "(WHITELIST) Whitelistlink to see the whitelisted links|usernames (user^).\n" ..
-    "(MSG_CHECKS) Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed when strict is enabled and punished with ban.\n",
+    "(WHITELIST) Whitelistlink <link>|<username> to whitelist links of groups/channels or usernames of public groups/channels so when they're sent sasha doesn't kick or ids of channels so when a message is forwarded from them sasha doesn't kick (owner^).\n" ..
+    "(WHITELIST) Whitelistlink to see the whitelisted links|usernames|ids (user^).\n" ..
+    "(MSG_CHECKS) Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed as every other link and when strict is enabled punished with ban.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
