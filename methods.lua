@@ -1146,7 +1146,6 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
         end
         local obj = getChat(chat_id)
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
-        sendMessage(41400331, curl_command)
         return curlRequest(curl_command)
     end
 end
