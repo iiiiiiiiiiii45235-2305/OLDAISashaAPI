@@ -367,7 +367,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
                     if num_msg > 2 then
-                        local path = "./data/tmp/" .. tostring(chat_id) .. ".txt"
+                        local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or '') .. ".txt"
                         local file = io.open(path, "w")
                         file:write(text)
                         file:close()
