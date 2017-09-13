@@ -232,10 +232,18 @@ local function run(msg, matches)
     end
     table.sort(plugins)
     if matches[1]:lower() == 'helpall' then
-        if msg.chat.type == 'private' then
-            mystat('/helpall')
-            return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+        mystat('/helpall')
+        if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+            if msg.chat.type ~= 'private' then
+                local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                return
+            end
+        else
+            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
         end
+        return
     end
     if matches[1]:lower() == 'help' then
         if not matches[2] then
@@ -310,20 +318,38 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'syntaxall' then
-        if msg.chat.type == 'private' then
-            mystat('/syntaxall')
-            return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+        mystat('/syntaxall')
+        if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+            if msg.chat.type ~= 'private' then
+                local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                return
+            end
+        else
+            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
         end
+        return
     end
     if matches[1]:lower() == 'syntax' then
-        if matches[2] then
+        if #matches[2] >= 3 then
             mystat('/syntax <command>')
             matches[2] = matches[2]:gsub('[#!/]', '#')
             local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
             if text == '' then
                 return langs[msg.lang].commandNotFound
             else
-                return sendReply(msg, langs[msg.lang].helpIntro .. text)
+                if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. text) then
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt).result.message_id
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                        return
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                end
+                return
             end
         else
             return langs[msg.lang].filterTooShort
@@ -402,7 +428,7 @@ return {
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp]) ([^%s]+)$",
         "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
-        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (...+)$",
+        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.+)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ff][Aa][Qq])$",
         "^[#!/]([Ff][Aa][Qq])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
