@@ -1,7 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "(HELP) Better help keyboard with pages.\n" ..
-    "(HELP) Restored !Helpall and !Syntaxall commands (in private chats).\n" ..
+    "(HELP) Restored !Helpall and !Syntaxall commands.\n" ..
     "(WHITELIST) !Whitelistlink <link>|<username> to whitelist links of groups/channels or usernames of public groups/channels so when they're sent sasha doesn't kick or ids of channels so when a message is forwarded from them sasha doesn't kick (owner^).\n" ..
     "(WHITELIST) !Whitelistlink to see the whitelisted links|usernames|ids (user^).\n" ..
     "(MSG_CHECKS) Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed as every other link and when STRICT is enabled punished with BAN.\n",
