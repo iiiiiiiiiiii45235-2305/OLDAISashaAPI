@@ -709,6 +709,8 @@ local function run(msg, matches)
             if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
                 return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
             end
+        elseif msg.service_type == 'pinned_message' then
+            return sendReply(msg, '#pin' .. msg.chat.id)
         end
     end
     if msg.cb then
@@ -2224,6 +2226,7 @@ return {
         "!!tgservice chat_change_photo",
         "!!tgservice delete_chat_photo",
         "!!tgservice chat_rename",
+        "!!tgservice pinned_message",
 
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
