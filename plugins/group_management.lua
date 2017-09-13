@@ -711,7 +711,7 @@ local function run(msg, matches)
             end
         elseif msg.service_type == 'pinned_message' then
             if not sendReply(msg, '#pin' .. tostring(msg.chat.id):gsub('-', '')) then
-                sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', '')
+                sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
             end
             return
         end
