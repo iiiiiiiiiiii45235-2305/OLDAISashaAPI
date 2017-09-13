@@ -656,66 +656,6 @@ local function checkMatchesMuteUnmute(txt)
 end
 
 local function run(msg, matches)
-    if msg.service then
-        print('service')
-        if is_realm(msg) then
-            if msg.service_type == 'chat_add_user_link' then
-                if msg.from.id ~= bot.userVersion.id then
-                    -- if not admin and not bot then
-                    if not is_admin(msg) then
-                        return banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteRealm)
-                    end
-                end
-            elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
-                local text = ''
-                for k, v in pairs(msg.added) do
-                    if v.id ~= bot.userVersion.id then
-                        -- if not admin and not bot then
-                        if not is_admin(msg) then
-                            text = text .. banUser(bot.id, v.id, msg.chat.id) .. '\n'
-                        end
-                    end
-                end
-                return text .. langs[msg.lang].reasonInviteRealm
-            end
-        end
-        if is_group(msg) then
-            if msg.service_type == 'chat_del_user' then
-                return savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.removed.id)
-            end
-        end
-        if msg.service_type == 'chat_rename' then
-            if data[tostring(msg.chat.id)].settings.lock_name then
-                return setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
-            end
-        elseif msg.service_type == 'chat_change_photo' then
-            if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
-                return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
-            else
-                local bigger_pic_id = ''
-                local size = 0
-                for k, v in pairsByKeys(msg.new_chat_photo) do
-                    if v.file_size then
-                        if v.file_size > size then
-                            size = v.file_size
-                            bigger_pic_id = v.file_id
-                        end
-                    end
-                end
-                data[tostring(msg.chat.id)].photo = bigger_pic_id
-                return
-            end
-        elseif msg.service_type == 'delete_chat_photo' then
-            if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
-                return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
-            end
-        elseif msg.service_type == 'pinned_message' then
-            if not sendReply(msg, '#pin' .. tostring(msg.chat.id):gsub('-', '')) then
-                sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
-            end
-            return
-        end
-    end
     if msg.cb then
         if matches[1] then
             if matches[1] == '###cbgroup_management' then
@@ -2202,6 +2142,86 @@ local function run(msg, matches)
     end
 end
 
+local function pre_process(msg)
+    if msg then
+        if msg.service then
+            if is_realm(msg) then
+                if msg.service_type == 'chat_add_user_link' then
+                    if msg.from.id ~= bot.userVersion.id then
+                        -- if not admin and not bot then
+                        if not is_admin(msg) then
+                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonInviteRealm))
+                        end
+                    end
+                elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+                    local text = ''
+                    for k, v in pairs(msg.added) do
+                        if v.id ~= bot.userVersion.id then
+                            -- if not admin and not bot then
+                            if not is_admin(msg) then
+                                text = text .. banUser(bot.id, v.id, msg.chat.id) .. '\n'
+                            end
+                        end
+                    end
+                    sendMessage(msg.chat.id, text .. langs[msg.lang].reasonInviteRealm)
+                end
+            end
+            if msg.service_type == 'chat_add_user_link' then
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] joined with invite link  ")
+            end
+            if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
+                local text = ''
+                for k, v in pairs(msg.added) do
+                    text = text .. v.id .. ' '
+                end
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added user(s)  " .. text)
+            end
+            if msg.service_type == 'chat_del_user' then
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.removed.id)
+            end
+            if msg.service_type == 'chat_rename' then
+                if data[tostring(msg.chat.id)].settings.lock_name then
+                    setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat N")
+                else
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat Y")
+                end
+            elseif msg.service_type == 'chat_change_photo' then
+                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                    setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo N")
+                else
+                    local bigger_pic_id = ''
+                    local size = 0
+                    for k, v in pairsByKeys(msg.new_chat_photo) do
+                        if v.file_size then
+                            if v.file_size > size then
+                                size = v.file_size
+                                bigger_pic_id = v.file_id
+                            end
+                        end
+                    end
+                    data[tostring(msg.chat.id)].photo = bigger_pic_id
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo Y")
+                end
+            elseif msg.service_type == 'delete_chat_photo' then
+                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                    setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted chat's photo N")
+                else
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted chat's photo Y")
+                end
+            elseif msg.service_type == 'pinned_message' then
+                if not sendReply(msg, '#pin' .. tostring(msg.chat.id):gsub('-', '')) then
+                    sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] pinned a message Y")
+                end
+            end
+        end
+        return msg
+    end
+end
+
 return {
     description = "GROUP_MANAGEMENT",
     patterns =
@@ -2221,15 +2241,6 @@ return {
         "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)(.?)$",
         "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)(.?)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)(.?)$",
-
-        "!!tgservice chat_add_user_link",
-        "!!tgservice chat_add_users",
-        "!!tgservice chat_add_user",
-        "!!tgservice chat_del_user",
-        "!!tgservice chat_change_photo",
-        "!!tgservice delete_chat_photo",
-        "!!tgservice chat_rename",
-        "!!tgservice pinned_message",
 
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
@@ -2312,6 +2323,7 @@ return {
         "^[#!/]([Gg][Ee][Tt][Ww][Aa][Rr][Nn])$",
     },
     run = run,
+    pre_process = pre_process,
     min_rank = 0,
     syntax =
     {

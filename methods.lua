@@ -366,71 +366,80 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     local text_max = 4090
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
-                    local url = BASE_URL ..
-                    '/sendMessage?chat_id=' .. chat_id ..
-                    '&disable_web_page_preview=true'
-                    local reply = false
-                    if reply_to_message_id then
-                        url = url .. '&reply_to_message_id=' .. reply_to_message_id
-                        reply = true
-                    end
-                    if parse_mode then
-                        if parse_mode:lower() == 'html' then
-                            url = url .. '&parse_mode=HTML'
-                        elseif parse_mode:lower() == 'markdown' then
-                            url = url .. '&parse_mode=Markdown'
-                        else
-                            -- no parse_mode
-                        end
-                    end
-                    if not send_sound then
-                        url = url .. '&disable_notification=true'
-                        -- messages are silent by default
-                    end
-
-                    if num_msg <= 1 then
-                        url = url .. '&text=' .. URL.escape(text)
-
-                        local res, code = sendRequest(url)
-
-                        if not res and code then
-                            -- if the request failed and a code is returned (not 403 and 429)
-                            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                savelog('send_msg', code .. '\n' .. text)
-                            end
-                        end
-                        if print_res_msg(res) then
-                            return res, code
-                        else
-                            local obj = getChat(chat_id)
-                            local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-                            print_msg(sent_msg)
-                        end
+                    if num_msg > 2 then
+                        local rnd = math.random(100000)
+                        local path = "./data/tmp/" .. tostring(chat_id) .. tostring(rnd) .. ".txt"
+                        local file = io.open(path, "w")
+                        file:write(text)
+                        file:close()
+                        return sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
                     else
-                        local my_text = string.sub(text, 1, 4090)
-                        local rest = string.sub(text, 4090, text_len)
-                        url = url .. '&text=' .. URL.escape(my_text)
-
-                        local res, code = sendRequest(url)
-
-                        if not res and code then
-                            -- if the request failed and a code is returned (not 403 and 429)
-                            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                savelog('send_msg', code .. '\n' .. text)
+                        local url = BASE_URL ..
+                        '/sendMessage?chat_id=' .. chat_id ..
+                        '&disable_web_page_preview=true'
+                        local reply = false
+                        if reply_to_message_id then
+                            url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                            reply = true
+                        end
+                        if parse_mode then
+                            if parse_mode:lower() == 'html' then
+                                url = url .. '&parse_mode=HTML'
+                            elseif parse_mode:lower() == 'markdown' then
+                                url = url .. '&parse_mode=Markdown'
+                            else
+                                -- no parse_mode
                             end
                         end
-                        if print_res_msg(res) then
-                            res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
-                        else
-                            local obj = getChat(chat_id)
-                            local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-                            print_msg(sent_msg)
-                            res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
+                        if not send_sound then
+                            url = url .. '&disable_notification=true'
+                            -- messages are silent by default
                         end
-                    end
 
-                    return res, code
-                    -- return false, and the code
+                        if num_msg <= 1 then
+                            url = url .. '&text=' .. URL.escape(text)
+
+                            local res, code = sendRequest(url)
+
+                            if not res and code then
+                                -- if the request failed and a code is returned (not 403 and 429)
+                                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                    savelog('send_msg', code .. '\n' .. text)
+                                end
+                            end
+                            if print_res_msg(res) then
+                                return res, code
+                            else
+                                local obj = getChat(chat_id)
+                                local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                                print_msg(sent_msg)
+                            end
+                        else
+                            local my_text = string.sub(text, 1, 4090)
+                            local rest = string.sub(text, 4090, text_len)
+                            url = url .. '&text=' .. URL.escape(my_text)
+
+                            local res, code = sendRequest(url)
+
+                            if not res and code then
+                                -- if the request failed and a code is returned (not 403 and 429)
+                                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                    savelog('send_msg', code .. '\n' .. text)
+                                end
+                            end
+                            if print_res_msg(res) then
+                                res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
+                            else
+                                local obj = getChat(chat_id)
+                                local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                                print_msg(sent_msg)
+                                res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
+                            end
+                        end
+
+                        return res, code
+                        -- return false, and the code
+                    end
                 end
             end
         end
@@ -1506,8 +1515,11 @@ function banUser(executer, target, chat_id, reason, until_date)
         if compare_ranks(executer, target, chat_id) then
             -- try to kick. "code" is already specific
             local res, code = kickChatMember(target, chat_id, until_date)
-
             if res then
+                if not tostring(chat_id):starts('-100') then
+                    local hash = 'banned:' .. chat_id
+                    redis:sadd(hash, tostring(target))
+                end
                 -- if the user has been kicked, then...
                 savelog(chat_id, "[" .. executer .. "] banned user " .. target)
                 redis:hincrby('bot:general', 'ban', 1)

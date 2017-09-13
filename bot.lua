@@ -789,6 +789,8 @@ function pre_process_msg(msg)
     msg = plugins.anti_spam.pre_process(msg)
     print(clr.white .. 'Preprocess', 'msg_checks')
     msg = plugins.msg_checks.pre_process(msg)
+    print(clr.white .. 'Preprocess', 'group_management')
+    msg = plugins.group_management.pre_process(msg)
     print(clr.white .. 'Preprocess', 'delword')
     msg = plugins.delword.pre_process(msg)
     for name, plugin in pairs(plugins) do
@@ -798,6 +800,7 @@ function pre_process_msg(msg)
                 plugin.description ~= 'BANHAMMER' and
                 plugin.description ~= 'DATABASE' and
                 plugin.description ~= 'DELWORD' and
+                plugin.description ~= 'GROUP_MANAGEMENT' and
                 plugin.description ~= 'MSG_CHECKS' then
                 print(clr.white .. 'Preprocess', name)
                 msg = plugin.pre_process(msg)

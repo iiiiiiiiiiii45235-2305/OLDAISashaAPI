@@ -257,6 +257,7 @@ return {
         sendKeyboardPvt = "Ti ho mandato la tastiera in privato.",
         sendTimeKeyboardPvt = "Ti ho mandato la tastiera del tempo in privato.",
         errorTempTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
+        messageTooLong = "Messaggio troppo lungo, questo è un file con il testo che mi hai richiesto.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kickato da: ",
@@ -1601,6 +1602,7 @@ return {
         sendKeyboardPvt = "I've sent you the keyboard in private.",
         sendTimeKeyboardPvt = "I've sent you the time keyboard in private.",
         errorTempTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
+        messageTooLong = "Message too long, this is a file that includes the text that you needed.",
 
         -- warn/kick/ban reasons --
         kickedFrom = "Kicked from: ",
