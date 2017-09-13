@@ -367,12 +367,12 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
                     if num_msg > 2 then
-                        local rnd = math.random(100000)
-                        local path = "./data/tmp/" .. tostring(chat_id) .. tostring(rnd) .. ".txt"
+                        local path = "./data/tmp/" .. tostring(chat_id) .. ".txt"
                         local file = io.open(path, "w")
                         file:write(text)
                         file:close()
-                        return sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
+                        sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
+                        return true
                     else
                         local url = BASE_URL ..
                         '/sendMessage?chat_id=' .. chat_id ..
