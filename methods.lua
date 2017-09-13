@@ -1136,6 +1136,7 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_document', true) then
         local url = BASE_URL .. '/sendDocument'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+        print(caption)
         if caption then
             curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
         end
@@ -1147,7 +1148,6 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
         local obj = getChat(chat_id)
         local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
         print_msg(sent_msg)
-        sendMessage(41400331, curl_command)
         return curlRequest(curl_command)
     end
 end
