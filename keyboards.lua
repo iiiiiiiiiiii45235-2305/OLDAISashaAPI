@@ -29,15 +29,15 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
             if type(value) == 'boolean' then
                 if value then
                     if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseRestrictionsDictionary[var] .. ' ✅', callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id .. 'I' }
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseRestrictionsDictionary[var:lower()] .. ' ✅', callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var:lower()] .. chat_id .. 'I' }
                     else
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseRestrictionsDictionary[var] .. ' ✅', callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseRestrictionsDictionary[var:lower()] .. ' ✅', callback_data = 'banhammerRESTRICT' .. user_id .. reverseRestrictionsDictionary[var:lower()] .. chat_id }
                     end
                 else
                     if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '🚫 ' .. reverseRestrictionsDictionary[var] .. ' 🚫', callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id .. 'I' }
+                        keyboard.inline_keyboard[row][column] = { text = '🚫 ' .. reverseRestrictionsDictionary[var:lower()] .. ' 🚫', callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var:lower()] .. chat_id .. 'I' }
                     else
-                        keyboard.inline_keyboard[row][column] = { text = '🚫 ' .. reverseRestrictionsDictionary[var] .. ' 🚫', callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var] .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = '🚫 ' .. reverseRestrictionsDictionary[var:lower()] .. ' 🚫', callback_data = 'banhammerUNRESTRICT' .. user_id .. reverseRestrictionsDictionary[var:lower()] .. chat_id }
                     end
                 end
                 row = row + 1
@@ -403,15 +403,15 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
             if type(value) == 'boolean' then
                 if value then
                     if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var] .. ' ✅', callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id .. 'I' }
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var:lower()] .. ' ✅', callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var:lower()] .. chat_id .. 'I' }
                     else
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var] .. ' ✅', callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reversePermissionsDictionary[var:lower()] .. ' ✅', callback_data = 'group_managementDENY' .. user_id .. reversePermissionsDictionary[var:lower()] .. chat_id }
                     end
                 else
                     if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var] .. ' ☑️', callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id .. 'I' }
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var:lower()] .. ' ☑️', callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var:lower()] .. chat_id .. 'I' }
                     else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var] .. ' ☑️', callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var] .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reversePermissionsDictionary[var:lower()] .. ' ☑️', callback_data = 'group_managementGRANT' .. user_id .. reversePermissionsDictionary[var:lower()] .. chat_id }
                     end
                 end
                 row = row + 1
@@ -453,7 +453,7 @@ function keyboard_settings_list(chat_id, from_other_plugin)
     local flag = false
     keyboard.inline_keyboard[row] = { }
     for var, value in pairsByKeys(data[tostring(chat_id)].settings) do
-        if reverseAdjustSettingType(var) ~= 'flood' then
+        if reverseSettingsDictionary[var:lower()] ~= 'flood' then
             if type(value) == 'boolean' then
                 if flag then
                     flag = false
@@ -463,15 +463,15 @@ function keyboard_settings_list(chat_id, from_other_plugin)
                 end
                 if value then
                     if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var .. chat_id .. 'I' }
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseSettingsDictionary[var:lower()] .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id .. 'I' }
                     else
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseAdjustSettingType(var) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = '✅ ' .. reverseSettingsDictionary[var:lower()] .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id }
                     end
                 else
                     if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var) .. ' ☑️', callback_data = 'group_managementLOCK' .. var .. chat_id .. 'I' }
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseSettingsDictionary[var:lower()] .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id .. 'I' }
                     else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseAdjustSettingType(var) .. ' ☑️', callback_data = 'group_managementLOCK' .. var .. chat_id }
+                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' .. reverseSettingsDictionary[var:lower()] .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id }
                     end
                 end
                 column = column + 1

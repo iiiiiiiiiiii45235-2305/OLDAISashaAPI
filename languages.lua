@@ -901,7 +901,7 @@ return {
             .. "R: Per comodità di sviluppo (gli id dei gruppi e supergruppi sono differenti per utenti e bot, lo stesso vale per altri parametri).",
             [11] = "D: Cosa significano le impostazioni?\n"
             .. "R: Arabic => Caratteri arabi.\n"
-            .. "Bots => Altri bot (controllati con le ultime lettere dell'username).\n"
+            .. "Bots => Altri bot.\n"
             .. "Flood => N messaggi in 2 secondi.\n"
             .. "Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n"
             .. "Leave => Abbandono del gruppo.\n"
@@ -2259,7 +2259,7 @@ return {
             .. "R: Because of development facilitations (groups and supergroups ids are not the same for bots and users like other parameters).",
             [11] = "D: What do settings mean?\n"
             .. "R: Arabic => Arabic characters.\n"
-            .. "Bots => Other bots (checked with the last letters of the username).\n"
+            .. "Bots => Other bots.\n"
             .. "Flood => N messages in 2 seconds.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
             .. "Leave => Group leave.\n"

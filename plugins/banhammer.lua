@@ -376,7 +376,7 @@ local function run(msg, matches)
                                 if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
-                                            text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                         end
                                     end
                                     text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #restrict'
@@ -387,7 +387,7 @@ local function run(msg, matches)
                                 if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
-                                            text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                         end
                                     end
                                     text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
@@ -817,7 +817,7 @@ local function run(msg, matches)
                                             end
                                             for k, v in pairs(restrictions) do
                                                 if not restrictions[k] then
-                                                    text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                                    text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                                 end
                                             end
                                             if time < 30 or time > 31622400 then
@@ -869,7 +869,7 @@ local function run(msg, matches)
                                     end
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
-                                            text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                         end
                                     end
                                     if time < 30 or time > 31622400 then
@@ -916,7 +916,7 @@ local function run(msg, matches)
                                 end
                                 for k, v in pairs(restrictions) do
                                     if not restrictions[k] then
-                                        text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                        text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                     end
                                 end
                                 if time < 30 or time > 31622400 then
@@ -968,7 +968,7 @@ local function run(msg, matches)
                                             end
                                             for k, v in pairs(restrictions) do
                                                 if not restrictions[k] then
-                                                    text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                                    text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                                 end
                                             end
                                             if time < 30 or time > 31622400 then
@@ -994,7 +994,7 @@ local function run(msg, matches)
                                 end
                                 for k, v in pairs(restrictions) do
                                     if not restrictions[k] then
-                                        text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                        text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                     end
                                 end
                                 if time < 30 or time > 31622400 then
@@ -1019,7 +1019,7 @@ local function run(msg, matches)
                                         end
                                         for k, v in pairs(restrictions) do
                                             if not restrictions[k] then
-                                                text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                                text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                             end
                                         end
                                         if time < 30 or time > 31622400 then
@@ -1127,7 +1127,7 @@ local function run(msg, matches)
                                         end
                                         for k, v in pairs(restrictions) do
                                             if not restrictions[k] then
-                                                text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                                text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                             end
                                         end
                                         if restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, restrictions) then
@@ -1147,7 +1147,7 @@ local function run(msg, matches)
                                 end
                                 for k, v in pairs(restrictions) do
                                     if not restrictions[k] then
-                                        text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                        text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                     end
                                 end
                                 if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions) then
@@ -1162,7 +1162,7 @@ local function run(msg, matches)
                             end
                             for k, v in pairs(restrictions) do
                                 if not restrictions[k] then
-                                    text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                    text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                 end
                             end
                             if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions) then
@@ -1182,7 +1182,7 @@ local function run(msg, matches)
                                         end
                                         for k, v in pairs(restrictions) do
                                             if not restrictions[k] then
-                                                text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                                text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                             end
                                         end
                                         if restrictChatMember(msg.chat.id, msg.entities[k].user.id, restrictions) then
@@ -1200,7 +1200,7 @@ local function run(msg, matches)
                             end
                             for k, v in pairs(restrictions) do
                                 if not restrictions[k] then
-                                    text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                    text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                 end
                             end
                             if restrictChatMember(msg.chat.id, obj_user.id, restrictions) then
@@ -1217,7 +1217,7 @@ local function run(msg, matches)
                                     end
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
-                                            text = text .. reverseRestrictionsDictionary[k] .. ' '
+                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                         end
                                     end
                                     if restrictChatMember(msg.chat.id, obj_user.id, restrictions) then

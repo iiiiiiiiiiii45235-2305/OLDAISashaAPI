@@ -657,15 +657,15 @@ function adjustPermissions(param_permissions)
     if param_permissions then
         if type(param_permissions) == 'table' then
             for k, v in pairs(param_permissions) do
-                if permissionsDictionary[k] then
-                    permissions[tostring(permissionsDictionary[k])] = param_permissions[tostring(permissionsDictionary[k])]
+                if permissionsDictionary[k:lower()] then
+                    permissions[tostring(permissionsDictionary[k:lower()])] = param_permissions[tostring(permissionsDictionary[k:lower()])]
                 end
             end
         elseif type(param_permissions) == 'string' then
             param_permissions = param_permissions:lower()
             for k, v in pairs(param_permissions:split(' ')) do
-                if permissionsDictionary[v] then
-                    permissions[tostring(permissionsDictionary[v])] = true
+                if permissionsDictionary[v:lower()] then
+                    permissions[tostring(permissionsDictionary[v:lower()])] = true
                 end
             end
         end
@@ -673,45 +673,93 @@ function adjustPermissions(param_permissions)
     return permissions
 end
 
-function reverseAdjustSettingType(setting_type)
-    if setting_type == 'lock_arabic' then
-        setting_type = 'arabic'
-    end
-    if setting_type == 'lock_bots' then
-        setting_type = 'bots'
-    end
-    if setting_type == 'flood' then
-        setting_type = 'flood'
-    end
-    if setting_type == 'lock_group_link' then
-        setting_type = 'grouplink'
-    end
-    if setting_type == 'lock_leave' then
-        setting_type = 'leave'
-    end
-    if setting_type == 'lock_link' then
-        setting_type = 'link'
-    end
-    if setting_type == 'lock_member' then
-        setting_type = 'member'
-    end
-    if setting_type == 'lock_name' then
-        setting_type = 'name'
-    end
-    if setting_type == 'lock_photo' then
-        setting_type = 'photo'
-    end
-    if setting_type == 'lock_rtl' then
-        setting_type = 'rtl'
-    end
-    if setting_type == 'lock_spam' then
-        setting_type = 'spam'
-    end
-    if setting_type == 'strict' then
-        setting_type = 'strict'
-    end
-    return setting_type
-end
+settingsDictionary = {
+    ["lock_arabic"] = "lock_arabic",
+    ["arabic"] = "lock_arabic",
+    ["lock_bots"] = "lock_bots",
+    ["bots"] = "lock_bots",
+    ["flood"] = "flood",
+    ["lock_group_link"] = "lock_group_link",
+    ["group_link"] = "lock_group_link",
+    ["grouplink"] = "lock_group_link",
+    ["lock_link"] = "lock_link",
+    ["links"] = "lock_link",
+    ["link"] = "lock_link",
+    ["lock_member"] = "lock_member",
+    ["members"] = "lock_member",
+    ["member"] = "lock_member",
+    ["lock_name"] = "lock_name",
+    ["name"] = "lock_name",
+    ["lock_photo"] = "lock_photo",
+    ["photo"] = "lock_photo",
+    ["lock_rtl"] = "lock_rtl",
+    ["rtl"] = "lock_rtl",
+    ["lock_spam"] = "lock_spam",
+    ["spam"] = "lock_spam",
+    ["strict"] = "strict",
+}
+
+reverseSettingsDictionary = {
+    ["lock_arabic"] = "arabic",
+    ["arabic"] = "arabic",
+    ["lock_bots"] = "bots",
+    ["bots"] = "bots",
+    ["flood"] = "flood",
+    ["lock_group_link"] = "grouplink",
+    ["group_link"] = "grouplink",
+    ["grouplink"] = "grouplink",
+    ["lock_link"] = "links",
+    ["links"] = "links",
+    ["link"] = "links",
+    ["lock_member"] = "members",
+    ["members"] = "members",
+    ["member"] = "members",
+    ["lock_name"] = "name",
+    ["name"] = "name",
+    ["lock_photo"] = "photo",
+    ["photo"] = "photo",
+    ["lock_rtl"] = "rtl",
+    ["rtl"] = "rtl",
+    ["lock_spam"] = "spam",
+    ["spam"] = "spam",
+    ["strict"] = "strict",
+}
+
+mutesDictionary = {
+    ["all"] = "all",
+    ["audio"] = "audio",
+    ["audios"] = "audio",
+    ["contact"] = "contact",
+    ["contacts"] = "contact",
+    ["document"] = "document",
+    ["documents"] = "document",
+    ["gif"] = "gif",
+    ["gifs"] = "gif",
+    ["location"] = "location",
+    ["locations"] = "location",
+    ["position"] = "location",
+    ["positions"] = "location",
+    ["image"] = "photo",
+    ["images"] = "photo",
+    ["photo"] = "photo",
+    ["photos"] = "photo",
+    ["pic"] = "photo",
+    ["pics"] = "photo",
+    ["picture"] = "photo",
+    ["pictures"] = "photo",
+    ["sticker"] = "sticker",
+    ["stickers"] = "sticker",
+    ["text"] = "text",
+    ["texts"] = "text",
+    ["tgservice"] = "tgservice",
+    ["tgservices"] = "tgservice",
+    ["video"] = "video",
+    ["videos"] = "video",
+    ["voice_note"] = "video_note",
+    ["voice_notes"] = "video_note",
+    ["video_note"] = "voice_note",
+    ["video_notes"] = "voice_note",
+}
 
 restrictionsDictionary = {
     ["can_send_messages"] = "can_send_messages",
@@ -743,30 +791,30 @@ function adjustRestrictions(param_restrictions)
     if param_restrictions then
         if type(param_restrictions) == 'table' then
             for k, v in pairs(param_restrictions) do
-                if restrictionsDictionary[k] then
-                    restrictions[tostring(restrictionsDictionary[k])] = param_restrictions[tostring(restrictionsDictionary[k])]
+                if restrictionsDictionary[k:lower()] then
+                    restrictions[tostring(restrictionsDictionary[k:lower()])] = param_restrictions[tostring(restrictionsDictionary[k:lower()])]
                 end
             end
         elseif type(param_restrictions) == 'string' then
             param_restrictions = param_restrictions:lower()
             for k, v in pairs(param_restrictions:split(' ')) do
-                if restrictionsDictionary[v] then
-                    if restrictionsDictionary[v] == 'can_send_messages' then
-                        restrictions[restrictionsDictionary[v]] = false
+                if restrictionsDictionary[v:lower()] then
+                    if restrictionsDictionary[v:lower()] == 'can_send_messages' then
+                        restrictions[restrictionsDictionary[v:lower()]] = false
                         restrictions['can_send_media_messages'] = false
                         restrictions['can_send_other_messages'] = false
                         restrictions['can_add_web_page_previews'] = false
                     end
-                    if restrictionsDictionary[v] == 'can_send_media_messages' then
-                        restrictions[restrictionsDictionary[v]] = false
+                    if restrictionsDictionary[v:lower()] == 'can_send_media_messages' then
+                        restrictions[restrictionsDictionary[v:lower()]] = false
                         restrictions['can_send_other_messages'] = false
                         restrictions['can_add_web_page_previews'] = false
                     end
-                    if restrictionsDictionary[v] == 'can_send_other_messages' then
-                        restrictions[restrictionsDictionary[v]] = false
+                    if restrictionsDictionary[v:lower()] == 'can_send_other_messages' then
+                        restrictions[restrictionsDictionary[v:lower()]] = false
                     end
-                    if restrictionsDictionary[v] == 'can_add_web_page_previews' then
-                        restrictions[restrictionsDictionary[v]] = false
+                    if restrictionsDictionary[v:lower()] == 'can_add_web_page_previews' then
+                        restrictions[restrictionsDictionary[v:lower()]] = false
                     end
                 end
             end

@@ -25,12 +25,35 @@ local default_settings = {
     set_owner = '41400331',
     settings =
     {
+        -- false, 'warn', 'kick', 'ban'
+        flood = true,
         flood_max = 5,
         links_whitelist =
         {
             -- whitelisted links, usernames, channel ids
             "@username",
         },
+        -- false, 'warn', 'kick', 'ban'
+        lock_arabic = false,
+        -- false, true
+        lock_bots = true,
+        -- false, true
+        lock_group_link = true,
+        -- false, true='ban'
+        lock_leave = false,
+        -- false, 'warn', 'kick', 'ban'
+        lock_link = false,
+        -- false, true='ban'
+        lock_member = false,
+        -- false, true
+        lock_name = false,
+        -- false, true
+        lock_photo = false,
+        -- false, 'warn', 'kick', 'ban'
+        lock_rtl = false,
+        -- false, 'warn', 'kick', 'ban'
+        lock_spam = false,
+        -- false, 'delete', 'warn', 'kick', 'ban'
         mutes =
         {
             all = false,
@@ -47,21 +70,9 @@ local default_settings = {
             video_note = false,
             voice_note = false,
         },
+        -- false, true
         strict = false,
         warn_max = 3,
-        -- #todo
-        -- setting = false, 'warn', 'kick', 'ban'
-        flood = true,
-        lock_arabic = false,
-        lock_bots = false,
-        lock_group_link = true,
-        lock_leave = false,
-        lock_link = false,
-        lock_member = false,
-        lock_name = false,
-        lock_photo = false,
-        lock_rtl = false,
-        lock_spam = false,
     },
     welcome = nil,
     welcomemembers = 0,
@@ -485,49 +496,9 @@ local function showSettings(target, lang)
 end
 
 -- begin LOCK/UNLOCK FUNCTIONS
-local function adjustSettingType(setting_type)
-    if setting_type == 'arabic' then
-        setting_type = 'lock_arabic'
-    end
-    if setting_type == 'bots' then
-        setting_type = 'lock_bots'
-    end
-    if setting_type == 'flood' then
-        setting_type = 'flood'
-    end
-    if setting_type == 'grouplink' then
-        setting_type = 'lock_group_link'
-    end
-    if setting_type == 'leave' then
-        setting_type = 'lock_leave'
-    end
-    if setting_type == 'link' then
-        setting_type = 'lock_link'
-    end
-    if setting_type == 'member' then
-        setting_type = 'lock_member'
-    end
-    if setting_type == 'name' then
-        setting_type = 'lock_name'
-    end
-    if setting_type == 'photo' then
-        setting_type = 'lock_photo'
-    end
-    if setting_type == 'rtl' then
-        setting_type = 'lock_rtl'
-    end
-    if setting_type == 'spam' then
-        setting_type = 'lock_spam'
-    end
-    if setting_type == 'strict' then
-        setting_type = 'strict'
-    end
-    return setting_type
-end
-
-function lockSetting(target, setting_type)
+local function lockSetting(target, setting_type)
     local lang = get_lang(target)
-    setting_type = adjustSettingType(setting_type)
+    setting_type = settingsDictionary[setting_type:lower()]
     if setting_type == 'photo' then
         local obj = getChat(target)
         if type(obj) == 'table' then
@@ -552,9 +523,9 @@ function lockSetting(target, setting_type)
     end
 end
 
-function unlockSetting(target, setting_type)
+local function unlockSetting(target, setting_type)
     local lang = get_lang(target)
-    setting_type = adjustSettingType(setting_type)
+    setting_type = settingsDictionary[setting_type:lower()]
     local setting = data[tostring(target)].settings[tostring(setting_type)]
     if setting ~= nil then
         if setting then
@@ -570,90 +541,7 @@ function unlockSetting(target, setting_type)
         return langs[lang].settingUnlocked
     end
 end
-
-local function checkMatchesLockUnlock(txt)
-    if txt:lower() == 'arabic' then
-        return true
-    end
-    if txt:lower() == 'bots' then
-        return true
-    end
-    if txt:lower() == 'flood' then
-        return true
-    end
-    if txt:lower() == 'grouplink' then
-        return true
-    end
-    if txt:lower() == 'leave' then
-        return true
-    end
-    if txt:lower() == 'link' then
-        return true
-    end
-    if txt:lower() == 'member' then
-        return true
-    end
-    if txt:lower() == 'name' then
-        return true
-    end
-    if txt:lower() == 'photo' then
-        return true
-    end
-    if txt:lower() == 'rtl' then
-        return true
-    end
-    if txt:lower() == 'spam' then
-        return true
-    end
-    if txt:lower() == 'strict' then
-        return true
-    end
-    return false
-end
 -- end LOCK/UNLOCK FUNCTIONS
-
-local function checkMatchesMuteUnmute(txt)
-    if txt:lower() == 'all' then
-        return true
-    end
-    if txt:lower() == 'audio' then
-        return true
-    end
-    if txt:lower() == 'contact' then
-        return true
-    end
-    if txt:lower() == 'document' then
-        return true
-    end
-    if txt:lower() == 'gif' then
-        return true
-    end
-    if txt:lower() == 'location' then
-        return true
-    end
-    if txt:lower() == 'photo' then
-        return true
-    end
-    if txt:lower() == 'sticker' then
-        return true
-    end
-    if txt:lower() == 'text' then
-        return true
-    end
-    if txt:lower() == 'tgservice' then
-        return true
-    end
-    if txt:lower() == 'video' then
-        return true
-    end
-    if txt:lower() == 'video_note' then
-        return true
-    end
-    if txt:lower() == 'voice_note' then
-        return true
-    end
-    return false
-end
 
 local function run(msg, matches)
     if msg.cb then
@@ -926,7 +814,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'lock' and matches[2] and matches[3] then
             if is_admin(msg) then
-                if checkMatchesLockUnlock(matches[3]) then
+                if settingsDictionary[matches[3]:lower()] then
                     mystat('/lock <group_id> ' .. matches[3]:lower())
                     return lockSetting(matches[2], matches[3]:lower())
                 end
@@ -937,7 +825,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'unlock' and matches[2] and matches[3] then
             if is_admin(msg) then
-                if checkMatchesLockUnlock(matches[3]) then
+                if settingsDictionary[matches[3]:lower()] then
                     mystat('/unlock <group_id> ' .. matches[3]:lower())
                     return unlockSetting(matches[2], matches[3]:lower())
                 end
@@ -948,7 +836,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'mute' and matches[2] and matches[3] then
             if is_admin(msg) then
-                if checkMatchesMuteUnmute(matches[3]) then
+                if mutesDictionary[matches[3]:lower()] then
                     mystat('/mute <group_id> ' .. matches[3]:lower())
                     return mute(msg.chat.id, matches[3]:lower())
                 end
@@ -959,7 +847,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'unmute' and matches[2] and matches[3] then
             if is_admin(msg) then
-                if checkMatchesMuteUnmute(matches[3]) then
+                if mutesDictionary[matches[3]:lower()] then
                     mystat('/unmute <group_id> ' .. matches[3]:lower())
                     return unmute(msg.chat.id, matches[3]:lower())
                 end
@@ -1375,7 +1263,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'lock' then
                 if msg.from.is_mod then
-                    if checkMatchesLockUnlock(matches[2]) then
+                    if settingsDictionary[matches[2]:lower()] then
                         mystat('/lock ' .. matches[2]:lower())
                         return lockSetting(msg.chat.id, matches[2]:lower())
                     end
@@ -1386,7 +1274,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'unlock' then
                 if msg.from.is_mod then
-                    if checkMatchesLockUnlock(matches[2]) then
+                    if settingsDictionary[matches[2]:lower()] then
                         mystat('/unlock ' .. matches[2]:lower())
                         return unlockSetting(msg.chat.id, matches[2]:lower())
                     end
@@ -1397,7 +1285,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'mute' then
                 if msg.from.is_mod then
-                    if checkMatchesMuteUnmute(matches[2]) then
+                    if mutesDictionary[matches[2]:lower()] then
                         mystat('/mute ' .. matches[2]:lower())
                         if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
                             if msg.from.is_owner then
@@ -1416,7 +1304,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'unmute' then
                 if msg.from.is_mod then
-                    if checkMatchesMuteUnmute(matches[2]) then
+                    if mutesDictionary[matches[2]:lower()] then
                         mystat('/unmute ' .. matches[2]:lower())
                         if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
                             if msg.from.is_owner then
