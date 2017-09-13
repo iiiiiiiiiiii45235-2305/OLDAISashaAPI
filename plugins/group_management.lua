@@ -710,7 +710,7 @@ local function run(msg, matches)
                 return setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
             end
         elseif msg.service_type == 'pinned_message' then
-            return sendReply(msg, '#pin' .. msg.chat.id)
+            return sendReply(msg, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
         end
     end
     if msg.cb then
