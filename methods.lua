@@ -1136,6 +1136,9 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_document', true) then
         local url = BASE_URL .. '/sendDocument'
         local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+        if caption then
+            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+        end
         local reply = false
         if reply_to_message_id then
             curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
