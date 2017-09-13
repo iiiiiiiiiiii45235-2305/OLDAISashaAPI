@@ -2214,12 +2214,7 @@ local function run(msg, matches)
                         gbanlist = gbanlist .. k .. " - " .. v .. "\n"
                     end
                 end
-                local file = io.open("./groups/gbanlist.txt", "w")
-                file:write(gbanlist)
-                file:flush()
-                file:close()
-                return sendDocument(msg.chat.id, "./groups/gbanlist.txt")
-                -- return sendMessage(msg.chat.id, gbanlist)
+                return gbanlist
             else
                 return langs[msg.lang].require_admin
             end
