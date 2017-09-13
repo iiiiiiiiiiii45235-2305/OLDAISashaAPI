@@ -231,10 +231,12 @@ local function run(msg, matches)
         return text
     end
     table.sort(plugins)
-    --[[if matches[1]:lower() == 'helpall' then
-        mystat('/helpall')
-        return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-    end]]
+    if matches[1]:lower() == 'helpall' then
+        if msg.chat.type == 'private' then
+            mystat('/helpall')
+            return langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+        end
+    end
     if matches[1]:lower() == 'help' then
         if not matches[2] then
             mystat('/help')
@@ -307,18 +309,24 @@ local function run(msg, matches)
             end
         end
     end
-    --[[if matches[1]:lower() == 'syntaxall' then
-        mystat('/syntaxall')
-        return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-    end]]
-    if matches[1]:lower() == 'syntax' and matches[2] then
-        mystat('/syntax <command>')
-        matches[2] = matches[2]:gsub('[#!/]', '#')
-        local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
-        if text == '' then
-            return langs[msg.lang].commandNotFound
+    if matches[1]:lower() == 'syntaxall' then
+        if msg.chat.type == 'private' then
+            mystat('/syntaxall')
+            return langs[msg.lang].helpIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+        end
+    end
+    if matches[1]:lower() == 'syntax' then
+        if matches[2] then
+            mystat('/syntax <command>')
+            matches[2] = matches[2]:gsub('[#!/]', '#')
+            local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
+            if text == '' then
+                return langs[msg.lang].commandNotFound
+            else
+                return sendReply(msg, langs[msg.lang].helpIntro .. text)
+            end
         else
-            return langs[msg.lang].helpIntro .. text
+            return langs[msg.lang].filterTooShort
         end
     end
     if matches[1]:lower() == 'faq' then
@@ -388,13 +396,13 @@ return {
 
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+) (%d+) (%d+) (%d+) (%d+)$",
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt][Tt][Ii][Mm][Ee]) (%d+)$",
-        -- "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
+        "^[#!/]([Hh][Ee][Ll][Pp][Aa][Ll][Ll])$",
         "^[#!/]([Hh][Ee][Ll][Pp])$",
         "^[#!/]([Hh][Ee][Ll][Pp]) ([^%s]+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Hh][Ee][Ll][Pp]) ([^%s]+)$",
-        -- "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
-        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (.*)$",
+        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx][Aa][Ll][Ll])$",
+        "^[#!/]([Ss][Yy][Nn][Tt][Aa][Xx]) (...+)$",
         "^[#!/]([Ss][Uu][Dd][Oo][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ff][Aa][Qq])$",
         "^[#!/]([Ff][Aa][Qq])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
@@ -415,9 +423,9 @@ return {
         "#help <plugin_name>|<plugin_number>",
         "#textualhelp",
         "#textualhelp <plugin_name>|<plugin_number>",
-        -- "#helpall",
+        "#helpall",
         "#syntax <filter>",
-        -- "#syntaxall",
+        "#syntaxall",
         "#faq[<n>]",
         "#textualfaq[<n>]",
         "#converttime <seconds>",

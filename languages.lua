@@ -1,6 +1,7 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "(HELP) Better help keyboard with pages.\n" ..
+    "(HELP) Restored !Helpall and !Syntaxall commands (in private chats).\n" ..
     "(WHITELIST) Whitelistlink <link>|<username> to whitelist links of groups/channels or usernames of public groups/channels so when they're sent sasha doesn't kick or ids of channels so when a message is forwarded from them sasha doesn't kick (owner^).\n" ..
     "(WHITELIST) Whitelistlink to see the whitelisted links|usernames|ids (user^).\n" ..
     "(MSG_CHECKS) Now forwarded messages from channels or links/usernames to public channels/supergroups are analyzed as every other link and when strict is enabled punished with ban.\n",
@@ -493,8 +494,8 @@ return {
         -- help.lua --
         require_higher = "🚫 Questo plugin richiede privilegi superiori a quelli che possiedi. 🚫\n",
         pluginListStart = "ℹ️ Lista plugin: \n\n",
-        -- helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin.\nℹ️ O \"!helpall\" per mostrare tutte le informazioni.",
-        helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️",
+        helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️\nℹ️ O \"!helpall\" per mostrare tutte le informazioni. ℹ️",
+        -- helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️",
         errorNoPlugin = "Questo plugin non esiste o non ha una descrizione.",
         helpIntro = "Ogni '#' può essere sostituito con i simboli '/' o '!'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale (E NON DEVI METTERLE).\nLe parentesi tonde indicano una scelta evidenziata da '|' che significa \"oppure\" (E NON DEVI METTERLE).\nLe parentesi angolari indicano una cosa che varia a seconda dell'input dell'utente, ciò che c'è al loro interno dà un'idea di cosa dovrebbe essere messo in quella posizione (E NON DEVI METTERLE).\nSe hai domande consulta prima le /faq.\n\n",
         commandNotFound = "Sintassi comando non trovata.",
@@ -539,6 +540,7 @@ return {
         pluginUrbandictionary = "Urban dictionary",
         pluginWebshot = "Webscreenshots",
         pluginWhitelist = "Whitelist",
+        filterTooShort = "Filtro troppo corto, ho bisogno di almeno 3 caratteri.",
 
         -- getsetunset.lua --
         globalEnable = "Variabili globali abilitate su questa chat.",
@@ -1267,9 +1269,9 @@ return {
             "#sudolist: Sasha manda la lista dei sudo.",
             "#[textual]help: Sasha manda la lista dei plugin per cui è disponibile l'help.",
             "#[textual]help <plugin_name>|<plugin_number>: Sasha manda l'aiuto per il plugin specificato.",
-            -- "#helpall: Sasha mostra tutti i comandi di tutti i plugin.",
+            "#helpall: Sasha mostra tutti i comandi di tutti i plugin.",
             "#syntax <filter>: Sasha mostra la sintassi dei comandi che corrispondono a <filter>.",
-            -- "#syntaxall: Sasha mostra la sintassi di tutti i comandi di tutti i plugin.",
+            "#syntaxall: Sasha mostra la sintassi di tutti i comandi di tutti i plugin.",
             "#[textual]faq[<n>]: Sasha mostra le Frequently asked questions, se <n> è specificato manda la risposta.",
             "#converttime <seconds>: Sasha converte <seconds> in Settimane, Giorni, Ore, Minuti, Secondi.",
             "#converttime <weeks> <days> <hours> <minutes> <seconds>: Sasha converte <weeks> <days> <hours> <minutes> <seconds> in Secondi.",
@@ -1842,8 +1844,8 @@ return {
         -- help.lua --
         require_higher = "🚫 This plugin requires higher privileges. 🚫\n",
         pluginListStart = "ℹ️ Plugins list: \n\n",
-        -- helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin.\nℹ️ Or \"!helpall\" to have all commands.",
-        helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin. ℹ️",
+        helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin. ℹ️\nℹ️ Or \"!helpall\" to have all commands. ℹ️",
+        -- helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin. ℹ️",
         errorNoPlugin = "This plugin doesn't exist or doesn't have a description.",
         helpIntro = "Every '#' can be replaced with '/' or '!'.\nAll commands are Case Insensitive.\nSquare brackets means optional (AND YOU MUST NOT WRITE THEM).\nRound brackets indicate a choice with '|' that means \"or\" (AND YOU MUST NOT WRITE THEM).\nAngle brackets indicate something that vary with the user's input, what is inside these brackets helps you to understand the thing that should be put there (AND YOU MUST NOT WRITE THEM).\nIf you have questions see /faq first.\n\n",
         commandNotFound = "Command syntax not found.",
@@ -1888,6 +1890,7 @@ return {
         pluginUrbandictionary = "Urban dictionary",
         pluginWebshot = "Webscreenshots",
         pluginWhitelist = "Whitelist",
+        filterTooShort = "Filter too short, I need at least 3 characters.",
 
         -- getsetunset.lua --
         globalEnable = "Global variables enabled on this chat.",
@@ -2623,9 +2626,9 @@ return {
             "#sudolist: Sasha sends sudo list.",
             "#[textual]help: Sasha sends a list of plugins for which there's the help.",
             "#[textual]help <plugin_name>|<plugin_number>: Sasha sends the help of the specified plugin.",
-            -- "#helpall: Sasha sends help of all plugins.",
+            "#helpall: Sasha sends help of all plugins.",
             "#syntax <filter>: Sasha sends syntax of all commands that matches with <filter>.",
-            -- "#syntaxall: Sasha sends syntax of all commands of all plugins.",
+            "#syntaxall: Sasha sends syntax of all commands of all plugins.",
             "#[textual]faq[<n>]: Sasha shows Frequently asked questions, if <n> the specified she sends the answer.",
             "#converttime <seconds>: Sasha converts <seconds> in Weeks, Days, Hours, Minutes, Seconds.",
             "#converttime <weeks> <days> <hours> <minutes> <seconds>: Sasha converts <weeks> <days> <hours> <minutes> <seconds> in Seconds.",
