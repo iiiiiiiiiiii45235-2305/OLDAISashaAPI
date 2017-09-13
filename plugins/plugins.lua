@@ -308,7 +308,7 @@ local function run(msg, matches)
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=plugins" } } } }, false, msg.message_id)
                 end
             end
         else
