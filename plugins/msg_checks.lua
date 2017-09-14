@@ -123,6 +123,7 @@ local function check_msg(msg, settings, pre_process_function)
     local mute_audio = settings.mutes['audio']
     local mute_contact = settings.mutes['contact']
     local mute_document = settings.mutes['document']
+    local mute_game = settings.mutes['game']
     local mute_gif = settings.mutes['gif']
     local mute_location = settings.mutes['location']
     local mute_photo = settings.mutes['photo']
@@ -380,6 +381,16 @@ local function check_msg(msg, settings, pre_process_function)
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedDocuments
+                    end
+                end
+            elseif msg.media_type == 'game' then
+                if mute_game then
+                    if pre_process_function then
+                        print('game muted')
+                        action(msg, strict, langs[msg.lang].reasonMutedGame)
+                        return nil
+                    else
+                        text = text .. langs[msg.lang].reasonMutedGame
                     end
                 end
             elseif msg.media_type == 'gif' then

@@ -1756,13 +1756,13 @@ function mute(chat_id, msg_type)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
-                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
-                    return msg_type:lower() .. langs[lang].alreadyMuted
+            if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] ~= nil then
+                if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] then
+                    return mutesDictionary[msg_type:lower()] .. langs[lang].alreadyMuted
                 else
-                    data[tostring(chat_id)].settings.mutes[msg_type:lower()] = true
+                    data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] = true
                     save_data(config.moderation.data, data)
-                    return msg_type:lower() .. langs[lang].muted
+                    return mutesDictionary[msg_type:lower()] .. langs[lang].muted
                 end
             else
                 return langs[lang].noSuchMuteType
@@ -1775,13 +1775,13 @@ function unmute(chat_id, msg_type)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            if data[tostring(chat_id)].settings.mutes[msg_type:lower()] ~= nil then
-                if data[tostring(chat_id)].settings.mutes[msg_type:lower()] then
-                    data[tostring(chat_id)].settings.mutes[msg_type:lower()] = false
+            if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] ~= nil then
+                if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] then
+                    data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] = false
                     save_data(config.moderation.data, data)
-                    return msg_type:lower() .. langs[lang].unmuted
+                    return mutesDictionary[msg_type:lower()] .. langs[lang].unmuted
                 else
-                    return msg_type:lower() .. langs[lang].alreadyUnmuted
+                    return mutesDictionary[msg_type:lower()] .. langs[lang].alreadyUnmuted
                 end
             else
                 return langs[lang].noSuchMuteType

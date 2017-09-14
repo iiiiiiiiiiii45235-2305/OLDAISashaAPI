@@ -60,6 +60,7 @@ local default_settings = {
             audio = false,
             contact = false,
             document = false,
+            game = false,
             gif = false,
             location = false,
             photo = false,
