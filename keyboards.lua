@@ -452,29 +452,35 @@ function keyboard_mutes_list(chat_id, from_other_plugin)
     local column = 1
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-        if flag then
-            flag = false
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-        end
-        if value then
-            if from_other_plugin then
-                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var:lower() .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var:lower() .. chat_id .. 'I' }
-            else
-                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var:lower() .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var:lower() .. chat_id }
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            if data[tostring(chat_id)].settings.mutes then
+                for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
+                    if flag then
+                        flag = false
+                        row = row + 1
+                        column = 1
+                        keyboard.inline_keyboard[row] = { }
+                    end
+                    if value then
+                        if from_other_plugin then
+                            keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var:lower() .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var:lower() .. chat_id .. 'I' }
+                        else
+                            keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var:lower() .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var:lower() .. chat_id }
+                        end
+                    else
+                        if from_other_plugin then
+                            keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var:lower() .. ' 🔊', callback_data = 'group_managementMUTE' .. var:lower() .. chat_id .. 'I' }
+                        else
+                            keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var:lower() .. ' 🔊', callback_data = 'group_managementMUTE' .. var:lower() .. chat_id }
+                        end
+                    end
+                    column = column + 1
+                    if column > 2 then
+                        flag = true
+                    end
+                end
             end
-        else
-            if from_other_plugin then
-                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var:lower() .. ' 🔊', callback_data = 'group_managementMUTE' .. var:lower() .. chat_id .. 'I' }
-            else
-                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var:lower() .. ' 🔊', callback_data = 'group_managementMUTE' .. var:lower() .. chat_id }
-            end
-        end
-        column = column + 1
-        if column > 2 then
-            flag = true
         end
     end
     row = row + 1
@@ -501,36 +507,39 @@ function keyboard_settings_list(chat_id, from_other_plugin)
     local column = 1
     local flag = false
     keyboard.inline_keyboard[row] = { }
-    for var, value in pairsByKeys(data[tostring(chat_id)].settings) do
-        if reverseSettingsDictionary[var:lower()] ~= 'flood' then
-            if type(value) == 'boolean' then
-                if flag then
-                    flag = false
-                    row = row + 1
-                    column = 1
-                    keyboard.inline_keyboard[row] = { }
-                end
-                if value then
-                    if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id .. 'I' }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id }
+    if data[tostring(chat_id)] then
+        if data[tostring(chat_id)].settings then
+            for var, value in pairsByKeys(data[tostring(chat_id)].settings) do
+                if reverseSettingsDictionary[var:lower()] ~= 'flood' then
+                    if type(value) == 'boolean' then
+                        if flag then
+                            flag = false
+                            row = row + 1
+                            column = 1
+                            keyboard.inline_keyboard[row] = { }
+                        end
+                        if value then
+                            if from_other_plugin then
+                                keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id .. 'I' }
+                            else
+                                keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id }
+                            end
+                        else
+                            if from_other_plugin then
+                                keyboard.inline_keyboard[row][column] = { text = '☑️ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id .. 'I' }
+                            else
+                                keyboard.inline_keyboard[row][column] = { text = '☑️ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id }
+                            end
+                        end
+                        column = column + 1
+                        if column > 2 then
+                            flag = true
+                        end
                     end
-                else
-                    if from_other_plugin then
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id .. 'I' }
-                    else
-                        keyboard.inline_keyboard[row][column] = { text = '☑️ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id }
-                    end
-                end
-                column = column + 1
-                if column > 2 then
-                    flag = true
                 end
             end
         end
     end
-
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
