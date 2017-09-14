@@ -171,23 +171,21 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
         end
-        if msg.forward then
-            if msg.forward_from_chat then
-                local whitelisted = false
-                for k, v in pairs(links_whitelist) do
-                    if tostring(v) == tostring(msg.forward_from_chat.id) then
-                        whitelisted = true
+        if strict then
+            if msg.forward then
+                if msg.forward_from_chat then
+                    local whitelisted = false
+                    for k, v in pairs(links_whitelist) do
+                        if tostring(v) == tostring(msg.forward_from_chat.id) then
+                            whitelisted = true
+                        end
                     end
-                end
-                if not whitelisted then
-                    if pre_process_function then
-                        print('link (forward) found')
-                        if strict then
+                    if not whitelisted then
+                        if pre_process_function then
+                            print('link (forward) found')
                             action(msg, strict, langs[msg.lang].reasonLockLinkForward)
                             return nil
-                        end
-                    else
-                        if strict then
+                        else
                             text = text .. langs[msg.lang].reasonLockLinkForward
                         end
                     end
@@ -229,32 +227,29 @@ local function check_msg(msg, settings, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                tmp = tmp:lower()
-                -- remove joinchat links
-                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
-                -- remove ?start=blabla and things like that
-                tmp = tmp:gsub('%?([^%s]+)', '')
-                -- make links usernames
-                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-                -- remove all whitelisted links
-                tmp = remove_whitelisted_links(tmp, links_whitelist, group_link)
-                while string.match(tmp, '@[^%s]+') do
-                    if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        if pre_process_function then
-                            print('link (public channel/supergroup username) found')
-                            if strict then
+                if strict then
+                    tmp = tmp:lower()
+                    -- remove joinchat links
+                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+                    -- remove ?start=blabla and things like that
+                    tmp = tmp:gsub('%?([^%s]+)', '')
+                    -- make links usernames
+                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+                    -- remove all whitelisted links
+                    tmp = remove_whitelisted_links(tmp, links_whitelist, group_link)
+                    while string.match(tmp, '@[^%s]+') do
+                        if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
+                            if pre_process_function then
+                                print('link (public channel/supergroup username) found')
                                 action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
                                 return nil
-                            end
-                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                        else
-                            if strict then
+                            else
                                 text = text .. langs[msg.lang].reasonLockLinkUsername
+                                tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                             end
+                        else
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         end
-                    else
-                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     end
                 end
             end
@@ -304,32 +299,29 @@ local function check_msg(msg, settings, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                tmp = tmp:lower()
-                -- remove joinchat links
-                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
-                -- remove ?start=blabla and things like that
-                tmp = tmp:gsub('%?([^%s]+)', '')
-                -- make links usernames
-                tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-                -- remove all whitelisted links
-                tmp = remove_whitelisted_links(tmp, links_whitelist, group_link)
-                while string.match(tmp, '@[^%s]+') do
-                    if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                        if pre_process_function then
-                            print('link (public channel/supergroup username) found')
-                            if strict then
+                if strict then
+                    tmp = tmp:lower()
+                    -- remove joinchat links
+                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+                    -- remove ?start=blabla and things like that
+                    tmp = tmp:gsub('%?([^%s]+)', '')
+                    -- make links usernames
+                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+                    -- remove all whitelisted links
+                    tmp = remove_whitelisted_links(tmp, links_whitelist, group_link)
+                    while string.match(tmp, '@[^%s]+') do
+                        if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
+                            if pre_process_function then
+                                print('link (public channel/supergroup username) found')
                                 action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
                                 return nil
-                            end
-                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                        else
-                            if strict then
+                            else
                                 text = text .. langs[msg.lang].reasonLockLinkUsername
+                                tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                             end
+                        else
                             tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                         end
-                    else
-                        tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
                     end
                 end
             end
