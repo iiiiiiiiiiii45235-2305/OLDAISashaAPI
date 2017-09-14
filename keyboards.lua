@@ -444,6 +444,55 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         return keyboard
     end
 end
+function keyboard_mutes_list(chat_id, from_other_plugin)
+    local lang = get_lang(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local flag = false
+    keyboard.inline_keyboard[row] = { }
+    for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
+        if flag then
+            flag = false
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+        end
+        if value then
+            if from_other_plugin then
+                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var:lower() .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var:lower() .. chat_id .. 'I' }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var:lower() .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var:lower() .. chat_id }
+            end
+        else
+            if from_other_plugin then
+                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var:lower() .. ' 🔊', callback_data = 'group_managementMUTE' .. var:lower() .. chat_id .. 'I' }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var:lower() .. ' 🔊', callback_data = 'group_managementMUTE' .. var:lower() .. chat_id }
+            end
+        end
+        column = column + 1
+        if column > 2 then
+            flag = true
+        end
+    end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    if from_other_plugin then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
+        column = column + 1
+    end
+    if from_other_plugin then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id .. 'I' }
+    else
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
+    end
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
+    return keyboard
+end
 function keyboard_settings_list(chat_id, from_other_plugin)
     local lang = get_lang(chat_id)
     local keyboard = { }
@@ -557,55 +606,6 @@ function keyboard_settings_list(chat_id, from_other_plugin)
         keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id .. 'I' }
     else
         keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKSETTINGS' .. chat_id }
-    end
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
-    return keyboard
-end
-function keyboard_mutes_list(chat_id, from_other_plugin)
-    local lang = get_lang(chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-        if flag then
-            flag = false
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-        end
-        if value then
-            if from_other_plugin then
-                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var .. chat_id .. 'I' }
-            else
-                keyboard.inline_keyboard[row][column] = { text = '🔇 ' .. var .. ' 🔇', callback_data = 'group_managementUNMUTE' .. var .. chat_id }
-            end
-        else
-            if from_other_plugin then
-                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var .. ' 🔊', callback_data = 'group_managementMUTE' .. var .. chat_id .. 'I' }
-            else
-                keyboard.inline_keyboard[row][column] = { text = '🔊 ' .. var .. ' 🔊', callback_data = 'group_managementMUTE' .. var .. chat_id }
-            end
-        end
-        column = column + 1
-        if column > 2 then
-            flag = true
-        end
-    end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
-        column = column + 1
-    end
-    if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id .. 'I' }
-    else
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_managementBACKMUTES' .. chat_id }
     end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }

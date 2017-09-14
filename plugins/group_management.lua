@@ -602,12 +602,12 @@ local function run(msg, matches)
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
                             if is_owner2(msg.from.id, matches[4]) then
-                                answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
+                                answerCallbackQuery(msg.cb_id, mute(matches[4], matches[3]), false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                             end
                         else
-                            answerCallbackQuery(msg.cb_id, mute(tonumber(matches[4]), matches[3]), false)
+                            answerCallbackQuery(msg.cb_id, mute(matches[4], matches[3]), false)
                         end
                         local chat_name = ''
                         if data[tostring(matches[4])] then
@@ -622,12 +622,12 @@ local function run(msg, matches)
                         mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
                             if is_owner2(msg.from.id, matches[4]) then
-                                answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
+                                answerCallbackQuery(msg.cb_id, unmute(matches[4], matches[3]), false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                             end
                         else
-                            answerCallbackQuery(msg.cb_id, unmute(tonumber(matches[4]), matches[3]), false)
+                            answerCallbackQuery(msg.cb_id, unmute(matches[4], matches[3]), false)
                         end
                         local chat_name = ''
                         if data[tostring(matches[4])] then
