@@ -557,6 +557,7 @@ local function run(msg, matches)
                     if data[tostring(matches[3])] then
                         chat_name = data[tostring(matches[3])].set_name or ''
                     end
+                    print(matches[3])
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[3], matches[4] or false))
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'BACKMUTES' then

@@ -500,6 +500,7 @@ function keyboard_mutes_list(chat_id, from_other_plugin)
     return keyboard
 end
 function keyboard_settings_list(chat_id, from_other_plugin)
+    print(chat_id)
     local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
@@ -587,21 +588,21 @@ function keyboard_settings_list(chat_id, from_other_plugin)
                     keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ☑️', callback_data = 'group_managementWARNS3' .. chat_id }
                 end
             end
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            if from_other_plugin then
+                keyboard.inline_keyboard[row][column] = { text = '--warns', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id .. 'I' }
+                column = column + 1
+                keyboard.inline_keyboard[row][column] = { text = 'warns++', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id .. 'I' }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '--warns', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+                column = column + 1
+                keyboard.inline_keyboard[row][column] = { text = 'warns++', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
+            end
+            -- end warn part
         end
     end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = '--warns', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id .. 'I' }
-        column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = 'warns++', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id .. 'I' }
-    else
-        keyboard.inline_keyboard[row][column] = { text = '--warns', callback_data = 'group_managementWARNSMINUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-        column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = 'warns++', callback_data = 'group_managementWARNSPLUS' .. data[tostring(chat_id)].settings.warn_max .. chat_id }
-    end
-    -- end warn part
 
     row = row + 1
     column = 1
