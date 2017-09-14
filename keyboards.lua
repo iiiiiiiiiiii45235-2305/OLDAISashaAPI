@@ -538,56 +538,55 @@ function keyboard_settings_list(chat_id, from_other_plugin)
                     end
                 end
             end
-        end
-    end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    -- start flood part
-    if data[tostring(chat_id)].settings.flood then
-        if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ✅', callback_data = 'group_managementUNLOCKflood' .. chat_id .. 'I' }
-        else
-            keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ✅', callback_data = 'group_managementUNLOCKflood' .. chat_id }
-        end
-    else
-        if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ☑️', callback_data = 'group_managementLOCKflood' .. chat_id .. 'I' }
-        else
-            keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ☑️', callback_data = 'group_managementLOCKflood' .. chat_id }
-        end
-    end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = '--flood', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id .. 'I' }
-        column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = 'flood++', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id .. 'I' }
-    else
-        keyboard.inline_keyboard[row][column] = { text = '--flood', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
-        column = column + 1
-        keyboard.inline_keyboard[row][column] = { text = 'flood++', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
-    end
-    -- end flood part
-
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    -- start warn part
-    if tonumber(data[tostring(chat_id)].settings.warn_max) ~= 0 then
-        -- disable warns
-        if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ✅', callback_data = 'group_managementWARNS0' .. chat_id .. 'I' }
-        else
-            keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ✅', callback_data = 'group_managementWARNS0' .. chat_id }
-        end
-    else
-        -- default warns
-        if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ☑️', callback_data = 'group_managementWARNS3' .. chat_id .. 'I' }
-        else
-            keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ☑️', callback_data = 'group_managementWARNS3' .. chat_id }
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            -- start flood part
+            if data[tostring(chat_id)].settings.flood then
+                if from_other_plugin then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ✅', callback_data = 'group_managementUNLOCKflood' .. chat_id .. 'I' }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '✅ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ✅', callback_data = 'group_managementUNLOCKflood' .. chat_id }
+                end
+            else
+                if from_other_plugin then
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ☑️', callback_data = 'group_managementLOCKflood' .. chat_id .. 'I' }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ flood (' .. data[tostring(chat_id)].settings.flood_max .. ') ☑️', callback_data = 'group_managementLOCKflood' .. chat_id }
+                end
+            end
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            if from_other_plugin then
+                keyboard.inline_keyboard[row][column] = { text = '--flood', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id .. 'I' }
+                column = column + 1
+                keyboard.inline_keyboard[row][column] = { text = 'flood++', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id .. 'I' }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '--flood', callback_data = 'group_managementFLOODMINUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+                column = column + 1
+                keyboard.inline_keyboard[row][column] = { text = 'flood++', callback_data = 'group_managementFLOODPLUS' .. data[tostring(chat_id)].settings.flood_max .. chat_id }
+            end
+            -- end flood part
+            row = row + 1
+            column = 1
+            keyboard.inline_keyboard[row] = { }
+            -- start warn part
+            if tonumber(data[tostring(chat_id)].settings.warn_max) ~= 0 then
+                -- disable warns
+                if from_other_plugin then
+                    keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ✅', callback_data = 'group_managementWARNS0' .. chat_id .. 'I' }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '✅ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ✅', callback_data = 'group_managementWARNS0' .. chat_id }
+                end
+            else
+                -- default warns
+                if from_other_plugin then
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ☑️', callback_data = 'group_managementWARNS3' .. chat_id .. 'I' }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '☑️ warns (' .. data[tostring(chat_id)].settings.warn_max .. ') ☑️', callback_data = 'group_managementWARNS3' .. chat_id }
+                end
+            end
         end
     end
     row = row + 1
