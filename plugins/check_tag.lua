@@ -78,9 +78,9 @@ local function run(msg, matches)
                         else
                             redis:hset('tagalert:usernames', msg.from.id, true)
                         end
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, false)
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
                     else
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertAlreadyRegistered, false)
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertAlreadyRegistered, true)
                     end
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
                     -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
