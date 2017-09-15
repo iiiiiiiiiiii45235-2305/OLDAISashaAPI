@@ -253,8 +253,8 @@ return {
         "/whitelistgban",
         "/whitelistlink",
         "OWNER",
-        "/whitelist <id>|<username>|<reply>",
-        "/whitelistgban <id>|<username>|<reply>",
+        "/whitelist <user>",
+        "/whitelistgban <user>",
         "/whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>",
     },
 }

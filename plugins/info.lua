@@ -517,11 +517,15 @@ local function run(msg, matches)
                     end
                 end
             end
-            local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-            if obj then
-                return obj.id
+            if string.match(matches[2], '^%d+$') then
+                return matches[2]
             else
-                return langs[msg.lang].noObject
+                local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                if obj then
+                    return obj.id
+                else
+                    return langs[msg.lang].noObject
+                end
             end
         else
             return msg.from.id .. '\n' .. msg.chat.id
@@ -576,11 +580,15 @@ local function run(msg, matches)
                     end
                 end
             end
-            local obj = getChat(matches[2])
-            if obj then
-                return obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
+            if string.match(matches[2], '^%d+$') then
+                local obj = getChat(matches[2])
+                if obj then
+                    return obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
+                else
+                    return langs[msg.lang].noObject
+                end
             else
-                return langs[msg.lang].noObject
+                return matches[2]
             end
         else
             return(msg.from.username or('NOUSER ' .. msg.from.first_name .. ' ' ..(msg.from.last_name or ''))) .. '\n' ..(msg.chat.username or('NOUSER ' .. msg.chat.title))
@@ -1070,13 +1078,13 @@ return {
     syntax =
     {
         "USER",
-        "/id [<username>|<reply>|from]",
-        "/username [<id>|<reply>|from]",
-        "/getrank [<id>|<username>|<reply>|from]",
+        "/id [<user>]",
+        "/username [<user>]",
+        "/getrank [<user>]",
         "/whoami",
         "/[textual]info",
         "/[textual]groupinfo",
-        "/ishere <id>|<username>|<reply>|from",
+        "/ishere <user>",
         "MOD",
         "/[textual]info <id>|<username>|<reply>|from",
         -- "(/who|/members)",

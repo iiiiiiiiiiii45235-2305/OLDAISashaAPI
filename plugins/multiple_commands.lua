@@ -188,25 +188,29 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 mystat('/multipleid')
                 local found = false
-                for k, username in pairs(tab) do
+                for k, user in pairs(tab) do
                     if msg.entities then
                         for k, v in pairs(msg.entities) do
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                if ((string.find(msg.text, username) or 0) -1) == msg.entities[k].offset then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. username .. ' ' .. msg.entities[k].user.id
+                                    txt = txt .. user .. ' ' .. msg.entities[k].user.id
                                 end
                             end
                         end
                     end
                     if not found then
-                        txt = txt .. username .. ' '
-                        local obj = getChat('@' ..(string.match(username, '^[^%s]+'):gsub('@', '') or ''))
-                        if obj then
-                            txt = txt .. obj.id
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            txt = txt .. user
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            local obj = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            if obj then
+                                txt = txt .. obj.id
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         end
                     end
                     txt = txt .. '\n'
@@ -221,25 +225,29 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 mystat('/multipleusername')
                 local found = false
-                for k, id in pairs(tab) do
+                for k, user in pairs(tab) do
                     if msg.entities then
                         for k, v in pairs(msg.entities) do
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                if ((string.find(msg.text, id) or 0) -1) == msg.entities[k].offset then
+                                if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. id .. ' ' ..(msg.entities[k].user.username or('NOUSER ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or '')))
+                                    txt = txt .. user .. ' ' ..(msg.entities[k].user.username or('NOUSER ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or '')))
                                 end
                             end
                         end
                     end
                     if not found then
-                        txt = txt .. id .. ' '
-                        local obj = getChat(id)
-                        if obj then
-                            txt = txt .. obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
+                        txt = txt .. user .. ' '
+                        if string.match(user, '^%d+$') then
+                            local obj = getChat(user)
+                            if obj then
+                                txt = txt .. obj.username or('NOUSER ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or ''))
+                            else
+                                txt = txt .. langs[msg.lang].noObject
+                            end
                         else
-                            txt = txt .. langs[msg.lang].noObject
+                            txt = txt .. user
                         end
                     end
                     txt = txt .. '\n'
