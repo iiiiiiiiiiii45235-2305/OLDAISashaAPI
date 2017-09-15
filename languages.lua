@@ -1055,7 +1055,7 @@ return {
 
         check_tag =
         {
-            "🅿️ CHECK_TAG 🅿️",
+            "🅿️ CHECK\\_TAG 🅿️",
             "Plugin per mandare le notifiche di tags e mentions (NOTIFICHE ABILITATE ANCHE PER GLI UTENTI ESTERNI AL GRUPPO).",
             "AVVIA IL BOT IN PRIVATO O NON POTRA' MANDARTI MESSAGGI.",
             "USER",
@@ -1203,7 +1203,7 @@ return {
 
         group_management =
         {
-            "🅿️ GROUP_MANAGEMENT 🅿️",
+            "🅿️ GROUP\\_MANAGEMENT 🅿️",
             "Plugin per la gestione dei gruppi.",
             -- COMMON
             "USER",
@@ -1336,7 +1336,7 @@ return {
 
         lua_exec =
         {
-            "🅿️ LUA_EXEC 🅿️",
+            "🅿️ LUA\\_EXEC 🅿️",
             "Plugin per l'esecuzione di codice LUA.",
             "SUDO",
             "`/lua <command>`: Sasha esegue <command>.",
@@ -1352,7 +1352,7 @@ return {
 
         msg_checks =
         {
-            "🅿️ MSG_CHECKS 🅿️",
+            "🅿️ MSG\\_CHECKS 🅿️",
             "Plugin per il controllo dei messaggi.",
             "USER",
             "`/checkmsg <reply>|<text>`: Sasha controlla <reply>|<text> e rileva quali blocchi/muti verrebbero attivati.",
@@ -1360,7 +1360,7 @@ return {
 
         multiple_commands =
         {
-            "🅿️ MULTIPLE_COMMANDS 🅿️",
+            "🅿️ MULTIPLE\\_COMMANDS 🅿️",
             "Plugin per eseguire azioni multiple.",
             "MOD",
             "`/multipleid <username1> <username2> ...`: Sasha manda gli id di tutti gli <usernames> specificati nella lista.",
@@ -1437,7 +1437,7 @@ return {
 
         scheduled_commands =
         {
-            "🅿️ SCHEDULED_COMMANDS 🅿️",
+            "🅿️ SCHEDULED\\_COMMANDS 🅿️",
             "Plugin per programmare comandi.",
             "MOD",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
@@ -1506,7 +1506,7 @@ return {
 
         tgcli_to_api_migration =
         {
-            "🅿️ TGCLI_TO_API_MIGRATION 🅿️",
+            "🅿️ TGCLI\\_TO\\_API\\_MIGRATION 🅿️",
             "Plugin per la migrazione da tgcli.",
             "OWNER",
             "`/migrate`: Sasha migra le impostazioni del gruppo, i ban, le variabili settate e i likes.",
@@ -2416,7 +2416,7 @@ return {
 
         check_tag =
         {
-            "🅿️ CHECK_TAG 🅿️",
+            "🅿️ CHECK\\_TAG 🅿️",
             "Plugin to send tags and mentions notifications (NOTIFICATIONS ARE ENABLED ALSO FOR USERS NOT IN THIS GROUP).",
             "START THE BOT IN PRIVATE OR IT WILL NOT SEND MESSAGES TO YOU.",
             "USER",
@@ -2564,7 +2564,7 @@ return {
 
         group_management =
         {
-            "🅿️ GROUP_MANAGEMENT 🅿️",
+            "🅿️ GROUP\\_MANAGEMENT 🅿️",
             "Plugin for the management of groups.",
             -- COMMON
             "USER",
@@ -2697,7 +2697,7 @@ return {
 
         lua_exec =
         {
-            "🅿️ LUA_EXEC 🅿️",
+            "🅿️ LUA\\_EXEC 🅿️",
             "Plugin for executing LUA code.",
             "SUDO",
             "`/lua <command>`: Sasha executes <command>.",
@@ -2713,7 +2713,7 @@ return {
 
         msg_checks =
         {
-            "🅿️ MSG_CHECKS 🅿️",
+            "🅿️ MSG\\_CHECKS 🅿️",
             "Plugin to check messages.",
             "USER",
             "`/checkmsg <reply>|<text>`: Sasha checks <reply>|<text> and tells which locks/mutes would be triggered.",
@@ -2721,7 +2721,7 @@ return {
 
         multiple_commands =
         {
-            "🅿️ MULTIPLE_COMMANDS 🅿️",
+            "🅿️ MULTIPLE\\_COMMANDS 🅿️",
             "Plugin to do multiple actions.",
             "MOD",
             "`/multipleid <username1> <username2> ...`: Sasha sends the id of all the <usernames> in the list.",
@@ -2798,7 +2798,7 @@ return {
 
         scheduled_commands =
         {
-            "🅿️ SCHEDULED_COMMANDS 🅿️",
+            "🅿️ SCHEDULED\\_COMMANDS 🅿️",
             "Plugin to schedule commands.",
             "MOD",
             "For more information on patterns see lua.org/pil/20.2.html",
@@ -2867,7 +2867,7 @@ return {
 
         tgcli_to_api_migration =
         {
-            "🅿️ TGCLI_TO_API_MIGRATION 🅿️",
+            "🅿️ TGCLI\\_TO\\_API\\_MIGRATION 🅿️",
             "Plugin for the migration from tgcli.",
             "OWNER",
             "`/migrate`: Sasha migrates group's settings, bans, variables set and likes.",
