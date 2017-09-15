@@ -398,6 +398,7 @@ return {
     patterns =
     {
         "^(###cbcheck_tag)(ALREADYREAD)$",
+        "^(###cbcheck_tag)(REGISTER)$",
         "^(###cbcheck_tag)(DELETEUP)(%d+)(%-%d+)$",
         "^(###cbcheck_tag)(GOTO)(%d+)(%-%d+)$",
 
