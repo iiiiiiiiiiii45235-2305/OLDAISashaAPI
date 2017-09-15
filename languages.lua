@@ -863,7 +863,7 @@ return {
         .. "`/faq11` significato impostazioni.\n"
         .. "`/faq12` significato muti.\n"
         .. "`/faq13` ruleta @AISashaBot.\n"
-        .. "`/faq14` api_patch.\n"
+        .. "`/faq14` api\_patch.\n"
         .. "`/faq15` spam @AISashaBot.\n"
         .. "`/faq16` significato permessi.\n"
         .. "`/faq17` significato restrizioni.\n",
@@ -926,26 +926,26 @@ return {
             .. "Text => Testo sia normale che sotto i media.\n"
             .. "Tgservice => Messaggi di servizio.\n"
             .. "Video => Video (non video messaggi).\n"
-            .. "Video_note => Video messaggi.\n"
-            .. "Voice_note => Note vocali.\n",
+            .. "Video\_note => Video messaggi.\n"
+            .. "Voice\_note => Note vocali.\n",
             [13] = "D: Perchè non porti ruleta anche su @AISashaAPI?\n"
             .. "R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
-            [14] = "D: Cos'è l'api_patch?\n"
-            .. "R: L'api_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.",
+            [14] = "D: Cos'è l'api\_patch?\n"
+            .. "R: L'api\_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.",
             [15] = "D: Perchè spam su @AISashaAPI è per soli admin?\n"
             .. "R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
             [16] = "D: Cosa significano i permessi?\n"
-            .. "R: Change_info => Cambiare info come nome gruppo, foto e altre impostazioni.\n"
-            .. "Delete_messages => Eliminare messaggi di altri utenti.\n"
-            .. "Invite_users => Invitare utenti tramite link.\n"
-            .. "Restrict_members => Restringere bannare o sbannare membri.\n"
-            .. "Pin_messages => Fissare messaggi.\n"
-            .. "Promote_members => Promuovere amministratori con gli stessi permessi o inferiori.\n",
+            .. "R: Change\_info => Cambiare info come nome gruppo, foto e altre impostazioni.\n"
+            .. "Delete\_messages => Eliminare messaggi di altri utenti.\n"
+            .. "Invite\_users => Invitare utenti tramite link.\n"
+            .. "Restrict\_members => Restringere bannare o sbannare membri.\n"
+            .. "Pin\_messages => Fissare messaggi.\n"
+            .. "Promote\_members => Promuovere amministratori con gli stessi permessi o inferiori.\n",
             [17] = "D: Cosa significano le restrizioni?\n"
-            .. "R: Send_messages => Inviare ogni tipo di messaggio.\n"
-            .. "Send_media_messages => Inviare audio, documenti, foto, video, video_notes, voice_notes.\n"
-            .. "Send_other_messages => Inviare gifs, giochi, stickers, inline bots.\n"
-            .. "Add_web_page_previews => Aggiungere anteprime di pagine web.\n",
+            .. "R: Send\_messages => Inviare ogni tipo di messaggio.\n"
+            .. "Send\_media\_messages => Inviare audio, documenti, foto, video, video\_notes, voice\_notes.\n"
+            .. "Send\_other\_messages => Inviare gifs, giochi, stickers, inline bots.\n"
+            .. "Add\_web\_page\_previews => Aggiungere anteprime di pagine web.\n",
         },
 
         ------------
@@ -958,7 +958,7 @@ return {
             "ADMIN",
             "`/todo <reply> [<text>]`: Sasha inoltra <reply> e invia l'eventuale <text> nella chat di LOG.",
             "`/todo <text>`: Sasha invia <text> nella chat di LOG.",
-            "`/pm <user_id> <msg>`: Sasha invia <msg> a <user_id>.",
+            "`/pm <user\_id> <msg>`: Sasha invia <msg> a <user\_id>.",
             "`/pmblock <id>|<username>|<reply>|from`: Sasha blocca l'utente specificato.",
             "`/pmunblock <id>|<username>|<reply>|from`: Sasha sblocca l'utente specificato.",
             "`/list admins|groups [createlinks]|realms [createlinks]`: Sasha mostra una lista della variabile specificata, se specificato crea i link d'invito se possibile.",
@@ -968,10 +968,10 @@ return {
             "`/commandsstats`: Sasha manda gli stats di tutti i comandi.",
             "`/ping`: Sasha risponde con \"Pong\".",
             "`/laststart`: Sasha manda la data dell'avvio.",
-            "`/leave [<group_id>]`: Sasha lascia il gruppo.",
+            "`/leave [<group\_id>]`: Sasha lascia il gruppo.",
             "SUDO",
-            "`/addadmin <user_id>|<username>`: Sasha promuove l'utente specificato ad amminstratore.",
-            "`/removeadmin <user_id>|<username>`: Sasha degrada l'utente specificato.",
+            "`/addadmin <user\_id>|<username>`: Sasha promuove l'utente specificato ad amminstratore.",
+            "`/removeadmin <user\_id>|<username>`: Sasha degrada l'utente specificato.",
             "`/botstop`: Sasha si stoppa.",
             "`/botrestart`: Sasha si riavvia.",
             "`/redissave`: Sasha salva il database redis.",
@@ -990,14 +990,14 @@ return {
             "`/getalternatives /<command>`: Sasha manda le alternative a <command>.",
             "`/previewalternative <alternative>`: Sasha manda <alternative>.",
             "MOD",
-            "`/setalternative /<command> <alternative>|<reply_media>`: Sasha eseguirà <alternative>|<reply_media> come se fosse <command>.",
-            "`/unsetalternative <alternative>|<reply_media>`: Sasha rimuove <alternative>|<reply_media>.",
+            "`/setalternative /<command> <alternative>|<reply\_media>`: Sasha eseguirà <alternative>|<reply\_media> come se fosse <command>.",
+            "`/unsetalternative <alternative>|<reply\_media>`: Sasha rimuove <alternative>|<reply\_media>.",
             "OWNER",
             "`/setdefaultalternatives`: Sasha ripristina i comandi alternativi di default.",
             "`/unsetalternatives /<command>`: Sasha rimuove tutte le alternative di <command>.",
             "ADMIN",
-            "`/setglobalalternative /<command> <alternative>|<reply_media>`: Sasha eseguirà <alternative>|<reply_media> come se fosse <command> in tutti i gruppi.",
-            "`/unsetglobalalternative <alternative>|<reply_media>`: Sasha rimuove <alternative>|<reply_media> dalle alternative globali.",
+            "`/setglobalalternative /<command> <alternative>|<reply\_media>`: Sasha eseguirà <alternative>|<reply\_media> come se fosse <command> in tutti i gruppi.",
+            "`/unsetglobalalternative <alternative>|<reply\_media>`: Sasha rimuove <alternative>|<reply\_media> dalle alternative globali.",
             "`/setdefaultglobalalternatives`: Sasha ripristina i comandi alternativi globali di default.",
         },
 
@@ -1016,7 +1016,7 @@ return {
             "`/unwarnall <id>|<username>|<reply>|from [<reason>]`: Sasha azzera gli avvertimenti dell'utente.",
             "`/temprestrict <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<restrictions>]`: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate) per <weeks> <days> <hours> <minutes> <seconds> se specificati, altrimenti manda una tastiera del tempo in privato.",
             "`/restrict <id>|<username>|<reply>|from [<restrictions>]`: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate).",
-            "<restrictions> può essere: [send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]",
+            "<restrictions> può essere: [send\_messages] [send\_media\_messages] [send\_other\_messages] [add\_web\_page\_previews]",
             "`/unrestrict <id>|<username>|<reply>|from`: Sasha rimuove le restrizioni dell'utente specificato.",
             "`/[textual]restrictions <id>|<username>|<reply>|from`: Sasha manda le restrizioni dell'utente specificato.",
             "`/kick <id>|<username>|<reply>|from [<reason>]`: Sasha kicka l'utente specificato.",
@@ -1031,8 +1031,8 @@ return {
             -- "`/kicknouser`: Sasha kicka tutti gli utenti senza username.",
             -- "`/kickinactive [<msgs>]`: Sasha kicka tutti gli utenti inattivi sotto <msgs> messaggi.",
             "ADMIN",
-            "`/banlist <group_id>`: Sasha mostra la lista di utenti bannati da <group_id>.",
-            "`/countbanlist <group_id>`: Sasha manda il numero di utenti bannati da <group_id>.",
+            "`/banlist <group\_id>`: Sasha mostra la lista di utenti bannati da <group\_id>.",
+            "`/countbanlist <group\_id>`: Sasha manda il numero di utenti bannati da <group\_id>.",
             "`/gban <id>|<username>|<reply>|from`: Sasha banna globalmente l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
             "`/ungban <id>|<username>|<reply>|from`: Sasha sbanna globalmente l'utente specificato.",
             "`/gbanlist`: Sasha mostra la lista di utenti bannati globalmente.",
@@ -1050,7 +1050,7 @@ return {
             "OWNER",
             "`/bot|sasha on|off`: Sasha si attiva|disattiva.",
             "ADMIN",
-            "`/bot|sasha on|off [<group_id>]`: Sasha si attiva|disattiva nel gruppo specificato.",
+            "`/bot|sasha on|off [<group\_id>]`: Sasha si attiva|disattiva nel gruppo specificato.",
         },
 
         check_tag =
@@ -1066,7 +1066,7 @@ return {
             "OWNER",
             "`/enabletagalert`: Sasha abilita la funzione per il gruppo (disabilitata per default).",
             "`/disabletagalert`: Sasha disabilita la funzione per il gruppo.",
-            -- "`/tagall <text>|<reply_text>`: Sasha scrive <text>|<reply_text> e tagga tutti i membri del gruppo.",
+            -- "`/tagall <text>|<reply\_text>`: Sasha scrive <text>|<reply\_text> e tagga tutti i membri del gruppo.",
         },
 
         database =
@@ -1078,10 +1078,10 @@ return {
             -- "`/dodatabase`: Sasha salva i dati di tutti gli utenti del gruppo e i dati del gruppo.",
             "`/dbsearch <id>|<username>|<reply>|from`: Sasha cerca l'utente specificato nel database.",
             "`/dbdelete <id>`: Sasha elimina <id> dal database.",
-            "`/addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>`: Sasha aggiunge manualmente al database l'utente specificato.",
-            "`/addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>`: Sasha aggiunge manualmente al database il gruppo specificato.",
-            "`/addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]`: Sasha aggiunge manualmente al database il supergruppo specificato.",
-            "`/addrecord channel <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]`: Sasha aggiunge manualmente al database il canale specificato.",
+            "`/addrecord user <id>\n<print\_name>\n<old\_print\_names>\n<username>\n<old\_usernames>\n<long\_id>\n<groups\_ids\_separated\_by\_space>`: Sasha aggiunge manualmente al database l'utente specificato.",
+            "`/addrecord group <id>\n<print\_name>\n<old\_print\_names>\n<lang>`: Sasha aggiunge manualmente al database il gruppo specificato.",
+            "`/addrecord supergroup <id>\n<print\_name>\n<old\_print\_names>\n<lang>\n[<username>\n<old\_usernames>]`: Sasha aggiunge manualmente al database il supergruppo specificato.",
+            "`/addrecord channel <id>\n<print\_name>\n<old\_print\_names>\n<lang>\n[<username>\n<old\_usernames>]`: Sasha aggiunge manualmente al database il canale specificato.",
             "`/uploaddb`: Sasha manda il database.",
             "`/replacedb <reply>`: Sasha sostituisce il database.",
         },
@@ -1157,11 +1157,11 @@ return {
             "🅿️ GETSETUNSET 🅿️",
             "Plugin per ottenere/settare/unsettare cose.",
             "USER",
-            "`/get <var_name>`: Sasha manda la risposta a <var_name>.",
+            "`/get <var\_name>`: Sasha manda la risposta a <var\_name>.",
             "`(/getlist|/get)`: Sasha mostra una lista delle variabili settate.",
             "`(/getgloballist|/getglobal)`: Sasha mostra una lista delle variabili globali settate.",
             "MOD",
-            "Per [un]settare una frase usare '_' al posto di ' '.",
+            "Per [un]settare una frase usare '\_' al posto di ' '.",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "Possono essere usati dei marcatori che verranno sostituiti quando sarà inviata la risposta: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
@@ -1170,15 +1170,15 @@ return {
             .. "$forwardchatid, $forwardchatname, $forwardchatusername, "
             .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername, $forwardmention."
             .. "\nSe alcuni marcatori non potessero essere risolti (reply, forwardchat, forward) verranno usati quelli normali (chat, user).",
-            "`/set <var_name>|<pattern> <text>`: Sasha salva <text> come risposta a <var_name>|<pattern>.",
-            "`/setmedia <var_name>|<pattern> <reply_media> [<caption>]`: Sasha salva il <reply_media> (foto, video, video messaggio, audio, nota vocale, gif, documento, sticker) come risposta a <var_name>|<pattern>, se <caption> è presente viene usato come didascalia (non disponibile per tutti i media).",
-            "`/unset <var_name>|<pattern>`: Sasha elimina <var_name>|<pattern>.",
+            "`/set <var\_name>|<pattern> <text>`: Sasha salva <text> come risposta a <var\_name>|<pattern>.",
+            "`/setmedia <var\_name>|<pattern> <reply\_media> [<caption>]`: Sasha salva il <reply\_media> (foto, video, video messaggio, audio, nota vocale, gif, documento, sticker) come risposta a <var\_name>|<pattern>, se <caption> è presente viene usato come didascalia (non disponibile per tutti i media).",
+            "`/unset <var\_name>|<pattern>`: Sasha elimina <var\_name>|<pattern>.",
             "OWNER",
             "`/enableglobal`: Sasha abilita i get globali sulla chat.",
             "`/disableglobal`: Sasha disabilita i get globali sulla chat.",
             "ADMIN",
-            "`/setglobal <var_name>|<pattern> <text>`: Sasha salva globalmente <text> come risposta a <var_name>|<pattern>.",
-            "`/unsetglobal <var_name>|<pattern>`: Sasha elimina globalmente <var_name>|<pattern>.",
+            "`/setglobal <var\_name>|<pattern> <text>`: Sasha salva globalmente <text> come risposta a <var\_name>|<pattern>.",
+            "`/unsetglobal <var\_name>|<pattern>`: Sasha elimina globalmente <var\_name>|<pattern>.",
         },
 
         goodbyewelcome =
@@ -1193,8 +1193,8 @@ return {
             "`/getgoodbye`: Sasha manda l'addio.",
             "`/previewwelcome`: Sasha manda l'esempio di benvenuto.",
             "`/previewgoodbye`: Sasha manda l'esempio di addio.",
-            "`/setwelcome <text>|(<reply_media> [<caption>])`: Sasha imposta <text>|(<reply_media> [<caption>]) come benvenuto.",
-            "`/setgoodbye <text>|(<reply_media> [<caption>])`: Sasha imposta <text>|(<reply_media> [<caption>]) come addio.",
+            "`/setwelcome <text>|(<reply\_media> [<caption>])`: Sasha imposta <text>|(<reply\_media> [<caption>]) come benvenuto.",
+            "`/setgoodbye <text>|(<reply\_media> [<caption>])`: Sasha imposta <text>|(<reply\_media> [<caption>]) come addio.",
             "`/unsetwelcome`: Sasha rimuove il benvenuto.",
             "`/unsetgoodbye`: Sasha rimuove l'addio.",
             "`/setmemberswelcome <value>`: Sasha dopo <value> membri manderà il benvenuto con le regole, se zero il benvenuto non verrà più mandato.",
@@ -1225,10 +1225,10 @@ return {
             "`/setwarn <value>`: Sasha imposta gli avvertimenti massimi a <value>, se zero gli avvertimenti non funzioneranno più.",
             "`/newlink`: Sasha crea un link per il gruppo.",
             "`/setflood <value>`: Sasha imposta il flood massimo del gruppo a <value>.",
-            "`/[un]lock <setting_type>`: Sasha [s]blocca <setting_type>.",
-            "<setting_type> può essere: arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-            "`/[un]mute <mute_type>`: Sasha [s]muta <mute_type>.",
-            "<mute_type> può essere: audio|contact|document|gif|location|photo|sticker|tgservice|video|video_note|voice_note",
+            "`/[un]lock <setting\_type>`: Sasha [s]blocca <setting\_type>.",
+            "<setting\_type> può essere: arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+            "`/[un]mute <mute\_type>`: Sasha [s]muta <mute\_type>.",
+            "<mute\_type> può essere: audio|contact|document|gif|location|photo|sticker|tgservice|video|video\_note|voice\_note",
             "SUPERGROUP",
             "`/[silent]pin <reply>`: Sasha fissa [silenziosamente] <reply>.",
             "`/unpin`: Sasha stacca il messaggio fissato.",
@@ -1245,24 +1245,24 @@ return {
             "`/[textual]permissions <id>|<username>|<reply>|from`: Sasha manda i permessi dell'utente specificato.",
             "`/promote <id>|<username>|<reply>|from`: Sasha promuove a moderatore l'utente specificato.",
             "`/demote <id>|<username>|<reply>|from`: Sasha degrada l'utente specificato.",
-            "`/promoteadmin <id>|<username>|<reply>|from [<permissions>]`: Sasha promuove ad amministratore di telegram l'utente specificato con i permessi specificati (se non specificati l'utente avrà di default tutti i permessi meno che il promote_members).",
-            "<permissions> può essere: [change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]",
+            "`/promoteadmin <id>|<username>|<reply>|from [<permissions>]`: Sasha promuove ad amministratore di telegram l'utente specificato con i permessi specificati (se non specificati l'utente avrà di default tutti i permessi meno che il promote\_members).",
+            "<permissions> può essere: [change\_info] [delete\_messages] [invite\_users] [restrict\_members] [pin\_messages] [promote\_members]",
             "`/demoteadmin <id>|<username>|<reply>|from`: Sasha degrada da amministratore di telegram l'utente specificato.",
-            "`/[un]mute <mute_type>`: Sasha [s]muta <mute_type>.",
-            "<mute_type> può essere: all|text",
+            "`/[un]mute <mute\_type>`: Sasha [s]muta <mute\_type>.",
+            "<mute\_type> può essere: all|text",
             "`/setowner <id>|<username>|<reply>|from`: Sasha imposta l'utente specificato come proprietario.",
             "`/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink`: Sasha pulisce il parametro specificato.",
             "ADMIN",
             "`/add [realm]`: Sasha aggiunge il gruppo in cui ci si trova, se \"realm\" come un regno.",
             "`/rem [realm]`: Sasha rimuove il gruppo in cui ci si trova, se \"realm\" come un regno.",
             "REGNO",
-            "`/setgpowner <group_id> <user_id>`: Sasha imposta <user_id> come proprietario di <group_id>.",
-            "`/setrules <group_id> <text>`: Sasha cambia le regole di <group_id> in <text>.",
-            "`/[un]mute <group_id> <mute_type>`: Sasha [s]muta <mute_type> in <group_id>.",
-            "`/[textual]muteslist <group_id>`: Sasha manda la lista dei muti di <group_id>.",
-            "`/[un]lock <group_id> <setting_type>`: Sasha [s]blocca <setting_type> in <group_id>.",
-            "`/[textual]settings <group_id>`: Sasha manda le impostazioni di <group_id>.",
-            "`/rem <group_id>`: Sasha rimuove il gruppo.",
+            "`/setgpowner <group\_id> <user\_id>`: Sasha imposta <user\_id> come proprietario di <group\_id>.",
+            "`/setrules <group\_id> <text>`: Sasha cambia le regole di <group\_id> in <text>.",
+            "`/[un]mute <group\_id> <mute\_type>`: Sasha [s]muta <mute\_type> in <group\_id>.",
+            "`/[textual]muteslist <group\_id>`: Sasha manda la lista dei muti di <group\_id>.",
+            "`/[un]lock <group\_id> <setting\_type>`: Sasha [s]blocca <setting\_type> in <group\_id>.",
+            "`/[textual]settings <group\_id>`: Sasha manda le impostazioni di <group\_id>.",
+            "`/rem <group\_id>`: Sasha rimuove il gruppo.",
         },
 
         help =
@@ -1272,7 +1272,7 @@ return {
             "USER",
             "`/sudolist`: Sasha manda la lista dei sudo.",
             "`/[textual]help`: Sasha manda la lista dei plugin per cui è disponibile l'help.",
-            "`/[textual]help <plugin_name>|<plugin_number>`: Sasha manda l'aiuto per il plugin specificato.",
+            "`/[textual]help <plugin\_name>|<plugin\_number>`: Sasha manda l'aiuto per il plugin specificato.",
             "`/helpall`: Sasha mostra tutti i comandi di tutti i plugin.",
             "`/syntax <filter>`: Sasha mostra la sintassi dei comandi che corrispondono a <filter>.",
             "`/syntaxall`: Sasha mostra la sintassi di tutti i comandi di tutti i plugin.",
@@ -1296,7 +1296,7 @@ return {
             "`/info <id>|<username>|<reply>|from`: Sasha manda le info del parametro specificato.",
             -- "`(/who|/members)`: Sasha manda la lista degli utenti.",
             "ADMIN",
-            "`/grouplink <group_id>`: Sasha manda il link del gruppo specificato.",
+            "`/grouplink <group\_id>`: Sasha manda il link del gruppo specificato.",
         },
 
         interact =
@@ -1305,15 +1305,15 @@ return {
             "Plugin per l'interazione con gli utenti.",
             "USER",
             "`/[del]typing`: Sasha finge di scrivere.",
-            "`/[del]upload_photo`: Sasha finge di inviare una foto.",
-            "`/[del]record_video`: Sasha finge di registrare un video.",
-            "`/[del]upload_video`: Sasha finge di inviare un video.",
-            "`/[del]record_audio`: Sasha finge di registrare un audio.",
-            "`/[del]upload_audio`: Sasha finge di inviare un audio.",
-            "`/[del]upload_document`: Sasha finge di inviare un documento.",
-            "`/[del]find_location`: Sasha finge di inviare una posizione.",
-            "`/[del]record_videonote`: Sasha finge di registrare un video messaggio.",
-            "`/[del]upload_videonote`: Sasha finge di inviare un video messaggio.",
+            "`/[del]upload\_photo`: Sasha finge di inviare una foto.",
+            "`/[del]record\_video`: Sasha finge di registrare un video.",
+            "`/[del]upload\_video`: Sasha finge di inviare un video.",
+            "`/[del]record\_audio`: Sasha finge di registrare un audio.",
+            "`/[del]upload\_audio`: Sasha finge di inviare un audio.",
+            "`/[del]upload\_document`: Sasha finge di inviare un documento.",
+            "`/[del]find\_location`: Sasha finge di inviare una posizione.",
+            "`/[del]record\_videonote`: Sasha finge di registrare un video messaggio.",
+            "`/[del]upload\_videonote`: Sasha finge di inviare un video messaggio.",
             "`/testuser <id>|<username>|<reply>|from`: Sasha controlla se l'utente specificato ha bloccato il bot.",
             "MOD",
             "`/[del][markdown|html]echo [<reply>]<text>`: Sasha ripete <text>, se in risposta ad un messaggio sasha risponde a quel messaggio, se \"del\" elimina il comando, se \"html\" o \"markdown\" usa la formattazione specificata.",
@@ -1432,7 +1432,7 @@ return {
             "Testo => red|green|blue|purple|black|white|gray.",
             "Notazione Esadecimale => (\"a56729\" è marrone).",
             "Notazione Decimale => (\"255-192-203\" è rosa).",
-            "`/qr [\"<background_color>\" \"<data_color>\"] <text>`: Sasha crea il QR Code di <text>, se specificato colora il QR Code.",
+            "`/qr [\"<background\_color>\" \"<data\_color>\"] <text>`: Sasha crea il QR Code di <text>, se specificato colora il QR Code.",
         },
 
         scheduled_commands =
@@ -1471,9 +1471,9 @@ return {
             "`(/cleanstats|/cleanmessages)`: Sasha pulisce le statistiche.",
             -- "`(/statslist|/messageslist)`: Sasha invia un file con le statistiche della chat.",
             "ADMIN",
-            -- "`(/stats|/messages) group <group_id>`: Sasha invia le statistiche relative al gruppo specificato.",
-            "`(/cleanstats|/cleanmessages) group <group_id>`: Sasha pulisce le statistiche relative al gruppo specificato.",
-            -- "`(/statslist|/messageslist) group <group_id>`: Sasha invia un file con le statistiche relative al gruppo specificato.",
+            -- "`(/stats|/messages) group <group\_id>`: Sasha invia le statistiche relative al gruppo specificato.",
+            "`(/cleanstats|/cleanmessages) group <group\_id>`: Sasha pulisce le statistiche relative al gruppo specificato.",
+            -- "`(/statslist|/messageslist) group <group\_id>`: Sasha invia un file con le statistiche relative al gruppo specificato.",
         },
 
         strings =
@@ -1554,7 +1554,7 @@ return {
             "OWNER",
             "`/whitelist <id>|<username>|<reply>`: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist.",
             "`/whitelistgban <id>|<username>|<reply>`: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist dei gban.",
-            "`/whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>`: Sasha aggiunge|rimuove <link>|<public_(channel|supergroup)_username>|<channel_id> alla|dalla whitelist dei link.",
+            "`/whitelistlink <link>|<public\_(channel|supergroup)\_username>|<channel\_id>`: Sasha aggiunge|rimuove <link>|<public\_(channel|supergroup)\_username>|<channel\_id> alla|dalla whitelist dei link.",
         },
     },
     -- ####
@@ -2224,7 +2224,7 @@ return {
         .. "`/faq11` settings meaning.\n"
         .. "`/faq12` mutes meaning.\n"
         .. "`/faq13` ruleta @AISashaBot.\n"
-        .. "`/faq14` api_patch.\n"
+        .. "`/faq14` api\_patch.\n"
         .. "`/faq15` spam @AISashaBot.\n"
         .. "`/faq16` permissions meaning.\n"
         .. "`/faq17` restrictions meaning.\n",
@@ -2287,26 +2287,26 @@ return {
             .. "Text => Normal text or captions.\n"
             .. "Tgservice => Service messages.\n"
             .. "Video => Videos (not video messages).\n"
-            .. "Video_note => Video messages.\n"
-            .. "Voice_note => Voice notes.\n",
+            .. "Video\_note => Video messages.\n"
+            .. "Voice\_note => Voice notes.\n",
             [13] = "D: Why don't you port ruleta on @AISashaAPI?\n"
             .. "R: Because I'm 90% sure that kicks number would be high enough to hit telegram limits causing problems.",
-            [14] = "D: What is the api_patch?\n"
-            .. "R: The api_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.",
+            [14] = "D: What is the api\_patch?\n"
+            .. "R: The api\_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.",
             [15] = "D: Why spam on @AISashaAPI is only for admins?\n"
             .. "R: Because I'm 90% sure that sent messages number would be high enough to hit telegram limits and so causing problems.",
             [16] = "D: What do permissions mean?\n"
-            .. "R: Change_info => Change info as group's name, pic and other settings.\n"
-            .. "Delete_messages => Delete other's messages.\n"
-            .. "Invite_users => Invite users with link.\n"
-            .. "Restrict_members => Restrict, ban, unban members.\n"
-            .. "Pin_messages => Pin messages.\n"
-            .. "Promote_members => Promote other members as admins with the same permissions or lower.\n",
+            .. "R: Change\_info => Change info as group's name, pic and other settings.\n"
+            .. "Delete\_messages => Delete other's messages.\n"
+            .. "Invite\_users => Invite users with link.\n"
+            .. "Restrict\_members => Restrict, ban, unban members.\n"
+            .. "Pin\_messages => Pin messages.\n"
+            .. "Promote\_members => Promote other members as admins with the same permissions or lower.\n",
             [17] = "D: What do restrictions mean?\n"
-            .. "R: Send_messages => Send any type of message.\n"
-            .. "Send_media_messages => Send audios, documents, photos, videos, video_notes, voice_notes.\n"
-            .. "Send_other_messages => Send gifs, games, stickers, inline bots.\n"
-            .. "Add_web_page_previews => Add web page previews.\n",
+            .. "R: Send\_messages => Send any type of message.\n"
+            .. "Send\_media\_messages => Send audios, documents, photos, videos, video\_notes, voice\_notes.\n"
+            .. "Send\_other\_messages => Send gifs, games, stickers, inline bots.\n"
+            .. "Add\_web\_page\_previews => Add web page previews.\n",
         },
 
         ------------
@@ -2319,7 +2319,7 @@ return {
             "ADMIN",
             "`/todo <reply> [<text>]`: Sasha forward <reply> and sends <text> if present in the LOG chat.",
             "`/todo <text>`: Sasha sends <text> in the LOG chat.",
-            "`/pm <user_id> <msg>`: Sasha writes <msg> to <user_id>.",
+            "`/pm <user\_id> <msg>`: Sasha writes <msg> to <user\_id>.",
             "`/pmblock <id>|<username>|<reply>|from`: Sasha blocks the specified user.",
             "`/pmunblock <id>|<username>|<reply>|from`: Sasha unblocks the specified user.",
             "`/list admins|groups [createlinks]|realms [createlinks]`: Sasha sends list of the specified parameter, if specified she creates invite links if possible.",
@@ -2329,10 +2329,10 @@ return {
             "`/commandsstats`: Sasha sends commands stats.",
             "`/ping`: Sasha answers with \"Pong\".",
             "`/laststart`: Sasha sends last start date.",
-            "`/leave [<group_id>]`: Sasha leaves the group.",
+            "`/leave [<group\_id>]`: Sasha leaves the group.",
             "SUDO",
-            "`/addadmin <user_id>|<username>`: Sasha promotes the specified user to administrator.",
-            "`/removeadmin <user_id>|<username>`: Sasha demotes the specified user from administrator.",
+            "`/addadmin <user\_id>|<username>`: Sasha promotes the specified user to administrator.",
+            "`/removeadmin <user\_id>|<username>`: Sasha demotes the specified user from administrator.",
             "`/botstop`: Sasha stops.",
             "`/botrestart`: Sasha restarts.",
             "`/redissave`: Sasha saves redis db.",
@@ -2351,14 +2351,14 @@ return {
             "`/getalternatives /<command>`: Sasha sends <command>'s alternatives.",
             "`/previewalternative <alternative>`: Sasha sends <alternative>.",
             "MOD",
-            "`/setalternative /<command> <alternative>|<reply_media>`: Sasha will execute <alternative>|<reply_media> as if it was <command>.",
-            "`/unsetalternative <alternative>|<reply_media>`: Sasha deletes <alternative>|<reply_media>.",
+            "`/setalternative /<command> <alternative>|<reply\_media>`: Sasha will execute <alternative>|<reply\_media> as if it was <command>.",
+            "`/unsetalternative <alternative>|<reply\_media>`: Sasha deletes <alternative>|<reply\_media>.",
             "OWNER",
             "`/setdefaultalternatives`: Sasha restores the default alternative commands.",
             "`/unsetalternatives /<command>`: Sasha deletes all <command>'s alternatives.",
             "ADMIN",
-            "`/setglobalalternative /<command> <alternative>|<reply_media>`: Sasha will execute <alternative>|<reply_media> as if it was <command> in all groups.",
-            "`/unsetglobalalternative <alternative><reply_media>`: Sasha deletes <alternative>|<reply_media> from global alternatives.",
+            "`/setglobalalternative /<command> <alternative>|<reply\_media>`: Sasha will execute <alternative>|<reply\_media> as if it was <command> in all groups.",
+            "`/unsetglobalalternative <alternative><reply\_media>`: Sasha deletes <alternative>|<reply\_media> from global alternatives.",
             "`/setdefaultglobalalternatives`: Sasha restores the default global alternative commands.",
         },
 
@@ -2377,7 +2377,7 @@ return {
             "`/unwarnall <id>|<username>|<reply>|from [<reason>]`: Sasha removes all warns from the specified user.",
             "`/temprestrict <id>|<username>|<reply>|from [<weeks> <days> <hours> <minutes> <seconds>] [<restrictions>]`: Sasha restrict the specified user as specified (if not specified the user will have all the restrictions) for <weeks> <days> <hours> <minutes> <seconds> if specified, otherwise she sends a time keyboard in private.",
             "`/restrict <id>|<username>|<reply>|from [<restrictions>]`: Sasha restrict the specified user as specified (if not specified the user will have all the restrictions).",
-            "<restrictions> can be: [send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]",
+            "<restrictions> can be: [send\_messages] [send\_media\_messages] [send\_other\_messages] [add\_web\_page\_previews]",
             "`/unrestrict <id>|<username>|<reply>|from [<reason>]`: Sasha unrestrict the specified user.",
             "`/[textual]restrictions <id>|<username>|<reply>|from`: Sasha sends an inline keyboard with the restrictions of the specified user.",
             "`/kick <id>|<username>|<reply>|from [<reason>]`: Sasha kicks the specified user.",
@@ -2392,8 +2392,8 @@ return {
             -- "`/kicknouser`: Sasha kicks users without username.",
             -- "`/kickinactive [<msgs>]`: Sasha kicks inactive users under <msgs> messages.",
             "ADMIN",
-            "`/banlist <group_id>`: Sasha sends bans list of <group_id>.",
-            "`/countbanlist <group_id>`: Sasha sends the number of banned users of <group_id>.",
+            "`/banlist <group\_id>`: Sasha sends bans list of <group\_id>.",
+            "`/countbanlist <group\_id>`: Sasha sends the number of banned users of <group\_id>.",
             "`/gban <id>|<username>|<reply>|from`: Sasha kicks and gbans the specified user, if he tries to join again it's automatically kicked.",
             "`/ungban <id>|<username>|<reply>|from`: Sasha ungbans the specified user.",
             "`/gbanlist`: Sasha sends gbans list.",
@@ -2411,7 +2411,7 @@ return {
             "OWNER",
             "`/bot|sasha on|off`: Sasha goes on|off on the group.",
             "ADMIN",
-            "`/bot|sasha on|off [<group_id>]`: Sasha goes on|off in the specified group.",
+            "`/bot|sasha on|off [<group\_id>]`: Sasha goes on|off in the specified group.",
         },
 
         check_tag =
@@ -2427,7 +2427,7 @@ return {
             "OWNER",
             "`/enabletagalert`: Sasha enables the function for this group (disabled by default).",
             "`/disabletagalert`: Sasha disables the function for this group.",
-            -- "`/tagall <text>|<reply_text>`: Sasha writes <text>|<reply_text> tags all group's members.",
+            -- "`/tagall <text>|<reply\_text>`: Sasha writes <text>|<reply\_text> tags all group's members.",
         },
 
         database =
@@ -2439,10 +2439,10 @@ return {
             -- "`/dodatabase`: Sasha saves all info of all users of group and group info.",
             "`/dbsearch <id>|<username>|<reply>|from`: Sasha searches for the specified user in the database.",
             "`/dbdelete <id>`: Sasha deleted <id> from the database.",
-            "`/addrecord user <id>\n<print_name>\n<old_print_names>\n<username>\n<old_usernames>\n<long_id>\n<groups_ids_separated_by_space>`: Sasha manually adds the specified user to the database.",
-            "`/addrecord group <id>\n<print_name>\n<old_print_names>\n<lang>`: Sasha manually adds the specified group to the database.",
-            "`/addrecord supergroup <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]`: Sasha manually adds the specified supergroup to the database.",
-            "`/addrecord channel <id>\n<print_name>\n<old_print_names>\n<lang>\n[<username>\n<old_usernames>]`: Sasha manually adds the specified channel to the database.",
+            "`/addrecord user <id>\n<print\_name>\n<old\_print\_names>\n<username>\n<old\_usernames>\n<long\_id>\n<groups\_ids\_separated\_by\_space>`: Sasha manually adds the specified user to the database.",
+            "`/addrecord group <id>\n<print\_name>\n<old\_print\_names>\n<lang>`: Sasha manually adds the specified group to the database.",
+            "`/addrecord supergroup <id>\n<print\_name>\n<old\_print\_names>\n<lang>\n[<username>\n<old\_usernames>]`: Sasha manually adds the specified supergroup to the database.",
+            "`/addrecord channel <id>\n<print\_name>\n<old\_print\_names>\n<lang>\n[<username>\n<old\_usernames>]`: Sasha manually adds the specified channel to the database.",
             "`/uploaddb`: Sasha uploads the database.",
             "`/replacedb <reply>`: Sasha replaces the database.",
         },
@@ -2518,11 +2518,11 @@ return {
             "🅿️ GETSETUNSET 🅿️",
             "Plugin to get/set/unset things.",
             "USER",
-            "`/get <var_name>`: Sasha sends the answer to <var_name>.",
+            "`/get <var\_name>`: Sasha sends the answer to <var\_name>.",
             "`(/getlist|/get)`: Sasha sends a list of saved variables.",
             "`(/getgloballist|/getglobal)`: Sasha sends a list of globally saved variables.",
             "MOD",
-            "To [un]set a phrase use '_' instead of ' '.",
+            "To [un]set a phrase use '\_' instead of ' '.",
             "For more information on patterns see lua.org/pil/20.2.html",
             "There are some markers that will be replaced when the answer is sent: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
@@ -2531,15 +2531,15 @@ return {
             .. "$forwardchatid, $forwardchatname, $forwardchatusername, "
             .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername, $forwardmention."
             .. "\nIf some markers can't be solved (reply, forwardchat, forward) normal ones will be used (chat, user).",
-            "`/set <var_name>|<pattern> <text>`: Sasha saves <text> as answer to <var_name>|<pattern>.",
-            "`/setmedia <var_name>|<pattern> <reply_media> [<caption>]`: Sasha saves <reply_media> (photo, video, video message, audio, voice note, gif, document, sticker) as answer to <var_name>|<pattern>, if <caption> is present it will be sent as caption (not available for all media).",
-            "`/unset <var_name>|<pattern>`: Sasha deletes <var_name>|<pattern>.",
+            "`/set <var\_name>|<pattern> <text>`: Sasha saves <text> as answer to <var\_name>|<pattern>.",
+            "`/setmedia <var\_name>|<pattern> <reply\_media> [<caption>]`: Sasha saves <reply\_media> (photo, video, video message, audio, voice note, gif, document, sticker) as answer to <var\_name>|<pattern>, if <caption> is present it will be sent as caption (not available for all media).",
+            "`/unset <var\_name>|<pattern>`: Sasha deletes <var\_name>|<pattern>.",
             "OWNER",
             "`/enableglobal`: Sasha enables global gets on chat.",
             "`/disableglobal`: Sasha disables global gets on chat.",
             "ADMIN",
-            "`/setglobal <var_name>|<pattern> <text>`: Sasha globally saves <text> as answer to <var_name>|<pattern>.",
-            "`/unsetglobal <var_name>|<pattern>`: Sasha globally deletes <var_name>|<pattern>.",
+            "`/setglobal <var\_name>|<pattern> <text>`: Sasha globally saves <text> as answer to <var\_name>|<pattern>.",
+            "`/unsetglobal <var\_name>|<pattern>`: Sasha globally deletes <var\_name>|<pattern>.",
         },
 
         goodbyewelcome =
@@ -2554,8 +2554,8 @@ return {
             "`/getgoodbye`: Sasha sends goodbye.",
             "`/previewwelcome`: Sasha sends welcome sample.",
             "`/previewgoodbye`: Sasha sends goodbye sample.",
-            "`/setwelcome <text>|(<reply_media> [<caption>])`: Sasha sets <text>|(<reply_media> [<caption>]) as welcome.",
-            "`/setgoodbye <text>|(<reply_media> [<caption>])`: Sasha sets <text>|(<reply_media> [<caption>]) as goodbye.",
+            "`/setwelcome <text>|(<reply\_media> [<caption>])`: Sasha sets <text>|(<reply\_media> [<caption>]) as welcome.",
+            "`/setgoodbye <text>|(<reply\_media> [<caption>])`: Sasha sets <text>|(<reply\_media> [<caption>]) as goodbye.",
             "`/unsetwelcome`: Sasha removes welcome.",
             "`/unsetgoodbye`: Sasha removes goodbye.",
             "`/setmemberswelcome <value>`: Sasha after <value> members will send welcome, if zero welcome will not be sent anymore.",
@@ -2586,10 +2586,10 @@ return {
             "`/setwarn <value>`: Sasha sets max warns to <value>, if zero warns will not work.",
             "`/newlink`: Sasha creates a new link of the group.",
             "`/setflood <value>`: Sasha sets <value> as max flood.",
-            "`/[un]lock <setting_type>`: Sasha [un]locks <setting_type>.",
-            "<setting_type> can be: arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-            "`/[un]mute <mute_type>`: Sasha [un]mutes the specified parameter.",
-            "<mute_type> can be: audio|contact|document|gif|location|photo|sticker|tgservice|video|video_note|voice_note",
+            "`/[un]lock <setting\_type>`: Sasha [un]locks <setting\_type>.",
+            "<setting\_type> can be: arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+            "`/[un]mute <mute\_type>`: Sasha [un]mutes the specified parameter.",
+            "<mute\_type> can be: audio|contact|document|gif|location|photo|sticker|tgservice|video|video\_note|voice\_note",
             "SUPERGROUP",
             "`/[silent]pin <reply>`: Sasha [silently] pins <reply>.",
             "`/unpin`: Sasha unpins the pinned message.",
@@ -2605,11 +2605,11 @@ return {
             "`/[textual]permissions <id>|<username>|<reply>|from`: Sasha sends the permissions of the specified user.",
             "`/promote <id>|<username>|<reply>|from`: Sasha promotes to mod the specified user.",
             "`/demote <id>|<username>|<reply>|from`: Sasha demotes from mod the specified user.",
-            "`/promoteadmin <id>|<username>|<reply>|from [<permissions>]`: Sasha promotes to telegram administrator the specified user with the specified permissions (if not specified the user will have all the permissions but promote_members).",
-            "<permissions> can be: [change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]",
+            "`/promoteadmin <id>|<username>|<reply>|from [<permissions>]`: Sasha promotes to telegram administrator the specified user with the specified permissions (if not specified the user will have all the permissions but promote\_members).",
+            "<permissions> can be: [change\_info] [delete\_messages] [invite\_users] [restrict\_members] [pin\_messages] [promote\_members]",
             "`/demoteadmin <id>|<username>|<reply>|from`: Sasha demotes from telegram administrator the specified user.",
-            "`/[un]mute <mute_type>`: Sasha [un]mutes the specified parameter.",
-            "<mute_type> can be: all|text",
+            "`/[un]mute <mute\_type>`: Sasha [un]mutes the specified parameter.",
+            "<mute\_type> can be: all|text",
             "`/setowner <id>|<username>|<reply>|from`: Sasha sets the specified user as owner.",
             "`/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink`: Sasha cleans the specified parameter.",
             "`/getadmins`: Sasha sends telegram's administrators list.",
@@ -2617,13 +2617,13 @@ return {
             "`/add [realm]`: Sasha adds the group in which you are, if \"realm\" as a realm.",
             "`/rem [realm]`: Sasha removes the group in which you are, if \"realm\" as a realm.",
             "REALM",
-            "`/setgpowner <group_id> <user_id>`: Sasha sets <user_id> as owner of <group_id>.",
-            "`/setrules <group_id> <text>`: Sasha changes <group_id>'s rules with <text>.",
-            "`/[un]mute <group_id> <mute_type>`: Sasha [un]mutes <group_id>'s <mute_type>.",
-            "`/[textual]muteslist <group_id>`: Sasha sends <group_id>'s mutes.",
-            "`/[un]lock <group_id> <setting_type>`: Sasha [un]locks <group_id>'s <setting_type>.",
-            "`/[textual]settings <group_id>`: Sasha sends <group_id>'s settings.",
-            "`/rem <group_id>`: Sasha removes group.",
+            "`/setgpowner <group\_id> <user\_id>`: Sasha sets <user\_id> as owner of <group\_id>.",
+            "`/setrules <group\_id> <text>`: Sasha changes <group\_id>'s rules with <text>.",
+            "`/[un]mute <group\_id> <mute\_type>`: Sasha [un]mutes <group\_id>'s <mute\_type>.",
+            "`/[textual]muteslist <group\_id>`: Sasha sends <group\_id>'s mutes.",
+            "`/[un]lock <group\_id> <setting\_type>`: Sasha [un]locks <group\_id>'s <setting\_type>.",
+            "`/[textual]settings <group\_id>`: Sasha sends <group\_id>'s settings.",
+            "`/rem <group\_id>`: Sasha removes group.",
         },
 
         help =
@@ -2633,7 +2633,7 @@ return {
             "USER",
             "`/sudolist`: Sasha sends sudo list.",
             "`/[textual]help`: Sasha sends a list of plugins for which there's the help.",
-            "`/[textual]help <plugin_name>|<plugin_number>`: Sasha sends the help of the specified plugin.",
+            "`/[textual]help <plugin\_name>|<plugin\_number>`: Sasha sends the help of the specified plugin.",
             "`/helpall`: Sasha sends help of all plugins.",
             "`/syntax <filter>`: Sasha sends syntax of all commands that matches with <filter>.",
             "`/syntaxall`: Sasha sends syntax of all commands of all plugins.",
@@ -2657,7 +2657,7 @@ return {
             "`/info <id>|<username>|<reply>|from`: Sasha sends info of the specified parameter.",
             -- "`(/who|/members)`: Sasha users list.",
             "ADMIN",
-            "`/grouplink <group_id>`: Sasha sends link of the specified group.",
+            "`/grouplink <group\_id>`: Sasha sends link of the specified group.",
         },
 
         interact =
@@ -2666,15 +2666,15 @@ return {
             "Plugin for the interaction with users.",
             "USER",
             "`/[del]typing`: Sasha pretends to write.",
-            "`/[del]upload_photo`: Sasha pretends to upload a photo.",
-            "`/[del]record_video`: Sasha pretends to record a video.",
-            "`/[del]upload_video`: Sasha pretends to upload a video.",
-            "`/[del]record_audio`: Sasha pretends to record an audio.",
-            "`/[del]upload_audio`: Sasha pretends to upload an audio.",
-            "`/[del]upload_document`: Sasha pretends to upload a document.",
-            "`/[del]find_location`: Sasha pretends to send a location.",
-            "`/[del]record_videonote`: Sasha pretends to record a video message.",
-            "`/[del]upload_videonote`: Sasha pretends to upload a video message.",
+            "`/[del]upload\_photo`: Sasha pretends to upload a photo.",
+            "`/[del]record\_video`: Sasha pretends to record a video.",
+            "`/[del]upload\_video`: Sasha pretends to upload a video.",
+            "`/[del]record\_audio`: Sasha pretends to record an audio.",
+            "`/[del]upload\_audio`: Sasha pretends to upload an audio.",
+            "`/[del]upload\_document`: Sasha pretends to upload a document.",
+            "`/[del]find\_location`: Sasha pretends to send a location.",
+            "`/[del]record\_videonote`: Sasha pretends to record a video message.",
+            "`/[del]upload\_videonote`: Sasha pretends to upload a video message.",
             "`/testuser <id>|<username>|<reply>|from`: Sasha tests if the specified user has blocked the bot.",
             "MOD",
             "`/[del][markdown|html]echo [<reply>]<text>`: Sasha repeats <text>, if in reply of a message she replies to that message, if \"del\" she deletes the command, if \"html\" or \"markdown\" she uses the specified format.",
@@ -2721,7 +2721,7 @@ return {
 
         multiple_commands =
         {
-            "🅿️ ME 🅿️",
+            "🅿️ MULTIPLE_COMMANDS 🅿️",
             "Plugin to do multiple actions.",
             "MOD",
             "`/multipleid <username1> <username2> ...`: Sasha sends the id of all the <usernames> in the list.",
@@ -2793,7 +2793,7 @@ return {
             "Text => red|green|blue|purple|black|white|gray.",
             "Hexadecimal => (\"a56729\" it's brown).",
             "Decimal => (\"255-192-203\" it's pink).",
-            "`/qr [\"<background_color>\" \"<data_color>\"] <text>`: Sasha creates QR Code of <text>, if the specified it colors QR Code.",
+            "`/qr [\"<background\_color>\" \"<data\_color>\"] <text>`: Sasha creates QR Code of <text>, if the specified it colors QR Code.",
         },
 
         scheduled_commands =
@@ -2832,9 +2832,9 @@ return {
             "`(/cleanstats|/cleanmessages)`: Sasha cleans chat's stats.",
             -- "`(/statslist|/messageslist)`: Sasha sends file with chat's stats.",
             "ADMIN",
-            -- "`(/stats|/messages) group <group_id>`: Sasha sends <group_id>'s stats.",
-            "`(/cleanstats|/cleanmessages) group <group_id>`: Sasha cleans <group_id>'s stats.",
-            -- "`(/statslist|/messageslist) group <group_id>`: Sasha sends file with <group_id>'s stats.",
+            -- "`(/stats|/messages) group <group\_id>`: Sasha sends <group\_id>'s stats.",
+            "`(/cleanstats|/cleanmessages) group <group\_id>`: Sasha cleans <group\_id>'s stats.",
+            -- "`(/statslist|/messageslist) group <group\_id>`: Sasha sends file with <group\_id>'s stats.",
         },
 
         strings =
@@ -2915,7 +2915,7 @@ return {
             "OWNER",
             "`/whitelist <id>|<username>|<reply>`: adds|removes the specified user to|from the whitelist.",
             "`/whitelistgban <id>|<username>|<reply>`: adds|removes the specified user to|from the gban whitelist.",
-            "`/whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>`: adds|removes <link>|<public_(channel|supergroup)_username>|<channel_id> to/from the links' whitelist.",
+            "`/whitelistlink <link>|<public\_(channel|supergroup)\_username>|<channel\_id>`: adds|removes <link>|<public\_(channel|supergroup)\_username>|<channel\_id> to/from the links' whitelist.",
         },
     },
 }
