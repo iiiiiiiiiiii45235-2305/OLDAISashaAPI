@@ -500,7 +500,7 @@ return {
         helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️\nℹ️ O \"!helpall\" per mostrare tutte le informazioni. ℹ️",
         -- helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️",
         errorNoPlugin = "Questo plugin non esiste o non ha una descrizione.",
-        helpIntro = "Ogni '/' può essere sostituito con i simboli '!' o '#'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale (E NON DEVI METTERLE).\n'|' significa \"oppure\" evidenzia una scelta.\nLe parentesi tonde NON LE DEVI METTERE.\nLe parentesi angolari indicano una cosa che varia a seconda dell'input dell'utente, ciò che c'è al loro interno dà un'idea di cosa dovrebbe essere messo in quella posizione (E NON DEVI METTERLE).\nPer copiare un comando cliccaci sopra.\nSe hai domande consulta prima le `/faq`.\n\n",
+        helpIntro = "Ogni '/' può essere sostituito con i simboli '!' o '#'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale (E NON DEVI METTERLE).\n'|' significa \"oppure\" evidenzia una scelta.\nLe parentesi tonde NON DEVI METTERLE.\nLe parentesi angolari indicano qualcosa che varia a seconda dell'input dell'utente, ciò che c'è al loro interno dà un'idea di ciò dovrebbe essere messo in quella posizione (E NON DEVI METTERLE).\nClicca sopra ad un comando per copiarlo.\nSe hai domande consulta prima le `/faq`.\n\n",
         commandNotFound = "Sintassi comando non trovata.",
         sendHelpPvt = "Ti ho mandato l'help in privato.",
         sendSyntaxPvt = "Ti ho mandato le sintassi dei comandi in privato.",
@@ -1204,7 +1204,7 @@ return {
         group_management =
         {
             "🅿️ GROUP\\_MANAGEMENT 🅿️",
-            "Plugin per la gestione dei gruppi.",
+            "Plugin per gestire i gruppi.",
             -- COMMON
             "USER",
             "`/getwarn`: Sasha manda il numero di avvertimenti massimi.",
