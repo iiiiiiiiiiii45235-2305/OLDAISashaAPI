@@ -73,9 +73,9 @@ return {
     syntax =
     {
         "USER",
-        "#news",
+        "/news",
         "SUDO",
-        "#spamnews [<news>]",
-        "#stopnews",
+        "/spamnews [<news>]",
+        "/stopnews",
     },
 }

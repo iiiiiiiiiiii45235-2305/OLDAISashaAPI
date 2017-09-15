@@ -418,13 +418,13 @@ return {
     syntax =
     {
         "USER",
-        "#registertagalert",
-        "#unregistertagalert",
-        "#setnickname <nickname>",
-        "#unsetnickname",
+        "/registertagalert",
+        "/unregistertagalert",
+        "/setnickname <nickname>",
+        "/unsetnickname",
         "OWNER",
-        "#enabletagalert",
-        "#disabletagalert",
-        -- "#tagall <text>|<reply_text>",
+        "/enabletagalert",
+        "/disabletagalert",
+        -- "/tagall <text>|<reply_text>",
     },
 }

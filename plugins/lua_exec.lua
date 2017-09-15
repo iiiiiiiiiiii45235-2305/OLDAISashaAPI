@@ -26,6 +26,6 @@ return {
     syntax =
     {
         "SUDO",
-        "#lua <command>",
+        "/lua <command>",
     },
 }

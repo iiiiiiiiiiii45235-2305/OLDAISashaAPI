@@ -72,6 +72,6 @@ return {
     syntax =
     {
         "MOD",
-        "#webshot <url> [<size>]",
+        "/webshot <url> [<size>]",
     },
 }

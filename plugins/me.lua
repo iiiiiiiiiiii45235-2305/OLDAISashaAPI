@@ -27,7 +27,7 @@ return {
     syntax =
     {
         "USER",
-        "#me",
+        "/me",
     },
 }
 -- idea taken from jack-telegram-bot

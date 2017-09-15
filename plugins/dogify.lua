@@ -22,6 +22,6 @@ return {
     syntax =
     {
         "USER",
-        "#dogify <your/words/with/slashes>",
+        "/dogify <your/words/with/slashes>",
     },
 }

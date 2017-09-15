@@ -33,6 +33,6 @@ return {
     syntax =
     {
         "USER",
-        "#pokedex|#pokemon <name>|<id>",
+        "(/pokedex|/pokemon) <name>|<id>",
     },
 }

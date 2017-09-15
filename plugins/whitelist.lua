@@ -249,12 +249,12 @@ return {
     syntax =
     {
         "USER",
-        "#whitelist",
-        "#whitelistgban",
-        "#whitelistlink",
+        "/whitelist",
+        "/whitelistgban",
+        "/whitelistlink",
         "OWNER",
-        "#whitelist <id>|<username>|<reply>",
-        "#whitelistgban <id>|<username>|<reply>",
-        "#whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>",
+        "/whitelist <id>|<username>|<reply>",
+        "/whitelistgban <id>|<username>|<reply>",
+        "/whitelistlink <link>|<public_(channel|supergroup)_username>|<channel_id>",
     },
 }

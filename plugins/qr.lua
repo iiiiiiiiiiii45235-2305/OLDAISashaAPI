@@ -63,6 +63,6 @@ return {
     syntax =
     {
         "USER",
-        "#qr [\"<background_color>\" \"<data_color>\"] <text>",
+        "/qr [\"<background_color>\" \"<data_color>\"] <text>",
     },
 }

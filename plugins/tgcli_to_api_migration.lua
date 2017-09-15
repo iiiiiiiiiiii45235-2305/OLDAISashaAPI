@@ -442,9 +442,9 @@ return {
     syntax =
     {
         "OWNER",
-        "#migrate",
-        "#copysettings",
+        "/migrate",
+        "/copysettings",
         "SUDO",
-        "#sudomigrate",
+        "/sudomigrate",
     },
 }

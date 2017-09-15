@@ -910,6 +910,10 @@ function on_msg_receive(msg)
         if string.match(msg.text, "^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ") then
             msg.text = msg.text:gsub("^@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] ", "")
         end
+        if string.match(msg.text, "^[#!/]?[%w]+@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]") then
+            local tmp = string.match(msg.text, "([#!/]?[%w]+)@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]")
+            msg.text = msg.text:gsub("^[#!/]?[%w]+@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]", tmp)
+        end
     end
     local print_text = print_msg(msg, true)
     local chat_id = msg.chat.id

@@ -107,8 +107,8 @@ return {
     syntax =
     {
         "USER",
-        "#dellist",
+        "/dellist",
         "MOD",
-        "#delword <word>|<pattern>",
+        "/delword <word>|<pattern>",
     },
 }

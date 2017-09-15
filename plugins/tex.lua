@@ -17,6 +17,6 @@ return {
     syntax =
     {
         "USER",
-        "#tex <equation>",
+        "/tex <equation>",
     },
 }

@@ -61,7 +61,9 @@ return {
     description = "STRINGS",
     patterns =
     {
+        "^(###cblangs)(..)$",
         "^(###cblangs)(..)(.)$",
+
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ii][Tt])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ee][Nn])$',
@@ -73,10 +75,10 @@ return {
     syntax =
     {
         "USER",
-        "#setlang [it|en]",
+        "/setlang [it|en]",
         "OWNER",
-        "#setlang [it|en]",
+        "/setlang [it|en]",
         "SUDO",
-        "#reloadstrings|#reloadlangs",
+        "/reloadstrings|#reloadlangs",
     },
 }

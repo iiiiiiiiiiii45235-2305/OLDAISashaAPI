@@ -151,14 +151,14 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
             elseif matches[2] == 'BACK' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'markdown')
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'PAGEMINUS' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) -1))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) -1), 'markdown')
             elseif matches[2] == 'PAGEPLUS' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + 1))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + 1), 'markdown')
             elseif matches[2] == 'BACKFAQ' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'markdown')
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             elseif matches[2] == 'FAQ' then
                 mystat('###cbhelp' .. matches[2] .. matches[3])
@@ -172,7 +172,7 @@ local function run(msg, matches)
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
                 if temp ~= nil then
                     if temp ~= '' then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } }, 'markdown')
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
                     end
@@ -233,7 +233,7 @@ local function run(msg, matches)
     table.sort(plugins)
     if matches[1]:lower() == 'helpall' then
         mystat('/helpall')
-        if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+        if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'markdown') then
             if msg.chat.type ~= 'private' then
                 local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -248,7 +248,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'help' then
         if not matches[2] then
             mystat('/help')
-            if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+            if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'markdown') then
                 if msg.chat.type ~= 'private' then
                     local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -263,7 +263,7 @@ local function run(msg, matches)
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
-                    if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }, 'markdown') then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -302,13 +302,13 @@ local function run(msg, matches)
     if matches[1]:lower() == 'textualhelp' then
         if not matches[2] then
             mystat('/help')
-            return langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+            return sendReply(msg, langs[msg.lang].helpIntro .. telegram_help(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'markdown')
         else
             mystat('/help <plugin>')
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
-                    return langs[msg.lang].helpIntro .. temp
+                    return sendReply(msg, langs[msg.lang].helpIntro .. temp, 'markdown')
                 else
                     return langs[msg.lang].require_higher
                 end
@@ -334,7 +334,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'syntax' then
         if #matches[2] >= 3 then
             mystat('/syntax <command>')
-            matches[2] = matches[2]:gsub('[#!/]', '#')
+            matches[2] = matches[2]:gsub('[#!/]', '/')
             local text = syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[2])
             if text == '' then
                 return langs[msg.lang].commandNotFound
@@ -358,7 +358,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'faq' then
         if not matches[2] then
             mystat('/faq')
-            if sendKeyboard(msg.from.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id)) then
+            if sendKeyboard(msg.from.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'markdown') then
                 if msg.chat.type ~= 'private' then
                     local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt).result.message_id
                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -398,7 +398,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'textualfaq' then
         if not matches[2] then
             mystat('/faq')
-            return langs[msg.lang].faqList
+            return sendReply(msg, langs[msg.lang].faqList, 'markdown')
         else
             mystat('/faq<n>')
             return langs[msg.lang].faq[tonumber(matches[2])]
@@ -444,17 +444,17 @@ return {
     syntax =
     {
         "USER",
-        "#sudolist",
-        "#help",
-        "#help <plugin_name>|<plugin_number>",
-        "#textualhelp",
-        "#textualhelp <plugin_name>|<plugin_number>",
-        "#helpall",
-        "#syntax <filter>",
-        "#syntaxall",
-        "#faq[<n>]",
-        "#textualfaq[<n>]",
-        "#converttime <seconds>",
-        "#converttime <weeks> <days> <hours> <minutes> <seconds>",
+        "/sudolist",
+        "/help",
+        "/help <plugin_name>|<plugin_number>",
+        "/textualhelp",
+        "/textualhelp <plugin_name>|<plugin_number>",
+        "/helpall",
+        "/syntax <filter>",
+        "/syntaxall",
+        "/faq[<n>]",
+        "/textualfaq[<n>]",
+        "/converttime <seconds>",
+        "/converttime <weeks> <days> <hours> <minutes> <seconds>",
     },
 }

@@ -35,6 +35,6 @@ return {
     syntax =
     {
         "USER",
-        "(#urbandictionary|#urban|#ud) <text>",
+        "(/urbandictionary|/urban|/ud) <text>",
     },
 }
