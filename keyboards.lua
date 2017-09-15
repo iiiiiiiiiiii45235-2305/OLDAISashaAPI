@@ -210,6 +210,15 @@ function keyboard_time(op, chat_id, user_id, time, from_other_plugin)
 end
 
 -- bot
+function keyboard_tagalert_tutorial(lang)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    keyboard.inline_keyboard[1] = { }
+    keyboard.inline_keyboard[1][1] = { text = langs[lang].tagalertWord, callback_data = 'check_tagREGISTER' }
+    -- keyboard.inline_keyboard[2] = { }
+    -- keyboard.inline_keyboard[2][1] = { text = langs[lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' }
+    return keyboard
+end
 -- strings
 function keyboard_langs(plugin)
     local keyboard = { }

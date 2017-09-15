@@ -70,6 +70,19 @@ local function run(msg, matches)
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
                     end
+                elseif matches[2] == 'REGISTER' then
+                    if not redis:hget('tagalert:usernames', msg.from.id) then
+                        mystat('###cbcheck_tag' .. matches[2] .. msg.from.id)
+                        if msg.from.username then
+                            redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+                        else
+                            redis:hset('tagalert:usernames', msg.from.id, true)
+                        end
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, false)
+                    else
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertAlreadyRegistered, false)
+                    end
+                    -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
                 else
                     if matches[2] == 'DELETEUP' then
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])

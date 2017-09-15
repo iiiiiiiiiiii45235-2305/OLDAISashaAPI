@@ -16,7 +16,12 @@ local function run(msg, matches)
                 end
                 local lang = get_lang(msg.chat.id)
                 if matches[3] == 'B' then
-                    return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage)
+                    if not redis:hget('tagalert:usernames', msg.from.id) then
+                        return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage, keyboard_tagalert_tutorial(lang))
+                    else
+                        return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage)
+                        -- return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
+                    end
                 elseif matches[3] == 'S' then
                     return editMessage(msg.chat.id, msg.message_id, langs[lang].langSet)
                 end
