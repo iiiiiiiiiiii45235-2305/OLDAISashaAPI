@@ -368,6 +368,10 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     local num_msg = math.ceil(text_len / text_max)
                     if num_msg > 2 then
                         local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or '') .. ".txt"
+                        text = text:gsub('<code>', '')
+                        text = text:gsub('</code>', '')
+                        text = text:gsub('&lt;', '<')
+                        text = text:gsub('&gt;', '>')
                         local file = io.open(path, "w")
                         file:write(text)
                         file:close()
@@ -382,10 +386,8 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                             url = url .. '&reply_to_message_id=' .. reply_to_message_id
                             reply = true
                         end
-                        local html = false
                         if parse_mode then
                             if parse_mode:lower() == 'html' then
-                                html = true
                                 url = url .. '&parse_mode=HTML'
                             elseif parse_mode:lower() == 'markdown' then
                                 url = url .. '&parse_mode=Markdown'
@@ -399,11 +401,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         end
 
                         if num_msg <= 1 then
-                            if html then
-                                url = url .. '&text=' .. URL.escape(URL.escape(text))
-                            else
-                                url = url .. '&text=' .. URL.escape(text)
-                            end
+                            url = url .. '&text=' .. URL.escape(text)
 
                             local res, code = sendRequest(url)
 
@@ -423,11 +421,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         else
                             local my_text = string.sub(text, 1, 4090)
                             local rest = string.sub(text, 4090, text_len)
-                            if html then
-                                url = url .. '&text=' .. URL.escape(URL.escape(my_text))
-                            else
-                                url = url .. '&text=' .. URL.escape(my_text)
-                            end
+                            url = url .. '&text=' .. URL.escape(my_text)
 
                             local res, code = sendRequest(url)
 
@@ -535,10 +529,8 @@ end
 function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, no_log)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
-        local html = false
         if parse_mode then
             if parse_mode:lower() == 'html' then
-                html = true
                 url = url .. '&parse_mode=HTML'
             elseif parse_mode:lower() == 'markdown' then
                 url = url .. '&parse_mode=Markdown'
@@ -547,11 +539,7 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, 
             end
         end
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
-        if html then
-            url = url .. '&text=' .. URL.escape(URL.escape(text))
-        else
-            url = url .. '&text=' .. URL.escape(text)
-        end
+        url = url .. '&text=' .. URL.escape(text)
         url = url .. '&disable_web_page_preview=true'
         url = url .. '&reply_markup=' .. URL.escape(JSON.encode(keyboard))
         local reply = false
@@ -600,22 +588,16 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/editMessageText?chat_id=' .. chat_id ..
-        '&message_id=' .. message_id
-        local html = false
+        '&message_id=' .. message_id ..
+        '&text=' .. URL.escape(text)
         if parse_mode then
             if parse_mode:lower() == 'html' then
-                html = true
                 url = url .. '&parse_mode=HTML'
             elseif parse_mode:lower() == 'markdown' then
                 url = url .. '&parse_mode=Markdown'
             else
                 -- no parse_mode
             end
-        end
-        if html then
-            url = url .. '&text=' .. URL.escape(URL.escape(text))
-        else
-            url = url .. '&text=' .. URL.escape(text)
         end
         url = url .. '&disable_web_page_preview=true'
         if keyboard then
