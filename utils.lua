@@ -542,7 +542,9 @@ end
 function pairsByGroupName(t)
     local list = { }
     for id, value in pairs(t) do
-        list[#list + 1] = id
+        if tonumber(id) then
+            list[#list + 1] = id
+        end
     end
     function byval(a, b)
         if t[a] and t[b] then
