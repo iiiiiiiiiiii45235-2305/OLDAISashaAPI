@@ -86,7 +86,7 @@ local function pre_process(msg)
                         -- Block user if spammed in private
                         blockUser(msg.from.id, msg.lang)
                         sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
-                        sendLog(langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
+                        sendLog(langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam, false, true)
                         savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
                     end
                 else
@@ -166,7 +166,7 @@ local function pre_process(msg)
                                 sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
                                 gban_text = langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
                                 -- send it to log group/channel
-                                sendLog(gban_text)
+                                sendLog(gban_text, false, true)
                             end
                         end
                         kicktable[msg.from.id] = true
