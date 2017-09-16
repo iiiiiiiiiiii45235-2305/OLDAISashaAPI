@@ -529,11 +529,6 @@ function keyboard_settings_list(chat_id, from_other_plugin)
                             keyboard.inline_keyboard[row] = { }
                         end
                         if value then
-                            if from_other_plugin then
-                                keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id .. 'I' }
-                            else
-                                keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id }
-                            end
                         else
                             if from_other_plugin then
                                 keyboard.inline_keyboard[row][column] = { text = '☑️ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id .. 'I' }
@@ -958,6 +953,9 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
+                row = row + 1
+                keyboard.inline_keyboard[row] = { }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK' .. obj.id .. 'I' }
             end
         elseif obj.type == 'supergroup' then
             if is_mod2(executer, obj.id) then
@@ -973,6 +971,9 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
+                row = row + 1
+                keyboard.inline_keyboard[row] = { }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK' .. obj.id .. 'I' }
             end
         elseif obj.type == 'channel' then
             -- nothing
@@ -1000,7 +1001,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
 end
 
 -- plugins
-function keyboard_plugins_list(user_id, privileged, chat_id)
+function keyboard_plugins_list(user_id, privileged, chat_id, from_other_plugin)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -1039,7 +1040,11 @@ function keyboard_plugins_list(user_id, privileged, chat_id)
             keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsENABLE' .. name }
         end
         if not privileged then
-            keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+            if from_other_plugin then
+                keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id .. 'I'
+            else
+                keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+            end
         end
         column = column + 1
         if column > 2 then
@@ -1049,9 +1054,17 @@ function keyboard_plugins_list(user_id, privileged, chat_id)
     row = row + 1
     column = 1
     keyboard.inline_keyboard[row] = { }
+    if from_other_plugin then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
+        column = column + 1
+    end
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].updateKeyboard, callback_data = 'pluginsBACK' }
     if not privileged then
-        keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+        if from_other_plugin then
+            keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id .. 'I'
+        else
+            keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+        end
     end
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteMessage, callback_data = 'pluginsDELETE' }

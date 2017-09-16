@@ -217,7 +217,7 @@ local function run(msg, matches)
             if matches[2] == 'BACK' then
                 if matches[3] then
                     if is_owner2(msg.from.id, matches[3]) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(msg.from.id, false, tonumber(matches[3])))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(msg.from.id, false, tonumber(matches[3]), matches[4] or false))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
@@ -239,11 +239,11 @@ local function run(msg, matches)
                     mystat('###cbplugins' .. matches[2] .. matches[3] .. matches[4])
                     if matches[2] == 'ENABLE' then
                         answerCallbackQuery(msg.cb_id, reenable_plugin_on_chat(matches[3], tonumber(matches[4])), false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_list(msg.from.id, false, tonumber(matches[4])))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_list(msg.from.id, false, tonumber(matches[4]), matches[4] or false))
                     elseif matches[2] == 'DISABLE' then
                         if not system_plugin(matches[3]) then
                             answerCallbackQuery(msg.cb_id, disable_plugin_on_chat(matches[3], tonumber(matches[4])), false)
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_list(msg.from.id, false, tonumber(matches[4])))
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_list(msg.from.id, false, tonumber(matches[4]), matches[4] or false))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                         end
@@ -432,6 +432,7 @@ return {
     {
         "^(###cbplugins)(DELETE)$",
         "^(###cbplugins)(BACK)(%-%d+)$",
+        "^(###cbplugins)(BACK)(%-%d+)(.)$",
         "^(###cbplugins)(BACK)$",
         "^(###cbplugins)(ENABLE)(.*)(%-%d+)$",
         "^(###cbplugins)(DISABLE)(.*)(%-%d+)$",
