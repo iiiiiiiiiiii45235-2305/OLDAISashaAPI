@@ -864,7 +864,7 @@ return {
         .. "`/faq11` significato impostazioni.\n"
         .. "`/faq12` significato muti.\n"
         .. "`/faq13` ruleta @AISashaBot.\n"
-        .. "`/faq14` api_patch.\n"
+        .. "`/faq14` api\\_patch.\n"
         .. "`/faq15` spam @AISashaBot.\n"
         .. "`/faq16` significato permessi.\n"
         .. "`/faq17` significato restrizioni.\n",
