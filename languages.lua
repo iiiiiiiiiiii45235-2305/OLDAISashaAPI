@@ -750,6 +750,7 @@ return {
         muteslistWord = "🔇 MUTI 🔇",
         linkWord = "🔗 LINK 🔗",
         newlinkWord = "🍄 NUOVO LINK 🍄",
+        pluginsWord = "📝 PLUGINS 📝",
 
         -- interact.lua
         userBlockedBot = "L'utente specificato ha bloccato il bot.",
@@ -2113,6 +2114,7 @@ return {
         muteslistWord = "🔇 MUTES 🔇",
         linkWord = "🔗 LINK 🔗",
         newlinkWord = "🍄 NEW LINK 🍄",
+        pluginsWord = "📝 PLUGINS 📝",
 
         -- interact.lua
         userBlockedBot = "The specifided user blocked the bot.",
