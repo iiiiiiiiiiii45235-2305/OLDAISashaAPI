@@ -134,11 +134,11 @@ return {
     {
         "USER",
         "/start[@AISashaBot]",
-        "/del <reply>",
-        "/delkeyboard <reply>",
+        "/del {reply}",
+        "/delkeyboard {reply}",
         "OWNER",
         "/bot|sasha on|off",
         "ADMIN",
-        "/bot|sasha on|off [<group_id>]",
+        "/bot|sasha on|off [{group_id}]",
     }
 }

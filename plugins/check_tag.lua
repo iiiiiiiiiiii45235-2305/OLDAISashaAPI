@@ -420,11 +420,11 @@ return {
         "USER",
         "/registertagalert",
         "/unregistertagalert",
-        "/setnickname <nickname>",
+        "/setnickname {nickname}",
         "/unsetnickname",
         "OWNER",
         "/enabletagalert",
         "/disabletagalert",
-        -- "/tagall <text>|<reply_text>",
+        -- "/tagall {text}|{reply_text}",
     },
 }

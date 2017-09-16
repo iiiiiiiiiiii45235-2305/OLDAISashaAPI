@@ -141,6 +141,6 @@ return {
     syntax =
     {
         "MOD",
-        "/tempmsg [<hours> <minutes> <seconds>] <text>",
+        "/tempmsg [{hours} {minutes} {seconds}] {text}",
     },
 }

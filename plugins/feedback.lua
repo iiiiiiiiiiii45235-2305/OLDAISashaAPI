@@ -27,6 +27,6 @@ return {
     syntax =
     {
         "USER",
-        "/feedback <text>",
+        "/feedback {text}",
     },
 }

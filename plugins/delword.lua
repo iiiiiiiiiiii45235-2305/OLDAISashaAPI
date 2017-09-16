@@ -109,6 +109,6 @@ return {
         "USER",
         "/dellist",
         "MOD",
-        "/delword <word>|<pattern>",
+        "/delword {word}|{pattern}",
     },
 }

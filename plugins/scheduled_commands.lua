@@ -297,8 +297,8 @@ return {
     syntax =
     {
         "MOD",
-        "/scheduledelword [<hours> <minutes> <seconds>] <word>|<pattern>",
+        "/scheduledelword [{hours} {minutes} {seconds}] {word}|{pattern}",
         "SUDO",
-        "/schedule [<hours> <minutes> <seconds>] <method> <chat_id> <text>",
+        "/schedule [{hours} {minutes} {seconds}] {method} {chat_id} {text}",
     },
 }

@@ -657,7 +657,7 @@ return {
     syntax =
     {
         "USER",
-        "/checkmsg <reply>|<text>",
+        "/checkmsg {reply}|{text}",
     },
 }
 -- End msg_checks.lua

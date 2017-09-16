@@ -75,7 +75,7 @@ return {
         "USER",
         "/news",
         "SUDO",
-        "/spamnews [<news>]",
+        "/spamnews [{news}]",
         "/stopnews",
     },
 }

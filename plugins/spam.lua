@@ -54,6 +54,6 @@ return {
     syntax =
     {
         "ADMIN",
-        "/spam [<messages> <seconds>] <reply>|<text>",
+        "/spam [{messages} {seconds}] {reply}|{text}",
     },
 }

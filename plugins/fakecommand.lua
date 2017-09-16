@@ -52,6 +52,6 @@ return {
     syntax =
     {
         "MOD",
-        "(/user|/mod|/owner|/admin) <command>",
+        "(/user|/mod|/owner|/admin) {command}",
     },
 }

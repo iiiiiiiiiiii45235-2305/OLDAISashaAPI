@@ -1078,17 +1078,17 @@ return {
     syntax =
     {
         "USER",
-        "/id [<user>]",
-        "/username [<user>]",
-        "/getrank [<user>]",
+        "/id [{user}]",
+        "/username [{user}]",
+        "/getrank [{user}]",
         "/whoami",
         "/[textual]info",
         "/[textual]groupinfo",
-        "/ishere <user>",
+        "/ishere {user}",
         "MOD",
-        "/[textual]info <id>|<username>|<reply>|from",
+        "/[textual]info {id}|{username}|{reply}|from",
         -- "(/who|/members)",
         "ADMIN",
-        "/grouplink <group_id>",
+        "/grouplink {group_id}",
     },
 }

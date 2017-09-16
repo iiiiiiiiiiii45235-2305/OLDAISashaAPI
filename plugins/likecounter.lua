@@ -225,12 +225,12 @@ return {
     syntax =
     {
         "USER",
-        "(/like|/1up) <user>",
-        "(/dislike|/1down) <user>",
+        "(/like|/1up) {user}",
+        "(/dislike|/1down) {user}",
         "/likes",
         "SUDO",
         "/createlikesdb",
-        "/addlikes <id> <value>",
-        "/remlikes <id> <value>",
+        "/addlikes {id} {value}",
+        "/remlikes {id} {value}",
     },
 }

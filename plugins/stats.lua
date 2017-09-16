@@ -266,7 +266,7 @@ return {
         -- "(/stats|/statslist|/messages)",
         "(/cleanstats|/cleanmessages)",
         "ADMIN",
-        -- "(/stats|/statslist|/messages) group <group_id>",
-        "(/cleanstats|/cleanmessages) group <group_id>",
+        -- "(/stats|/statslist|/messages) group {group_id}",
+        "(/cleanstats|/cleanmessages) group {group_id}",
     },
 }

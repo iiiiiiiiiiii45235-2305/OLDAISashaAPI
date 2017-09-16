@@ -35,6 +35,6 @@ return {
     syntax =
     {
         "USER",
-        "/shout <text>",
+        "/shout {text}",
     },
 }

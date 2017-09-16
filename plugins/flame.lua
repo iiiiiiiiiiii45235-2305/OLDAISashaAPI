@@ -134,7 +134,7 @@ return {
     syntax =
     {
         "MOD",
-        "/startflame <user>",
+        "/startflame {user}",
         "/stopflame",
         "/flameinfo",
     },
