@@ -222,6 +222,8 @@ function bot_init()
         bot.userVersion = obj
     end
 
+    langs = dofile("languages.lua")
+
     local tot_plugins = load_plugins()
     print(clr.white .. 'Loading database.json' .. clr.reset)
     database = load_data(config.database.db)

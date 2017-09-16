@@ -9,7 +9,6 @@ json =(loadfile "./libs/JSON.lua")()
 mimetype =(loadfile "./libs/mimetype.lua")()
 redis =(loadfile "./libs/redis.lua")()
 JSON =(loadfile "./libs/dkjson.lua")()
-langs = dofile("languages.lua")
 
 http.TIMEOUT = 10
 
