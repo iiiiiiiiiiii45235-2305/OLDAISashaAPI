@@ -319,7 +319,7 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'syntaxall' then
         mystat('/syntaxall')
-        if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))) then
+        if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
             if msg.chat.type ~= 'private' then
                 local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt).result.message_id
                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -339,7 +339,7 @@ local function run(msg, matches)
             if text == '' then
                 return langs[msg.lang].commandNotFound
             else
-                if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. text) then
+                if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. text, 'html') then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt).result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
