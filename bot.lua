@@ -213,6 +213,7 @@ function bot_init()
         if obj then
             if obj.result then
                 bot = obj.result
+                bot.link = "t.me/" .. bot.username
             end
         end
     end

@@ -235,13 +235,13 @@ local function run(msg, matches)
         mystat('/helpall')
         if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
             if msg.chat.type ~= 'private' then
-                local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
+                local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                 return
             end
         else
-            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=helpall" } } } }, false, msg.message_id)
+            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=helpall" } } } }, false, msg.message_id)
         end
         return
     end
@@ -250,13 +250,13 @@ local function run(msg, matches)
             mystat('/help')
             if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
                 if msg.chat.type ~= 'private' then
-                    local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
+                    local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                     return
                 end
             else
-                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=help" } } } }, false, msg.message_id)
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=help" } } } }, false, msg.message_id)
             end
         else
             mystat('/help <plugin>')
@@ -265,36 +265,36 @@ local function run(msg, matches)
                 if temp ~= '' then
                     if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }, 'html') then
                         if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
+                            local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                             return
                         end
                     else
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=help" } } } }, false, msg.message_id)
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=help" } } } }, false, msg.message_id)
                     end
                 else
                     if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                         if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
+                            local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                             return
                         end
                     else
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=help" } } } }, false, msg.message_id)
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=help" } } } }, false, msg.message_id)
                     end
                 end
             else
                 if sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=help" } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=help" } } } }, false, msg.message_id)
                 end
             end
         end
@@ -321,13 +321,13 @@ local function run(msg, matches)
         mystat('/syntaxall')
         if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
             if msg.chat.type ~= 'private' then
-                local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt).result.message_id
+                local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                 return
             end
         else
-            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=syntaxall" } } } }, false, msg.message_id)
+            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=syntaxall" } } } }, false, msg.message_id)
         end
         return
     end
@@ -341,13 +341,13 @@ local function run(msg, matches)
             else
                 if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. text, 'html') then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
                 return
             end
@@ -360,37 +360,37 @@ local function run(msg, matches)
             mystat('/faq')
             if sendKeyboard(msg.from.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html') then
                 if msg.chat.type ~= 'private' then
-                    local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt).result.message_id
+                    local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt, 'html').result.message_id
                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                     return
                 end
             else
-                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=faq" } } } }, false, msg.message_id)
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=faq" } } } }, false, msg.message_id)
             end
         else
             mystat('/faq<n>')
             if langs[msg.lang].faq[tonumber(matches[2])] then
                 if sendKeyboard(msg.from.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } }) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=faq" .. matches[2] } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=faq" .. matches[2] } } } }, false, msg.message_id)
                 end
             else
                 if sendKeyboard(msg.from.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } }) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot?start=faq" .. matches[2] } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link .. "?start=faq" .. matches[2] } } } }, false, msg.message_id)
                 end
             end
         end

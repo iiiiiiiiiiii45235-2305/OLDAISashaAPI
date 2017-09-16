@@ -215,13 +215,13 @@ local function run(msg, matches)
                     else
                         if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_scheduledelword(msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
-                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
+                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                 return
                             end
                         else
-                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                         end
                     end
                 end
@@ -255,13 +255,13 @@ local function run(msg, matches)
                 schedule_table[tostring(msg.from.id)] = { method = matches[2]:lower(), chat_id = matches[3], text = matches[4] }
                 if sendKeyboard(msg.from.id, 'SCHEDULE', keyboard_schedule(msg.chat.id)) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             end
         else

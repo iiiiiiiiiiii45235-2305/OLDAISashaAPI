@@ -181,7 +181,7 @@ local function run(msg, matches)
                 return langs[msg.lang].tagalertAlreadyRegistered
             end
         else
-            return langs[msg.lang].require_private
+            return sendReply(msg, langs[msg.lang].require_private, 'html')
         end
     end
 

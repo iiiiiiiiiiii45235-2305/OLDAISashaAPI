@@ -868,13 +868,13 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[2])) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
                 return langs[msg.lang].require_admin
@@ -899,13 +899,13 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[2])) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt).result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return
                     end
                 else
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
                 return langs[msg.lang].require_admin
@@ -1333,13 +1333,13 @@ local function run(msg, matches)
                     if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(msg.chat.id)) then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                         if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt).result.message_id
+                            local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                             return
                         end
                     else
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                     end
                 else
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
@@ -1361,13 +1361,13 @@ local function run(msg, matches)
                     if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(msg.chat.id)) then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                         if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt).result.message_id
+                            local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                             return
                         end
                     else
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                     end
                 else
                     return showSettings(msg.chat.id, msg.lang)
@@ -1422,10 +1422,10 @@ local function run(msg, matches)
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
                             if sendMessage(msg.from.id, msg.chat.title .. '\n' .. data[tostring(msg.chat.id)].settings.set_link) then
                                 if msg.chat.type ~= 'private' then
-                                    return sendReply(msg, langs[msg.lang].sendLinkPvt)
+                                    return sendReply(msg, langs[msg.lang].sendLinkPvt, 'html')
                                 end
                             else
-                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                             end
                         else
                             return langs[msg.lang].createLink
@@ -1832,13 +1832,13 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return
                                             end
                                         else
-                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                         end
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -1850,13 +1850,13 @@ local function run(msg, matches)
                         else
                             if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
                                 if msg.chat.type ~= 'private' then
-                                    local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt).result.message_id
+                                    local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                     io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                     return
                                 end
                             else
-                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                             end
                         end
                     else
@@ -1875,13 +1875,13 @@ local function run(msg, matches)
                                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                                         if msg.chat.type ~= 'private' then
-                                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt).result.message_id
+                                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                             return
                                                         end
                                                     else
-                                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                                     end
                                                 end
                                             else
@@ -1899,13 +1899,13 @@ local function run(msg, matches)
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                             if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt).result.message_id
+                                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                                 return
                                             end
                                         else
-                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                         end
                                     end
                                 else
@@ -1918,13 +1918,13 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt).result.message_id
+                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
                                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                                             return
                                         end
                                     else
-                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = "t.me/AISashaBot" } } } }, false, msg.message_id)
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                     end
                                 end
                             else
