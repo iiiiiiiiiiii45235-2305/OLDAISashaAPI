@@ -153,64 +153,6 @@ local function list_disabled_plugin_on_chat(chat_id)
     return text
 end
 
-local function keyboard_plugins_list(user_id, privileged, chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
-    local flag = false
-    keyboard.inline_keyboard[row] = { }
-    for k, name in pairs(plugins_names()) do
-        --  ✅ enabled, ☑️ disabled
-        local status = '☑️'
-        local enabled = false
-        -- get the name
-        name = string.match(name, "(.*)%.lua")
-        -- Check if is enabled
-        if plugin_enabled(name) then
-            status = '✅'
-            enabled = true
-        end
-        -- Check if system plugin, if not check if disabled on chat
-        if system_plugin(name) then
-            status = '💻'
-        elseif not privileged then
-            if plugin_disabled_on_chat(name, chat_id) then
-                status = '🚫'
-                enabled = false
-            end
-        end
-        if flag then
-            flag = false
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-        end
-        if enabled then
-            keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsDISABLE' .. name }
-        else
-            keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsENABLE' .. name }
-        end
-        if not privileged then
-            keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
-        end
-        column = column + 1
-        if column > 2 then
-            flag = true
-        end
-    end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].updateKeyboard, callback_data = 'pluginsBACK' }
-    if not privileged then
-        keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
-    end
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteMessage, callback_data = 'pluginsDELETE' }
-    return keyboard
-end
-
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbplugins' then
