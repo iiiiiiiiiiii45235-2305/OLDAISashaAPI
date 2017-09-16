@@ -40,11 +40,8 @@ local function botAdminsList(chat_id)
 end
 
 local function groupsList(msg, get_links)
-    if not data.groups then
-        return langs[msg.lang].noGroups
-    end
     local message = langs[msg.lang].groupListStart
-    for k, v in pairs(data.groups) do
+    for k, v in pairsByGroupName(data) do
         if data[tostring(v)] then
             if data[tostring(v)]['settings'] then
                 local name = ''
@@ -74,47 +71,6 @@ local function groupsList(msg, get_links)
         end
     end
     local file = io.open("./groups/lists/groups.txt", "w")
-    file:write(message)
-    file:flush()
-    file:close()
-    return message
-end
-
-local function realmsList(msg, get_links)
-    if not data.realms then
-        return langs[msg.lang].noRealms
-    end
-    local message = langs[msg.lang].realmListStart
-    for k, v in pairs(data.realms) do
-        if data[tostring(v)] then
-            if data[tostring(v)]['settings'] then
-                local grp = data[tostring(v)]
-                local name = ''
-                for m, n in pairs(grp) do
-                    if m == 'set_name' then
-                        name = n
-                    end
-                end
-                local group_owner = "No owner"
-                if data[tostring(v)]['admins_in'] then
-                    group_owner = tostring(data[tostring(v)]['admins_in'])
-                end
-                local group_link = "No link"
-                if data[tostring(v)]['settings']['set_link'] then
-                    group_link = data[tostring(v)]['settings']['set_link']
-                elseif get_links and data[tostring(v)]['group_type']:lower() == 'supergroup' then
-                    local link = exportChatInviteLink(v)
-                    if link then
-                        data[tostring(v)]['settings']['set_link'] = link
-                        save_data(config.moderation.data, data)
-                        group_link = link
-                    end
-                end
-                message = message .. name .. ' [' .. v .. '] - [' .. group_owner .. ']\n{' .. group_link .. "}\n"
-            end
-        end
-    end
-    local file = io.open("./groups/lists/realms.txt", "w")
     file:write(message)
     file:flush()
     file:close()
@@ -273,15 +229,6 @@ local function run(msg, matches)
                     return groupsList(msg, false)
                 elseif matches[2]:lower() == 'groups createlinks' then
                     return groupsList(msg, true)
-                end
-            elseif matches[2]:lower() == 'realms' or matches[2]:lower() == 'realms createlinks' then
-                mystat('/list realms')
-                -- realmsList(msg)
-                -- sendDocument(msg.from.id, "./groups/lists/realms.txt")
-                if matches[2]:lower() == 'realms' then
-                    return realmsList(msg, false)
-                elseif matches[2]:lower() == 'realms createlinks' then
-                    return realmsList(msg, true)
                 end
             end
             return
@@ -460,7 +407,7 @@ return {
         "/pm {id} {msg}",
         "/pmblock {user}",
         "/pmunblock {user}",
-        "/list admins|groups [createlinks]|realms [createlinks]",
+        "/list admins|(groups [createlinks])",
         "/checkspeed",
         "/requestslog",
         "/vardump [{reply}]",

@@ -7,13 +7,7 @@ local function run(msg, matches)
             news_table.news = matches[2] or langs.news
             news_table.tot_chats = 0
             news_table.chats = { }
-            for k, v in pairs(data.groups) do
-                if data[tostring(v)] then
-                    news_table.tot_chats = news_table.tot_chats + 1
-                    news_table.chats[tostring(v)] = true
-                end
-            end
-            for k, v in pairs(data.realms) do
+            for k, v in pairsByGroupName(data) do
                 if data[tostring(v)] then
                     news_table.tot_chats = news_table.tot_chats + 1
                     news_table.chats[tostring(v)] = true
@@ -46,9 +40,9 @@ local function pre_process(msg)
                 news_table.chats[tostring(msg.chat.id)] = false
                 news_table.counter = news_table.counter + 1
                 local text = "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats) .. '\n'
-                for k, v in pairs(news_table.chats) do
+                for k, v in pairsByGroupName(data) do
                     if not news_table.chats[k] then
-                        text = text .. data[tostring(k)].set_name .. '\n'
+                        text = text .. v.set_name .. '\n'
                     end
                 end
                 editMessage(news_table.chat_msg_to_update, news_table.msg_to_update, text)
