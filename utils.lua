@@ -545,8 +545,10 @@ function pairsByGroupName(t)
         list[#list + 1] = id
     end
     function byval(a, b)
-        if t[a].set_name and t[b].set_name then
-            return t[a].set_name < t[b].set_name
+        if t[a] and t[b] then
+            if t[a].set_name and t[b].set_name then
+                return t[a].set_name < t[b].set_name
+            end
         end
         return false
     end
