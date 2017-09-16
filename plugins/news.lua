@@ -8,9 +8,9 @@ local function run(msg, matches)
             news_table.tot_chats = 0
             news_table.chats = { }
             for k, v in pairsByGroupName(data) do
-                if data[tostring(v)] then
+                if data[tostring(k)] then
                     news_table.tot_chats = news_table.tot_chats + 1
-                    news_table.chats[tostring(v)] = true
+                    news_table.chats[tostring(k)] = true
                 end
             end
             news_table.spam = true

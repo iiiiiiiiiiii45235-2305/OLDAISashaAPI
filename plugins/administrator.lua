@@ -42,26 +42,26 @@ end
 local function groupsList(msg, get_links)
     local message = langs[msg.lang].groupListStart
     for k, v in pairsByGroupName(data) do
-        if data[tostring(v)] then
-            if data[tostring(v)]['settings'] then
+        if data[tostring(k)] then
+            if data[tostring(k)]['settings'] then
                 local name = ''
-                local grp = data[tostring(v)]
+                local grp = data[tostring(k)]
                 for m, n in pairs(grp) do
                     if m == 'set_name' then
                         name = n
                     end
                 end
                 local group_owner = "No owner"
-                if data[tostring(v)]['set_owner'] then
-                    group_owner = tostring(data[tostring(v)]['set_owner'])
+                if data[tostring(k)]['set_owner'] then
+                    group_owner = tostring(data[tostring(k)]['set_owner'])
                 end
                 local group_link = "No link"
-                if data[tostring(v)]['settings']['set_link'] then
-                    group_link = data[tostring(v)]['settings']['set_link']
-                elseif get_links and data[tostring(v)]['group_type']:lower() == 'supergroup' then
+                if data[tostring(k)]['settings']['set_link'] then
+                    group_link = data[tostring(k)]['settings']['set_link']
+                elseif get_links and data[tostring(k)]['group_type']:lower() == 'supergroup' then
                     local link = exportChatInviteLink(v)
                     if link then
-                        data[tostring(v)]['settings']['set_link'] = link
+                        data[tostring(k)]['settings']['set_link'] = link
                         save_data(config.moderation.data, data)
                         group_link = link
                     end
