@@ -545,7 +545,10 @@ function pairsByGroupName(t)
         list[#list + 1] = id
     end
     function byval(a, b)
-        return t[a].set_name < t[b].set_name
+        if t[a].set_name and t[b].set_name then
+            return t[a].set_name < t[b].set_name
+        end
+        return false
     end
     table.sort(list, byval)
     local i = 0
