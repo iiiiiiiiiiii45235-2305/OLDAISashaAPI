@@ -538,6 +538,29 @@ function pairsByKeys(t, f)
     end
     return iter
 end
+
+function pairsByGroupName(t)
+    local list = { }
+    for id, value in pairs(t) do
+        list[#list + 1] = id
+    end
+    function byval(a, b)
+        return t[a].set_name < t[b].set_name
+    end
+    table.sort(list, byval)
+    local i = 0
+    -- iterator variable
+    local iter = function()
+        -- iterator function
+        i = i + 1
+        if list[i] == nil then
+            return nil
+        else
+            return list[i], t[list[i]]
+        end
+    end
+    return iter
+end
 -- End Table Sort
 
 function get_lang(chat_id)
