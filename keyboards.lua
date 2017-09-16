@@ -529,6 +529,11 @@ function keyboard_settings_list(chat_id, from_other_plugin)
                             keyboard.inline_keyboard[row] = { }
                         end
                         if value then
+                            if from_other_plugin then
+                                keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id .. 'I' }
+                            else
+                                keyboard.inline_keyboard[row][column] = { text = '✅ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ✅', callback_data = 'group_managementUNLOCK' .. var:lower() .. chat_id }
+                            end
                         else
                             if from_other_plugin then
                                 keyboard.inline_keyboard[row][column] = { text = '☑️ ' ..(reverseSettingsDictionary[var:lower()] or var:lower()) .. ' ☑️', callback_data = 'group_managementLOCK' .. var:lower() .. chat_id .. 'I' }
@@ -1055,7 +1060,7 @@ function keyboard_plugins_list(user_id, privileged, chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].previousPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].updateKeyboard, callback_data = 'pluginsBACK' }
