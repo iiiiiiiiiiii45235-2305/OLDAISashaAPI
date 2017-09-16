@@ -116,8 +116,6 @@ return {
     {
         "^(/[Ss][Tt][Aa][Rr][Tt])$",
         "^(/[Ss][Tt][Aa][Rr][Tt]) (.*)$",
-        "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt]$",
-        "^(/[Ss][Tt][Aa][Rr][Tt])@[Aa][Ii][Ss][Aa][Ss][Hh][Aa][Bb][Oo][Tt] (.*)$",
         "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Dd][Ee][Ll][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
         "^[#!/][Bb][Oo][Tt] ([Oo][Nn])$",
