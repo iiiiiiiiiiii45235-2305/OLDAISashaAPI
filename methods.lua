@@ -370,6 +370,8 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or '') .. ".txt"
                         text = text:gsub('<code>', '')
                         text = text:gsub('</code>', '')
+                        text = text:gsub('<b>', '')
+                        text = text:gsub('</b>', '')
                         text = text:gsub('&lt;', '<')
                         text = text:gsub('&gt;', '>')
                         local file = io.open(path, "w")

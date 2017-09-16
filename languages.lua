@@ -864,7 +864,7 @@ return {
         .. "<code>/faq11</code> significato impostazioni.\n"
         .. "<code>/faq12</code> significato muti.\n"
         .. "<code>/faq13</code> ruleta @AISashaBot.\n"
-        .. "<code>/faq14</code> api\\_patch.\n"
+        .. "<code>/faq14</code> api_patch.\n"
         .. "<code>/faq15</code> spam @AISashaBot.\n"
         .. "<code>/faq16</code> significato permessi.\n"
         .. "<code>/faq17</code> significato restrizioni.\n",
@@ -954,12 +954,12 @@ return {
         ------------
         administrator =
         {
-            "🅿️ ADMINISTRATOR 🅿️",
+            "🅿️ <b>ADMINISTRATOR</b> 🅿️",
             "Plugin per amministratori di Sasha.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/todo &lt;reply&gt; [&lt;text&gt;]</code>: Sasha inoltra &lt;reply&gt; e invia l'eventuale &lt;text&gt; nella chat di LOG.",
             "<code>/todo &lt;text&gt;</code>: Sasha invia &lt;text&gt; nella chat di LOG.",
-            "<code>/pm &lt;user_id&gt; &lt;msg&gt;</code>: Sasha invia &lt;msg&gt; a &lt;user\\_id&gt;.",
+            "<code>/pm &lt;user_id&gt; &lt;msg&gt;</code>: Sasha invia &lt;msg&gt; a &lt;user_id&gt;.",
             "<code>/pmblock &lt;user&gt;</code>: Sasha blocca l'utente specificato.",
             "<code>/pmunblock &lt;user&gt;</code>: Sasha sblocca l'utente specificato.",
             "<code>/list admins|groups [createlinks]|realms [createlinks]</code>: Sasha mostra una lista della variabile specificata, se specificato crea i link d'invito se possibile.",
@@ -970,7 +970,7 @@ return {
             "<code>/ping</code>: Sasha risponde con \"Pong\".",
             "<code>/laststart</code>: Sasha manda la data dell'avvio.",
             "<code>/leave [&lt;group_id&gt;]</code>: Sasha lascia il gruppo.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/addadmin &lt;user_id&gt;|&lt;username&gt;</code>: Sasha promuove l'utente specificato ad amminstratore.",
             "<code>/removeadmin &lt;user_id&gt;|&lt;username&gt;</code>: Sasha degrada l'utente specificato.",
             "<code>/botstop</code>: Sasha si stoppa.",
@@ -985,30 +985,30 @@ return {
 
         alternatives =
         {
-            "🅿️ ALTERNATIVES 🅿️",
+            "🅿️ <b>ALTERNATIVES</b> 🅿️",
             "Plugin per l'utilizzo di comandi alternativi.",
-            "USER",
+            "<b>USER</b>",
             "<code>/getalternatives /&lt;command&gt;</code>: Sasha manda le alternative a &lt;command&gt;.",
             "<code>/previewalternative &lt;alternative&gt;</code>: Sasha manda &lt;alternative&gt;.",
-            "MOD",
-            "<code>/setalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha eseguirà &lt;alternative&gt;|&lt;reply\\_media&gt; come se fosse &lt;command&gt;.",
-            "<code>/unsetalternative &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha rimuove &lt;alternative&gt;|&lt;reply\\_media&gt;.",
-            "OWNER",
+            "<b>MOD</b>",
+            "<code>/setalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha eseguirà &lt;alternative&gt;|&lt;reply_media&gt; come se fosse &lt;command&gt;.",
+            "<code>/unsetalternative &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha rimuove &lt;alternative&gt;|&lt;reply_media&gt;.",
+            "<b>OWNER</b>",
             "<code>/setdefaultalternatives</code>: Sasha ripristina i comandi alternativi di default.",
             "<code>/unsetalternatives /&lt;command&gt;</code>: Sasha rimuove tutte le alternative di &lt;command&gt;.",
-            "ADMIN",
-            "<code>/setglobalalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha eseguirà &lt;alternative&gt;|&lt;reply\\_media&gt; come se fosse &lt;command&gt; in tutti i gruppi.",
-            "<code>/unsetglobalalternative &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha rimuove &lt;alternative&gt;|&lt;reply\\_media&gt; dalle alternative globali.",
+            "<b>ADMIN</b>",
+            "<code>/setglobalalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha eseguirà &lt;alternative&gt;|&lt;reply_media&gt; come se fosse &lt;command&gt; in tutti i gruppi.",
+            "<code>/unsetglobalalternative &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha rimuove &lt;alternative&gt;|&lt;reply_media&gt; dalle alternative globali.",
             "<code>/setdefaultglobalalternatives</code>: Sasha ripristina i comandi alternativi globali di default.",
         },
 
         banhammer =
         {
-            "🅿️ BANHAMMER 🅿️",
+            "🅿️ <b>BANHAMMER</b> 🅿️",
             "Plugin per la gestione dei kick e dei ban.",
-            "USER",
+            "<b>USER</b>",
             "<code>/kickme</code>: Sasha kicka l'utente.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/getuserwarns &lt;user&gt;</code>: Sasha manda il numero di avvertimenti ricevuti dall'utente.",
             "<code>/muteuser &lt;user&gt;</code>: Sasha [s]muta l'utente specificato.",
             "<code>/mutelist</code>: Sasha manda la lista degli utenti muti della chat.",
@@ -1028,12 +1028,12 @@ return {
             "<code>/countbanlist</code>: Sasha manda il numero di utenti bannati.",
             -- "<code>/kickrandom</code>: Sasha sceglie un utente a caso e lo kicka.",
             -- "<code>/kickdeleted</code>: Sasha kicka tutti gli account eliminati.",
-            "OWNER",
+            "<b>OWNER</b>",
             -- "<code>/kicknouser</code>: Sasha kicka tutti gli utenti senza username.",
             -- "<code>/kickinactive [&lt;msgs&gt;]</code>: Sasha kicka tutti gli utenti inattivi sotto &lt;msgs&gt; messaggi.",
-            "ADMIN",
-            "<code>/banlist &lt;group_id&gt;</code>: Sasha mostra la lista di utenti bannati da &lt;group\\_id&gt;.",
-            "<code>/countbanlist &lt;group_id&gt;</code>: Sasha manda il numero di utenti bannati da &lt;group\\_id&gt;.",
+            "<b>ADMIN</b>",
+            "<code>/banlist &lt;group_id&gt;</code>: Sasha mostra la lista di utenti bannati da &lt;group_id&gt;.",
+            "<code>/countbanlist &lt;group_id&gt;</code>: Sasha manda il numero di utenti bannati da &lt;group_id&gt;.",
             "<code>/gban &lt;user&gt;</code>: Sasha banna globalmente l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
             "<code>/ungban &lt;user&gt;</code>: Sasha sbanna globalmente l'utente specificato.",
             "<code>/gbanlist</code>: Sasha mostra la lista di utenti bannati globalmente.",
@@ -1042,39 +1042,39 @@ return {
 
         bot =
         {
-            "🅿️ BOT 🅿️",
+            "🅿️ <b>BOT</b> 🅿️",
             "Plugin per attivare e disattivare Sasha sul gruppo.",
-            "USER",
+            "<b>USER</b>",
             "<code>/start</code>: Sasha manda il messaggio di start.",
             "<code>/del &lt;reply&gt;</code>: Sasha elimina il messaggio in &lt;reply&gt; (funziona solo in chat privata).",
             "<code>/delkeyboard &lt;reply&gt;</code>: Sasha elimina la keyboard in &lt;reply&gt; (funziona solo in chat privata).",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/bot|sasha on|off</code>: Sasha si attiva|disattiva.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/bot|sasha on|off [&lt;group_id&gt;]</code>: Sasha si attiva|disattiva nel gruppo specificato.",
         },
 
         check_tag =
         {
-            "🅿️ CHECK\\_TAG 🅿️",
+            "🅿️ <b>CHECK_TAG</b> 🅿️",
             "Plugin per mandare le notifiche di tags e mentions (NOTIFICHE ABILITATE ANCHE PER GLI UTENTI ESTERNI AL GRUPPO).",
             "AVVIA IL BOT IN PRIVATO O NON POTRA' MANDARTI MESSAGGI.",
-            "USER",
+            "<b>USER</b>",
             "<code>/registertagalert</code>: Sasha ti registra al tagalert, se non hai un username controllerà solo le mentions.",
             "<code>/unregistertagalert</code>: Sasha elimina la tua registrazione.",
             "<code>/setnickname &lt;nickname&gt;</code>: Sasha imposta &lt;nickname&gt; come alternativa all'username/mention.",
             "<code>/unsetnickname</code>: Sasha elimina il tuo nickname (rimani registrato).",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/enabletagalert</code>: Sasha abilita la funzione per il gruppo (disabilitata per default).",
             "<code>/disabletagalert</code>: Sasha disabilita la funzione per il gruppo.",
-            -- "<code>/tagall &lt;text&gt;|&lt;reply_text&gt;</code>: Sasha scrive &lt;text&gt;|&lt;reply\\_text&gt; e tagga tutti i membri del gruppo.",
+            -- "<code>/tagall &lt;text&gt;|&lt;reply_text&gt;</code>: Sasha scrive &lt;text&gt;|&lt;reply_text&gt; e tagga tutti i membri del gruppo.",
         },
 
         database =
         {
-            "🅿️ DATABASE 🅿️",
+            "🅿️ <b>DATABASE</b> 🅿️",
             "Plugin per il salvataggio delle informazioni di utenti e gruppi.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/createdatabase</code>: Sasha crea il database.",
             -- "<code>/dodatabase</code>: Sasha salva i dati di tutti gli utenti del gruppo e i dati del gruppo.",
             "<code>/dbsearch &lt;id&gt;|&lt;username&gt;|&lt;reply&gt;|from</code>: Sasha cerca l'oggetto specificato nel database.",
@@ -1089,44 +1089,44 @@ return {
 
         delword =
         {
-            "🅿️ DELWORD 🅿️",
+            "🅿️ <b>DELWORD</b> 🅿️",
             "Plugin per la censura delle parole.",
-            "USER",
+            "<b>USER</b>",
             "<code>/dellist</code>: Sasha manda una lista di parole o pattern censurati.",
-            "MOD",
+            "<b>MOD</b>",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "<code>/delword &lt;word&gt;|&lt;pattern&gt;</code>: Sasha mette|toglie una censura su &lt;word&gt;|&lt;pattern&gt;, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio.",
         },
 
         dogify =
         {
-            "🅿️ DOGIFY 🅿️",
+            "🅿️ <b>DOGIFY</b> 🅿️",
             "Plugin per la creazione di immagini col doge.",
-            "USER",
+            "<b>USER</b>",
             "<code>/dogify &lt;your/words/with/slashes&gt;</code>: Sasha crea un'immagine col doge e le parole specificate.",
         },
 
         fakecommand =
         {
-            "🅿️ FAKECOMMAND 🅿️",
+            "🅿️ <b>FAKECOMMAND</b> 🅿️",
             "Plugin per testare i comandi.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>(/user|/mod|/owner|/admin) &lt;command&gt;</code>: Sasha esegue &lt;command&gt; come se fosse stato inviato da un utente con il rango specificato.",
         },
 
         feedback =
         {
-            "🅿️ FEEDBACK 🅿️",
+            "🅿️ <b>FEEDBACK</b> 🅿️",
             "Plugin per mandare feedback.",
-            "USER",
+            "<b>USER</b>",
             "<code>/feedback &lt;text&gt;</code>: Sasha invia &lt;text&gt; come feedback.",
         },
 
         filemanager =
         {
-            "🅿️ FILEMANAGER 🅿️",
+            "🅿️ <b>FILEMANAGER</b> 🅿️",
             "Plugin per la gestione del server di Sasha.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/folder</code>: Sasha manda la directory attuale.",
             "<code>/cd [&lt;directory&gt;]</code>: Sasha entra in &lt;directory&gt;, se non è specificata torna alla cartella base.",
             "<code>/ls</code>: Sasha manda la lista di file e cartelle della directory corrente.",
@@ -1145,9 +1145,9 @@ return {
 
         flame =
         {
-            "🅿️ FLAME 🅿️",
+            "🅿️ <b>FLAME</b> 🅿️",
             "Plugin per flammare gli utenti.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/startflame &lt;user&gt;</code>: Sasha flamma l'utente specificato.",
             "<code>/stopflame</code>: Sasha smette di flammare.",
             "<code>/flameinfo</code>: Sasha manda le info su chi sta flammando.",
@@ -1155,14 +1155,14 @@ return {
 
         getsetunset =
         {
-            "🅿️ GETSETUNSET 🅿️",
+            "🅿️ <b>GETSETUNSET</b> 🅿️",
             "Plugin per ottenere/settare/unsettare cose.",
-            "USER",
-            "<code>/get &lt;var_name&gt;</code>: Sasha manda la risposta a &lt;var\\_name&gt;.",
+            "<b>USER</b>",
+            "<code>/get &lt;var_name&gt;</code>: Sasha manda la risposta a &lt;var_name&gt;.",
             "<code>(/getlist|/get)</code>: Sasha mostra una lista delle variabili settate.",
             "<code>(/getgloballist|/getglobal)</code>: Sasha mostra una lista delle variabili globali settate.",
-            "MOD",
-            "Per [un]settare una frase usare '\\_' al posto di ' '.",
+            "<b>MOD</b>",
+            "Per [un]settare una frase usare '_' al posto di ' '.",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "Possono essere usati dei marcatori che verranno sostituiti quando sarà inviata la risposta: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
@@ -1171,22 +1171,22 @@ return {
             .. "$forwardchatid, $forwardchatname, $forwardchatusername, "
             .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername, $forwardmention."
             .. "\nSe alcuni marcatori non potessero essere risolti (reply, forwardchat, forward) verranno usati quelli normali (chat, user).",
-            "<code>/set &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha salva &lt;text&gt; come risposta a &lt;var\\_name&gt;|&lt;pattern&gt;.",
-            "<code>/setmedia &lt;var_name&gt;|&lt;pattern&gt; &lt;reply_media&gt; [&lt;caption&gt;]</code>: Sasha salva il &lt;reply\\_media&gt; (foto, video, video messaggio, audio, nota vocale, gif, documento, sticker) come risposta a &lt;var\\_name&gt;|&lt;pattern&gt;, se &lt;caption&gt; è presente viene usato come didascalia (non disponibile per tutti i media).",
-            "<code>/unset &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha elimina &lt;var\\_name&gt;|&lt;pattern&gt;.",
-            "OWNER",
+            "<code>/set &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha salva &lt;text&gt; come risposta a &lt;var_name&gt;|&lt;pattern&gt;.",
+            "<code>/setmedia &lt;var_name&gt;|&lt;pattern&gt; &lt;reply_media&gt; [&lt;caption&gt;]</code>: Sasha salva il &lt;reply_media&gt; (foto, video, video messaggio, audio, nota vocale, gif, documento, sticker) come risposta a &lt;var_name&gt;|&lt;pattern&gt;, se &lt;caption&gt; è presente viene usato come didascalia (non disponibile per tutti i media).",
+            "<code>/unset &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha elimina &lt;var_name&gt;|&lt;pattern&gt;.",
+            "<b>OWNER</b>",
             "<code>/enableglobal</code>: Sasha abilita i get globali sulla chat.",
             "<code>/disableglobal</code>: Sasha disabilita i get globali sulla chat.",
-            "ADMIN",
-            "<code>/setglobal &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha salva globalmente &lt;text&gt; come risposta a &lt;var\\_name&gt;|&lt;pattern&gt;.",
-            "<code>/unsetglobal &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha elimina globalmente &lt;var\\_name&gt;|&lt;pattern&gt;.",
+            "<b>ADMIN</b>",
+            "<code>/setglobal &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha salva globalmente &lt;text&gt; come risposta a &lt;var_name&gt;|&lt;pattern&gt;.",
+            "<code>/unsetglobal &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha elimina globalmente &lt;var_name&gt;|&lt;pattern&gt;.",
         },
 
         goodbyewelcome =
         {
-            "🅿️ GOODBYEWELCOME 🅿️",
+            "🅿️ <b>GOODBYEWELCOME</b> 🅿️",
             "Plugin per il benvenuto e l'addio dei membri.",
-            "MOD",
+            "<b>MOD</b>",
             "Possono essere usati dei marcatori che verranno sostituiti quando sarà inviato il benvenuto/l'addio: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
             .. "$userid, $firstname, $lastname, $printname, $username, $mention.",
@@ -1194,8 +1194,8 @@ return {
             "<code>/getgoodbye</code>: Sasha manda l'addio.",
             "<code>/previewwelcome</code>: Sasha manda l'esempio di benvenuto.",
             "<code>/previewgoodbye</code>: Sasha manda l'esempio di addio.",
-            "<code>/setwelcome &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha imposta &lt;text&gt;|(&lt;reply\\_media&gt; [&lt;caption&gt;]) come benvenuto.",
-            "<code>/setgoodbye &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha imposta &lt;text&gt;|(&lt;reply\\_media&gt; [&lt;caption&gt;]) come addio.",
+            "<code>/setwelcome &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha imposta &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;]) come benvenuto.",
+            "<code>/setgoodbye &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha imposta &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;]) come addio.",
             "<code>/unsetwelcome</code>: Sasha rimuove il benvenuto.",
             "<code>/unsetgoodbye</code>: Sasha rimuove l'addio.",
             "<code>/setmemberswelcome &lt;value&gt;</code>: Sasha dopo &lt;value&gt; membri manderà il benvenuto con le regole, se zero il benvenuto non verrà più mandato.",
@@ -1204,10 +1204,10 @@ return {
 
         group_management =
         {
-            "🅿️ GROUP\\_MANAGEMENT 🅿️",
+            "🅿️ <b>GROUP_MANAGEMENT</b> 🅿️",
             "Plugin per gestire i gruppi.",
             -- COMMON
-            "USER",
+            "<b>USER</b>",
             "<code>/getwarn</code>: Sasha manda il numero di avvertimenti massimi.",
             "<code>/rules</code>: Sasha mostra le regole del gruppo.",
             "<code>/modlist</code>: Sasha mostra la lista dei moderatori.",
@@ -1217,7 +1217,7 @@ return {
             "<code>/[textual]settings</code>: Sasha manda le impostazioni del gruppo.",
             "<code>/[textual]muteslist</code>: Sasha manda la lista dei muti della chat.",
             "<code>/[textual]permissions</code>: Sasha manda i tuoi permessi.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/del [&lt;reply&gt;]</code>: Sasha elimina il messaggio del comando e &lt;reply&gt;.",
             "<code>/delkeyboard &lt;reply&gt;</code>: Sasha elimina la keyboard in &lt;reply&gt;.",
             "<code>/type</code>: Sasha mostra il tipo del gruppo.",
@@ -1230,14 +1230,14 @@ return {
             "<code>&lt;setting&gt;</code> può essere: </code>arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict</code>.",
             "<code>/[un]mute &lt;mute&gt;</code>: Sasha [s]muta &lt;mute&gt;.",
             "<code>&lt;mute&gt;</code> può essere: </code>all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note</code>.",
-            "SUPERGROUP",
+            "<b>SUPERGRUPPO</b>",
             "<code>/[silent]pin &lt;reply&gt;</code>: Sasha fissa [silenziosamente] &lt;reply&gt;.",
             "<code>/unpin</code>: Sasha stacca il messaggio fissato.",
             "<code>/settitle &lt;text&gt;</code>: Sasha imposta &lt;text&gt; come titolo del gruppo.",
             "<code>/setdescription &lt;text&gt;</code>: Sasha imposta &lt;text&gt; come descrizione del gruppo.",
             "<code>/setphoto &lt;reply&gt;</code>: Sasha imposta &lt;reply&gt; come foto del gruppo.",
             "<code>/unsetphoto</code>: Sasha elimina la foto del gruppo.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/syncmodlist</code>: Sasha sincronizza i moderatori con gli amministratori di telegram.",
             "<code>/log</code>: Sasha manda un file contenente il log giornaliero della chat.",
             "<code>/setlink &lt;link&gt;</code>: Sasha imposta &lt;link&gt; come link d'invito.",
@@ -1246,29 +1246,29 @@ return {
             "<code>/[textual]permissions &lt;user&gt;</code>: Sasha manda i permessi dell'utente specificato.",
             "<code>/promote &lt;user&gt;</code>: Sasha promuove a moderatore l'utente specificato.",
             "<code>/demote &lt;user&gt;</code>: Sasha degrada l'utente specificato.",
-            "<code>/promoteadmin &lt;user&gt; [&lt;permissions&gt;]</code>: Sasha promuove ad amministratore di telegram l'utente specificato con i permessi specificati (se non specificati l'utente avrà tutti i permessi meno che il promote\\_members).",
+            "<code>/promoteadmin &lt;user&gt; [&lt;permissions&gt;]</code>: Sasha promuove ad amministratore di telegram l'utente specificato con i permessi specificati (se non specificati l'utente avrà tutti i permessi meno che il promote_members).",
             "<code>&lt;permissions&gt;</code> può essere: </code>[change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]</code>.",
             "<code>/demoteadmin &lt;user&gt;</code>: Sasha degrada da amministratore di telegram l'utente specificato.",
             "<code>/setowner &lt;user&gt;</code>: Sasha imposta l'utente specificato come proprietario.",
             "<code>/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha pulisce il parametro specificato.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/add [realm]</code>: Sasha aggiunge il gruppo in cui ci si trova, se \"realm\" come un regno.",
             "<code>/rem [realm]</code>: Sasha rimuove il gruppo in cui ci si trova, se \"realm\" come un regno.",
-            "REGNO",
-            "<code>/setgpowner &lt;group_id&gt; &lt;user_id&gt;</code>: Sasha imposta &lt;user\\_id&gt; come proprietario di &lt;group\\_id&gt;.",
-            "<code>/setrules &lt;group_id&gt; &lt;text&gt;</code>: Sasha cambia le regole di &lt;group\\_id&gt; in &lt;text&gt;.",
-            "<code>/[un]mute &lt;group_id&gt; &lt;mute&gt;</code>: Sasha [s]muta &lt;mute&gt; in &lt;group\\_id&gt;.",
-            "<code>/[textual]muteslist &lt;group_id&gt;</code>: Sasha manda la lista dei muti di &lt;group\\_id&gt;.",
-            "<code>/[un]lock &lt;group_id&gt; &lt;setting&gt;</code>: Sasha [s]blocca &lt;setting&gt; in &lt;group\\_id&gt;.",
-            "<code>/[textual]settings &lt;group_id&gt;</code>: Sasha manda le impostazioni di &lt;group\\_id&gt;.",
+            "<b>REGNO</b>",
+            "<code>/setgpowner &lt;group_id&gt; &lt;user_id&gt;</code>: Sasha imposta &lt;user_id&gt; come proprietario di &lt;group_id&gt;.",
+            "<code>/setrules &lt;group_id&gt; &lt;text&gt;</code>: Sasha cambia le regole di &lt;group_id&gt; in &lt;text&gt;.",
+            "<code>/[un]mute &lt;group_id&gt; &lt;mute&gt;</code>: Sasha [s]muta &lt;mute&gt; in &lt;group_id&gt;.",
+            "<code>/[textual]muteslist &lt;group_id&gt;</code>: Sasha manda la lista dei muti di &lt;group_id&gt;.",
+            "<code>/[un]lock &lt;group_id&gt; &lt;setting&gt;</code>: Sasha [s]blocca &lt;setting&gt; in &lt;group_id&gt;.",
+            "<code>/[textual]settings &lt;group_id&gt;</code>: Sasha manda le impostazioni di &lt;group_id&gt;.",
             "<code>/rem &lt;group_id&gt;</code>: Sasha rimuove il gruppo.",
         },
 
         help =
         {
-            "🅿️ HELP 🅿️",
+            "🅿️ <b>HELP</b> 🅿️",
             "Plugin di aiuto, USATELO!",
-            "USER",
+            "<b>USER</b>",
             "<code>/sudolist</code>: Sasha manda la lista dei sudo.",
             "<code>/[textual]help</code>: Sasha manda la lista dei plugin per cui è disponibile l'help.",
             "<code>/[textual]help &lt;plugin_name&gt;|&lt;plugin_number&gt;</code>: Sasha manda l'aiuto per il plugin specificato.",
@@ -1282,27 +1282,27 @@ return {
 
         info =
         {
-            "🅿️ INFO 🅿️",
+            "🅿️ <b>INFO</b> 🅿️",
             "Plugin per ottenere informazioni.",
-            "USER",
+            "<b>USER</b>",
             "<code>/id [&lt;user&gt;]</code>: Sasha manda l'id dell'utente/della chat specificato/a, altrimenti l'id dell'utente e l'id del gruppo.",
             "<code>/username [&lt;user&gt;]</code>: Sasha manda l'username dell'utente/della chat specificato/a, altrimenti l'username dell'utente e l'username del gruppo.",
             "<code>/getrank [&lt;user&gt;]</code>: Sasha manda il rank dell'utente.",
             "<code>/whoami</code>: Sasha manda le informazioni dell'utente.",
             "<code>/info</code>: Sasha manda le info dell'utente e della chat o di se stessa",
             "<code>/ishere &lt;user&gt;</code>: Sasha dice se l'utente specificato è presente nel gruppo.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/info &lt;id&gt;|&lt;username&gt;|&lt;reply&gt;|from</code>: Sasha manda le info dell'oggetto specificato.",
             -- "<code>(/who|/members)</code>: Sasha manda la lista degli utenti.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/grouplink &lt;group_id&gt;</code>: Sasha manda il link del gruppo specificato.",
         },
 
         interact =
         {
-            "🅿️ INTERACT 🅿️",
+            "🅿️ <b>INTERACT</b> 🅿️",
             "Plugin per l'interazione con gli utenti.",
-            "USER",
+            "<b>USER</b>",
             "<code>/[del]typing</code>: Sasha finge di scrivere.",
             "<code>/[del]upload_photo</code>: Sasha finge di inviare una foto.",
             "<code>/[del]record_video</code>: Sasha finge di registrare un video.",
@@ -1314,20 +1314,20 @@ return {
             "<code>/[del]record_videonote</code>: Sasha finge di registrare un video messaggio.",
             "<code>/[del]upload_videonote</code>: Sasha finge di inviare un video messaggio.",
             "<code>/testobject &lt;id&gt;|&lt;username&gt;|&lt;reply&gt;|from</code>: Sasha controlla se può scrivere all'oggetto specificato.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/[del][markdown|html]echo [&lt;reply&gt;]&lt;text&gt;</code>: Sasha ripete &lt;text&gt;, se in risposta ad un messaggio sasha risponde a quel messaggio, se \"del\" elimina il comando, se \"html\" o \"markdown\" usa la formattazione specificata.",
             "<code>/[del][markdown|html]edit &lt;reply&gt; &lt;text&gt;</code>: Sasha modifica &lt;reply&gt;, se \"markdown\" o \"html\" usa la formattazione specificata.",
         },
 
         likecounter =
         {
-            "🅿️ LIKECOUNTER 🅿️",
+            "🅿️ <b>LIKECOUNTER</b> 🅿️",
             "Plugin per il conteggio dei likes.",
-            "USER",
+            "<b>USER</b>",
             "<code>(/like|/1up) &lt;user&gt;</code>: Sasha aggiunge un like all'utente specificato.",
             "<code>(/dislike|/1down) &lt;user&gt;</code>: Sasha toglie un like all'utente specificato.",
             "<code>/likes</code>: Sasha manda la classifica dei likes.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/createlikesdb</code>:  Sasha crea il database di likecounter.",
             "<code>/addlikes &lt;id&gt; &lt;value&gt;</code>: Sasha aggiunge &lt;value&gt; likes all'utente specificato.",
             "<code>/remlikes &lt;id&gt; &lt;value&gt;</code>: Sasha toglie &lt;value&gt; likes all'utente specificato.",
@@ -1335,33 +1335,33 @@ return {
 
         lua_exec =
         {
-            "🅿️ LUA\\_EXEC 🅿️",
+            "🅿️ <b>LUA_EXEC</b> 🅿️",
             "Plugin per l'esecuzione di codice LUA.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/lua &lt;command&gt;</code>: Sasha esegue &lt;command&gt;.",
         },
 
         me =
         {
-            "🅿️ ME 🅿️",
+            "🅿️ <b>ME</b> 🅿️",
             "Plugin per sapere i messaggi mandati.",
-            "USER",
+            "<b>USER</b>",
             "<code>/me</code>: Sasha dice quanti messaggi hai mandato.",
         },
 
         msg_checks =
         {
-            "🅿️ MSG\\_CHECKS 🅿️",
+            "🅿️ <b>MSG_CHECKS</b> 🅿️",
             "Plugin per il controllo dei messaggi.",
-            "USER",
+            "<b>USER</b>",
             "<code>/checkmsg &lt;reply&gt;|&lt;text&gt;</code>: Sasha controlla &lt;reply&gt;|&lt;text&gt; e rileva quali blocchi/muti verrebbero attivati.",
         },
 
         multiple_commands =
         {
-            "🅿️ MULTIPLE\\_COMMANDS 🅿️",
+            "🅿️ <b>MULTIPLE_COMMANDS</b> 🅿️",
             "Plugin per eseguire azioni multiple.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/multipleid &lt;username1&gt; &lt;username2&gt; ...</code>: Sasha manda gli id di tutti gli &lt;usernames&gt; specificati nella lista.",
             "<code>/multipleusername &lt;id1&gt; &lt;id2&gt; ...</code>: Sasha manda gli username di tutti gli &lt;ids&gt; specificati nella lista.",
             "<code>/multipleishere &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha controlla se gli &lt;users&gt; specificati nella lista sono nel gruppo.",
@@ -1369,14 +1369,14 @@ return {
             "<code>/multipleinfo &lt;obj1&gt; &lt;obj2&gt; ...</code>: Sasha manda le info di tutti gli &lt;objects&gt; specificati nella lista.",
             "<code>/multiplegetuserwarns &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha manda gli avvertimenti di tutti gli &lt;users&gt; specificati nella lista.",
             "<code>/multiplemuteuser &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha [s]muta tutti gli &lt;users&gt; specificati nella lista.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/multiplewarn &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha avverte tutti gli &lt;users&gt; specificati nella lista.",
             "<code>/multipleunwarn &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha diminuisce di uno gli avvertimenti di tutti gli &lt;users&gt; specificati nella lista.",
             "<code>/multipleunwarnall &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha azzera gli avvertimenti di tutti gli &lt;users&gt; specificati nella lista.",
             "<code>/multiplekick &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha kicka tutti gli &lt;users&gt; specificati nella lista.",
             "<code>/multipleban &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha banna tutti gli &lt;users&gt; specificati nella lista.",
             "<code>/multipleunban &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha sbanna tutti gli &lt;users&gt; specificati nella lista.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/multipledbsearch &lt;obj1&gt; &lt;obj2&gt; ...</code>: Sasha cerca nel database tutti gli &lt;objects&gt; specificati nella lista.",
             "<code>/multipledbdelete &lt;obj1&gt; &lt;obj2&gt; ...</code>: Sasha elimina dal database tutti gli &lt;objects&gt; specificati nella lista.",
             "<code>/multiplegrouplink &lt;group1&gt; &lt;group2&gt; ...</code>: Sasha invia il link di tutti i &lt;groups&gt; specificati nella lista.",
@@ -1388,25 +1388,25 @@ return {
 
         news =
         {
-            "🅿️ NEWS 🅿️",
+            "🅿️ <b>NEWS</b> 🅿️",
             "Plugin per le news di Sasha.",
-            "USER",
+            "<b>USER</b>",
             "<code>/news</code>: Sasha manda le novità di se stessa.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/spamnews [&lt;news&gt;]</code>: Sasha manda le novità ad ogni gruppo appena riceve un messaggio dallo stesso.",
             "<code>/stopnews</code>: Sasha smette di mandare le novità.",
         },
 
         plugins =
         {
-            "🅿️ PLUGINS 🅿️",
+            "🅿️ <b>PLUGINS</b> 🅿️",
             "Plugin per attivare e disattivare plugin.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/[textual]plugins</code>: Sasha manda la lista dei plugin.",
             "<code>/disabledlist</code>: Sasha mostra una lista dei plugins disabilitati su questa chat.",
             "<code>/enable &lt;plugin&gt; chat</code>: Sasha riabilita &lt;plugin&gt; su questa chat.",
             "<code>/disable &lt;plugin&gt; chat</code>: Sasha disabilita &lt;plugin&gt; su questa chat.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/[textual]plugins [chat]</code>: Sasha manda la lista dei plugin, se [chat] è specificato permette di modificare la lista del gruppo in cui è stato eseguito il comando.",
             "<code>/enable &lt;plugin&gt; [chat]</code>: Sasha abilita &lt;plugin&gt;, se specificato solo su questa chat.",
             "<code>/disable &lt;plugin&gt; [chat]</code>: Sasha disabilita &lt;plugin&gt;, se specificato solo su questa chat.",
@@ -1416,17 +1416,17 @@ return {
 
         pokedex =
         {
-            "🅿️ POKEDEX 🅿️",
+            "🅿️ <b>POKEDEX</b> 🅿️",
             "Plugin per ottenere informazioni su un pokémon.",
-            "USER",
+            "<b>USER</b>",
             "<code>(/pokedex|/pokemon) &lt;name&gt;|&lt;id&gt;</code>: Sasha cerca il pokémon specificato e ne invia le informazioni.",
         },
 
         qr =
         {
-            "🅿️ QR 🅿️",
+            "🅿️ <b>QR</b> 🅿️",
             "Plugin per creare QR Code.",
-            "USER",
+            "<b>USER</b>",
             "I colori possono essere specificati come segue:",
             "Testo =&gt; red|green|blue|purple|black|white|gray.",
             "Notazione Esadecimale =&gt; (\"a56729\" è marrone).",
@@ -1436,40 +1436,40 @@ return {
 
         scheduled_commands =
         {
-            "🅿️ SCHEDULED\\_COMMANDS 🅿️",
+            "🅿️ <b>SCHEDULED_COMMANDS</b> 🅿️",
             "Plugin per programmare comandi.",
-            "MOD",
+            "<b>MOD</b>",
             "Per maggiori informazioni sui patterns vedi lua.org/pil/20.2.html",
             "<code>/scheduledelword [&lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt;] &lt;word&gt;|&lt;pattern&gt;</code>: Sasha mette|toglie una censura su &lt;word&gt;|&lt;pattern&gt;, quando verrà scritta una cosa censurata Sasha eliminerà il messaggio dopo &lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt; se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         shout =
         {
-            "🅿️ SHOUT 🅿️",
+            "🅿️ <b>SHOUT</b> 🅿️",
             "Plugin per urlare delle parole.",
-            "USER",
+            "<b>USER</b>",
             "<code>/shout &lt;text&gt;</code>: Sasha \"urla\" &lt;text&gt;.",
         },
 
         spam =
         {
-            "🅿️ SPAM 🅿️",
+            "🅿️ <b>SPAM</b> 🅿️",
             "Plugin per spammare fastidiosamente.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/spam [&lt;messages&gt; &lt;seconds&gt;] &lt;reply&gt;|&lt;text&gt;</code>: Sasha inzia a spammare &lt;reply&gt;|&lt;text&gt;, se specificato &lt;messages&gt; messaggi uno ogni &lt;seconds&gt; secondi, altrimenti 5 messaggi uno ogni 2 secondi.",
         },
 
         stats =
         {
-            "🅿️ STATS 🅿️",
+            "🅿️ <b>STATS</b> 🅿️",
             "Plugin per ottenere statistiche sui gruppi e su Sasha.",
-            "USER",
+            "<b>USER</b>",
             "<code>[/]aisashabot</code>: Sasha invia la propria descrizione.",
-            "MOD",
+            "<b>MOD</b>",
             -- "<code>(/stats|/messages)</code>: Sasha invia le statistiche della chat.",
             "<code>(/cleanstats|/cleanmessages)</code>: Sasha pulisce le statistiche.",
             -- "<code>(/statslist|/messageslist)</code>: Sasha invia un file con le statistiche della chat.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             -- "<code>(/stats|/messages) group &lt;group_id&gt;</code>: Sasha invia le statistiche relative al gruppo specificato.",
             "<code>(/cleanstats|/cleanmessages) group &lt;group_id&gt;</code>: Sasha pulisce le statistiche relative al gruppo specificato.",
             -- "<code>(/statslist|/messageslist) group &lt;group_id&gt;</code>: Sasha invia un file con le statistiche relative al gruppo specificato.",
@@ -1477,56 +1477,56 @@ return {
 
         strings =
         {
-            "🅿️ STRINGS 🅿️",
+            "🅿️ <b>STRINGS</b> 🅿️",
             "Plugin per la gestione delle lingue di Sasha.",
-            "USER",
+            "<b>USER</b>",
             "<code>/setlang [it|en]</code>: Sasha imposta la lingua in cui deve parlare (funziona solo in privato con l'utente).",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/setlang [it|en]</code>: Sasha imposta la lingua in cui deve parlare in questo gruppo.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>(/reloadstrings|/reloadlangs)</code>: Sasha aggiorna le stringhe di testo.",
         },
 
         tempmessage =
         {
-            "🅿️ TEMPMESSAGE 🅿️",
+            "🅿️ <b>TEMPMESSAGE</b> 🅿️",
             "Plugin per temporizzare i messaggi.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/tempmsg [&lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt;] &lt;text&gt;</code>: Sasha eliminerà il messaggio dopo &lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt; se specificati, altrimenti manda una tastiera del tempo in privato.",
         },
 
         tex =
         {
-            "🅿️ TEX 🅿️",
+            "🅿️ <b>TEX</b> 🅿️",
             "Plugin per generare equazioni.",
-            "USER",
+            "<b>USER</b>",
             "<code>/tex &lt;equation&gt;</code>: Sasha converte &lt;equation&gt; in immagine.",
         },
 
         tgcli_to_api_migration =
         {
-            "🅿️ TGCLI\\_TO\\_API\\_MIGRATION 🅿️",
+            "🅿️ <b>TGCLI_TO_API_MIGRATION</b> 🅿️",
             "Plugin per la migrazione da tgcli.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/migrate</code>: Sasha migra le impostazioni del gruppo, i ban, le variabili settate e i likes.",
             "<code>/copysettings</code>: Sasha copia le impostazioni del gruppo su quelle di @AISasha.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/sudomigrate</code>: Sasha migra i database e i set globali.",
         },
 
         urbandictionary =
         {
-            "🅿️ URBANDICTIONARY 🅿️",
+            "🅿️ <b>URBANDICTIONARY</b> 🅿️",
             "Plugin per interagire con l'Urban Dictionary.",
-            "USER",
+            "<b>USER</b>",
             "<code>(/urbandictionary|/urban|/ud) &lt;text&gt;</code>: Sasha mostra la definizione di &lt;text&gt; dall'Urban Dictionary.",
         },
 
         webshot =
         {
-            "🅿️ WEBSHOT 🅿️",
+            "🅿️ <b>WEBSHOT</b> 🅿️",
             "Plugin per fare screenshots di siti.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/webshot &lt;url&gt; [&lt;size&gt;]</code>: Sasha esegue uno screenshot di &lt;url&gt; e lo invia, se &lt;size&gt; è specificata di quella dimensione.",
             "&lt;size&gt; può essere:",
             "T =&gt; (120 x 90px)",
@@ -1537,23 +1537,23 @@ return {
             "M =&gt; (640 x 480px)",
             "L =&gt; (800 x 600px)",
             "X =&gt; (1024 x 768px)",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "Fmob =&gt; Pagina intera (può essere un processo lungo)",
             "F =&gt; Pagina intera (può essere un processo molto lungo)",
         },
 
         whitelist =
         {
-            "🅿️ WHITELIST 🅿️",
+            "🅿️ <b>WHITELIST</b> 🅿️",
             "Plugin per la gestione delle whitelist.",
-            "USER",
+            "<b>USER</b>",
             "<code>/whitelist</code>: Sasha manda la whitelist.",
             "<code>/whitelistgban</code>: Sasha manda la whitelist dei gban.",
             "<code>/whitelistlink</code>: Sasha manda la whitelist dei link.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/whitelist &lt;user&gt;</code>: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist.",
             "<code>/whitelistgban &lt;user&gt;</code>: Sasha aggiunge|rimuove l'utente specificato alla|dalla whitelist dei gban.",
-            "<code>/whitelistlink &lt;link&gt;|&lt;public_(channel|supergroup)_username&gt;|&lt;channel_id&gt;</code>: Sasha aggiunge|rimuove &lt;link&gt;|&lt;public\\_(channel|supergroup)\\_username&gt;|&lt;channel\\_id&gt; alla|dalla whitelist dei link.",
+            "<code>/whitelistlink &lt;link&gt;|&lt;public_(channel|supergroup)_username&gt;|&lt;channel_id&gt;</code>: Sasha aggiunge|rimuove &lt;link&gt;|&lt;public_(channel|supergroup)_username&gt;|&lt;channel_id&gt; alla|dalla whitelist dei link.",
         },
     },
     -- ####
@@ -2095,7 +2095,7 @@ return {
         groupName = "\nGroup name: ",
         supergroupName = "\nSupergroup name: ",
         channelName = "\nChannel name: ",
-        userWord = "USER",
+        userWord = "<b>USER</b>",
         botWord = "BOT",
         groupWord = "GROUP",
         supergroupWord = "SUPERGROUP",
@@ -2224,7 +2224,7 @@ return {
         .. "<code>/faq11</code> settings meaning.\n"
         .. "<code>/faq12</code> mutes meaning.\n"
         .. "<code>/faq13</code> ruleta @AISashaBot.\n"
-        .. "<code>/faq14</code> api\\_patch.\n"
+        .. "<code>/faq14</code> api_patch.\n"
         .. "<code>/faq15</code> spam @AISashaBot.\n"
         .. "<code>/faq16</code> permissions meaning.\n"
         .. "<code>/faq17</code> restrictions meaning.\n",
@@ -2314,12 +2314,12 @@ return {
         ------------
         administrator =
         {
-            "🅿️ ADMINISTRATOR 🅿️",
+            "🅿️ <b>ADMINISTRATOR</b> 🅿️",
             "Plugin for Sasha's administrators.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/todo &lt;reply&gt; [&lt;text&gt;]</code>: Sasha forward &lt;reply&gt; and sends &lt;text&gt; if present in the LOG chat.",
             "<code>/todo &lt;text&gt;</code>: Sasha sends &lt;text&gt; in the LOG chat.",
-            "<code>/pm &lt;user_id&gt; &lt;msg&gt;</code>: Sasha writes &lt;msg&gt; to &lt;user\\_id&gt;.",
+            "<code>/pm &lt;user_id&gt; &lt;msg&gt;</code>: Sasha writes &lt;msg&gt; to &lt;user_id&gt;.",
             "<code>/pmblock &lt;user&gt;</code>: Sasha blocks the specified user.",
             "<code>/pmunblock &lt;user&gt;</code>: Sasha unblocks the specified user.",
             "<code>/list admins|groups [createlinks]|realms [createlinks]</code>: Sasha sends list of the specified parameter, if specified she creates invite links if possible.",
@@ -2330,7 +2330,7 @@ return {
             "<code>/ping</code>: Sasha answers with \"Pong\".",
             "<code>/laststart</code>: Sasha sends last start date.",
             "<code>/leave [&lt;group_id&gt;]</code>: Sasha leaves the group.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/addadmin &lt;user_id&gt;|&lt;username&gt;</code>: Sasha promotes the specified user to administrator.",
             "<code>/removeadmin &lt;user_id&gt;|&lt;username&gt;</code>: Sasha demotes the specified user from administrator.",
             "<code>/botstop</code>: Sasha stops.",
@@ -2345,30 +2345,30 @@ return {
 
         alternatives =
         {
-            "🅿️ ALTERNATIVES 🅿️",
+            "🅿️ <b>ALTERNATIVES</b> 🅿️",
             "Plugin for using alternative commands.",
-            "USER",
+            "<b>USER</b>",
             "<code>/getalternatives /&lt;command&gt;</code>: Sasha sends &lt;command&gt;'s alternatives.",
             "<code>/previewalternative &lt;alternative&gt;</code>: Sasha sends &lt;alternative&gt;.",
-            "MOD",
-            "<code>/setalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha will execute &lt;alternative&gt;|&lt;reply\\_media&gt; as if it was &lt;command&gt;.",
-            "<code>/unsetalternative &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha deletes &lt;alternative&gt;|&lt;reply\\_media&gt;.",
-            "OWNER",
+            "<b>MOD</b>",
+            "<code>/setalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha will execute &lt;alternative&gt;|&lt;reply_media&gt; as if it was &lt;command&gt;.",
+            "<code>/unsetalternative &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha deletes &lt;alternative&gt;|&lt;reply_media&gt;.",
+            "<b>OWNER</b>",
             "<code>/setdefaultalternatives</code>: Sasha restores the default alternative commands.",
             "<code>/unsetalternatives /&lt;command&gt;</code>: Sasha deletes all &lt;command&gt;'s alternatives.",
-            "ADMIN",
-            "<code>/setglobalalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha will execute &lt;alternative&gt;|&lt;reply\\_media&gt; as if it was &lt;command&gt; in all groups.",
-            "<code>/unsetglobalalternative &lt;alternative&gt;&lt;reply_media&gt;</code>: Sasha deletes &lt;alternative&gt;|&lt;reply\\_media&gt; from global alternatives.",
+            "<b>ADMIN</b>",
+            "<code>/setglobalalternative /&lt;command&gt; &lt;alternative&gt;|&lt;reply_media&gt;</code>: Sasha will execute &lt;alternative&gt;|&lt;reply_media&gt; as if it was &lt;command&gt; in all groups.",
+            "<code>/unsetglobalalternative &lt;alternative&gt;&lt;reply_media&gt;</code>: Sasha deletes &lt;alternative&gt;|&lt;reply_media&gt; from global alternatives.",
             "<code>/setdefaultglobalalternatives</code>: Sasha restores the default global alternative commands.",
         },
 
         banhammer =
         {
-            "🅿️ BANHAMMER 🅿️",
+            "🅿️ <b>BANHAMMER</b> 🅿️",
             "Plugin for the management of kick and bans.",
-            "USER",
+            "<b>USER</b>",
             "<code>/kickme</code>: Sasha kicks sender.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/getuserwarns &lt;user&gt;</code>: Sasha sends user's warns.",
             "<code>/muteuser &lt;user&gt;</code>: Sasha [un]mutes the specified user.",
             "<code>/mutelist</code>: Sasha sends muted users' list.",
@@ -2388,12 +2388,12 @@ return {
             "<code>/countbanlist</code>: Sasha sends the number of banned users.",
             -- "<code>/kickrandom</code>: Sasha chooses a random user and kicks it.",
             -- "<code>/kickdeleted</code>: Sasha kicks all deleted accounts.",
-            "OWNER",
+            "<b>OWNER</b>",
             -- "<code>/kicknouser</code>: Sasha kicks users without username.",
             -- "<code>/kickinactive [&lt;msgs&gt;]</code>: Sasha kicks inactive users under &lt;msgs&gt; messages.",
-            "ADMIN",
-            "<code>/banlist &lt;group_id&gt;</code>: Sasha sends bans list of &lt;group\\_id&gt;.",
-            "<code>/countbanlist &lt;group_id&gt;</code>: Sasha sends the number of banned users of &lt;group\\_id&gt;.",
+            "<b>ADMIN</b>",
+            "<code>/banlist &lt;group_id&gt;</code>: Sasha sends bans list of &lt;group_id&gt;.",
+            "<code>/countbanlist &lt;group_id&gt;</code>: Sasha sends the number of banned users of &lt;group_id&gt;.",
             "<code>/gban &lt;user&gt;</code>: Sasha kicks and gbans the specified user, if he tries to join again it's automatically kicked.",
             "<code>/ungban &lt;user&gt;</code>: Sasha ungbans the specified user.",
             "<code>/gbanlist</code>: Sasha sends gbans list.",
@@ -2402,39 +2402,39 @@ return {
 
         bot =
         {
-            "🅿️ BOT 🅿️",
+            "🅿️ <b>BOT</b> 🅿️",
             "Plugin to enable or disable Sasha on the group.",
-            "USER",
+            "<b>USER</b>",
             "<code>/start</code>: Sasha sends the start message (works only in private chat).",
             "<code>/del &lt;reply&gt;</code>: Sasha deletes the message in &lt;reply&gt; (works only in private chat).",
             "<code>/delkeyboard &lt;reply&gt;</code>: Sasha deletes the keyboard in &lt;reply&gt; (works only in private chat).",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/bot|sasha on|off</code>: Sasha goes on|off on the group.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/bot|sasha on|off [&lt;group_id&gt;]</code>: Sasha goes on|off in the specified group.",
         },
 
         check_tag =
         {
-            "🅿️ CHECK\\_TAG 🅿️",
+            "🅿️ <b>CHECK_TAG</b> 🅿️",
             "Plugin to send tags and mentions notifications (NOTIFICATIONS ARE ENABLED ALSO FOR USERS NOT IN THIS GROUP).",
             "START THE BOT IN PRIVATE OR IT WILL NOT SEND MESSAGES TO YOU.",
-            "USER",
+            "<b>USER</b>",
             "<code>/registertagalert</code>: Sasha registers you to the tagalert, if you haven't got an username you will be notified just for mentions.",
             "<code>/unregistertagalert</code>: Sasha deletes your registration.",
             "<code>/setnickname &lt;nickname&gt;</code>: Sasha sets &lt;nickname&gt; as an alternative to username/mention.",
             "<code>/unsetnickname</code>: Sasha deletes your nickname (registration not affected).",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/enabletagalert</code>: Sasha enables the function for this group (disabled by default).",
             "<code>/disabletagalert</code>: Sasha disables the function for this group.",
-            -- "<code>/tagall &lt;text&gt;|&lt;reply_text&gt;</code>: Sasha writes &lt;text&gt;|&lt;reply\\_text&gt; tags all group's members.",
+            -- "<code>/tagall &lt;text&gt;|&lt;reply_text&gt;</code>: Sasha writes &lt;text&gt;|&lt;reply_text&gt; tags all group's members.",
         },
 
         database =
         {
-            "🅿️ DATABASE 🅿️",
+            "🅿️ <b>DATABASE</b> 🅿️",
             "Plugin to save all users and groups info.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/createdatabase</code>: Sasha creates the database.",
             -- "<code>/dodatabase</code>: Sasha saves all info of all users of group and group info.",
             "<code>/dbsearch &lt;id&gt;|&lt;username&gt;|&lt;reply&gt;|from</code>: Sasha searches for the specified object in the database.",
@@ -2449,44 +2449,44 @@ return {
 
         delword =
         {
-            "🅿️ DELWORD 🅿️",
+            "🅿️ <b>DELWORD</b> 🅿️",
             "Plugin for the management of censorships.",
-            "USER",
+            "<b>USER</b>",
             "<code>/dellist</code>: Sasha sends a list of censored words or patterns.",
-            "MOD",
+            "<b>MOD</b>",
             "For more information on patterns see lua.org/pil/20.2.html",
             "<code>/delword &lt;word&gt;|&lt;pattern&gt;</code>: Sasha puts|removes a censorship on &lt;word&gt;|&lt;pattern&gt;, when someone writes it the message is deleted.",
         },
 
         dogify =
         {
-            "🅿️ DOGIFY 🅿️",
+            "🅿️ <b>DOGIFY</b> 🅿️",
             "Plugin to create picture with doge.",
-            "USER",
+            "<b>USER</b>",
             "<code>/dogify &lt;your/words/with/slashes&gt;</code>: Sasha creates a pic with doge and the specified words.",
         },
 
         fakecommand =
         {
-            "🅿️ FAKECOMMAND 🅿️",
+            "🅿️ <b>FAKECOMMAND</b> 🅿️",
             "Plugin to test commands.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>(/user|/mod|/owner|/admin) &lt;command&gt;</code>: Sasha executes &lt;command&gt; as it would be sent by a user with the specified rank.",
         },
 
         feedback =
         {
-            "🅿️ FEEDBACK 🅿️",
+            "🅿️ <b>FEEDBACK</b> 🅿️",
             "Plugin for feedbacks.",
-            "USER",
+            "<b>USER</b>",
             "<code>/feedback &lt;text&gt;</code>: Sasha sends &lt;text&gt; as feedback.",
         },
 
         filemanager =
         {
-            "🅿️ FILEMANAGER 🅿️",
+            "🅿️ <b>FILEMANAGER</b> 🅿️",
             "Plugin for the management of Sasha's server.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/folder</code>: Sasha sends actual directory.",
             "<code>/cd [&lt;directory&gt;]</code>: Sasha enters in &lt;directory&gt;, if it's not the specified it returns to base folder.",
             "<code>/ls</code>: Sasha sends the list of files and folders of the current directory.",
@@ -2505,9 +2505,9 @@ return {
 
         flame =
         {
-            "🅿️ FLAME 🅿️",
+            "🅿️ <b>FLAME</b> 🅿️",
             "Plugin to start flames.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/startflame &lt;user&gt;</code>: Sasha flames the specified user.",
             "<code>/stopflame</code>: Sasha stops flame.",
             "<code>/flameinfo</code>: Sasha sends flamed user info.",
@@ -2515,14 +2515,14 @@ return {
 
         getsetunset =
         {
-            "🅿️ GETSETUNSET 🅿️",
+            "🅿️ <b>GETSETUNSET</b> 🅿️",
             "Plugin to get/set/unset things.",
-            "USER",
-            "<code>/get &lt;var_name&gt;</code>: Sasha sends the answer to &lt;var\\_name&gt;.",
+            "<b>USER</b>",
+            "<code>/get &lt;var_name&gt;</code>: Sasha sends the answer to &lt;var_name&gt;.",
             "<code>(/getlist|/get)</code>: Sasha sends a list of saved variables.",
             "<code>(/getgloballist|/getglobal)</code>: Sasha sends a list of globally saved variables.",
-            "MOD",
-            "To [un]set a phrase use '\\_' instead of ' '.",
+            "<b>MOD</b>",
+            "To [un]set a phrase use '_' instead of ' '.",
             "For more information on patterns see lua.org/pil/20.2.html",
             "There are some markers that will be replaced when the answer is sent: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
@@ -2531,22 +2531,22 @@ return {
             .. "$forwardchatid, $forwardchatname, $forwardchatusername, "
             .. "$forwarduserid, $forwardfirstname, $forwardlastname, $forwardprintname, $forwardusername, $forwardmention."
             .. "\nIf some markers can't be solved (reply, forwardchat, forward) normal ones will be used (chat, user).",
-            "<code>/set &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha saves &lt;text&gt; as answer to &lt;var\\_name&gt;|&lt;pattern&gt;.",
-            "<code>/setmedia &lt;var_name&gt;|&lt;pattern&gt; &lt;reply_media&gt; [&lt;caption&gt;]</code>: Sasha saves &lt;reply\\_media&gt; (photo, video, video message, audio, voice note, gif, document, sticker) as answer to &lt;var\\_name&gt;|&lt;pattern&gt;, if &lt;caption&gt; is present it will be sent as caption (not available for all media).",
-            "<code>/unset &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha deletes &lt;var\\_name&gt;|&lt;pattern&gt;.",
-            "OWNER",
+            "<code>/set &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha saves &lt;text&gt; as answer to &lt;var_name&gt;|&lt;pattern&gt;.",
+            "<code>/setmedia &lt;var_name&gt;|&lt;pattern&gt; &lt;reply_media&gt; [&lt;caption&gt;]</code>: Sasha saves &lt;reply_media&gt; (photo, video, video message, audio, voice note, gif, document, sticker) as answer to &lt;var_name&gt;|&lt;pattern&gt;, if &lt;caption&gt; is present it will be sent as caption (not available for all media).",
+            "<code>/unset &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha deletes &lt;var_name&gt;|&lt;pattern&gt;.",
+            "<b>OWNER</b>",
             "<code>/enableglobal</code>: Sasha enables global gets on chat.",
             "<code>/disableglobal</code>: Sasha disables global gets on chat.",
-            "ADMIN",
-            "<code>/setglobal &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha globally saves &lt;text&gt; as answer to &lt;var\\_name&gt;|&lt;pattern&gt;.",
-            "<code>/unsetglobal &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha globally deletes &lt;var\\_name&gt;|&lt;pattern&gt;.",
+            "<b>ADMIN</b>",
+            "<code>/setglobal &lt;var_name&gt;|&lt;pattern&gt; &lt;text&gt;</code>: Sasha globally saves &lt;text&gt; as answer to &lt;var_name&gt;|&lt;pattern&gt;.",
+            "<code>/unsetglobal &lt;var_name&gt;|&lt;pattern&gt;</code>: Sasha globally deletes &lt;var_name&gt;|&lt;pattern&gt;.",
         },
 
         goodbyewelcome =
         {
-            "🅿️ GOODBYEWELCOME 🅿️",
+            "🅿️ <b>GOODBYEWELCOME</b> 🅿️",
             "Plugin for welcome and goodbye.",
-            "MOD",
+            "<b>MOD</b>",
             "There are some markers that will be replaced when goodbye/welcome is sent: "
             .. "$chatid, $chatname, $chatusername, $rules, $grouplink, "
             .. "$userid, $firstname, $lastname, $printname, $username, $mention.",
@@ -2554,8 +2554,8 @@ return {
             "<code>/getgoodbye</code>: Sasha sends goodbye.",
             "<code>/previewwelcome</code>: Sasha sends welcome sample.",
             "<code>/previewgoodbye</code>: Sasha sends goodbye sample.",
-            "<code>/setwelcome &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha sets &lt;text&gt;|(&lt;reply\\_media&gt; [&lt;caption&gt;]) as welcome.",
-            "<code>/setgoodbye &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha sets &lt;text&gt;|(&lt;reply\\_media&gt; [&lt;caption&gt;]) as goodbye.",
+            "<code>/setwelcome &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha sets &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;]) as welcome.",
+            "<code>/setgoodbye &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;])</code>: Sasha sets &lt;text&gt;|(&lt;reply_media&gt; [&lt;caption&gt;]) as goodbye.",
             "<code>/unsetwelcome</code>: Sasha removes welcome.",
             "<code>/unsetgoodbye</code>: Sasha removes goodbye.",
             "<code>/setmemberswelcome &lt;value&gt;</code>: Sasha after &lt;value&gt; members will send welcome, if zero welcome will not be sent anymore.",
@@ -2564,10 +2564,10 @@ return {
 
         group_management =
         {
-            "🅿️ GROUP\\_MANAGEMENT 🅿️",
+            "🅿️ <b>GROUP_MANAGEMENT</b> 🅿️",
             "Plugin for the management of groups.",
             -- COMMON
-            "USER",
+            "<b>USER</b>",
             "<code>/getwarn</code>: Sasha sends max warns value.",
             "<code>/rules</code>: Sasha sends group's rules.",
             "<code>/modlist</code>: Sasha sends moderators list.",
@@ -2577,7 +2577,7 @@ return {
             "<code>/[textual]settings</code>: Sasha sends group's settings.",
             "<code>/[textual]muteslist</code>: Sasha sends group's mutes.",
             "<code>/[textual]permissions</code>: Sasha sends your permissions.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/del [&lt;reply&gt;]</code>: Sasha deletes the message of the command and &lt;reply&gt;.",
             "<code>/delkeyboard &lt;reply&gt;</code>: Sasha deletes the keyboard in &lt;reply&gt;.",
             "<code>/type</code>: Sasha sends group type.",
@@ -2590,14 +2590,14 @@ return {
             "<code>&lt;setting&gt;</code> can be: </code>arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict</code>.",
             "<code>/[un]mute &lt;mute&gt;</code>: Sasha [un]mutes the specified parameter.",
             "<code>&lt;mute&gt;</code> can be: </code>all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note</code>.",
-            "SUPERGROUP",
+            "<b>SUPERGROUP</b>",
             "<code>/[silent]pin &lt;reply&gt;</code>: Sasha [silently] pins &lt;reply&gt;.",
             "<code>/unpin</code>: Sasha unpins the pinned message.",
             "<code>/settitle &lt;text&gt;</code>: Sasha sets &lt;text&gt; as the group's title.",
             "<code>/setdescription &lt;text&gt;</code>: Sasha sets &lt;text&gt; as the group's description.",
             "<code>/setphoto &lt;reply&gt;</code>: Sasha sets &lt;reply&gt; as the group's photo.",
             "<code>/unsetphoto</code>: Sasha deletes the group's photo.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/syncmodlist</code>: Sasha syncs the modlist with telegram's adminstrators.",
             "<code>/log</code>: Sasha sends a file that contains the daily log of the chat.",
             "<code>/setlink &lt;link&gt;</code>: Sasha saves &lt;link&gt; as group's link.",
@@ -2605,30 +2605,30 @@ return {
             "<code>/[textual]permissions &lt;user&gt;</code>: Sasha sends the permissions of the specified user.",
             "<code>/promote &lt;user&gt;</code>: Sasha promotes to mod the specified user.",
             "<code>/demote &lt;user&gt;</code>: Sasha demotes from mod the specified user.",
-            "<code>/promoteadmin &lt;user&gt; [&lt;permissions&gt;]</code>: Sasha promotes to telegram administrator the specified user with the specified permissions (if not specified the user will have all the permissions but promote\\_members).",
+            "<code>/promoteadmin &lt;user&gt; [&lt;permissions&gt;]</code>: Sasha promotes to telegram administrator the specified user with the specified permissions (if not specified the user will have all the permissions but promote_members).",
             "<code>&lt;permissions&gt;</code> can be: </code>[change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]</code>.",
             "<code>/demoteadmin &lt;user&gt;</code>: Sasha demotes from telegram administrator the specified user.",
             "<code>/setowner &lt;user&gt;</code>: Sasha sets the specified user as owner.",
             "<code>/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha cleans the specified parameter.",
             "<code>/getadmins</code>: Sasha sends telegram's administrators list.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/add [realm]</code>: Sasha adds the group in which you are, if \"realm\" as a realm.",
             "<code>/rem [realm]</code>: Sasha removes the group in which you are, if \"realm\" as a realm.",
-            "REALM",
-            "<code>/setgpowner &lt;group_id&gt; &lt;user_id&gt;</code>: Sasha sets &lt;user\\_id&gt; as owner of &lt;group\\_id&gt;.",
-            "<code>/setrules &lt;group_id&gt; &lt;text&gt;</code>: Sasha changes &lt;group\\_id&gt;'s rules with &lt;text&gt;.",
-            "<code>/[un]mute &lt;group_id&gt; &lt;mute&gt;</code>: Sasha [un]mutes &lt;group\\_id&gt;'s &lt;mute&gt;.",
-            "<code>/[textual]muteslist &lt;group_id&gt;</code>: Sasha sends &lt;group\\_id&gt;'s mutes.",
-            "<code>/[un]lock &lt;group_id&gt; &lt;setting&gt;</code>: Sasha [un]locks &lt;group\\_id&gt;'s &lt;setting&gt;.",
-            "<code>/[textual]settings &lt;group_id&gt;</code>: Sasha sends &lt;group\\_id&gt;'s settings.",
+            "<b>REALM</b>",
+            "<code>/setgpowner &lt;group_id&gt; &lt;user_id&gt;</code>: Sasha sets &lt;user_id&gt; as owner of &lt;group_id&gt;.",
+            "<code>/setrules &lt;group_id&gt; &lt;text&gt;</code>: Sasha changes &lt;group_id&gt;'s rules with &lt;text&gt;.",
+            "<code>/[un]mute &lt;group_id&gt; &lt;mute&gt;</code>: Sasha [un]mutes &lt;group_id&gt;'s &lt;mute&gt;.",
+            "<code>/[textual]muteslist &lt;group_id&gt;</code>: Sasha sends &lt;group_id&gt;'s mutes.",
+            "<code>/[un]lock &lt;group_id&gt; &lt;setting&gt;</code>: Sasha [un]locks &lt;group_id&gt;'s &lt;setting&gt;.",
+            "<code>/[textual]settings &lt;group_id&gt;</code>: Sasha sends &lt;group_id&gt;'s settings.",
             "<code>/rem &lt;group_id&gt;</code>: Sasha removes group.",
         },
 
         help =
         {
-            "🅿️ HELP 🅿️",
+            "🅿️ <b>HELP</b> 🅿️",
             "Plugin to help users with commands, USE IT!",
-            "USER",
+            "<b>USER</b>",
             "<code>/sudolist</code>: Sasha sends sudo list.",
             "<code>/[textual]help</code>: Sasha sends a list of plugins for which there's the help.",
             "<code>/[textual]help &lt;plugin_name&gt;|&lt;plugin_number&gt;</code>: Sasha sends the help of the specified plugin.",
@@ -2642,27 +2642,27 @@ return {
 
         info =
         {
-            "🅿️ INFO 🅿️",
+            "🅿️ <b>INFO</b> 🅿️",
             "Plugin to obtain info.",
-            "USER",
+            "<b>USER</b>",
             "<code>/id [&lt;user&gt;]</code>: Sasha sends the id of the specified user/chat, otherwise the id of the user and the id of the chat.",
             "<code>/username [&lt;user&gt;]</code>: Sasha sends the username of the specified user/chat, otherwise the username of the user and the username of the chat.",
             "<code>/getrank [&lt;user&gt;]</code>: Sasha sends the rank of the specified user.",
             "<code>/whoami</code>: Sasha sends user's info.",
             "<code>/info</code>: Sasha sends user's info and chat's info or her info.",
             "<code>/ishere &lt;user&gt;</code>: Sasha says if the specified user is in the group.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/info &lt;id&gt;|&lt;username&gt;|&lt;reply&gt;|from</code>: Sasha sends info of the specified object.",
             -- "<code>(/who|/members)</code>: Sasha users list.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/grouplink &lt;group_id&gt;</code>: Sasha sends link of the specified group.",
         },
 
         interact =
         {
-            "🅿️ INTERACT 🅿️",
+            "🅿️ <b>INTERACT</b> 🅿️",
             "Plugin for the interaction with users.",
-            "USER",
+            "<b>USER</b>",
             "<code>/[del]typing</code>: Sasha pretends to write.",
             "<code>/[del]upload_photo</code>: Sasha pretends to upload a photo.",
             "<code>/[del]record_video</code>: Sasha pretends to record a video.",
@@ -2674,20 +2674,20 @@ return {
             "<code>/[del]record_videonote</code>: Sasha pretends to record a video message.",
             "<code>/[del]upload_videonote</code>: Sasha pretends to upload a video message.",
             "<code>/testobject &lt;id&gt;|&lt;username&gt;|&lt;reply&gt;|from</code>: Sasha tests if she can write to the specified object.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/[del][markdown|html]echo [&lt;reply&gt;]&lt;text&gt;</code>: Sasha repeats &lt;text&gt;, if in reply of a message she replies to that message, if \"del\" she deletes the command, if \"html\" or \"markdown\" she uses the specified format.",
             "<code>/[del][markdown|html]edit &lt;reply&gt; &lt;text&gt;</code>: Sasha edits &lt;reply&gt;, if \"html\" or \"markdown\" she uses the specified format.",
         },
 
         likecounter =
         {
-            "🅿️ LIKECOUNTER 🅿️",
+            "🅿️ <b>LIKECOUNTER</b> 🅿️",
             "Plugin for the management of likes.",
-            "USER",
+            "<b>USER</b>",
             "<code>(/like|/1up) &lt;user&gt;</code>: Sasha adds a like to the specified user.",
             "<code>(/dislike|/1down) &lt;user&gt;</code>: Sasha removes a like from the specified user.",
             "<code>/likes</code>: Sasha sends the likes leaderboard.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/createlikesdb</code>:  Sasha creates likecounter database.",
             "<code>/addlikes &lt;id&gt; &lt;value&gt;</code>: Sasha adds &lt;value&gt; likes to the specified user.",
             "<code>/remlikes &lt;id&gt; &lt;value&gt;</code>: Sasha removes &lt;value&gt; likes to the specified user.",
@@ -2695,33 +2695,33 @@ return {
 
         lua_exec =
         {
-            "🅿️ LUA\\_EXEC 🅿️",
+            "🅿️ <b>LUA_EXEC</b> 🅿️",
             "Plugin for executing LUA code.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/lua &lt;command&gt;</code>: Sasha executes &lt;command&gt;.",
         },
 
         me =
         {
-            "🅿️ ME 🅿️",
+            "🅿️ <b>ME</b> 🅿️",
             "Plugin to know number of sent messages.",
-            "USER",
+            "<b>USER</b>",
             "<code>/me</code>: Sasha tells you how many messages you've sent.",
         },
 
         msg_checks =
         {
-            "🅿️ MSG\\_CHECKS 🅿️",
+            "🅿️ <b>MSG_CHECKS</b> 🅿️",
             "Plugin to check messages.",
-            "USER",
+            "<b>USER</b>",
             "<code>/checkmsg &lt;reply&gt;|&lt;text&gt;</code>: Sasha checks &lt;reply&gt;|&lt;text&gt; and tells which locks/mutes would be triggered.",
         },
 
         multiple_commands =
         {
-            "🅿️ MULTIPLE\\_COMMANDS 🅿️",
+            "🅿️ <b>MULTIPLE_COMMANDS</b> 🅿️",
             "Plugin to do multiple actions.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/multipleid &lt;username1&gt; &lt;username2&gt; ...</code>: Sasha sends the id of all the &lt;usernames&gt; in the list.",
             "<code>/multipleusername &lt;id1&gt; &lt;id2&gt; ...</code>: Sasha sends the username of all the &lt;ids&gt; in the list.",
             "<code>/multipleishere &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha checks if all the &lt;users&gt; in the list are in the group.",
@@ -2729,14 +2729,14 @@ return {
             "<code>/multipleinfo &lt;obj1&gt; &lt;obj2&gt; ...</code>: Sasha sends the info of all the &lt;objects&gt; in the list.",
             "<code>/multiplegetuserwarns &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha sends the warns of all the &lt;users&gt; in the list.",
             "<code>/multiplemuteuser &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha [un]mutes all the &lt;users&gt; in the list.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/multiplewarn &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha warns all the &lt;users&gt; in the list.",
             "<code>/multipleunwarn &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha removes one warns from all the &lt;users&gt; in the list.",
             "<code>/multipleunwarnall &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha removes all warns from all the &lt;users&gt; in the list.",
             "<code>/multiplekick &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha kicks all the &lt;users&gt; in the list.",
             "<code>/multipleban &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha bans all the &lt;users&gt; in the list.",
             "<code>/multipleunban &lt;user1&gt; &lt;user2&gt; ...</code>: Sasha unbans all the &lt;users&gt; in the list.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/multipledbsearch &lt;obj1&gt; &lt;obj2&gt; ...</code>: Sasha search through the database all the &lt;objects&gt; in the list.",
             "<code>/multipledbdelete &lt;obj1&gt; &lt;obj2&gt; ...</code>: Sasha deletes from the database all the &lt;objects&gt; in the list.",
             "<code>/multiplegrouplink &lt;group1&gt; &lt;group2&gt; ...</code>: Sasha sends the link of all the &lt;groups&gt; in the list.",
@@ -2748,25 +2748,25 @@ return {
 
         news =
         {
-            "🅿️ NEWS 🅿️",
+            "🅿️ <b>NEWS</b> 🅿️",
             "Plugin for Sasha's news.",
-            "USER",
+            "<b>USER</b>",
             "<code>/news</code>: Sasha sends her news.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/spamnews [&lt;news&gt;]</code>: Sasha sends her news to every group as soon as she receives a message from it.",
             "<code>/stopnews</code>: Sasha stops sending her news.",
         },
 
         plugins =
         {
-            "🅿️ PLUGINS 🅿️",
+            "🅿️ <b>PLUGINS</b> 🅿️",
             "Plugin to enable or disable plugins.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/[textual]plugins</code>: Sasha sends a list of plugins.",
             "<code>/disabledlist</code>: Sasha sends disabled plugins list.",
             "<code>/enable &lt;plugin&gt; chat</code>: Sasha re enables &lt;plugin&gt; on this chat.",
             "<code>/disable &lt;plugin&gt; chat</code>: Sasha disables &lt;plugin&gt; on this chat.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/[textual]plugins [chat]</code>: Sasha sends a list of plugins, if [chat] is specified it allows to manage the plugins' list of the group in which the command was executed.",
             "<code>/enable &lt;plugin&gt; [chat]</code>: Sasha enables &lt;plugin&gt;, if the specified just on chat.",
             "<code>/disable &lt;plugin&gt; [chat]</code>: Sasha disables &lt;plugin&gt;, if the specified just on chat.",
@@ -2776,17 +2776,17 @@ return {
 
         pokedex =
         {
-            "🅿️ POKEDEX 🅿️",
+            "🅿️ <b>POKEDEX</b> 🅿️",
             "Plugin to obtain info on pokémons.",
-            "USER",
+            "<b>USER</b>",
             "<code>(/pokedex|/pokemon) &lt;name&gt;|&lt;id&gt;</code>: Sasha searches the specified pokemon and sends its info.",
         },
 
         qr =
         {
-            "🅿️ QR 🅿️",
+            "🅿️ <b>QR</b> 🅿️",
             "Plugin to create QR Codes.",
-            "USER",
+            "<b>USER</b>",
             "Colors can be the specified as follows:",
             "Text =&gt; red|green|blue|purple|black|white|gray.",
             "Hexadecimal =&gt; (\"a56729\" it's brown).",
@@ -2796,97 +2796,97 @@ return {
 
         scheduled_commands =
         {
-            "🅿️ SCHEDULED\\_COMMANDS 🅿️",
+            "🅿️ <b>SCHEDULED_COMMANDS</b> 🅿️",
             "Plugin to schedule commands.",
-            "MOD",
+            "<b>MOD</b>",
             "For more information on patterns see lua.org/pil/20.2.html",
             "<code>/scheduledelword [&lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt;] &lt;word&gt;|&lt;pattern&gt;</code>: Sasha puts|removes a censorship on &lt;word&gt;|&lt;pattern&gt;, when someone writes it the message is deleted after &lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt; if specified, otherwise she sends a time keyboard in private.",
         },
 
         shout =
         {
-            "🅿️ SHOUT 🅿️",
+            "🅿️ <b>SHOUT</b> 🅿️",
             "Plugin to shout words.",
-            "USER",
+            "<b>USER</b>",
             "<code>/shout &lt;text&gt;</code>: Sasha \"shouts\" &lt;text&gt;.",
         },
 
         spam =
         {
-            "🅿️ SPAM 🅿️",
+            "🅿️ <b>SPAM</b> 🅿️",
             "Plugin for spamming.",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "<code>/spam [&lt;messages&gt; &lt;seconds&gt;] &lt;reply&gt;|&lt;text&gt;</code>: Sasha starts spamming &lt;reply&gt;|&lt;text&gt; if the specified for &lt;messages&gt; times every &lt;seconds&gt; seconds, otherwise 5 messages one every 2 seconds.",
         },
 
         stats =
         {
-            "🅿️ STATS 🅿️",
+            "🅿️ <b>STATS</b> 🅿️",
             "Plugin to obtain stats on groups and Sasha.",
-            "USER",
+            "<b>USER</b>",
             "<code>[/]aisashabot</code>: Sasha sends her description.",
-            "MOD",
+            "<b>MOD</b>",
             -- "<code>(/stats|/messages)</code>: Sasha sends chat's stats.",
             "<code>(/cleanstats|/cleanmessages)</code>: Sasha cleans chat's stats.",
             -- "<code>(/statslist|/messageslist)</code>: Sasha sends file with chat's stats.",
-            "ADMIN",
-            -- "<code>(/stats|/messages) group &lt;group_id&gt;</code>: Sasha sends &lt;group\\_id&gt;'s stats.",
-            "<code>(/cleanstats|/cleanmessages) group &lt;group_id&gt;</code>: Sasha cleans &lt;group\\_id&gt;'s stats.",
-            -- "<code>(/statslist|/messageslist) group &lt;group_id&gt;</code>: Sasha sends file with &lt;group\\_id&gt;'s stats.",
+            "<b>ADMIN</b>",
+            -- "<code>(/stats|/messages) group &lt;group_id&gt;</code>: Sasha sends &lt;group_id&gt;'s stats.",
+            "<code>(/cleanstats|/cleanmessages) group &lt;group_id&gt;</code>: Sasha cleans &lt;group_id&gt;'s stats.",
+            -- "<code>(/statslist|/messageslist) group &lt;group_id&gt;</code>: Sasha sends file with &lt;group_id&gt;'s stats.",
         },
 
         strings =
         {
-            "🅿️ STRINGS 🅿️",
+            "🅿️ <b>STRINGS</b> 🅿️",
             "Plugin for the management of Sasha's languages.",
-            "USER",
+            "<b>USER</b>",
             "<code>/setlang [it|en]</code>: Sasha sets the language she has to talk (works just in private with the user).",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/setlang [it|en]</code>: Sasha sets the language she has to talk in this group.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>(/reloadstrings|/reloadlangs)</code>: Sasha updates strings.",
         },
 
         tempmessage =
         {
-            "🅿️ TEMPMESSAGE 🅿️",
+            "🅿️ <b>TEMPMESSAGE</b> 🅿️",
             "Plugin to temporize messages.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/tempmsg [&lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt;] &lt;text&gt;</code>: Sasha will delete that message after &lt;hours&gt; &lt;minutes&gt; &lt;seconds&gt; if specified, otherwise she sends a time keyboard in private.",
         },
 
         tex =
         {
-            "🅿️ TEX 🅿️",
+            "🅿️ <b>TEX</b> 🅿️",
             "Plugin to create equations.",
-            "USER",
+            "<b>USER</b>",
             "<code>/tex &lt;equation&gt;</code>: Sasha converts &lt;equation&gt; in image.",
         },
 
         tgcli_to_api_migration =
         {
-            "🅿️ TGCLI\\_TO\\_API\\_MIGRATION 🅿️",
+            "🅿️ <b>TGCLI_TO_API_MIGRATION</b> 🅿️",
             "Plugin for the migration from tgcli.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/migrate</code>: Sasha migrates group's settings, bans, variables set and likes.",
             "<code>/copysettings</code>: Sasha copies group's settings over @AISasha's ones.",
-            "SUDO",
+            "<b>SUDO</b>",
             "<code>/sudomigrate</code>: Sasha migrates databases and global sets.",
         },
 
         urbandictionary =
         {
-            "🅿️ URBANDICTIONARY 🅿️",
+            "🅿️ <b>URBANDICTIONARY</b> 🅿️",
             "Plugin for the interaction with the Urban Dictionary.",
-            "USER",
+            "<b>USER</b>",
             "<code>(/urbandictionary|/urban|/ud) &lt;text&gt;</code>: Sasha searches &lt;text&gt; in the Urban Dictionary.",
         },
 
         webshot =
         {
-            "🅿️ WEBSHOT 🅿️",
+            "🅿️ <b>WEBSHOT</b> 🅿️",
             "Plugin to make screenshots of websites.",
-            "MOD",
+            "<b>MOD</b>",
             "<code>/webshot &lt;url&gt; [&lt;size&gt;]</code>: Sasha does a screenshot of &lt;url&gt; and sends it, if &lt;size&gt; is the specified it sends of that dimension.",
             "&lt;size&gt; can be:",
             "T =&gt; (120 x 90px)",
@@ -2897,23 +2897,23 @@ return {
             "M =&gt; (640 x 480px)",
             "L =&gt; (800 x 600px)",
             "X =&gt; (1024 x 768px)",
-            "ADMIN",
+            "<b>ADMIN</b>",
             "Fmob =&gt; Full page (can be a long process)",
             "F =&gt; Full page (can be a very long process)",
         },
 
         whitelist =
         {
-            "🅿️ WHITELIST 🅿️",
+            "🅿️ <b>WHITELIST</b> 🅿️",
             "Plugin for the management of the whitelists.",
-            "USER",
+            "<b>USER</b>",
             "<code>/whitelist</code>: Sasha sends the whitelist",
             "<code>/whitelistgban</code>: Sasha sends the gban whitelist.",
             "<code>/whitelistlink</code>: Sasha sends the links whitelist.",
-            "OWNER",
+            "<b>OWNER</b>",
             "<code>/whitelist &lt;user&gt;</code>: adds|removes the specified user to|from the whitelist.",
             "<code>/whitelistgban &lt;user&gt;</code>: adds|removes the specified user to|from the gban whitelist.",
-            "<code>/whitelistlink &lt;link&gt;|&lt;public_(channel|supergroup)_username&gt;|&lt;channel_id&gt;</code>: adds|removes &lt;link&gt;|&lt;public\\_(channel|supergroup)\\_username&gt;|&lt;channel\\_id&gt; to/from the links' whitelist.",
+            "<code>/whitelistlink &lt;link&gt;|&lt;public_(channel|supergroup)_username&gt;|&lt;channel_id&gt;</code>: adds|removes &lt;link&gt;|&lt;public_(channel|supergroup)_username&gt;|&lt;channel_id&gt; to/from the links' whitelist.",
         },
     },
 }
