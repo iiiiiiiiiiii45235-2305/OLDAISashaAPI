@@ -428,6 +428,7 @@ return {
         upMessageDeleted = "Messaggio di UP eliminato.",
         repliedToMessage = "Ho risposto a quel messaggio.",
         whatDoYouWantToDo = "Cosa vuoi fare?",
+        nowSetNickname = "Ora puoi impostare un nickname (solitamente il nome con cui ti chiamano su telegram senza taggarti) con /setnickname per ricevere le notifiche quando vieni citato senza tag.",
 
         -- database.lua --
         dbCreated = "Database creato.",
@@ -1785,6 +1786,7 @@ return {
         upMessageDeleted = "UP message deleted.",
         repliedToMessage = "I've replied to that message.",
         whatDoYouWantToDo = "What do you want to do?",
+        nowSetNickname = "Now you can set a nickname (usually the name users use when talking to you) with /setnickname to receive notification even when not mentioned with tags.",
 
         -- database.lua --
         dbCreated = "Database created.",

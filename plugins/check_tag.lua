@@ -82,8 +82,8 @@ local function run(msg, matches)
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertAlreadyRegistered, true)
                     end
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
-                    -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
+                    -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
                 else
                     if matches[2] == 'DELETEUP' then
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
