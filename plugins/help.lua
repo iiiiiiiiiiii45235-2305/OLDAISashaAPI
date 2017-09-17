@@ -24,7 +24,7 @@ local function plugin_help(var, chat, rank)
         local textHash = plugin.description:lower()
         if langs[lang][textHash] then
             for i = 1, #langs[lang][plugin.description:lower()], 1 do
-                if rank_table[langs[lang][plugin.description:lower()][i]] then
+                if rank_table[langs[lang][plugin.description:lower()][i]:gsub('<b>', ''):gsub('</b>', '')] then
                     if rank_table[langs[lang][plugin.description:lower()][i]:gsub('<b>', ''):gsub('</b>', '')] > rank then
                         help_permission = false
                     end
