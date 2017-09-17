@@ -2057,17 +2057,23 @@ local function pre_process(msg)
                 end
             end
             if msg.service_type == 'chat_add_user_link' then
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] joined with invite link  ")
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] joined with invite link")
+                if is_owner2(msg.from.id, msg.chat.id, true) then
+                    sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, msg.from, default_permissions))
+                end
             end
             if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
                 local text = ''
                 for k, v in pairs(msg.added) do
                     text = text .. v.id .. ' '
+                    if is_owner2(msg.from.id, msg.chat.id, true) then
+                        sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, v, default_permissions))
+                    end
                 end
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added user(s)  " .. text)
             end
             if msg.service_type == 'chat_del_user' then
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user  " .. 'user#id' .. msg.removed.id)
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user user#id" .. msg.removed.id)
             end
             if msg.service_type == 'chat_rename' then
                 if data[tostring(msg.chat.id)].settings.lock_name then
