@@ -2059,15 +2059,37 @@ local function pre_process(msg)
             if msg.service_type == 'chat_add_user_link' then
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] joined with invite link")
                 if is_owner2(msg.from.id, msg.chat.id, true) then
-                    sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, msg.from, default_permissions))
+                    local bot_member = getChatMember(msg.chat.id, bot.id)
+                    if bot_member.result then
+                        bot_member = bot_member.result
+                        bot_member = adjustPermissions(bot_member)
+                        if bot_member.can_promote_members then
+                            sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, msg.from, bot_member))
+                        else
+                            sendMessage(msg.chat.id, langs[msg.lang].checkMyPermissions)
+                        end
+                    end
                 end
             end
             if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
                 local text = ''
+                local promote = false
+                local bot_member = getChatMember(msg.chat.id, bot.id)
+                if bot_member.result then
+                    bot_member = bot_member.result
+                    bot_member = adjustPermissions(bot_member)
+                    if bot_member.can_promote_members then
+                        promote = true
+                    else
+                        sendMessage(msg.chat.id, langs[msg.lang].checkMyPermissions)
+                    end
+                end
                 for k, v in pairs(msg.added) do
                     text = text .. v.id .. ' '
-                    if is_owner2(msg.from.id, msg.chat.id, true) then
-                        sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, v, default_permissions))
+                    if is_owner2(v.id, msg.chat.id, true) then
+                        if promote then
+                            sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, v, bot_member))
+                        end
                     end
                 end
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added user(s)  " .. text)
