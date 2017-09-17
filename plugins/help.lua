@@ -25,7 +25,7 @@ local function plugin_help(var, chat, rank)
         if langs[lang][textHash] then
             for i = 1, #langs[lang][plugin.description:lower()], 1 do
                 if rank_table[langs[lang][plugin.description:lower()][i]] then
-                    if rank_table[langs[lang][plugin.description:lower()][i]] > rank then
+                    if rank_table[langs[lang][plugin.description:lower()][i]:gsub('<b>', ''):gsub('</b>', '')] > rank then
                         help_permission = false
                     end
                 end
@@ -132,11 +132,11 @@ local function syntax_all(chat, rank, filter)
     for name in pairsByKeys(plugins) do
         temp = plugin_syntax(name, chat, rank, filter)
         if temp ~= nil then
-            if not filter then
-                text = text .. '🅿️ ' .. i .. '. ' .. name:lower() .. '\n' .. temp
-            else
-                text = text .. temp
-            end
+            -- if not filter then
+            text = text .. '🅿️ ' .. i .. '. ' .. name:lower() .. '\n' .. temp
+            -- else
+            --     text = text .. temp
+            -- end
             i = i + 1
         end
     end

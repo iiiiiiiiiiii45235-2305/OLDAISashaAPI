@@ -1,5 +1,19 @@
-rank_table = { ["USER"] = 0, ["MOD"] = 1, ["OWNER"] = 2, ["ADMIN"] = 3, ["SUDO"] = 4, ["BOT"] = 5 }
-reverse_rank_table = { "USER", "MOD", "OWNER", "ADMIN", "SUDO", "BOT" }
+rank_table = {
+    ["USER"] = 0,
+    ["MOD"] = 1,
+    ["OWNER"] = 2,
+    ["ADMIN"] = 3,
+    ["SUDO"] = 4,
+    ["BOT"] = 5
+}
+reverse_rank_table = {
+    "USER",
+    "MOD",
+    "OWNER",
+    "ADMIN",
+    "SUDO",
+    "BOT"
+}
 
 function get_rank(user_id, chat_id, check_local)
     if tonumber(user_id) ~= tonumber(chat_id) then
