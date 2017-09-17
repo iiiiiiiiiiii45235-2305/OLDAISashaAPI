@@ -152,9 +152,9 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user, parse_mode)
             goodbyewelcome = goodbyewelcome:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
         else
             if parse_mode == 'html' then
-                goodbyewelcome = goodbyewelcome:gsub('$mention', '<a href="tg://user?id=' .. user.id .. '">' .. user.first_name .. '</a>')
+                goodbyewelcome = goodbyewelcome:gsub('$mention', '<a href="tg://user?id=' .. user.id .. '">' .. html_escape(user.first_name) .. '</a>')
             elseif parse_mode == 'markdown' then
-                goodbyewelcome = goodbyewelcome:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
+                goodbyewelcome = goodbyewelcome:gsub('$mention', '[' .. user.first_name:mEscape_hard() .. '](tg://user?id=' .. user.id .. ')')
             end
         end
     end

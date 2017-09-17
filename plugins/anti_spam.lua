@@ -158,8 +158,8 @@ local function pre_process(msg)
                                 -- reset the counter
                                 redis:set(gbanspam, 0)
                                 -- Send this to that chat
-                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. msg.from.print_name .. "</a> ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
-                                gban_text = langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. msg.from.print_name .. "</a> ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
+                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. html_escape(msg.from.print_name) .. "</a> ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
+                                gban_text = langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. html_escape(msg.from.print_name) .. "</a> ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
                                 -- send it to log group/channel
                                 sendLog(gban_text, 'html', true)
                             end

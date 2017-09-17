@@ -128,9 +128,9 @@ local function adjust_value(value, msg, parse_mode)
             value = value:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
         else
             if parse_mode == 'html' then
-                value = value:gsub('$mention', '<a href="tg://user?id=' .. user.id .. '">' .. user.first_name .. '</a>')
+                value = value:gsub('$mention', '<a href="tg://user?id=' .. user.id .. '">' .. html_escape(user.first_name) .. '</a>')
             elseif parse_mode == 'markdown' then
-                value = value:gsub('$mention', '[' .. user.first_name .. '](tg://user?id=' .. user.id .. ')')
+                value = value:gsub('$mention', '[' .. user.first_name:mEscape_hard() .. '](tg://user?id=' .. user.id .. ')')
             end
         end
     end
@@ -170,9 +170,9 @@ local function adjust_value(value, msg, parse_mode)
             value = value:gsub('$replymention', '[' .. replyuser.first_name .. '](tg://user?id=' .. replyuser.id .. ')')
         else
             if parse_mode == 'html' then
-                value = value:gsub('$replymention', '<a href="tg://user?id=' .. replyuser.id .. '">' .. replyuser.first_name .. '</a>')
+                value = value:gsub('$replymention', '<a href="tg://user?id=' .. replyuser.id .. '">' .. html_escape(replyuser.first_name) .. '</a>')
             elseif parse_mode == 'markdown' then
-                value = value:gsub('$replymention', '[' .. replyuser.first_name .. '](tg://user?id=' .. replyuser.id .. ')')
+                value = value:gsub('$replymention', '[' .. replyuser.first_name:mEscape_hard() .. '](tg://user?id=' .. replyuser.id .. ')')
             end
         end
     end
@@ -231,9 +231,9 @@ local function adjust_value(value, msg, parse_mode)
             value = value:gsub('$forwardmention', '[' .. fwd_user.first_name .. '](tg://user?id=' .. fwd_user.id .. ')')
         else
             if parse_mode == 'html' then
-                value = value:gsub('$forwardmention', '<a href="tg://user?id=' .. fwd_user.id .. '">' .. fwd_user.first_name .. '</a>')
+                value = value:gsub('$forwardmention', '<a href="tg://user?id=' .. fwd_user.id .. '">' .. html_escape(fwd_user.first_name) .. '</a>')
             elseif parse_mode == 'markdown' then
-                value = value:gsub('$forwardmention', '[' .. fwd_user.first_name .. '](tg://user?id=' .. fwd_user.id .. ')')
+                value = value:gsub('$forwardmention', '[' .. fwd_user.first_name:mEscape_hard() .. '](tg://user?id=' .. fwd_user.id .. ')')
             end
         end
     end

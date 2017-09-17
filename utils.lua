@@ -501,6 +501,17 @@ function load_from_file(file, default_data)
     return loadfile(file)()
 end
 
+function html_escape(str)
+    return string.gsub(str, "[}{\">/<'&]", {
+        ["&"] = "&amp;",
+        ["<"] = "&lt;",
+        [">"] = "&gt;",
+        ['"'] = "&quot;",
+        ["'"] = "&#39;",
+        ["/"] = "&#47;"
+    } )
+end
+
 -- See http://stackoverflow.com/a/14899740
 function unescape_html(str)
     local map = {
@@ -510,7 +521,7 @@ function unescape_html(str)
         ["quot"] = '"',
         ["apos"] = "'"
     }
-    new = string.gsub(str, '(&(#?x?)([%d%a]+);)', function(orig, n, s)
+    local new = string.gsub(str, '(&(#?x?)([%d%a]+);)', function(orig, n, s)
         var = map[s] or n == "#" and string.char(s)
         var = var or n == "#x" and string.char(tonumber(s, 16))
         var = var or orig
