@@ -133,12 +133,12 @@ local function syntax_all(chat, rank, filter)
         temp = plugin_syntax(name, chat, rank, filter)
         if temp ~= nil and temp ~= '' then
             -- if not filter then
-            text = text .. '🅿️ ' .. i .. '. ' .. name:lower() .. '\n' .. temp
+            text = text .. '🅿️ ' .. i .. '. ' .. name:upper() .. ' 🅿️\n' .. temp
             -- else
             --     text = text .. temp
             -- end
-            i = i + 1
         end
+        i = i + 1
     end
     return text
 end
