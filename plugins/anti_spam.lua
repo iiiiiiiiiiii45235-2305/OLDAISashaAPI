@@ -134,10 +134,10 @@ local function pre_process(msg)
                         else
                             text = banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
                         end
-                        local username = msg.from.username
+                        local username = msg.from.username or 'USERNAME'
                         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                             if msg.from.username then
-                                savelog(msg.chat.id, msg.from.print_name .. " @" .. msg.from.username .. " [" .. msg.from.id .. "] kicked for #spam")
+                                savelog(msg.chat.id, msg.from.print_name .. " @" .. username .. " [" .. msg.from.id .. "] kicked for #spam")
                                 sendMessage(msg.chat.id, text)
                             else
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
@@ -157,16 +157,11 @@ local function pre_process(msg)
                                 local gbanspam = 'gban:spam' .. msg.from.id
                                 -- reset the counter
                                 redis:set(gbanspam, 0)
-                                if msg.from.username ~= nil then
-                                    username = msg.from.username
-                                else
-                                    username = "---"
-                                end
                                 -- Send this to that chat
-                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)")
-                                gban_text = langs[msg.lang].user .. " [ " .. msg.from.print_name .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
+                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. msg.from.print_name .. "</a> ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
+                                gban_text = langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. msg.from.print_name .. "</a> ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
                                 -- send it to log group/channel
-                                sendLog(gban_text, false, true)
+                                sendLog(gban_text, 'html', true)
                             end
                         end
                         kicktable[msg.from.id] = true
