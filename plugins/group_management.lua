@@ -1200,7 +1200,7 @@ local function run(msg, matches)
                     if msg.reply then
                         mystat('/silentpin')
                         if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id) then
-                            return '#pin' .. tostring(msg.chat.id):gsub('-', '')
+                            return sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
                         end
                     else
                         return langs[msg.lang].needReply
@@ -1214,7 +1214,7 @@ local function run(msg, matches)
                     if msg.reply then
                         mystat('/pin')
                         if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            return '#pin' .. tostring(msg.chat.id):gsub('-', '')
+                            return sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
                         end
                     else
                         return langs[msg.lang].needReply
