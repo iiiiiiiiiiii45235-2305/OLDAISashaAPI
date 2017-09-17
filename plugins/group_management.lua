@@ -25,7 +25,7 @@ local default_settings = {
     set_owner = '41400331',
     settings =
     {
-        -- false, 'warn', 'kick', 'ban'
+        -- false, 'warn', 'ban'
         flood = true,
         flood_max = 5,
         links_whitelist =
@@ -33,15 +33,15 @@ local default_settings = {
             -- whitelisted links, usernames, channel ids
             "@username",
         },
-        -- false, 'warn', 'kick', 'ban'
+        -- false, 'delete', 'warn', 'kick', 'ban'
         lock_arabic = false,
-        -- false, true
+        -- false, 'ban'
         lock_bots = true,
         -- false, true
         lock_group_link = true,
         -- false, true='ban'
         lock_leave = false,
-        -- false, 'warn', 'kick', 'ban'
+        -- false, 'delete', 'warn', 'kick', 'ban'
         lock_link = false,
         -- false, true='ban'
         lock_member = false,
@@ -49,9 +49,9 @@ local default_settings = {
         lock_name = false,
         -- false, true
         lock_photo = false,
-        -- false, 'warn', 'kick', 'ban'
+        -- false, 'delete', 'warn', 'kick', 'ban'
         lock_rtl = false,
-        -- false, 'warn', 'kick', 'ban'
+        -- false, 'delete', 'warn', 'kick', 'ban'
         lock_spam = false,
         -- false, 'delete', 'warn', 'kick', 'ban'
         mutes =
@@ -1199,7 +1199,9 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     if msg.reply then
                         mystat('/silentpin')
-                        return pinChatMessage(msg.chat.id, msg.reply_to_message.message_id)
+                        if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id) then
+                            return '#pin' .. tostring(msg.chat.id):gsub('-', '')
+                        end
                     else
                         return langs[msg.lang].needReply
                     end
@@ -1211,7 +1213,9 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     if msg.reply then
                         mystat('/pin')
-                        return pinChatMessage(msg.chat.id, msg.reply_to_message.message_id, true)
+                        if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                            return '#pin' .. tostring(msg.chat.id):gsub('-', '')
+                        end
                     else
                         return langs[msg.lang].needReply
                     end

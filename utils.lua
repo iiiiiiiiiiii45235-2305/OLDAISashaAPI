@@ -963,8 +963,112 @@ function adjust_plugin_names(p, lang)
     return 'ERR'
 end
 
+delete_tab = {
+    "lock_arabic",
+    "lock_link",
+    "lock_rtl",
+    "lock_spam",
+    "all",
+    "audio",
+    "contact",
+    "document",
+    "game",
+    "gif",
+    "location",
+    "photo",
+    "sticker",
+    "text",
+    "tgservice",
+    "video",
+    "video_note",
+    "voice_note",
+}
+warn_tab = {
+    "lock_arabic",
+    "lock_link",
+    "lock_rtl",
+    "lock_spam",
+    "all",
+    "audio",
+    "contact",
+    "document",
+    "game",
+    "gif",
+    "location",
+    "photo",
+    "sticker",
+    "text",
+    "video",
+    "video_note",
+    "voice_note",
+}
+kick_tab = {
+    "lock_arabic",
+    "lock_link",
+    "lock_rtl",
+    "lock_spam",
+    "all",
+    "audio",
+    "contact",
+    "document",
+    "game",
+    "gif",
+    "location",
+    "photo",
+    "sticker",
+    "text",
+    "video",
+    "video_note",
+    "voice_note",
+}
+kick_warn_tab = {
+    "flood",
+    "lock_arabic",
+    "lock_link",
+    "lock_rtl",
+    "lock_spam",
+    "all",
+    "audio",
+    "contact",
+    "document",
+    "game",
+    "gif",
+    "location",
+    "photo",
+    "sticker",
+    "text",
+    "video",
+    "video_note",
+    "voice_note",
+}
+ban_tab = {
+    "flood",
+    "lock_arabic",
+    "lock_bots",
+    "lock_leave",
+    "lock_link",
+    "lock_member",
+    "lock_rtl",
+    "lock_spam",
+    "all",
+    "audio",
+    "contact",
+    "document",
+    "game",
+    "gif",
+    "location",
+    "photo",
+    "sticker",
+    "text",
+    "video",
+    "video_note",
+    "voice_note",
+}
+
 function punishment_plus_plus(punishment)
     if not punishment then
+        punishment = 'delete'
+    elseif punishment == 'delete' then
         punishment = 'warn'
     elseif punishment == 'warn' then
         punishment = 'kick'

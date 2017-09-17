@@ -1,6 +1,8 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "(HELP) Better help with code blocks for commands (tap to copy).\n",
+    "(HELP) Better help with code blocks for commands (tap to copy).\n" ..
+    "(INFO) Plugins keyboard for Info <chat_id> and Groupinfo commands (owner^).\n" ..
+    "(GROUP_MANAGEMENT) Pinned messages are now tracked with a hashtag #pinchat_id.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
