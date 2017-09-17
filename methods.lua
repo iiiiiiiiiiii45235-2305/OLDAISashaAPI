@@ -672,6 +672,7 @@ function pinChatMessage(chat_id, message_id, send_sound)
                 savelog('pin_message', code)
             end
         end
+        return res
     end
 end
 
@@ -687,6 +688,7 @@ function unpinChatMessage(chat_id)
                 savelog('unpin_message', code)
             end
         end
+        return res
     end
 end
 
@@ -717,6 +719,7 @@ function setChatTitle(chat_id, title)
         end
         data[tostring(chat_id)].set_name = title
         save_data(config.moderation.data, data)
+        return res
     end
 end
 
@@ -733,6 +736,7 @@ function setChatDescription(chat_id, description)
                 savelog('set_description', code)
             end
         end
+        return res
     end
 end
 
@@ -747,6 +751,7 @@ function deleteChatPhoto(chat_id)
                 savelog('delete_photo', code)
             end
         end
+        return res
     end
 end
 
