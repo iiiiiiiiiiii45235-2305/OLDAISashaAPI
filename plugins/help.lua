@@ -131,7 +131,7 @@ local function syntax_all(chat, rank, filter)
     local temp
     for name in pairsByKeys(plugins) do
         temp = plugin_syntax(name, chat, rank, filter)
-        if temp ~= nil then
+        if temp ~= nil and temp ~= '' then
             -- if not filter then
             text = text .. '🅿️ ' .. i .. '. ' .. name:lower() .. '\n' .. temp
             -- else
