@@ -117,35 +117,38 @@ end
 local function run(msg, matches)
     if matches[1]:lower() == 'migrate' then
         if msg.from.is_owner then
+            local text = ''
             mystat('/migrate')
             local migrated = false
             -- migrate group from moderation.json
             local old_moderation_path = '/home/pi/AISasha/data/moderation.json'
             -- local new_moderation_path = config.moderation.data
             local old_moderation_data = load_data(old_moderation_path)
-            -- local new_moderation_data = data
+            -- local new_moderation_data = load_data(config.moderation.data)
             if old_moderation_data['groups'] then
                 if not data['groups'] then
                     data['groups'] = { }
                 end
                 for id_string in pairs(old_moderation_data['groups']) do
                     if id_string == tostring(msg.chat.tg_cli_id) then
-                        sendMessage(msg.chat.id, type(old_moderation_data[id_string]))
-                        if type(old_moderation_data[id_string]) ~= 'nil' then
+                        if old_moderation_data[id_string] then
                             if old_moderation_data[id_string].group_type == 'SuperGroup' then
                                 data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
                                 data[tostring(msg.chat.id)] = { }
                                 data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
                                 data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
                                 data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
+                                data[tostring(msg.chat.id)].photo = nil
                                 data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
                                 data[tostring(msg.chat.id)].set_name = msg.chat.print_name
                                 data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
                                 data[tostring(msg.chat.id)].settings = {
-                                    flood = true,
+                                    flood = false,
                                     flood_max = 5,
                                     links_whitelist = { "@username", },
                                     lock_arabic = false,
+                                    lock_bots = false,
+                                    lock_group_link = false,
                                     lock_leave = false,
                                     lock_link = false,
                                     lock_member = false,
@@ -183,14 +186,17 @@ local function run(msg, matches)
                                 data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
                                 data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
                                 data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
+                                data[tostring(msg.chat.id)].photo = nil
                                 data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
                                 data[tostring(msg.chat.id)].set_name = msg.chat.print_name
                                 data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
                                 data[tostring(msg.chat.id)].settings = {
-                                    flood = true,
+                                    flood = false,
                                     flood_max = 5,
                                     links_whitelist = { "@username", },
                                     lock_arabic = false,
+                                    lock_bots = false,
+                                    lock_group_link = false,
                                     lock_leave = false,
                                     lock_link = false,
                                     lock_member = false,
@@ -223,10 +229,10 @@ local function run(msg, matches)
                                 migrated = true
                             end
                             if not migrated then
-                                return langs[msg.lang].unknownGroupType .. id_string
+                                text = langs[msg.lang].unknownGroupType .. id_string .. '\n'
                             end
                         else
-                            return langs[msg.lang].noGroupDataAvailable
+                            text = langs[msg.lang].noGroupDataAvailable .. '\n'
                         end
                     end
                 end
@@ -247,11 +253,11 @@ local function run(msg, matches)
                                 migrated = true
                             end
                             if not migrated then
-                                return langs[msg.lang].unknownGroupType .. id_string
+                                text = langs[msg.lang].unknownGroupType .. id_string .. '\n'
                             end
                         end
                     else
-                        return langs[msg.lang].noGroupDataAvailable
+                        text = langs[msg.lang].noGroupDataAvailable .. ' json \n'
                     end
                 end
             end
@@ -267,7 +273,7 @@ local function run(msg, matches)
                     local answer = cli_get_value(msg, word:lower())
                     if answer then
                         if string.match(answer, '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
-                            return langs[msg.lang].crossexecDenial
+                            text = langs[msg.lang].crossexecDenial .. '\n'
                         end
                         api_set_value(msg, word:lower(), answer)
                     end
@@ -305,15 +311,15 @@ local function run(msg, matches)
                         if old_likecounter_data[id_string] then
                             new_likecounter_data[tostring(msg.chat.id)] = old_likecounter_data[id_string]
                         else
-                            return langs[msg.lang].noGroupDataAvailable
+                            text = langs[msg.lang].noGroupDataAvailable .. ' likecounter\n'
                         end
                     end
                 end
             end
             save_data(new_likecounter_path, new_likecounter_data)
             database = load_data(config.database.db)
-            data = load_data(config.moderation.data)
-            return langs[msg.lang].migrationCompleted
+            text = langs[msg.lang].migrationCompleted
+            return text
         else
             return langs[msg.lang].require_owner
         end
