@@ -121,9 +121,9 @@ local function run(msg, matches)
             local migrated = false
             -- migrate group from moderation.json
             local old_moderation_path = '/home/pi/AISasha/data/moderation.json'
-            local new_moderation_path = config.moderation.data
+            -- local new_moderation_path = config.moderation.data
             local old_moderation_data = load_data(old_moderation_path)
-            -- local data = data
+            -- local new_moderation_data = data
             if old_moderation_data['groups'] then
                 if not data['groups'] then
                     data['groups'] = { }
@@ -131,103 +131,99 @@ local function run(msg, matches)
                 for id_string in pairs(old_moderation_data['groups']) do
                     if id_string == tostring(msg.chat.tg_cli_id) then
                         sendMessage(msg.chat.id, vardumptext(old_moderation_data[id_string]))
-                        if old_moderation_data[id_string] then
-                            if data[id_string] then
-                                return langs[msg.lang].migrationAlreadyExecuted
-                            else
-                                if old_moderation_data[id_string].group_type == 'SuperGroup' then
-                                    data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
-                                    data[tostring(msg.chat.id)] = { }
-                                    data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
-                                    data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
-                                    data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
-                                    data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
-                                    data[tostring(msg.chat.id)].set_name = msg.chat.print_name
-                                    data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
-                                    data[tostring(msg.chat.id)].settings = {
-                                        flood = true,
-                                        flood_max = 5,
-                                        links_whitelist = { "@username", },
-                                        lock_arabic = false,
-                                        lock_leave = false,
-                                        lock_link = false,
-                                        lock_member = false,
-                                        lock_name = false,
-                                        lock_photo = false,
-                                        lock_rtl = false,
-                                        lock_spam = false,
-                                        mutes =
-                                        {
-                                            all = false,
-                                            audio = false,
-                                            contact = false,
-                                            document = false,
-                                            game = false,
-                                            gif = false,
-                                            location = false,
-                                            photo = false,
-                                            sticker = false,
-                                            text = false,
-                                            tgservice = false,
-                                            video = false,
-                                            video_note = false,
-                                            voice_note = false,
-                                        },
-                                        strict = false,
-                                        warn_max = 3,
-                                    }
-                                    data[tostring(msg.chat.id)].welcome = old_moderation_data[id_string].welcome or ''
-                                    data[tostring(msg.chat.id)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
-                                    migrated = true
-                                end
-                                if old_moderation_data[id_string].group_type == 'Group' then
-                                    data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
-                                    data[tostring(msg.chat.id)] = { }
-                                    data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
-                                    data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
-                                    data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
-                                    data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
-                                    data[tostring(msg.chat.id)].set_name = msg.chat.print_name
-                                    data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
-                                    data[tostring(msg.chat.id)].settings = {
-                                        flood = true,
-                                        flood_max = 5,
-                                        links_whitelist = { "@username", },
-                                        lock_arabic = false,
-                                        lock_leave = false,
-                                        lock_link = false,
-                                        lock_member = false,
-                                        lock_name = false,
-                                        lock_photo = false,
-                                        lock_rtl = false,
-                                        lock_spam = false,
-                                        mutes =
-                                        {
-                                            all = false,
-                                            audio = false,
-                                            contact = false,
-                                            document = false,
-                                            game = false,
-                                            gif = false,
-                                            location = false,
-                                            photo = false,
-                                            sticker = false,
-                                            text = false,
-                                            tgservice = false,
-                                            video = false,
-                                            video_note = false,
-                                            voice_note = false,
-                                        },
-                                        strict = false,
-                                        warn_max = 3,
-                                    }
-                                    data[tostring(msg.chat.id)].welcome = old_moderation_data[id_string].welcome or ''
-                                    data[tostring(msg.chat.id)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
-                                    migrated = true
-                                end
-                                if not migrated then
-                                    return langs[msg.lang].unknownGroupType .. id_string
-                                end
+                        if type(old_moderation_data[id_string]) ~= 'nil' then
+                            if old_moderation_data[id_string].group_type == 'SuperGroup' then
+                                data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
+                                data[tostring(msg.chat.id)] = { }
+                                data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
+                                data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
+                                data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
+                                data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
+                                data[tostring(msg.chat.id)].set_name = msg.chat.print_name
+                                data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
+                                data[tostring(msg.chat.id)].settings = {
+                                    flood = true,
+                                    flood_max = 5,
+                                    links_whitelist = { "@username", },
+                                    lock_arabic = false,
+                                    lock_leave = false,
+                                    lock_link = false,
+                                    lock_member = false,
+                                    lock_name = false,
+                                    lock_photo = false,
+                                    lock_rtl = false,
+                                    lock_spam = false,
+                                    mutes =
+                                    {
+                                        all = false,
+                                        audio = false,
+                                        contact = false,
+                                        document = false,
+                                        game = false,
+                                        gif = false,
+                                        location = false,
+                                        photo = false,
+                                        sticker = false,
+                                        text = false,
+                                        tgservice = false,
+                                        video = false,
+                                        video_note = false,
+                                        voice_note = false,
+                                    },
+                                    strict = false,
+                                    warn_max = 3,
+                                }
+                                data[tostring(msg.chat.id)].welcome = old_moderation_data[id_string].welcome or ''
+                                data[tostring(msg.chat.id)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
+                                migrated = true
+                            end
+                            if old_moderation_data[id_string].group_type == 'Group' then
+                                data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
+                                data[tostring(msg.chat.id)] = { }
+                                data[tostring(msg.chat.id)].goodbye = old_moderation_data[id_string].goodbye or ''
+                                data[tostring(msg.chat.id)].group_type = old_moderation_data[id_string].group_type
+                                data[tostring(msg.chat.id)].moderators = old_moderation_data[id_string].moderators
+                                data[tostring(msg.chat.id)].rules = old_moderation_data[id_string].rules
+                                data[tostring(msg.chat.id)].set_name = msg.chat.print_name
+                                data[tostring(msg.chat.id)].set_owner = old_moderation_data[id_string].set_owner
+                                data[tostring(msg.chat.id)].settings = {
+                                    flood = true,
+                                    flood_max = 5,
+                                    links_whitelist = { "@username", },
+                                    lock_arabic = false,
+                                    lock_leave = false,
+                                    lock_link = false,
+                                    lock_member = false,
+                                    lock_name = false,
+                                    lock_photo = false,
+                                    lock_rtl = false,
+                                    lock_spam = false,
+                                    mutes =
+                                    {
+                                        all = false,
+                                        audio = false,
+                                        contact = false,
+                                        document = false,
+                                        game = false,
+                                        gif = false,
+                                        location = false,
+                                        photo = false,
+                                        sticker = false,
+                                        text = false,
+                                        tgservice = false,
+                                        video = false,
+                                        video_note = false,
+                                        voice_note = false,
+                                    },
+                                    strict = false,
+                                    warn_max = 3,
+                                }
+                                data[tostring(msg.chat.id)].welcome = old_moderation_data[id_string].welcome or ''
+                                data[tostring(msg.chat.id)].welcomemembers = old_moderation_data[id_string].welcomemembers or 0
+                                migrated = true
+                            end
+                            if not migrated then
+                                return langs[msg.lang].unknownGroupType .. id_string
                             end
                         else
                             return langs[msg.lang].noGroupDataAvailable
@@ -259,7 +255,7 @@ local function run(msg, matches)
                     end
                 end
             end
-            save_data(new_moderation_path, data)
+            save_data(config.moderation.data, data)
 
             -- migrate set, get, unset things
             local vars = cli_list_variables(msg)
@@ -328,9 +324,9 @@ local function run(msg, matches)
             mystat('/copysettings')
             local found = false
             local old_moderation_path = '/home/pi/AISasha/data/moderation.json'
-            local new_moderation_path = config.moderation.data
+            -- local new_moderation_path = config.moderation.data
             local old_moderation_data = load_data(old_moderation_path)
-            local data = load_data(new_moderation_path)
+            -- local new_moderation_data = load_data(config.moderation.data)
             if old_moderation_data['groups'] then
                 for id_string in pairs(old_moderation_data['groups']) do
                     if id_string == tostring(msg.chat.tg_cli_id) then
