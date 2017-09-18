@@ -130,7 +130,7 @@ local function run(msg, matches)
                 end
                 for id_string in pairs(old_moderation_data['groups']) do
                     if id_string == tostring(msg.chat.tg_cli_id) then
-                        sendMessage(msg.chat.id, vardumptext(old_moderation_data[id_string]))
+                        sendMessage(msg.chat.id, type(old_moderation_data[id_string]))
                         if type(old_moderation_data[id_string]) ~= 'nil' then
                             if old_moderation_data[id_string].group_type == 'SuperGroup' then
                                 data['groups'][tostring(msg.chat.id)] = tonumber(msg.chat.id)
