@@ -53,7 +53,7 @@ local function api_set_value(msg, name, value)
     end
 
     if api_get_hash(msg) then
-        redis:hset(api_get_hash(msg), name:gsub('_', ' '), value)
+        redis:hset(api_get_hash(msg), name:gsub(' ', '_'), value)
         return name .. langs[msg.lang].saved
     end
 end
@@ -275,7 +275,7 @@ local function run(msg, matches)
                         if string.match(answer, '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                             text = langs[msg.lang].crossexecDenial .. '\n'
                         end
-                        api_set_value(msg, word:lower():gsub(' ', '_'), answer)
+                        api_set_value(msg, word:lower(), answer)
                     end
                 end
             end
