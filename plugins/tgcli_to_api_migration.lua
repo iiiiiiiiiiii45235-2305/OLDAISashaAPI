@@ -130,6 +130,7 @@ local function run(msg, matches)
                 end
                 for id_string in pairs(old_moderation_data['groups']) do
                     if id_string == tostring(msg.chat.tg_cli_id) then
+                        sendMessage(msg.chat.id, vardumptext(old_moderation_data[id_string]))
                         if old_moderation_data[id_string] then
                             if data[id_string] then
                                 return langs[msg.lang].migrationAlreadyExecuted
