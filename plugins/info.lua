@@ -294,7 +294,7 @@ local function run(msg, matches)
                             if group_link then
                                 updated = true
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessage(msg.chat.id, msg.message_id, "<a href=\"" .. html_escape(chat_name) .. "\">" .. group_link .. "</a>", { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } }, 'html')
+                                editMessage(msg.chat.id, msg.message_id, "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>", { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } }, 'html')
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
                             end
@@ -314,7 +314,7 @@ local function run(msg, matches)
                                 data[tostring(matches[3])]['settings']['set_link'] = link
                                 save_data(config.moderation.data, data)
                                 savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] created group link [" .. data[tostring(matches[3])].settings.set_link .. "]")
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].linkCreated .. "\n<a href=\"" .. html_escape(chat_name) .. "\">" .. link .. "</a>", { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } }, 'html')
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].linkCreated .. "\n<a href=\"" .. link .. "\">" .. html_escape(chat_name) .. "</a>", { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'infoBACK' .. matches[3] } } } }, 'html')
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].sendMeLink, true)
                             end

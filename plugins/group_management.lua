@@ -1424,7 +1424,7 @@ local function run(msg, matches)
                     if msg.from.is_mod then
                         if data[tostring(msg.chat.id)].settings.set_link then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                            if sendMessage(msg.from.id, "<a href=\"" .. html_escape(msg.chat.title) .. "\">" .. data[tostring(msg.chat.id)].settings.set_link .. "</a>", 'html') then
+                            if sendMessage(msg.from.id, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html') then
                                 if msg.chat.type ~= 'private' then
                                     return sendReply(msg, langs[msg.lang].sendLinkPvt, 'html')
                                 end
@@ -1440,7 +1440,7 @@ local function run(msg, matches)
                 else
                     if data[tostring(msg.chat.id)].settings.set_link then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                        return sendReply(msg, "<a href=\"" .. html_escape(msg.chat.title) .. "\">" .. data[tostring(msg.chat.id)].settings.set_link .. "</a>", 'html')
+                        return sendReply(msg, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html')
                     else
                         return langs[msg.lang].createLink
                     end
