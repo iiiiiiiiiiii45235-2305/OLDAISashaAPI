@@ -2084,8 +2084,6 @@ local function pre_process(msg)
                     bot_member = adjustPermissions(bot_member)
                     if bot_member.can_promote_members then
                         promote = true
-                    else
-                        sendMessage(msg.chat.id, langs[msg.lang].checkMyPermissions)
                     end
                 end
                 for k, v in pairs(msg.added) do
@@ -2093,6 +2091,8 @@ local function pre_process(msg)
                     if is_owner2(v.id, msg.chat.id, true) then
                         if promote then
                             sendMessage(msg.chat.id, promoteTgAdmin(msg.chat.id, v, bot_member))
+                        else
+                            sendMessage(msg.chat.id, langs[msg.lang].checkMyPermissions)
                         end
                     end
                 end
