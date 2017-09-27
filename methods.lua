@@ -146,7 +146,7 @@ function sendRequest(url, no_log)
 
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
             if not no_log then
-                sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code)
+                sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code, false, false, true)
             end
         end
         return nil, code, tab.description
@@ -446,12 +446,21 @@ function sendReply(msg, text, parse_mode, send_sound)
     return sendMessage(msg.chat.id, text, parse_mode, msg.message_id, send_sound)
 end
 
-function sendLog(text, parse_mode, novardump)
+function sendLog(text, parse_mode, novardump, keyboard)
     if config.log_chat then
         if novardump then
             sendMessage(config.log_chat, text, parse_mode)
         else
-            sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
+            if keyboard then
+                local obj = getChat(tmp_msg.chat.id)
+                if obj then
+                    sendKeyboard(config.log_chat, text, get_object_info_keyboard(bot.id, obj, config.log_chat))
+                else
+                    sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
+                end
+            else
+                sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
+            end
         end
     else
         if novardump then
