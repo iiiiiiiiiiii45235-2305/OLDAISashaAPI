@@ -50,10 +50,10 @@ function run(msg, matches)
             end
             if matches[1]:lower() == 'tofile' and matches[2] and matches[3] then
                 mystat('/tofile')
-                file = io.open(BASE_FOLDER .. folder .. matches[2], "w")
-                file:write(matches[3])
-                file:flush()
-                file:close()
+                file_to_write = io.open(BASE_FOLDER .. folder .. matches[2], "w")
+                file_to_write:write(matches[3])
+                file_to_write:flush()
+                file_to_write:close()
                 langs[msg.lang].fileCreatedWithContent:gsub("X", matches[3])
             end
             if matches[1]:lower() == 'shell' and matches[2] then

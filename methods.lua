@@ -378,9 +378,9 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         text = text:gsub('</i>', '')
                         text = text:gsub('<a href="(.*)">', '')
                         text = text:gsub('</a>', '')
-                        local file = io.open(path, "w")
-                        file:write(text)
-                        file:close()
+                        local file_msg = io.open(path, "w")
+                        file_msg:write(text)
+                        file_msg:close()
                         sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
                         return true
                     else
@@ -1274,9 +1274,9 @@ function tempDownloadFile(url, file_name)
     local file_path = "data/tmp/" .. file_name
     print("Saved to: " .. file_path)
 
-    file = io.open(file_path, "w+")
-    file:write(table.concat(respbody))
-    file:close()
+    file_var = io.open(file_path, "w+")
+    file_var:write(table.concat(respbody))
+    file_var:close()
 
     return file_path
 end

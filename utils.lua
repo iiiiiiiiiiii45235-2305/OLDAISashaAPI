@@ -147,16 +147,16 @@ function write_file(path, text, mode)
     if not mode then
         mode = "w"
     end
-    local file = io.open(path, mode)
+    local file_to_write = io.open(path, mode)
     if not file then
         create_folder('logs')
-        file = io.open(path, mode)
+        file_to_write = io.open(path, mode)
         if not file then
             return false
         end
     end
-    file:write(text)
-    file:close()
+    file_to_write:write(text)
+    file_to_write:close()
     return true
 end
 
@@ -171,10 +171,10 @@ end
 function savelog(group, logtxt)
     local ok, err = pcall( function()
         local text =(os.date("[ %c ]=>  " .. logtxt .. "\n \n"))
-        local file = io.open("./groups/logs/" .. group .. "log.txt", "a")
+        local file_log = io.open("./groups/logs/" .. group .. "log.txt", "a")
 
-        file:write(text)
-        file:close()
+        file_log:write(text)
+        file_log:close()
     end )
 end
 
@@ -275,9 +275,9 @@ function download_to_file(url, file_path)
 
     print("Saved to: " .. file_path)
 
-    local file = io.open(file_path, "w+")
-    file:write(table.concat(respbody))
-    file:close()
+    local file_downloaded = io.open(file_path, "w+")
+    file_downloaded:write(table.concat(respbody))
+    file_downloaded:close()
     return file_path, code
 end
 
@@ -384,7 +384,7 @@ end
 -- Save into file the data serialized for lua.
 -- Set uglify true to minify the file.
 function serialize_to_file(data, file, uglify)
-    local file = io.open(file, 'w+')
+    local file_to_write = io.open(file, 'w+')
     local serialized
     if not uglify then
         serialized = serpent.block(data, {
@@ -394,8 +394,8 @@ function serialize_to_file(data, file, uglify)
     else
         serialized = serpent.dump(data)
     end
-    file:write(serialized)
-    file:close()
+    file_to_write:write(serialized)
+    file_to_write:close()
 end
 
 -- Parameters in ?a=1&b=2 style
@@ -636,10 +636,10 @@ function doSendBackup()
     -- redis database
     '/var/lib/redis'
     local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
-    local file = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
-    file:write(log)
-    file:flush()
-    file:close()
+    local file_backup_log = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
+    file_backup_log:write(log)
+    file_backup_log:flush()
+    file_backup_log:close()
     -- send last backup
     local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
     local backups = { }

@@ -193,11 +193,11 @@ function bot_init()
     loadfile("./utils.lua")()
     config = load_config()
     alternatives = load_alternatives()
-    local file = io.open('bot_api_key.txt', "r")
-    if file then
+    local file_bot_api_key = io.open('bot_api_key.txt', "r")
+    if file_bot_api_key then
         -- read all contents of file into a string
-        config.bot_api_key = file:read()
-        file:close()
+        config.bot_api_key = file_bot_api_key:read()
+        file_bot_api_key:close()
     end
     if config.bot_api_key == '' then
         print(clr.red .. 'API KEY MISSING!' .. clr.reset)

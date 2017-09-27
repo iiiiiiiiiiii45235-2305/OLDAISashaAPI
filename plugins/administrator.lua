@@ -70,10 +70,10 @@ local function groupsList(msg, get_links)
             end
         end
     end
-    local file = io.open("./groups/lists/groups.txt", "w")
-    file:write(message)
-    file:flush()
-    file:close()
+    local file_groups = io.open("./groups/lists/groups.txt", "w")
+    file_groups:write(message)
+    file_groups:flush()
+    file_groups:close()
     return message
 end
 

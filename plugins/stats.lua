@@ -108,10 +108,10 @@ local function chat_stats(chat_id, lang)
     for k, user in pairs(users_info) do
         text = text .. user.name .. ' = ' .. user.msgs .. ' (' .. user.percentage .. '%)\n'
     end
-    local file = io.open("./groups/lists/" .. chat_id .. "stats.txt", "w")
-    file:write(text)
-    file:flush()
-    file:close()
+    local file_stats = io.open("./groups/lists/" .. chat_id .. "stats.txt", "w")
+    file_stats:write(text)
+    file_stats:flush()
+    file_stats:close()
     return
     -- text
 end
