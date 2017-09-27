@@ -244,7 +244,7 @@ function kickChatMember(user_id, chat_id, until_date, no_log)
 end
 
 -- never call this outside this file
-function unbanChatMember(user_id, chat_id)
+function unbanChatMember(user_id, chat_id, no_log)
     local url = BASE_URL .. '/unbanChatMember?chat_id=' .. chat_id ..
     '&user_id=' .. user_id
     local res, code = sendRequest(url, no_log)
@@ -1460,9 +1460,9 @@ function kickUser(executer, target, chat_id, reason)
                 -- general: save how many kicks
                 -- unban not necessary because tempban for 45 seconds is used
                 -- unbanChatMember(target, chat_id)
-                local obj_chat = getChat(chat_id)
-                local obj_remover = getChat(executer)
-                local obj_removed = getChat(target)
+                local obj_chat = getChat(chat_id, true)
+                local obj_remover = getChat(executer, true)
+                local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. reason)
@@ -1519,9 +1519,9 @@ function banUser(executer, target, chat_id, reason, until_date)
                 savelog(chat_id, "[" .. executer .. "] banned user " .. target)
                 redis:hincrby('bot:general', 'ban', 1)
                 -- general: save how many kicks
-                local obj_chat = getChat(chat_id)
-                local obj_remover = getChat(executer)
-                local obj_removed = getChat(target)
+                local obj_chat = getChat(chat_id, true)
+                local obj_remover = getChat(executer, true)
+                local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 -- sendMessage(target, langs[get_lang(target)].bannedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. (reason or ''))
