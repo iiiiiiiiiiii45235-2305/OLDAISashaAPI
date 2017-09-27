@@ -763,7 +763,7 @@ local function pre_process(msg)
                                 return msg
                             end
                         elseif msg.text then
-                            if string.find(msg.text:lower(), '^' .. k) then
+                            if string.match(msg.text:lower(), '^' .. k) then
                                 -- one match is enough
                                 local thing_to_remove = string.sub(msg.text, 1, #k)
                                 print(thing_tp_remove, v)
@@ -816,9 +816,9 @@ local function pre_process(msg)
                                 return msg
                             end
                         elseif msg.text then
-                            if string.find(msg.text:lower(), '^' .. k) then
+                            if string.match(msg.text:lower(), '^' .. k) then
                                 -- one match is enough
-                                local thing_to_remove = string.sub(msg.text, 1, #k)
+                                local thing_to_remove = string.find(msg.text, 1, #k)
                                 print(thing_tp_remove, v)
                                 msg.text:gsub(thing_to_remove, v)
                                 return msg
