@@ -454,7 +454,8 @@ function sendLog(text, parse_mode, novardump, keyboard)
             if keyboard then
                 local obj = getChat(tmp_msg.chat.id)
                 if obj then
-                    sendKeyboard(config.log_chat, text, get_object_info_keyboard(bot.id, obj, config.log_chat))
+                    sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
+                    sendKeyboard(config.log_chat, 'KEYBOARD', get_object_info_keyboard(bot.id, obj, config.log_chat))
                 else
                     sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
                 end
