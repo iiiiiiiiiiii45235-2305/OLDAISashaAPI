@@ -15,51 +15,64 @@ reverse_rank_table = {
     "BOT"
 }
 
-function get_rank(user_id, chat_id, check_local)
+local last_chat_member = { }
+
+function get_rank(user_id, chat_id, check_local, no_log)
     if tonumber(user_id) ~= tonumber(chat_id) then
         -- if get_rank in a group check only in that group
-        if tonumber(bot.id) ~= tonumber(user_id) then
-            if not is_sudo2(user_id) then
-                if not is_admin2(user_id) then
-                    if not is_owner2(user_id, chat_id, check_local) then
-                        if not is_mod2(user_id, chat_id, check_local) then
-                            -- user
-                            return rank_table["USER"]
+        if is_mod2(user_id, chat_id, check_local, no_log) then
+            if is_owner2(user_id, chat_id, check_local, no_log) then
+                if is_admin2(user_id) then
+                    if is_sudo2(user_id) then
+                        if tonumber(bot.id) == tonumber(user_id) then
+                            -- bot
+                            return rank_table["BOT"]
                         else
-                            -- mod
-                            return rank_table["MOD"]
+                            -- sudo
+                            return rank_table["SUDO"]
                         end
                     else
-                        -- owner
-                        return rank_table["OWNER"]
+                        -- admin
+                        return rank_table["ADMIN"]
                     end
                 else
-                    -- admin
-                    return rank_table["ADMIN"]
+                    -- owner
+                    return rank_table["OWNER"]
                 end
             else
-                -- sudo
-                return rank_table["SUDO"]
+                -- mod
+                return rank_table["MOD"]
             end
         else
-            -- bot
-            return rank_table["BOT"]
+            -- user
+            return rank_table["USER"]
         end
     else
         -- if get_rank in private check the higher rank of the user in all groups
-        if tonumber(bot.id) ~= tonumber(user_id) then
-            if not is_sudo2(user_id) then
-                if not is_admin2(user_id) then
+        if tonumber(bot.id) == tonumber(user_id) then
+            -- bot
+            return rank_table["BOT"]
+        else
+            if is_sudo2(user_id) then
+                -- sudo
+                return rank_table["SUDO"]
+            else
+                if is_admin2(user_id) then
+                    -- admin
+                    return rank_table["ADMIN"]
+                else
                     local higher_rank = rank_table["USER"]
                     if data['groups'] then
                         -- if there are any groups check for everyone of them the rank of the user and choose the higher one
                         for id_string in pairs(data['groups']) do
-                            if not is_owner2(user_id, id_string, check_local) then
-                                if not is_mod2(user_id, id_string, check_local) then
-                                    -- user
-                                    if higher_rank < rank_table["USER"] then
-                                        higher_rank = rank_table["USER"]
+                            if is_mod2(user_id, id_string, check_local, no_log) then
+                                if is_owner2(user_id, id_string, check_local, no_log) then
+                                    -- owner
+                                    if higher_rank < rank_table["OWNER"] then
+                                        higher_rank = rank_table["OWNER"]
                                     end
+                                    -- not higher than owner or it would not be here
+                                    break
                                 else
                                     -- mod
                                     if higher_rank < rank_table["MOD"] then
@@ -67,32 +80,23 @@ function get_rank(user_id, chat_id, check_local)
                                     end
                                 end
                             else
-                                -- owner
-                                if higher_rank < rank_table["OWNER"] then
-                                    higher_rank = rank_table["OWNER"]
+                                -- user
+                                if higher_rank < rank_table["USER"] then
+                                    higher_rank = rank_table["USER"]
                                 end
                             end
                         end
                     end
                     return higher_rank
-                else
-                    -- admin
-                    return rank_table["ADMIN"]
                 end
-            else
-                -- sudo
-                return rank_table["SUDO"]
             end
-        else
-            -- bot
-            return rank_table["BOT"]
         end
     end
 end
 
-function compare_ranks(executer, target, chat_id, check_local)
-    local executer_rank = get_rank(executer, chat_id, check_local)
-    local target_rank = get_rank(target, chat_id, check_local)
+function compare_ranks(executer, target, chat_id, check_local, no_log)
+    local executer_rank = get_rank(executer, chat_id, check_local, no_log)
+    local target_rank = get_rank(target, chat_id, check_local, no_log)
     if executer_rank > target_rank then
         return true
     elseif executer_rank <= target_rank then
@@ -229,11 +233,11 @@ function is_owner(param_msg, check_local)
     return var
 end
 
-function is_owner2(user_id, chat_id, check_local)
+function is_owner2(user_id, chat_id, check_local, no_log)
     local var = false
 
     if not check_local then
-        local res = getChatMember(chat_id, user_id)
+        local res = getChatMember(chat_id, user_id, no_log)
         if type(res) == 'table' then
             if res.result then
                 local status = res.result.status
@@ -324,11 +328,11 @@ function is_mod(param_msg, check_local)
     return var
 end
 
-function is_mod2(user_id, chat_id, check_local)
+function is_mod2(user_id, chat_id, check_local, no_log)
     local var = false
 
     if not check_local then
-        local res = getChatMember(chat_id, user_id)
+        local res = getChatMember(chat_id, user_id, no_log)
         if type(res) == 'table' then
             if res.result then
                 local status = res.result.status
@@ -353,7 +357,7 @@ function is_mod2(user_id, chat_id, check_local)
         end
     end
 
-    if is_owner2(user_id, chat_id, check_local) then
+    if is_owner2(user_id, chat_id, check_local, no_log) then
         -- owner
         var = true
     end
