@@ -367,7 +367,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
                     if num_msg > 2 then
-                        local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or '') .. ".txt"
+                        local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or ''):gsub('/', 'forwardslash') .. ".txt"
                         text = text:gsub('<code>', '')
                         text = text:gsub('</code>', '')
                         text = text:gsub('<b>', '')
@@ -378,7 +378,6 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         text = text:gsub('</i>', '')
                         text = text:gsub('<a href="(.*)">', '')
                         text = text:gsub('</a>', '')
-                        text = text:gsub('/', 'forwardslash')
                         local file_msg = io.open(path, "w")
                         file_msg:write(text)
                         file_msg:close()
