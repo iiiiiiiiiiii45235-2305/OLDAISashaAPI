@@ -233,44 +233,22 @@ function code2text(code, ln)
 end
 
 -- never call this outside this file
-function kickChatMember(user_id, chat_id, until_date)
+function kickChatMember(user_id, chat_id, until_date, no_log)
     local url = BASE_URL .. '/kickChatMember?chat_id=' .. chat_id ..
     '&user_id=' .. user_id
     if until_date then
         url = url .. '&until_date=' .. until_date
     end
-    local dat, res = HTTPS.request(url)
-    local tab = JSON.decode(dat)
-
-    if res ~= 200 then
-        -- if error, return false and the custom error code
-        return false, getCode(tab.description)
-    end
-
-    if not tab.ok then
-        return false, tab.description
-    end
-
-    return tab
+    local res, code = sendRequest(url, no_log)
+    return res, code
 end
 
 -- never call this outside this file
 function unbanChatMember(user_id, chat_id)
     local url = BASE_URL .. '/unbanChatMember?chat_id=' .. chat_id ..
     '&user_id=' .. user_id
-    -- return sendRequest(url)
-    local dat, res = HTTPS.request(url)
-    local tab = JSON.decode(dat)
-
-    if res ~= 200 then
-        return false, res
-    end
-
-    if not tab.ok then
-        return false, tab.description
-    end
-
-    return tab
+    local res, code = sendRequest(url, no_log)
+    return res, code
 end
 
 --[[permissions is a table that contains (not necessarily all of them):
@@ -1473,7 +1451,7 @@ function kickUser(executer, target, chat_id, reason)
         end
         if compare_ranks(executer, target, chat_id) then
             -- try to kick
-            local res, code = kickChatMember(target, chat_id, os.time() + 45)
+            local res, code = kickChatMember(target, chat_id, os.time() + 45, true)
 
             if res then
                 -- if the user has been kicked, then...
@@ -1531,7 +1509,7 @@ function banUser(executer, target, chat_id, reason, until_date)
         end
         if compare_ranks(executer, target, chat_id) then
             -- try to kick. "code" is already specific
-            local res, code = kickChatMember(target, chat_id, until_date)
+            local res, code = kickChatMember(target, chat_id, until_date, true)
             if res then
                 if not tostring(chat_id):starts('-100') then
                     local hash = 'banned:' .. chat_id
@@ -1563,9 +1541,7 @@ function banUser(executer, target, chat_id, reason, until_date)
                     '\n#user' .. target .. ' #executer' .. executer .. ' #ban ' ..(reason or '')
                 end
             else
-                local hash = 'banned:' .. chat_id
-                redis:sadd(hash, tostring(target))
-                return code2text(code, get_lang(chat_id))
+                return preBanUser(executer, target, chat_id, reason)
             end
         else
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
