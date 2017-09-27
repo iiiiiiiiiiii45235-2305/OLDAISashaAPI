@@ -1449,7 +1449,7 @@ function kickUser(executer, target, chat_id, reason)
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
-        if compare_ranks(executer, target, chat_id) then
+        if compare_ranks(executer, target, chat_id, true) then
             -- try to kick
             local res, code = kickChatMember(target, chat_id, os.time() + 45, true)
 
@@ -1507,7 +1507,7 @@ function banUser(executer, target, chat_id, reason, until_date)
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
-        if compare_ranks(executer, target, chat_id) then
+        if compare_ranks(executer, target, chat_id, true) then
             -- try to kick. "code" is already specific
             local res, code = kickChatMember(target, chat_id, until_date, true)
             if res then
@@ -1552,12 +1552,14 @@ end
 
 -- call this to unban
 function unbanUser(executer, target, chat_id, reason)
-    if compare_ranks(executer, target, chat_id) then
+    if compare_ranks(executer, target, chat_id, true) then
         savelog(chat_id, "[" .. target .. "] unbanned")
+        -- remove from the local banlist
         local hash = 'banned:' .. chat_id
         redis:srem(hash, tostring(target))
-        -- redis:srem('chat:'..chat_id..':prevban', target) --remove from the prevban list
-        local res, code = unbanChatMember(target, chat_id)
+        if getChat(target, true) then
+            local res, code = unbanChatMember(target, chat_id)
+        end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
     else
