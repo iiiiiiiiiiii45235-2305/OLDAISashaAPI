@@ -119,8 +119,12 @@ function is_bot_admin(chat_id)
 end
 
 function is_sudo(param_msg)
-    local var = false
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
 
+    local var = false
     -- Check users id in config
     for k, v in pairs(config.sudo_users) do
         if tostring(k) == tostring(param_msg.from.id) then
@@ -132,8 +136,12 @@ function is_sudo(param_msg)
 end
 
 function is_sudo2(user_id)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
-
     -- Check users id in config
     for k, v in pairs(config.sudo_users) do
         if tostring(k) == tostring(user_id) then
@@ -145,6 +153,11 @@ function is_sudo2(user_id)
 end
 
 function is_admin(param_msg)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
     local user_id = param_msg.from.id
 
@@ -168,6 +181,11 @@ function is_admin(param_msg)
 end
 
 function is_admin2(user_id)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
 
     if data.admins then
@@ -190,6 +208,11 @@ function is_admin2(user_id)
 end
 
 function is_owner(param_msg, check_local)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
     local user_id = param_msg.from.id
     local chat_id = param_msg.chat.id
@@ -234,6 +257,11 @@ function is_owner(param_msg, check_local)
 end
 
 function is_owner2(user_id, chat_id, check_local, no_log)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
 
     if not check_local then
@@ -276,6 +304,11 @@ function is_owner2(user_id, chat_id, check_local, no_log)
 end
 
 function is_mod(param_msg, check_local)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
     local user_id = param_msg.from.id
     local chat_id = param_msg.chat.id
@@ -329,6 +362,11 @@ function is_mod(param_msg, check_local)
 end
 
 function is_mod2(user_id, chat_id, check_local, no_log)
+    if tonumber(bot.id) == tonumber(user_id) then
+        -- bot
+        return true
+    end
+    
     local var = false
 
     if not check_local then
