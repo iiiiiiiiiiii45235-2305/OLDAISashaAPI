@@ -767,7 +767,9 @@ local function pre_process(msg)
                                 -- one match is enough
                                 local thing_to_remove = string.sub(msg.text, 1, #k)
                                 print(thing_to_remove, v)
-                                msg.text = msg.text:gsub(thing_to_remove, v)
+                                if thing_to_remove then
+                                    msg.text = msg.text:gsub(thing_to_remove, v)
+                                end
                                 return msg
                             end
                         end
@@ -820,7 +822,9 @@ local function pre_process(msg)
                                 -- one match is enough
                                 local thing_to_remove = string.find(msg.text, 1, #k)
                                 print(thing_to_remove, v)
-                                msg.text = msg.text:gsub(thing_to_remove, v)
+                                if thing_to_remove then
+                                    msg.text = msg.text:gsub(thing_to_remove, v)
+                                end
                                 return msg
                             end
                         end

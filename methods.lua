@@ -451,16 +451,12 @@ function sendLog(text, parse_mode, novardump, keyboard)
         if novardump then
             sendMessage(config.log_chat, text, parse_mode)
         else
+            sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
             if keyboard then
                 local obj = getChat(tmp_msg.chat.id)
                 if obj then
-                    sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
                     sendKeyboard(config.log_chat, 'KEYBOARD OF THE CHAT IN WHICH THAT HAPPENED', get_object_info_keyboard(bot.id, obj, config.log_chat))
-                else
-                    sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
                 end
-            else
-                sendMessage(config.log_chat, text .. '\n' ..(vardumptext(tmp_msg) or ''), parse_mode)
             end
         end
     else
