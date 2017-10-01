@@ -332,14 +332,14 @@ local function run(msg, matches)
             if matches[1]:lower() == 'previewwelcome' then
                 mystat('/previewwelcome')
                 if last_welcome[tostring(msg.chat.id)] then
-                    deleteMessage(msg.chat.id, last_welcome[tostring(msg.chat.id)])
+                    deleteMessage(msg.chat.id, last_welcome[tostring(msg.chat.id)], true)
                 end
                 last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, { preview_user }, msg.message_id).result.message_id or nil
             end
             if matches[1]:lower() == 'previewgoodbye' then
                 mystat('/previewgoodbye')
                 if last_goodbye[tostring(msg.chat.id)] then
-                    deleteMessage(msg.chat.id, last_goodbye[tostring(msg.chat.id)])
+                    deleteMessage(msg.chat.id, last_goodbye[tostring(msg.chat.id)], true)
                 end
                 last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, preview_user, msg.message_id).result.message_id or nil
                 return
@@ -485,7 +485,7 @@ local function pre_process(msg)
                             last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id).result.message_id or nil
                             redis:getset(hash, 0)
                             if tmp then
-                                deleteMessage(msg.chat.id, tmp)
+                                deleteMessage(msg.chat.id, tmp, true)
                             end
                         end
                     else
@@ -496,7 +496,7 @@ local function pre_process(msg)
                     local tmp = last_goodbye[tostring(msg.chat.id)]
                     last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id).result.message_id or nil
                     if tmp then
-                        deleteMessage(msg.chat.id, tmp)
+                        deleteMessage(msg.chat.id, tmp, true)
                     end
                 end
             end
