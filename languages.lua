@@ -2096,7 +2096,7 @@ return {
         groupName = "\nGroup name: ",
         supergroupName = "\nSupergroup name: ",
         channelName = "\nChannel name: ",
-        userWord = "<b>USER</b>",
+        userWord = "USER",
         botWord = "BOT",
         groupWord = "GROUP",
         supergroupWord = "SUPERGROUP",
