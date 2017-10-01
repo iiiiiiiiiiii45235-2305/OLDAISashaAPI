@@ -688,7 +688,61 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'info' then
         mystat('/info')
-        if msg.reply then
+        if msg.chat.type == 'private' and matches[3] then
+            if msg.reply then
+                if is_mod2(msg.from.id, matches[3]) then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    if not sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.forward_from, matches[3]), get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from, matches[3])) then
+                                        return langs[msg.lang].errorTryAgain
+                                    end
+                                elseif msg.reply_to_message.forward_from_chat then
+                                    if not sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.forward_from_chat, matches[3]), get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from_chat, matches[3])) then
+                                        return langs[msg.lang].errorTryAgain
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if is_mod2(msg.from.id, matches[3]) then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    if not sendKeyboard(msg.from.id, get_object_info(msg.entities[k].user, matches[3]), get_object_info_keyboard(msg.from.id, msg.entities[k].user, matches[3])) then
+                                        return langs[msg.lang].errorTryAgain
+                                    end
+                                end
+                            end
+                        end
+                    end
+                    if string.match(matches[2], '^%-?%d+$') then
+                        local obj = getChat(matches[2])
+                        if not sendKeyboard(msg.from.id, get_object_info(obj, matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[3])) then
+                            return langs[msg.lang].errorTryAgain
+                        end
+                    else
+                        local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if not sendKeyboard(msg.from.id, get_object_info(obj, matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[3])) then
+                            return langs[msg.lang].errorTryAgain
+                        end
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+        elseif msg.reply then
             if msg.from.is_mod then
                 if matches[2] then
                     if matches[2]:lower() == 'from' then
@@ -704,7 +758,7 @@ local function run(msg, matches)
                                 else
                                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                 end
-                            else
+                            elseif msg.reply_to_message.forward_from_chat then
                                 if sendKeyboard(msg.from.id, get_object_info(msg.reply_to_message.forward_from_chat, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from_chat, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
@@ -715,6 +769,8 @@ local function run(msg, matches)
                                 else
                                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                 end
+                            else
+                                return langs[msg.lang].errorNoForward
                             end
                         else
                             return langs[msg.lang].errorNoForward
@@ -872,7 +928,51 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'textualinfo' then
         mystat('/info')
-        if msg.reply then
+        if msg.chat.type == 'private' and matches[3] then
+            if msg.reply then
+                if is_mod2(msg.from.id, matches[3]) then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return get_object_info(msg.reply_to_message.forward_from, matches[3])
+                                elseif msg.reply_to_message.forward_from_chat then
+                                    return get_object_info(msg.reply_to_message.forward_from_chat, matches[3])
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if is_mod2(msg.from.id, matches[3]) then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    return get_object_info(msg.entities[k].user, matches[3])
+                                end
+                            end
+                        end
+                    end
+                    if string.match(matches[2], '^%-?%d+$') then
+                        local obj = getChat(matches[2])
+                        return get_object_info(obj, matches[3])
+                    else
+                        local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        return get_object_info(obj, matches[3])
+                    end
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
+        elseif msg.reply then
             if msg.from.is_mod then
                 if matches[2] then
                     if matches[2]:lower() == 'from' then
@@ -1064,8 +1164,10 @@ return {
         "^[#!/]([Ww][Hh][Oo][Aa][Mm][Ii])$",
         "^[#!/]([Ii][Nn][Ff][Oo])$",
         "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+)$",
+        "^[#!/]([Ii][Nn][Ff][Oo]) ([^%s]+) (%-%d+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo]) ([^%s]+)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo]) ([^%s]+) (%-%d+)$",
         "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
         -- "^[#!/]([Ww][Hh][Oo])$",
@@ -1087,6 +1189,8 @@ return {
         "/ishere {user}",
         "MOD",
         "/[textual]info {id}|{username}|{reply}|from",
+        "PM",
+        "/[textual]info {id}|{username}|from {group_id}",
         -- "(/who|/members)",
         "ADMIN",
         "/grouplink {group_id}",
