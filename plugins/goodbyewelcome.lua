@@ -228,26 +228,26 @@ local function sendWelcome(chat, added, message_id)
         else
             local text = ''
             if string.find(welcome, '$mention') then
-                local tmp_msg = nil
+                local tmp_var_msg = nil
                 for k, v in pairs(added) do
                     text = text .. adjust_goodbyewelcome(welcome, chat, v, 'markdown') .. '\n'
                 end
-                tmp_msg = sendMessage(chat.id, text, 'markdown', message_id)
-                if not tmp_msg then
+                tmp_var_msg = sendMessage(chat.id, text, 'markdown', message_id)
+                if not tmp_var_msg then
                     text = ''
                     for k, v in pairs(added) do
                         text = text .. adjust_goodbyewelcome(welcome, chat, v, 'html') .. '\n'
                     end
-                    tmp_msg = sendMessage(chat.id, text, 'html', message_id)
-                    if not tmp_msg then
+                    tmp_var_msg = sendMessage(chat.id, text, 'html', message_id)
+                    if not tmp_var_msg then
                         text = ''
                         for k, v in pairs(added) do
                             text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
                         end
-                        tmp_msg = sendMessage(chat.id, text, false, message_id)
+                        tmp_var_msg = sendMessage(chat.id, text, false, message_id)
                     end
                 end
-                return tmp_msg
+                return tmp_var_msg
             else
                 for k, v in pairs(added) do
                     text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
@@ -302,15 +302,15 @@ local function sendGoodbye(chat, removed, message_id)
             return sendStickerId(chat.id, media_id, message_id)
         else
             if string.find(goodbye, '$mention') then
-                local tmp_msg = nil
-                tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'markdown'), 'markdown', message_id)
-                if not tmp_msg then
-                    tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'html'), 'html', message_id)
-                    if not tmp_msg then
-                        tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+                local tmp_var_msg = nil
+                tmp_var_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'markdown'), 'markdown', message_id)
+                if not tmp_var_msg then
+                    tmp_var_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'html'), 'html', message_id)
+                    if not tmp_var_msg then
+                        tmp_var_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
                     end
                 end
-                return tmp_msg
+                return tmp_var_msg
             else
                 return sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
             end

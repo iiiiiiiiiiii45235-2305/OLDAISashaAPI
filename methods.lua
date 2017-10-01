@@ -384,9 +384,9 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                             -- messages are silent by default
                         end
 
-                        if num_msg <= 1 then
-                            url = url .. '&text=' .. URL.escape(text)
-                            if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+                        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+                            if num_msg <= 1 then
+                                url = url .. '&text=' .. URL.escape(text)
                                 local res, code = sendRequest(url)
                                 if not res and code then
                                     -- if the request failed and a code is returned (not 403 and 429)
@@ -402,13 +402,11 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                                     local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
                                     print_msg(sent_msg)
                                 end
-                            end
-                        else
-                            local my_text = string.sub(text, 1, 4090)
-                            local rest = string.sub(text, 4090, text_len)
-                            url = url .. '&text=' .. URL.escape(my_text)
+                            else
+                                local my_text = string.sub(text, 1, 4090)
+                                local rest = string.sub(text, 4090, text_len)
+                                url = url .. '&text=' .. URL.escape(my_text)
 
-                            if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
                                 local res, code = sendRequest(url)
                                 if not res and code then
                                     -- if the request failed and a code is returned (not 403 and 429)
@@ -427,10 +425,9 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                                     res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
                                 end
                             end
+                            return res, code
+                            -- return false, and the code
                         end
-
-                        return res, code
-                        -- return false, and the code
                     end
                 end
             end
