@@ -67,9 +67,9 @@ local function groupsList(msg, get_links)
                     end
                 end
                 if group_link then
-                    message = message .. '<a href="' .. group_link .. '">' .. html_escape(name) .. '</a>' .. ' [' .. k .. '] - [' .. group_owner .. ']\n'
+                    message = message .. '<a href="' .. group_link .. '">' .. html_escape(name) .. '</a>' .. ' ' .. k .. ' ' .. group_owner .. '\n'
                 else
-                    message = message .. html_escape(name) .. ' [' .. k .. '] - [' .. group_owner .. ']\n{No link}\n'
+                    message = message .. html_escape(name) .. ' ' .. k .. ' ' .. group_owner .. '\n'
                 end
             end
         end
