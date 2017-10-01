@@ -13,7 +13,6 @@ local function pre_process(msg)
                 for k, v in pairs(msg.added) do
                     kicktable[v.id] = false
                 end
-                return msg
             end
         end
 

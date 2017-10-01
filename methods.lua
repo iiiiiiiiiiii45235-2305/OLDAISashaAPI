@@ -1613,6 +1613,7 @@ function gbanUser(user_id, lang)
     -- Save to redis
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
+    sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id)
     return langs[lang].user .. user_id .. langs[lang].gbanned
 end
 
