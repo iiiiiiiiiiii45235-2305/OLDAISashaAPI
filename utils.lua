@@ -1097,6 +1097,6 @@ function msgs_plus_plus(chat_id)
     local hash = 'bot:msgs'
     local chat_msgs = tonumber(redis:get(chat_hash) or 0)
     local tot_msgs = tonumber(redis:get(hash) or 0)
-    redis:setex(chat_hash, TIME_CHECK, chat_msgs + 1)
-    redis:setex(hash, TIME_CHECK, tot_msgs + 1)
+    redis:setex(chat_hash, 60, chat_msgs + 1)
+    redis:setex(hash, 1, tot_msgs + 1)
 end
