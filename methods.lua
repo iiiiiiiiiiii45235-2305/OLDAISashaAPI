@@ -1666,7 +1666,7 @@ function banList(chat_id)
 end
 
 -- Global ban
-function gbanUser(user_id, lang)
+function gbanUser(user_id, lang, no_log)
     if tonumber(user_id) == tonumber(bot.id) then
         -- Ignore bot
         return ''
@@ -1678,7 +1678,9 @@ function gbanUser(user_id, lang)
     -- Save to redis
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
-    sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id)
+    if not no_log then
+        sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id)
+    end
     return langs[lang].user .. user_id .. langs[lang].gbanned
 end
 

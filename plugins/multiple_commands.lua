@@ -921,7 +921,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, msg.lang)
+                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, msg.lang, true)
                                 end
                             end
                         end
