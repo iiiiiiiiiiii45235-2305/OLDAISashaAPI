@@ -334,6 +334,7 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
+local max_msgs = 2
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
         if text then
@@ -344,7 +345,10 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     local text_max = 4090
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
-                    if num_msg > 2 then
+                    if parse_mode then
+                        max_msgs = 1
+                    end
+                    if num_msg > max_msgs then
                         local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or ''):gsub('/', 'forwardslash') .. ".txt"
                         text = text:gsub('<code>', '')
                         text = text:gsub('</code>', '')
@@ -384,7 +388,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                             -- messages are silent by default
                         end
 
-                        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+                        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
                             if num_msg <= 1 then
                                 url = url .. '&text=' .. URL.escape(text)
                                 local res, code = sendRequest(url)
@@ -471,7 +475,7 @@ end
 
 function forwardMessage(chat_id, from_chat_id, message_id)
     if sendChatAction(chat_id, 'typing', true) and sendChatAction(from_chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/forwardMessage?chat_id=' .. chat_id ..
             '&from_chat_id=' .. from_chat_id ..
@@ -541,7 +545,7 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, 
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local res, code = sendRequest(url, no_log)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
@@ -647,7 +651,7 @@ end
 
 function pinChatMessage(chat_id, message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/pinChatMessage?chat_id=' .. chat_id ..
             '&message_id=' .. message_id
@@ -671,7 +675,7 @@ end
 
 function unpinChatMessage(chat_id)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/unpinChatMessage?chat_id=' .. chat_id
             local res, code = sendRequest(url)
@@ -703,7 +707,7 @@ end
 
 function setChatTitle(chat_id, title)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/setChatTitle?chat_id=' .. chat_id ..
             '&title=' .. title
             local res, code = sendRequest(url)
@@ -725,7 +729,7 @@ end
 -- supergroups/channels only
 function setChatDescription(chat_id, description)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/setChatDescription?chat_id=' .. chat_id ..
             '&description=' .. description
             local res, code = sendRequest(url)
@@ -744,7 +748,7 @@ end
 
 function deleteChatPhoto(chat_id)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/deleteChatPhoto?chat_id=' .. chat_id
             local res, code = sendRequest(url)
 
@@ -764,7 +768,7 @@ end
 
 function setChatPhotoId(chat_id, file_id)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             if file_id then
                 local download_link = getFile(file_id)
                 if download_link.result then
@@ -785,7 +789,7 @@ end
 
 function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendPhoto?chat_id=' .. chat_id ..
             '&photo=' .. file_id
@@ -820,7 +824,7 @@ end
 
 function sendStickerId(chat_id, file_id, reply_to_message_id)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendSticker?chat_id=' .. chat_id ..
             '&sticker=' .. file_id
@@ -850,7 +854,7 @@ end
 
 function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'record_audio', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendVoice?chat_id=' .. chat_id ..
             '&voice=' .. file_id
@@ -885,7 +889,7 @@ end
 
 function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_audio', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendAudio?chat_id=' .. chat_id ..
             '&audio=' .. file_id
@@ -920,7 +924,7 @@ end
 
 function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
     if sendChatAction(chat_id, 'record_videonote', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendVideoNote?chat_id=' .. chat_id ..
             '&video_note=' .. file_id
@@ -950,7 +954,7 @@ end
 
 function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_video', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendVideo?chat_id=' .. chat_id ..
             '&video=' .. file_id
@@ -985,7 +989,7 @@ end
 
 function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_document', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendDocument?chat_id=' .. chat_id ..
             '&document=' .. file_id
@@ -1027,7 +1031,7 @@ end
 
 function setChatPhoto(chat_id, photo)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/setChatPhoto'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
             local obj = getChat(chat_id)
@@ -1040,7 +1044,7 @@ end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendPhoto'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
             local reply = false
@@ -1062,7 +1066,7 @@ end
 
 function sendSticker(chat_id, sticker, reply_to_message_id)
     if sendChatAction(chat_id, 'typing', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendSticker'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
             local reply = false
@@ -1081,7 +1085,7 @@ end
 
 function sendVoice(chat_id, voice, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'record_audio', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVoice'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
             if caption then
@@ -1108,7 +1112,7 @@ end
 
 function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title)
     if sendChatAction(chat_id, 'upload_audio', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendAudio'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
             if caption then
@@ -1141,7 +1145,7 @@ end
 
 function sendVideo(chat_id, video, reply_to_message_id, caption, duration, performer, title)
     if sendChatAction(chat_id, 'upload_video', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideo'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
             local reply = false
@@ -1166,7 +1170,7 @@ end
 
 function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length)
     if sendChatAction(chat_id, 'record_videonote', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideoNote'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
             local reply = false
@@ -1191,7 +1195,7 @@ end
 
 function sendDocument(chat_id, document, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_document', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendDocument'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
             if caption then
@@ -1213,7 +1217,7 @@ end
 
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
     if sendChatAction(chat_id, 'find_location', true) then
-        if check_chat_msgs(chat_id) <= 18 and check_total_msgs() <= 28 then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendLocation?chat_id=' .. chat_id ..
             '&latitude=' .. latitude ..
