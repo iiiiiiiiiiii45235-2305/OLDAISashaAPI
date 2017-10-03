@@ -1457,14 +1457,14 @@ function kickUser(executer, target, chat_id, reason)
         end
         if compare_ranks(executer, target, chat_id, false, true) then
             -- try to kick
-            local res, code = kickChatMember(target, chat_id, os.time() + 45, true)
+            local res, code = kickChatMember(target, chat_id, os.time() + 60, true)
 
             if res then
                 -- if the user has been kicked, then...
                 savelog(chat_id, "[" .. executer .. "] kicked user " .. target)
                 redis:hincrby('bot:general', 'kick', 1)
                 -- general: save how many kicks
-                -- unban not necessary because tempban for 45 seconds is used
+                -- unban not necessary because tempban for 60 seconds is used
                 -- unbanChatMember(target, chat_id)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
