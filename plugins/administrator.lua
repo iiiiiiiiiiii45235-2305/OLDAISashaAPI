@@ -55,7 +55,7 @@ local function groupsList(msg, get_links)
                 if data[tostring(k)]['set_owner'] then
                     group_owner = tostring(data[tostring(k)]['set_owner'])
                 end
-                local group_link = "No link"
+                local group_link = nil
                 if data[tostring(k)]['settings']['set_link'] then
                     group_link = data[tostring(k)]['settings']['set_link']
                 elseif get_links and data[tostring(k)]['group_type']:lower() == 'supergroup' then
@@ -66,7 +66,11 @@ local function groupsList(msg, get_links)
                         group_link = link
                     end
                 end
-                message = message .. name .. ' [' .. k .. '] - [' .. group_owner .. ']\n{' .. group_link .. "}\n"
+                if group_link then
+                    message = message .. '<a href="' .. group_link .. '">' .. html_escape(name) .. '</a>' .. ' ' .. k .. ' ' .. group_owner .. '\n'
+                else
+                    message = message .. html_escape(name) .. ' ' .. k .. ' ' .. group_owner .. '\n'
+                end
             end
         end
     end
@@ -226,9 +230,9 @@ local function run(msg, matches)
                 -- groupsList(msg)
                 -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
                 if matches[2]:lower() == 'groups' then
-                    return groupsList(msg, false)
+                    sendReply(msg, groupsList(msg, false), 'html')
                 elseif matches[2]:lower() == 'groups createlinks' then
-                    return groupsList(msg, true)
+                    sendReply(msg, groupsList(msg, true), 'html')
                 end
             end
             return

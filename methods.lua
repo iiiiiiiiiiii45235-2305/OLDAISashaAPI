@@ -334,6 +334,7 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
+local max_msgs = 2
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
         if text then
@@ -341,10 +342,13 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                 text = tostring(text)
                 if text ~= '' then
                     text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
-                    local text_max = 4090
+                    local text_max = 4096
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
-                    if num_msg > 2 then
+                    if parse_mode then
+                        max_msgs = 1
+                    end
+                    if num_msg > max_msgs then
                         local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or ''):gsub('/', 'forwardslash') .. ".txt"
                         text = text:gsub('<code>', '')
                         text = text:gsub('</code>', '')
@@ -354,7 +358,8 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         text = text:gsub('</pre>', '')
                         text = text:gsub('<i>', '')
                         text = text:gsub('</i>', '')
-                        text = text:gsub('<a href="(.*)">', '')
+                        text = text:gsub('<a href="', '')
+                        text = text:gsub('">', '')
                         text = text:gsub('</a>', '')
                         local file_msg = io.open(path, "w")
                         file_msg:write(text)
@@ -384,49 +389,50 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                             -- messages are silent by default
                         end
 
-                        if num_msg <= 1 then
-                            url = url .. '&text=' .. URL.escape(text)
+                        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+                            if num_msg <= 1 then
+                                url = url .. '&text=' .. URL.escape(text)
+                                local res, code = sendRequest(url)
+                                if not res and code then
+                                    -- if the request failed and a code is returned (not 403 and 429)
+                                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                        savelog('send_msg', code .. '\n' .. text)
+                                    end
+                                end
+                                if print_res_msg(res) then
+                                    msgs_plus_plus(chat_id)
+                                    return res, code
+                                else
+                                    local obj = getChat(chat_id)
+                                    local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                                    print_msg(sent_msg)
+                                end
+                            else
+                                local my_text = string.sub(text, 1, 4090)
+                                local rest = string.sub(text, 4090, text_len)
+                                url = url .. '&text=' .. URL.escape(my_text)
 
-                            local res, code = sendRequest(url)
-
-                            if not res and code then
-                                -- if the request failed and a code is returned (not 403 and 429)
-                                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                    savelog('send_msg', code .. '\n' .. text)
+                                local res, code = sendRequest(url)
+                                if not res and code then
+                                    -- if the request failed and a code is returned (not 403 and 429)
+                                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                                        savelog('send_msg', code .. '\n' .. text)
+                                    end
+                                end
+                                if print_res_msg(res) then
+                                    msgs_plus_plus(chat_id)
+                                    res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
+                                else
+                                    local obj = getChat(chat_id)
+                                    local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                                    print_msg(sent_msg)
+                                    msgs_plus_plus(chat_id)
+                                    res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
                                 end
                             end
-                            if print_res_msg(res) then
-                                return res, code
-                            else
-                                local obj = getChat(chat_id)
-                                local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-                                print_msg(sent_msg)
-                            end
-                        else
-                            local my_text = string.sub(text, 1, 4090)
-                            local rest = string.sub(text, 4090, text_len)
-                            url = url .. '&text=' .. URL.escape(my_text)
-
-                            local res, code = sendRequest(url)
-
-                            if not res and code then
-                                -- if the request failed and a code is returned (not 403 and 429)
-                                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                    savelog('send_msg', code .. '\n' .. text)
-                                end
-                            end
-                            if print_res_msg(res) then
-                                res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
-                            else
-                                local obj = getChat(chat_id)
-                                local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-                                print_msg(sent_msg)
-                                res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
-                            end
+                            return res, code
+                            -- return false, and the code
                         end
-
-                        return res, code
-                        -- return false, and the code
                     end
                 end
             end
@@ -470,30 +476,33 @@ end
 
 function forwardMessage(chat_id, from_chat_id, message_id)
     if sendChatAction(chat_id, 'typing', true) and sendChatAction(from_chat_id, 'typing', true) then
-        local url = BASE_URL ..
-        '/forwardMessage?chat_id=' .. chat_id ..
-        '&from_chat_id=' .. from_chat_id ..
-        '&message_id=' .. message_id
-        local res, code = sendRequest(url)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/forwardMessage?chat_id=' .. chat_id ..
+            '&from_chat_id=' .. from_chat_id ..
+            '&message_id=' .. message_id
+            local res, code = sendRequest(url)
 
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('forward_msg', code)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('forward_msg', code)
+                end
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj_from = getChat(from_chat_id)
-            local obj_to = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
-            if obj_from.type == 'private' then
-                sent_msg.forward_from = obj_from
-            elseif obj_from.type == 'channel' then
-                sent_msg.forward_from_chat = obj_from
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj_from = getChat(from_chat_id)
+                local obj_to = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj_to, text = text, forward = true }
+                if obj_from.type == 'private' then
+                    sent_msg.forward_from = obj_from
+                elseif obj_from.type == 'channel' then
+                    sent_msg.forward_from_chat = obj_from
+                end
+                print_msg(sent_msg)
             end
-            print_msg(sent_msg)
         end
     else
         return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
@@ -537,22 +546,24 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, 
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
         end
-        local res, code = sendRequest(url, no_log)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_msg', code .. '\n' .. text)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local res, code = sendRequest(url, no_log)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_msg', code .. '\n' .. text)
+                end
             end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, text = text, cb = true, reply = reply }
+                print_msg(sent_msg)
+            end
+            -- return false, and the code
         end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, text = text, cb = true, reply = reply }
-            print_msg(sent_msg)
-        end
-        -- return false, and the code
     else
         return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
     end
@@ -641,38 +652,44 @@ end
 
 function pinChatMessage(chat_id, message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL ..
-        '/pinChatMessage?chat_id=' .. chat_id ..
-        '&message_id=' .. message_id
-        if not send_sound then
-            url = url .. '&disable_notification=true'
-            -- messages are silent by default
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('pin_message', code)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/pinChatMessage?chat_id=' .. chat_id ..
+            '&message_id=' .. message_id
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
             end
+            local res, code = sendRequest(url)
+
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('pin_message', code)
+                end
+            end
+            msgs_plus_plus(chat_id)
+            return res
         end
-        return res
     end
 end
 
 function unpinChatMessage(chat_id)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL ..
-        '/unpinChatMessage?chat_id=' .. chat_id
-        local res, code = sendRequest(url)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/unpinChatMessage?chat_id=' .. chat_id
+            local res, code = sendRequest(url)
 
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('unpin_message', code)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('unpin_message', code)
+                end
             end
+            msgs_plus_plus(chat_id)
+            return res
         end
-        return res
     end
 end
 
@@ -691,51 +708,60 @@ end
 
 function setChatTitle(chat_id, title)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL .. '/setChatTitle?chat_id=' .. chat_id ..
-        '&title=' .. title
-        local res, code = sendRequest(url)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/setChatTitle?chat_id=' .. chat_id ..
+            '&title=' .. title
+            local res, code = sendRequest(url)
 
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('set_title', code)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('set_title', code)
+                end
             end
+            data[tostring(chat_id)].set_name = title
+            save_data(config.moderation.data, data)
+            msgs_plus_plus(chat_id)
+            return res
         end
-        data[tostring(chat_id)].set_name = title
-        save_data(config.moderation.data, data)
-        return res
     end
 end
 
 -- supergroups/channels only
 function setChatDescription(chat_id, description)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL .. '/setChatDescription?chat_id=' .. chat_id ..
-        '&description=' .. description
-        local res, code = sendRequest(url)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/setChatDescription?chat_id=' .. chat_id ..
+            '&description=' .. description
+            local res, code = sendRequest(url)
 
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('set_description', code)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('set_description', code)
+                end
             end
+            msgs_plus_plus(chat_id)
+            return res
         end
-        return res
     end
 end
 
 function deleteChatPhoto(chat_id)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL .. '/deleteChatPhoto?chat_id=' .. chat_id
-        local res, code = sendRequest(url)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/deleteChatPhoto?chat_id=' .. chat_id
+            local res, code = sendRequest(url)
 
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('delete_photo', code)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('delete_photo', code)
+                end
             end
+            msgs_plus_plus(chat_id)
+            return res
         end
-        return res
     end
 end
 
@@ -743,239 +769,256 @@ end
 
 function setChatPhotoId(chat_id, file_id)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        if file_id then
-            local download_link = getFile(file_id)
-            if download_link.result then
-                download_link = download_link.result
-                download_link = 'https://api.telegram.org/file/bot' .. config.bot_api_key .. '/' .. download_link.file_path
-                local file_path = download_to_file(download_link, '/home/pi/AISashaAPI/data/tmp/' .. download_link:match('.*/(.*)'))
-                data[tostring(chat_id)].photo = file_id
-                save_data(config.moderation.data, data)
-                return setChatPhoto(chat_id, file_path)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            if file_id then
+                local download_link = getFile(file_id)
+                if download_link.result then
+                    download_link = download_link.result
+                    download_link = 'https://api.telegram.org/file/bot' .. config.bot_api_key .. '/' .. download_link.file_path
+                    local file_path = download_to_file(download_link, '/home/pi/AISashaAPI/data/tmp/' .. download_link:match('.*/(.*)'))
+                    data[tostring(chat_id)].photo = file_id
+                    save_data(config.moderation.data, data)
+                    msgs_plus_plus(chat_id)
+                    return setChatPhoto(chat_id, file_path)
+                end
+            else
+                deleteChatPhoto(chat_id)
             end
-        else
-            deleteChatPhoto(chat_id)
         end
     end
 end
 
 function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        local url = BASE_URL ..
-        '/sendPhoto?chat_id=' .. chat_id ..
-        '&photo=' .. file_id
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. '&caption=' .. caption
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendPhoto?chat_id=' .. chat_id ..
+            '&photo=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
             end
-        end
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_photo', code)
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_photo', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
 
 function sendStickerId(chat_id, file_id, reply_to_message_id)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL ..
-        '/sendSticker?chat_id=' .. chat_id ..
-        '&sticker=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_sticker', code)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendSticker?chat_id=' .. chat_id ..
+            '&sticker=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_sticker', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
 
 function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'record_audio', true) then
-        local url = BASE_URL ..
-        '/sendVoice?chat_id=' .. chat_id ..
-        '&voice=' .. file_id
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. '&caption=' .. caption
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendVoice?chat_id=' .. chat_id ..
+            '&voice=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
             end
-        end
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_voice', code)
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_voice', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
 
 function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_audio', true) then
-        local url = BASE_URL ..
-        '/sendAudio?chat_id=' .. chat_id ..
-        '&audio=' .. file_id
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. '&caption=' .. caption
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendAudio?chat_id=' .. chat_id ..
+            '&audio=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
             end
-        end
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_audio', code)
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_audio', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
 
 function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
     if sendChatAction(chat_id, 'record_videonote', true) then
-        local url = BASE_URL ..
-        '/sendVideoNote?chat_id=' .. chat_id ..
-        '&video_note=' .. file_id
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_video_note', code)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendVideoNote?chat_id=' .. chat_id ..
+            '&video_note=' .. file_id
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_video_note', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
 
 function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_video', true) then
-        local url = BASE_URL ..
-        '/sendVideo?chat_id=' .. chat_id ..
-        '&video=' .. file_id
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. '&caption=' .. caption
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendVideo?chat_id=' .. chat_id ..
+            '&video=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
             end
-        end
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_video', code)
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_video', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
 
 function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_document', true) then
-        local url = BASE_URL ..
-        '/sendDocument?chat_id=' .. chat_id ..
-        '&document=' .. file_id
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. '&caption=' .. caption
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendDocument?chat_id=' .. chat_id ..
+            '&document=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. '&caption=' .. caption
+                end
             end
-        end
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_document', code)
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_document', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
@@ -989,191 +1032,218 @@ end
 
 function setChatPhoto(chat_id, photo)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        local url = BASE_URL .. '/setChatPhoto'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
-        -- print_msg(sent_msg)
-        return curlRequest(curl_command)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/setChatPhoto'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
+            -- print_msg(sent_msg)
+            return curlRequest(curl_command)
+        end
     end
 end
 
 function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        local url = BASE_URL .. '/sendPhoto'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendPhoto'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if caption then
+                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        if caption then
-            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-        end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
-        print_msg(sent_msg)
-        return curlRequest(curl_command)
     end
 end
 
 function sendSticker(chat_id, sticker, reply_to_message_id)
     if sendChatAction(chat_id, 'typing', true) then
-        local url = BASE_URL .. '/sendSticker'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendSticker'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
-        print_msg(sent_msg)
-        return curlRequest(curl_command)
     end
 end
 
 function sendVoice(chat_id, voice, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'record_audio', true) then
-        local url = BASE_URL .. '/sendVoice'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. ' -F "caption=' .. caption .. '"'
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendVoice'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. ' -F "caption=' .. caption .. '"'
+                end
             end
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
-        end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
-        print_msg(sent_msg)
-        return curlRequest(curl_command)
     end
 end
 
 function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title)
     if sendChatAction(chat_id, 'upload_audio', true) then
-        local url = BASE_URL .. '/sendAudio'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
-        if caption then
-            if type(caption) == 'string' or type(caption) == 'number' then
-                url = url .. ' -F "caption=' .. caption .. '"'
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendAudio'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    url = url .. ' -F "caption=' .. caption .. '"'
+                end
             end
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            if performer then
+                curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
+            end
+            if title then
+                curl_command = curl_command .. ' -F "title=' .. title .. '"'
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
-        end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        if performer then
-            curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
-        end
-        if title then
-            curl_command = curl_command .. ' -F "title=' .. title .. '"'
-        end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
-        print_msg(sent_msg)
-        return curlRequest(curl_command)
     end
 end
 
 function sendVideo(chat_id, video, reply_to_message_id, caption, duration, performer, title)
     if sendChatAction(chat_id, 'upload_video', true) then
-        local url = BASE_URL .. '/sendVideo'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendVideo'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if caption then
+                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        if caption then
-            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-        end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
-        print_msg(sent_msg)
-        return curlRequest(curl_command)
     end
 end
 
 function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length)
     if sendChatAction(chat_id, 'record_videonote', true) then
-        local url = BASE_URL .. '/sendVideoNote'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendVideoNote'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if duration then
+                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+            end
+            if length then
+                curl_command = curl_command .. ' -F "length=' .. length .. '"'
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        if duration then
-            curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
-        end
-        if length then
-            curl_command = curl_command .. ' -F "length=' .. length .. '"'
-        end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
-        print_msg(sent_msg)
-        return curlRequest(curl_command)
     end
 end
 
 function sendDocument(chat_id, document, caption, reply_to_message_id)
     if sendChatAction(chat_id, 'upload_document', true) then
-        local url = BASE_URL .. '/sendDocument'
-        local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
-        if caption then
-            curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendDocument'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
+            if caption then
+                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+            end
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
         end
-        local reply = false
-        if reply_to_message_id then
-            curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
-            reply = true
-        end
-        local obj = getChat(chat_id)
-        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
-        return curlRequest(curl_command)
     end
 end
 
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
     if sendChatAction(chat_id, 'find_location', true) then
-        local url = BASE_URL ..
-        '/sendLocation?chat_id=' .. chat_id ..
-        '&latitude=' .. latitude ..
-        '&longitude=' .. longitude
-        local reply = false
-        if reply_to_message_id then
-            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-            reply = true
-        end
-        local res, code = sendRequest(url)
-
-        if not res and code then
-            -- if the request failed and a code is returned (not 403 and 429)
-            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_location', code)
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendLocation?chat_id=' .. chat_id ..
+            '&latitude=' .. latitude ..
+            '&longitude=' .. longitude
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
             end
-        end
-        if print_res_msg(res) then
-            return res, code
-        else
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'location' }
-            print_msg(sent_msg)
+            local res, code = sendRequest(url)
+
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_location', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+                return res, code
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'location' }
+                print_msg(sent_msg)
+            end
         end
     end
 end
@@ -1287,7 +1357,7 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
         return langs[get_lang(chat_id)].errorFileDownload
     else
         print("File path: " .. file_path)
-        sendDocument(chat_id, file_path, reply_to_message_id)
+        return sendDocument(chat_id, file_path, reply_to_message_id)
     end
 end
 -- *** END API FUNCTIONS ***

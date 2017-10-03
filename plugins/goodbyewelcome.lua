@@ -228,26 +228,26 @@ local function sendWelcome(chat, added, message_id)
         else
             local text = ''
             if string.find(welcome, '$mention') then
-                local tmp_msg = nil
+                local tmp_var_msg = nil
                 for k, v in pairs(added) do
                     text = text .. adjust_goodbyewelcome(welcome, chat, v, 'markdown') .. '\n'
                 end
-                tmp_msg = sendMessage(chat.id, text, 'markdown', message_id)
-                if not tmp_msg then
+                tmp_var_msg = sendMessage(chat.id, text, 'markdown', message_id)
+                if not tmp_var_msg then
                     text = ''
                     for k, v in pairs(added) do
                         text = text .. adjust_goodbyewelcome(welcome, chat, v, 'html') .. '\n'
                     end
-                    tmp_msg = sendMessage(chat.id, text, 'html', message_id)
-                    if not tmp_msg then
+                    tmp_var_msg = sendMessage(chat.id, text, 'html', message_id)
+                    if not tmp_var_msg then
                         text = ''
                         for k, v in pairs(added) do
                             text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
                         end
-                        tmp_msg = sendMessage(chat.id, text, false, message_id)
+                        tmp_var_msg = sendMessage(chat.id, text, false, message_id)
                     end
                 end
-                return tmp_msg
+                return tmp_var_msg
             else
                 for k, v in pairs(added) do
                     text = text .. adjust_goodbyewelcome(welcome, chat, v) .. '\n'
@@ -302,15 +302,15 @@ local function sendGoodbye(chat, removed, message_id)
             return sendStickerId(chat.id, media_id, message_id)
         else
             if string.find(goodbye, '$mention') then
-                local tmp_msg = nil
-                tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'markdown'), 'markdown', message_id)
-                if not tmp_msg then
-                    tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'html'), 'html', message_id)
-                    if not tmp_msg then
-                        tmp_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
+                local tmp_var_msg = nil
+                tmp_var_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'markdown'), 'markdown', message_id)
+                if not tmp_var_msg then
+                    tmp_var_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed, 'html'), 'html', message_id)
+                    if not tmp_var_msg then
+                        tmp_var_msg = sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
                     end
                 end
-                return tmp_msg
+                return tmp_var_msg
             else
                 return sendMessage(chat.id, adjust_goodbyewelcome(goodbye, chat, removed), false, message_id)
             end
@@ -332,16 +332,35 @@ local function run(msg, matches)
             if matches[1]:lower() == 'previewwelcome' then
                 mystat('/previewwelcome')
                 if last_welcome[tostring(msg.chat.id)] then
-                    deleteMessage(msg.chat.id, last_welcome[tostring(msg.chat.id)])
+                    deleteMessage(msg.chat.id, last_welcome[tostring(msg.chat.id)], true)
                 end
-                last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, { preview_user }, msg.message_id).result.message_id or nil
+                last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, { preview_user }, msg.message_id)
+                if last_welcome[tostring(msg.chat.id)].result then
+                    if last_welcome[tostring(msg.chat.id)].result.message_id then
+                        last_welcome[tostring(msg.chat.id)] = last_welcome[tostring(msg.chat.id)].result.message_id
+                    else
+                        last_welcome[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    last_welcome[tostring(msg.chat.id)] = nil
+                end
+                return
             end
             if matches[1]:lower() == 'previewgoodbye' then
                 mystat('/previewgoodbye')
                 if last_goodbye[tostring(msg.chat.id)] then
-                    deleteMessage(msg.chat.id, last_goodbye[tostring(msg.chat.id)])
+                    deleteMessage(msg.chat.id, last_goodbye[tostring(msg.chat.id)], true)
                 end
-                last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, preview_user, msg.message_id).result.message_id or nil
+                last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, preview_user, msg.message_id)
+                if last_goodbye[tostring(msg.chat.id)].result then
+                    if last_goodbye[tostring(msg.chat.id)].result.message_id then
+                        last_goodbye[tostring(msg.chat.id)] = last_goodbye[tostring(msg.chat.id)].result.message_id
+                    else
+                        last_goodbye[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    last_goodbye[tostring(msg.chat.id)] = nil
+                end
                 return
             end
             if matches[1]:lower() == 'setwelcome' then
@@ -482,10 +501,19 @@ local function pre_process(msg)
                     if hashonredis then
                         if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
                             local tmp = last_welcome[tostring(msg.chat.id)]
-                            last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id).result.message_id or nil
+                            last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id)
+                            if last_welcome[tostring(msg.chat.id)].result then
+                                if last_welcome[tostring(msg.chat.id)].result.message_id then
+                                    last_welcome[tostring(msg.chat.id)] = last_welcome[tostring(msg.chat.id)].result.message_id
+                                else
+                                    last_welcome[tostring(msg.chat.id)] = nil
+                                end
+                            else
+                                last_welcome[tostring(msg.chat.id)] = nil
+                            end
                             redis:getset(hash, 0)
                             if tmp then
-                                deleteMessage(msg.chat.id, tmp)
+                                deleteMessage(msg.chat.id, tmp, true)
                             end
                         end
                     else
@@ -494,9 +522,18 @@ local function pre_process(msg)
                 end
                 if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then
                     local tmp = last_goodbye[tostring(msg.chat.id)]
-                    last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id).result.message_id or nil
+                    last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id)
+                    if last_goodbye[tostring(msg.chat.id)].result then
+                        if last_goodbye[tostring(msg.chat.id)].result.message_id then
+                            last_goodbye[tostring(msg.chat.id)] = last_goodbye[tostring(msg.chat.id)].result.message_id
+                        else
+                            last_goodbye[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        last_goodbye[tostring(msg.chat.id)] = nil
+                    end
                     if tmp then
-                        deleteMessage(msg.chat.id, tmp)
+                        deleteMessage(msg.chat.id, tmp, true)
                     end
                 end
             end
