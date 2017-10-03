@@ -348,7 +348,9 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                     if parse_mode then
                         max_msgs = 1
                     end
+                    print(num_msgs, max_msgs)
                     if num_msg > max_msgs then
+                        print('send doc')
                         local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or ''):gsub('/', 'forwardslash') .. ".txt"
                         text = text:gsub('<code>', '')
                         text = text:gsub('</code>', '')
@@ -358,7 +360,8 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         text = text:gsub('</pre>', '')
                         text = text:gsub('<i>', '')
                         text = text:gsub('</i>', '')
-                        text = text:gsub('<a href="(.*)">', '')
+                        text = text:gsub('<a href="', '')
+                        text = text:gsub('">', '')
                         text = text:gsub('</a>', '')
                         local file_msg = io.open(path, "w")
                         file_msg:write(text)
@@ -366,6 +369,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
                         return true
                     else
+                        print('send msg')
                         local url = BASE_URL ..
                         '/sendMessage?chat_id=' .. chat_id ..
                         '&disable_web_page_preview=true'
