@@ -230,9 +230,9 @@ local function run(msg, matches)
                 -- groupsList(msg)
                 -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
                 if matches[2]:lower() == 'groups' then
-                    return groupsList(msg, false)
+                    sendReply(msg, groupsList(msg, false), 'html')
                 elseif matches[2]:lower() == 'groups createlinks' then
-                    return groupsList(msg, true)
+                    sendReply(msg, groupsList(msg, true), 'html')
                 end
             end
             return
