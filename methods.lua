@@ -342,7 +342,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                 text = tostring(text)
                 if text ~= '' then
                     text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
-                    local text_max = 4090
+                    local text_max = 4096
                     local text_len = string.len(text)
                     local num_msg = math.ceil(text_len / text_max)
                     if parse_mode then
