@@ -769,8 +769,8 @@ local function pre_process(msg)
                                 print(thing_to_remove, v)
                                 if thing_to_remove then
                                     msg.text = msg.text:gsub(thing_to_remove, v)
+                                    return msg
                                 end
-                                return msg
                             end
                         end
                     end
@@ -824,8 +824,8 @@ local function pre_process(msg)
                                 print(thing_to_remove, v)
                                 if thing_to_remove then
                                     msg.text = msg.text:gsub(thing_to_remove, v)
+                                    return msg
                                 end
-                                return msg
                             end
                         end
                     end
