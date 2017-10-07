@@ -1686,7 +1686,7 @@ function gbanUser(user_id, lang, no_log)
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
     if not no_log then
-        sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id)
+        sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
     end
     return langs[lang].user .. user_id .. langs[lang].gbanned
 end
