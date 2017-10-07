@@ -756,6 +756,15 @@ function msg_valid(msg)
     else
         if msg.date < os.time() -5 then
             -- Before bot was started more or less
+            msg = get_tg_rank(msg)
+            print(clr.white .. 'Preprocess old message', 'database')
+            msg = plugins.database.pre_process(msg)
+            print(clr.white .. 'Preprocess old message', 'banhammer')
+            msg = plugins.banhammer.pre_process(msg)
+            print(clr.white .. 'Preprocess old message', 'delword')
+            msg = plugins.delword.pre_process(msg)
+            print(clr.white .. 'Preprocess old message', 'msg_checks')
+            msg = plugins.msg_checks.pre_process(msg)
             print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
             return false
         end
