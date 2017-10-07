@@ -775,6 +775,7 @@ local function pre_process(msg)
                         end
                     end
                 end
+                print('after', msg.text)
                 if alternatives.global then
                     for k, v in pairs(alternatives.global.altCmd) do
                         if msg.media then
