@@ -921,7 +921,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, msg.lang)
+                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, msg.lang, true)
                                 end
                             end
                         end
@@ -929,12 +929,12 @@ local function run(msg, matches)
                     if not found then
                         txt = txt .. user .. ' '
                         if string.match(user, '^%d+$') then
-                            txt = txt .. gbanUser(user, msg.lang)
+                            txt = txt .. gbanUser(user, msg.lang, true)
                         else
                             local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    txt = txt .. gbanUser(obj_user.id, msg.lang)
+                                    txt = txt .. gbanUser(obj_user.id, msg.lang, true)
                                 end
                             else
                                 txt = txt .. langs[msg.lang].noObject

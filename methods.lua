@@ -239,6 +239,7 @@ function kickChatMember(user_id, chat_id, until_date, no_log)
     if until_date then
         url = url .. '&until_date=' .. until_date
     end
+    print(url)
     local res, code = sendRequest(url, no_log)
     return res, code
 end
@@ -1527,6 +1528,7 @@ function kickUser(executer, target, chat_id, reason)
         end
         if compare_ranks(executer, target, chat_id, false, true) then
             -- try to kick
+            print(os.time(), os.time() + 45)
             local res, code = kickChatMember(target, chat_id, os.time() + 45, true)
 
             if res then
@@ -1535,7 +1537,8 @@ function kickUser(executer, target, chat_id, reason)
                 redis:hincrby('bot:general', 'kick', 1)
                 -- general: save how many kicks
                 -- unban not necessary because tempban for 45 seconds is used
-                -- unbanChatMember(target, chat_id)
+                -- unban necessary because telegram is an asshole and 45 seconds don't work
+                unbanChatMember(target, chat_id)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
@@ -1671,7 +1674,7 @@ function banList(chat_id)
 end
 
 -- Global ban
-function gbanUser(user_id, lang)
+function gbanUser(user_id, lang, no_log)
     if tonumber(user_id) == tonumber(bot.id) then
         -- Ignore bot
         return ''
@@ -1683,7 +1686,9 @@ function gbanUser(user_id, lang)
     -- Save to redis
     local hash = 'gbanned'
     redis:sadd(hash, user_id)
-    sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id)
+    if not no_log then
+        sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
+    end
     return langs[lang].user .. user_id .. langs[lang].gbanned
 end
 

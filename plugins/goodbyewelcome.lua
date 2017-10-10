@@ -502,14 +502,16 @@ local function pre_process(msg)
                         if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
                             local tmp = last_welcome[tostring(msg.chat.id)]
                             last_welcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id)
-                            if last_welcome[tostring(msg.chat.id)].result then
-                                if last_welcome[tostring(msg.chat.id)].result.message_id then
-                                    last_welcome[tostring(msg.chat.id)] = last_welcome[tostring(msg.chat.id)].result.message_id
+                            if last_welcome[tostring(msg.chat.id)] then
+                                if last_welcome[tostring(msg.chat.id)].result then
+                                    if last_welcome[tostring(msg.chat.id)].result.message_id then
+                                        last_welcome[tostring(msg.chat.id)] = last_welcome[tostring(msg.chat.id)].result.message_id
+                                    else
+                                        last_welcome[tostring(msg.chat.id)] = nil
+                                    end
                                 else
                                     last_welcome[tostring(msg.chat.id)] = nil
                                 end
-                            else
-                                last_welcome[tostring(msg.chat.id)] = nil
                             end
                             redis:getset(hash, 0)
                             if tmp then
@@ -523,14 +525,16 @@ local function pre_process(msg)
                 if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then
                     local tmp = last_goodbye[tostring(msg.chat.id)]
                     last_goodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id)
-                    if last_goodbye[tostring(msg.chat.id)].result then
-                        if last_goodbye[tostring(msg.chat.id)].result.message_id then
-                            last_goodbye[tostring(msg.chat.id)] = last_goodbye[tostring(msg.chat.id)].result.message_id
+                    if last_goodbye[tostring(msg.chat.id)] then
+                        if last_goodbye[tostring(msg.chat.id)].result then
+                            if last_goodbye[tostring(msg.chat.id)].result.message_id then
+                                last_goodbye[tostring(msg.chat.id)] = last_goodbye[tostring(msg.chat.id)].result.message_id
+                            else
+                                last_goodbye[tostring(msg.chat.id)] = nil
+                            end
                         else
                             last_goodbye[tostring(msg.chat.id)] = nil
                         end
-                    else
-                        last_goodbye[tostring(msg.chat.id)] = nil
                     end
                     if tmp then
                         deleteMessage(msg.chat.id, tmp, true)
