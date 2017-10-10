@@ -112,10 +112,6 @@ local function run(msg, matches)
             mystat('/laststart')
             return io.popen('speedtest'):read('*all')
         end
-        if matches[1]:lower() == "speedtest" then
-            mystat('/speedtest')
-            return start_time
-        end
         if matches[1]:lower() == "pm" then
             mystat('/pm')
             sendMessage(matches[2], matches[3])
@@ -393,7 +389,6 @@ return {
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
         "^[#!/]([Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
-        "^[#!/]([Ss][Pp][Ee][Ee][Dd][Tt][Ee][Ss][Tt])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
@@ -416,7 +411,6 @@ return {
         "/pm {id} {msg}",
         "/pmblock {user}",
         "/pmunblock {user}",
-        "/speedtest",
         "/list admins|(groups [createlinks])",
         "/checkspeed",
         "/requestslog",
