@@ -104,18 +104,18 @@ local function run(msg, matches)
             end
             return text
         end
-        if matches[1]:lower() == "pm" then
-            mystat('/pm')
-            sendMessage(matches[2], matches[3])
-            return langs[msg.lang].pmSent
-        end
         if matches[1]:lower() == "ping" then
             mystat('/ping')
             return 'Pong'
         end
         if matches[1]:lower() == "laststart" then
             mystat('/laststart')
-            return start_time
+            return io.popen('speedtest'):read('*all')
+        end
+        if matches[1]:lower() == "pm" then
+            mystat('/pm')
+            sendMessage(matches[2], matches[3])
+            return langs[msg.lang].pmSent
         end
         if matches[1]:lower() == "pmblock" then
             mystat('/block')
