@@ -472,6 +472,10 @@ end
 
 -- recursive to simplify code
 function pre_process_media_msg(msg)
+    if msg.caption_entities then
+        msg.entities = clone_table(msg.caption_entities)
+        msg.caption_entities = nil
+    end
     msg.media = false
     if msg.audio then
         msg.media = true
