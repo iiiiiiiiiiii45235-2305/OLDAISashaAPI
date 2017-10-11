@@ -193,7 +193,7 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
         end
-        if msg.text then
+        if msg.text and not msg.media then
             if mute_text then
                 if pre_process_function then
                     print('text muted')
