@@ -1217,6 +1217,7 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
     end
 end
 
+-- must be updated with live_period and stoplivelocation and editlivelocation
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
     if sendChatAction(chat_id, 'find_location', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
