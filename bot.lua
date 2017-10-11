@@ -491,7 +491,7 @@ function pre_process_media_msg(msg)
         end
         -- if the entity it's not an url (username/bot command), set msg.media as false
     end
-
+    
     if msg.audio then
         msg.media = true
         msg.text = "%[audio%]"
@@ -532,21 +532,6 @@ function pre_process_media_msg(msg)
         msg.media = true
         msg.text = "%[voice_note%]"
         msg.media_type = 'voice_note'
-    end
-
-    if msg.entities then
-        for i, entity in pairs(msg.entities) do
-            if entity.type == 'url' or entity.type == 'text_link' then
-                msg.url = true
-                msg.media = true
-                msg.media_type = 'link'
-                break
-            end
-        end
-        if not msg.url then
-            msg.media = false
-        end
-        -- if the entity it's not an url (username/bot command), set msg.media as false
     end
     if msg.reply then
         pre_process_media_msg(msg.reply_to_message)
