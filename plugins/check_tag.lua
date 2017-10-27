@@ -127,8 +127,8 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                            if data[tostring(chat_id)] then
-                                if data[tostring(chat_id)].settings then
+                            if data[tostring(matches[4])] then
+                                if data[tostring(matches[4])].settings then
                                     if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
                                         if sent then
                                             sendKeyboard(matches[4], langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
