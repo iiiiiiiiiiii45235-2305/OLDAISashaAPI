@@ -233,8 +233,8 @@ local function run(msg, matches)
             return langs[msg.lang].require_mod
         end
     end
-    if matches[1]:lower() == 'testuser' then
-        mystat('/testuser')
+    if matches[1]:lower() == 'testobject' then
+        mystat('/testobject')
         if msg.reply then
             if matches[2] then
                 if matches[2]:lower() == 'from' then
@@ -297,7 +297,7 @@ local function run(msg, matches)
                 end
             end
         elseif matches[2] and matches[2] ~= '' then
-            if string.match(matches[2], '^%d+$') then
+            if string.match(matches[2], '^%-?%d+$') then
                 if sendChatAction(matches[2], 'typing', true) then
                     return langs[msg.lang].userDidNotBlockBot
                 else
