@@ -244,7 +244,7 @@ function keyboard_tag(chat_id, message_id, callback, user_id)
 
         if data[tostring(chat_id)] then
             if data[tostring(chat_id)].settings then
-                if (not data[tostring(chat_id)].settings.lock_group_link) and data[tostring(chat_id)].settings.set_link then
+                if is_mod2(user_id, chat_id) or((not data[tostring(chat_id)].settings.lock_group_link) and data[tostring(chat_id)].settings.set_link) then
                     keyboard.inline_keyboard[3] = { }
                     keyboard.inline_keyboard[3][1] = { text = langs[lang].gotoGroup, url = data[tostring(chat_id)].settings.set_link }
                 end

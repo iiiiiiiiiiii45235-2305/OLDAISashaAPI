@@ -127,6 +127,23 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            if data[tostring(chat_id)] then
+                                if data[tostring(chat_id)].settings then
+                                    if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
+                                        if sent then
+                                            sendKeyboard(matches[4], langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                        else
+                                            sendKeyboard(matches[4], langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                        end
+                                    else
+                                        return
+                                    end
+                                else
+                                    return
+                                end
+                            else
+                                return
+                            end
                             if sent then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                             else
@@ -138,7 +155,6 @@ local function run(msg, matches)
                                 else
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                                 end
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
                     end
