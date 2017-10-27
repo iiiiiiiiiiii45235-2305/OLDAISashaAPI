@@ -253,15 +253,6 @@ function keyboard_tag(chat_id, message_id, callback, user_id)
     else
         keyboard.inline_keyboard[1] = { }
         keyboard.inline_keyboard[1][1] = { text = langs[lang].deleteUp, callback_data = 'check_tagDELETEUP' .. user_id .. chat_id }
-
-        if data[tostring(chat_id)] then
-            if data[tostring(chat_id)].settings then
-                if (not data[tostring(chat_id)].settings.lock_group_link) and data[tostring(chat_id)].settings.set_link then
-                    keyboard.inline_keyboard[2] = { }
-                    keyboard.inline_keyboard[2][1] = { text = langs[lang].gotoGroup, url = data[tostring(chat_id)].settings.set_link }
-                end
-            end
-        end
     end
 
     return keyboard
