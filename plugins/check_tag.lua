@@ -99,13 +99,30 @@ local function run(msg, matches)
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
                         if msg.from.username then
                             local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
+                            if data[tostring(matches[4])] then
+                                if data[tostring(matches[4])].settings then
+                                    if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
+                                        if res then
+                                            sendKeyboard(matches[4], langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                        else
+                                            sendKeyboard(matches[4], langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                        end
+                                    else
+                                        return
+                                    end
+                                else
+                                    return
+                                end
+                            else
+                                return
+                            end
                             if res then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                             end
                             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                if res then
+                                if sent then
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                                 else
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
