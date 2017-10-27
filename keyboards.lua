@@ -244,7 +244,7 @@ function keyboard_tag(chat_id, message_id, callback, user_id)
 
         if data[tostring(chat_id)] then
             if data[tostring(chat_id)].settings then
-                if not data[tostring(chat_id)].settings.lock_group_link and data[tostring(chat_id)].settings.set_link then
+                if (not data[tostring(chat_id)].settings.lock_group_link) and data[tostring(chat_id)].settings.set_link then
                     keyboard.inline_keyboard[2] = { }
                     keyboard.inline_keyboard[2][1] = { text = langs[lang].alreadyRead, url = data[tostring(chat_id)].settings.set_link }
                 end
@@ -256,7 +256,7 @@ function keyboard_tag(chat_id, message_id, callback, user_id)
 
         if data[tostring(chat_id)] then
             if data[tostring(chat_id)].settings then
-                if not data[tostring(chat_id)].settings.lock_group_link and data[tostring(chat_id)].settings.set_link then
+                if (not data[tostring(chat_id)].settings.lock_group_link) and data[tostring(chat_id)].settings.set_link then
                     keyboard.inline_keyboard[2] = { }
                     keyboard.inline_keyboard[2][1] = { text = langs[lang].alreadyRead, url = data[tostring(chat_id)].settings.set_link }
                 end
