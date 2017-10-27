@@ -103,10 +103,11 @@ local function run(msg, matches)
                                 if data[tostring(matches[4])].settings then
                                     if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
                                         if res then
-                                            sendKeyboard(msg.from.id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         else
-                                            sendKeyboard(msg.from.id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         end
+                                        return
                                     else
                                         return
                                     end
@@ -148,10 +149,11 @@ local function run(msg, matches)
                                 if data[tostring(matches[4])].settings then
                                     if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
                                         if sent then
-                                            sendKeyboard(msg.from.id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         else
-                                            sendKeyboard(msg.from.id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
+                                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         end
+                                        return
                                     else
                                         return
                                     end
