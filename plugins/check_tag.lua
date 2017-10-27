@@ -97,36 +97,33 @@ local function run(msg, matches)
                         end
                     elseif matches[2] == 'GOTO' then
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
+                        local link_in_keyboard = false
                         if msg.from.username then
                             local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
                             if data[tostring(matches[4])] then
                                 if data[tostring(matches[4])].settings then
                                     if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
+                                        link_in_keyboard = true
                                         if res then
                                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         else
                                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         end
-                                        return
-                                    else
-                                        return
                                     end
-                                else
-                                    return
                                 end
-                            else
-                                return
                             end
-                            if res then
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                            end
-                            if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                if sent then
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                            if not link_in_keyboard then
+                                if res then
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                                 else
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                                end
+                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                    if sent then
+                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    else
+                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    end
                                 end
                             end
                         else
@@ -148,31 +145,27 @@ local function run(msg, matches)
                             if data[tostring(matches[4])] then
                                 if data[tostring(matches[4])].settings then
                                     if is_mod2(msg.from.id, matches[4]) or((not data[tostring(matches[4])].settings.lock_group_link) and data[tostring(matches[4])].settings.set_link) then
+                                        link_in_keyboard = true
                                         if sent then
                                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         else
                                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
                                         end
-                                        return
-                                    else
-                                        return
                                     end
-                                else
-                                    return
                                 end
-                            else
-                                return
                             end
                             if sent then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
                             end
-                            if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                if sent then
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
-                                else
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                            if not link_in_keyboard then
+                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                    if sent then
+                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                    else
+                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                    end
                                 end
                             end
                         end
