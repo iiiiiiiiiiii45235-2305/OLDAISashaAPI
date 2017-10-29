@@ -800,6 +800,9 @@ return {
         pokeWeight = "Peso: ",
         pokeHeight = "Altezza: ",
 
+        -- shout.lua --
+        shoutError = "Errore, manda un messaggio senza emoji, caratteri strani, lettere accentate.",
+
         -- stats.lua --
         usersInChat = "Utenti in questa chat\n",
         totalChatMessages = "Messaggi totali della chat: ",
@@ -2167,6 +2170,9 @@ return {
         pokeName = "Name: ",
         pokeWeight = "Weight: ",
         pokeHeight = "Height: ",
+
+        -- shout.lua --
+        shoutError = "Error, send a message without emoji, weird characters, accented letters.",
 
         -- stats.lua --
         usersInChat = "Users on chat\n",

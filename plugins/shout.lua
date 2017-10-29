@@ -6,22 +6,24 @@ local function run(msg, matches)
     end
 
     matches[1] = matches[1]:upper()
-    local res = ''
+    local text = ''
     local inc = 0
     for mtch in matches[1]:gmatch('.') do
-        res = res .. mtch .. ' '
+        text = text .. mtch .. ' '
     end
-    res = res .. '\n'
+    text = text .. '\n'
     for mtch in matches[1]:sub(2):gmatch('.') do
         local spacing = ''
         for i = 1, inc do
             spacing = spacing .. '  '
         end
         inc = inc + 1
-        res = res .. mtch .. ' ' .. spacing .. mtch .. '\n'
+        text = text .. mtch .. ' ' .. spacing .. mtch .. '\n'
     end
-    res = res:trim()
-    return res
+    text = text:trim()
+    if not sendReply(msg, text, false, false, true) then
+        return langs[msg.lang].shoutError
+    end
 end
 
 return {

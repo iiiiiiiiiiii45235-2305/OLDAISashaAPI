@@ -336,7 +336,7 @@ function leaveChat(chat_id)
 end
 
 local max_msgs = 2
-function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
+function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound, no_log)
     if sendChatAction(chat_id, 'typing', true) then
         if text then
             if type(text) ~= 'table' then
@@ -393,7 +393,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
                             if num_msg <= 1 then
                                 url = url .. '&text=' .. URL.escape(text)
-                                local res, code = sendRequest(url)
+                                local res, code = sendRequest(url, no_log)
                                 if not res and code then
                                     -- if the request failed and a code is returned (not 403 and 429)
                                     if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
@@ -413,7 +413,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound)
                                 local rest = string.sub(text, 4090, text_len)
                                 url = url .. '&text=' .. URL.escape(my_text)
 
-                                local res, code = sendRequest(url)
+                                local res, code = sendRequest(url, no_log)
                                 if not res and code then
                                     -- if the request failed and a code is returned (not 403 and 429)
                                     if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
@@ -449,8 +449,8 @@ function sendMessage_SUDOERS(text, parse_mode)
     end
 end
 
-function sendReply(msg, text, parse_mode, send_sound)
-    return sendMessage(msg.chat.id, text, parse_mode, msg.message_id, send_sound)
+function sendReply(msg, text, parse_mode, send_sound, no_log)
+    return sendMessage(msg.chat.id, text, parse_mode, msg.message_id, send_sound, no_log)
 end
 
 function sendLog(text, parse_mode, novardump, keyboard)
