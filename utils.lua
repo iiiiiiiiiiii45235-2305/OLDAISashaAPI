@@ -217,8 +217,10 @@ function clone_table(t)
     local new_t = { }
     local i, v = next(t, nil)
     while i do
-        new_t[i] = v
-        i, v = next(t, i)
+        if t then
+            new_t[i] = v
+            i, v = next(t, i)
+        end
     end
     return new_t
 end

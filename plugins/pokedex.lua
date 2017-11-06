@@ -4,6 +4,10 @@ local function run(msg, matches)
     local b, c = http.request(url)
     local pokemon = json:decode(b)
 
+    sendLog(vardumptext(pokemon))
+    pokemon.moves = nil
+    pokemon.game_indices = nil
+    sendLog(vardumptext(pokemon))
     if not pokemon then
         return langs[msg.lang].noPoke
     end
