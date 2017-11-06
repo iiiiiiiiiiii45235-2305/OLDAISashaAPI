@@ -1,8 +1,12 @@
 local function run(msg, matches)
     local query = URL.escape(matches[1])
     local url = "http://pokeapi.co/api/v2/pokemon/" .. query .. "/"
-    local b, c = HTTPS.request(url)
-    local pokemon = json:decode(b)
+    local dat, code = HTTPS.request(url)
+
+    if not dat then
+        return false, code
+    end
+    local pokemon = JSON:decode(dat)
 
     pokemon.moves = nil
     pokemon.game_indices = nil
