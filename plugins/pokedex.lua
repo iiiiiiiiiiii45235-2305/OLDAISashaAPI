@@ -1,8 +1,7 @@
 local function run(msg, matches)
     local query = URL.escape(matches[1])
-    local url = "http://pokeapi.co/api/v2/pokemon/" .. query .. "/"
+    local url = "https://pokeapi.co/api/v2/pokemon/" .. query .. "/"
     local dat, code = HTTPS.request(url)
-
     if not dat then
         return false, code
     end
