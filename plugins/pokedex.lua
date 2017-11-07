@@ -1,7 +1,7 @@
 local function run(msg, matches)
     local query = URL.escape(matches[1])
     local url = "https://pokeapi.co/api/v2/pokemon/" .. query .. "/"
-    local dat, code = HTTPS.request(url)
+    local dat, code = http.request(url)
     sendLog(vardumptext(dat))
     sendLog(vardumptext(code))
 

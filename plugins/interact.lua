@@ -320,7 +320,7 @@ local function run(msg, matches)
         end
         return
     end
-    if matches[1]:lower() == 'deltyping' or matches[1]:lower() == 'delupload_photo' or matches[1]:lower() == 'delrecord_video' or matches[1]:lower() == 'delupload_video' or matches[1]:lower() == 'delrecord_audio' or matches[1]:lower() == 'delupload_audio' or matches[1]:lower() == 'delupload_document' or matches[1]:lower() == 'delfind_location' or matches[1]:lower() == 'delrecord_videonote' or matches[1]:lower() == 'delupload_videonote' then
+    if matches[1]:lower() == 'deltyping' or matches[1]:lower() == 'delupload_photo' or matches[1]:lower() == 'delrecord_video' or matches[1]:lower() == 'delupload_video' or matches[1]:lower() == 'delrecord_audio' or matches[1]:lower() == 'delupload_audio' or matches[1]:lower() == 'delupload_document' or matches[1]:lower() == 'delfind_location' or matches[1]:lower() == 'delrecord_video_note' or matches[1]:lower() == 'delupload_video_note' then
         mystat('/reactions')
         print(matches[1]:lower())
         if not deleteMessage(msg.chat.id, msg.message_id, true) then
@@ -329,7 +329,7 @@ local function run(msg, matches)
         sendChatAction(msg.chat.id,(matches[1]:lower()):gsub('del', ''))
         return
     end
-    if matches[1]:lower() == 'typing' or matches[1]:lower() == 'upload_photo' or matches[1]:lower() == 'record_video' or matches[1]:lower() == 'upload_video' or matches[1]:lower() == 'record_audio' or matches[1]:lower() == 'upload_audio' or matches[1]:lower() == 'upload_document' or matches[1]:lower() == 'find_location' or matches[1]:lower() == 'record_videonote' or matches[1]:lower() == 'upload_videonote' then
+    if matches[1]:lower() == 'typing' or matches[1]:lower() == 'upload_photo' or matches[1]:lower() == 'record_video' or matches[1]:lower() == 'upload_video' or matches[1]:lower() == 'record_audio' or matches[1]:lower() == 'upload_audio' or matches[1]:lower() == 'upload_document' or matches[1]:lower() == 'find_location' or matches[1]:lower() == 'record_video_note' or matches[1]:lower() == 'upload_video_note' then
         mystat('/reactions')
         print(matches[1]:lower())
         sendChatAction(msg.chat.id, matches[1]:lower())
@@ -388,8 +388,8 @@ return {
         "^[#!/]([Dd][Ee][Ll][Uu][Pp][Ll][Oo][Aa][Dd]_[Aa][Uu][Dd][Ii][Oo])$",
         "^[#!/]([Dd][Ee][Ll][Uu][Pp][Ll][Oo][Aa][Dd]_[Dd][Oo][Cc][Uu][Mm][Ee][Nn][Tt])$",
         "^[#!/]([Dd][Ee][Ll][Ff][Ii][Nn][Dd]_[Ll][Oo][Cc][Aa][Tt][Ii][Oo][Nn])$",
-        "^[#!/]([Dd][Ee][Ll][Rr][Ee][Cc][Oo][Rr][Dd]_[Vv][Ii][Dd][Ee][Oo][Nn][Oo][Tt][Ee])$",
-        "^[#!/]([Dd][Ee][Ll][Uu][Pp][Ll][Oo][Aa][Dd]_[Vv][Ii][Dd][Ee][Oo][Nn][Oo][Tt][Ee])$",
+        "^[#!/]([Dd][Ee][Ll][Rr][Ee][Cc][Oo][Rr][Dd]_[Vv][Ii][Dd][Ee][Oo]_[Nn][Oo][Tt][Ee])$",
+        "^[#!/]([Dd][Ee][Ll][Uu][Pp][Ll][Oo][Aa][Dd]_[Vv][Ii][Dd][Ee][Oo]_[Nn][Oo][Tt][Ee])$",
         "^[#!/]([Tt][Yy][Pp][Ii][Nn][Gg])$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd]_[Pp][Hh][Oo][Tt][Oo])$",
         "^[#!/]([Rr][Ee][Cc][Oo][Rr][Dd]_[Vv][Ii][Dd][Ee][Oo])$",
@@ -398,8 +398,8 @@ return {
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd]_[Aa][Uu][Dd][Ii][Oo])$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd]_[Dd][Oo][Cc][Uu][Mm][Ee][Nn][Tt])$",
         "^[#!/]([Ff][Ii][Nn][Dd]_[Ll][Oo][Cc][Aa][Tt][Ii][Oo][Nn])$",
-        "^[#!/]([Rr][Ee][Cc][Oo][Rr][Dd]_[Vv][Ii][Dd][Ee][Oo][Nn][Oo][Tt][Ee])$",
-        "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd]_[Vv][Ii][Dd][Ee][Oo][Nn][Oo][Tt][Ee])$",
+        "^[#!/]([Rr][Ee][Cc][Oo][Rr][Dd]_[Vv][Ii][Dd][Ee][Oo]_[Nn][Oo][Tt][Ee])$",
+        "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd]_[Vv][Ii][Dd][Ee][Oo]_[Nn][Oo][Tt][Ee])$",
     },
     run = run,
     min_rank = 0,
@@ -414,8 +414,8 @@ return {
         "/[del]upload_audio",
         "/[del]upload_document",
         "/[del]find_location",
-        "/[del]record_videonote",
-        "/[del]upload_videonote",
+        "/[del]record_video_note",
+        "/[del]upload_video_note",
         "/testobject {id}|{username}|{reply}|from",
         "MOD",
         "/echo [{reply}]{text}",
