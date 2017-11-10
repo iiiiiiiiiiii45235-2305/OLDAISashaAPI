@@ -1803,7 +1803,7 @@ local function run(msg, matches)
                                         return demoteMod(msg.chat.id, obj_user)
                                     end
                                 else
-                                    return langs[msg.lang].noObject
+                                    return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                                 end
                             end
                         else
