@@ -1801,10 +1801,14 @@ local function run(msg, matches)
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         return demoteMod(msg.chat.id, obj_user)
+                                    else
+                                        return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                                     end
                                 else
                                     return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                                 end
+                            else
+                                return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                             end
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
