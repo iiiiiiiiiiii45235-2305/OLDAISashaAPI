@@ -2,7 +2,8 @@ if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
 
-local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', title = 'FAKE USER CHAT', id = 'FAKE ID' }
+local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', title = 'FAKE USER CHAT', username = 'USERNAME', id = 'FAKE ID' }
+local unknown_user = { first_name = 'UNKNOWN', last_name = 'USER', username = 'USERNAME', id = 'UNKNOWN ID' }
 
 local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
 local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
@@ -1543,7 +1544,7 @@ function kickUser(executer, target, chat_id, reason)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
-                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
+                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. reason)
                 -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))))
@@ -1602,7 +1603,7 @@ function banUser(executer, target, chat_id, reason, until_date)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
-                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
+                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 -- sendMessage(target, langs[get_lang(target)].bannedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. (reason or ''))
                 local tempban = false
