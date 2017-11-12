@@ -19,7 +19,7 @@ function run(msg, matches)
 
     text = text:gsub('%[', ''):gsub('%]', '')
 
-    if not sendReply(msg.chat.id, text, 'markdown') then
+    if not sendReply(msg, text, 'markdown') then
         return text
     end
 end
