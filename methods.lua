@@ -189,11 +189,11 @@ function getChatMembersCount(chat_id)
     return sendRequest(url)
 end
 
-function getChatMember(chat_id, user_id)
+function getChatMember(chat_id, user_id, no_log)
     if not string.match(user_id, '^%*%d') then
         if sendChatAction(chat_id, 'typing', true) then
             local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
-            return sendRequest(url)
+            return sendRequest(url, no_log)
         end
     else
         local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
@@ -1540,7 +1540,7 @@ function kickUser(executer, target, chat_id, reason)
                 -- general: save how many kicks
                 -- unban not necessary because tempban for 45 seconds is used
                 -- unban necessary because telegram is an asshole and 45 seconds don't work
-                unbanChatMember(target, chat_id)
+                unbanChatMember(target, chat_id, true)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
