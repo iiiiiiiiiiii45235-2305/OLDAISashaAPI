@@ -12,14 +12,16 @@ function run(msg, matches)
         return langs[msg.lang].opsError
     end
 
-    local res = '*' .. jdat.list[1].word .. '*\n\n' .. jdat.list[1].definition:trim()
+    local text = '*' .. jdat.list[1].word .. '*\n\n' .. jdat.list[1].definition:trim()
     if string.len(jdat.list[1].example) > 0 then
-        res = res .. '_\n\n' .. jdat.list[1].example:trim() .. '_'
+        text = text .. '_\n\n' .. jdat.list[1].example:trim() .. '_'
     end
 
-    res = res:gsub('%[', ''):gsub('%]', '')
+    text = text:gsub('%[', ''):gsub('%]', '')
 
-    return res
+    if not sendReply(msg.chat.id, text, 'markdown') then
+        return text
+    end
 end
 
 return {
