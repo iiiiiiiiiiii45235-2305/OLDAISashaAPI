@@ -1259,7 +1259,7 @@ return {
         "/ishere {user}",
         "MOD",
         "/[textual]info {id}|{username}|{reply}|from",
-        "/trackuser {id}|{username}|{reply}|from",
+        "/trackuser {id}|{username}|{reply}|from [{name}]",
         "PM",
         "/[textual]info {id}|{username}|from {group_id}",
         -- "(/who|/members)",
