@@ -1,8 +1,6 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
-    "(HELP) Better help with code blocks for commands (tap to copy).\n" ..
-    "(INFO) Plugins keyboard for Info <chat_id> and Groupinfo commands (owner^).\n" ..
-    "(GROUP_MANAGEMENT) Pinned messages are now tracked with a hashtag #pinchat_id.\n",
+    "(INFO) !Trackuser command that allows you to track the user even if (s)he changes name/username/pictures (mod^).\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
@@ -744,6 +742,7 @@ return {
         ishereYes = "Si.",
         ishereNo = "No.",
         noLinkAvailable = "Nessun link disponibile.",
+        cantTrackUser = "Non posso tracciare questo utente perchè non ho mai ricevuto un suo messaggio (o perchè le API di telegram si burlano di me), prova ad inoltrarmene tu uno e usa di nuovo il comando.",
         sendInfoPvt = "Ti ho mandato le info dell'oggetto in <a href=\"" .. bot.link .. "\">privato</a>.",
         infoOf = "INFO di X in Y:",
         adminCommands = "🌍 COMANDI GLOBALI. 🌍",
@@ -1295,6 +1294,7 @@ return {
             "<code>/ishere {user}</code>: Sasha dice se l'utente specificato è presente nel gruppo.",
             "<b>MOD</b>",
             "<code>/[textual]info {id}|{username}|{reply}|from</code>: Sasha manda le info dell'oggetto specificato.",
+            "<code>/trackuser {id}|{username}|{reply}|from [{name}]</code>: Sasha manda un messaggio tramite cui si potrà sempre tracciare l'utente specificato.",
             "<b>PM</b>",
             "<code>/[textual]info {id}|{username}|from {group_id}</code>: Sasha manda le info dell'oggetto specificato come se fosse nella chat specificata.",
             -- "<code>(/who|/members)</code>: Sasha manda la lista degli utenti.",
@@ -2115,6 +2115,7 @@ return {
         ishereYes = "Yes.",
         ishereNo = "No.",
         noLinkAvailable = "No link available.",
+        cantTrackUser = "I can't track this user because I've never received a message from him (or because telegram's APIs keeps making fun of me), try to forward me a message of that user and use the command again.",
         sendInfoPvt = "I've sent you the object's info in <a href=\"" .. bot.link .. "\">private</a>.",
         infoOf = "INFO of X in Y:",
         adminCommands = "🌍 GLOBAL COMMANDS. 🌍",
@@ -2666,6 +2667,7 @@ return {
             "<code>/ishere {user}</code>: Sasha says if the specified user is in the group.",
             "<b>MOD</b>",
             "<code>/[textual]info {id}|{username}|{reply}|from</code>: Sasha sends info of the specified object.",
+            "<code>/trackuser {id}|{username}|{reply}|from [{name}]</code>: Sasha sends a message through which you will always be able to track the specified user.",
             "<b>PM</b>",
             "<code>/[textual]info {id}|{username}|from {group_id}</code>: Sasha sends info of the specified object as if it was in the specified chat.",
             -- "<code>(/who|/members)</code>: Sasha users list.",

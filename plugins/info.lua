@@ -686,6 +686,73 @@ local function run(msg, matches)
             end
         end
     end
+    if matches[1]:lower() == 'trackuser' then
+        if msg.from.is_mod then
+            mystat('/trackuser')
+            if msg.reply then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.reply_to_message.forward_from.id .. "\">" .. html_escape(matches[2] or msg.reply_to_message.forward_from.first_name) .. "</a>", 'html')
+                                if not res then
+                                    return langs[msg.lang].cantTrackUser
+                                end
+                            else
+                                return langs[msg.lang].cantDoThisToChat
+                            end
+                        else
+                            return langs[msg.lang].errorNoForward
+                        end
+                    else
+                        local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.reply_to_message.from.id .. "\">" .. html_escape(matches[2] or msg.reply_to_message.from.first_name) .. "</a>", 'html')
+                        if not res then
+                            return langs[msg.lang].cantTrackUser
+                        end
+                    end
+                else
+                    local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.reply_to_message.from.id .. "\">" .. html_escape(matches[2] or msg.reply_to_message.from.first_name) .. "</a>", 'html')
+                    if not res then
+                        return langs[msg.lang].cantTrackUser
+                    end
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.entities[k].user.id .. "\">" .. html_escape(matches[3] or msg.entities[k].user.first_name) .. "</a>", 'html')
+                                if not res then
+                                    return langs[msg.lang].cantTrackUser
+                                end
+                            end
+                        end
+                    end
+                end
+                if string.match(matches[2], '^%d+$') then
+                    local res = sendReply(msg, "<a href=\"tg://user?id=" .. matches[2] .. "\">" .. html_escape(matches[3] or matches[2]) .. "</a>", 'html')
+                    if not res then
+                        return langs[msg.lang].cantTrackUser
+                    end
+                else
+                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    if obj_user then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                            local res = sendReply(msg, "<a href=\"tg://user?id=" .. obj_user.id .. "\">" .. html_escape(matches[3] or matches[2] or obj_user.id) .. "</a>", 'html')
+                            if not res then
+                                return langs[msg.lang].cantTrackUser
+                            end
+                        end
+                    else
+                        return langs[msg.lang].noObject
+                    end
+                end
+            end
+        else
+            return langs[msg.lang].require_mod
+        end
+    end
     if matches[1]:lower() == 'info' then
         mystat('/info')
         if msg.chat.type == 'private' and matches[3] then
@@ -1168,6 +1235,9 @@ return {
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo]) ([^%s]+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ii][Nn][Ff][Oo]) ([^%s]+) (%-%d+)$",
+        "^[#!/]([Tt][Rr][Aa][Cc][Kk][Uu][Ss][Ee][Rr])$",
+        "^[#!/]([Tt][Rr][Aa][Cc][Kk][Uu][Ss][Ee][Rr]) ([^%s]+)$",
+        "^[#!/]([Tt][Rr][Aa][Cc][Kk][Uu][Ss][Ee][Rr]) ([^%s]+) ([^%s]+)$",
         "^[#!/]([Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Gg][Rr][Oo][Uu][Pp][Ii][Nn][Ff][Oo])$",
         -- "^[#!/]([Ww][Hh][Oo])$",
@@ -1189,6 +1259,7 @@ return {
         "/ishere {user}",
         "MOD",
         "/[textual]info {id}|{username}|{reply}|from",
+        "/trackuser {id}|{username}|{reply}|from",
         "PM",
         "/[textual]info {id}|{username}|from {group_id}",
         -- "(/who|/members)",
