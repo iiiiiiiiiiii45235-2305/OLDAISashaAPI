@@ -775,6 +775,8 @@ local function pre_process(msg)
                             end
                         end
                     end
+                else
+                    alternatives[tostring(msg.chat.id)] = default_alternatives
                 end
                 if alternatives.global then
                     for k, v in pairs(alternatives.global.altCmd) do
