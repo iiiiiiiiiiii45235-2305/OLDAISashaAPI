@@ -278,6 +278,7 @@ return {
         reasonMutedVoicenotes = "\nMuto note vocali abilitato.",
         reasonLockArabic = "\nBlocco arabo abilitato.",
         reasonLockBots = "\nBlocco bots abilitato.",
+        reasonLockDelword = "\nBlocco censure abilitato.",
         reasonLockLeave = "\nBlocco abbandono abilitato.",
         reasonLockLink = "\nBlocco link abilitato.",
         reasonLockLinkUsername = "\nBlocco link abilitato (username di gruppo/canale pubblico).",
@@ -571,6 +572,7 @@ return {
         unmuted = " desilenziato.",
         arabicLock = "\nBlocco arabo: ",
         botsLock = "\nBlocco bots: ",
+        censorshipsLock = "\nBlocco censure: ",
         floodLock = "\nBlocco flood: ",
         floodSensibility = "\nSensibilità flood: ",
         grouplinkLock = "\nBlocco link gruppo: ",
@@ -904,6 +906,7 @@ return {
             [11] = "D: Cosa significano le impostazioni?\n"
             .. "R: Arabic => Caratteri arabi.\n"
             .. "Bots => Altri bot.\n"
+            .. "Delword => Se abilitato aggiunge uno warn, se Strict è attivato banna.\n"
             .. "Flood => N messaggi in 2 secondi.\n"
             .. "Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n"
             .. "Leave => Abbandono del gruppo.\n"
@@ -1228,7 +1231,7 @@ return {
             "<code>/newlink</code>: Sasha crea un link per il gruppo.",
             "<code>/setflood {value}</code>: Sasha imposta il flood massimo del gruppo a {value}.",
             "<code>/[un]lock {setting}</code>: Sasha [s]blocca {setting}.",
-            "<code>{setting}</code> può essere: <code>arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict</code>.",
+            "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|grouplink|leave|link|member|rtl|spam|strict</code>.",
             "<code>/[un]mute {mute}</code>: Sasha [s]muta {mute}.",
             "<code>{mute}</code> può essere: <code>all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note</code>.",
             "<b>SUPERGRUPPO</b>",
@@ -1635,6 +1638,7 @@ return {
         reasonMutedVoicenotes = "\nMute voicenotes enabled.",
         reasonLockArabic = "\nLock arabic enabled.",
         reasonLockBots = "\nLock bots enabled.",
+        reasonLockDelword = "\nLock censorships enabled.",
         reasonLockLeave = "\nLock leave enabled.",
         reasonLockLink = "\nLock link enabled.",
         reasonLockLinkUsername = "\nLock link enabled (username of public group/channel).",
@@ -1937,6 +1941,7 @@ return {
         unmuted = " unmuted.",
         arabicLock = "\nLock arabic: ",
         botsLock = "\nLock bots: ",
+        censorshipsLock = "\nLock censorships: ",
         floodLock = "\nLock flood: ",
         floodSensibility = "\nFlood sensibility: ",
         grouplinkLock = "\nLock link group: ",
@@ -2277,6 +2282,7 @@ return {
             [11] = "D: What do settings mean?\n"
             .. "R: Arabic => Arabic characters.\n"
             .. "Bots => Other bots.\n"
+            .. "Delword => If enabled adds a warn to the user, if Strict is enabled she bans.\n"
             .. "Flood => N messages in 2 seconds.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
             .. "Leave => Group leave.\n"
@@ -2601,7 +2607,7 @@ return {
             "<code>/newlink</code>: Sasha creates a new link of the group.",
             "<code>/setflood {value}</code>: Sasha sets {value} as max flood.",
             "<code>/[un]lock {setting}</code>: Sasha [un]locks {setting}.",
-            "<code>{setting}</code> can be: <code>arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict</code>.",
+            "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|grouplink|leave|link|member|rtl|spam|strict</code>.",
             "<code>/[un]mute {mute}</code>: Sasha [un]mutes the specified parameter.",
             "<code>{mute}</code> can be: <code>all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note</code>.",
             "<b>SUPERGROUP</b>",

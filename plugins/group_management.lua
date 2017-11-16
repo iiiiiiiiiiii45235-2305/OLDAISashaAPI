@@ -37,6 +37,8 @@ local default_settings = {
         lock_arabic = false,
         -- false, 'ban'
         lock_bots = true,
+        -- false, 'delete', 'warn', 'kick', 'ban'
+        lock_delword = false,
         -- false, true
         lock_group_link = true,
         -- false, true='ban'
@@ -481,6 +483,7 @@ local function showSettings(target, lang)
             local text = langs[lang].groupSettings ..
             langs[lang].arabicLock .. tostring(settings.lock_arabic) ..
             langs[lang].botsLock .. tostring(settings.lock_bots) ..
+            langs[lang].censorshipsLock .. tostring(settings.lock_delword) ..
             langs[lang].floodLock .. tostring(settings.flood) ..
             langs[lang].floodSensibility .. tostring(settings.flood_max) ..
             langs[lang].grouplinkLock .. tostring(settings.lock_group_link) ..

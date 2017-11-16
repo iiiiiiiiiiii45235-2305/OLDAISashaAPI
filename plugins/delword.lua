@@ -82,6 +82,9 @@ local function pre_process(msg)
                         local time = redis:hget(hash, temp)
                         if time == 'true' or time == '0' then
                             deleteMessage(msg.chat.id, msg.message_id)
+                            if data[tostring(msg.chat.id)].settings.lock_delword then
+                                sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                            end
                         else
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. time .. '" "' .. msg.message_id .. '"')
                         end
