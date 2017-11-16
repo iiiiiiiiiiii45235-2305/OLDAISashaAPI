@@ -83,7 +83,11 @@ local function pre_process(msg)
                         if time == 'true' or time == '0' then
                             deleteMessage(msg.chat.id, msg.message_id)
                             if data[tostring(msg.chat.id)].settings.lock_delword then
-                                sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                                if not data[tostring(msg.chat.id)].settings.strict then
+                                    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                                else
+                                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                                end
                             end
                         else
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. time .. '" "' .. msg.message_id .. '"')
