@@ -1544,7 +1544,7 @@ function kickUser(executer, target, chat_id, reason)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
-                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
+                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. reason)
                 -- sendMessage(target, langs[get_lang(target)].kickedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))))
@@ -1603,7 +1603,7 @@ function banUser(executer, target, chat_id, reason, until_date)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
-                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed, text = text, service = true, service_type = 'chat_del_user' }
+                local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 -- sendMessage(target, langs[get_lang(target)].bannedFrom .. obj_chat.title .. '\n' .. langs[get_lang(target)].executer ..(obj_remover.username or(obj_remover.first_name .. ' ' ..(obj_remover.last_name or ''))) .. '\n' .. langs[get_lang(target)].reason .. (reason or ''))
                 local tempban = false
