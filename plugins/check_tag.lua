@@ -302,8 +302,8 @@ local function pre_process(msg)
             for k, v in pairs(config.sudo_users) do
                 if not notified[tostring(k)] then
                     -- exclude already notified
-                    if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
-                        -- exclude autotags and tags of tg-cli version
+                    if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then
+                        -- exclude autotags and tags from tg-cli version and tags of tg-cli version
                         if check_tag(msg, k, v) then
                             local lang = get_lang(k)
                             -- set user as notified to not send multiple notifications
@@ -340,8 +340,8 @@ local function pre_process(msg)
                 for i = 1, #usernames do
                     if not notified[tostring(usernames[i])] then
                         -- exclude already notified
-                        if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
-                            -- exclude autotags and tags of tg-cli version
+                        if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(usernames[i]) ~= tonumber(bot.userVersion.id) then
+                            -- exclude autotags and tags from tg-cli version and tags of tg-cli version
                             local usr = redis:hget('tagalert:usernames', usernames[i])
                             if usr == 'true' then
                                 usr = nil
@@ -380,8 +380,8 @@ local function pre_process(msg)
                 for i = 1, #nicknames do
                     if not notified[tostring(nicknames[i])] then
                         -- exclude already notified
-                        if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) then
-                            -- exclude autotags and tags of tg-cli version
+                        if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(nicknames[i]) ~= tonumber(bot.userVersion.id) then
+                            -- exclude autotags and tags from tg-cli version and tags of tg-cli version
                             if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
                                 local obj = getChatMember(msg.chat.id, nicknames[i])
                                 if type(obj) == 'table' then
