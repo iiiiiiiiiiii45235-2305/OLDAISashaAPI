@@ -1050,6 +1050,7 @@ local function run(msg, matches)
                 local tmp = last_rules[tostring(msg.chat.id)]
                 if not data[tostring(msg.chat.id)].rules then
                     last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
+                    io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' ..(last_rules[tostring(msg.chat.id)].result.message_id or '') .. '"')
                 else
                     last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules'])
                 end
@@ -1067,7 +1068,7 @@ local function run(msg, matches)
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end
-                deleteMessage(msg.chat.id, msg.message_id)
+                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
             end
             if matches[1]:lower() == 'updategroupinfo' then
                 if msg.from.is_mod then
