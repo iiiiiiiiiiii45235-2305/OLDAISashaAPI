@@ -1,4 +1,7 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
+-- table that contains 'group_id' = message_id to delete old rules messages
+local last_rules = { }
+
 local default_permissions = {
     ['can_change_info'] = true,
     ['can_delete_messages'] = true,
@@ -1044,10 +1047,26 @@ local function run(msg, matches)
             if matches[1]:lower() == 'rules' then
                 mystat('/rules')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
+                local tmp = last_rules[tostring(msg.chat.id)]
                 if not data[tostring(msg.chat.id)].rules then
-                    return langs[msg.lang].noRules
+                    last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
+                else
+                    last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules'])
                 end
-                return langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules']
+                if last_rules[tostring(msg.chat.id)] then
+                    if last_rules[tostring(msg.chat.id)].result then
+                        if last_rules[tostring(msg.chat.id)].result.message_id then
+                            last_rules[tostring(msg.chat.id)] = last_rules[tostring(msg.chat.id)].result.message_id
+                        else
+                            last_rules[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        last_rules[tostring(msg.chat.id)] = nil
+                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
             end
             if matches[1]:lower() == 'updategroupinfo' then
                 if msg.from.is_mod then
