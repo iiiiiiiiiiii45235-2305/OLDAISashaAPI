@@ -1067,6 +1067,7 @@ local function run(msg, matches)
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end
+                deleteMessage(msg.chat.id, msg.message_id)
             end
             if matches[1]:lower() == 'updategroupinfo' then
                 if msg.from.is_mod then
