@@ -1521,6 +1521,17 @@ function userVersionInChat(chat_id)
     return false
 end
 
+function userInChat(chat_id, user_id, no_log)
+    local member = getChatMember(chat_id, user_id, no_log)
+    if type(member) == 'table' then
+        if member.ok and member.result then
+            if member.result.status == 'creator' or member.result.status == 'administrator' or member.result.status == 'member' or member.status == 'restricted' then
+                return true
+            end
+        end
+    end
+end
+
 -- call this to kick
 function kickUser(executer, target, chat_id, reason)
     if sendChatAction(chat_id, 'typing', true) then

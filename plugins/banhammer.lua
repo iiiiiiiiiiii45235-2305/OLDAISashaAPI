@@ -429,10 +429,14 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        if sendMessage(msg.reply_to_message.forward_from.id, link) then
-                                            return langs[msg.lang].ok
+                                        if not userInChat(msg.chat.id, msg.reply_to_message.forward_from.id, true) then
+                                            if sendMessage(msg.reply_to_message.forward_from.id, link, 'html') then
+                                                return langs[msg.lang].ok
+                                            else
+                                                return langs[msg.lang].noObjectInvite
+                                            end
                                         else
-                                            return langs[msg.lang].noObjectInvite
+                                            return langs[msg.lang].userAlreadyInChat
                                         end
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -441,32 +445,48 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                if sendMessage(msg.reply_to_message.from.id, link) then
-                                    return langs[msg.lang].ok
+                                if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
+                                    if sendMessage(msg.reply_to_message.from.id, link, 'html') then
+                                        return langs[msg.lang].ok
+                                    else
+                                        return langs[msg.lang].noObjectInvite
+                                    end
                                 else
-                                    return langs[msg.lang].noObjectInvite
+                                    return langs[msg.lang].userAlreadyInChat
                                 end
                             end
                         else
                             if msg.reply_to_message.service then
                                 if msg.reply_to_message.service_type == 'chat_del_user' then
-                                    if sendMessage(msg.reply_to_message.removed.id, link) then
-                                        return langs[msg.lang].ok
+                                    if not userInChat(msg.chat.id, msg.reply_to_message.removed.id, true) then
+                                        if sendMessage(msg.reply_to_message.removed.id, link, 'html') then
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].noObjectInvite
+                                        end
                                     else
-                                        return langs[msg.lang].noObjectInvite
+                                        return langs[msg.lang].userAlreadyInChat
                                     end
                                 else
-                                    if sendMessage(msg.reply_to_message.from.id, link) then
-                                        return langs[msg.lang].ok
+                                    if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
+                                        if sendMessage(msg.reply_to_message.from.id, link, 'html') then
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].noObjectInvite
+                                        end
                                     else
-                                        return langs[msg.lang].noObjectInvite
+                                        return langs[msg.lang].userAlreadyInChat
                                     end
                                 end
                             else
-                                if sendMessage(msg.reply_to_message.from.id, link) then
-                                    return langs[msg.lang].ok
+                                if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
+                                    if sendMessage(msg.reply_to_message.from.id, link, 'html') then
+                                        return langs[msg.lang].ok
+                                    else
+                                        return langs[msg.lang].noObjectInvite
+                                    end
                                 else
-                                    return langs[msg.lang].noObjectInvite
+                                    return langs[msg.lang].userAlreadyInChat
                                 end
                             end
                         end
@@ -476,29 +496,41 @@ local function run(msg, matches)
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        if sendMessage(msg.entities[k].user.id, link) then
-                                            return langs[msg.lang].ok
+                                        if not userInChat(msg.chat.id, msg.entities[k].user.id, true) then
+                                            if sendMessage(msg.entities[k].user.id, link, 'html') then
+                                                return langs[msg.lang].ok
+                                            else
+                                                return langs[msg.lang].noObjectInvite
+                                            end
                                         else
-                                            return langs[msg.lang].noObjectInvite
+                                            return langs[msg.lang].userAlreadyInChat
                                         end
                                     end
                                 end
                             end
                         end
                         if string.match(matches[2], '^%d+$') then
-                            if sendMessage(matches[2], link) then
-                                return langs[msg.lang].ok
+                            if not userInChat(msg.chat.id, matches[2], true) then
+                                if sendMessage(matches[2], link, 'html') then
+                                    return langs[msg.lang].ok
+                                else
+                                    return langs[msg.lang].noObjectInvite
+                                end
                             else
-                                return langs[msg.lang].noObjectInvite
+                                return langs[msg.lang].userAlreadyInChat
                             end
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if sendMessage(obj_user.id, link) then
-                                        return langs[msg.lang].ok
+                                    if not userInChat(msg.chat.id, obj_user.id, true) then
+                                        if sendMessage(obj_user.id, link, 'html') then
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].noObjectInvite
+                                        end
                                     else
-                                        return langs[msg.lang].noObjectInvite
+                                        return langs[msg.lang].userAlreadyInChat
                                     end
                                 end
                             else
