@@ -491,7 +491,7 @@ function pre_process_media_msg(msg)
         end
         -- if the entity it's not an url (username/bot command), set msg.media as false
     end
-    
+
     if msg.audio then
         msg.media = true
         msg.text = "%[audio%]"
@@ -966,27 +966,9 @@ function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
-        -- deletes all previous backups (they're in telegram so no problem)
-        io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
-
-        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
-        -- AISASHAAPI
         -- save database
         save_data(config.database.db, database)
-        -- send database
-        if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
-            sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
-        end
-        -- AISASHA
-        -- send database
-        if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
-            sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
-        end
-        -- send the whole backup
-        doSendBackup()
-        -- deletes all files in log folder
-        io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
-        io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
+        io.popen('lua timework.lua "cronbackup"')
     end
 end
 
