@@ -2539,6 +2539,7 @@ return {
 
         "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee])$",
         "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee]) ([^%s]+)$",
+        "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee]) (.*)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+) ?(.*)$",
