@@ -410,6 +410,107 @@ local function run(msg, matches)
             end
         end
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if matches[1]:lower() == 'invite' then
+                if msg.from.is_mod then
+                    mystat('/invite')
+                    local inviter = nil
+                    if msg.from.username then
+                        inviter = '@' .. msg.from.username .. ' [' .. msg.from.id .. ']'
+                    else
+                        inviter = msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']'
+                    end
+                    local link = nil
+                    local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                    if group_link then
+                        link = inviter .. langs[msg.lang].invitedYouTo .. " <a href=\"" .. group_link .. "\">" .. html_escape((data[tostring(msg.chat.id)].set_name or '')) .. "</a>"
+                    end
+                    if msg.reply then
+                        if matches[2] then
+                            if matches[2]:lower() == 'from' then
+                                if msg.reply_to_message.forward then
+                                    if msg.reply_to_message.forward_from then
+                                        if sendMessage(msg.reply_to_message.forward_from.id, link) then
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].noObjectInvite
+                                        end
+                                    else
+                                        return langs[msg.lang].cantDoThisToChat
+                                    end
+                                else
+                                    return langs[msg.lang].errorNoForward
+                                end
+                            else
+                                if sendMessage(msg.reply_to_message.from.id, link) then
+                                    return langs[msg.lang].ok
+                                else
+                                    return langs[msg.lang].noObjectInvite
+                                end
+                            end
+                        else
+                            if msg.reply_to_message.service then
+                                if msg.reply_to_message.service_type == 'chat_del_user' then
+                                    if sendMessage(msg.reply_to_message.removed.id, link) then
+                                        return langs[msg.lang].ok
+                                    else
+                                        return langs[msg.lang].noObjectInvite
+                                    end
+                                else
+                                    if sendMessage(msg.reply_to_message.from.id, link) then
+                                        return langs[msg.lang].ok
+                                    else
+                                        return langs[msg.lang].noObjectInvite
+                                    end
+                                end
+                            else
+                                if sendMessage(msg.reply_to_message.from.id, link) then
+                                    return langs[msg.lang].ok
+                                else
+                                    return langs[msg.lang].noObjectInvite
+                                end
+                            end
+                        end
+                    elseif matches[2] and matches[2] ~= '' then
+                        if msg.entities then
+                            for k, v in pairs(msg.entities) do
+                                -- check if there's a text_mention
+                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                        if sendMessage(msg.entities[k].user.id, link) then
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].noObjectInvite
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                        if string.match(matches[2], '^%d+$') then
+                            if sendMessage(matches[2], link) then
+                                return langs[msg.lang].ok
+                            else
+                                return langs[msg.lang].noObjectInvite
+                            end
+                        else
+                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if sendMessage(obj_user.id, link) then
+                                        return langs[msg.lang].ok
+                                    else
+                                        return langs[msg.lang].noObjectInvite
+                                    end
+                                end
+                            else
+                                return langs[msg.lang].noObject
+                            end
+                        end
+                    end
+                    return
+                else
+                    return langs[msg.lang].require_mod
+                end
+            end
             if matches[1]:lower() == 'kickme' then
                 if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
@@ -2404,6 +2505,8 @@ return {
         "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(DONE)(%d+)(%-%d+)$",
         "^(###cbbanhammer)(TEMPRESTRICT)(%d+)(DONE)(%d+)(%-%d+)(.)$",
 
+        "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee])$",
+        "^[#!/]([Ii][Nn][Vv][Ii][Tt][Ee]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss]) ([^%s]+)$",
         "^[#!/]([Gg][Ee][Tt][Uu][Ss][Ee][Rr][Ww][Aa][Rr][Nn][Ss])$",
         "^[#!/]([Uu][Nn][Ww][Aa][Rr][Nn][Aa][Ll][Ll]) ([^%s]+) ?(.*)$",
@@ -2475,6 +2578,7 @@ return {
         "USER",
         "/kickme",
         "MOD",
+        "/invite {user}",
         "/getuserwarns {user}",
         "/muteuser {user}",
         "/mutelist",

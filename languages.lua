@@ -403,6 +403,8 @@ return {
         forever = "∞",
         untilWord = "fino a",
         tempRestrictIntro = "\nPuoi applicare restrizioni temporaneamente alle persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range le restrizioni verranno applicate per sempre.\nTastiera del tempo:\n",
+        noObjectInvite = "Nessun oggetto trovato.\nL'utente non esiste oppure non mi ha mai contattata.",
+        invitedYouTo = " ti ha invitato nel gruppo ",
 
         -- bot.lua --
         startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi (dovresti sapere chi è, se non lo sai chiedi nei miei gruppi), per qualsiasi cosa utilizza pure il comando /help.",
@@ -1772,6 +1774,8 @@ return {
         forever = "∞",
         untilWord = "until",
         tempRestrictIntro = "\nYou can temporary restrict people from 30 seconds to 366 days, if the specified value is not in the range the user will be restricted forever.\nTime keyboard:\n",
+        noObjectInvite = "No object found.\nThe user doesn't exist or (s)he didn't write to me.",
+        invitedYouTo = " invited you to join ",
 
         -- bot.lua --
         startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group (you should know who he is, if not just ask in my groups), for anything you need use /help.",
