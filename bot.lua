@@ -968,7 +968,25 @@ function cron_administrator()
         last_administrator_cron = last_redis_administrator_cron
         -- save database
         save_data(config.database.db, database)
-        io.popen('lua timework.lua "cronbackup"')
+        -- deletes all previous backups (they're in telegram so no problem)
+        io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
+
+        sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
+        -- AISASHAAPI
+        -- send database
+        if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
+            sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
+        end
+        -- AISASHA
+        -- send database
+        if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
+            sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
+        end
+        -- send the whole backup
+        doSendBackup()
+        -- deletes all files in log folder
+        io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
+        io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
     end
 end
 

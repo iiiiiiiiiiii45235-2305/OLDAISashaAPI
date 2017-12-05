@@ -19,24 +19,4 @@ elseif action == 'deletemessage' then
     if not deleteMessage(chat_id, message_id, true) then
         sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, message_id)
     end
-elseif action == 'cronbackup' then
-    -- deletes all previous backups (they're in telegram so no problem)
-    io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
-
-    sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
-    -- AISASHAAPI
-    -- send database
-    if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
-        sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
-    end
-    -- AISASHA
-    -- send database
-    if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
-        sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
-    end
-    -- send the whole backup
-    doSendBackup()
-    -- deletes all files in log folder
-    io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
-    io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
 end
