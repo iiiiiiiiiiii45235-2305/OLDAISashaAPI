@@ -1416,7 +1416,7 @@ function getChat(id_or_username, no_log)
             if not ok then
                 if not tostring(id_or_username):match('^@') then
                     -- getChat if not a username
-                    obj = APIgetChat(id_or_username, no_log)
+                    obj = APIgetChat(id_or_username, true)
                     if type(obj) == 'table' then
                         if obj.result then
                             obj = obj.result
