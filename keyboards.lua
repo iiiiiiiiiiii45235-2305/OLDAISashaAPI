@@ -787,6 +787,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 else
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED ☑️', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
                                 end
+                                -- INVITE📨
                                 if tostring(chat_id):starts('-100') then
                                     -- supergroup
                                     row = row + 1
@@ -947,6 +948,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 else
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ MODERATOR ☑️', callback_data = 'infoPROMOTE' .. obj.id .. chat_id }
                                 end
+                                -- INVITE📨
                                 if tostring(chat_id):starts('-100') then
                                     -- supergroup
                                     row = row + 1

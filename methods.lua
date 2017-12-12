@@ -1541,7 +1541,6 @@ function kickUser(executer, target, chat_id, reason)
         end
         if compare_ranks(executer, target, chat_id, false, true) then
             -- try to kick
-            print(os.time(), os.time() + 45)
             local res, code = kickChatMember(target, chat_id, os.time() + 45, true)
 
             if res then
@@ -1550,8 +1549,7 @@ function kickUser(executer, target, chat_id, reason)
                 redis:hincrby('bot:general', 'kick', 1)
                 -- general: save how many kicks
                 -- unban not necessary because tempban for 45 seconds is used
-                -- unban necessary because telegram is an asshole and 45 seconds don't work
-                unbanChatMember(target, chat_id, true)
+                -- unbanChatMember(target, chat_id, true)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
