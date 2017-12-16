@@ -721,30 +721,14 @@ local function pre_process(msg)
         if not msg.service then
             if data[tostring(msg.chat.id)] then
                 msg.command = false
-                if msg.text then
-                    local t = msg.text:split(' ')
-                    if tostring(t[1]) then
-                        t[1] = t[1]:gsub('[#!/]', '/')
-                    end
-                    for var in pairsByKeys(plugins) do
-                        local plugin = ''
-                        if tonumber(var) then
-                            local i = 0
-                            for name in pairsByKeys(plugins) do
-                                i = i + 1
-                                if i == tonumber(var) then
-                                    plugin = plugins[name]
-                                end
-                            end
-                        else
-                            plugin = plugins[var]
-                        end
-                        if type(plugin) == 'table' then
-                            if plugin.syntax then
-                                for i = 1, #plugin.syntax, 1 do
-                                    if string.find(plugin.syntax[i], t[1]) then
-                                        msg.command = true
-                                    end
+                for name, plugin in pairs(plugins) do
+                    for k, pattern in pairs(plugin.patterns) do
+                        local matches = match_pattern(pattern, msg.text)
+                        if matches then
+                            local disabled = is_plugin_disabled_on_chat(name, msg.chat.id)
+                            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
+                                if not disabled then
+                                    msg.command = true
                                 end
                             end
                         end
