@@ -563,7 +563,7 @@ function migrate_to_supergroup(msg)
     local banned = redis:smembers('banned:' .. old)
     if next(banned) then
         for i = 1, #banned do
-            banUser(msg.chat.id, banned[i])
+            banUser(bot.id, banned[i], new)
         end
     end
 
