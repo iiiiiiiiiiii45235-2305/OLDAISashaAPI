@@ -1,3 +1,26 @@
+-- administrator
+function keyboard_list_groups_pages(page)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    keyboard.inline_keyboard[row] = { }
+    if tonumber(page) > 1 then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'administratorPAGEMINUS' .. page }
+        column = column + 1
+    end
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'administratorBACK' .. page }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'NONE' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'administratorDELETE' }
+    column = column + 1
+    if tonumber(page) < max_pages then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'administratorPAGEPLUS' .. page }
+    end
+    return keyboard
+end
+
 -- banhammer
 function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_other_plugin)
     local lang = get_lang(chat_id)
@@ -304,7 +327,6 @@ function keyboard_help_pages(chat_id, rank, page)
     local column = 1
     local index = 0
     local plugins_available_for_rank = 0
-    local k = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
     if not page then

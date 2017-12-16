@@ -81,8 +81,86 @@ local function groupsList(msg, get_links)
     return message
 end
 
+local max_groups = 10
+local function groupsPages(page)
+    local message = ""
+    if not page then
+        page = 1
+    end
+    local tot_groups = 0
+    for k, v in pairsByGroupName(data) do
+        if data[tostring(k)] then
+            if data[tostring(k)]['settings'] then
+                tot_groups = tot_groups + 1
+            end
+        end
+    end
+    local max_pages = math.floor(tot_groups / max_groups)
+    if (tot_groups / max_groups) >= math.floor(tot_groups / max_groups) then
+        max_pages = max_pages + 1
+    end
+    if tonumber(page) > max_pages then
+        page = max_pages
+    end
+    tot_groups = 0
+    for k, v in pairsByGroupName(data) do
+        if data[tostring(k)] then
+            if data[tostring(k)]['settings'] then
+                tot_groups = tot_groups + 1
+                if tot_groups >=(((tonumber(page) -1) * max_groups) + 1) and tot_groups <=(max_groups * tonumber(page)) then
+                    local name = ''
+                    local grp = data[tostring(k)]
+                    for m, n in pairs(grp) do
+                        if m == 'set_name' then
+                            name = n
+                        end
+                    end
+                    local group_owner = "No owner"
+                    if data[tostring(k)]['set_owner'] then
+                        group_owner = tostring(data[tostring(k)]['set_owner'])
+                    end
+                    local group_link = nil
+                    if data[tostring(k)]['settings']['set_link'] then
+                        group_link = data[tostring(k)]['settings']['set_link']
+                    elseif get_links and data[tostring(k)]['group_type']:lower() == 'supergroup' then
+                        local link = exportChatInviteLink(k)
+                        if link then
+                            data[tostring(k)]['settings']['set_link'] = link
+                            save_data(config.moderation.data, data)
+                            group_link = link
+                        end
+                    end
+                    if group_link then
+                        message = message .. '<a href="' .. group_link .. '">' .. html_escape(name) .. '</a>' .. ' ' .. k .. ' ' .. group_owner .. '\n'
+                    else
+                        message = message .. html_escape(name) .. ' ' .. k .. ' ' .. group_owner .. '\n'
+                    end
+                end
+            end
+        end
+    end
+    return message
+end
+
 local function run(msg, matches)
     if is_admin(msg) then
+        if msg.cb then
+            if matches[1] == '###cbadministrator' then
+                if matches[2] == 'DELETE' then
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    end
+                elseif matches[2] == 'BACK' then
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                elseif matches[2] == 'PAGEMINUS' then
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) -1), keyboard_list_groups_pages(tonumber(matches[3] or 2) -1), 'html')
+                elseif matches[2] == 'PAGEPLUS' then
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 0) + 1), keyboard_list_groups_pages(tonumber(matches[3] or 0) + 1), 'html')
+                end
+                return
+            end
+        end
         if matches[1] == 'todo' then
             mystat('/todo <text>')
             if msg.reply then
@@ -221,11 +299,8 @@ local function run(msg, matches)
             mystat('/checkspeed')
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
         end
-        if matches[1]:lower() == 'list' then
-            if matches[2]:lower() == 'admins' then
-                mystat('/list admins')
-                return botAdminsList(msg.chat.id)
-            elseif matches[2]:lower() == 'groups' or matches[2]:lower() == 'groups createlinks' then
+        if matches[1]:lower() == 'textuallist' then
+            if matches[2]:lower() == 'groups' then
                 mystat('/list groups')
                 -- groupsList(msg)
                 -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
@@ -233,6 +308,27 @@ local function run(msg, matches)
                     sendReply(msg, groupsList(msg, false), 'html')
                 elseif matches[2]:lower() == 'groups createlinks' then
                     sendReply(msg, groupsList(msg, true), 'html')
+                end
+            end
+            return
+        end
+        if matches[1]:lower() == 'list' then
+            if matches[2]:lower() == 'admins' then
+                mystat('/list admins')
+                return botAdminsList(msg.chat.id)
+            elseif matches[2]:lower() == 'groups' then
+                mystat('/list groups')
+                if matches[2]:lower() == 'groups' then
+                    if sendKeyboard(msg.from.id, groupsPages(1), keyboard_list_groups_pages(1), 'html') then
+                        if msg.chat.type ~= 'private' then
+                            local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
+                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                            return
+                        end
+                    else
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    end
                 end
             end
             return
@@ -375,6 +471,11 @@ return {
     description = "ADMINISTRATOR",
     patterns =
     {
+        "^(###cbadministrator)(DELETE)$",
+        "^(###cbadministrator)(BACK)(%d+)$",
+        "^(###cbadministrator)(PAGEMINUS)(%d+)$",
+        "^(###cbadministrator)(PAGEPLUS)(%d+)$",
+
         "^[#!/]([Tt][Oo][Dd][Oo])$",
         "^[#!/]([Tt][Oo][Dd][Oo]) (.*)$",
         "^[#!/]([Pp][Mm]) (%-?%d+) (.*)$",
@@ -385,6 +486,7 @@ return {
         "^[#!/]([Aa][Dd][Dd][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Rr][Ee][Mm][Oo][Vv][Ee][Aa][Dd][Mm][Ii][Nn]) ([^%s]+)$",
         "^[#!/]([Ll][Ii][Ss][Tt]) (.*)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ll][Ii][Ss][Tt]) (.*)$",
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
         "^[#!/]([Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
