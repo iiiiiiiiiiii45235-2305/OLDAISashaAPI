@@ -1,10 +1,23 @@
 -- administrator
+local max_groups = 10
 function keyboard_list_groups_pages(chat_id, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
     local column = 1
+    local tot_groups = 0
+    for k, v in pairsByGroupName(data) do
+        if data[tostring(k)] then
+            if data[tostring(k)]['settings'] then
+                tot_groups = tot_groups + 1
+            end
+        end
+    end
+    local max_pages = math.floor(tot_groups / max_groups)
+    if (tot_groups / max_groups) >= math.floor(tot_groups / max_groups) then
+        max_pages = max_pages + 1
+    end
     keyboard.inline_keyboard[row] = { }
     if tonumber(page) > 1 then
         keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'administratorPAGEMINUS' .. page }
