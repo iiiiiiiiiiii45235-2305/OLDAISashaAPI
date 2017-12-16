@@ -739,13 +739,11 @@ local function pre_process(msg)
                         else
                             plugin = plugins[var]
                         end
-                        if plugin and plugin ~= "" then
+                        if type(plugin) == 'table' then
                             if plugin.syntax then
                                 for i = 1, #plugin.syntax, 1 do
-                                    if filter then
-                                        if string.find(plugin.syntax[i], t[1]) then
-                                            msg.command = true
-                                        end
+                                    if string.find(plugin.syntax[i], t[1]) then
+                                        msg.command = true
                                     end
                                 end
                             end

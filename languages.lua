@@ -761,8 +761,8 @@ return {
         pluginsWord = "📝 PLUGINS 📝",
 
         -- interact.lua
-        userBlockedBot = "L'utente specificato ha bloccato il bot.",
-        userDidNotBlockBot = "L'utente specificato ha il bot attivo.",
+        objectBlockedBot = "L'oggetto specificato ha bloccato il bot.",
+        objectDidNotBlockedBot = "L'oggetto specificato ha il bot attivo.",
         cantEditOthersMessages = "Non posso modificare i messaggi altrui.",
 
         -- lua_exec.lua --
@@ -2140,8 +2140,8 @@ return {
         pluginsWord = "📝 PLUGINS 📝",
 
         -- interact.lua
-        userBlockedBot = "The specifided user blocked the bot.",
-        userDidNotBlockBot = "The specified did not block the bot .",
+        objectBlockedBot = "The specifided object blocked the bot.",
+        objectDidNotBlockedBot = "The specified object did not block the bot .",
         cantEditOthersMessages = "I can't edit others' messages.",
 
         -- lua_exec.lua --
