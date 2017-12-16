@@ -720,6 +720,7 @@ local function pre_process(msg)
     if msg then
         if not msg.service then
             if data[tostring(msg.chat.id)] then
+                msg.command = false
                 if alternatives[tostring(msg.chat.id)] then
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].altCmd) do
                         if msg.media then
@@ -754,6 +755,7 @@ local function pre_process(msg)
                                 return msg
                             end
                             if ('media:' .. msg.media_type .. file_id) == k then
+                                msg.command = true
                                 -- one match is enough
                                 if msg.caption then
                                     msg.text = v .. ' ' .. msg.caption
@@ -764,6 +766,7 @@ local function pre_process(msg)
                             end
                         elseif msg.text then
                             if string.match(msg.text:lower(), '^' .. k) then
+                                msg.command = true
                                 -- one match is enough
                                 local temp = msg.text
                                 local thing_to_remove = string.sub(temp, 1, #k)
@@ -812,6 +815,7 @@ local function pre_process(msg)
                                 return msg
                             end
                             if ('media:' .. msg.media_type .. file_id) == k then
+                                msg.command = true
                                 -- one match is enough
                                 if msg.caption then
                                     msg.text = v .. ' ' .. msg.caption
@@ -822,6 +826,7 @@ local function pre_process(msg)
                             end
                         elseif msg.text then
                             if string.match(msg.text:lower(), '^' .. k) then
+                                msg.command = true
                                 -- one match is enough
                                 local temp = msg.text
                                 local thing_to_remove = string.sub(temp, 1, #k)

@@ -334,85 +334,87 @@ local function pre_process(msg)
                     end
                 end
             end
-            if redis:get('tagalert:' .. msg.chat.id) then
-                -- if group is enabled to tagalert notifications then
-                local usernames = redis:hkeys('tagalert:usernames')
-                for i = 1, #usernames do
-                    if not notified[tostring(usernames[i])] then
-                        -- exclude already notified
-                        if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(usernames[i]) ~= tonumber(bot.userVersion.id) then
-                            -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            local usr = redis:hget('tagalert:usernames', usernames[i])
-                            if usr == 'true' then
-                                usr = nil
-                            end
-                            if check_tag(msg, usernames[i], usr) then
-                                local lang = get_lang(usernames[i])
-                                -- set user as notified to not send multiple notifications
-                                notified[tostring(usernames[i])] = true
-                                if msg.reply then
-                                    forwardMessage(usernames[i], msg.chat.id, msg.reply_to_message.message_id)
+            if not msg.command then
+                if redis:get('tagalert:' .. msg.chat.id) then
+                    -- if group is enabled to tagalert notifications then
+                    local usernames = redis:hkeys('tagalert:usernames')
+                    for i = 1, #usernames do
+                        if not notified[tostring(usernames[i])] then
+                            -- exclude already notified
+                            if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(usernames[i]) ~= tonumber(bot.userVersion.id) then
+                                -- exclude autotags and tags from tg-cli version and tags of tg-cli version
+                                local usr = redis:hget('tagalert:usernames', usernames[i])
+                                if usr == 'true' then
+                                    usr = nil
                                 end
-                                local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
-                                if msg.from.username then
-                                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                                else
-                                    text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-                                end
-                                text = text .. langs[lang].msgText
-
-                                if msg.text then
-                                    text = text .. msg.text
-                                end
-                                if msg.media then
-                                    if msg.caption then
-                                        text = text .. msg.caption
+                                if check_tag(msg, usernames[i], usr) then
+                                    local lang = get_lang(usernames[i])
+                                    -- set user as notified to not send multiple notifications
+                                    notified[tostring(usernames[i])] = true
+                                    if msg.reply then
+                                        forwardMessage(usernames[i], msg.chat.id, msg.reply_to_message.message_id)
                                     end
+                                    local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
+                                    if msg.from.username then
+                                        text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+                                    else
+                                        text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
+                                    end
+                                    text = text .. langs[lang].msgText
+
+                                    if msg.text then
+                                        text = text .. msg.text
+                                    end
+                                    if msg.media then
+                                        if msg.caption then
+                                            text = text .. msg.caption
+                                        end
+                                    end
+                                    text = text .. '\n#tag' .. usernames[i]
+                                    sendMessage(usernames[i], text)
+                                    sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, usernames[i]))
                                 end
-                                text = text .. '\n#tag' .. usernames[i]
-                                sendMessage(usernames[i], text)
-                                sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, usernames[i]))
                             end
                         end
                     end
-                end
-                local nicknames = redis:hkeys('tagalert:nicknames')
-                for i = 1, #nicknames do
-                    if not notified[tostring(nicknames[i])] then
-                        -- exclude already notified
-                        if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(nicknames[i]) ~= tonumber(bot.userVersion.id) then
-                            -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
-                                local obj = getChatMember(msg.chat.id, nicknames[i])
-                                if type(obj) == 'table' then
-                                    if obj.ok and obj.result then
-                                        obj = obj.result
-                                        if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
-                                            local lang = get_lang(nicknames[i])
-                                            -- set user as notified to not send multiple notifications
-                                            notified[tostring(nicknames[i])] = true
-                                            if msg.reply then
-                                                forwardMessage(nicknames[i], msg.chat.id, msg.reply_to_message.message_id)
-                                            end
-                                            local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
-                                            if msg.from.username then
-                                                text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                                            else
-                                                text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-                                            end
-                                            text = text .. langs[lang].msgText
-
-                                            if msg.text then
-                                                text = text .. msg.text
-                                            end
-                                            if msg.media then
-                                                if msg.caption then
-                                                    text = text .. msg.caption
+                    local nicknames = redis:hkeys('tagalert:nicknames')
+                    for i = 1, #nicknames do
+                        if not notified[tostring(nicknames[i])] then
+                            -- exclude already notified
+                            if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(nicknames[i]) ~= tonumber(bot.userVersion.id) then
+                                -- exclude autotags and tags from tg-cli version and tags of tg-cli version
+                                if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
+                                    local obj = getChatMember(msg.chat.id, nicknames[i])
+                                    if type(obj) == 'table' then
+                                        if obj.ok and obj.result then
+                                            obj = obj.result
+                                            if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
+                                                local lang = get_lang(nicknames[i])
+                                                -- set user as notified to not send multiple notifications
+                                                notified[tostring(nicknames[i])] = true
+                                                if msg.reply then
+                                                    forwardMessage(nicknames[i], msg.chat.id, msg.reply_to_message.message_id)
                                                 end
+                                                local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
+                                                if msg.from.username then
+                                                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+                                                else
+                                                    text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
+                                                end
+                                                text = text .. langs[lang].msgText
+
+                                                if msg.text then
+                                                    text = text .. msg.text
+                                                end
+                                                if msg.media then
+                                                    if msg.caption then
+                                                        text = text .. msg.caption
+                                                    end
+                                                end
+                                                text = text .. '\n#tag' .. nicknames[i]
+                                                sendMessage(nicknames[i], text)
+                                                sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, nicknames[i]))
                                             end
-                                            text = text .. '\n#tag' .. nicknames[i]
-                                            sendMessage(nicknames[i], text)
-                                            sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, nicknames[i]))
                                         end
                                     end
                                 end
