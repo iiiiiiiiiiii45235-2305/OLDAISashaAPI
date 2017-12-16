@@ -721,6 +721,35 @@ local function pre_process(msg)
         if not msg.service then
             if data[tostring(msg.chat.id)] then
                 msg.command = false
+                if msg.text then
+                    local t = msg.text:split(' ')
+                    t[1] = t[1]:gsub('[#!/]', '/')
+                    for name in pairsByKeys(plugins) do
+                        local plugin = ''
+                        if tonumber(name) then
+                            local i = 0
+                            for name in pairsByKeys(plugins) do
+                                i = i + 1
+                                if i == tonumber(name) then
+                                    plugin = plugins[name]
+                                end
+                            end
+                        else
+                            plugin = plugins[name]
+                        end
+                        if plugin and plugin ~= "" then
+                            if plugin.syntax then
+                                for i = 1, #plugin.syntax, 1 do
+                                    if filter then
+                                        if string.find(plugin.syntax[i], t[1]) then
+                                            msg.command = true
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
                 if alternatives[tostring(msg.chat.id)] then
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].altCmd) do
                         if msg.media then
