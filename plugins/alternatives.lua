@@ -723,19 +723,21 @@ local function pre_process(msg)
                 msg.command = false
                 if msg.text then
                     local t = msg.text:split(' ')
-                    t[1] = t[1]:gsub('[#!/]', '/')
-                    for name in pairsByKeys(plugins) do
+                    if tostring(t[1]) then
+                        t[1] = t[1]:gsub('[#!/]', '/')
+                    end
+                    for var in pairsByKeys(plugins) do
                         local plugin = ''
-                        if tonumber(name) then
+                        if tonumber(var) then
                             local i = 0
                             for name in pairsByKeys(plugins) do
                                 i = i + 1
-                                if i == tonumber(name) then
+                                if i == tonumber(var) then
                                     plugin = plugins[name]
                                 end
                             end
                         else
-                            plugin = plugins[name]
+                            plugin = plugins[var]
                         end
                         if plugin and plugin ~= "" then
                             if plugin.syntax then
