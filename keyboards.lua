@@ -295,7 +295,7 @@ end
 --     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
 --     return keyboard
 -- end
-local max_buttons = 17
+local max_help_buttons = 15
 function keyboard_help_pages(chat_id, rank, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
@@ -315,8 +315,8 @@ function keyboard_help_pages(chat_id, rank, page)
             plugins_available_for_rank = plugins_available_for_rank + 1
         end
     end
-    local max_pages = math.floor(plugins_available_for_rank / max_buttons)
-    if (plugins_available_for_rank / max_buttons) >= math.floor(plugins_available_for_rank / max_buttons) then
+    local max_pages = math.floor(plugins_available_for_rank / max_help_buttons)
+    if (plugins_available_for_rank / max_help_buttons) >= math.floor(plugins_available_for_rank / max_help_buttons) then
         max_pages = max_pages + 1
     end
     if tonumber(page) > max_pages then
@@ -328,7 +328,7 @@ function keyboard_help_pages(chat_id, rank, page)
         -- index between the last plugin of the previous page and the last plugin of this page
         if plugins[name].min_rank <= tonumber(rank) then
             plugins_available_for_rank = plugins_available_for_rank + 1
-            if plugins_available_for_rank >=(((tonumber(page) -1) * max_buttons) + 1) and plugins_available_for_rank <=(max_buttons * tonumber(page)) then
+            if plugins_available_for_rank >=(((tonumber(page) -1) * max_help_buttons) + 1) and plugins_available_for_rank <=(max_help_buttons * tonumber(page)) then
                 if flag then
                     flag = false
                     row = row + 1
@@ -352,6 +352,8 @@ function keyboard_help_pages(chat_id, rank, page)
         column = column + 1
     end
     keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' .. page }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'NONE' }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
     column = column + 1
