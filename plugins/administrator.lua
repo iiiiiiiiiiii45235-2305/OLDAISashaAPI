@@ -151,12 +151,12 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif matches[2] == 'BACK' then
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'PAGEMINUS' then
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) -1), keyboard_list_groups_pages(tonumber(matches[3] or 2) -1), 'html')
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) -1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 2) -1), 'html')
                 elseif matches[2] == 'PAGEPLUS' then
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 0) + 1), keyboard_list_groups_pages(tonumber(matches[3] or 0) + 1), 'html')
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 0) + 1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 0) + 1), 'html')
                 end
                 return
             end
@@ -319,7 +319,7 @@ local function run(msg, matches)
             elseif matches[2]:lower() == 'groups' then
                 mystat('/list groups')
                 if matches[2]:lower() == 'groups' then
-                    if sendKeyboard(msg.from.id, groupsPages(1), keyboard_list_groups_pages(1), 'html') then
+                    if sendKeyboard(msg.from.id, groupsPages(1), keyboard_list_groups_pages(msg.chat.id, 1), 'html') then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')

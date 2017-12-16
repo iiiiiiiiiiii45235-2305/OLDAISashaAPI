@@ -1,5 +1,6 @@
 -- administrator
-function keyboard_list_groups_pages(page)
+function keyboard_list_groups_pages(chat_id, page)
+    local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
