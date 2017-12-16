@@ -833,23 +833,6 @@ function match_plugins(msg)
     end
 end
 
--- Check if plugin is on config.disabled_plugin_on_chat table
-local function is_plugin_disabled_on_chat(plugin_name, chat_id)
-    local disabled_chats = config.disabled_plugin_on_chat
-    -- Table exists and chat has disabled plugins
-    if disabled_chats and disabled_chats[chat_id] then
-        -- Checks if plugin is disabled on this chat
-        for disabled_plugin, disabled in pairs(disabled_chats[chat_id]) do
-            if disabled_plugin == plugin_name and disabled then
-                local warning = 'Plugin ' .. disabled_plugin .. ' is disabled on this chat'
-                print(warning)
-                return true
-            end
-        end
-    end
-    return false
-end
-
 function match_plugin(plugin, plugin_name, msg)
     -- Go over patterns. If one matches it's enough.
     for k, pattern in pairs(plugin.patterns) do
@@ -857,7 +840,7 @@ function match_plugin(plugin, plugin_name, msg)
         if matches then
             print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
 
-            local disabled = is_plugin_disabled_on_chat(plugin_name, msg.chat.id)
+            local disabled = plugin_disabled_on_chat(plugin_name, msg.chat.id)
 
             if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
                 if msg.chat.type == 'private' then

@@ -725,7 +725,7 @@ local function pre_process(msg)
                     for k, pattern in pairs(plugin.patterns) do
                         local matches = match_pattern(pattern, msg.text)
                         if matches then
-                            local disabled = is_plugin_disabled_on_chat(name, msg.chat.id)
+                            local disabled = plugin_disabled_on_chat(name, msg.chat.id)
                             if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
                                 if not disabled then
                                     msg.command = true
