@@ -240,7 +240,6 @@ function kickChatMember(user_id, chat_id, until_date, no_log)
     if until_date then
         url = url .. '&until_date=' .. until_date
     end
-    print(url)
     local res, code = sendRequest(url, no_log)
     return res, code
 end
