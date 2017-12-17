@@ -335,14 +335,18 @@ local function run(msg, matches)
                                 link = inviter .. langs[msg.lang].invitedYouTo .. " <a href=\"" .. group_link .. "\">" .. html_escape((data[tostring(matches[4])].set_name or '')) .. "</a>"
                             end
                             local text = ''
-                            if not userInChat(matches[4], matches[3], true) then
-                                if sendMessage(matches[3], link, 'html') then
-                                    text = langs[msg.lang].ok
+                            if link then
+                                if not userInChat(matches[4], matches[3], true) then
+                                    if sendMessage(matches[3], link, 'html') then
+                                        text = langs[msg.lang].ok
+                                    else
+                                        text = langs[msg.lang].noObjectInvite
+                                    end
                                 else
-                                    text = langs[msg.lang].noObjectInvite
+                                    text = langs[msg.lang].userAlreadyInChat
                                 end
                             else
-                                text = langs[msg.lang].userAlreadyInChat
+                                text = langs[msg.lang].noLinkAvailable
                             end
                             deeper = 'PROMOTIONS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
