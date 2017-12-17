@@ -425,6 +425,7 @@ return {
         noObjectInvite = "Nessun oggetto trovato.\nL'utente non esiste oppure non mi ha mai contattata.",
         invitedYouTo = " ti ha invitato nel gruppo ",
         userAlreadyInChat = 'Utente già nel gruppo.',
+        userAlreadyInvited = 'Utente già invitato.',
 
         -- bot.lua --
         startMessage = "Ciao, io sono la versione BOT di @AISasha, come per la versione utente solo il mio creatore può aggiungermi (dovresti sapere chi è, se non lo sai chiedi nei miei gruppi), per qualsiasi cosa utilizza pure il comando /help.",
@@ -1826,6 +1827,7 @@ return {
         noObjectInvite = "No object found.\nThe user doesn't exist or (s)he didn't write to me.",
         invitedYouTo = " invited you to join ",
         userAlreadyInChat = 'User already in this chat.',
+        userAlreadyInvited = 'User has been already invited.',
 
         -- bot.lua --
         startMessage = "Hi, I'm the BOT version of @AISasha, as for my user version only my creator can add me to a group (you should know who he is, if not just ask in my groups), for anything you need use /help.",
