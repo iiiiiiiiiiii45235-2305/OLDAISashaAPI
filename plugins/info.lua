@@ -1235,6 +1235,7 @@ return {
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
+        "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(MUTEUSER)(%d+)(%-%d+)$",
