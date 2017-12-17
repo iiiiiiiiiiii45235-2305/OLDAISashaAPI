@@ -321,6 +321,35 @@ local function run(msg, matches)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
+                    elseif matches[2] == 'INVITE' then
+                        if is_mod2(msg.from.id, matches[4]) then
+                            local inviter = nil
+                            if msg.from.username then
+                                inviter = '@' .. msg.from.username .. ' [' .. msg.from.id .. ']'
+                            else
+                                inviter = msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']'
+                            end
+                            local link = nil
+                            local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                            if group_link then
+                                link = inviter .. langs[msg.lang].invitedYouTo .. " <a href=\"" .. group_link .. "\">" .. html_escape((data[tostring(msg.chat.id)].set_name or '')) .. "</a>"
+                            end
+                            local text = ''
+                            if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
+                                if sendMessage(msg.reply_to_message.from.id, link, 'html') then
+                                    text = langs[msg.lang].ok
+                                else
+                                    text = langs[msg.lang].noObjectInvite
+                                end
+                            else
+                                text = langs[msg.lang].userAlreadyInChat
+                            end
+                            deeper = 'PROMOTIONS'
+                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            answerCallbackQuery(msg.cb_id, text, false)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                        end
                     elseif matches[2] == 'WHITELIST' then
                         if is_owner2(msg.from.id, matches[4]) then
                             deeper = 'PROMOTIONS'

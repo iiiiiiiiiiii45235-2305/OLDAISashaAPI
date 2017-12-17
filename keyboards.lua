@@ -707,7 +707,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 end
                 if tonumber(chat_id) < 0 then
                     local status = ''
-                    local chat_member = getChatMember(chat_id, obj.id)
+                    local chat_member = getChatMember(chat_id, executer)
                     local is_executer_owner = false
                     local is_executer_mod = false
                     if type(chat_member) == 'table' then
@@ -750,7 +750,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 else
                     if tonumber(chat_id) < 0 then
                         local status = ''
-                        local chat_member = getChatMember(chat_id, obj.id)
+                        local chat_member = getChatMember(chat_id, executer)
                         local is_executer_owner = false
                         local is_executer_mod = false
                         if type(chat_member) == 'table' then
@@ -825,13 +825,12 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 else
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED ☑️', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
                                 end
-                                -- INVITE📨
-                                if tostring(chat_id):starts('-100') then
-                                    -- supergroup
-                                    row = row + 1
-                                    keyboard.inline_keyboard[row] = { }
-                                    keyboard.inline_keyboard[row][column] = { text = langs[lang].permissionsWord, callback_data = 'group_managementBACKPERMISSIONS' .. obj.id .. chat_id .. 'I' }
-                                end
+                            end
+                            if tostring(chat_id):starts('-100') then
+                                -- supergroup
+                                row = row + 1
+                                keyboard.inline_keyboard[row] = { }
+                                keyboard.inline_keyboard[row][column] = { text = langs[lang].permissionsWord, callback_data = 'group_managementBACKPERMISSIONS' .. obj.id .. chat_id .. 'I' }
                             end
                         end
                     end
@@ -856,7 +855,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 end
                 if tonumber(chat_id) < 0 then
                     local status = ''
-                    local chat_member = getChatMember(chat_id, obj.id)
+                    local chat_member = getChatMember(chat_id, executer)
                     local is_executer_owner = false
                     local is_executer_mod = false
                     if type(chat_member) == 'table' then
@@ -906,7 +905,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 else
                     if tonumber(chat_id) < 0 then
                         local status = ''
-                        local chat_member = getChatMember(chat_id, obj.id)
+                        local chat_member = getChatMember(chat_id, executer)
                         local is_executer_owner = false
                         local is_executer_mod = false
                         if type(chat_member) == 'table' then
@@ -964,29 +963,32 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 end
                             end
                         elseif deeper == 'PROMOTIONS' then
-                            if is_executer_owner or is_owner2(executer, chat_id, true) then
+                            if is_executer_mod or is_mod2(executer, chat_id, true) then
                                 row = row + 1
-                                keyboard.inline_keyboard[row] = { }
-                                if isWhitelisted(id_to_cli(chat_id), obj.id) then
-                                    keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED ✅', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
-                                else
-                                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED ☑️', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                keyboard.inline_keyboard[row][column] = { text = '📨 INVITE 📨', callback_data = 'infoINVITE' .. obj.id .. chat_id }
+                                if is_executer_owner or is_owner2(executer, chat_id, true) then
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                                        keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTED ✅', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                    else
+                                        keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTED ☑️', callback_data = 'infoWHITELIST' .. obj.id .. chat_id }
+                                    end
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED ✅', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                    else
+                                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED ☑️', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                    end
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    if is_mod2(obj.id, chat_id, true) then
+                                        keyboard.inline_keyboard[row][column] = { text = '✅ MODERATOR ✅', callback_data = 'infoDEMOTE' .. obj.id .. chat_id }
+                                    else
+                                        keyboard.inline_keyboard[row][column] = { text = '☑️ MODERATOR ☑️', callback_data = 'infoPROMOTE' .. obj.id .. chat_id }
+                                    end
                                 end
-                                row = row + 1
-                                keyboard.inline_keyboard[row] = { }
-                                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
-                                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED ✅', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                                else
-                                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED ☑️', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
-                                end
-                                row = row + 1
-                                keyboard.inline_keyboard[row] = { }
-                                if is_mod2(obj.id, chat_id, true) then
-                                    keyboard.inline_keyboard[row][column] = { text = '✅ MODERATOR ✅', callback_data = 'infoDEMOTE' .. obj.id .. chat_id }
-                                else
-                                    keyboard.inline_keyboard[row][column] = { text = '☑️ MODERATOR ☑️', callback_data = 'infoPROMOTE' .. obj.id .. chat_id }
-                                end
-                                -- INVITE📨
                                 if tostring(chat_id):starts('-100') then
                                     -- supergroup
                                     row = row + 1
