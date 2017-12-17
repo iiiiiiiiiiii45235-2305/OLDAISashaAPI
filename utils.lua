@@ -1108,6 +1108,9 @@ function msgs_plus_plus(chat_id)
 end
 
 function areNoticesEnabled(user_id, chat_id)
+    if is_admin2(user_id) then
+        return true
+    end
     local pm = false
     if redis:get('notice:' .. user_id) then
         pm = true
