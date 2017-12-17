@@ -1,6 +1,10 @@
--- An empty table for solving multiple kicking problem(thanks to @topkecleon)
-kicktable = { }
-cbwarntable = { }
+-- Empty tables for solving multiple kicking problem(thanks to @topkecleon)
+local kicktable = {
+    -- user_id
+}
+local cbwarntable = {
+    -- user_id
+}
 
 local TIME_CHECK = 2
 -- seconds

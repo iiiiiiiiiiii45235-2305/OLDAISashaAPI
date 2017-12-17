@@ -1,4 +1,8 @@
-﻿local function is_here(chat_id, user_id)
+﻿local invite_table = {
+    -- user_id
+}
+
+local function is_here(chat_id, user_id)
     local lang = get_lang(chat_id)
     local chat_member = getChatMember(chat_id, user_id)
     if type(chat_member) == 'table' then
@@ -338,7 +342,12 @@ local function run(msg, matches)
                             if link then
                                 if not userInChat(matches[4], matches[3], true) then
                                     if sendMessage(matches[3], link, 'html') then
-                                        text = langs[msg.lang].ok
+                                        if not invite_table[matches[3]] then
+                                            invite_table[matches[3]] = true
+                                            text = langs[msg.lang].ok
+                                        else
+                                            text = langs[msg.lang].userAlreadyInvited
+                                        end
                                     else
                                         text = langs[msg.lang].noObjectInvite
                                     end
@@ -1227,8 +1236,14 @@ local function pre_process(msg)
     end
 end
 
+local function cron()
+    -- clear the table on the top of the plugin
+    invite_table = { }
+end
+
 return {
     description = "INFO",
+    cron = cron,
     patterns =
     {
         "^(###cbinfo)(DELETE)$",

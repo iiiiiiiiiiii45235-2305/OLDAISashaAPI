@@ -4,6 +4,9 @@
 local kick_ban_errors = {
     -- chat_id = error
 }
+local invite_table = {
+    -- user_id
+}
 local default_restrictions = {
     can_send_messages = true,
     can_send_media_messages = true,
@@ -431,7 +434,12 @@ local function run(msg, matches)
                                     if msg.reply_to_message.forward_from then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.forward_from.id, true) then
                                             if sendMessage(msg.reply_to_message.forward_from.id, link, 'html') then
-                                                return langs[msg.lang].ok
+                                                if not invite_table[msg.reply_to_message.forward_from.id] then
+                                                    invite_table[msg.reply_to_message.forward_from.id] = true
+                                                    return langs[msg.lang].ok
+                                                else
+                                                    return langs[msg.lang].userAlreadyInvited
+                                                end
                                             else
                                                 return langs[msg.lang].noObjectInvite
                                             end
@@ -447,7 +455,12 @@ local function run(msg, matches)
                             else
                                 if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                     if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                        return langs[msg.lang].ok
+                                        if not invite_table[msg.reply_to_message.from.id] then
+                                            invite_table[msg.reply_to_message.from.id] = true
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].userAlreadyInvited
+                                        end
                                     else
                                         return langs[msg.lang].noObjectInvite
                                     end
@@ -460,7 +473,12 @@ local function run(msg, matches)
                                 if msg.reply_to_message.service_type == 'chat_del_user' then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.removed.id, true) then
                                         if sendMessage(msg.reply_to_message.removed.id, link, 'html') then
-                                            return langs[msg.lang].ok
+                                            if not invite_table[msg.reply_to_message.removed.id] then
+                                                invite_table[msg.reply_to_message.removed.id] = true
+                                                return langs[msg.lang].ok
+                                            else
+                                                return langs[msg.lang].userAlreadyInvited
+                                            end
                                         else
                                             return langs[msg.lang].noObjectInvite
                                         end
@@ -470,7 +488,12 @@ local function run(msg, matches)
                                 else
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                            return langs[msg.lang].ok
+                                            if not invite_table[msg.reply_to_message.from.id] then
+                                                invite_table[msg.reply_to_message.from.id] = true
+                                                return langs[msg.lang].ok
+                                            else
+                                                return langs[msg.lang].userAlreadyInvited
+                                            end
                                         else
                                             return langs[msg.lang].noObjectInvite
                                         end
@@ -481,7 +504,12 @@ local function run(msg, matches)
                             else
                                 if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                     if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                        return langs[msg.lang].ok
+                                        if not invite_table[msg.reply_to_message.from.id] then
+                                            invite_table[msg.reply_to_message.from.id] = true
+                                            return langs[msg.lang].ok
+                                        else
+                                            return langs[msg.lang].userAlreadyInvited
+                                        end
                                     else
                                         return langs[msg.lang].noObjectInvite
                                     end
@@ -498,7 +526,12 @@ local function run(msg, matches)
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
                                         if not userInChat(msg.chat.id, msg.entities[k].user.id, true) then
                                             if sendMessage(msg.entities[k].user.id, link, 'html') then
-                                                return langs[msg.lang].ok
+                                                if not invite_table[msg.entities[k].user.id] then
+                                                    invite_table[msg.entities[k].user.id] = true
+                                                    return langs[msg.lang].ok
+                                                else
+                                                    return langs[msg.lang].userAlreadyInvited
+                                                end
                                             else
                                                 return langs[msg.lang].noObjectInvite
                                             end
@@ -513,7 +546,12 @@ local function run(msg, matches)
                         if string.match(matches[2], '^%d+$') then
                             if not userInChat(msg.chat.id, matches[2], true) then
                                 if sendMessage(matches[2], link, 'html') then
-                                    return langs[msg.lang].ok
+                                    if not invite_table[matches[2]] then
+                                        invite_table[matches[2]] = true
+                                        return langs[msg.lang].ok
+                                    else
+                                        return langs[msg.lang].userAlreadyInvited
+                                    end
                                 else
                                     return langs[msg.lang].noObjectInvite
                                 end
@@ -526,7 +564,12 @@ local function run(msg, matches)
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if not userInChat(msg.chat.id, obj_user.id, true) then
                                         if sendMessage(obj_user.id, link, 'html') then
-                                            return langs[msg.lang].ok
+                                            if not invite_table[obj_user.id] then
+                                                invite_table[obj_user.id] = true
+                                                return langs[msg.lang].ok
+                                            else
+                                                return langs[msg.lang].userAlreadyInvited
+                                            end
                                         else
                                             return langs[msg.lang].noObjectInvite
                                         end
@@ -2511,8 +2554,9 @@ local function pre_process(msg)
 end
 
 local function cron()
-    -- clear table on the top of the plugin
+    -- clear those tables on the top of the plugin
     kick_ban_errors = { }
+    invite_table = { }
 end
 
 return {
