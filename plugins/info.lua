@@ -359,7 +359,7 @@ local function run(msg, matches)
                             end
                             deeper = 'PROMOTIONS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
@@ -368,7 +368,7 @@ local function run(msg, matches)
                             deeper = 'PROMOTIONS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
@@ -378,7 +378,7 @@ local function run(msg, matches)
                             deeper = 'PROMOTIONS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
@@ -406,15 +406,15 @@ local function run(msg, matches)
                             if compare_ranks(msg.from.id, matches[3], matches[4]) then
                                 if isMutedUser(matches[4], matches[3]) then
                                     local text = unmuteUser(matches[4], matches[3], msg.lang)
-                                    answerCallbackQuery(msg.cb_id, text, false)
+                                    answerCallbackQuery(msg.cb_id, text, true)
                                     sendMessage(matches[4], text .. '\n#executer' .. msg.from.id)
                                 else
                                     local text = muteUser(matches[4], matches[3], msg.lang)
-                                    answerCallbackQuery(msg.cb_id, text, false)
+                                    answerCallbackQuery(msg.cb_id, text, true)
                                     sendMessage(matches[4], text .. '\n#executer' .. msg.from.id)
                                 end
                             else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, false)
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, true)
                             end
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -425,11 +425,11 @@ local function run(msg, matches)
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             if matches[2] == 'WARNSMINUS' then
                                 local text = unwarnUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
-                                answerCallbackQuery(msg.cb_id, text, false)
+                                answerCallbackQuery(msg.cb_id, text, true)
                                 sendMessage(matches[4], text)
                             elseif matches[2] == 'WARNSPLUS' then
                                 local text = warnUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
-                                answerCallbackQuery(msg.cb_id, text, false)
+                                answerCallbackQuery(msg.cb_id, text, true)
                                 sendMessage(matches[4], text)
                             end
                         else
@@ -440,7 +440,7 @@ local function run(msg, matches)
                             deeper = 'PUNISHMENTS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = banUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -450,7 +450,7 @@ local function run(msg, matches)
                             deeper = 'PUNISHMENTS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = unbanUser(msg.from.id, matches[3], matches[4], '#executer' .. msg.from.id)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -460,7 +460,7 @@ local function run(msg, matches)
                             deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = gbanUser(matches[3], msg.lang)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -470,7 +470,7 @@ local function run(msg, matches)
                             deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = ungbanUser(matches[3], msg.lang)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -480,7 +480,7 @@ local function run(msg, matches)
                             deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = blockUser(matches[3], msg.lang)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -490,7 +490,7 @@ local function run(msg, matches)
                             deeper = 'ADMINCOMMANDS'
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             local text = unblockUser(matches[3], msg.lang)
-                            answerCallbackQuery(msg.cb_id, text, false)
+                            answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
