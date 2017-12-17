@@ -198,7 +198,7 @@ local function run(msg, matches)
         if msg.from.is_owner then
             if redis:get('notice:' .. msg.chat.id) then
                 mystat('/disablenotices')
-                redis:unset('notice:' .. msg.chat.id)
+                redis:del('notice:' .. msg.chat.id)
                 return langs[msg.lang].noticesGroupDisabled
             else
                 return langs[msg.lang].noticesGroupAlreadyDisabled
@@ -226,7 +226,7 @@ local function run(msg, matches)
         if msg.chat.type == 'private' then
             if redis:get('notice:' .. msg.from.id) then
                 mystat('/unregisternotices')
-                redis:unset('notice:' .. msg.from.id)
+                redis:del('notice:' .. msg.from.id)
                 return langs[msg.lang].noticesUserUnregistered
             else
                 return langs[msg.lang].userAlreadyUnregistered
