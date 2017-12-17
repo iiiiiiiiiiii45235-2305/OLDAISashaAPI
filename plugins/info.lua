@@ -340,19 +340,19 @@ local function run(msg, matches)
                             end
                             local text = ''
                             if link then
-                                if not userInChat(matches[4], matches[3], true) then
-                                    if sendMessage(matches[3], link, 'html') then
-                                        if not invite_table[matches[3]] then
+                                if not invite_table[matches[3]] then
+                                    if not userInChat(matches[4], matches[3], true) then
+                                        if sendMessage(matches[3], link, 'html') then
                                             invite_table[matches[3]] = true
                                             text = langs[msg.lang].ok
                                         else
-                                            text = langs[msg.lang].userAlreadyInvited
+                                            text = langs[msg.lang].noObjectInvite
                                         end
                                     else
-                                        text = langs[msg.lang].noObjectInvite
+                                        text = langs[msg.lang].userAlreadyInChat
                                     end
                                 else
-                                    text = langs[msg.lang].userAlreadyInChat
+                                    text = langs[msg.lang].userAlreadyInvited
                                 end
                             else
                                 text = langs[msg.lang].noLinkAvailable
