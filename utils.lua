@@ -1106,3 +1106,16 @@ function msgs_plus_plus(chat_id)
     redis:setex(chat_hash, 60, chat_msgs + 1)
     redis:setex(hash, 1, tot_msgs + 1)
 end
+
+function areNoticeEnabled(user_id, chat_id)
+    local pm = false
+    if redis:get('notice:' .. user_id) then
+        pm = true
+    end
+    if redis:get('notice:' .. chat_id) then
+        pm = true
+    else
+        pm = false
+    end
+    return pm
+end

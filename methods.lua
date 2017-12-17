@@ -1563,7 +1563,9 @@ function kickUser(executer, target, chat_id, reason)
                 local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                -- sendMessage(target, langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                if areNoticeEnabled(target, chat_id) then
+                    sendMessage(target, langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                end
                 return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
                 '\n#user' .. target .. ' #executer' .. executer .. ' #kick ' ..(reason or '')
             else
@@ -1623,7 +1625,9 @@ function banUser(executer, target, chat_id, reason, until_date)
                 local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                -- sendMessage(target, langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                if areNoticeEnabled(target, chat_id) then
+                    sendMessage(target, langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                end
                 local tempban = false
                 if until_date then
                     if until_date >= 30 or until_date <= 31622400 then
@@ -1660,8 +1664,10 @@ function unbanUser(executer, target, chat_id, reason)
         if getChat(target, true) then
             local res, code = unbanChatMember(target, chat_id)
         end
-        -- local obj_chat = getChat(chat_id, true)
-        -- sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+        if areNoticeEnabled(target, chat_id) then
+            local obj_chat = getChat(chat_id, true)
+            sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+        end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
     else
@@ -1822,8 +1828,10 @@ function warnUser(executer, target, chat_id, reason)
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 return banUser(executer, target, chat_id, langs[lang].reasonWarnMax)
             end
-            -- local obj_chat = getChat(chat_id, true)
-            -- sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            if areNoticeEnabled(target, chat_id) then
+                local obj_chat = getChat(chat_id, true)
+                sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            end
             return langs[lang].user .. target .. ' ' .. langs[lang].warned:gsub('X', tostring(hashonredis)) ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #warn ' ..(reason or '')
         else
@@ -1846,8 +1854,10 @@ function unwarnUser(executer, target, chat_id, reason)
             return langs[lang].user .. target .. ' ' .. langs[lang].alreadyZeroWarnings
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
-            -- local obj_chat = getChat(chat_id, true)
-            -- sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            if areNoticeEnabled(target, chat_id) then
+                local obj_chat = getChat(chat_id, true)
+                sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            end
             return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #unwarn ' ..(reason or '')
         end
@@ -1863,8 +1873,10 @@ function unwarnallUser(executer, target, chat_id, reason)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
-        -- local obj_chat = getChat(chat_id, true)
-        -- sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+        if areNoticeEnabled(target, chat_id) then
+            local obj_chat = getChat(chat_id, true)
+            sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+        end
         return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unwarnall ' ..(reason or '')
     else

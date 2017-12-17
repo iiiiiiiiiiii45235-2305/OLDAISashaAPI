@@ -31,6 +31,7 @@ end
 local function run(msg, matches)
     if msg.chat.type == 'private' then
         if matches[1]:lower() == '/start' then
+            redis:set('notice:' .. msg.from.id, 1)
             sendKeyboard(msg.chat.id, langs[msg.lang].startMessage, keyboard_langs('B'))
             mystat('/start' ..(matches[2] or ''):lower())
             if matches[2] then

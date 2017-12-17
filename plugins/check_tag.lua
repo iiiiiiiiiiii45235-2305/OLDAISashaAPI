@@ -80,7 +80,7 @@ local function run(msg, matches)
                         end
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
                     else
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertAlreadyRegistered, true)
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].userAlreadyRegistered, true)
                     end
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
                     -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
@@ -179,6 +179,63 @@ local function run(msg, matches)
             end
         end
     end
+
+    if matches[1]:lower() == 'enablenotices' then
+        if msg.from.is_owner then
+            if not redis:get('notice:' .. msg.chat.id) then
+                mystat('/enablenotices')
+                redis:set('notice:' .. msg.chat.id, 1)
+                return langs[msg.lang].noticesGroupEnabled
+            else
+                return langs[msg.lang].noticesGroupAlreadyEnabled
+            end
+        else
+            return langs[msg.lang].require_owner
+        end
+    end
+
+    if matches[1]:lower() == 'disablenotices' then
+        if msg.from.is_owner then
+            if redis:get('notice:' .. msg.chat.id) then
+                mystat('/disablenotices')
+                redis:unset('notice:' .. msg.chat.id)
+                return langs[msg.lang].noticesGroupDisabled
+            else
+                return langs[msg.lang].noticesGroupAlreadyDisabled
+            end
+        else
+            return langs[msg.lang].require_owner
+        end
+    end
+
+    if matches[1]:lower() == 'registernotices' then
+        if msg.chat.type == 'private' then
+            if not redis:get('notice:' .. msg.from.id) then
+                mystat('/registernotices')
+                redis:set('notice:' .. msg.from.id, 1)
+                return langs[msg.lang].noticesUserRegistered
+            else
+                return langs[msg.lang].userAlreadyRegistered
+            end
+        else
+            return sendReply(msg, langs[msg.lang].require_private, 'html')
+        end
+    end
+
+    if matches[1]:lower() == 'unregisternotices' then
+        if msg.chat.type == 'private' then
+            if redis:get('notice:' .. msg.from.id) then
+                mystat('/unregisternotices')
+                redis:unset('notice:' .. msg.from.id)
+                return langs[msg.lang].noticesUserUnregistered
+            else
+                return langs[msg.lang].userAlreadyUnregistered
+            end
+        else
+            return sendReply(msg, langs[msg.lang].require_private, 'html')
+        end
+    end
+
     if matches[1]:lower() == 'enabletagalert' then
         if msg.from.is_owner then
             mystat('/enabletagalert')
@@ -210,7 +267,7 @@ local function run(msg, matches)
                 end
                 return langs[msg.lang].tagalertUserRegistered
             else
-                return langs[msg.lang].tagalertAlreadyRegistered
+                return langs[msg.lang].userAlreadyRegistered
             end
         else
             return sendReply(msg, langs[msg.lang].require_private, 'html')
@@ -447,6 +504,10 @@ return {
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Gg][Ii][Ss][Tt][Ee][Rr][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",
         "^[#!/]([Uu][Nn][Rr][Ee][Gg][Ii][Ss][Tt][Ee][Rr][Tt][Aa][Gg][Aa][Ll][Ee][Rr][Tt])$",
+        "^[#!/]([Ee][Nn][Aa][Bb][Ll][Ee][Nn][Oo][Tt][Ii][Cc][Ee][Ss])$",
+        "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Nn][Oo][Tt][Ii][Cc][Ee][Ss])$",
+        "^[#!/]([Rr][Ee][Gg][Ii][Ss][Tt][Ee][Rr][Nn][Oo][Tt][Ii][Cc][Ee][Ss])$",
+        "^[#!/]([Uu][Nn][Rr][Ee][Gg][Ii][Ss][Tt][Ee][Rr][Nn][Oo][Tt][Ii][Cc][Ee][Ss])$",
         "^[#!/]([Ss][Ee][Tt][Nn][Ii][Cc][Kk][Nn][Aa][Mm][Ee]) (.*)$",
         "^[#!/]([Uu][Nn][Ss][Ee][Tt][Nn][Ii][Cc][Kk][Nn][Aa][Mm][Ee])$",
         "^[#!/]([Tt][Aa][Gg][Aa][Ll][Ll])$",
@@ -460,11 +521,15 @@ return {
         "USER",
         "/registertagalert",
         "/unregistertagalert",
+        "/registernotices",
+        "/unregisternotices",
         "/setnickname {nickname}",
         "/unsetnickname",
         "OWNER",
         "/enabletagalert",
         "/disabletagalert",
+        "/enablenotices",
+        "/disablenotices",
         -- "/tagall {text}|{reply_text}",
     },
 }
