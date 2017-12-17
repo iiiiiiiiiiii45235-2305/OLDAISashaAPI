@@ -964,8 +964,8 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                             end
                         elseif deeper == 'PROMOTIONS' then
                             if is_executer_mod or is_mod2(executer, chat_id, true) then
-                                row = row + 1
                                 if not userInChat(chat_id, obj.id, true) then
+                                    row = row + 1
                                     keyboard.inline_keyboard[row][column] = { text = '📨 INVITE 📨', callback_data = 'infoINVITE' .. obj.id .. chat_id }
                                 end
                                 if is_executer_owner or is_owner2(executer, chat_id, true) then
