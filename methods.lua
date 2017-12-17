@@ -283,6 +283,18 @@ function promoteChatMember(chat_id, user_id, permissions)
                 savelog('promote_user', code)
             end
         end
+        if res then
+            if areNoticesEnabled(user_id, chat_id) then
+                sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenPromotedDemoted .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(user_id)].permissions ..
+                langs[get_lang(user_id)].permissionCanBeEdited .. tostring(permissions.can_be_edited or false) ..
+                langs[get_lang(user_id)].permissionChangeInfo .. tostring(permissions.can_change_info or false) ..
+                langs[get_lang(user_id)].permissionDeleteMessages .. tostring(permissions.can_delete_messages or false) ..
+                langs[get_lang(user_id)].permissionInviteUsers .. tostring(permissions.can_invite_users or false) ..
+                langs[get_lang(user_id)].permissionPinMessages .. tostring(permissions.can_pin_messages or false) ..
+                langs[get_lang(user_id)].permissionPromoteMembers .. tostring(permissions.can_promote_members or false) ..
+                langs[get_lang(user_id)].permissionRestrictMembers .. tostring(permissions.can_restrict_members or false))
+            end
+        end
         return res
     end
 end
@@ -316,11 +328,19 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date)
             url = url .. '&' .. k .. '=' .. tostring(restrictions[k])
         end
         local res, code = sendRequest(url)
-
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
                 savelog('restrict_user', code)
+            end
+        end
+        if res then
+            if areNoticesEnabled(user_id, chat_id) then
+                sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(user_id)].restrictions ..
+                langs[get_lang(user_id)].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
+                langs[get_lang(user_id)].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
+                langs[get_lang(user_id)].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
+                langs[get_lang(user_id)].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
             end
         end
         return res
@@ -1563,7 +1583,7 @@ function kickUser(executer, target, chat_id, reason)
                 local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                if areNoticeEnabled(target, chat_id) then
+                if areNoticesEnabled(target, chat_id) then
                     sendMessage(target, langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
                 end
                 return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
@@ -1625,7 +1645,7 @@ function banUser(executer, target, chat_id, reason, until_date)
                 local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                if areNoticeEnabled(target, chat_id) then
+                if areNoticesEnabled(target, chat_id) then
                     sendMessage(target, langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
                 end
                 local tempban = false
@@ -1664,9 +1684,8 @@ function unbanUser(executer, target, chat_id, reason)
         if getChat(target, true) then
             local res, code = unbanChatMember(target, chat_id)
         end
-        if areNoticeEnabled(target, chat_id) then
-            local obj_chat = getChat(chat_id, true)
-            sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+        if areNoticesEnabled(target, chat_id) then
+            sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
         end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
@@ -1720,7 +1739,7 @@ function gbanUser(user_id, lang, no_log)
     if not no_log then
         sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
     end
-    -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenGbanned)
+    sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenGbanned)
     return langs[lang].user .. user_id .. langs[lang].gbanned
 end
 
@@ -1730,7 +1749,7 @@ function ungbanUser(user_id, lang)
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
-    -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUngbanned)
+    sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUngbanned)
     return langs[lang].user .. user_id .. langs[lang].ungbanned
 end
 
@@ -1747,7 +1766,7 @@ function blockUser(user_id, lang)
     user_id = tostring(user_id):gsub(' ', '')
     if not is_admin2(user_id) then
         redis:sadd('bot:blocked', user_id)
-        -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenBlocked)
+        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenBlocked)
         return langs[lang].userBlocked
     else
         return langs[lang].cantBlockAdmin
@@ -1757,7 +1776,7 @@ end
 function unblockUser(user_id, lang)
     user_id = tostring(user_id):gsub(' ', '')
     redis:srem('bot:blocked', user_id)
-    -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnblocked)
+    sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnblocked)
     return langs[lang].userUnblocked
 end
 
@@ -1828,9 +1847,8 @@ function warnUser(executer, target, chat_id, reason)
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 return banUser(executer, target, chat_id, langs[lang].reasonWarnMax)
             end
-            if areNoticeEnabled(target, chat_id) then
-                local obj_chat = getChat(chat_id, true)
-                sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            if areNoticesEnabled(target, chat_id) then
+                sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].warned:gsub('X', tostring(hashonredis)) ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #warn ' ..(reason or '')
@@ -1854,9 +1872,8 @@ function unwarnUser(executer, target, chat_id, reason)
             return langs[lang].user .. target .. ' ' .. langs[lang].alreadyZeroWarnings
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
-            if areNoticeEnabled(target, chat_id) then
-                local obj_chat = getChat(chat_id, true)
-                sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            if areNoticesEnabled(target, chat_id) then
+                sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #unwarn ' ..(reason or '')
@@ -1873,9 +1890,8 @@ function unwarnallUser(executer, target, chat_id, reason)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
-        if areNoticeEnabled(target, chat_id) then
-            local obj_chat = getChat(chat_id, true)
-            sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+        if areNoticesEnabled(target, chat_id) then
+            sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
         end
         return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unwarnall ' ..(reason or '')
@@ -1927,8 +1943,9 @@ function muteUser(chat_id, user_id, lang)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:sadd(hash, user_id)
-    -- local obj_chat = getChat(chat_id, true)
-    -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenMuted .. obj_chat.title)
+    if areNoticesEnabled(user_id, chat_id) then
+        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenMuted .. database[tostring(chat_id)].print_name)
+    end
     return user_id .. langs[lang].muteUserAdd
 end
 
@@ -1943,8 +1960,9 @@ function unmuteUser(chat_id, user_id, lang)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:srem(hash, user_id)
-    -- local obj_chat = getChat(chat_id, true)
-    -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnmuted .. obj_chat.title)
+    if areNoticesEnabled(user_id, chat_id) then
+        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnmuted .. database[tostring(chat_id)].print_name)
+    end
     return user_id .. langs[lang].muteUserRemove
 end
 

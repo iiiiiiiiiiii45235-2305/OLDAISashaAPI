@@ -261,6 +261,8 @@ return {
         messageTooLong = "Messaggio troppo lungo, questo è un file con il testo che mi hai richiesto.",
 
         -- warn/kick/ban reasons --
+        youHaveBeenPromotedDemoted = "Sei stato degradato da/promosso ad admin in ",
+        youHaveBeenRestrictedUnrestricted = "Ti sono state applicate/rimosse delle restrizioni in ",
         youHaveBeenMuted = "Sei stato mutato in ",
         youHaveBeenUnmuted = "Sei stato smutato in ",
         youHaveBeenWarned = "Sei stato avvertito in ",
@@ -1647,6 +1649,8 @@ return {
         messageTooLong = "Message too long, this is a file that includes the text that you needed.",
 
         -- warn/kick/ban reasons --
+        youHaveBeenPromotedDemoted = "You have been demoted from/promoted to admin in ",
+        youHaveBeenRestrictedUnrestricted = "You have been unrestricted/restricted in ",
         youHaveBeenMuted = "You have been muted in ",
         youHaveBeenUnmuted = "You have been unmuted in ",
         youHaveBeenWarned = "You have been warned in ",
