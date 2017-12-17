@@ -1,10 +1,10 @@
 return {
     news = "SASHA'S NEWS\n#sashasnews\n" ..
     "(INFO) !Trackuser command that allows you to track the user even if (s)he changes name/username/pictures (mod^).\n" ..
-    "(BANHAMMER) !Invite command that allows you to invite a user in the group by sending him the invite link using Sasha (mod^).\n" ..
-    "No tag when executing a command.\n" ..
+    "(BANHAMMER) !Invite command that allows you to invite a user in the group by sending him the invite link using Sasha (also in the info keyboard) (mod^).\n" ..
     "(CHECK_TAG) Private notices to users when they are target of actions that affect their permanence in a group.\nThey're disabled by default, use the help to know how to enable them in your group.\n" ..
-    "(GROUP_MANAGEMENT) !Lock delword, !Lock photo, !Lock name available for groups and supergroups (mod^)",
+    "(GROUP_MANAGEMENT) !Lock delword, !Lock photo, !Lock name available for groups and supergroups (mod^)" ..
+    "No tag when executing a command.\n",
     italian = "🇮🇹 Italian",
     english = "🇬🇧 English",
     selectLanguage = "🏳 Select a language 🏴",
