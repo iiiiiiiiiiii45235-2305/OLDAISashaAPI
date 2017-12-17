@@ -158,8 +158,11 @@ local function run(msg, matches)
         end]]
 
         if matches[1]:lower() == 'countdatabase' then
-            mystat('/countdatabase')
-            return #database
+            local i = 0
+            for k, v in pairsByKeys(database) do
+                i = i + 1
+            end
+            return i
         end
 
         if matches[1]:lower() == 'dbsearch' or matches[1]:lower() == 'sasha cerca db' or matches[1]:lower() == 'cerca db' then
