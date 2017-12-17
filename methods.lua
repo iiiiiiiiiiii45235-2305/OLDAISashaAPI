@@ -175,7 +175,7 @@ function getUpdates(offset)
 end
 
 function APIgetChat(id_or_username, no_log)
-    id_or_username = id_or_username:gsub(' ', '')
+    id_or_username = tostring(id_or_username):gsub(' ', '')
     local url = BASE_URL .. '/getChat?chat_id=' .. id_or_username
     return sendRequest(url, no_log)
 end
@@ -191,7 +191,7 @@ function getChatMembersCount(chat_id)
 end
 
 function getChatMember(chat_id, user_id, no_log)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     if not string.match(user_id, '^%*%d') then
         if sendChatAction(chat_id, 'typing', true) then
             local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
@@ -237,7 +237,7 @@ end
 
 -- never call this outside this file
 function kickChatMember(user_id, chat_id, until_date, no_log)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local url = BASE_URL .. '/kickChatMember?chat_id=' .. chat_id ..
     '&user_id=' .. user_id
     if until_date then
@@ -249,7 +249,7 @@ end
 
 -- never call this outside this file
 function unbanChatMember(user_id, chat_id, no_log)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local url = BASE_URL .. '/unbanChatMember?chat_id=' .. chat_id ..
     '&user_id=' .. user_id
     local res, code = sendRequest(url, no_log)
@@ -266,7 +266,7 @@ end
     can_pin_messages = true,  -- supergroups
     can_promote_members = true]]
 function promoteChatMember(chat_id, user_id, permissions)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
@@ -288,7 +288,7 @@ function promoteChatMember(chat_id, user_id, permissions)
 end
 
 function demoteChatMember(chat_id, user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local demote_table = {
         ['can_change_info'] = false,
         ['can_delete_messages'] = false,
@@ -301,7 +301,7 @@ function demoteChatMember(chat_id, user_id)
 end
 
 function restrictChatMember(chat_id, user_id, restrictions, until_date)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     --[[local restrictions = { can_send_messages = true,
     can_send_media_messages = true, -- implies can_send_messages
     can_send_other_messages = true, -- implies can_send_media_messages
@@ -328,7 +328,7 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date)
 end
 
 function unrestrictChatMember(chat_id, user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local unrestrict_table = {
         can_send_messages = true,
         can_send_media_messages = true,
@@ -1374,7 +1374,7 @@ end
 
 -- *** START PWRTELEGRAM API FUNCTIONS ***
 function resolveChat(id_or_username, no_log)
-    id_or_username = id_or_username:gsub(' ', '')
+    id_or_username = tostring(id_or_username):gsub(' ', '')
     local url = PWR_URL .. '/getChat?chat_id=' .. id_or_username
     local dat, code = HTTPS.request(url)
 
@@ -1531,7 +1531,7 @@ function userVersionInChat(chat_id)
 end
 
 function userInChat(chat_id, user_id, no_log)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local member = getChatMember(chat_id, user_id, no_log)
     if type(member) == 'table' then
         if member.ok and member.result then
@@ -1544,7 +1544,7 @@ end
 
 -- call this to kick
 function kickUser(executer, target, chat_id, reason)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     if sendChatAction(chat_id, 'typing', true) then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
@@ -1577,7 +1577,7 @@ function kickUser(executer, target, chat_id, reason)
 end
 
 function preBanUser(executer, target, chat_id, reason)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     if isWhitelisted(id_to_cli(chat_id), target) then
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
         return langs[get_lang(chat_id)].cantKickWhitelisted
@@ -1600,7 +1600,7 @@ end
 
 -- call this to ban
 function banUser(executer, target, chat_id, reason, until_date)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     if sendChatAction(chat_id, 'typing', true) then
         if isWhitelisted(id_to_cli(chat_id), target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
@@ -1651,7 +1651,7 @@ end
 
 -- call this to unban
 function unbanUser(executer, target, chat_id, reason)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     if compare_ranks(executer, target, chat_id, false, true) then
         savelog(chat_id, "[" .. target .. "] unbanned")
         -- remove from the local banlist
@@ -1672,7 +1672,7 @@ end
 
 -- Check if user_id is banned in chat_id or not
 function isBanned(user_id, chat_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'banned:' .. chat_id
     local banned = redis:sismember(hash, tostring(user_id))
@@ -1699,7 +1699,7 @@ end
 
 -- Global ban
 function gbanUser(user_id, lang, no_log)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     if tonumber(user_id) == tonumber(bot.id) then
         -- Ignore bot
         return ''
@@ -1720,7 +1720,7 @@ end
 
 -- Global unban
 function ungbanUser(user_id, lang)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
@@ -1730,7 +1730,7 @@ end
 
 -- Check if user_id is globally banned or not
 function isGbanned(user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'gbanned'
     local gbanned = redis:sismember(hash, user_id)
@@ -1738,7 +1738,7 @@ function isGbanned(user_id)
 end
 
 function blockUser(user_id, lang)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     if not is_admin2(user_id) then
         redis:sadd('bot:blocked', user_id)
         -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenBlocked)
@@ -1749,14 +1749,14 @@ function blockUser(user_id, lang)
 end
 
 function unblockUser(user_id, lang)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     redis:srem('bot:blocked', user_id)
     -- sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnblocked)
     return langs[lang].userUnblocked
 end
 
 function isBlocked(user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     if redis:sismember('bot:blocked', user_id) then
         return true
     else
@@ -1766,7 +1766,7 @@ end
 
 -- Check if user_id is whitelisted or not
 function isWhitelisted(chat_id, user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'whitelist:' .. chat_id
     local whitelisted = redis:sismember(hash, user_id)
@@ -1775,7 +1775,7 @@ end
 
 -- Check if user_id is gban whitelisted or not
 function isWhitelistedGban(chat_id, user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'whitelist:gban:' .. chat_id
     local whitelisted = redis:sismember(hash, user_id)
@@ -1797,7 +1797,7 @@ function getWarn(chat_id)
 end
 
 function getUserWarns(user_id, chat_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local lang = get_lang(chat_id)
     local hashonredis = redis:get(chat_id .. ':warn:' .. user_id) or 0
     local warn_msg = langs[lang].yourWarnings
@@ -1806,7 +1806,7 @@ function getUserWarns(user_id, chat_id)
 end
 
 function warnUser(executer, target, chat_id, reason)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         local warn_chat = tonumber(data[tostring(chat_id)].settings.warn_max or 0)
@@ -1836,7 +1836,7 @@ function warnUser(executer, target, chat_id, reason)
 end
 
 function unwarnUser(executer, target, chat_id, reason)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         local warns = redis:get(chat_id .. ':warn:' .. target) or 0
@@ -1858,7 +1858,7 @@ function unwarnUser(executer, target, chat_id, reason)
 end
 
 function unwarnallUser(executer, target, chat_id, reason)
-    target = target:gsub(' ', '')
+    target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
@@ -1912,7 +1912,7 @@ function unmute(chat_id, msg_type)
 end
 
 function muteUser(chat_id, user_id, lang)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:sadd(hash, user_id)
     -- local obj_chat = getChat(chat_id, true)
@@ -1921,14 +1921,14 @@ function muteUser(chat_id, user_id, lang)
 end
 
 function isMutedUser(chat_id, user_id)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     local muted = redis:sismember(hash, user_id)
     return muted or false
 end
 
 function unmuteUser(chat_id, user_id, lang)
-    user_id = user_id:gsub(' ', '')
+    user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:srem(hash, user_id)
     -- local obj_chat = getChat(chat_id, true)

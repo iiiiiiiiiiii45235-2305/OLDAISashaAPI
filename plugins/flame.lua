@@ -34,7 +34,7 @@ local function run(msg, matches)
                         return flame_user(msg.from.id, msg.reply_to_message.from.id, msg.chat.id)
                     end
                 elseif matches[2] and matches[2] ~= '' then
-                    matches[2]:gsub(' ', '')
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return flame_user(msg.from.id, matches[2], msg.chat.id)
                     else

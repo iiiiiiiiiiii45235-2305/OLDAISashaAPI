@@ -1528,7 +1528,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        matches[2]:gsub(' ', '')
+                        matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
                             local obj_user = getChat(matches[2])
@@ -1616,7 +1616,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        matches[2]:gsub(' ', '')
+                        matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1689,7 +1689,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        matches[2]:gsub(' ', '')
+                        matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1756,7 +1756,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        matches[2]:gsub(' ', '')
+                        matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1823,7 +1823,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        matches[2]:gsub(' ', '')
+                        matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1929,7 +1929,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        matches[2]:gsub(' ', '')
+                        matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -2008,7 +2008,7 @@ local function run(msg, matches)
                             end
                         end
                     end
-                    matches[2]:gsub(' ', '')
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return showPermissions(msg.chat.id, matches[2], msg.lang)
                     else

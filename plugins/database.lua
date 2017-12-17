@@ -207,7 +207,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                matches[2]:gsub(' ', '')
+                matches[2] = tostring(matches[2]):gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
                     if database[tostring(matches[2])] then
                         return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
