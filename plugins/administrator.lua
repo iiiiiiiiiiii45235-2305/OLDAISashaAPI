@@ -226,6 +226,7 @@ local function run(msg, matches)
                         end
                     end
                 end
+                matches[2]:gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
                     return blockUser(matches[2], msg.lang)
                 else
@@ -272,6 +273,7 @@ local function run(msg, matches)
                         end
                     end
                 end
+                matches[2]:gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
                     return unblockUser(matches[2], msg.lang)
                 else
@@ -366,6 +368,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then
@@ -405,6 +408,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
                         if type(obj_user) == 'table' then

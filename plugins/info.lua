@@ -517,6 +517,7 @@ local function run(msg, matches)
                     end
                 end
             end
+            matches[2]:gsub(' ', '')
             if string.match(matches[2], '^%d+$') then
                 return matches[2]
             else
@@ -580,6 +581,7 @@ local function run(msg, matches)
                     end
                 end
             end
+            matches[2]:gsub(' ', '')
             if string.match(matches[2], '^%d+$') then
                 local obj = getChat(matches[2])
                 if obj then
@@ -625,6 +627,7 @@ local function run(msg, matches)
                     end
                 end
             end
+            matches[2]:gsub(' ', '')
             if string.match(matches[2], '^%d+$') then
                 return get_reverse_rank(msg.chat.id, matches[2], true)
             else
@@ -672,6 +675,7 @@ local function run(msg, matches)
                     end
                 end
             end
+            matches[2]:gsub(' ', '')
             if string.match(matches[2], '^%d+$') then
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
@@ -730,6 +734,7 @@ local function run(msg, matches)
                         end
                     end
                 end
+                matches[2]:gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
                     local res = sendReply(msg, "<a href=\"tg://user?id=" .. matches[2] .. "\">" .. html_escape(matches[3] or matches[2]) .. "</a>", 'html')
                     if not res then

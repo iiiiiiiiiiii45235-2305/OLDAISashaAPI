@@ -108,6 +108,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return whitelist_user(msg.chat.tg_cli_id, matches[2], msg.lang)
                     else
@@ -175,6 +176,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return whitegban_user(msg.chat.tg_cli_id, matches[2], msg.lang)
                     else

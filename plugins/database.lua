@@ -157,6 +157,11 @@ local function run(msg, matches)
             return langs[msg.lang].dataLeaked
         end]]
 
+        if matches[1]:lower() == 'countdatabase' then
+            mystat('/countdatabase')
+            return #database
+        end
+
         if matches[1]:lower() == 'dbsearch' or matches[1]:lower() == 'sasha cerca db' or matches[1]:lower() == 'cerca db' then
             mystat('/dbsearch')
             if msg.reply then
@@ -202,6 +207,7 @@ local function run(msg, matches)
                         end
                     end
                 end
+                matches[2]:gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
                     if database[tostring(matches[2])] then
                         return serpent.block(database[tostring(matches[2])], { sortkeys = false, comment = false })
@@ -499,7 +505,8 @@ return {
     patterns =
     {
         "^[#!/]([Cc][Rr][Ee][Aa][Tt][Ee][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
-        "^[#!/]([Dd][Oo][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
+        -- "^[#!/]([Dd][Oo][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
+        "^[#!/]([Cc][Oo][Uu][Nn][Tt][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
         "^[#!/]([Dd][Bb][Ss][Ee][Aa][Rr][Cc][Hh]) ([^%s]+)$",
         "^[#!/]([Aa][Dd][Dd][Rr][Ee][Cc][Oo][Rr][Dd]) ([^%s]+) (.*)$",
         "^[#!/]([Dd][Bb][Dd][Ee][Ll][Ee][Tt][Ee]) (%-?%d+)$",
@@ -516,6 +523,7 @@ return {
         "SUDO",
         "/createdatabase",
         -- "/dodatabase",
+        "/countdatabase",
         "/dbsearch {id}|{username}|{reply}|from",
         "/dbdelete {id}",
         "/addrecord user {id}\n{print_name}\n{old_print_names}\n{username}\n{old_usernames}\n{groups_ids_separated_by_space}",

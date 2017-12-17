@@ -509,6 +509,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             if not userInChat(msg.chat.id, matches[2], true) then
                                 if sendMessage(matches[2], link, 'html') then
@@ -586,6 +587,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 return getUserWarns(matches[2], msg.chat.id)
                             else
@@ -667,6 +669,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             -- ignore higher or same rank
                             if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
@@ -765,6 +768,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 return warnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                             else
@@ -833,6 +837,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 return unwarnUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                             else
@@ -901,6 +906,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 return unwarnallUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                             else
@@ -1121,6 +1127,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 if matches[8] then
                                     restrictions = adjustRestrictions(matches[8]:lower())
@@ -1197,6 +1204,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 if matches[3] then
                                     restrictions = adjustRestrictions(matches[3]:lower())
@@ -1327,6 +1335,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             if matches[3] then
                                 restrictions = adjustRestrictions(matches[3]:lower())
@@ -1417,6 +1426,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             if unrestrictChatMember(msg.chat.id, matches[2]) then
                                 return langs[msg.lang].userUnrestricted .. '\n#user' .. matches[2] .. ' #executer' .. msg.from.id .. ' #unrestrict'
@@ -1514,6 +1524,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if type(obj_user) == 'table' then
@@ -1591,6 +1602,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             local obj_user = getChat(matches[2])
                             if obj_user then
@@ -1662,6 +1674,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             return kickUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
@@ -1980,6 +1993,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 return banUser(msg.from.id, matches[2], msg.chat.id, matches[8] or '', os.time() + time)
                             else
@@ -2016,6 +2030,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
+                            matches[2]:gsub(' ', '')
                             if string.match(matches[2], '^%d+$') then
                                 if compare_ranks(msg.from.id, matches[2], msg.chat.id) then
                                     if sendKeyboard(msg.from.id, '(' .. matches[2] .. ') ' ..(database[tostring(matches[2])]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time('TEMPBAN', msg.chat.id, matches[2])) then
@@ -2107,6 +2122,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             return banUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
@@ -2171,6 +2187,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        matches[2]:gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
                             return unbanUser(msg.from.id, matches[2], msg.chat.id, matches[3] or '')
                         else
@@ -2234,6 +2251,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return gbanUser(matches[2], msg.lang)
                     else
@@ -2296,6 +2314,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return ungbanUser(matches[2], msg.lang)
                     else

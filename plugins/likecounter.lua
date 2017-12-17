@@ -139,6 +139,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return like(likedata, msg.chat.id, matches[2])
                     else
@@ -182,6 +183,7 @@ local function run(msg, matches)
                             end
                         end
                     end
+                    matches[2]:gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         return dislike(likedata, msg.chat.id, matches[2])
                     else
