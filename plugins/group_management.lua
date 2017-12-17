@@ -312,6 +312,9 @@ local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)]['set_owner'] = tostring(user.id)
     save_data(config.moderation.data, data)
+    if areNoticesEnabled(user.id, chat_id) then
+        sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedOwner .. database[tostring(chat_id)].print_name)
+    end
     return(user.username or user.print_name or user.first_name) .. ' [' .. user.id .. ']' .. langs[lang].setOwner
 end
 
@@ -341,6 +344,9 @@ local function promoteTgAdmin(chat_id, user, permissions)
         if promote then
             data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
             save_data(config.moderation.data, data)
+            if areNoticesEnabled(user.id, chat_id) then
+                sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
+            end
             return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
         end
     else
@@ -358,6 +364,9 @@ local function demoteTgAdmin(chat_id, user)
             data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
             save_data(config.moderation.data, data)
         end
+        if areNoticesEnabled(user.id, chat_id) then
+            sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenDemotedAdmin .. database[tostring(chat_id)].print_name)
+        end
         return(user.username or user.print_name or user.first_name) .. langs[lang].demoteModAdmin
     else
         return langs[lang].checkMyPermissions
@@ -374,6 +383,9 @@ local function promoteMod(chat_id, user)
     end
     data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
     save_data(config.moderation.data, data)
+    if areNoticesEnabled(user.id, chat_id) then
+        sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedMod .. database[tostring(chat_id)].print_name)
+    end
     return(user.username or user.print_name or user.first_name) .. langs[lang].promoteMod
 end
 
@@ -387,6 +399,9 @@ local function demoteMod(chat_id, user)
     end
     data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
     save_data(config.moderation.data, data)
+    if areNoticesEnabled(user.id, chat_id) then
+        sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenDemotedMod .. database[tostring(chat_id)].print_name)
+    end
     return(user.username or user.print_name or user.first_name) .. langs[lang].demoteMod
 end
 
@@ -942,6 +957,9 @@ local function run(msg, matches)
                     data[tostring(matches[2])].set_owner = matches[3]
                     save_data(config.moderation.data, data)
                     sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
+                    if areNoticesEnabled(matches[3], matches[2]) then
+                        sendMessage(matches[3], langs[get_lang(matches[3])].youHaveBeenDemotedMod .. database[tostring(matches[2])].print_name)
+                    end
                     return matches[3] .. langs[msg.lang].setOwner
                 end
             else

@@ -283,18 +283,6 @@ function promoteChatMember(chat_id, user_id, permissions)
                 savelog('promote_user', code)
             end
         end
-        if res then
-            if areNoticesEnabled(user_id, chat_id) then
-                sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenPromotedDemoted .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(user_id)].permissions ..
-                langs[get_lang(user_id)].permissionCanBeEdited .. tostring(permissions.can_be_edited or false) ..
-                langs[get_lang(user_id)].permissionChangeInfo .. tostring(permissions.can_change_info or false) ..
-                langs[get_lang(user_id)].permissionDeleteMessages .. tostring(permissions.can_delete_messages or false) ..
-                langs[get_lang(user_id)].permissionInviteUsers .. tostring(permissions.can_invite_users or false) ..
-                langs[get_lang(user_id)].permissionPinMessages .. tostring(permissions.can_pin_messages or false) ..
-                langs[get_lang(user_id)].permissionPromoteMembers .. tostring(permissions.can_promote_members or false) ..
-                langs[get_lang(user_id)].permissionRestrictMembers .. tostring(permissions.can_restrict_members or false))
-            end
-        end
         return res
     end
 end
