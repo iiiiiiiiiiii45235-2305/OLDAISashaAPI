@@ -330,13 +330,13 @@ local function run(msg, matches)
                                 inviter = msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']'
                             end
                             local link = nil
-                            local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                            local group_link = data[tostring(matches[4])]['settings']['set_link']
                             if group_link then
-                                link = inviter .. langs[msg.lang].invitedYouTo .. " <a href=\"" .. group_link .. "\">" .. html_escape((data[tostring(msg.chat.id)].set_name or '')) .. "</a>"
+                                link = inviter .. langs[msg.lang].invitedYouTo .. " <a href=\"" .. group_link .. "\">" .. html_escape((data[tostring(matches[4])].set_name or '')) .. "</a>"
                             end
                             local text = ''
-                            if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
-                                if sendMessage(msg.reply_to_message.from.id, link, 'html') then
+                            if not userInChat(matches[4], matches[3], true) then
+                                if sendMessage(matches[3], link, 'html') then
                                     text = langs[msg.lang].ok
                                 else
                                     text = langs[msg.lang].noObjectInvite
