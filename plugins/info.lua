@@ -268,7 +268,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
                     elseif matches[2] == 'PROMOTIONS' then
-                        if is_owner2(msg.from.id, matches[4]) then
+                        if is_mod2(msg.from.id, matches[4]) then
                             mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                             local obj = getChat(matches[3])
