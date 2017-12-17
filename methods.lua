@@ -1416,7 +1416,7 @@ end
 
 -- call this to get the chat
 function getChat(id_or_username, no_log)
-    id_or_username = id_or_username:gsub(' ', '')
+    id_or_username = tostring(id_or_username):gsub(' ', '')
     if not string.match(id_or_username, '^%*%d') then
         if tostring(id_or_username) ~= '@' then
             local obj = nil
