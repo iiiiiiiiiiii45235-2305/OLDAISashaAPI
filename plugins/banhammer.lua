@@ -592,7 +592,7 @@ local function run(msg, matches)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] left using kickme ")
                     -- Save to logs
                     mystat('/kickme')
-                    return kickUser(bot.id, msg.from.id, msg.chat.id)
+                    return kickUser(bot.id, msg.from.id, msg.chat.id, '#kickme')
                 else
                     return langs[msg.lang].useYourGroups
                 end
