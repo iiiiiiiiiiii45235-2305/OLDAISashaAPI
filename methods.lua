@@ -1727,7 +1727,7 @@ function gbanUser(user_id, lang, no_log, no_notice)
     if not no_log then
         sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
     end
-    if areNoticesEnabled(user_id, 0) and not no_notice then
+    if not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenGbanned)
     end
     return langs[lang].user .. user_id .. langs[lang].gbanned
@@ -1739,7 +1739,7 @@ function ungbanUser(user_id, lang, no_notice)
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
-    if areNoticesEnabled(user_id, 0) and not no_notice then
+    if not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUngbanned)
     end
     return langs[lang].user .. user_id .. langs[lang].ungbanned
@@ -1758,7 +1758,7 @@ function blockUser(user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     if not is_admin2(user_id) then
         redis:sadd('bot:blocked', user_id)
-        if areNoticesEnabled(user_id, 0) and not no_notice then
+        if not no_notice then
             sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenBlocked)
         end
         return langs[lang].userBlocked
@@ -1770,7 +1770,7 @@ end
 function unblockUser(user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     redis:srem('bot:blocked', user_id)
-    if areNoticesEnabled(user_id, 0) and not no_notice then
+    if not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnblocked)
     end
     return langs[lang].userUnblocked
