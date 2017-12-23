@@ -153,9 +153,6 @@ function sendRequest(url, no_log)
                 sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code, false, false, true)
             end
         end
-        if code == 429 then
-            printvardump(tab)
-        end
         return nil, code, tab.description
     end
 
@@ -634,6 +631,9 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
                 savelog('send_msg', code .. '\n' .. text)
             end
+        if code == 429 then
+            printvardump(tab)
+        end
         end
         if print_res_msg(res) then
             return res, code
