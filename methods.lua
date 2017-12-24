@@ -631,9 +631,9 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
                 savelog('send_msg', code .. '\n' .. text)
             end
-        if code == 429 then
-            printvardump(tab)
-        end
+            if code == 429 then
+                printvardump(tab)
+            end
         end
         if print_res_msg(res) then
             return res, code
@@ -1347,7 +1347,7 @@ function tempDownloadFile(url, file_name)
         return
     end
 
-    file_name = file_name or getHttpFileName(url, headers)
+    file_name = file_name or string.random(50)
 
     local file_path = "data/tmp/" .. file_name
     print("Saved to: " .. file_path)
