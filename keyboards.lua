@@ -706,19 +706,17 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                     keyboard.inline_keyboard[row][column] = { text = langs[lang].adminCommands, callback_data = 'infoADMINCOMMANDS' .. obj.id .. chat_id }
                 end
                 if tonumber(chat_id) < 0 then
-                    local status = ''
-                    local chat_member = getChatMember(chat_id, executer)
+                    local chat_member_executer = getChatMember(chat_id, executer)
                     local is_executer_owner = false
                     local is_executer_mod = false
-                    if type(chat_member) == 'table' then
-                        if chat_member.result then
-                            chat_member = chat_member.result
-                            if chat_member.status then
-                                status = chat_member.status
-                                if chat_member.status == 'creator' then
+                    if type(chat_member_executer) == 'table' then
+                        if chat_member_executer.result then
+                            chat_member_executer = chat_member_executer.result
+                            if chat_member_executer.status then
+                                if chat_member_executer.status == 'creator' then
                                     is_executer_owner = true
                                     is_executer_mod = true
-                                elseif chat_member.status == 'administrator' then
+                                elseif chat_member_executer.status == 'administrator' then
                                     is_executer_mod = true
                                 end
                             end
@@ -749,21 +747,29 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                     end
                 else
                     if tonumber(chat_id) < 0 then
-                        local status = ''
-                        local chat_member = getChatMember(chat_id, executer)
+                        local chat_member_executer = getChatMember(chat_id, executer)
                         local is_executer_owner = false
                         local is_executer_mod = false
-                        if type(chat_member) == 'table' then
-                            if chat_member.result then
-                                chat_member = chat_member.result
-                                if chat_member.status then
-                                    status = chat_member.status
-                                    if chat_member.status == 'creator' then
+                        if type(chat_member_executer) == 'table' then
+                            if chat_member_executer.result then
+                                chat_member_executer = chat_member_executer.result
+                                if chat_member_executer.status then
+                                    if chat_member_executer.status == 'creator' then
                                         is_executer_owner = true
                                         is_executer_mod = true
-                                    elseif chat_member.status == 'administrator' then
+                                    elseif chat_member_executer.status == 'administrator' then
                                         is_executer_mod = true
                                     end
+                                end
+                            end
+                        end
+                        local status = ''
+                        local chat_member_target = getChatMember(chat_id, target)
+                        if type(chat_member_target) == 'table' then
+                            if chat_member_target.result then
+                                chat_member_target = chat_member_target.result
+                                if chat_member_target.status then
+                                    status = chat_member_target.status
                                 end
                             end
                         end
@@ -854,19 +860,17 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                     keyboard.inline_keyboard[row][column] = { text = langs[lang].adminCommands, callback_data = 'infoADMINCOMMANDS' .. obj.id .. chat_id }
                 end
                 if tonumber(chat_id) < 0 then
-                    local status = ''
-                    local chat_member = getChatMember(chat_id, executer)
+                    local chat_member_executer = getChatMember(chat_id, executer)
                     local is_executer_owner = false
                     local is_executer_mod = false
-                    if type(chat_member) == 'table' then
-                        if chat_member.result then
-                            chat_member = chat_member.result
-                            if chat_member.status then
-                                status = chat_member.status
-                                if chat_member.status == 'creator' then
+                    if type(chat_member_executer) == 'table' then
+                        if chat_member_executer.result then
+                            chat_member_executer = chat_member_executer.result
+                            if chat_member_executer.status then
+                                if chat_member_executer.status == 'creator' then
                                     is_executer_owner = true
                                     is_executer_mod = true
-                                elseif chat_member.status == 'administrator' then
+                                elseif chat_member_executer.status == 'administrator' then
                                     is_executer_mod = true
                                 end
                             end
@@ -904,21 +908,29 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                     end
                 else
                     if tonumber(chat_id) < 0 then
-                        local status = ''
-                        local chat_member = getChatMember(chat_id, executer)
+                        local chat_member_executer = getChatMember(chat_id, executer)
                         local is_executer_owner = false
                         local is_executer_mod = false
-                        if type(chat_member) == 'table' then
-                            if chat_member.result then
-                                chat_member = chat_member.result
-                                if chat_member.status then
-                                    status = chat_member.status
-                                    if chat_member.status == 'creator' then
+                        if type(chat_member_executer) == 'table' then
+                            if chat_member_executer.result then
+                                chat_member_executer = chat_member_executer.result
+                                if chat_member_executer.status then
+                                    if chat_member_executer.status == 'creator' then
                                         is_executer_owner = true
                                         is_executer_mod = true
-                                    elseif chat_member.status == 'administrator' then
+                                    elseif chat_member_executer.status == 'administrator' then
                                         is_executer_mod = true
                                     end
+                                end
+                            end
+                        end
+                        local status = ''
+                        local chat_member_target = getChatMember(chat_id, target)
+                        if type(chat_member_target) == 'table' then
+                            if chat_member_target.result then
+                                chat_member_target = chat_member_target.result
+                                if chat_member_target.status then
+                                    status = chat_member_target.status
                                 end
                             end
                         end
