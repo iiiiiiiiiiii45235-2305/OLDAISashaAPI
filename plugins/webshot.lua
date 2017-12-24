@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if msg.from.is_mod then
-        local url = "http://webshot.okfnlabs.org/api/generate?url=" .. html_escape(matches[1])
+        local url = "http://webshot.okfnlabs.org/api/generate?url=" .. html_escape("http://" .. matches[1])
         if matches[2] and not matches[3] then
             url = url .. "&full=true"
         elseif matches[2] and matches[3] then
@@ -16,9 +16,9 @@ return {
     description = "WEBSHOT",
     patterns =
     {
-        "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([Hh][Tt][Tt][Pp][Ss]?://[%w-_%.%?%.:/%+=&]+) ([Ff][Uu][Ll][Ll])$",
-        "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([Hh][Tt][Tt][Pp][Ss]?://[%w-_%.%?%.:/%+=&]+) (%d+)x(%d+)$",
-        "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([Hh][Tt][Tt][Pp][Ss]?://[%w-_%.%?%.:/%+=&]+)$",
+        "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] [Hh][Tt][Tt][Pp][Ss]?://([%w-_%.%?%.:/%+=&]+) ([Ff][Uu][Ll][Ll])$",
+        "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] [Hh][Tt][Tt][Pp][Ss]?://([%w-_%.%?%.:/%+=&]+) (%d+)x(%d+)$",
+        "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] [Hh][Tt][Tt][Pp][Ss]?://([%w-_%.%?%.:/%+=&]+)$",
         "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([%w-_%.%?%.:/%+=&]+) ([Ff][Uu][Ll][Ll])$",
         "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([%w-_%.%?%.:/%+=&]+) (%d+)x(%d+)$",
         "^[#!/][Ww][Ee][Bb][Ss][Hh][Oo][Tt] ([%w-_%.%?%.:/%+=&]+)$",
