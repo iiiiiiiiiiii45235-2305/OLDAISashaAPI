@@ -764,7 +764,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                             end
                         end
                         local status = ''
-                        local chat_member_target = getChatMember(chat_id, target)
+                        local chat_member_target = getChatMember(chat_id, obj.id)
                         if type(chat_member_target) == 'table' then
                             if chat_member_target.result then
                                 chat_member_target = chat_member_target.result
@@ -925,7 +925,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                             end
                         end
                         local status = ''
-                        local chat_member_target = getChatMember(chat_id, target)
+                        local chat_member_target = getChatMember(chat_id, obj.id)
                         if type(chat_member_target) == 'table' then
                             if chat_member_target.result then
                                 chat_member_target = chat_member_target.result
