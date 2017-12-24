@@ -28,6 +28,6 @@ return {
     syntax =
     {
         "MOD",
-        "/webshot <url> [{size}|full]",
+        "/webshot <url> [{width}x{height}|full]",
     },
 }
