@@ -7,7 +7,7 @@ local function run(msg, matches)
             url = url .. "&width=" .. matches[2] .. "&height=" .. matches[3]
         end
         return vardumptext(HTTPS.request(url))
-        return sendPhotoFromUrl(msg.chat.id, url)
+        -- return sendPhotoFromUrl(msg.chat.id, url)
     else
         return langs[msg.lang].require_mod
     end
