@@ -6,6 +6,7 @@ local function run(msg, matches)
         elseif matches[2] and matches[3] then
             url = url .. "&width=" .. matches[2] .. "&height=" .. matches[3]
         end
+        return vardumptext(HTTPS.request(url))
         return sendPhotoFromUrl(msg.chat.id, url)
     else
         return langs[msg.lang].require_mod
