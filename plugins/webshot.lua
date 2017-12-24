@@ -1,6 +1,6 @@
 local function run(msg, matches)
     if msg.from.is_mod then
-        local url = "http://webshot.okfnlabs.org/api/generate?url=" .. matches[1]
+        local url = "http://webshot.okfnlabs.org/api/generate?url=" .. unescape_html(matches[1])
         if matches[2] and not matches[3] then
             url = url .. "&full=true"
         elseif matches[2] and matches[3] then
