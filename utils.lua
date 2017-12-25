@@ -214,15 +214,19 @@ end
 
 function clone_table(t)
     -- doing "table1 = table2" in lua = create a pointer to table2
-    local new_t = { }
-    local i, v = next(t, nil)
-    while i do
-        if t then
-            new_t[i] = v
-            i, v = next(t, i)
+    if type(t) ~= 'table' then
+        return false, 'Table expected, got ' .. type(t)
+    else
+        local new_t = { }
+        local i, v = next(t, nil)
+        while i do
+            if t then
+                new_t[i] = v
+                i, v = next(t, i)
+            end
         end
+        return new_t
     end
-    return new_t
 end
 
 function remove_duplicates(t)
