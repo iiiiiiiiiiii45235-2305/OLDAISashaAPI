@@ -813,13 +813,18 @@ local function run(msg, matches)
         mystat('/admins')
         if is_group(msg) or is_super_group(msg) then
             local hashtag = '#admins' .. tostring(msg.message_id)
-            local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
+            local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+            local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+            if group_link then
+                chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
+            end
+            local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
             if msg.from.username then
                 text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
             else
-                text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
+                text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
             end
-            text = text .. langs[msg.lang].msgText ..(msg.text or msg.caption) .. '\n' ..
+            text = text .. langs[msg.lang].msgText .. html_escape(msg.text or msg.caption) .. '\n' ..
             'HASHTAG: ' .. hashtag
 
             sendMessage(msg.chat.id, hashtag)
@@ -837,7 +842,7 @@ local function run(msg, matches)
                             if msg.reply then
                                 forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
                             end
-                            sendMessage(admin.user.id, text)
+                            sendMessage(admin.user.id, text, 'html')
                         else
                             cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                         end
@@ -854,7 +859,7 @@ local function run(msg, matches)
                         if msg.reply then
                             forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
                         end
-                        sendMessage(owner, text)
+                        sendMessage(owner, text, 'html')
                     else
                         cant_contact = cant_contact .. owner .. '\n'
                     end
@@ -873,7 +878,7 @@ local function run(msg, matches)
                             if msg.reply then
                                 forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
                             end
-                            sendMessage(k, text)
+                            sendMessage(k, text, 'html')
                         else
                             cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                         end

@@ -194,7 +194,12 @@ local function pre_process(msg)
                             modsContacted = true
 
                             local hashtag = '#alarm' .. tostring(msg.message_id)
-                            local attentionText = langs[msg.lang].possibleShistorm .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' ..
+                            local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+                            local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                            if group_link then
+                                chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
+                            end
+                            local attentionText = langs[msg.lang].possibleShistorm .. chat_name .. '\n' ..
                             'HASHTAG: ' .. hashtag
                             sendMessage(msg.chat.id, hashtag)
                             local already_contacted = { }
@@ -207,7 +212,7 @@ local function pre_process(msg)
                                     if not already_contacted[tonumber(admin.user.id)] then
                                         already_contacted[tonumber(admin.user.id)] = admin.user.id
                                         if sendChatAction(admin.user.id, 'typing', true) then
-                                            sendMessage(admin.user.id, attentionText)
+                                            sendMessage(admin.user.id, attentionText, 'html')
                                         else
                                             cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                                         end
@@ -221,7 +226,7 @@ local function pre_process(msg)
                                 if not already_contacted[tonumber(owner)] then
                                     already_contacted[tonumber(owner)] = owner
                                     if sendChatAction(owner, 'typing', true) then
-                                        sendMessage(owner, attentionText)
+                                        sendMessage(owner, attentionText, 'html')
                                     else
                                         cant_contact = cant_contact .. owner .. '\n'
                                     end
@@ -234,7 +239,7 @@ local function pre_process(msg)
                                     if not already_contacted[tonumber(k)] then
                                         already_contacted[tonumber(k)] = k
                                         if sendChatAction(k, 'typing', true) then
-                                            sendMessage(k, attentionText)
+                                            sendMessage(k, attentionText, 'html')
                                         else
                                             cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                                         end
