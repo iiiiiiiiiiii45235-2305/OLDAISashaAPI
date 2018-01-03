@@ -936,29 +936,26 @@ end
 -- Call and postpone execution for cron plugins
 function cron_plugins()
     if last_cron ~= last_redis_cron then
-        -- Run cron jobs every minute.
-        last_cron = last_redis_cron
         for name, plugin in ipairs(plugins) do
             if plugin.cron then
                 -- Call each plugin's cron function, if it has one.
                 local res, err = pcall( function() plugin.cron() end)
                 if not res then
-                    return sendLog('An #error occurred.\n' .. err)
+                    sendLog('An #error occurred.\n' .. err)
                 end
             end
         end
+        -- Run cron jobs every minute.
+        last_cron = last_redis_cron
     end
 end
 
 function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
-        -- Run cron jobs every day.
-        last_administrator_cron = last_redis_administrator_cron
         -- save database
         save_data(config.database.db, database)
         -- deletes all previous backups (they're in telegram so no problem)
         io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
-
         sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
         -- AISASHAAPI
         -- send database
@@ -975,6 +972,8 @@ function cron_administrator()
         -- deletes all files in log folder
         io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
         io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
+        -- Run cron jobs every day.
+        last_administrator_cron = last_redis_administrator_cron
     end
 end
 
