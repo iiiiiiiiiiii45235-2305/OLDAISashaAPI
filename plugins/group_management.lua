@@ -825,18 +825,22 @@ local function run(msg, matches)
             sendMessage(msg.chat.id, hashtag)
 
             local already_contacted = { }
+            already_contacted[tonumber(bot.id)] = bot.id
+            already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
             local cant_contact = ''
             local list = getChatAdministrators(msg.chat.id)
             if list then
                 for i, admin in pairs(list.result) do
-                    already_contacted[tonumber(admin.user.id)] = admin.user.id
-                    if sendChatAction(admin.user.id, 'typing', true) then
-                        if msg.reply then
-                            forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+                    if not already_contacted[tonumber(admin.user.id)] then
+                        already_contacted[tonumber(admin.user.id)] = admin.user.id
+                        if sendChatAction(admin.user.id, 'typing', true) then
+                            if msg.reply then
+                                forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+                            end
+                            sendMessage(admin.user.id, text)
+                        else
+                            cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                         end
-                        sendMessage(admin.user.id, text)
-                    else
-                        cant_contact = cant_contact .. admin.user.id .. ' ' .. admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or '')) .. '\n'
                     end
                 end
             end
@@ -871,7 +875,7 @@ local function run(msg, matches)
                             end
                             sendMessage(k, text)
                         else
-                            cant_contact = cant_contact .. k .. '\n'
+                            cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                         end
                     end
                 end

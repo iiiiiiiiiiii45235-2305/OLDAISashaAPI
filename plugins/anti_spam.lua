@@ -198,15 +198,19 @@ local function pre_process(msg)
                             'HASHTAG: ' .. hashtag
                             sendMessage(msg.chat.id, hashtag)
                             local already_contacted = { }
+                            already_contacted[tonumber(bot.id)] = bot.id
+                            already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
                             local cant_contact = ''
                             local list = getChatAdministrators(msg.chat.id)
                             if list then
                                 for i, admin in pairs(list.result) do
-                                    already_contacted[tonumber(admin.user.id)] = admin.user.id
-                                    if sendChatAction(admin.user.id, 'typing', true) then
-                                        sendMessage(admin.user.id, attentionText)
-                                    else
-                                        cant_contact = cant_contact .. admin.user.id .. ' ' .. admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or '')) .. '\n'
+                                    if not already_contacted[tonumber(admin.user.id)] then
+                                        already_contacted[tonumber(admin.user.id)] = admin.user.id
+                                        if sendChatAction(admin.user.id, 'typing', true) then
+                                            sendMessage(admin.user.id, attentionText)
+                                        else
+                                            cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
+                                        end
                                     end
                                 end
                             end
@@ -232,7 +236,7 @@ local function pre_process(msg)
                                         if sendChatAction(k, 'typing', true) then
                                             sendMessage(k, attentionText)
                                         else
-                                            cant_contact = cant_contact .. k .. '\n'
+                                            cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                                         end
                                     end
                                 end
