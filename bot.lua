@@ -693,6 +693,11 @@ function msg_valid(msg)
         if msg.service_type == 'chat_del_user' then
             if tostring(msg.removed.id) == tostring(bot.id) then
                 sendLog('#REMOVEDFROM ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].set_owner then
+                        sendMessage(data[tostring(msg.chat.id)].set_owner, langs[get_lang(data[tostring(msg.chat.id)].set_owner)].chatWillBeRemoved)
+                    end
+                end
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do

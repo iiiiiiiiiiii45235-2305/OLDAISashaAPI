@@ -259,6 +259,7 @@ return {
         sendTimeKeyboardPvt = "Ti ho mandato la tastiera del tempo in <a href=\"" .. bot.link .. "\">privato</a>.",
         errorTempTimeRange = "Errore, il valore deve essere compreso tra 0 secondi e 47 ore 59 minuti 59 secondi.",
         messageTooLong = "Messaggio troppo lungo, questo è un file con il testo che mi hai richiesto.",
+        chatWillBeRemoved = "Mi hai rimosso dal tuo gruppo, i relativi dati saranno essere cancellati a breve.",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "Sei stato promosso ad admin in ",
@@ -1640,6 +1641,7 @@ return {
         sendTimeKeyboardPvt = "I've sent you the time keyboard in <a href=\"" .. bot.link .. "\">private</a>.",
         errorTempTimeRange = "Error, the value must be included between 0 seconds and 47 hours 59 minutes and 59 seconds.",
         messageTooLong = "Message too long, this is a file that includes the text that you needed.",
+        chatWillBeRemoved = "You removed me from your group, those data will be removed soon.",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "You have been promoted to admin in ",
