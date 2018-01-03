@@ -377,6 +377,7 @@ local function run(msg, matches)
                             local restrictions = restrictions_table[tostring(matches[5])]
                             if time < 30 or time > 31622400 then
                                 if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
+                                printvardump(restrictions)
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
                                             text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
@@ -388,6 +389,7 @@ local function run(msg, matches)
                                 end
                             else
                                 if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
+                                printvardump(restrictions)
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
                                             text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
