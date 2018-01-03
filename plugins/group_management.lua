@@ -825,6 +825,8 @@ local function run(msg, matches)
                     sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
                 end
                 return
+            else
+                return langs[msg.lang].dontFloodAdmins
             end
         else
             return langs[msg.lang].useYourGroups

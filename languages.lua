@@ -743,6 +743,7 @@ return {
         usernameCleaned = "Username gruppo pulito.",
         errorCleanedUsername = "Errore nel tentativo di pulire l'username.",
         needPhoto = "Mi serve una foto.",
+        dontFloodAdmins = "Non stressare gli admin, hanno già ricevuto un avviso.",
 
         -- info.lua --
         infoWord = "INFO",
@@ -2141,6 +2142,7 @@ return {
         usernameCleaned = "Supergroup username cleaned.",
         errorCleanedUsername = "Error while cleaning supergroup username.",
         needPhoto = "I need a photo.",
+        dontFloodAdmins = "Dont't flood the admins, they already received a message.",
 
         -- info.lua --
         infoWord = "INFO",
