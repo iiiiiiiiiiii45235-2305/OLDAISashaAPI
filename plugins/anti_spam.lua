@@ -1,21 +1,32 @@
 -- Empty tables for solving multiple kicking problem(thanks to @topkecleon)
 local kicktable = {
-    -- user_id
+    -- chat_id = { user_id }
 }
 local cbwarntable = {
     -- user_id
 }
+local floodkicktable = {
+    -- chat_id = { user_id = counter }
+}
+local modsContacted = false
 
 local TIME_CHECK = 2
 -- seconds
 -- Save stats, ban user
 local function pre_process(msg)
     if msg then
+        if not floodkicktable[msg.chat.id] then
+            floodkicktable[msg.chat.id] = { }
+        end
+        if not kicktable[msg.chat.id] then
+            kicktable[msg.chat.id] = { }
+        end
+
         -- Ignore service msg
         if msg.service then
             if msg.added then
                 for k, v in pairs(msg.added) do
-                    kicktable[v.id] = false
+                    kicktable[msg.chat.id][v.id] = false
                 end
             end
         end
@@ -116,14 +127,14 @@ local function pre_process(msg)
                         if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
                             return msg
                         end
-                        if kicktable[msg.from.id] == true then
+                        if kicktable[msg.chat.id][msg.from.id] == true then
                             local member = getChatMember(msg.chat.id, msg.from.id)
                             if type(member) == 'table' then
                                 if member.ok and member.result then
                                     if member.result.status == 'left' or member.result.status == 'kicked' then
                                         return
                                     else
-                                        kicktable[msg.from.id] = false
+                                        kicktable[msg.chat.id][msg.from.id] = false
                                     end
                                 end
                             end
@@ -167,7 +178,69 @@ local function pre_process(msg)
                                 sendLog(gban_text, 'html', true)
                             end
                         end
-                        kicktable[msg.from.id] = true
+                        kicktable[msg.chat.id][msg.from.id] = true
+                        if floodkicktable[msg.chat.id][msg.from.id] then
+                            floodkicktable[msg.chat.id][msg.from.id] = floodkicktable[msg.chat.id][msg.from.id] + 1
+                        else
+                            floodkicktable[msg.chat.id][msg.from.id] = 1
+                        end
+
+                        -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
+                        local tot_kicks = 0
+                        for k, v in pairs(floodkicktable[msg.chat.id]) do
+                            tot_kicks = tot_kicks + v
+                        end
+                        if tot_kicks >= 4 and not modsContacted then
+                            modsContacted = true
+
+                            local hashtag = '#alarm' .. tostring(msg.message_id)
+                            local attentionText = langs[msg.lang].possibleShistorm .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' ..
+                            'HASHTAG: ' .. hashtag
+                            sendMessage(msg.chat.id, hashtag)
+                            local already_contacted = { }
+                            local cant_contact = ''
+                            local list = getChatAdministrators(msg.chat.id)
+                            if list then
+                                for i, admin in pairs(list.result) do
+                                    already_contacted[tonumber(admin.user.id)] = admin.user.id
+                                    if sendChatAction(admin.user.id, 'typing', true) then
+                                        sendMessage(admin.user.id, attentionText)
+                                    else
+                                        cant_contact = cant_contact .. admin.user.id .. ' ' .. admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or '')) .. '\n'
+                                    end
+                                end
+                            end
+
+                            -- owner
+                            local owner = data[tostring(msg.chat.id)]['set_owner']
+                            if owner then
+                                if not already_contacted[tonumber(owner)] then
+                                    already_contacted[tonumber(owner)] = owner
+                                    if sendChatAction(owner, 'typing', true) then
+                                        sendMessage(owner, attentionText)
+                                    else
+                                        cant_contact = cant_contact .. owner .. '\n'
+                                    end
+                                end
+                            end
+
+                            -- determine if table is empty
+                            if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
+                                for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
+                                    if not already_contacted[tonumber(k)] then
+                                        already_contacted[tonumber(k)] = k
+                                        if sendChatAction(k, 'typing', true) then
+                                            sendMessage(k, attentionText)
+                                        else
+                                            cant_contact = cant_contact .. k .. '\n'
+                                        end
+                                    end
+                                end
+                            end
+                            if cant_contact ~= '' then
+                                sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
+                            end
+                        end
                         msg = nil
                     end
                 end
@@ -181,6 +254,8 @@ local function cron()
     -- clear those tables on the top of the plugin
     kicktable = { }
     cbwarntable = { }
+    floodkicktable = { }
+    modsContacted = false
 end
 
 return {

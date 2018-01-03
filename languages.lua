@@ -401,7 +401,8 @@ return {
         floodNotAdmitted = "Il flood non è ammesso.\n",
         statusRemoved = "Utente kickato.",
         gbannedFrom = " bannato globalmente da ",
-        dontFloodKeyboard = "Non floodare la fottuta tastiera!",
+        dontFloodKeyboard = "Non floodare la fottuta tastiera!\n",
+        possibleShistorm = "Attenzione, possibile shitstorm in corso!\n",
 
         -- banhammer.lua --
         noUsernameFound = "Non trovo nessun utente con quell'username.",
@@ -1793,6 +1794,7 @@ return {
         statusRemoved = "User kicked.",
         gbannedFrom = " globally banned from ",
         dontFloodKeyboard = "Don't flood the fucking keyboard!",
+        possibleShistorm = "Attention, possible ongoing shistorm!\n",
 
         -- banhammer.lua --
         noUsernameFound = "Can't find a user with that username.",
