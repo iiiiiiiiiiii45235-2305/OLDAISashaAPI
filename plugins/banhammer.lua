@@ -296,7 +296,10 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
-                            restrictions_table[tostring(matches[5])] = default_restrictions
+                            restrictions_table[tostring(matches[5])] = clone_table(default_restrictions)
+                            for k, v in pairs(restrictions_table[tostring(matches[5])]) do
+                                restrictions_table[tostring(matches[5])][k] = false
+                            end
                         end
                     elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                         if restrictions_table[tostring(matches[7])] then
@@ -377,7 +380,6 @@ local function run(msg, matches)
                             local restrictions = restrictions_table[tostring(matches[5])]
                             if time < 30 or time > 31622400 then
                                 if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
-                                printvardump(restrictions)
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
                                             text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
@@ -389,7 +391,6 @@ local function run(msg, matches)
                                 end
                             else
                                 if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
-                                printvardump(restrictions)
                                     for k, v in pairs(restrictions) do
                                         if not restrictions[k] then
                                             text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
