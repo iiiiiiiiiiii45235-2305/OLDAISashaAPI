@@ -1,4 +1,8 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
+local adminsContacted = {
+    -- chat_id
+}
+
 -- table that contains 'group_id' = message_id to delete old rules messages
 local last_rules = { }
 
@@ -422,76 +426,6 @@ local function modList(msg)
     end
     return message
 end
-
-local function contactMods(msg)
-    local hashtag = '#admins' .. tostring(msg.message_id)
-    local text = langs[msg.lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[msg.lang].sender
-    if msg.from.username then
-        text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-    else
-        text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-    end
-    text = text .. langs[msg.lang].msgText ..(msg.text or msg.caption) .. '\n' ..
-    'HASHTAG: ' .. hashtag
-
-    sendMessage(msg.chat.id, hashtag)
-
-    local already_contacted = { }
-    local cant_contact = ''
-    local list = getChatAdministrators(msg.chat.id)
-    if list then
-        for i, admin in pairs(list.result) do
-            already_contacted[tonumber(admin.user.id)] = admin.user.id
-            if sendChatAction(admin.user.id, 'typing', true) then
-                if msg.reply then
-                    forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
-                end
-                sendMessage(admin.user.id, text)
-            else
-                cant_contact = cant_contact .. admin.user.id .. ' ' .. admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or '')) .. '\n'
-            end
-        end
-    end
-
-    -- owner
-    local owner = data[tostring(msg.chat.id)]['set_owner']
-    if owner then
-        if not already_contacted[tonumber(owner)] then
-            already_contacted[tonumber(owner)] = owner
-            if sendChatAction(owner, 'typing', true) then
-                if msg.reply then
-                    forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
-                end
-                sendMessage(owner, text)
-            else
-                cant_contact = cant_contact .. owner .. '\n'
-            end
-        end
-    end
-
-    -- determine if table is empty
-    if next(data[tostring(msg.chat.id)]['moderators']) == nil then
-        -- fix way
-        return
-    else
-        for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-            if not already_contacted[tonumber(k)] then
-                if sendChatAction(k, 'typing', true) then
-                    already_contacted[tonumber(k)] = k
-                    if msg.reply then
-                        forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
-                    end
-                    sendMessage(k, text)
-                else
-                    cant_contact = cant_contact .. k .. '\n'
-                end
-            end
-        end
-    end
-    if cant_contact ~= '' then
-        sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
-    end
-end
 -- end RANKS MANAGEMENT
 
 local function showSettings(target, lang)
@@ -812,83 +746,86 @@ local function run(msg, matches)
     if matches[1]:lower() == 'admins' then
         mystat('/admins')
         if is_group(msg) or is_super_group(msg) then
-            local hashtag = '#admins' .. tostring(msg.message_id)
-            local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-            local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
-            if group_link then
-                chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
-            end
-            local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
-            if msg.from.username then
-                text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-            else
-                text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
-            end
-            text = text .. langs[msg.lang].msgText .. html_escape(msg.text or msg.caption) .. '\n' ..
-            'HASHTAG: ' .. hashtag
+            if not adminsContacted[msg.chat.id] or is_admin(msg) then
+                adminsContacted[msg.chat.id] = true
+                local hashtag = '#admins' .. tostring(msg.message_id)
+                local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+                local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                if group_link then
+                    chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
+                end
+                local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
+                if msg.from.username then
+                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+                else
+                    text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
+                end
+                text = text .. langs[msg.lang].msgText .. html_escape(msg.text or msg.caption) .. '\n' ..
+                'HASHTAG: ' .. hashtag
 
-            sendMessage(msg.chat.id, hashtag)
+                sendMessage(msg.chat.id, hashtag)
 
-            local already_contacted = { }
-            already_contacted[tonumber(bot.id)] = bot.id
-            already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
-            local cant_contact = ''
-            local list = getChatAdministrators(msg.chat.id)
-            if list then
-                for i, admin in pairs(list.result) do
-                    if not already_contacted[tonumber(admin.user.id)] then
-                        already_contacted[tonumber(admin.user.id)] = admin.user.id
-                        if sendChatAction(admin.user.id, 'typing', true) then
-                            if msg.reply then
-                                forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+                local already_contacted = { }
+                already_contacted[tonumber(bot.id)] = bot.id
+                already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
+                local cant_contact = ''
+                local list = getChatAdministrators(msg.chat.id)
+                if list then
+                    for i, admin in pairs(list.result) do
+                        if not already_contacted[tonumber(admin.user.id)] then
+                            already_contacted[tonumber(admin.user.id)] = admin.user.id
+                            if sendChatAction(admin.user.id, 'typing', true) then
+                                if msg.reply then
+                                    forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
+                                end
+                                sendMessage(admin.user.id, text, 'html')
+                            else
+                                cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                             end
-                            sendMessage(admin.user.id, text, 'html')
+                        end
+                    end
+                end
+
+                -- owner
+                local owner = data[tostring(msg.chat.id)]['set_owner']
+                if owner then
+                    if not already_contacted[tonumber(owner)] then
+                        already_contacted[tonumber(owner)] = owner
+                        if sendChatAction(owner, 'typing', true) then
+                            if msg.reply then
+                                forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
+                            end
+                            sendMessage(owner, text, 'html')
                         else
-                            cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
+                            cant_contact = cant_contact .. owner .. '\n'
                         end
                     end
                 end
-            end
 
-            -- owner
-            local owner = data[tostring(msg.chat.id)]['set_owner']
-            if owner then
-                if not already_contacted[tonumber(owner)] then
-                    already_contacted[tonumber(owner)] = owner
-                    if sendChatAction(owner, 'typing', true) then
-                        if msg.reply then
-                            forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
+                -- determine if table is empty
+                if next(data[tostring(msg.chat.id)]['moderators']) == nil then
+                    -- fix way
+                    return
+                else
+                    for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
+                        if not already_contacted[tonumber(k)] then
+                            already_contacted[tonumber(k)] = k
+                            if sendChatAction(k, 'typing', true) then
+                                if msg.reply then
+                                    forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
+                                end
+                                sendMessage(k, text, 'html')
+                            else
+                                cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
+                            end
                         end
-                        sendMessage(owner, text, 'html')
-                    else
-                        cant_contact = cant_contact .. owner .. '\n'
                     end
                 end
-            end
-
-            -- determine if table is empty
-            if next(data[tostring(msg.chat.id)]['moderators']) == nil then
-                -- fix way
+                if cant_contact ~= '' then
+                    sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
+                end
                 return
-            else
-                for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                    if not already_contacted[tonumber(k)] then
-                        already_contacted[tonumber(k)] = k
-                        if sendChatAction(k, 'typing', true) then
-                            if msg.reply then
-                                forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
-                            end
-                            sendMessage(k, text, 'html')
-                        else
-                            cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
-                        end
-                    end
-                end
             end
-            if cant_contact ~= '' then
-                sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
-            end
-            return
         else
             return langs[msg.lang].useYourGroups
         end
@@ -2273,8 +2210,14 @@ local function pre_process(msg)
     end
 end
 
+local function cron()
+    -- clear the table on the top of the plugin
+    adminsContacted = { }
+end
+
 return {
     description = "GROUP_MANAGEMENT",
+    cron = cron,
     patterns =
     {
         "^(###cbgroup_management)(DELETE)$",
