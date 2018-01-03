@@ -55,6 +55,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         end
         param_restrictions = obj_user
     end
+    printvardump(param_restrictions)
     if param_restrictions then
         local restrictions = adjustRestrictions(param_restrictions)
         local keyboard = { }

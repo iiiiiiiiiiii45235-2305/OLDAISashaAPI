@@ -432,7 +432,7 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        if not invite_table[msg.reply_to_message.forward_from.id] then
+                                        if not invite_table[msg.reply_to_message.forward_from.id] or is_admin(msg) then
                                             if not userInChat(msg.chat.id, msg.reply_to_message.forward_from.id, true) then
                                                 if sendMessage(msg.reply_to_message.forward_from.id, link, 'html') then
                                                     invite_table[msg.reply_to_message.forward_from.id] = true
@@ -453,7 +453,7 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                if not invite_table[msg.reply_to_message.from.id] then
+                                if not invite_table[msg.reply_to_message.from.id] or is_admin(msg) then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
                                             invite_table[msg.reply_to_message.from.id] = true
@@ -471,7 +471,7 @@ local function run(msg, matches)
                         else
                             if msg.reply_to_message.service then
                                 if msg.reply_to_message.service_type == 'chat_del_user' then
-                                    if not invite_table[msg.reply_to_message.removed.id] then
+                                    if not invite_table[msg.reply_to_message.removed.id] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.removed.id, true) then
                                             if sendMessage(msg.reply_to_message.removed.id, link, 'html') then
                                                 invite_table[msg.reply_to_message.removed.id] = true
@@ -486,7 +486,7 @@ local function run(msg, matches)
                                         return langs[msg.lang].userAlreadyInvited
                                     end
                                 else
-                                    if not invite_table[msg.reply_to_message.from.id] then
+                                    if not invite_table[msg.reply_to_message.from.id] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                             if sendMessage(msg.reply_to_message.from.id, link, 'html') then
                                                 invite_table[msg.reply_to_message.from.id] = true
@@ -502,7 +502,7 @@ local function run(msg, matches)
                                     end
                                 end
                             else
-                                if not invite_table[msg.reply_to_message.from.id] then
+                                if not invite_table[msg.reply_to_message.from.id] or is_admin(msg) then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
                                             invite_table[msg.reply_to_message.from.id] = true
@@ -524,7 +524,7 @@ local function run(msg, matches)
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        if not invite_table[msg.entities[k].user.id] then
+                                        if not invite_table[msg.entities[k].user.id] or is_admin(msg) then
                                             if not userInChat(msg.chat.id, msg.entities[k].user.id, true) then
                                                 if sendMessage(msg.entities[k].user.id, link, 'html') then
                                                     invite_table[msg.entities[k].user.id] = true
@@ -544,7 +544,7 @@ local function run(msg, matches)
                         end
                         matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
-                            if not invite_table[matches[2]] then
+                            if not invite_table[matches[2]] or is_admin(msg) then
                                 if not userInChat(msg.chat.id, matches[2], true) then
                                     if sendMessage(matches[2], link, 'html') then
                                         invite_table[matches[2]] = true
@@ -562,7 +562,7 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if not invite_table[obj_user.id] then
+                                    if not invite_table[obj_user.id] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, obj_user.id, true) then
                                             if sendMessage(obj_user.id, link, 'html') then
                                                 invite_table[obj_user.id] = true
