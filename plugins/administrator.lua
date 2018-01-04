@@ -161,6 +161,158 @@ local function run(msg, matches)
                 return
             end
         end
+
+        if is_realm(msg) then
+            if matches[1]:lower() == 'rem' and matches[2] then
+                mystat('/rem <group_id>')
+                -- Group configuration removal
+                data[tostring(matches[2])] = nil
+                if not data[tostring('groups')] then
+                    data[tostring('groups')] = nil
+                end
+                data[tostring('groups')][tostring(matches[2])] = nil
+                save_data(config.moderation.data, data)
+                return langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed
+            end
+            if matches[1]:lower() == 'lock' and matches[2] and matches[3] then
+                if settingsDictionary[matches[3]:lower()] then
+                    mystat('/lock <group_id> ' .. matches[3]:lower())
+                    return lockSetting(matches[2], matches[3]:lower())
+                end
+                return
+            end
+            if matches[1]:lower() == 'unlock' and matches[2] and matches[3] then
+                if settingsDictionary[matches[3]:lower()] then
+                    mystat('/unlock <group_id> ' .. matches[3]:lower())
+                    return unlockSetting(matches[2], matches[3]:lower())
+                end
+                return
+            end
+            if matches[1]:lower() == 'mute' and matches[2] and matches[3] then
+                if mutesDictionary[matches[3]:lower()] then
+                    mystat('/mute <group_id> ' .. matches[3]:lower())
+                    return mute(msg.chat.id, matches[3]:lower())
+                end
+                return
+            end
+            if matches[1]:lower() == 'unmute' and matches[2] and matches[3] then
+                if mutesDictionary[matches[3]:lower()] then
+                    mystat('/unmute <group_id> ' .. matches[3]:lower())
+                    return unmute(msg.chat.id, matches[3]:lower())
+                end
+                return
+            end
+            if matches[1]:lower() == 'muteslist' and matches[2] then
+                mystat('/muteslist <group_id>')
+                local chat_name = ''
+                if data[tostring(matches[2])] then
+                    chat_name = data[tostring(matches[2])].set_name or ''
+                end
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[2])) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                        return
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
+            end
+            if matches[1]:lower() == 'textualmuteslist' and matches[2] then
+                mystat('/muteslist <group_id>')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
+                return mutesList(matches[2])
+            end
+            if matches[1]:lower() == 'settings' and matches[2] then
+                mystat('/settings <group_id>')
+                local chat_name = ''
+                if data[tostring(matches[2])] then
+                    chat_name = data[tostring(matches[2])].set_name or ''
+                end
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[2])) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                        return
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
+            end
+            if matches[1]:lower() == 'textualsettings' and matches[2] then
+                mystat('/settings <group_id>')
+                return showSettings(matches[2], msg.lang)
+            end
+            if matches[1]:lower() == 'setgprules' and matches[2] and matches[3] then
+                mystat('/setgprules <group_id>')
+                data[tostring(matches[2])].rules = matches[3]
+                save_data(config.moderation.data, data)
+                return langs[msg.lang].newRules .. matches[3]
+            end
+            if matches[1]:lower() == 'setgpowner' and matches[2] and matches[3] then
+                if data[tostring(matches[2])] then
+                    mystat('/setgpowner <group_id> <user_id>')
+                    data[tostring(matches[2])].set_owner = matches[3]
+                    save_data(config.moderation.data, data)
+                    sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
+                    if areNoticesEnabled(matches[3], matches[2]) then
+                        sendMessage(matches[3], langs[get_lang(matches[3])].youHaveBeenDemotedMod .. database[tostring(matches[2])].print_name)
+                    end
+                    return matches[3] .. langs[msg.lang].setOwner
+                end
+            end
+        end
+
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if matches[1]:lower() == 'add' and not matches[2] then
+                if is_realm(msg) then
+                    return langs[msg.lang].errorAlreadyRealm
+                end
+                if msg.chat.type == 'group' then
+                    mystat('/add')
+                    if is_group(msg) then
+                        return langs[msg.lang].groupAlreadyAdded
+                    end
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added group [ " .. msg.chat.id .. " ]")
+                    print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
+                    return addGroup(msg)
+                elseif msg.chat.type == 'supergroup' then
+                    mystat('/add')
+                    if is_super_group(msg) then
+                        return langs[msg.lang].supergroupAlreadyAdded
+                    end
+                    print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added SuperGroup")
+                    return addSuperGroup(msg)
+                end
+            end
+            if matches[1]:lower() == 'rem' and not matches[2] then
+                if is_realm(msg) then
+                    return langs[msg.lang].errorRealm
+                end
+                if msg.chat.type == 'group' then
+                    if not is_group(msg) then
+                        return langs[msg.lang].groupRemoved
+                    end
+                    mystat('/rem')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed group [ " .. msg.chat.id .. " ]")
+                    print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")
+                    return remGroup(msg)
+                elseif msg.chat.type == 'supergroup' then
+                    if not is_super_group(msg) then
+                        return langs[msg.lang].supergroupRemoved
+                    end
+                    mystat('/rem')
+                    print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")
+                    return remSuperGroup(msg)
+                end
+            end
+        end
+
         if matches[1] == 'todo' then
             mystat('/todo <text>')
             if msg.reply then
@@ -463,6 +615,26 @@ local function run(msg, matches)
                 doSendBackup()
                 return langs[msg.lang].backupDone
             end
+            if matches[1]:lower() == 'add' and matches[2]:lower() == 'realm' then
+                if is_group(msg) then
+                    return langs[msg.lang].errorAlreadyGroup
+                end
+                mystat('/add realm')
+                if msg.chat.type == 'group' then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added realm [ " .. msg.chat.id .. " ]")
+                    print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added as a realm")
+                    return addRealm(msg)
+                end
+            end
+            if matches[1]:lower() == 'rem' and matches[2]:lower() == 'realm' then
+                if not is_realm(msg) then
+                    return langs[msg.lang].errorNotRealm
+                end
+                mystat('/rem realm')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed realm [ " .. msg.chat.id .. " ]")
+                print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed as a realm")
+                return remRealm(msg)
+            end
         else
             return langs[msg.lang].require_sudo
         end
@@ -480,6 +652,26 @@ return {
         "^(###cbadministrator)(PAGEMINUS)(%d+)$",
         "^(###cbadministrator)(PAGEPLUS)(%d+)$",
 
+        -- INREALM
+        "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Oo][Ww][Nn][Ee][Rr]) (%-?%d+) (%d+)$",-- (group id) (owner id)
+        "^[#!/]([Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
+        "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
+        "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)$",
+        "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
+        "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
+        "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
+        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Rr][Uu][Ll][Ee][Ss]) (%-?%d+) (.*)$",
+        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Aa][Bb][Oo][Uu][Tt]) (%-?%d+) (.*)$",
+
+        -- INGROUP
+        "^[#!/]([Aa][Dd][Dd]) ([Rr][Ee][Aa][Ll][Mm])$",
+        "^[#!/]([Rr][Ee][Mm]) ([Rr][Ee][Aa][Ll][Mm])$",
+
+        "^[#!/]([Aa][Dd][Dd])$",
+        "^[#!/]([Rr][Ee][Mm])$",
         "^[#!/]([Tt][Oo][Dd][Oo])$",
         "^[#!/]([Tt][Oo][Dd][Oo]) (.*)$",
         "^[#!/]([Pp][Mm]) (%-?%d+) (.*)$",
@@ -525,6 +717,20 @@ return {
         "/ping",
         "/laststart",
         "/leave [{group_id}]",
+        "/add",
+        "/rem",
+        "REALM",
+        "/setgpowner {group_id} {user_id}",
+        "/setgprules {group_id} {text}",
+        "/mute {group_id} all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "/unmute {group_id} all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "/muteslist {group_id}",
+        "/textualmuteslist {group_id}",
+        "/lock {group_id} arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "/unlock {group_id} arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
+        "/settings {group_id}",
+        "/textualsettings {group_id}",
+        "/rem {group_id}",
         "SUDO",
         "/addadmin {user_id}|{username}",
         "/removeadmin {user_id}|{username}",
@@ -535,6 +741,9 @@ return {
         "/rebootcli",
         "/reloaddata",
         "/broadcast {text}",
+        "REALM",
+        "/add realm",
+        "/rem realm",
     },
 }
 -- By @imandaneshi :)

@@ -833,76 +833,324 @@ local function run(msg, matches)
         end
     end
 
-    -- INREALM
-    if is_realm(msg) then
-        if matches[1]:lower() == 'rem' and matches[2] then
-            if is_admin(msg) then
-                mystat('/rem <group_id>')
-                -- Group configuration removal
-                data[tostring(matches[2])] = nil
-                if not data[tostring('groups')] then
-                    data[tostring('groups')] = nil
+    -- INGROUP/SUPERGROUP
+    if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') and data[tostring(msg.chat.id)] then
+        if matches[1]:lower() == 'rules' then
+            mystat('/rules')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
+            local tmp = last_rules[tostring(msg.chat.id)]
+            if not data[tostring(msg.chat.id)].rules then
+                last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
+                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' ..(last_rules[tostring(msg.chat.id)].result.message_id or '') .. '"')
+            else
+                last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules'])
+            end
+            if last_rules[tostring(msg.chat.id)] then
+                if last_rules[tostring(msg.chat.id)].result then
+                    if last_rules[tostring(msg.chat.id)].result.message_id then
+                        last_rules[tostring(msg.chat.id)] = last_rules[tostring(msg.chat.id)].result.message_id
+                    else
+                        last_rules[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    last_rules[tostring(msg.chat.id)] = nil
                 end
-                data[tostring('groups')][tostring(matches[2])] = nil
+            end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+        end
+        if matches[1]:lower() == 'updategroupinfo' then
+            if msg.from.is_mod then
+                mystat('/upgradegroupinfo')
+                data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                local list = getChatAdministrators(msg.chat.id)
+                if list then
+                    if list.result then
+                        for i, admin in pairs(list.result) do
+                            if admin.status == 'creator' or admin.status == 'administrator' then
+                                if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
+                                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                                end
+                            end
+                        end
+                    end
+                end
                 save_data(config.moderation.data, data)
-                return langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed
+                return langs[msg.lang].groupInfoUpdated
             else
-                return langs[msg.lang].require_admin
+                return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'lock' and matches[2] and matches[3] then
-            if is_admin(msg) then
-                if settingsDictionary[matches[3]:lower()] then
-                    mystat('/lock <group_id> ' .. matches[3]:lower())
-                    return lockSetting(matches[2], matches[3]:lower())
+        if matches[1]:lower() == 'syncmodlist' then
+            if msg.from.is_owner then
+                mystat('/syncmodlist')
+                data[tostring(msg.chat.id)].moderators = { }
+                local list = getChatAdministrators(msg.chat.id)
+                if list then
+                    if list.result then
+                        for i, admin in pairs(list.result) do
+                            if admin.status == 'creator' or admin.status == 'administrator' then
+                                if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
+                                    data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
+                                end
+                            end
+                        end
+                    end
+                end
+                save_data(config.moderation.data, data)
+                return langs[msg.lang].modListSynced
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'setrules' then
+            mystat('/setrules')
+            if msg.from.is_mod then
+                data[tostring(msg.chat.id)].rules = matches[2]
+                save_data(config.moderation.data, data)
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] has changed group rules to [" .. matches[2] .. "]")
+                return langs[msg.lang].newRules .. matches[2]
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'setflood' then
+            if msg.from.is_mod then
+                if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 20 then
+                    return langs[msg.lang].errorFloodRange
+                end
+                mystat('/setflood')
+                data[tostring(msg.chat.id)].settings.flood_max = matches[2]
+                save_data(config.moderation.data, data)
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. matches[2] .. "]")
+                return langs[msg.lang].floodSet .. matches[2]
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'getwarn' then
+            mystat('/getwarn')
+            return getWarn(msg.chat.id)
+        end
+        if matches[1]:lower() == 'setwarn' and matches[2] then
+            if msg.from.is_mod then
+                mystat('/setwarn')
+                if tonumber(matches[2]) < 0 or tonumber(matches[2]) > 10 then
+                    return langs[msg.lang].errorWarnRange
+                end
+                local warn_max = matches[2]
+                data[tostring(msg.chat.id)].settings.warn_max = warn_max
+                save_data(config.moderation.data, data)
+                savelog(msg.chat.id, " [" .. msg.from.id .. "] set warn to [" .. matches[2] .. "]")
+                if tonumber(matches[2]) == 0 then
+                    return langs[msg.lang].neverWarn
+                else
+                    return langs[msg.lang].warnSet .. matches[2]
+                end
+            else
+                return langs[msg.msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'settitle' then
+            if msg.from.is_mod then
+                mystat('/settitle')
+                return setChatTitle(msg.chat.id, matches[2])
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'setdescription' then
+            if msg.from.is_mod then
+                mystat('/setdescription')
+                return setChatDescription(msg.chat.id, matches[2])
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'setphoto' then
+            if msg.from.is_mod then
+                if msg.reply then
+                    if msg.reply_to_message.media then
+                        local file_id = ''
+                        local caption = matches[3] or ''
+                        if msg.reply_to_message.media_type == 'photo' then
+                            local bigger_pic_id = ''
+                            local size = 0
+                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                                if v.file_size then
+                                    if v.file_size > size then
+                                        size = v.file_size
+                                        bigger_pic_id = v.file_id
+                                    end
+                                end
+                            end
+                            file_id = bigger_pic_id
+                            mystat('/setphoto')
+                            return setChatPhotoId(msg.chat.id, file_id)
+                        else
+                            return langs[msg.lang].needPhoto
+                        end
+                    else
+                        return langs[msg.lang].needPhoto
+                    end
+                else
+                    return langs[msg.lang].needReply
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'unsetphoto' then
+            if msg.from.is_mod then
+                mystat('/unsetphoto')
+                return deleteChatPhoto(msg.chat.id)
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'silentpin' then
+            if msg.from.is_mod then
+                if msg.reply then
+                    mystat('/silentpin')
+                    if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id) then
+                        return sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
+                    end
+                else
+                    return langs[msg.lang].needReply
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'pin' then
+            if msg.from.is_mod then
+                if msg.reply then
+                    mystat('/pin')
+                    if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                        return sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
+                    end
+                else
+                    return langs[msg.lang].needReply
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'unpin' then
+            if msg.from.is_mod then
+                mystat('/unpin')
+                return unpinChatMessage(msg.chat.id)
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'del' then
+            if msg.from.is_mod then
+                mystat('/del')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
+                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                    sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                end
+                if msg.reply then
+                    if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                        sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                    end
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+            return
+        end
+        if matches[1]:lower() == 'delkeyboard' then
+            if msg.reply then
+                if msg.reply_to_message.from.id == bot.id then
+                    if msg.reply_to_message.text or msg.reply_to_message.caption then
+                        if msg.from.is_mod then
+                            mystat('/delkeyboard')
+                            return editMessage(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
+                        else
+                            return langs[msg.lang].require_mod
+                        end
+                    end
+                else
+                    return langs[msg.lang].cantDeleteMessage
+                end
+            else
+                return langs[msg.lang].needReply
+            end
+            return
+        end
+        if matches[1]:lower() == 'lock' then
+            if msg.from.is_mod then
+                if settingsDictionary[matches[2]:lower()] then
+                    mystat('/lock ' .. matches[2]:lower())
+                    return lockSetting(msg.chat.id, matches[2]:lower())
                 end
                 return
             else
-                return langs[msg.lang].require_admin
+                return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'unlock' and matches[2] and matches[3] then
-            if is_admin(msg) then
-                if settingsDictionary[matches[3]:lower()] then
-                    mystat('/unlock <group_id> ' .. matches[3]:lower())
-                    return unlockSetting(matches[2], matches[3]:lower())
+        if matches[1]:lower() == 'unlock' then
+            if msg.from.is_mod then
+                if settingsDictionary[matches[2]:lower()] then
+                    mystat('/unlock ' .. matches[2]:lower())
+                    return unlockSetting(msg.chat.id, matches[2]:lower())
                 end
                 return
             else
-                return langs[msg.lang].require_admin
+                return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'mute' and matches[2] and matches[3] then
-            if is_admin(msg) then
-                if mutesDictionary[matches[3]:lower()] then
-                    mystat('/mute <group_id> ' .. matches[3]:lower())
-                    return mute(msg.chat.id, matches[3]:lower())
+        if matches[1]:lower() == 'mute' then
+            if msg.from.is_mod then
+                if mutesDictionary[matches[2]:lower()] then
+                    mystat('/mute ' .. matches[2]:lower())
+                    if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
+                        if msg.from.is_owner then
+                            return mute(msg.chat.id, matches[2]:lower())
+                        else
+                            return langs[msg.lang].require_owner
+                        end
+                    else
+                        return mute(msg.chat.id, matches[2]:lower())
+                    end
                 end
                 return
             else
-                return langs[msg.lang].require_admin
+                return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'unmute' and matches[2] and matches[3] then
-            if is_admin(msg) then
-                if mutesDictionary[matches[3]:lower()] then
-                    mystat('/unmute <group_id> ' .. matches[3]:lower())
-                    return unmute(msg.chat.id, matches[3]:lower())
+        if matches[1]:lower() == 'unmute' then
+            if msg.from.is_mod then
+                if mutesDictionary[matches[2]:lower()] then
+                    mystat('/unmute ' .. matches[2]:lower())
+                    if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
+                        if msg.from.is_owner then
+                            return unmute(msg.chat.id, matches[2]:lower())
+                        else
+                            return langs[msg.lang].require_owner
+                        end
+                    else
+                        return unmute(msg.chat.id, matches[2]:lower())
+                    end
                 end
                 return
             else
-                return langs[msg.lang].require_admin
+                return langs[msg.lang].require_mod
             end
         end
-        if matches[1]:lower() == 'muteslist' and matches[2] then
-            if is_admin(msg) then
-                mystat('/muteslist <group_id>')
+        if matches[1]:lower() == 'muteslist' then
+            mystat('/muteslist')
+            if msg.from.is_mod then
                 local chat_name = ''
-                if data[tostring(matches[2])] then
-                    chat_name = data[tostring(matches[2])].set_name or ''
+                if data[tostring(msg.chat.id)] then
+                    chat_name = data[tostring(msg.chat.id)].set_name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[2])) then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(msg.chat.id)) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -913,27 +1161,24 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
-                return langs[msg.lang].require_admin
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                return mutesList(msg.chat.id)
             end
         end
-        if matches[1]:lower() == 'textualmuteslist' and matches[2] then
-            if is_admin(msg) then
-                mystat('/muteslist <group_id>')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
-                return mutesList(matches[2])
-            else
-                return langs[msg.lang].require_admin
-            end
+        if matches[1]:lower() == 'textualmuteslist' then
+            mystat('/muteslist')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+            return mutesList(msg.chat.id)
         end
-        if matches[1]:lower() == 'settings' and matches[2] then
-            if is_admin(msg) then
-                mystat('/settings <group_id>')
+        if matches[1]:lower() == 'settings' then
+            mystat('/settings')
+            if msg.from.is_mod then
                 local chat_name = ''
-                if data[tostring(matches[2])] then
-                    chat_name = data[tostring(matches[2])].set_name or ''
+                if data[tostring(msg.chat.id)] then
+                    chat_name = data[tostring(msg.chat.id)].set_name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[2])) then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(msg.chat.id)) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
@@ -944,638 +1189,141 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'textualsettings' and matches[2] then
-            if is_admin(msg) then
-                mystat('/settings <group_id>')
-                return showSettings(matches[2], msg.lang)
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'setgprules' and matches[2] and matches[3] then
-            if is_admin(msg) then
-                mystat('/setgprules <group_id>')
-                data[tostring(matches[2])].rules = matches[3]
-                save_data(config.moderation.data, data)
-                return langs[msg.lang].newRules .. matches[3]
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'setgpowner' and matches[2] and matches[3] then
-            if is_admin(msg) then
-                if data[tostring(matches[2])] then
-                    mystat('/setgpowner <group_id> <user_id>')
-                    data[tostring(matches[2])].set_owner = matches[3]
-                    save_data(config.moderation.data, data)
-                    sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
-                    if areNoticesEnabled(matches[3], matches[2]) then
-                        sendMessage(matches[3], langs[get_lang(matches[3])].youHaveBeenDemotedMod .. database[tostring(matches[2])].print_name)
-                    end
-                    return matches[3] .. langs[msg.lang].setOwner
-                end
-            else
-                return langs[msg.lang].require_admin
-            end
-        end
-    end
-
-    -- INGROUP/SUPERGROUP
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-        if matches[1]:lower() == 'add' and not matches[2] then
-            if is_admin(msg) then
-                if is_realm(msg) then
-                    return langs[msg.lang].errorAlreadyRealm
-                end
-                if msg.chat.type == 'group' then
-                    mystat('/add')
-                    if is_group(msg) then
-                        return langs[msg.lang].groupAlreadyAdded
-                    end
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added group [ " .. msg.chat.id .. " ]")
-                    print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
-                    return addGroup(msg)
-                elseif msg.chat.type == 'supergroup' then
-                    mystat('/add')
-                    if is_super_group(msg) then
-                        return langs[msg.lang].supergroupAlreadyAdded
-                    end
-                    print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added")
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added SuperGroup")
-                    return addSuperGroup(msg)
-                end
-            else
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] attempted to add group [ " .. msg.chat.id .. " ]")
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'add' and matches[2]:lower() == 'realm' then
-            if is_sudo(msg) then
-                if is_group(msg) then
-                    return langs[msg.lang].errorAlreadyGroup
-                end
-                mystat('/add realm')
-                if msg.chat.type == 'group' then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added realm [ " .. msg.chat.id .. " ]")
-                    print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") added as a realm")
-                    return addRealm(msg)
-                end
-            else
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] attempted to add realm [ " .. msg.chat.id .. " ]")
-                return langs[msg.lang].require_sudo
-            end
-        end
-        if matches[1]:lower() == 'rem' and not matches[2] then
-            if is_admin(msg) then
-                if is_realm(msg) then
-                    return langs[msg.lang].errorRealm
-                end
-                if msg.chat.type == 'group' then
-                    if not is_group(msg) then
-                        return langs[msg.lang].groupRemoved
-                    end
-                    mystat('/rem')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed group [ " .. msg.chat.id .. " ]")
-                    print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")
-                    return remGroup(msg)
-                elseif msg.chat.type == 'supergroup' then
-                    if not is_super_group(msg) then
-                        return langs[msg.lang].supergroupRemoved
-                    end
-                    mystat('/rem')
-                    print("SuperGroup " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed")
-                    return remSuperGroup(msg)
-                end
-            else
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] attempted to remove group [ " .. msg.chat.id .. " ]")
-                return langs[msg.lang].require_admin
-            end
-        end
-        if matches[1]:lower() == 'rem' and matches[2]:lower() == 'realm' then
-            if is_sudo(msg) then
-                if not is_realm(msg) then
-                    return langs[msg.lang].errorNotRealm
-                end
-                mystat('/rem realm')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] removed realm [ " .. msg.chat.id .. " ]")
-                print("group " .. msg.chat.print_name .. "(" .. msg.chat.id .. ") removed as a realm")
-                return remRealm(msg)
-            else
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] attempted to remove realm [ " .. msg.chat.id .. " ]")
-                return langs[msg.lang].require_sudo
-            end
-        end
-        if data[tostring(msg.chat.id)] then
-            if matches[1]:lower() == 'createkeyboard' and matches[2] then
-                if msg.from.is_mod then
-                    mystat('/createkeyboard')
-
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'rules' then
-                mystat('/rules')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
-                local tmp = last_rules[tostring(msg.chat.id)]
-                if not data[tostring(msg.chat.id)].rules then
-                    last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
-                    io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' ..(last_rules[tostring(msg.chat.id)].result.message_id or '') .. '"')
-                else
-                    last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules'])
-                end
-                if last_rules[tostring(msg.chat.id)] then
-                    if last_rules[tostring(msg.chat.id)].result then
-                        if last_rules[tostring(msg.chat.id)].result.message_id then
-                            last_rules[tostring(msg.chat.id)] = last_rules[tostring(msg.chat.id)].result.message_id
-                        else
-                            last_rules[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        last_rules[tostring(msg.chat.id)] = nil
-                    end
-                end
-                if tmp then
-                    deleteMessage(msg.chat.id, tmp, true)
-                end
-                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-            end
-            if matches[1]:lower() == 'updategroupinfo' then
-                if msg.from.is_mod then
-                    mystat('/upgradegroupinfo')
-                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
-                    local list = getChatAdministrators(msg.chat.id)
-                    if list then
-                        if list.result then
-                            for i, admin in pairs(list.result) do
-                                if admin.status == 'creator' or admin.status == 'administrator' then
-                                    if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
-                                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
-                                    end
-                                end
-                            end
-                        end
-                    end
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].groupInfoUpdated
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'syncmodlist' then
-                if msg.from.is_owner then
-                    mystat('/syncmodlist')
-                    data[tostring(msg.chat.id)].moderators = { }
-                    local list = getChatAdministrators(msg.chat.id)
-                    if list then
-                        if list.result then
-                            for i, admin in pairs(list.result) do
-                                if admin.status == 'creator' or admin.status == 'administrator' then
-                                    if admin.user.id ~= bot.userVersion.id and admin.user.id ~= bot.id then
-                                        data[tostring(msg.chat.id)].moderators[tostring(admin.user.id)] =(admin.user.username or(admin.user.first_name ..(admin.user.last_name or '')))
-                                    end
-                                end
-                            end
-                        end
-                    end
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].modListSynced
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'setrules' then
-                mystat('/setrules')
-                if msg.from.is_mod then
-                    data[tostring(msg.chat.id)].rules = matches[2]
-                    save_data(config.moderation.data, data)
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] has changed group rules to [" .. matches[2] .. "]")
-                    return langs[msg.lang].newRules .. matches[2]
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'setflood' then
-                if msg.from.is_mod then
-                    if tonumber(matches[2]) < 3 or tonumber(matches[2]) > 20 then
-                        return langs[msg.lang].errorFloodRange
-                    end
-                    mystat('/setflood')
-                    data[tostring(msg.chat.id)].settings.flood_max = matches[2]
-                    save_data(config.moderation.data, data)
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. matches[2] .. "]")
-                    return langs[msg.lang].floodSet .. matches[2]
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'getwarn' then
-                mystat('/getwarn')
-                return getWarn(msg.chat.id)
-            end
-            if matches[1]:lower() == 'setwarn' and matches[2] then
-                if msg.from.is_mod then
-                    mystat('/setwarn')
-                    if tonumber(matches[2]) < 0 or tonumber(matches[2]) > 10 then
-                        return langs[msg.lang].errorWarnRange
-                    end
-                    local warn_max = matches[2]
-                    data[tostring(msg.chat.id)].settings.warn_max = warn_max
-                    save_data(config.moderation.data, data)
-                    savelog(msg.chat.id, " [" .. msg.from.id .. "] set warn to [" .. matches[2] .. "]")
-                    if tonumber(matches[2]) == 0 then
-                        return langs[msg.lang].neverWarn
-                    else
-                        return langs[msg.lang].warnSet .. matches[2]
-                    end
-                else
-                    return langs[msg.msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'settitle' then
-                if msg.from.is_mod then
-                    mystat('/settitle')
-                    return setChatTitle(msg.chat.id, matches[2])
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'setdescription' then
-                if msg.from.is_mod then
-                    mystat('/setdescription')
-                    return setChatDescription(msg.chat.id, matches[2])
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'setphoto' then
-                if msg.from.is_mod then
-                    if msg.reply then
-                        if msg.reply_to_message.media then
-                            local file_id = ''
-                            local caption = matches[3] or ''
-                            if msg.reply_to_message.media_type == 'photo' then
-                                local bigger_pic_id = ''
-                                local size = 0
-                                for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                                    if v.file_size then
-                                        if v.file_size > size then
-                                            size = v.file_size
-                                            bigger_pic_id = v.file_id
-                                        end
-                                    end
-                                end
-                                file_id = bigger_pic_id
-                                mystat('/setphoto')
-                                return setChatPhotoId(msg.chat.id, file_id)
-                            else
-                                return langs[msg.lang].needPhoto
-                            end
-                        else
-                            return langs[msg.lang].needPhoto
-                        end
-                    else
-                        return langs[msg.lang].needReply
-                    end
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'unsetphoto' then
-                if msg.from.is_mod then
-                    mystat('/unsetphoto')
-                    return deleteChatPhoto(msg.chat.id)
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'silentpin' then
-                if msg.from.is_mod then
-                    if msg.reply then
-                        mystat('/silentpin')
-                        if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id) then
-                            return sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
-                        end
-                    else
-                        return langs[msg.lang].needReply
-                    end
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'pin' then
-                if msg.from.is_mod then
-                    if msg.reply then
-                        mystat('/pin')
-                        if pinChatMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            return sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
-                        end
-                    else
-                        return langs[msg.lang].needReply
-                    end
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'unpin' then
-                if msg.from.is_mod then
-                    mystat('/unpin')
-                    return unpinChatMessage(msg.chat.id)
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'del' then
-                if msg.from.is_mod then
-                    mystat('/del')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
-                    end
-                    if msg.reply then
-                        if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
-                            sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
-                        end
-                    end
-                else
-                    return langs[msg.lang].require_mod
-                end
-                return
-            end
-            if matches[1]:lower() == 'delkeyboard' then
-                if msg.reply then
-                    if msg.reply_to_message.from.id == bot.id then
-                        if msg.reply_to_message.text or msg.reply_to_message.caption then
-                            if msg.from.is_mod then
-                                mystat('/delkeyboard')
-                                return editMessage(msg.chat.id, msg.reply_to_message.message_id, msg.reply_to_message.text or msg.reply_to_message.caption)
-                            else
-                                return langs[msg.lang].require_mod
-                            end
-                        end
-                    else
-                        return langs[msg.lang].cantDeleteMessage
-                    end
-                else
-                    return langs[msg.lang].needReply
-                end
-                return
-            end
-            if matches[1]:lower() == 'lock' then
-                if msg.from.is_mod then
-                    if settingsDictionary[matches[2]:lower()] then
-                        mystat('/lock ' .. matches[2]:lower())
-                        return lockSetting(msg.chat.id, matches[2]:lower())
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'unlock' then
-                if msg.from.is_mod then
-                    if settingsDictionary[matches[2]:lower()] then
-                        mystat('/unlock ' .. matches[2]:lower())
-                        return unlockSetting(msg.chat.id, matches[2]:lower())
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'mute' then
-                if msg.from.is_mod then
-                    if mutesDictionary[matches[2]:lower()] then
-                        mystat('/mute ' .. matches[2]:lower())
-                        if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
-                            if msg.from.is_owner then
-                                return mute(msg.chat.id, matches[2]:lower())
-                            else
-                                return langs[msg.lang].require_owner
-                            end
-                        else
-                            return mute(msg.chat.id, matches[2]:lower())
-                        end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'unmute' then
-                if msg.from.is_mod then
-                    if mutesDictionary[matches[2]:lower()] then
-                        mystat('/unmute ' .. matches[2]:lower())
-                        if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
-                            if msg.from.is_owner then
-                                return unmute(msg.chat.id, matches[2]:lower())
-                            else
-                                return langs[msg.lang].require_owner
-                            end
-                        else
-                            return unmute(msg.chat.id, matches[2]:lower())
-                        end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'muteslist' then
-                mystat('/muteslist')
-                if msg.from.is_mod then
-                    local chat_name = ''
-                    if data[tostring(msg.chat.id)] then
-                        chat_name = data[tostring(msg.chat.id)].set_name or ''
-                    end
-                    if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(msg.chat.id)) then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                        if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
-                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                            return
-                        end
-                    else
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                    end
-                else
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                    return mutesList(msg.chat.id)
-                end
-            end
-            if matches[1]:lower() == 'textualmuteslist' then
-                mystat('/muteslist')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                return mutesList(msg.chat.id)
-            end
-            if matches[1]:lower() == 'settings' then
-                mystat('/settings')
-                if msg.from.is_mod then
-                    local chat_name = ''
-                    if data[tostring(msg.chat.id)] then
-                        chat_name = data[tostring(msg.chat.id)].set_name or ''
-                    end
-                    if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(msg.chat.id)) then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-                        if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
-                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                            return
-                        end
-                    else
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                    end
-                else
-                    return showSettings(msg.chat.id, msg.lang)
-                end
-            end
-            if matches[1]:lower() == 'textualsettings' then
-                mystat('/settings')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                 return showSettings(msg.chat.id, msg.lang)
             end
-            if matches[1]:lower() == 'newlink' then
+        end
+        if matches[1]:lower() == 'textualsettings' then
+            mystat('/settings')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+            return showSettings(msg.chat.id, msg.lang)
+        end
+        if matches[1]:lower() == 'newlink' then
+            if msg.from.is_mod then
+                mystat('/newlink')
+                local link = exportChatInviteLink(msg.chat.id)
+                if link then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] created new group link [" .. tostring(link) .. "]")
+                    data[tostring(msg.chat.id)].settings.set_link = tostring(link)
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].linkCreated
+                else
+                    return langs[msg.lang].sendMeLink
+                end
+            else
+                return langs[msg.lang].require_mod
+            end
+        end
+        if matches[1]:lower() == 'setlink' and matches[2] then
+            if msg.from.is_owner then
+                mystat('/setlink')
+                data[tostring(msg.chat.id)].settings.set_link = matches[2]
+                save_data(config.moderation.data, data)
+                return langs[msg.lang].linkSaved
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'unsetlink' then
+            if msg.from.is_owner then
+                mystat('/unsetlink')
+                data[tostring(msg.chat.id)].settings.set_link = nil
+                save_data(config.moderation.data, data)
+                return langs[msg.lang].linkDeleted
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'link' then
+            mystat('/link')
+            if data[tostring(msg.chat.id)].settings.lock_group_link then
                 if msg.from.is_mod then
-                    mystat('/newlink')
-                    local link = exportChatInviteLink(msg.chat.id)
-                    if link then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] created new group link [" .. tostring(link) .. "]")
-                        data[tostring(msg.chat.id)].settings.set_link = tostring(link)
-                        save_data(config.moderation.data, data)
-                        return langs[msg.lang].linkCreated
-                    else
-                        return langs[msg.lang].sendMeLink
-                    end
-                else
-                    return langs[msg.lang].require_mod
-                end
-            end
-            if matches[1]:lower() == 'setlink' and matches[2] then
-                if msg.from.is_owner then
-                    mystat('/setlink')
-                    data[tostring(msg.chat.id)].settings.set_link = matches[2]
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].linkSaved
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'unsetlink' then
-                if msg.from.is_owner then
-                    mystat('/unsetlink')
-                    data[tostring(msg.chat.id)].settings.set_link = nil
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].linkDeleted
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'link' then
-                mystat('/link')
-                if data[tostring(msg.chat.id)].settings.lock_group_link then
-                    if msg.from.is_mod then
-                        if data[tostring(msg.chat.id)].settings.set_link then
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                            if sendMessage(msg.from.id, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html') then
-                                if msg.chat.type ~= 'private' then
-                                    return sendReply(msg, langs[msg.lang].sendLinkPvt, 'html')
-                                end
-                            else
-                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                            end
-                        else
-                            return langs[msg.lang].createLink
-                        end
-                    else
-                        return langs[msg.lang].require_mod
-                    end
-                else
                     if data[tostring(msg.chat.id)].settings.set_link then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                        return sendReply(msg, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html')
+                        if sendMessage(msg.from.id, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html') then
+                            if msg.chat.type ~= 'private' then
+                                return sendReply(msg, langs[msg.lang].sendLinkPvt, 'html')
+                            end
+                        else
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                        end
                     else
                         return langs[msg.lang].createLink
                     end
-                end
-            end
-            if matches[1]:lower() == 'getadmins' then
-                if msg.from.is_owner then
-                    mystat('/getadmins')
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup Admins list")
-                    return getAdmins(msg.chat.id)
                 else
-                    return langs[msg.lang].require_owner
+                    return langs[msg.lang].require_mod
+                end
+            else
+                if data[tostring(msg.chat.id)].settings.set_link then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
+                    return sendReply(msg, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html')
+                else
+                    return langs[msg.lang].createLink
                 end
             end
-            if matches[1]:lower() == 'owner' then
-                mystat('/owner')
-                local group_owner = data[tostring(msg.chat.id)].set_owner
-                if not group_owner then
-                    return langs[msg.lang].noOwnerCallAdmin
-                end
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] used /owner")
-                return langs[msg.lang].ownerIs .. group_owner
+        end
+        if matches[1]:lower() == 'getadmins' then
+            if msg.from.is_owner then
+                mystat('/getadmins')
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup Admins list")
+                return getAdmins(msg.chat.id)
+            else
+                return langs[msg.lang].require_owner
             end
-            if matches[1]:lower() == 'setowner' then
-                if msg.from.is_owner then
-                    mystat('/setowner')
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        return setOwner(msg.reply_to_message.forward_from, msg.chat.id)
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
+        end
+        if matches[1]:lower() == 'owner' then
+            mystat('/owner')
+            local group_owner = data[tostring(msg.chat.id)].set_owner
+            if not group_owner then
+                return langs[msg.lang].noOwnerCallAdmin
+            end
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] used /owner")
+            return langs[msg.lang].ownerIs .. group_owner
+        end
+        if matches[1]:lower() == 'setowner' then
+            if msg.from.is_owner then
+                mystat('/setowner')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return setOwner(msg.reply_to_message.forward_from, msg.chat.id)
                                 else
-                                    return langs[msg.lang].errorNoForward
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
+                            else
+                                return langs[msg.lang].errorNoForward
                             end
-                        else
-                            return setOwner(msg.reply_to_message.from, msg.chat.id)
                         end
-                    elseif matches[2] and matches[2] ~= '' then
-                        if msg.entities then
-                            for k, v in pairs(msg.entities) do
-                                -- check if there's a text_mention
-                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. msg.entities[k].user.id .. "] as owner")
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    return setOwner(obj_user, msg.chat.id)
-                                                end
-                                            else
-                                                return langs[msg.lang].noObject
+                    else
+                        return setOwner(msg.reply_to_message.from, msg.chat.id)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. msg.entities[k].user.id .. "] as owner")
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                return setOwner(obj_user, msg.chat.id)
                                             end
+                                        else
+                                            return langs[msg.lang].noObject
                                         end
                                     end
                                 end
                             end
                         end
-                        matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return setOwner(obj_user, msg.chat.id)
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    end
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
+                    if string.match(matches[2], '^%d+$') then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return setOwner(obj_user, msg.chat.id)
@@ -1584,41 +1332,45 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject
                             end
                         end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return setOwner(obj_user, msg.chat.id)
+                            end
+                        else
+                            return langs[msg.lang].noObject
+                        end
                     end
-                    return
-                else
-                    return langs[msg.lang].require_owner
                 end
+                return
+            else
+                return langs[msg.lang].require_owner
             end
-            if matches[1]:lower() == 'modlist' then
-                mystat('/modlist')
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
-                return modList(msg)
-            end
-            if matches[1]:lower() == 'promoteadmin' then
-                if msg.from.is_owner then
-                    mystat('/promoteadmin')
-                    local permissions = clone_table(default_permissions)
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        if matches[3] then
-                                            permissions = adjustPermissions(matches[3]:lower())
-                                        end
-                                        return promoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from, permissions)
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
+        end
+        if matches[1]:lower() == 'modlist' then
+            mystat('/modlist')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
+            return modList(msg)
+        end
+        if matches[1]:lower() == 'promoteadmin' then
+            if msg.from.is_owner then
+                mystat('/promoteadmin')
+                local permissions = clone_table(default_permissions)
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    if matches[3] then
+                                        permissions = adjustPermissions(matches[3]:lower())
                                     end
+                                    return promoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from, permissions)
                                 else
-                                    return langs[msg.lang].errorNoForward
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                if matches[2] then
-                                    permissions = adjustPermissions(matches[2]:lower())
-                                end
-                                return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions)
+                                return langs[msg.lang].errorNoForward
                             end
                         else
                             if matches[2] then
@@ -1626,46 +1378,39 @@ local function run(msg, matches)
                             end
                             return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions)
                         end
-                    elseif matches[2] and matches[2] ~= '' then
-                        if msg.entities then
-                            for k, v in pairs(msg.entities) do
-                                -- check if there's a text_mention
-                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    if matches[3] then
-                                                        permissions = adjustPermissions(matches[3]:lower())
-                                                    end
-                                                    return promoteTgAdmin(msg.chat.id, obj_user, permissions)
+                    else
+                        if matches[2] then
+                            permissions = adjustPermissions(matches[2]:lower())
+                        end
+                        return promoteTgAdmin(msg.chat.id, msg.reply_to_message.from, permissions)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                if matches[3] then
+                                                    permissions = adjustPermissions(matches[3]:lower())
                                                 end
-                                            else
-                                                return langs[msg.lang].noObject
+                                                return promoteTgAdmin(msg.chat.id, obj_user, permissions)
                                             end
+                                        else
+                                            return langs[msg.lang].noObject
                                         end
                                     end
                                 end
                             end
                         end
-                        matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        if matches[3] then
-                                            permissions = adjustPermissions(matches[3]:lower())
-                                        end
-                                        return promoteTgAdmin(msg.chat.id, obj_user, permissions)
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    end
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if matches[3] then
@@ -1677,65 +1422,68 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject
                             end
                         end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'demoteadmin' then
-                if msg.from.is_owner then
-                    mystat('/demoteadmin')
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        return demoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from)
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
-                                else
-                                    return langs[msg.lang].errorNoForward
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if matches[3] then
+                                    permissions = adjustPermissions(matches[3]:lower())
                                 end
+                                return promoteTgAdmin(msg.chat.id, obj_user, permissions)
                             end
                         else
-                            return demoteTgAdmin(msg.chat.id, msg.reply_to_message.from)
+                            return langs[msg.lang].noObject
                         end
-                    elseif matches[2] and matches[2] ~= '' then
-                        if msg.entities then
-                            for k, v in pairs(msg.entities) do
-                                -- check if there's a text_mention
-                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    return demoteTgAdmin(msg.chat.id, obj_user)
-                                                end
-                                            else
-                                                return langs[msg.lang].noObject
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'demoteadmin' then
+            if msg.from.is_owner then
+                mystat('/demoteadmin')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return demoteTgAdmin(msg.chat.id, msg.reply_to_message.forward_from)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        return demoteTgAdmin(msg.chat.id, msg.reply_to_message.from)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                return demoteTgAdmin(msg.chat.id, obj_user)
                                             end
+                                        else
+                                            return langs[msg.lang].noObject
                                         end
                                     end
                                 end
                             end
                         end
-                        matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return demoteTgAdmin(msg.chat.id, obj_user)
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    end
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return demoteTgAdmin(msg.chat.id, obj_user)
@@ -1744,65 +1492,65 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject
                             end
                         end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'promote' then
-                if msg.from.is_owner then
-                    mystat('/promote')
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        return promoteMod(msg.chat.id, msg.reply_to_message.forward_from)
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
-                                else
-                                    return langs[msg.lang].errorNoForward
-                                end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return demoteTgAdmin(msg.chat.id, obj_user)
                             end
                         else
-                            return promoteMod(msg.chat.id, msg.reply_to_message.from)
+                            return langs[msg.lang].noObject
                         end
-                    elseif matches[2] and matches[2] ~= '' then
-                        if msg.entities then
-                            for k, v in pairs(msg.entities) do
-                                -- check if there's a text_mention
-                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    return promoteMod(msg.chat.id, obj_user)
-                                                end
-                                            else
-                                                return langs[msg.lang].noObject
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'promote' then
+            if msg.from.is_owner then
+                mystat('/promote')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return promoteMod(msg.chat.id, msg.reply_to_message.forward_from)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        return promoteMod(msg.chat.id, msg.reply_to_message.from)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                return promoteMod(msg.chat.id, obj_user)
                                             end
+                                        else
+                                            return langs[msg.lang].noObject
                                         end
                                     end
                                 end
                             end
                         end
-                        matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return promoteMod(msg.chat.id, obj_user)
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    end
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     return promoteMod(msg.chat.id, obj_user)
@@ -1811,61 +1559,68 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject
                             end
                         end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'demote' then
-                if msg.from.is_owner then
-                    mystat('/demote')
-                    if msg.reply then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        return demoteMod(msg.chat.id, msg.reply_to_message.forward_from)
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
-                                else
-                                    return langs[msg.lang].errorNoForward
-                                end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return promoteMod(msg.chat.id, obj_user)
                             end
                         else
-                            return demoteMod(msg.chat.id, msg.reply_to_message.from)
+                            return langs[msg.lang].noObject
                         end
-                    elseif matches[2] and matches[2] ~= '' then
-                        if msg.entities then
-                            for k, v in pairs(msg.entities) do
-                                -- check if there's a text_mention
-                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    return demoteMod(msg.chat.id, obj_user)
-                                                end
-                                            else
-                                                return langs[msg.lang].noObject
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'demote' then
+            if msg.from.is_owner then
+                mystat('/demote')
+                if msg.reply then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    return demoteMod(msg.chat.id, msg.reply_to_message.forward_from)
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
+                                end
+                            else
+                                return langs[msg.lang].errorNoForward
+                            end
+                        end
+                    else
+                        return demoteMod(msg.chat.id, msg.reply_to_message.from)
+                    end
+                elseif matches[2] and matches[2] ~= '' then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                return demoteMod(msg.chat.id, obj_user)
                                             end
+                                        else
+                                            return langs[msg.lang].noObject
                                         end
                                     end
                                 end
                             end
                         end
-                        matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        return demoteMod(msg.chat.id, obj_user)
-                                    else
-                                        return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
-                                    end
+                    end
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    return demoteMod(msg.chat.id, obj_user)
                                 else
                                     return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                                 end
@@ -1873,118 +1628,102 @@ local function run(msg, matches)
                                 return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                             end
                         else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return demoteMod(msg.chat.id, obj_user)
-                                end
-                            else
-                                return langs[msg.lang].noObject
-                            end
+                            return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                         end
-                    end
-                    return
-                else
-                    return langs[msg.lang].require_owner
-                end
-            end
-            if matches[1]:lower() == 'permissions' then
-                mystat('/permissions')
-                local chat_name = ''
-                if data[tostring(msg.chat.id)] then
-                    chat_name = data[tostring(msg.chat.id)].set_name or ''
-                end
-                if msg.reply then
-                    if msg.from.is_mod then
-                        if matches[2] then
-                            if matches[2]:lower() == 'from' then
-                                if msg.reply_to_message.forward then
-                                    if msg.reply_to_message.forward_from then
-                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
-                                            if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                                return
-                                            end
-                                        else
-                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                                        end
-                                    else
-                                        return langs[msg.lang].cantDoThisToChat
-                                    end
-                                else
-                                    return langs[msg.lang].errorNoForward
-                                end
+                    else
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return demoteMod(msg.chat.id, obj_user)
                             end
                         else
-                            if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
-                                if msg.chat.type ~= 'private' then
-                                    local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                    io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                    io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                    return
+                            return langs[msg.lang].noObject
+                        end
+                    end
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
+            end
+        end
+        if matches[1]:lower() == 'permissions' then
+            mystat('/permissions')
+            local chat_name = ''
+            if data[tostring(msg.chat.id)] then
+                chat_name = data[tostring(msg.chat.id)].set_name or ''
+            end
+            if msg.reply then
+                if msg.from.is_mod then
+                    if matches[2] then
+                        if matches[2]:lower() == 'from' then
+                            if msg.reply_to_message.forward then
+                                if msg.reply_to_message.forward_from then
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                        if msg.chat.type ~= 'private' then
+                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
+                                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                            return
+                                        end
+                                    else
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                                    end
+                                else
+                                    return langs[msg.lang].cantDoThisToChat
                                 end
                             else
-                                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                                return langs[msg.lang].errorNoForward
                             end
                         end
                     else
-                        return langs[msg.lang].require_mod
+                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                            if msg.chat.type ~= 'private' then
+                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
+                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                return
+                            end
+                        else
+                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                        end
                     end
-                elseif matches[2] and matches[2] ~= '' then
-                    if msg.from.is_mod then
-                        if msg.entities then
-                            for k, v in pairs(msg.entities) do
-                                -- check if there's a text_mention
-                                if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                    if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
-                                                        if msg.chat.type ~= 'private' then
-                                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                                            return
-                                                        end
-                                                    else
-                                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                else
+                    return langs[msg.lang].require_mod
+                end
+            elseif matches[2] and matches[2] ~= '' then
+                if msg.from.is_mod then
+                    if msg.entities then
+                        for k, v in pairs(msg.entities) do
+                            -- check if there's a text_mention
+                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                    local obj_user = getChat(msg.entities[k].user.id)
+                                    if type(obj_user) == 'table' then
+                                        if obj_user then
+                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                                    if msg.chat.type ~= 'private' then
+                                                        local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
+                                                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                                        return
                                                     end
+                                                else
+                                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                                 end
-                                            else
-                                                return langs[msg.lang].noObject
                                             end
+                                        else
+                                            return langs[msg.lang].noObject
                                         end
                                     end
                                 end
                             end
                         end
-                        matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            local obj_user = getChat(matches[2])
-                            if type(obj_user) == 'table' then
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
-                                            if msg.chat.type ~= 'private' then
-                                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
-                                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
-                                                return
-                                            end
-                                        else
-                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                                        end
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    end
+                    matches[2] = tostring(matches[2]):gsub(' ', '')
+                    if string.match(matches[2], '^%d+$') then
+                        local obj_user = getChat(matches[2])
+                        if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
@@ -2003,102 +1742,120 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        return langs[msg.lang].require_mod
-                    end
-                else
-                    return showPermissions(msg.chat.id, msg.from.id, msg.lang)
-                end
-                return
-            end
-            if matches[1]:lower() == 'textualpermissions' then
-                mystat('/permissions')
-                if msg.reply then
-                    if matches[2] then
-                        if matches[2]:lower() == 'from' then
-                            if msg.reply_to_message.forward then
-                                if msg.reply_to_message.forward_from then
-                                    return showPermissions(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
-                                else
-                                    return langs[msg.lang].cantDoThisToChat
-                                end
-                            else
-                                return langs[msg.lang].errorNoForward
-                            end
-                        else
-                            return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
-                        end
-                    else
-                        return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
-                    end
-                elseif matches[2] and matches[2] ~= '' then
-                    if msg.entities then
-                        for k, v in pairs(msg.entities) do
-                            -- check if there's a text_mention
-                            if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
-                                if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    return showPermissions(msg.chat.id, msg.entities[k].user.id, msg.lang)
-                                end
-                            end
-                        end
-                    end
-                    matches[2] = tostring(matches[2]):gsub(' ', '')
-                    if string.match(matches[2], '^%d+$') then
-                        return showPermissions(msg.chat.id, matches[2], msg.lang)
-                    else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return showPermissions(msg.chat.id, obj_user.id, msg.lang)
+                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
+                                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. message_id .. '"')
+                                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
+                                        return
+                                    end
+                                else
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                                end
                             end
                         else
                             return langs[msg.lang].noObject
                         end
                     end
                 else
-                    return showPermissions(msg.chat.id, msg.from.id, msg.lang)
+                    return langs[msg.lang].require_mod
                 end
+            else
+                return showPermissions(msg.chat.id, msg.from.id, msg.lang)
             end
-            if matches[1]:lower() == 'clean' then
-                if msg.from.is_owner then
-                    if matches[2]:lower() == 'banlist' then
-                        mystat('/clean banlist')
-                        redis:del('banned:' .. msg.chat.id)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned banlist")
-                        return langs[msg.lang].banlistCleaned
-                    elseif matches[2]:lower() == 'modlist' then
-                        mystat('/clean modlist')
-                        data[tostring(msg.chat.id)].moderators = { }
-                        save_data(config.moderation.data, data)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
-                        return langs[msg.lang].modlistCleaned
-                    elseif matches[2]:lower() == 'rules' then
-                        mystat('/clean rules')
-                        data[tostring(msg.chat.id)].rules = nil
-                        save_data(config.moderation.data, data)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned rules")
-                        return langs[msg.lang].rulesCleaned
-                    elseif matches[2]:lower() == 'whitelist' then
-                        mystat('/clean whitelist')
-                        redis:del('whitelist:' .. msg.chat.tg_cli_id)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelist")
-                        return langs[msg.lang].whitelistCleaned
-                    elseif matches[2]:lower() == 'whitelistgban' then
-                        mystat('/clean whitelistgban')
-                        redis:del('whitelist:gban:' .. msg.chat.tg_cli_id)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelistgban")
-                        return langs[msg.lang].whitelistGbanCleaned
-                    elseif matches[2]:lower() == 'whitelistlink' then
-                        mystat('/clean whitelistlink')
-                        data[tostring(msg.chat.id)].settings.links_whitelist = { }
-                        save_data(config.moderation.data, data)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned links_whitelist")
-                        --
-                        return langs[msg.lang].whitelistLinkCleaned
+            return
+        end
+        if matches[1]:lower() == 'textualpermissions' then
+            mystat('/permissions')
+            if msg.reply then
+                if matches[2] then
+                    if matches[2]:lower() == 'from' then
+                        if msg.reply_to_message.forward then
+                            if msg.reply_to_message.forward_from then
+                                return showPermissions(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
+                            else
+                                return langs[msg.lang].cantDoThisToChat
+                            end
+                        else
+                            return langs[msg.lang].errorNoForward
+                        end
+                    else
+                        return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                     end
-                    return
                 else
-                    return langs[msg.lang].require_owner
+                    return showPermissions(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                 end
+            elseif matches[2] and matches[2] ~= '' then
+                if msg.entities then
+                    for k, v in pairs(msg.entities) do
+                        -- check if there's a text_mention
+                        if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
+                            if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
+                                return showPermissions(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                            end
+                        end
+                    end
+                end
+                matches[2] = tostring(matches[2]):gsub(' ', '')
+                if string.match(matches[2], '^%d+$') then
+                    return showPermissions(msg.chat.id, matches[2], msg.lang)
+                else
+                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    if obj_user then
+                        if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                            return showPermissions(msg.chat.id, obj_user.id, msg.lang)
+                        end
+                    else
+                        return langs[msg.lang].noObject
+                    end
+                end
+            else
+                return showPermissions(msg.chat.id, msg.from.id, msg.lang)
+            end
+        end
+        if matches[1]:lower() == 'clean' then
+            if msg.from.is_owner then
+                if matches[2]:lower() == 'banlist' then
+                    mystat('/clean banlist')
+                    redis:del('banned:' .. msg.chat.id)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned banlist")
+                    return langs[msg.lang].banlistCleaned
+                elseif matches[2]:lower() == 'modlist' then
+                    mystat('/clean modlist')
+                    data[tostring(msg.chat.id)].moderators = { }
+                    save_data(config.moderation.data, data)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
+                    return langs[msg.lang].modlistCleaned
+                elseif matches[2]:lower() == 'rules' then
+                    mystat('/clean rules')
+                    data[tostring(msg.chat.id)].rules = nil
+                    save_data(config.moderation.data, data)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned rules")
+                    return langs[msg.lang].rulesCleaned
+                elseif matches[2]:lower() == 'whitelist' then
+                    mystat('/clean whitelist')
+                    redis:del('whitelist:' .. msg.chat.tg_cli_id)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelist")
+                    return langs[msg.lang].whitelistCleaned
+                elseif matches[2]:lower() == 'whitelistgban' then
+                    mystat('/clean whitelistgban')
+                    redis:del('whitelist:gban:' .. msg.chat.tg_cli_id)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelistgban")
+                    return langs[msg.lang].whitelistGbanCleaned
+                elseif matches[2]:lower() == 'whitelistlink' then
+                    mystat('/clean whitelistlink')
+                    data[tostring(msg.chat.id)].settings.links_whitelist = { }
+                    save_data(config.moderation.data, data)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned links_whitelist")
+                    --
+                    return langs[msg.lang].whitelistLinkCleaned
+                end
+                return
+            else
+                return langs[msg.lang].require_owner
             end
         end
     end
@@ -2252,25 +2009,6 @@ return {
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)(.)$",
 
-        -- INREALM
-        "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
-        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Oo][Ww][Nn][Ee][Rr]) (%-?%d+) (%d+)$",-- (group id) (owner id)
-        "^[#!/]([Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
-        "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
-        "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)",
-        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)$",
-        "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
-        "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
-        "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
-        "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
-        "^[#!/]([Ss][Uu][Pp][Ee][Rr][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
-        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Rr][Uu][Ll][Ee][Ss]) (%-?%d+) (.*)$",
-        "^[#!/]([Ss][Ee][Tt][Gg][Pp][Aa][Bb][Oo][Uu][Tt]) (%-?%d+) (.*)$",
-
-        -- INGROUP
-        "^[#!/]([Aa][Dd][Dd]) ([Rr][Ee][Aa][Ll][Mm])$",
-        "^[#!/]([Rr][Ee][Mm]) ([Rr][Ee][Aa][Ll][Mm])$",
-
         -- SUPERGROUP
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
         "^[#!/]([Pp][Ii][Nn])$",
@@ -2287,8 +2025,6 @@ return {
         "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
         "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss])",
-        "^[#!/]([Aa][Dd][Dd])$",
-        "^[#!/]([Rr][Ee][Mm])$",
         "^[#!/]([Rr][Uu][Ll][Ee][Ss])$",
         "^[#!/]([Aa][Bb][Oo][Uu][Tt])$",
         "^[#!/]([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
@@ -2384,22 +2120,5 @@ return {
         "/mute all|text",
         "/unmute all|text",
         "/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink",
-        "ADMIN",
-        "/add",
-        "/rem",
-        "/add realm",
-        "/rem realm",
-        "REALM",
-        "/setgpowner {group_id} {user_id}",
-        "/setgprules {group_id} {text}",
-        "/mute {group_id} all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "/unmute {group_id} all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "/muteslist {group_id}",
-        "/textualmuteslist {group_id}",
-        "/lock {group_id} arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "/unlock {group_id} arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "/settings {group_id}",
-        "/textualsettings {group_id}",
-        "/rem {group_id}",
     },
 }
