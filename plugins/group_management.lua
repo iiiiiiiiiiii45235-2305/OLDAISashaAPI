@@ -809,7 +809,7 @@ local function run(msg, matches)
                 mystat('/del')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                    sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
+                    -- sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                 end
                 if msg.reply then
                     if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
