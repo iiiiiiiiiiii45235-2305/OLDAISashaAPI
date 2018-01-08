@@ -8,7 +8,9 @@ local cbwarntable = {
 local floodkicktable = {
     -- chat_id = { user_id = counter }
 }
-local modsContacted = false
+local modsContacted = {
+    -- chat_id = false/true
+}
 
 local TIME_CHECK = 2
 -- seconds
@@ -190,8 +192,8 @@ local function pre_process(msg)
                         for k, v in pairs(floodkicktable[msg.chat.id]) do
                             tot_kicks = tot_kicks + v
                         end
-                        if tot_kicks >= 4 and not modsContacted then
-                            modsContacted = true
+                        if tot_kicks >= 4 and not modsContacted[msg.chat.id] then
+                            modsContacted[msg.chat.id] = true
 
                             local hashtag = '#alarm' .. tostring(msg.message_id)
                             local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
@@ -264,7 +266,7 @@ local function cron()
     kicktable = { }
     cbwarntable = { }
     floodkicktable = { }
-    modsContacted = false
+    modsContacted = { }
 end
 
 return {
