@@ -1126,3 +1126,7 @@ function areNoticesEnabled(user_id, chat_id)
     end
     return pm
 end
+
+function profileLink(id, name)
+    return "<a href=\"tg://user?id=" .. id .. "\">" .. html_escape(name) .. "</a>"
+end

@@ -31,46 +31,47 @@ local function pre_process(msg)
                     kicktable[msg.chat.id][v.id] = false
                 end
             end
+            return msg
         end
 
         -- Save chat's total messages
-        local hash = 'chatmsgs:' .. msg.chat.id
-        if not redis:get(hash) then
-            redis:set(hash, 0)
+        local totalhash = 'chatmsgs:' .. msg.chat.id
+        if not redis:get(totalhash) then
+            redis:set(totalhash, 0)
         end
-        redis:incr(hash)
+        redis:incr(totalhash)
 
         -- Save user on Redis
         if msg.from.type == 'user' then
-            local hash = 'user:' .. msg.from.id
-            print('Saving user', hash)
+            local savehash = 'user:' .. msg.from.id
+            print('Saving user', savehash)
             if msg.from.print_name then
-                redis:hset(hash, 'print_name', msg.from.print_name)
+                redis:hset(savehash, 'print_name', msg.from.print_name)
             end
             if msg.from.first_name then
-                redis:hset(hash, 'first_name', msg.from.first_name)
+                redis:hset(savehash, 'first_name', msg.from.first_name)
             end
             if msg.from.last_name then
-                redis:hset(hash, 'last_name', msg.from.last_name)
+                redis:hset(savehash, 'last_name', msg.from.last_name)
             end
         end
 
         -- Save stats on Redis
-        local hash = 'chat:' .. msg.chat.id .. ':users'
+        local statshash = 'chat:' .. msg.chat.id .. ':users'
         if msg.chat.type == 'private' then
-            hash = 'chat:' .. msg.from.id
+            statshash = 'chat:' .. msg.from.id
         end
-        redis:sadd(hash, msg.from.id)
+        redis:sadd(statshash, msg.from.id)
 
         -- Total user msgs in TIME_CHECK seconds
-        local hash = 'api:user:' .. msg.from.id .. ':msgs'
-        local msgs = tonumber(redis:get(hash) or 0)
-        redis:setex(hash, TIME_CHECK, msgs + 1)
-        print(msgs)
+        local userhash = 'api:user:' .. msg.from.id .. ':msgs'
+        local usermsgs = tonumber(redis:get(userhash) or 0)
+        redis:setex(userhash, TIME_CHECK, usermsgs + 1)
+        print('user ' .. usermsgs)
 
         if msg.cb then
             if not cbwarntable[msg.from.id] then
-                if msgs >= 4 then
+                if usermsgs >= 4 then
                     cbwarntable[msg.from.id] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
@@ -79,8 +80,8 @@ local function pre_process(msg)
             end
         else
             -- Total user msgs in that chat excluding keyboard interactions
-            local hash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
-            redis:incr(hash)
+            local msgshash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
+            redis:incr(msgshash)
         end
 
         if data[tostring(msg.chat.id)] then
@@ -97,7 +98,7 @@ local function pre_process(msg)
                 -- Check flood
                 if msg.chat.type == 'private' then
                     local max_msg = 7 * 1
-                    if msgs >= max_msg then
+                    if usermsgs >= max_msg then
                         print("Pass2")
                         -- Block user if spammed in private
                         blockUser(msg.from.id, msg.lang)
@@ -123,7 +124,7 @@ local function pre_process(msg)
                     if msg.cb then
                         max_msg = 7
                     end
-                    if msgs >= max_msg then
+                    if usermsgs >= max_msg then
                         local user = msg.from.id
                         -- Ignore whitelisted
                         if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
@@ -174,8 +175,8 @@ local function pre_process(msg)
                                 -- reset the counter
                                 redis:set(gbanspam, 0)
                                 -- Send this to that chat
-                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. html_escape(msg.from.print_name) .. "</a> ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
-                                gban_text = langs[msg.lang].user .. " [ <a href=\"tg://user?id=" .. msg.from.id .. "\">" .. html_escape(msg.from.print_name) .. "</a> ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
+                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
+                                gban_text = langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
                                 -- send it to log group/channel
                                 sendLog(gban_text, 'html', true)
                             end

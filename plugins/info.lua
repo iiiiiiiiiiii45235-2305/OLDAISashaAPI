@@ -23,7 +23,7 @@ local function get_reverse_rank(chat_id, user_id, check_local)
     return langs[lang].rank .. reverse_rank_table[rank + 1]
 end
 
-local function get_object_info(obj, chat_id)
+local function get_object_info(obj, chat_id, no_link)
     local lang = get_lang(chat_id)
     if obj then
         local chat_name = ''
@@ -51,6 +51,10 @@ local function get_object_info(obj, chat_id)
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
             text = text .. langs[lang].date .. os.date('%c')
+            if not no_link then
+                --
+                text = html_escape(text) .. langs[lang].profileLink .. profileLink(obj.id, obj.first_name)
+            end
             local otherinfo = langs[lang].otherInfo
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
@@ -113,6 +117,10 @@ local function get_object_info(obj, chat_id)
             text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true) + 1] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
+            if not no_link then
+                --
+                text = html_escape(text) .. langs[lang].profileLink .. profileLink(obj.id, obj.first_name)
+            end
             local otherinfo = langs[lang].otherInfo
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
@@ -740,7 +748,7 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.reply_to_message.forward_from.id .. "\">" .. html_escape(matches[2] or msg.reply_to_message.forward_from.first_name) .. "</a>", 'html')
+                                local res = sendReply(msg, profileLink(msg.reply_to_message.forward_from.id, matches[2] or msg.reply_to_message.forward_from.first_name), 'html')
                                 if not res then
                                     return langs[msg.lang].cantTrackUser
                                 end
@@ -751,13 +759,13 @@ local function run(msg, matches)
                             return langs[msg.lang].errorNoForward
                         end
                     else
-                        local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.reply_to_message.from.id .. "\">" .. html_escape(matches[2] or msg.reply_to_message.from.first_name) .. "</a>", 'html')
+                        local res = sendReply(msg, profileLink(msg.reply_to_message.from.id, matches[2] or msg.reply_to_message.from.first_name), 'html')
                         if not res then
                             return langs[msg.lang].cantTrackUser
                         end
                     end
                 else
-                    local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.reply_to_message.from.id .. "\">" .. html_escape(matches[2] or msg.reply_to_message.from.first_name) .. "</a>", 'html')
+                    local res = sendReply(msg, profileLink(msg.reply_to_message.from.id, matches[2] or msg.reply_to_message.from.first_name) .. "</a>", 'html')
                     if not res then
                         return langs[msg.lang].cantTrackUser
                     end
@@ -768,7 +776,7 @@ local function run(msg, matches)
                         -- check if there's a text_mention
                         if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                             if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                local res = sendReply(msg, "<a href=\"tg://user?id=" .. msg.entities[k].user.id .. "\">" .. html_escape(matches[3] or msg.entities[k].user.first_name) .. "</a>", 'html')
+                                local res = sendReply(msg, profileLink(msg.entities[k].user.id, matches[3] or msg.entities[k].user.first_name), 'html')
                                 if not res then
                                     return langs[msg.lang].cantTrackUser
                                 end
@@ -778,7 +786,7 @@ local function run(msg, matches)
                 end
                 matches[2] = tostring(matches[2]):gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
-                    local res = sendReply(msg, "<a href=\"tg://user?id=" .. matches[2] .. "\">" .. html_escape(matches[3] or matches[2]) .. "</a>", 'html')
+                    local res = sendReply(msg, profileLink(matches[2], matches[3] or matches[2]), 'html')
                     if not res then
                         return langs[msg.lang].cantTrackUser
                     end
@@ -786,7 +794,7 @@ local function run(msg, matches)
                     local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            local res = sendReply(msg, "<a href=\"tg://user?id=" .. obj_user.id .. "\">" .. html_escape(matches[3] or matches[2] or obj_user.id) .. "</a>", 'html')
+                            local res = sendReply(msg, profileLink(obj_user.id, matches[3] or matches[2] or obj_user.id), 'html')
                             if not res then
                                 return langs[msg.lang].cantTrackUser
                             end
