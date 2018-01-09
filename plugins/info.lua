@@ -23,7 +23,7 @@ local function get_reverse_rank(chat_id, user_id, check_local)
     return langs[lang].rank .. reverse_rank_table[rank + 1]
 end
 
-local function get_object_info(obj, chat_id, no_link)
+local function get_object_info(obj, chat_id)
     local lang = get_lang(chat_id)
     if obj then
         local chat_name = ''
@@ -51,10 +51,6 @@ local function get_object_info(obj, chat_id, no_link)
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
             text = text .. langs[lang].date .. os.date('%c')
-            if not no_link then
-                --
-                text = html_escape(text) .. langs[lang].profileLink .. profileLink(obj.id, obj.first_name)
-            end
             local otherinfo = langs[lang].otherInfo
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
@@ -117,10 +113,6 @@ local function get_object_info(obj, chat_id, no_link)
             text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true) + 1] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
-            if not no_link then
-                --
-                text = html_escape(text) .. langs[lang].profileLink .. profileLink(obj.id, obj.first_name)
-            end
             local otherinfo = langs[lang].otherInfo
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
