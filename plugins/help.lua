@@ -151,24 +151,23 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
             elseif matches[2] == 'BACK' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
             elseif matches[2] == 'PAGEMINUS' then
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) -1), 'html')
             elseif matches[2] == 'PAGEPLUS' then
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + 1), 'html')
             elseif matches[2] == 'BACKFAQ' then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
             elseif matches[2] == 'FAQ' then
-                mystat('###cbhelp' .. matches[2] .. matches[3])
                 if langs[msg.lang].faq[tonumber(matches[3])] then
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
                 end
+                mystat('###cbhelp' .. matches[2] .. matches[3])
             else
-                mystat('###cbhelp' .. matches[2])
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
                 if temp ~= nil then
                     if temp ~= '' then
@@ -179,6 +178,7 @@ local function run(msg, matches)
                 else
                     editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
                 end
+                mystat('###cbhelp' .. matches[2])
             end
             return
         end

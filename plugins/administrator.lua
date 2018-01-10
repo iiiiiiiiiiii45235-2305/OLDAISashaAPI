@@ -394,8 +394,8 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif matches[2] == 'BACK' then
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
                 elseif matches[2] == 'PAGEMINUS' then
                     editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) -1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 2) -1), 'html')
                 elseif matches[2] == 'PAGEPLUS' then

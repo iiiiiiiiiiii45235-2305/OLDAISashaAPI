@@ -266,54 +266,53 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif matches[2] == 'BACKSETTINGS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''
                     if data[tostring(matches[3])] then
                         chat_name = data[tostring(matches[3])].set_name or ''
                     end
                     print(matches[3])
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[3], matches[4] or false))
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'BACKMUTES' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''
                     if data[tostring(matches[3])] then
                         chat_name = data[tostring(matches[3])].set_name or ''
                     end
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[3], matches[4] or false))
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'BACKPERMISSIONS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].set_name or ''
                     end
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[4], matches[3], nil, matches[5] or false))
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'LOCK' then
                     if is_mod2(msg.from.id, matches[4]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
                         local chat_name = ''
                         if data[tostring(matches[4])] then
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'UNLOCK' then
                     if is_mod2(msg.from.id, matches[4]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
                         local chat_name = ''
                         if data[tostring(matches[4])] then
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'MUTE' then
                     if is_mod2(msg.from.id, matches[4]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 answerCallbackQuery(msg.cb_id, mute(matches[4], matches[3]), false)
@@ -328,12 +327,12 @@ local function run(msg, matches)
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[4], matches[5] or false))
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'UNMUTE' then
                     if is_mod2(msg.from.id, matches[4]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
                             if is_owner2(msg.from.id, matches[4]) then
                                 answerCallbackQuery(msg.cb_id, unmute(matches[4], matches[3]), false)
@@ -348,11 +347,13 @@ local function run(msg, matches)
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[4], matches[5] or false))
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'FLOODMINUS' or matches[2] == 'FLOODPLUS' then
                     if is_mod2(msg.from.id, matches[4]) then
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         local flood = matches[3]
                         if matches[2] == 'FLOODPLUS' then
                             flood = flood + 1
@@ -362,11 +363,10 @@ local function run(msg, matches)
                         if tonumber(flood) < 3 or tonumber(flood) > 20 then
                             return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
                         end
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
                         data[tostring(matches[4])].settings.flood_max = flood
                         save_data(config.moderation.data, data)
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
                         local chat_name = ''
                         if data[tostring(matches[4])] then
                             chat_name = data[tostring(matches[4])].set_name or ''
@@ -377,6 +377,7 @@ local function run(msg, matches)
                     end
                 elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNS' or matches[2] == 'WARNSPLUS' then
                     if is_mod2(msg.from.id, matches[4]) then
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         local warns = matches[3]
                         if matches[2] == 'WARNSMINUS' then
                             warns = warns - 1
@@ -386,15 +387,14 @@ local function run(msg, matches)
                         if tonumber(warns) < 0 or tonumber(warns) > 10 then
                             return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorWarnRange, false)
                         end
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                        data[tostring(matches[4])].settings.warn_max = warns
-                        save_data(config.moderation.data, data)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set warns to [" .. warns .. "]")
                         if tonumber(warns) == 0 then
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].neverWarn, false)
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
                         end
+                        data[tostring(matches[4])].settings.warn_max = warns
+                        save_data(config.moderation.data, data)
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set warns to [" .. warns .. "]")
                         local chat_name = ''
                         if data[tostring(matches[4])] then
                             chat_name = data[tostring(matches[4])].set_name or ''
@@ -405,7 +405,6 @@ local function run(msg, matches)
                     end
                 elseif matches[2] == 'GRANT' then
                     if is_owner2(msg.from.id, matches[5]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         local obj_user = getChatMember(matches[5], matches[3])
                         if type(obj_user) == 'table' then
                             if obj_user.result then
@@ -434,12 +433,12 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
                         end
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
                 elseif matches[2] == 'DENY' then
                     if is_owner2(msg.from.id, matches[5]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         local obj_user = getChatMember(matches[5], matches[3])
                         if type(obj_user) == 'table' then
                             if obj_user.result then
@@ -468,6 +467,7 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
                         end
+                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end

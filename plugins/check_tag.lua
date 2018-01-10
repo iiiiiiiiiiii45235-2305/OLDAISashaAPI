@@ -72,13 +72,13 @@ local function run(msg, matches)
                     end
                 elseif matches[2] == 'REGISTER' then
                     if not redis:hget('tagalert:usernames', msg.from.id) then
-                        mystat('###cbcheck_tag' .. matches[2] .. msg.from.id)
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
                         if msg.from.username then
                             redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
                         else
                             redis:hset('tagalert:usernames', msg.from.id, true)
                         end
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
+                        mystat('###cbcheck_tag' .. matches[2] .. msg.from.id)
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].userAlreadyRegistered, true)
                     end
@@ -86,7 +86,6 @@ local function run(msg, matches)
                     -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
                 else
                     if matches[2] == 'DELETEUP' then
-                        mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
                         if tonumber(matches[3]) == tonumber(msg.from.id) then
                             if deleteMessage(msg.chat.id, msg.message_id) then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
@@ -95,8 +94,8 @@ local function run(msg, matches)
                                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
-                    elseif matches[2] == 'GOTO' then
                         mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
+                    elseif matches[2] == 'GOTO' then
                         local link_in_keyboard = false
                         if msg.from.username then
                             local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
@@ -173,6 +172,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
+                        mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
                     end
                 end
                 return

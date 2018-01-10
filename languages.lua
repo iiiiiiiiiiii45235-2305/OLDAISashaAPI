@@ -948,9 +948,8 @@ return {
             .. "Name => Nome del gruppo.\n"
             .. "Photo => Foto del gruppo.\n"
             .. "RTL => Caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n"
-            .. "Spam => Messaggio più lungo di 2048 caratteri o con più di 40 simboli* oppure nomi più lunghi di 70 caratteri o con più di 40 simboli*.\n"
-            .. "Strict => Aumento di \"pena\" da kick a ban.\n"
-            .. "* = emoji, caratteri di controllo ecc...",
+            .. "Spam => Messaggio più lungo di 2048 caratteri o con più di 40 caratteri non stampabili oppure nomi più lunghi di 70 caratteri o con più di 40 caratteri non stampabili.\n"
+            .. "Strict => Aumento di \"pena\" da kick a ban.\n",
             [12] = "D: Cosa significano i muti?\n"
             .. "R: All => Tutto.\n"
             .. "Audio => Audio (non note vocali).\n"
@@ -2348,9 +2347,8 @@ return {
             .. "Name => Group's name.\n"
             .. "Photo => Group's photo.\n"
             .. "RTL => Right to left characters (those that reverse messages).\n"
-            .. "Spam => Message longer than 2048 characters or with more than 40 simbols* or names longer than 70 characters or with more than 40 simbols*.\n"
-            .. "Strict => Increase punishment from kick to ban.\n"
-            .. "* = emojis, control characters etc...",
+            .. "Spam => Message longer than 2048 characters or with more than 40 non-printable characters or names longer than 70 characters or with more than 40 non-printable characters.\n"
+            .. "Strict => Increase punishment from kick to ban.\n",
             [12] = "D: What do mutes mean?\n"
             .. "R: All => Everything.\n"
             .. "Audio => Audios (not voice notes).\n"

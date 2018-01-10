@@ -89,15 +89,14 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif matches[2] == 'BACK' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].set_name or ''
                     end
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 elseif matches[2] == 'RESTRICT' then
                     if is_mod2(msg.from.id, matches[5]) then
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         local obj_user = getChatMember(matches[5], matches[3])
                         if type(obj_user) == 'table' then
                             if obj_user.result then
@@ -141,12 +140,12 @@ local function run(msg, matches)
                             end
                             editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
                         end
+                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'UNRESTRICT' then
                     if is_mod2(msg.from.id, matches[5]) then
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         local obj_user = getChatMember(matches[5], matches[3])
                         if type(obj_user) == 'table' then
                             if obj_user.result then
@@ -190,6 +189,7 @@ local function run(msg, matches)
                             end
                             editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
                         end
+                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
@@ -200,8 +200,8 @@ local function run(msg, matches)
                         chat_name = data[tostring(matches[6])].set_name or ''
                     end
                     if matches[4] == 'BACK' then
-                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                     elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                         local remainder, weeks, days, hours, minutes, seconds = 0
                         weeks = math.floor(time / 604800)
@@ -212,11 +212,10 @@ local function run(msg, matches)
                         remainder = remainder % 3600
                         minutes = math.floor(remainder / 60)
                         seconds = remainder % 60
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                         if matches[4] == 'SECONDS' then
                             if tonumber(matches[5]) == 0 then
-                                time = time - seconds
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                                time = time - seconds
                             else
                                 if (time + tonumber(matches[5])) >= 0 then
                                     time = time + tonumber(matches[5])
@@ -226,8 +225,8 @@ local function run(msg, matches)
                             end
                         elseif matches[4] == 'MINUTES' then
                             if tonumber(matches[5]) == 0 then
-                                time = time -(minutes * 60)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                                time = time -(minutes * 60)
                             else
                                 if (time +(tonumber(matches[5]) * 60)) >= 0 then
                                     time = time +(tonumber(matches[5]) * 60)
@@ -237,8 +236,8 @@ local function run(msg, matches)
                             end
                         elseif matches[4] == 'HOURS' then
                             if tonumber(matches[5]) == 0 then
-                                time = time -(hours * 60 * 60)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                                time = time -(hours * 60 * 60)
                             else
                                 if (time +(tonumber(matches[5]) * 60 * 60)) >= 0 then
                                     time = time +(tonumber(matches[5]) * 60 * 60)
@@ -248,8 +247,8 @@ local function run(msg, matches)
                             end
                         elseif matches[4] == 'DAYS' then
                             if tonumber(matches[5]) == 0 then
-                                time = time -(days * 60 * 60 * 24)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].daysReset, false)
+                                time = time -(days * 60 * 60 * 24)
                             else
                                 if (time +(tonumber(matches[5]) * 60 * 60 * 24)) >= 0 then
                                     time = time +(tonumber(matches[5]) * 60 * 60 * 24)
@@ -259,8 +258,8 @@ local function run(msg, matches)
                             end
                         elseif matches[4] == 'WEEKS' then
                             if tonumber(matches[5]) == 0 then
-                                time = time -(weeks * 60 * 60 * 24 * 7)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].weeksReset, false)
+                                time = time -(weeks * 60 * 60 * 24 * 7)
                             else
                                 if (time +(tonumber(matches[5]) * 60 * 60 * 24 * 7)) >= 0 then
                                     time = time +(tonumber(matches[5]) * 60 * 60 * 24 * 7)
@@ -270,8 +269,8 @@ local function run(msg, matches)
                             end
                         end
                         editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
+                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                     elseif matches[4] == 'DONE' then
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                         local text = ''
                         if time < 30 or time > 31622400 then
                             text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
@@ -283,6 +282,7 @@ local function run(msg, matches)
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
+                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                     end
                 elseif matches[2] == 'TEMPRESTRICT' then
                     local time = tonumber(matches[3])
@@ -292,8 +292,8 @@ local function run(msg, matches)
                     end
                     if matches[4] == 'BACK' then
                         if restrictions_table[tostring(matches[5])] then
-                            editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                            editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
                             restrictions_table[tostring(matches[5])] = clone_table(default_restrictions)
@@ -312,11 +312,10 @@ local function run(msg, matches)
                             remainder = remainder % 3600
                             minutes = math.floor(remainder / 60)
                             seconds = remainder % 60
-                            mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                             if matches[4] == 'SECONDS' then
                                 if tonumber(matches[5]) == 0 then
-                                    time = time - seconds
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                                    time = time - seconds
                                 else
                                     if (time + tonumber(matches[5])) >= 0 then
                                         time = time + tonumber(matches[5])
@@ -326,8 +325,8 @@ local function run(msg, matches)
                                 end
                             elseif matches[4] == 'MINUTES' then
                                 if tonumber(matches[5]) == 0 then
-                                    time = time -(minutes * 60)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                                    time = time -(minutes * 60)
                                 else
                                     if (time +(tonumber(matches[5]) * 60)) >= 0 then
                                         time = time +(tonumber(matches[5]) * 60)
@@ -337,8 +336,8 @@ local function run(msg, matches)
                                 end
                             elseif matches[4] == 'HOURS' then
                                 if tonumber(matches[5]) == 0 then
-                                    time = time -(hours * 60 * 60)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                                    time = time -(hours * 60 * 60)
                                 else
                                     if (time +(tonumber(matches[5]) * 60 * 60)) >= 0 then
                                         time = time +(tonumber(matches[5]) * 60 * 60)
@@ -348,8 +347,8 @@ local function run(msg, matches)
                                 end
                             elseif matches[4] == 'DAYS' then
                                 if tonumber(matches[5]) == 0 then
-                                    time = time -(days * 60 * 60 * 24)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].daysReset, false)
+                                    time = time -(days * 60 * 60 * 24)
                                 else
                                     if (time +(tonumber(matches[5]) * 60 * 60 * 24)) >= 0 then
                                         time = time +(tonumber(matches[5]) * 60 * 60 * 24)
@@ -359,8 +358,8 @@ local function run(msg, matches)
                                 end
                             elseif matches[4] == 'WEEKS' then
                                 if tonumber(matches[5]) == 0 then
-                                    time = time -(weeks * 60 * 60 * 24 * 7)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].weeksReset, false)
+                                    time = time -(weeks * 60 * 60 * 24 * 7)
                                 else
                                     if (time +(tonumber(matches[5]) * 60 * 60 * 24 * 7)) >= 0 then
                                         time = time +(tonumber(matches[5]) * 60 * 60 * 24 * 7)
@@ -370,12 +369,12 @@ local function run(msg, matches)
                                 end
                             end
                             editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
+                            mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                         else
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                         end
                     elseif matches[4] == 'DONE' then
                         if restrictions_table[tostring(matches[5])] then
-                            mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                             local text = ''
                             local restrictions = restrictions_table[tostring(matches[5])]
                             if time < 30 or time > 31622400 then
@@ -401,12 +400,13 @@ local function run(msg, matches)
                                     text = langs[msg.lang].errorTryAgain
                                 end
                             end
-                            restrictions_table[tostring(matches[5])] = nil
                             answerCallbackQuery(msg.cb_id, text, false)
+                            restrictions_table[tostring(matches[5])] = nil
                             sendMessage(matches[6], text)
                             if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
+                            mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                         else
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                         end

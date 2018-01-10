@@ -48,10 +48,9 @@ local function run(msg, matches)
                     if delword_table[tostring(msg.from.id)] then
                         local time = tonumber(matches[2])
                         if matches[3] == 'BACK' then
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[4], time))
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[4], time))
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
-                            mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                             local remainder, hours, minutes, seconds = 0
                             hours = math.floor(time / 3600)
                             remainder = time % 3600
@@ -59,8 +58,8 @@ local function run(msg, matches)
                             seconds = remainder % 60
                             if matches[3] == 'SECONDS' then
                                 if tonumber(matches[4]) == 0 then
-                                    time = time - seconds
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                                    time = time - seconds
                                 else
                                     if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
                                         time = time + tonumber(matches[4])
@@ -70,8 +69,8 @@ local function run(msg, matches)
                                 end
                             elseif matches[3] == 'MINUTES' then
                                 if tonumber(matches[4]) == 0 then
-                                    time = time -(minutes * 60)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                                    time = time -(minutes * 60)
                                 else
                                     if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                         time = time +(tonumber(matches[4]) * 60)
@@ -81,8 +80,8 @@ local function run(msg, matches)
                                 end
                             elseif matches[3] == 'HOURS' then
                                 if tonumber(matches[4]) == 0 then
-                                    time = time -(hours * 60 * 60)
                                     answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                                    time = time -(hours * 60 * 60)
                                 else
                                     if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
                                         time = time +(tonumber(matches[4]) * 60 * 60)
@@ -92,9 +91,9 @@ local function run(msg, matches)
                                 end
                             end
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[5], time))
+                            mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
-                                mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4])
                                 local tmp = { chat = { id = matches[4], type = '' }, lang = msg.lang }
                                 if matches[4]:starts('-100') then
                                     tmp.chat.type = 'supergroup'
@@ -102,12 +101,13 @@ local function run(msg, matches)
                                     tmp.chat.type = 'group'
                                 end
                                 local text = setunset_delword(tmp, delword_table[tostring(msg.from.id)], time)
-                                delword_table[tostring(msg.from.id)] = nil
                                 answerCallbackQuery(msg.cb_id, text, false)
+                                delword_table[tostring(msg.from.id)] = nil
                                 sendMessage(matches[4], text)
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                 end
+                                mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4])
                             end
                         end
                     else
@@ -124,8 +124,8 @@ local function run(msg, matches)
                         if schedule_table[tostring(msg.from.id)] then
                             local time = tonumber(matches[2])
                             if matches[3] == 'BACK' then
-                                editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[4], time))
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                                editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[4], time))
                             elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                                 local remainder, hours, minutes, seconds = 0
                                 hours = math.floor(time / 3600)
@@ -134,8 +134,8 @@ local function run(msg, matches)
                                 seconds = remainder % 60
                                 if matches[3] == 'SECONDS' then
                                     if tonumber(matches[4]) == 0 then
-                                        time = time - seconds
                                         answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                                        time = time - seconds
                                     else
                                         if (time + tonumber(matches[4])) >= 0 and(time + tonumber(matches[4])) < 172800 then
                                             time = time + tonumber(matches[4])
@@ -145,8 +145,8 @@ local function run(msg, matches)
                                     end
                                 elseif matches[3] == 'MINUTES' then
                                     if tonumber(matches[4]) == 0 then
-                                        time = time -(minutes * 60)
                                         answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                                        time = time -(minutes * 60)
                                     else
                                         if (time +(tonumber(matches[4]) * 60)) >= 0 and(time +(tonumber(matches[4]) * 60)) < 172800 then
                                             time = time +(tonumber(matches[4]) * 60)
@@ -156,8 +156,8 @@ local function run(msg, matches)
                                     end
                                 elseif matches[3] == 'HOURS' then
                                     if tonumber(matches[4]) == 0 then
-                                        time = time -(hours * 60 * 60)
                                         answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                                        time = time -(hours * 60 * 60)
                                     else
                                         if (time +(tonumber(matches[4]) * 60 * 60)) >= 0 and(time +(tonumber(matches[4]) * 60 * 60)) < 172800 then
                                             time = time +(tonumber(matches[4]) * 60 * 60)
@@ -168,9 +168,9 @@ local function run(msg, matches)
                                 end
                                 editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[5], time))
                             elseif matches[3] == 'DONE' then
+                                answerCallbackQuery(msg.cb_id, 'SCHEDULED', false)
                                 io.popen('lua timework.lua "' .. schedule_table[tostring(msg.from.id)].method .. '" "' .. schedule_table[tostring(msg.from.id)].chat_id .. '" "' .. time .. '" "' .. schedule_table[tostring(msg.from.id)].text .. '"')
                                 schedule_table[tostring(msg.from.id)] = nil
-                                answerCallbackQuery(msg.cb_id, 'SCHEDULED', false)
                                 sendMessage(matches[4], 'SCHEDULED')
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
