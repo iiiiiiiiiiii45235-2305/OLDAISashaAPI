@@ -127,6 +127,7 @@ local function pre_process(msg)
                 hash = sha2.hash256(msg.text)
             end
             hashes[msg.chat.id][hash] =(hashes[msg.chat.id][hash] or 0) + 1
+            printvardump(hashes[msg.chat.id])
 
             -- Check flood
             if msg.chat.type == 'private' then
