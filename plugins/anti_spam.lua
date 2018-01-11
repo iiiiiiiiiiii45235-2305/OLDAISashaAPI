@@ -167,6 +167,7 @@ local function pre_process(msg)
                 if hashes[msg.chat.id][hash] > 10 then
                     shitstormAlarm = true
                 end
+                floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
                 if usermsgs >= NUM_MSG_MAX then
                     local user = msg.from.id
                     -- Ignore whitelisted
@@ -225,7 +226,7 @@ local function pre_process(msg)
                         end
                     end
                     kicktable[msg.chat.id][msg.from.id] = true
-                    floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0) + 1
+                    floodkicktable[msg.chat.id] = floodkicktable[msg.chat.id] + 1
                 end
                 -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
                 if (floodkicktable[msg.chat.id] >= 4 or shitstormAlarm) and not modsContacted[msg.chat.id] then
