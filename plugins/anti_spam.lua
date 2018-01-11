@@ -166,6 +166,7 @@ local function pre_process(msg)
                 local shitstormAlarm = false
                 if hashes[msg.chat.id][hash] > 10 then
                     shitstormAlarm = true
+                    banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood .. ' #possibleshitstorm')
                 end
                 floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
                 if usermsgs >= NUM_MSG_MAX then
