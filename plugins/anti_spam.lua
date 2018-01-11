@@ -164,9 +164,11 @@ local function pre_process(msg)
                 end
                 -- if more than 10 messages all equals
                 if hashes[msg.chat.id][hash] > 10 then
+                    print('in', NUM_MSG_MAX, usermsgs)
                     -- don't write two times the same thing
                     usermsgs = NUM_MSG_MAX + 1
                     floodkicktable[msg.chat.id] = 5
+                    print('in', NUM_MSG_MAX, usermsgs)
                 end
                 if usermsgs >= NUM_MSG_MAX then
                     local user = msg.from.id
