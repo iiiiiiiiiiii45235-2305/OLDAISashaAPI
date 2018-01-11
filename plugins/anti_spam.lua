@@ -6,10 +6,13 @@ local cbwarntable = {
     -- user_id
 }
 local floodkicktable = {
-    -- chat_id = { user_id = counter }
+    -- chat_id = counter
 }
 local modsContacted = {
     -- chat_id = false/true
+}
+local hashes = {
+    -- chat_id = { msgHash = counter }
 }
 
 local TIME_CHECK = 2
@@ -17,11 +20,11 @@ local TIME_CHECK = 2
 -- Save stats, ban user
 local function pre_process(msg)
     if msg then
-        if not floodkicktable[msg.chat.id] then
-            floodkicktable[msg.chat.id] = { }
-        end
         if not kicktable[msg.chat.id] then
             kicktable[msg.chat.id] = { }
+        end
+        if not hashes[msg.chat.id] then
+            hashes[msg.chat.id] = { }
         end
 
         -- Ignore service msg
@@ -84,177 +87,208 @@ local function pre_process(msg)
             redis:incr(msgshash)
         end
 
-        if data[tostring(msg.chat.id)] then
-            -- Check if flood is on or off
-            if not data[tostring(msg.chat.id)].settings.flood then
+        if not msg.edited then
+            -- Ignore mods,owner and admins
+            if msg.from.is_mod then
                 return msg
             end
 
-            if not msg.edited then
-                -- Ignore mods,owner and admins
-                if msg.from.is_mod then
+            -- Check for a distributed flood in one minute
+            local hash
+            if msg.media then
+                local file_id = ''
+                if msg.media_type == 'photo' then
+                    local bigger_pic_id = ''
+                    local size = 0
+                    for k, v in pairsByKeys(msg.photo) do
+                        if v.file_size > size then
+                            size = v.file_size
+                            bigger_pic_id = v.file_id
+                        end
+                    end
+                    file_id = bigger_pic_id
+                elseif msg.media_type == 'video' then
+                    file_id = msg.video.file_id
+                elseif msg.media_type == 'video_note' then
+                    file_id = msg.video_note.file_id
+                elseif msg.media_type == 'audio' then
+                    file_id = msg.audio.file_id
+                elseif msg.media_type == 'voice_note' then
+                    file_id = msg.voice.file_id
+                elseif msg.media_type == 'gif' then
+                    file_id = msg.document.file_id
+                elseif msg.media_type == 'document' then
+                    file_id = msg.document.file_id
+                elseif msg.media_type == 'sticker' then
+                    file_id = msg.sticker.file_id
+                end
+                hash = file_id
+            else
+                hash = sha2.hash256(msg.text)
+            end
+            hashes[msg.chat.id][hash] =(hashes[msg.chat.id][hash] or 0) + 1
+
+            -- Check flood
+            if msg.chat.type == 'private' then
+                if hashes[msg.chat.id][hash] > 10 then
+                    -- don't write two times the same thing
+                    usermsgs = 10
+                end
+                if usermsgs >= 7 then
+                    print("Pass2")
+                    -- Block user if spammed in private
+                    blockUser(msg.from.id, msg.lang)
+                    sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
+                    sendLog(langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam, false, true)
+                    savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
+                    return nil
+                end
+            elseif data[tostring(msg.chat.id)] then
+                -- Check if flood is on or off
+                if not data[tostring(msg.chat.id)].settings.flood then
                     return msg
                 end
-                -- Check flood
-                if msg.chat.type == 'private' then
-                    local max_msg = 7 * 1
-                    if usermsgs >= max_msg then
-                        print("Pass2")
-                        -- Block user if spammed in private
-                        blockUser(msg.from.id, msg.lang)
-                        sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
-                        sendLog(langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam, false, true)
-                        savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
-                    end
-                else
-                    local NUM_MSG_MAX = 5
-                    local strict = false
-                    if data[tostring(msg.chat.id)] then
-                        if data[tostring(msg.chat.id)].settings then
-                            if data[tostring(msg.chat.id)].settings.flood_max then
-                                NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
-                                -- Obtain group flood sensitivity
-                            end
-                            if data[tostring(msg.chat.id)].settings.strict then
-                                strict = data[tostring(msg.chat.id)].settings.strict
-                            end
+                local NUM_MSG_MAX = 5
+                local strict = false
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].settings then
+                        if data[tostring(msg.chat.id)].settings.flood_max then
+                            NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
+                            -- Obtain group flood sensitivity
+                        end
+                        if data[tostring(msg.chat.id)].settings.strict then
+                            strict = data[tostring(msg.chat.id)].settings.strict
                         end
                     end
-                    local max_msg = NUM_MSG_MAX * 1
-                    if msg.cb then
-                        max_msg = 7
+                end
+                -- if more than 10 messages all equals
+                if hashes[msg.chat.id][hash] > 10 then
+                    -- don't write two times the same thing
+                    usermsgs = NUM_MSG_MAX + 1
+                    floodkicktable[msg.chat.id] = 5
+                end
+                if usermsgs >= NUM_MSG_MAX then
+                    local user = msg.from.id
+                    -- Ignore whitelisted
+                    if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
+                        return msg
                     end
-                    if usermsgs >= max_msg then
-                        local user = msg.from.id
-                        -- Ignore whitelisted
-                        if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
-                            return msg
-                        end
-                        if kicktable[msg.chat.id][msg.from.id] == true then
-                            local member = getChatMember(msg.chat.id, msg.from.id)
-                            if type(member) == 'table' then
-                                if member.ok and member.result then
-                                    if member.result.status == 'left' or member.result.status == 'kicked' then
-                                        return
-                                    else
-                                        kicktable[msg.chat.id][msg.from.id] = false
-                                    end
+                    if kicktable[msg.chat.id][msg.from.id] == true then
+                        local member = getChatMember(msg.chat.id, msg.from.id)
+                        if type(member) == 'table' then
+                            if member.ok and member.result then
+                                if member.result.status == 'left' or member.result.status == 'kicked' then
+                                    return
+                                else
+                                    kicktable[msg.chat.id][msg.from.id] = false
                                 end
                             end
                         end
-                        local text = ''
-                        if string.match(getWarn(msg.chat.id), "%d+") then
-                            text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                            text = text .. '\n' .. tostring(kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                        elseif not strict then
-                            text = kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                    end
+                    local text = ''
+                    if string.match(getWarn(msg.chat.id), "%d+") then
+                        text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                        text = text .. '\n' .. tostring(kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                    elseif not strict then
+                        text = kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                    else
+                        text = banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                    end
+                    local username = msg.from.username or 'USERNAME'
+                    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+                        if msg.from.username then
+                            savelog(msg.chat.id, msg.from.print_name .. " @" .. username .. " [" .. msg.from.id .. "] kicked for #spam")
+                            sendMessage(msg.chat.id, text)
                         else
-                            text = banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
+                            sendMessage(msg.chat.id, text)
                         end
-                        local username = msg.from.username or 'USERNAME'
-                        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-                            if msg.from.username then
-                                savelog(msg.chat.id, msg.from.print_name .. " @" .. username .. " [" .. msg.from.id .. "] kicked for #spam")
-                                sendMessage(msg.chat.id, text)
-                            else
-                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
-                                sendMessage(msg.chat.id, text)
-                            end
-                        end
-                        -- incr it on redis
-                        local gbanspam = 'gban:spam' .. msg.from.id
-                        redis:incr(gbanspam)
-                        local gbanspam = 'gban:spam' .. msg.from.id
-                        local gbanspamonredis = redis:get(gbanspam)
-                        -- Check if user has spammed is group more than 4 times
-                        if gbanspamonredis then
-                            if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
-                                -- Global ban that user
-                                gbanUser(msg.from.id, msg.lang)
-                                local gbanspam = 'gban:spam' .. msg.from.id
-                                -- reset the counter
-                                redis:set(gbanspam, 0)
-                                -- Send this to that chat
-                                sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
-                                gban_text = langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
-                                -- send it to log group/channel
-                                sendLog(gban_text, 'html', true)
-                            end
-                        end
-                        kicktable[msg.chat.id][msg.from.id] = true
-                        if floodkicktable[msg.chat.id][msg.from.id] then
-                            floodkicktable[msg.chat.id][msg.from.id] = floodkicktable[msg.chat.id][msg.from.id] + 1
-                        else
-                            floodkicktable[msg.chat.id][msg.from.id] = 1
-                        end
-
-                        -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
-                        local tot_kicks = 0
-                        for k, v in pairs(floodkicktable[msg.chat.id]) do
-                            tot_kicks = tot_kicks + v
-                        end
-                        if tot_kicks >= 4 and not modsContacted[msg.chat.id] then
-                            modsContacted[msg.chat.id] = true
-
-                            local hashtag = '#alarm' .. tostring(msg.message_id)
-                            local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-                            local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
-                            if group_link then
-                                chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
-                            end
-                            local attentionText = langs[msg.lang].possibleShistorm .. chat_name .. '\n' ..
-                            'HASHTAG: ' .. hashtag
-                            sendMessage(msg.chat.id, hashtag)
-                            local already_contacted = { }
-                            already_contacted[tonumber(bot.id)] = bot.id
-                            already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
-                            local cant_contact = ''
-                            local list = getChatAdministrators(msg.chat.id)
-                            if list then
-                                for i, admin in pairs(list.result) do
-                                    if not already_contacted[tonumber(admin.user.id)] then
-                                        already_contacted[tonumber(admin.user.id)] = admin.user.id
-                                        if sendChatAction(admin.user.id, 'typing', true) then
-                                            sendMessage(admin.user.id, attentionText, 'html')
-                                        else
-                                            cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
-                                        end
-                                    end
-                                end
-                            end
-
-                            -- owner
-                            local owner = data[tostring(msg.chat.id)]['set_owner']
-                            if owner then
-                                if not already_contacted[tonumber(owner)] then
-                                    already_contacted[tonumber(owner)] = owner
-                                    if sendChatAction(owner, 'typing', true) then
-                                        sendMessage(owner, attentionText, 'html')
-                                    else
-                                        cant_contact = cant_contact .. owner .. '\n'
-                                    end
-                                end
-                            end
-
-                            -- determine if table is empty
-                            if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
-                                for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                                    if not already_contacted[tonumber(k)] then
-                                        already_contacted[tonumber(k)] = k
-                                        if sendChatAction(k, 'typing', true) then
-                                            sendMessage(k, attentionText, 'html')
-                                        else
-                                            cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
-                                        end
-                                    end
-                                end
-                            end
-                            if cant_contact ~= '' then
-                                sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
-                            end
-                        end
-                        msg = nil
                     end
+                    -- incr it on redis
+                    local gbanspam = 'gban:spam' .. msg.from.id
+                    redis:incr(gbanspam)
+                    local gbanspam = 'gban:spam' .. msg.from.id
+                    local gbanspamonredis = redis:get(gbanspam)
+                    -- Check if user has spammed is group more than 4 times
+                    if gbanspamonredis then
+                        if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
+                            -- Global ban that user
+                            gbanUser(msg.from.id, msg.lang)
+                            local gbanspam = 'gban:spam' .. msg.from.id
+                            -- reset the counter
+                            redis:set(gbanspam, 0)
+                            -- Send this to that chat
+                            sendMessage(msg.chat.id, langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] " .. msg.from.id .. langs[msg.lang].gbanned .. " (SPAM)", 'html')
+                            gban_text = langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] ( @" .. username .. " ) " .. msg.from.id .. langs[msg.lang].gbannedFrom .. " ( " .. msg.chat.print_name .. " ) [ " .. msg.chat.id .. " ] (SPAM)"
+                            -- send it to log group/channel
+                            sendLog(gban_text, 'html', true)
+                        end
+                    end
+                    kicktable[msg.chat.id][msg.from.id] = true
+                    floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0) + 1
+
+                    -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
+                    if floodkicktable[msg.chat.id] >= 4 and not modsContacted[msg.chat.id] then
+                        modsContacted[msg.chat.id] = true
+
+                        local hashtag = '#alarm' .. tostring(msg.message_id)
+                        local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+                        local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                        if group_link then
+                            chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
+                        end
+                        local attentionText = langs[msg.lang].possibleShitstorm .. chat_name .. '\n' ..
+                        'HASHTAG: ' .. hashtag
+                        sendMessage(msg.chat.id, hashtag)
+                        local already_contacted = { }
+                        already_contacted[tonumber(bot.id)] = bot.id
+                        already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
+                        local cant_contact = ''
+                        local list = getChatAdministrators(msg.chat.id)
+                        if list then
+                            for i, admin in pairs(list.result) do
+                                if not already_contacted[tonumber(admin.user.id)] then
+                                    already_contacted[tonumber(admin.user.id)] = admin.user.id
+                                    if sendChatAction(admin.user.id, 'typing', true) then
+                                        sendMessage(admin.user.id, attentionText, 'html')
+                                    else
+                                        cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
+                                    end
+                                end
+                            end
+                        end
+
+                        -- owner
+                        local owner = data[tostring(msg.chat.id)]['set_owner']
+                        if owner then
+                            if not already_contacted[tonumber(owner)] then
+                                already_contacted[tonumber(owner)] = owner
+                                if sendChatAction(owner, 'typing', true) then
+                                    sendMessage(owner, attentionText, 'html')
+                                else
+                                    cant_contact = cant_contact .. owner .. '\n'
+                                end
+                            end
+                        end
+
+                        -- determine if table is empty
+                        if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
+                            for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
+                                if not already_contacted[tonumber(k)] then
+                                    already_contacted[tonumber(k)] = k
+                                    if sendChatAction(k, 'typing', true) then
+                                        sendMessage(k, attentionText, 'html')
+                                    else
+                                        cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
+                                    end
+                                end
+                            end
+                        end
+                        if cant_contact ~= '' then
+                            sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
+                        end
+                    end
+                    return nil
                 end
             end
         end
@@ -268,6 +302,7 @@ local function cron()
     cbwarntable = { }
     floodkicktable = { }
     modsContacted = { }
+    hashes = { }
 end
 
 return {
