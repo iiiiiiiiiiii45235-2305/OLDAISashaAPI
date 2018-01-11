@@ -70,7 +70,7 @@ local function pre_process(msg)
         local userhash = 'api:user:' .. msg.from.id .. ':msgs'
         local usermsgs = tonumber(redis:get(userhash) or 0)
         redis:setex(userhash, TIME_CHECK, usermsgs + 1)
-        print('user ' .. usermsgs)
+        print('messages: ' .. usermsgs)
 
         if msg.cb then
             if not cbwarntable[msg.from.id] then
@@ -127,7 +127,6 @@ local function pre_process(msg)
                 hash = sha2.hash256(msg.text)
             end
             hashes[msg.chat.id][hash] =(hashes[msg.chat.id][hash] or 0) + 1
-            printvardump(hashes[msg.chat.id])
 
             -- Check flood
             if msg.chat.type == 'private' then
