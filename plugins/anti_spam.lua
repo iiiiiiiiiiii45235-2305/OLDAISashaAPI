@@ -163,12 +163,9 @@ local function pre_process(msg)
                     end
                 end
                 -- if more than 10 messages all equals
+                local shitstormAlarm = false
                 if hashes[msg.chat.id][hash] > 10 then
-                    print('in', NUM_MSG_MAX, usermsgs)
-                    -- don't write two times the same thing
-                    usermsgs = NUM_MSG_MAX + 1
-                    floodkicktable[msg.chat.id] = 5
-                    print('in', NUM_MSG_MAX, usermsgs)
+                    shitstormAlarm = true
                 end
                 if usermsgs >= NUM_MSG_MAX then
                     local user = msg.from.id
@@ -229,68 +226,69 @@ local function pre_process(msg)
                     end
                     kicktable[msg.chat.id][msg.from.id] = true
                     floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0) + 1
-
-                    -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
-                    if floodkicktable[msg.chat.id] >= 4 and not modsContacted[msg.chat.id] then
-                        modsContacted[msg.chat.id] = true
-                        local hashtag = '#alarm' .. tostring(msg.message_id)
-                        local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-                        local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
-                        if group_link then
-                            chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
-                        end
-                        local attentionText = langs[msg.lang].possibleShitstorm .. chat_name .. '\n' ..
-                        'HASHTAG: ' .. hashtag
-                        sendMessage(msg.chat.id, hashtag)
-                        local already_contacted = { }
-                        already_contacted[tonumber(bot.id)] = bot.id
-                        already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
-                        local cant_contact = ''
-                        local list = getChatAdministrators(msg.chat.id)
-                        if list then
-                            for i, admin in pairs(list.result) do
-                                if not already_contacted[tonumber(admin.user.id)] then
-                                    already_contacted[tonumber(admin.user.id)] = admin.user.id
-                                    if sendChatAction(admin.user.id, 'typing', true) then
-                                        sendMessage(admin.user.id, attentionText, 'html')
-                                    else
-                                        cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
-                                    end
-                                end
-                            end
-                        end
-
-                        -- owner
-                        local owner = data[tostring(msg.chat.id)]['set_owner']
-                        if owner then
-                            if not already_contacted[tonumber(owner)] then
-                                already_contacted[tonumber(owner)] = owner
-                                if sendChatAction(owner, 'typing', true) then
-                                    sendMessage(owner, attentionText, 'html')
-                                else
-                                    cant_contact = cant_contact .. owner .. '\n'
-                                end
-                            end
-                        end
-
-                        -- determine if table is empty
-                        if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
-                            for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                                if not already_contacted[tonumber(k)] then
-                                    already_contacted[tonumber(k)] = k
-                                    if sendChatAction(k, 'typing', true) then
-                                        sendMessage(k, attentionText, 'html')
-                                    else
-                                        cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
-                                    end
-                                end
-                            end
-                        end
-                        if cant_contact ~= '' then
-                            sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
-                        end
-                        data[tostring(msg.chat.id)]['settings']['lock_spam'] = true
+                end
+                -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
+                if (floodkicktable[msg.chat.id] >= 4 or shitstormAlarm) and not modsContacted[msg.chat.id] then
+                    modsContacted[msg.chat.id] = true
+                    local hashtag = '#alarm' .. tostring(msg.message_id)
+                    local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+                    local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                    if group_link then
+                        chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
                     end
+                    local attentionText = langs[msg.lang].possibleShitstorm .. chat_name .. '\n' ..
+                    'HASHTAG: ' .. hashtag
+                    local already_contacted = { }
+                    already_contacted[tonumber(bot.id)] = bot.id
+                    already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
+                    local cant_contact = ''
+                    local list = getChatAdministrators(msg.chat.id)
+                    if list then
+                        for i, admin in pairs(list.result) do
+                            if not already_contacted[tonumber(admin.user.id)] then
+                                already_contacted[tonumber(admin.user.id)] = admin.user.id
+                                if sendChatAction(admin.user.id, 'typing', true) then
+                                    sendMessage(admin.user.id, attentionText, 'html')
+                                else
+                                    cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
+                                end
+                            end
+                        end
+                    end
+
+                    -- owner
+                    local owner = data[tostring(msg.chat.id)]['set_owner']
+                    if owner then
+                        if not already_contacted[tonumber(owner)] then
+                            already_contacted[tonumber(owner)] = owner
+                            if sendChatAction(owner, 'typing', true) then
+                                sendMessage(owner, attentionText, 'html')
+                            else
+                                cant_contact = cant_contact .. owner .. '\n'
+                            end
+                        end
+                    end
+
+                    -- determine if table is empty
+                    if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
+                        for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
+                            if not already_contacted[tonumber(k)] then
+                                already_contacted[tonumber(k)] = k
+                                if sendChatAction(k, 'typing', true) then
+                                    sendMessage(k, attentionText, 'html')
+                                else
+                                    cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
+                                end
+                            end
+                        end
+                    end
+                    if cant_contact ~= '' then
+                        sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
+                    end
+                    data[tostring(msg.chat.id)]['settings']['lock_spam'] = true
+                    sendMessage(msg.chat.id, hashtag)
+                end
+                if usermsgs >= NUM_MSG_MAX then
                     return nil
                 end
             end
