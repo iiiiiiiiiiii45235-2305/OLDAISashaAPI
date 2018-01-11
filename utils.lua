@@ -9,6 +9,7 @@ json =(loadfile "./libs/JSON.lua")()
 mimetype =(loadfile "./libs/mimetype.lua")()
 redis =(loadfile "./libs/redis.lua")()
 JSON =(loadfile "./libs/dkjson.lua")()
+sha2 =(loadfile "./libs/sha2.lua")()
 
 http.TIMEOUT = 10
 
