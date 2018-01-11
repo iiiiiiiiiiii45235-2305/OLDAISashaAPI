@@ -230,7 +230,6 @@ local function pre_process(msg)
                     -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
                     if floodkicktable[msg.chat.id] >= 4 and not modsContacted[msg.chat.id] then
                         modsContacted[msg.chat.id] = true
-
                         local hashtag = '#alarm' .. tostring(msg.message_id)
                         local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
                         local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
@@ -287,6 +286,7 @@ local function pre_process(msg)
                         if cant_contact ~= '' then
                             sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
                         end
+                        data[tostring(msg.chat.id)]['settings']['lock_spam'] = true
                     end
                     return nil
                 end
