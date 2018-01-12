@@ -20,18 +20,18 @@ local TIME_CHECK = 2
 -- Save stats, ban user
 local function pre_process(msg)
     if msg then
-        if not kicktable[msg.chat.id] then
-            kicktable[msg.chat.id] = { }
+        if not kicktable[tostring(msg.chat.id)] then
+            kicktable[tostring(msg.chat.id)] = { }
         end
-        if not hashes[msg.chat.id] then
-            hashes[msg.chat.id] = { }
+        if not hashes[tostring(msg.chat.id)] then
+            hashes[tostring(msg.chat.id)] = { }
         end
 
         -- Ignore service msg
         if msg.service then
             if msg.added then
                 for k, v in pairs(msg.added) do
-                    kicktable[msg.chat.id][v.id] = false
+                    kicktable[tostring(msg.chat.id)][tostring(v.id)] = false
                 end
             end
             return msg
@@ -73,13 +73,13 @@ local function pre_process(msg)
         print('messages: ' .. usermsgs)
 
         if msg.cb then
-            if not cbwarntable[msg.from.id] then
+            if not cbwarntable[tostring(msg.from.id)] then
                 if usermsgs >= 4 then
-                    cbwarntable[msg.from.id] = true
+                    cbwarntable[tostring(msg.from.id)] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
             else
-                cbwarntable[msg.from.id] = false
+                cbwarntable[tostring(msg.from.id)] = false
             end
         else
             -- Total user msgs in that chat excluding keyboard interactions
@@ -126,11 +126,11 @@ local function pre_process(msg)
             else
                 hash = sha2.hash256(msg.text)
             end
-            hashes[msg.chat.id][hash] =(hashes[msg.chat.id][hash] or 0) + 1
+            hashes[tostring(msg.chat.id)][tostring(hash)] =(hashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
 
             -- Check flood
             if msg.chat.type == 'private' then
-                if hashes[msg.chat.id][hash] > 10 then
+                if hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     -- don't write two times the same thing
                     usermsgs = 10
                 end
@@ -163,7 +163,8 @@ local function pre_process(msg)
                 end
                 -- if more than 10 messages all equals
                 local shitstormAlarm = false
-                if hashes[msg.chat.id][hash] > 10 then
+                print(hash, hashes[tostring(msg.chat.id)][tostring(hash)])
+                if hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     local text = ''
                     if string.match(getWarn(msg.chat.id), "%d+") then
@@ -176,21 +177,21 @@ local function pre_process(msg)
                     end
                     sendMessage(msg.chat.id, text)
                 end
-                floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
+                floodkicktable[tostring(msg.chat.id)] =(floodkicktable[tostring(msg.chat.id)] or 0)
                 if usermsgs >= NUM_MSG_MAX then
                     local user = msg.from.id
                     -- Ignore whitelisted
                     if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
                         return msg
                     end
-                    if kicktable[msg.chat.id][msg.from.id] == true then
+                    if kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] == true then
                         local member = getChatMember(msg.chat.id, msg.from.id)
                         if type(member) == 'table' then
                             if member.ok and member.result then
                                 if member.result.status == 'left' or member.result.status == 'kicked' then
                                     return
                                 else
-                                    kicktable[msg.chat.id][msg.from.id] = false
+                                    kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] = false
                                 end
                             end
                         end
@@ -234,12 +235,12 @@ local function pre_process(msg)
                             sendLog(gban_text, 'html', true)
                         end
                     end
-                    kicktable[msg.chat.id][msg.from.id] = true
-                    floodkicktable[msg.chat.id] = floodkicktable[msg.chat.id] + 1
+                    kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                    floodkicktable[tostring(msg.chat.id)] = floodkicktable[tostring(msg.chat.id)] + 1
                 end
                 -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
-                if (floodkicktable[msg.chat.id] >= 4 or shitstormAlarm) and not modsContacted[msg.chat.id] then
-                    modsContacted[msg.chat.id] = true
+                if (floodkicktable[tostring(msg.chat.id)] >= 4 or shitstormAlarm) and not modsContacted[tostring(msg.chat.id)] then
+                    modsContacted[tostring(msg.chat.id)] = true
                     local hashtag = '#alarm' .. tostring(msg.message_id)
                     local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
                     local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
