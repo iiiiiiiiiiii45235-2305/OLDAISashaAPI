@@ -935,6 +935,7 @@ end
 
 -- Call and postpone execution for cron plugins
 function cron_plugins()
+    print(last_cron)
     if last_cron ~= last_redis_cron then
         for name, plugin in ipairs(plugins) do
             if plugin.cron then
