@@ -8,7 +8,7 @@ local function run(msg, matches)
     if not dat then
         return false, code
     end
-    local pokemon = JSON:decode(dat)
+    local pokemon = json:decode(dat)
 
     pokemon.moves = nil
     pokemon.game_indices = nil

@@ -21,7 +21,7 @@ function load_data(filename)
     end
     local s = f:read('*all')
     f:close()
-    local decodeddata = JSON.decode(s)
+    local decodeddata = json:decode(s)
 
     return decodeddata
 end
