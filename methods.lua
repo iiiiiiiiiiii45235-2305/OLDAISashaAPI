@@ -131,7 +131,7 @@ function sendRequest(url, no_log)
         savelog('requests', method)
     end
     local dat, code = performRequest(url)
-    local tab = JSON.decode(dat)
+    local tab = json:decode(dat)
 
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
@@ -560,7 +560,7 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, 
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         url = url .. '&text=' .. URL.escape(text)
         url = url .. '&disable_web_page_preview=true'
-        url = url .. '&reply_markup=' .. URL.escape(JSON.encode(keyboard))
+        url = url .. '&reply_markup=' .. URL.escape(json:encode(keyboard))
         local reply = false
         if reply_to_message_id then
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
@@ -622,7 +622,7 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
         end
         url = url .. '&disable_web_page_preview=true'
         if keyboard then
-            url = url .. '&reply_markup=' .. URL.escape(JSON.encode(keyboard))
+            url = url .. '&reply_markup=' .. URL.escape(json:encode(keyboard))
         end
         local res, code = sendRequest(url)
 
@@ -1396,7 +1396,7 @@ function resolveChat(id_or_username, no_log)
         return false, code
     end
 
-    local tab = JSON.decode(dat)
+    local tab = json:decode(dat)
 
     if code ~= 200 then
         if not tab then
