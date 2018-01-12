@@ -176,8 +176,8 @@ local function pre_process(msg)
                     end
                     sendMessage(msg.chat.id, text)
                 end
+                floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
                 if usermsgs >= NUM_MSG_MAX then
-                    floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
                     local user = msg.from.id
                     -- Ignore whitelisted
                     if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
