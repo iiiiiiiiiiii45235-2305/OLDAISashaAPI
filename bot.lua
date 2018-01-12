@@ -938,7 +938,7 @@ function cron_plugins()
     print(last_cron, last_redis_cron)
     if last_cron ~= last_redis_cron then
         print('in')
-        for name, plugin in ipairs(plugins) do
+        for name, plugin in pairs(plugins) do
             print(name)
             if plugin.cron then
                 -- Call each plugin's cron function, if it has one.
