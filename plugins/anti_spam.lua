@@ -165,10 +165,19 @@ local function pre_process(msg)
                 local shitstormAlarm = false
                 if hashes[msg.chat.id][hash] > 10 then
                     shitstormAlarm = true
-                    banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood .. ' #possibleshitstorm')
+                    local text = ''
+                    if string.match(getWarn(msg.chat.id), "%d+") then
+                        text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                        text = text .. '\n' .. tostring(kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                    elseif not strict then
+                        text = kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                    else
+                        text = banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                    end
+                    sendMessage(msg.chat.id, text)
                 end
-                floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
                 if usermsgs >= NUM_MSG_MAX then
+                    floodkicktable[msg.chat.id] =(floodkicktable[msg.chat.id] or 0)
                     local user = msg.from.id
                     -- Ignore whitelisted
                     if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
