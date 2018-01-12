@@ -310,6 +310,7 @@ end
 
 local function cron()
     -- clear those tables on the top of the plugin
+    print("CRON")
     kicktable = { }
     cbwarntable = { }
     floodkicktable = { }
