@@ -163,7 +163,6 @@ local function pre_process(msg)
                 end
                 -- if more than 10 messages all equals
                 local shitstormAlarm = false
-                print(hash, hashes[tostring(msg.chat.id)][tostring(hash)])
                 if hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     local text = ''
