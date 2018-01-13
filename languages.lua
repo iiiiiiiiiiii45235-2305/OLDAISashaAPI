@@ -522,6 +522,7 @@ return {
         databaseSent = "Ti sto inviando il database.",
         databaseMissing = "Database mancante.",
         databaseFuckedUp = "*Errore, crash durante il salvataggio del database, ripristinarlo al più presto.*",
+        databaseSaved = "Database salvato.",
 
         -- delword.lua --
         delwordList = "Lista censure:\n",
@@ -1140,6 +1141,7 @@ return {
             "<code>/addrecord channel {id}\n{print_name}\n{old_print_names}\n{lang}\n[{username}\n{old_usernames}]</code>: Sasha aggiunge manualmente al database il canale specificato.",
             "<code>/uploaddb</code>: Sasha manda il database.",
             "<code>/replacedb {reply}</code>: Sasha sostituisce il database.",
+            "<code>/savedb {reply}</code>: Sasha salva il database.",
         },
 
         delword =
@@ -1914,6 +1916,7 @@ return {
         databaseSent = "I'm sending you the database.",
         databaseMissing = "Database missing.",
         databaseFuckedUp = "*Error, crash while saving database, restore it as soon as possible.*",
+        databaseSaved = "Database saved.",
 
         -- delword.lua --
         delwordList = "Censorship list:\n",
@@ -2539,6 +2542,7 @@ return {
             "<code>/addrecord channel {id}\n{print_name}\n{old_print_names}\n{lang}\n[{username}\n{old_usernames}]</code>: Sasha manually adds the specified channel to the database.",
             "<code>/uploaddb</code>: Sasha uploads the database.",
             "<code>/replacedb {reply}</code>: Sasha replaces the database.",
+            "<code>/savedb {reply}</code>: Sasha saves the database.",
         },
 
         delword =

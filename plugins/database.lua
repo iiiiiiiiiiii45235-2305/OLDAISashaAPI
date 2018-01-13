@@ -331,7 +331,7 @@ local function run(msg, matches)
         end
 
         if (matches[1]:lower() == 'dbdelete' or matches[1]:lower() == 'sasha elimina db' or matches[1]:lower() == 'elimina db') and matches[2] then
-            mystat('/delete')
+            mystat('/dbdelete')
             if database[tostring(matches[2])] then
                 database[tostring(matches[2])] = nil
                 save_data(config.database.db, database)
@@ -351,6 +351,13 @@ local function run(msg, matches)
             else
                 return langs[msg.lang].databaseMissing
             end
+        end
+
+        if matches[1]:lower() == 'savedb' then
+            mystat('/savedb')
+            print('SAVING USERS/GROUPS DATABASE')
+            save_data(config.database.db, database)
+            return langs[msg.lang].databaseSaved
         end
 
         if matches[1]:lower() == 'replacedb' then
@@ -515,6 +522,7 @@ return {
         "^[#!/]([Dd][Bb][Dd][Ee][Ll][Ee][Tt][Ee]) (%-?%d+)$",
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd][Dd][Bb])$",
         "^[#!/]([Rr][Ee][Pp][Ll][Aa][Cc][Ee][Dd][Bb])$",
+        "^[#!/]([Ss][Aa][Vv][Ee][Dd][Bb])$",
         -- dodatabase
         "^([Ss][Aa][Ss][Hh][Aa] [Ee][Ss][Ee][Gg][Uu][Ii] [Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
     },
@@ -535,5 +543,6 @@ return {
         "/addrecord channel {id}\n{print_name}\n{old_print_names}\n{lang}\n[{username}\n{old_usernames}]",
         "/uploaddb",
         "/replacedb",
+        "/savedb",
     },
 }
