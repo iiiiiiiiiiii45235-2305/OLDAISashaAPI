@@ -890,6 +890,31 @@ function match_plugin(plugin, plugin_name, msg)
     end
 end
 
+local function base_logging(msg)
+    if msg.service then
+        local text = ""
+        if msg.service_type == 'pinned_message' then
+            text = msg.from.print_name .. " [" .. msg.from.id .. "] pinned a message"
+        elseif msg.service_type == 'chat_add_user_link' or msg.service_type == 'chat_add_users' or msg.service_type == 'chat_add_user' then
+            if msg.adder.id == msg.added[1].id then
+                text = msg.adder.print_name .. " [" .. msg.adder.id .. "] joined with invite link"
+            else
+                text = msg.adder.print_name .. " [" .. msg.adder.id .. "] added:\n"
+                for k, v in pairs(msg.added) do
+                    text = v.print_name .. " [" .. v.id .. "]\n"
+                end
+            end
+        elseif msg.service_type == 'chat_del_user_leave' or msg.service_type == 'chat_del_user' then
+            if msg.remover.id == msg.removed.id then
+                text = msg.remover.print_name .. " [" .. msg.remover.id .. "] left the chat"
+            else
+                text = msg.remover.print_name .. " [" .. msg.remover.id .. "] deleted " .. msg.removed.print_name .. " [" .. msg.removed.id .. "]"
+            end
+        end
+        savelog(msg.chat.id, text)
+    end
+end
+
 -- This function is called when tg receive a msg
 function on_msg_receive(msg)
     if not is_started then
@@ -923,6 +948,7 @@ function on_msg_receive(msg)
     local chat_id = msg.chat.id
     msg = get_tg_rank(msg)
     tmp_msg = clone_table(msg)
+    base_logging(msg)
     if msg_valid(msg) then
         msg = pre_process_msg(msg)
         if msg then

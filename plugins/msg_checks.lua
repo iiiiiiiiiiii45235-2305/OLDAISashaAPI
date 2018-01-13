@@ -483,7 +483,6 @@ local function check_msg(msg, settings, pre_process_function)
                         print('name spam found')
                         deleteMessage(msg.chat.id, msg.message_id)
                         if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] joined and banned (#spam name)")
                             sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                         end
                         return nil
@@ -499,7 +498,6 @@ local function check_msg(msg, settings, pre_process_function)
                         print('rtl name found')
                         deleteMessage(msg.chat.id, msg.message_id)
                         if strict then
-                            savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#RTL char in name)")
                             sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                         end
                         return nil
@@ -512,7 +510,6 @@ local function check_msg(msg, settings, pre_process_function)
                 if pre_process_function then
                     print('member locked')
                     deleteMessage(msg.chat.id, msg.message_id)
-                    savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] joined and banned (#lockmember)")
                     sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                     return nil
                 else
@@ -528,7 +525,6 @@ local function check_msg(msg, settings, pre_process_function)
                             print('name spam found')
                             deleteMessage(msg.chat.id, msg.message_id)
                             if strict then
-                                savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#spam name) ")
                                 sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                             end
                             return nil
@@ -544,7 +540,6 @@ local function check_msg(msg, settings, pre_process_function)
                             print('rtl name found')
                             deleteMessage(msg.chat.id, msg.message_id)
                             if strict then
-                                savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned (#RTL char in name)")
                                 sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                             end
                             return nil
@@ -558,7 +553,6 @@ local function check_msg(msg, settings, pre_process_function)
                         print('member locked')
                         deleteMessage(msg.chat.id, msg.message_id)
                         sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                        savelog(msg.chat.id, tostring(msg.from.print_name:gsub("‮", "")):gsub("_", " ") .. " User [" .. msg.from.id .. "] added [" .. v.id .. "]: added user banned  (#lockmember)")
                         sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                         return nil
                     else
@@ -569,7 +563,6 @@ local function check_msg(msg, settings, pre_process_function)
                     if v.is_bot then
                         if pre_process_function then
                             print('bots locked')
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a bot > @" .. v.username)
                             sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
                             return nil
                         else

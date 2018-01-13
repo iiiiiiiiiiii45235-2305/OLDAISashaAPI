@@ -1644,7 +1644,6 @@ local function pre_process(msg)
                 end
             end
             if msg.service_type == 'chat_add_user_link' then
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] joined with invite link")
                 if is_owner2(msg.from.id, msg.chat.id, true) then
                     local bot_member = getChatMember(msg.chat.id, bot.id)
                     if bot_member.result then
@@ -1679,10 +1678,6 @@ local function pre_process(msg)
                         end
                     end
                 end
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added user(s)  " .. text)
-            end
-            if msg.service_type == 'chat_del_user' then
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted user user#id" .. msg.removed.id)
             end
             if msg.service_type == 'chat_rename' then
                 if data[tostring(msg.chat.id)].settings.lock_name then
@@ -1717,10 +1712,7 @@ local function pre_process(msg)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted chat's photo Y")
                 end
             elseif msg.service_type == 'pinned_message' then
-                if not sendReply(msg, '#pin' .. tostring(msg.chat.id):gsub('-', '')) then
-                    sendMessage(msg.chat.id, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] pinned a message Y")
-                end
+                sendReply(msg, '#pin' .. tostring(msg.chat.id):gsub('-', ''))
             end
         end
         return msg
