@@ -2,6 +2,9 @@
 local adminsContacted = {
     -- chat_id
 }
+local noticeContacted = {
+    -- chat_id = false/true
+}
 
 -- table that contains 'group_id' = message_id to delete old rules messages
 local last_rules = { }
@@ -504,8 +507,8 @@ local function run(msg, matches)
     if matches[1]:lower() == 'admins' then
         mystat('/admins')
         if is_group(msg) or is_super_group(msg) then
-            if not adminsContacted[msg.chat.id] or is_admin(msg) then
-                adminsContacted[msg.chat.id] = true
+            if not adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
+                adminsContacted[tostring(msg.chat.id)] = true
                 local hashtag = '#admins' .. tostring(msg.message_id)
                 local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
                 local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
@@ -584,7 +587,10 @@ local function run(msg, matches)
                 end
                 return
             else
-                return langs[msg.lang].dontFloodAdmins
+                if not noticeContacted[tostring(msg.chat.id)] then
+                    noticeContacted[tostring(msg.chat.id)] = true
+                    return langs[msg.lang].dontFloodAdmins
+                end
             end
         else
             return langs[msg.lang].useYourGroups
@@ -1720,8 +1726,9 @@ local function pre_process(msg)
 end
 
 local function cron()
-    -- clear the table on the top of the plugin
+    -- clear those tables on the top of the plugin
     adminsContacted = { }
+    noticeContacted = { }
 end
 
 return {

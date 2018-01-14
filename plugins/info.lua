@@ -340,10 +340,10 @@ local function run(msg, matches)
                             end
                             local text = ''
                             if link then
-                                if not invite_table[matches[3]] then
+                                if not invite_table[tostring(matches[3])] then
                                     if not userInChat(matches[4], matches[3], true) then
                                         if sendMessage(matches[3], link, 'html') then
-                                            invite_table[matches[3]] = true
+                                            invite_table[tostring(matches[3])] = true
                                             text = langs[msg.lang].ok
                                         else
                                             text = langs[msg.lang].noObjectInvite
