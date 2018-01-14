@@ -639,7 +639,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, nil, true)
+                                    txt = txt .. user .. ' ' .. banUser(msg.from.id, msg.entities[k].user.id, msg.chat.id, nil, nil, true)
                                 end
                             end
                         end
@@ -647,12 +647,12 @@ local function run(msg, matches)
                     if not found then
                         txt = txt .. user .. ' '
                         if string.match(user, '^%d+$') then
-                            txt = txt .. banUser(msg.from.id, user, msg.chat.id, nil, true)
+                            txt = txt .. banUser(msg.from.id, user, msg.chat.id, nil, nil, true)
                         else
                             local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    txt = txt .. banUser(msg.from.id, obj_user.id, msg.chat.id, nil, true)
+                                    txt = txt .. banUser(msg.from.id, obj_user.id, msg.chat.id, nil, nil, true)
                                 end
                             else
                                 txt = txt .. langs[msg.lang].noObject
