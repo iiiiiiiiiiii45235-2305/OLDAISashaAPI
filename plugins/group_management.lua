@@ -1882,6 +1882,7 @@ return {
         "^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
         "^[#!/]([Ss][Ee][Tt][Ww][Aa][Rr][Nn]) (%d+)$",
         "^[#!/]([Gg][Ee][Tt][Ww][Aa][Rr][Nn])$",
+        "^[#!/]([Mm][Ss][Gg][Ii][Dd])$",
     },
     run = run,
     pre_process = pre_process,
