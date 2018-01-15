@@ -815,7 +815,11 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'msgid' then
             mystat('/msgid')
-            return msg.message_id
+            if msg.reply then
+                return msg.reply_to_message.message_id
+            else
+                return msg.message_id
+            end
         end
         if matches[1]:lower() == 'del' then
             if msg.from.is_mod then
@@ -836,10 +840,14 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'delfrom' then
             if msg.from.is_mod then
-                mystat('/delfrom')
-                delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
-                delAll[tostring(msg.chat.id)].from = msg.message_id
-                return langs[msg.lang].ok
+                if msg.reply then
+                    mystat('/delfrom')
+                    delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
+                    delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
+                    return langs[msg.lang].ok
+                else
+                    return langs[msg.lang].needReply
+                end
             else
                 return langs[msg.lang].require_mod
             end
@@ -847,10 +855,14 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'delto' then
             if msg.from.is_mod then
-                mystat('/delto')
-                delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
-                delAll[tostring(msg.chat.id)].to = msg.message_id
-                return langs[msg.lang].ok
+                if msg.reply then
+                    mystat('/delto')
+                    delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
+                    delAll[tostring(msg.chat.id)].to = msg.reply_to_message.message_id
+                    return langs[msg.lang].ok
+                else
+                    return langs[msg.lang].needReply
+                end
             else
                 return langs[msg.lang].require_mod
             end
