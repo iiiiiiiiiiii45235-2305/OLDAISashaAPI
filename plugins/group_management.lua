@@ -845,6 +845,7 @@ local function run(msg, matches)
                         mystat('/delfrom')
                         delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                         delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
+                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                         return langs[msg.lang].ok
                     else
                         return langs[msg.lang].messageTooOld
@@ -863,6 +864,7 @@ local function run(msg, matches)
                     mystat('/delto')
                     delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                     delAll[tostring(msg.chat.id)].to = msg.reply_to_message.message_id
+                    io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "60" "' .. msg.message_id .. '"')
                     return langs[msg.lang].ok
                 else
                     return langs[msg.lang].needReply
@@ -878,13 +880,12 @@ local function run(msg, matches)
                     if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
                             mystat('/delall')
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
-                            print(delAll[tostring(msg.chat.id)].from)
-                            print(delAll[tostring(msg.chat.id)].to)
+                            sendReply(msg, langs[msg.lang].deletingMessages)
                             for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
-                                print(i)
-                                deleteMessage(msg.chat.id, i, true)
+                                local rndtime = math.random(1, 15)
+                                io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. rndtime .. '" "' .. i .. '"')
                             end
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
                             return langs[msg.lang].messagesDeleted
                         else
                             return langs[msg.lang].delallError
