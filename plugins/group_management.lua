@@ -5,6 +5,9 @@ local adminsContacted = {
 local noticeContacted = {
     -- chat_id = false/true
 }
+local delAll = {
+    -- chat_id = from = msgid, to = msgid + n
+}
 
 -- table that contains 'group_id' = message_id to delete old rules messages
 local last_rules = { }
@@ -810,6 +813,10 @@ local function run(msg, matches)
                 return langs[msg.lang].require_mod
             end
         end
+        if matches[1]:lower() == 'msgid' then
+            mystat('/msgid')
+            return msg.message_id
+        end
         if matches[1]:lower() == 'del' then
             if msg.from.is_mod then
                 mystat('/del')
@@ -822,6 +829,54 @@ local function run(msg, matches)
                         sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                     end
                 end
+            else
+                return langs[msg.lang].require_mod
+            end
+            return
+        end
+        if matches[1]:lower() == 'delfrom' then
+            if msg.from.is_mod then
+                mystat('/delfrom')
+                delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
+                delAll[tostring(msg.chat.id)].from = msg.message_id
+                return langs[msg.lang].ok
+            else
+                return langs[msg.lang].require_mod
+            end
+            return
+        end
+        if matches[1]:lower() == 'delto' then
+            if msg.from.is_mod then
+                mystat('/delto')
+                delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
+                delAll[tostring(msg.chat.id)].to = msg.message_id
+                return langs[msg.lang].ok
+            else
+                return langs[msg.lang].require_mod
+            end
+            return
+        end
+        if matches[1]:lower() == 'delall' then
+            if msg.from.is_mod then
+                if delAll[tostring(msg.chat.id)] then
+                    if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
+                        if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
+                            mystat('/delall')
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll.from .. " to " .. delAll.to)
+                            for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
+                                deleteMessage(msg.chat.id, i, true)
+                            end
+                            return langs[msg.lang].messagesDeleted
+                        else
+                            return langs[msg.lang].delallError
+                        end
+                    else
+                        return langs[msg.lang].delallError
+                    end
+                else
+                    return langs[msg.lang].delallError
+                end
+                return langs[msg.lang].ok
             else
                 return langs[msg.lang].require_mod
             end
@@ -1779,6 +1834,9 @@ return {
         -- COMMON
         "^[#!/]([Dd][Ee][Ll])$",
         "^[#!/]([Dd][Ee][Ll][Kk][Ee][Yy][Bb][Oo][Aa][Rr][Dd])$",
+        "^[#!/]([Dd][Ee][Ll][Ff][Rr][Oo][Mm])$",
+        "^[#!/]([Dd][Ee][Ll][Tt][Oo])$",
+        "^[#!/]([Dd][Ee][Ll][Aa][Ll][Ll])$",
         "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
         "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss])",

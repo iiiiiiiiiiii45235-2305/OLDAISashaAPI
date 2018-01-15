@@ -744,6 +744,8 @@ return {
         errorCleanedUsername = "Errore nel tentativo di pulire l'username.",
         needPhoto = "Mi serve una foto.",
         dontFloodAdmins = "Non stressare gli admin, hanno già ricevuto un avviso.",
+        messagesDeleted = "Messaggi eliminati.",
+        delallError = "Devi prima usare /delfrom /delto e assicurarti che il messaggio di delfrom sia più vecchio di quello di delto.",
 
         -- info.lua --
         infoWord = "INFO",
@@ -2145,6 +2147,8 @@ return {
         errorCleanedUsername = "Error while cleaning supergroup username.",
         needPhoto = "I need a photo.",
         dontFloodAdmins = "Dont't flood the admins, they already received a message.",
+        messagesDeleted = "Messages deleted.",
+        delallError = "You must set /delfrom /delto and ensure that the message of delfrom is older than the the one of delto.",
 
         -- info.lua --
         infoWord = "INFO",
