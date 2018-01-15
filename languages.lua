@@ -746,6 +746,7 @@ return {
         dontFloodAdmins = "Non stressare gli admin, hanno già ricevuto un avviso.",
         messagesDeleted = "Messaggi eliminati.",
         delallError = "Devi prima usare /delfrom /delto e assicurarti che il messaggio di delfrom sia più vecchio di quello di delto.",
+        messageTooOld = "Il messaggio è troppo vecchio (massimo 48h).",
 
         -- info.lua --
         infoWord = "INFO",
@@ -2149,6 +2150,7 @@ return {
         dontFloodAdmins = "Dont't flood the admins, they already received a message.",
         messagesDeleted = "Messages deleted.",
         delallError = "You must set /delfrom /delto and ensure that the message of delfrom is older than the the one of delto.",
+        messageTooOld = "The message is too old (maximum 48h).",
 
         -- info.lua --
         infoWord = "INFO",

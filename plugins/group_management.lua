@@ -841,10 +841,14 @@ local function run(msg, matches)
         if matches[1]:lower() == 'delfrom' then
             if msg.from.is_mod then
                 if msg.reply then
-                    mystat('/delfrom')
-                    delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
-                    delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
-                    return langs[msg.lang].ok
+                    if msg.reply_to_message.date > os.time() -48 * 60 * 60 then
+                        mystat('/delfrom')
+                        delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
+                        delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
+                        return langs[msg.lang].ok
+                    else
+                        return langs[msg.lang].messageTooOld
+                    end
                 else
                     return langs[msg.lang].needReply
                 end
