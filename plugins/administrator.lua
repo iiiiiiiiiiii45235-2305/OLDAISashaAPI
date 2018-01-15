@@ -858,6 +858,9 @@ local function run(msg, matches)
                 doSendBackup()
                 return langs[msg.lang].backupDone
             end
+            if matches[1]:lower() == 'getip' then
+                return io.popen("wget -qO- http://ipecho.net/plain"):read('*all')
+            end
             if matches[1]:lower() == 'add' and matches[2]:lower() == 'realm' then
                 if is_group(msg) then
                     return langs[msg.lang].errorAlreadyGroup
@@ -941,6 +944,7 @@ return {
         "^[#!/]([Bb][Rr][Oo][Aa][Dd][Cc][Aa][Ss][Tt]) +(.+)$",
         "^[#!/]([Ll][Ee][Aa][Vv][Ee]) (%-?%d+)$",
         "^[#!/]([Ll][Ee][Aa][Vv][Ee])$",
+        "^[#!/]([Gg][Ee][Tt][Ii][Pp])$",
     },
     run = run,
     min_rank = 3,
@@ -984,6 +988,7 @@ return {
         "/rebootcli",
         "/reloaddata",
         "/broadcast {text}",
+        "/getip",
         "REALM",
         "/add realm",
         "/rem realm",
