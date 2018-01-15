@@ -862,7 +862,7 @@ local function run(msg, matches)
                     if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
                             mystat('/delall')
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll.from .. " to " .. delAll.to)
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
                             for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
                                 deleteMessage(msg.chat.id, i, true)
                             end
