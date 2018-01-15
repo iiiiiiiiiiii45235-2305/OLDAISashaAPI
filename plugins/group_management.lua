@@ -5,8 +5,9 @@ local adminsContacted = {
 local noticeContacted = {
     -- chat_id = false/true
 }
+
 local delAll = {
-    -- chat_id = from = msgid, to = msgid + n
+    -- chat_id = { from = msgid1, to = msgid2 }
 }
 
 -- table that contains 'group_id' = message_id to delete old rules messages
@@ -880,13 +881,12 @@ local function run(msg, matches)
                     if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
                             mystat('/delall')
-                            sendReply(msg, langs[msg.lang].deletingMessages)
                             for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
                                 local rndtime = math.random(1, 15)
                                 io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. rndtime .. '" "' .. i .. '"')
                             end
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
-                            return langs[msg.lang].messagesDeleted
+                            return langs[msg.lang].deletingMessages
                         else
                             return langs[msg.lang].delallError
                         end
