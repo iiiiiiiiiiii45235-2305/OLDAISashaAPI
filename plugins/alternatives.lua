@@ -778,7 +778,7 @@ local function pre_process(msg)
                                 return msg
                             end
                         elseif msg.text then
-                            if string.match(msg.text:lower(), '^' .. k) then
+                            if string.match(msg.text:lower(), '^' .. k .. '$') or string.match(msg.text:lower(), '^' .. k .. ' ') then
                                 msg.command = true
                                 -- one match is enough
                                 local temp = msg.text
@@ -838,7 +838,7 @@ local function pre_process(msg)
                                 return msg
                             end
                         elseif msg.text then
-                            if string.match(msg.text:lower(), '^' .. k) then
+                            if string.match(msg.text:lower(), '^' .. k .. '$') or string.match(msg.text:lower(), '^' .. k .. ' ') then
                                 msg.command = true
                                 -- one match is enough
                                 local temp = msg.text
