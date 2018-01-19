@@ -2421,6 +2421,7 @@ end
 
 local function pre_process(msg)
     if msg then
+        keyboardActions[tostring(msg.chat.id)] = { }
         -- SERVICE MESSAGE
         if msg.service then
             if msg.service_type then

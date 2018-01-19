@@ -1696,6 +1696,7 @@ end
 
 local function pre_process(msg)
     if msg then
+        keyboardActions[tostring(msg.chat.id)] = { }
         if msg.service then
             if is_realm(msg) then
                 if msg.service_type == 'chat_add_user_link' then
