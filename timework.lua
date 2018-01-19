@@ -21,5 +21,5 @@ elseif action == 'deletemessage' then
     end
 elseif action == 'kickuser' then
     action, sleep_time, chat_id, user_id, reason = ...
-    sendMessage(chat_id, kickUser(bot.id, user_id, chat_id, reason))
+    kickChatMember(user_id, chat_id)
 end

@@ -227,12 +227,12 @@ local function pre_process(msg)
                 if floodkicktable[tostring(msg.chat.id)] >= 4 or hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
+                        local text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)) .. '\n#user' .. msg.from.id .. ' #executer' .. bot.id
                         if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
-                            sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)) .. '\n#user' .. msg.from.id .. ' #executer' .. bot.id .. ' #restrict')
-                        else
-                            sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)))
+                            text = text .. ' #restrict'
                         end
-                        io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "' .. langs[msg.lang].reasonFlood .. '"')
+                        sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick)
+                        io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                     elseif not strict then
                         sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                     else
