@@ -227,7 +227,7 @@ local function pre_process(msg)
                 if floodkicktable[tostring(msg.chat.id)] >= 4 or hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
-                        local text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)) .. '\n#user' .. msg.from.id .. ' #executer' .. bot.id
+                        local text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                         if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
                             text = text .. ' #restrict'
                         end
