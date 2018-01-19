@@ -161,21 +161,6 @@ local function pre_process(msg)
                         end
                     end
                 end
-                -- if more than 10 messages all equals
-                local shitstormAlarm = false
-                if hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
-                    shitstormAlarm = true
-                    local text = ''
-                    if string.match(getWarn(msg.chat.id), "%d+") then
-                        text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                        text = text .. '\n' .. tostring(kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                    elseif not strict then
-                        text = kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
-                    else
-                        text = banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
-                    end
-                    sendMessage(msg.chat.id, text)
-                end
                 floodkicktable[tostring(msg.chat.id)] =(floodkicktable[tostring(msg.chat.id)] or 0)
                 if usermsgs >= NUM_MSG_MAX then
                     local user = msg.from.id
@@ -237,8 +222,24 @@ local function pre_process(msg)
                     kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                     floodkicktable[tostring(msg.chat.id)] = floodkicktable[tostring(msg.chat.id)] + 1
                 end
-                -- check if there's a possible ongoing shitstorm (if flooders are more than 4 in 1 minute)
-                if (floodkicktable[tostring(msg.chat.id)] >= 4 or shitstormAlarm) and not modsContacted[tostring(msg.chat.id)] then
+                -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
+                local shitstormAlarm = false
+                if floodkicktable[tostring(msg.chat.id)] >= 4 or hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
+                    shitstormAlarm = true
+                    if string.match(getWarn(msg.chat.id), "%d+") then
+                        if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
+                            sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)) .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict')
+                        else
+                            sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)))
+                        end
+                        io.popen('lua timework.lua "kickuser" "' .. msg.chat.id .. '" "' .. math.random(1, 10) .. '" "' .. msg.from.id .. '" "' .. langs[msg.lang].reasonFlood .. '"')
+                    elseif not strict then
+                        sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                    else
+                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                    end
+                end
+                if shitstormAlarm and not modsContacted[tostring(msg.chat.id)] then
                     modsContacted[tostring(msg.chat.id)] = true
                     local hashtag = '#alarm' .. tostring(msg.message_id)
                     local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'

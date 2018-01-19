@@ -19,4 +19,7 @@ elseif action == 'deletemessage' then
     if not deleteMessage(chat_id, message_id, true) then
         -- sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, message_id)
     end
+elseif action == 'kickuser' then
+    action, chat_id, sleep_time, user_id, reason = ...
+    sendMessage(chat_id, kickUser(bot.id, user_id, chat_id, reason))
 end
