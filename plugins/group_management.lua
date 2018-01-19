@@ -420,6 +420,9 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
+                            if not keyboardActions[tostring(matches[5])] then
+                                keyboardActions[tostring(matches[5])] = { }
+                            end
                             local permissions = adjustPermissions(obj_user)
                             permissions[permissionsDictionary[matches[4]:lower()]] = true
                             local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
@@ -454,6 +457,9 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
+                            if not keyboardActions[tostring(matches[5])] then
+                                keyboardActions[tostring(matches[5])] = { }
+                            end
                             local permissions = adjustPermissions(obj_user)
                             permissions[permissionsDictionary[matches[4]:lower()]] = false
                             local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
@@ -1696,7 +1702,9 @@ end
 
 local function pre_process(msg)
     if msg then
-        keyboardActions[tostring(msg.chat.id)] = { }
+        if not keyboardActions[tostring(msg.chat.id)] then
+            keyboardActions[tostring(msg.chat.id)] = { }
+        end
         if msg.service then
             if is_realm(msg) then
                 if msg.service_type == 'chat_add_user_link' then

@@ -151,6 +151,9 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
+                            if not keyboardActions[tostring(matches[5])] then
+                                keyboardActions[tostring(matches[5])] = { }
+                            end
                             local restrictions = adjustRestrictions(obj_user)
                             if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
                                 restrictions[restrictionsDictionary[matches[4]:lower()]] = false
@@ -200,6 +203,9 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
+                            if not keyboardActions[tostring(matches[5])] then
+                                keyboardActions[tostring(matches[5])] = { }
+                            end
                             local restrictions = adjustRestrictions(obj_user)
                             if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
                                 restrictions[restrictionsDictionary[matches[4]:lower()]] = true
@@ -413,6 +419,9 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[5], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if not keyboardActions[tostring(matches[6])] then
+                                        keyboardActions[tostring(matches[6])] = { }
+                                    end
                                     local text = ''
                                     local restrictions = restrictions_table[tostring(obj_user.id)]
                                     if restrictUser(matches[6], obj_user, restrictions, os.time() + time) then
@@ -2421,7 +2430,9 @@ end
 
 local function pre_process(msg)
     if msg then
-        keyboardActions[tostring(msg.chat.id)] = { }
+        if not keyboardActions[tostring(msg.chat.id)] then
+            keyboardActions[tostring(msg.chat.id)] = { }
+        end
         -- SERVICE MESSAGE
         if msg.service then
             if msg.service_type then
