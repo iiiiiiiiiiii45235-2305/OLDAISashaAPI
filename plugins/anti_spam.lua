@@ -232,7 +232,7 @@ local function pre_process(msg)
                         else
                             sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)))
                         end
-                        io.popen('lua timework.lua "kickuser" "' .. msg.chat.id .. '" "' .. math.random(1, 10) .. '" "' .. msg.from.id .. '" "' .. langs[msg.lang].reasonFlood .. '"')
+                        io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "' .. langs[msg.lang].reasonFlood .. '"')
                     elseif not strict then
                         sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                     else

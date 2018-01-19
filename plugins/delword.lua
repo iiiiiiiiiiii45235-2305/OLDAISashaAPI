@@ -90,7 +90,7 @@ local function pre_process(msg)
                                 end
                             end
                         else
-                            io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. time .. '" "' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         end
                         return nil
                     end

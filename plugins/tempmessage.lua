@@ -64,7 +64,7 @@ local function run(msg, matches)
                                 local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
                                 text_table[tostring(msg.from.id)] = nil
                                 if message_id then
-                                    io.popen('lua timework.lua "deletemessage" "' .. matches[4] .. '" "' .. time .. '" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. matches[4] .. '" "' .. message_id .. '"')
                                 end
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
@@ -103,7 +103,7 @@ local function run(msg, matches)
                     local time = seconds +(minutes * 60) +(hours * 60 * 60)
                     local message_id = sendMessage(msg.chat.id, matches[5]).result.message_id
                     if message_id then
-                        io.popen('lua timework.lua "deletemessage" "' .. msg.chat.id .. '" "' .. time .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. message_id .. '"')
                     end
                 else
                     text_table[tostring(msg.from.id)] = matches[2]
