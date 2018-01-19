@@ -325,20 +325,11 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date, no_notic
                 savelog('restrict_user', code)
             end
         end
-        if res then
-            if areNoticesEnabled(user_id, chat_id) and not no_notice then
-                sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(user_id)].restrictions ..
-                langs[get_lang(user_id)].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
-                langs[get_lang(user_id)].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
-                langs[get_lang(user_id)].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
-                langs[get_lang(user_id)].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
-            end
-        end
         return res
     end
 end
 
-function unrestrictChatMember(chat_id, user_id)
+function unrestrictChatMember(chat_id, user_id, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local unrestrict_table = {
         can_send_messages = true,
@@ -346,7 +337,7 @@ function unrestrictChatMember(chat_id, user_id)
         can_send_other_messages = true,
         can_add_web_page_previews = true
     }
-    return restrictChatMember(chat_id, user_id, unrestrict_table)
+    return restrictChatMember(chat_id, user_id, unrestrict_table, nil, no_notice)
 end
 
 function leaveChat(chat_id)

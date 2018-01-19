@@ -5,6 +5,9 @@ local adminsContacted = {
 local noticeContacted = {
     -- chat_id = false/true
 }
+local keyboardActions = {
+    -- chat_id = { user_id = false/true }
+}
 
 local delAll = {
     -- chat_id = { from = msgid1, to = msgid2 }
@@ -100,9 +103,6 @@ end
 
 local function promoteTgAdmin(chat_id, user, permissions)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)] then
-        return langs[lang].groupNotAdded
-    end
     if promoteChatMember(chat_id, user.id, permissions) then
         local promote = false
         for key, var in pairs(permissions) do
@@ -114,7 +114,10 @@ local function promoteTgAdmin(chat_id, user, permissions)
             data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
             save_data(config.moderation.data, data)
             if areNoticesEnabled(user.id, chat_id) then
-                sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
+                if not keyboardActions[tostring(chat_id)][tostring(user.id)] then
+                    keyboardActions[tostring(chat_id)][tostring(user.id)] = true
+                    sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
+                end
             end
             return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
         end
@@ -125,9 +128,6 @@ end
 
 local function demoteTgAdmin(chat_id, user)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)] then
-        return langs[lang].groupNotAdded
-    end
     if demoteChatMember(chat_id, user.id) then
         if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
             data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
@@ -144,9 +144,6 @@ end
 
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)] then
-        return langs[lang].groupNotAdded
-    end
     if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
         return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyMod
     end
@@ -160,9 +157,6 @@ end
 
 local function demoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)] then
-        return langs[lang].groupNotAdded
-    end
     if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
         return(user.username or user.print_name or user.first_name) .. langs[lang].notMod
     end
@@ -1804,6 +1798,7 @@ local function cron()
     -- clear those tables on the top of the plugin
     adminsContacted = { }
     noticeContacted = { }
+    keyboardActions = { }
 end
 
 return {

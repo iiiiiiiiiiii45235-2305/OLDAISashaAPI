@@ -213,9 +213,6 @@ end
 
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)] then
-        return langs[lang].groupNotAdded
-    end
     if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
         return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyMod
     end
@@ -226,9 +223,6 @@ end
 
 local function demoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)] then
-        return langs[lang].groupNotAdded
-    end
     if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
         return(user.username or user.print_name or user.first_name) .. langs[lang].notMod
     end

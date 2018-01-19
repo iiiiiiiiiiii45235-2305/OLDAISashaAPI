@@ -7,6 +7,10 @@ local kick_ban_errors = {
 local invite_table = {
     -- user_id
 }
+local keyboardActions = {
+    -- chat_id = { user_id = false/true }
+}
+
 local default_restrictions = {
     can_send_messages = true,
     can_send_media_messages = true,
@@ -80,6 +84,42 @@ local function showRestrictions(chat_id, user_id, lang)
     end
 end
 
+local function restrictUser(chat_id, user, restrictions, until_date, no_notice)
+    local lang = get_lang(chat_id)
+    if restrictChatMember(chat_id, user.id, restrictions, until_date, no_notice) then
+        if areNoticesEnabled(user.id, chat_id) and not no_notice then
+            if not keyboardActions[tostring(chat_id)][tostring(user.id)] then
+                keyboardActions[tostring(chat_id)][tostring(user.id)] = true
+                sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+                langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
+                langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
+                langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
+                langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
+            end
+        end
+    else
+        return langs[lang].checkMyPermissions
+    end
+end
+
+local function unrestrictUser(chat_id, user, no_notice)
+    local lang = get_lang(chat_id)
+    if unrestrictChatMember(chat_id, user.id, no_notice) then
+        if areNoticesEnabled(user.id, chat_id) and not no_notice then
+            if not keyboardActions[tostring(chat_id)][tostring(user.id)] then
+                keyboardActions[tostring(chat_id)][tostring(user.id)] = true
+                sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+                langs[lang].restrictionSendMessages .. tostring(default_restrictions.can_send_messages) ..
+                langs[lang].restrictionSendMediaMessages .. tostring(default_restrictions.can_send_media_messages) ..
+                langs[lang].restrictionSendOtherMessages .. tostring(default_restrictions.can_send_other_messages) ..
+                langs[lang].restrictionAddWebPagePreviews .. tostring(default_restrictions.can_add_web_page_previews))
+            end
+        end
+    else
+        return langs[lang].checkMyPermissions
+    end
+end
+
 local function run(msg, matches)
     if not msg.service then
         if msg.cb then
@@ -129,7 +169,7 @@ local function run(msg, matches)
                             if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
                                 restrictions[restrictionsDictionary[matches[4]:lower()]] = false
                             end
-                            if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
+                            if restrictUser(matches[5], obj_user.user, restrictions) then
                                 answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
@@ -178,7 +218,7 @@ local function run(msg, matches)
                                 restrictions['can_send_media_messages'] = true
                                 restrictions[restrictionsDictionary[matches[4]:lower()]] = true
                             end
-                            if restrictChatMember(matches[5], obj_user.user.id, restrictions) then
+                            if restrictUser(matches[5], obj_user.user, restrictions) then
                                 answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
@@ -271,12 +311,7 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
                         mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                     elseif matches[4] == 'DONE' then
-                        local text = ''
-                        if time < 30 or time > 31622400 then
-                            text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
-                        else
-                            text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
-                        end
+                        local text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
                         answerCallbackQuery(msg.cb_id, text, false)
                         sendMessage(matches[6], text)
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
@@ -375,38 +410,37 @@ local function run(msg, matches)
                         end
                     elseif matches[4] == 'DONE' then
                         if restrictions_table[tostring(matches[5])] then
-                            local text = ''
-                            local restrictions = restrictions_table[tostring(matches[5])]
-                            if time < 30 or time > 31622400 then
-                                if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
-                                    for k, v in pairs(restrictions) do
-                                        if not restrictions[k] then
-                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                            local obj_user = getChat('@' ..(string.match(matches[5], '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    local text = ''
+                                    local restrictions = restrictions_table[tostring(obj_user.id)]
+                                    if restrictUser(matches[6], obj_user, restrictions, os.time() + time) then
+                                        for k, v in pairs(restrictions) do
+                                            if not restrictions[k] then
+                                                text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                                            end
                                         end
+                                        if time < 30 or time > 31622400 then
+                                            text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
+                                        else
+                                            text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
+                                        end
+                                    else
+                                        text = langs[msg.lang].errorTryAgain
                                     end
-                                    text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #restrict'
-                                else
-                                    text = langs[msg.lang].errorTryAgain
+                                    answerCallbackQuery(msg.cb_id, text, false)
+                                    restrictions_table[tostring(obj_user.id)] = nil
+                                    sendMessage(matches[6], text)
+                                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                    end
+                                    mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                                 end
                             else
-                                if restrictChatMember(matches[6], matches[5], restrictions, os.time() + time) then
-                                    for k, v in pairs(restrictions) do
-                                        if not restrictions[k] then
-                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
-                                        end
-                                    end
-                                    text = text .. langs[msg.lang].denied .. '\n#user' .. matches[5] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
-                                else
-                                    text = langs[msg.lang].errorTryAgain
-                                end
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].noObject, false)
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
                             end
-                            answerCallbackQuery(msg.cb_id, text, false)
-                            restrictions_table[tostring(matches[5])] = nil
-                            sendMessage(matches[6], text)
-                            if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                            end
-                            mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                         else
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                         end
@@ -1005,18 +1039,14 @@ local function run(msg, matches)
                                                     text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                                 end
                                             end
-                                            if time < 30 or time > 31622400 then
-                                                if restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, restrictions, os.time() + time) then
+                                            if restrictUser(msg.chat.id, msg.reply_to_message.forward_from, restrictions, os.time() + time) then
+                                                if time < 30 or time > 31622400 then
                                                     text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                                 else
-                                                    text = langs[msg.lang].errorTryAgain
+                                                    text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                                 end
                                             else
-                                                if restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, restrictions, os.time() + time) then
-                                                    text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
-                                                else
-                                                    text = langs[msg.lang].errorTryAgain
-                                                end
+                                                text = langs[msg.lang].errorTryAgain
                                             end
                                         else
                                             if matches[3] then
@@ -1057,18 +1087,14 @@ local function run(msg, matches)
                                             text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                         end
                                     end
-                                    if time < 30 or time > 31622400 then
-                                        if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions, os.time() + time) then
+                                    if restrictUser(msg.chat.id, msg.reply_to_message.from, restrictions, os.time() + time) then
+                                        if time < 30 or time > 31622400 then
                                             text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                         else
-                                            text = langs[msg.lang].errorTryAgain
+                                            text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                         end
                                     else
-                                        if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions, os.time() + time) then
-                                            text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
-                                        else
-                                            text = langs[msg.lang].errorTryAgain
-                                        end
+                                        text = langs[msg.lang].errorTryAgain
                                     end
                                 else
                                     if matches[2] then
@@ -1104,18 +1130,14 @@ local function run(msg, matches)
                                         text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                     end
                                 end
-                                if time < 30 or time > 31622400 then
-                                    if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions, os.time() + time) then
+                                if restrictUser(msg.chat.id, msg.reply_to_message.from, restrictions, os.time() + time) then
+                                    if time < 30 or time > 31622400 then
                                         text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                     else
-                                        text = langs[msg.lang].errorTryAgain
+                                        text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                     end
                                 else
-                                    if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions, os.time() + time) then
-                                        text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
-                                    else
-                                        text = langs[msg.lang].errorTryAgain
-                                    end
+                                    text = langs[msg.lang].errorTryAgain
                                 end
                             else
                                 if matches[2] then
@@ -1156,75 +1178,43 @@ local function run(msg, matches)
                                                     text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                                 end
                                             end
-                                            if time < 30 or time > 31622400 then
-                                                if restrictChatMember(msg.chat.id, msg.entities[k].user.id, restrictions, os.time() + time) then
+                                            if restrictUser(msg.chat.id, msg.entities[k].user, restrictions, os.time() + time) then
+                                                if time < 30 or time > 31622400 then
                                                     text = text .. langs[msg.lang].denied .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                                 else
-                                                    text = langs[msg.lang].errorTryAgain
+                                                    text = text .. langs[msg.lang].denied .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                                 end
                                             else
-                                                if restrictChatMember(msg.chat.id, msg.entities[k].user.id, restrictions, os.time() + time) then
-                                                    text = text .. langs[msg.lang].denied .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
-                                                else
-                                                    text = langs[msg.lang].errorTryAgain
-                                                end
+                                                text = langs[msg.lang].errorTryAgain
                                             end
                                         end
                                     end
                                 end
                             end
                             matches[2] = tostring(matches[2]):gsub(' ', '')
-                            if string.match(matches[2], '^%d+$') then
-                                if matches[8] then
-                                    restrictions = adjustRestrictions(matches[8]:lower())
-                                end
-                                for k, v in pairs(restrictions) do
-                                    if not restrictions[k] then
-                                        text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                            if obj_user then
+                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                    if matches[8] then
+                                        restrictions = adjustRestrictions(matches[8]:lower())
                                     end
-                                end
-                                if time < 30 or time > 31622400 then
-                                    if restrictChatMember(msg.chat.id, matches[2], restrictions, os.time() + time) then
-                                        text = text .. langs[msg.lang].denied .. '\n#user' .. matches[2] .. ' #executer' .. msg.from.id .. ' #restrict'
-                                    else
-                                        text = langs[msg.lang].errorTryAgain
+                                    for k, v in pairs(restrictions) do
+                                        if not restrictions[k] then
+                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                                        end
                                     end
-                                else
-                                    if restrictChatMember(msg.chat.id, matches[2], restrictions, os.time() + time) then
-                                        text = text .. langs[msg.lang].denied .. '\n#user' .. matches[2] .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
+                                    if restrictUser(msg.chat.id, obj_user, restrictions, os.time() + time) then
+                                        if time < 30 or time > 31622400 then
+                                            text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
+                                        else
+                                            text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
+                                        end
                                     else
                                         text = langs[msg.lang].errorTryAgain
                                     end
                                 end
                             else
-                                local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                                if obj_user then
-                                    if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                        if matches[8] then
-                                            restrictions = adjustRestrictions(matches[8]:lower())
-                                        end
-                                        for k, v in pairs(restrictions) do
-                                            if not restrictions[k] then
-                                                text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
-                                            end
-                                        end
-                                        if time < 30 or time > 31622400 then
-                                            if restrictChatMember(msg.chat.id, obj_user.id, restrictions, os.time() + time) then
-                                                text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
-                                            else
-                                                text = langs[msg.lang].errorTryAgain
-                                            end
-                                        else
-                                            if restrictChatMember(msg.chat.id, obj_user.id, restrictions, os.time() + time) then
-                                                text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
-                                            else
-                                                text = langs[msg.lang].errorTryAgain
-                                            end
-                                        end
-                                    end
-                                else
-                                    return langs[msg.lang].noObject
-                                end
+                                return langs[msg.lang].noObject
                             end
                         else
                             if msg.entities then
@@ -1317,7 +1307,7 @@ local function run(msg, matches)
                                                 text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                             end
                                         end
-                                        if restrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id, restrictions) then
+                                        if restrictUser(msg.chat.id, msg.reply_to_message.forward_from, restrictions) then
                                             return text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                         else
                                             return langs[msg.lang].errorTryAgain
@@ -1337,7 +1327,7 @@ local function run(msg, matches)
                                         text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                     end
                                 end
-                                if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions) then
+                                if restrictUser(msg.chat.id, msg.reply_to_message.from, restrictions) then
                                     return text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                 else
                                     return langs[msg.lang].errorTryAgain
@@ -1352,7 +1342,7 @@ local function run(msg, matches)
                                     text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                 end
                             end
-                            if restrictChatMember(msg.chat.id, msg.reply_to_message.from.id, restrictions) then
+                            if restrictUser(msg.chat.id, msg.reply_to_message.from, restrictions) then
                                 return text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                             else
                                 return langs[msg.lang].errorTryAgain
@@ -1372,7 +1362,7 @@ local function run(msg, matches)
                                                 text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                             end
                                         end
-                                        if restrictChatMember(msg.chat.id, msg.entities[k].user.id, restrictions) then
+                                        if restrictUser(msg.chat.id, msg.entities[k].user, restrictions) then
                                             return text .. langs[msg.lang].denied .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                         else
                                             return langs[msg.lang].errorTryAgain
@@ -1382,24 +1372,10 @@ local function run(msg, matches)
                             end
                         end
                         matches[2] = tostring(matches[2]):gsub(' ', '')
-                        if string.match(matches[2], '^%d+$') then
-                            if matches[3] then
-                                restrictions = adjustRestrictions(matches[3]:lower())
-                            end
-                            for k, v in pairs(restrictions) do
-                                if not restrictions[k] then
-                                    text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
-                                end
-                            end
-                            if restrictChatMember(msg.chat.id, obj_user.id, restrictions) then
-                                return text .. langs[msg.lang].denied .. '\n#user' .. matches[2] .. ' #executer' .. msg.from.id .. ' #restrict'
-                            else
-                                return langs[msg.lang].errorTryAgain
-                            end
-                        else
-                            local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if string.match(matches[2], '^%d+$') then
                                     if matches[3] then
                                         restrictions = adjustRestrictions(matches[3]:lower())
                                     end
@@ -1408,15 +1384,29 @@ local function run(msg, matches)
                                             text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
                                         end
                                     end
-                                    if restrictChatMember(msg.chat.id, obj_user.id, restrictions) then
+                                    if restrictUser(msg.chat.id, obj_user, restrictions) then
+                                        return text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
+                                    else
+                                        return langs[msg.lang].errorTryAgain
+                                    end
+                                else
+                                    if matches[3] then
+                                        restrictions = adjustRestrictions(matches[3]:lower())
+                                    end
+                                    for k, v in pairs(restrictions) do
+                                        if not restrictions[k] then
+                                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                                        end
+                                    end
+                                    if restrictUser(msg.chat.id, obj_user, restrictions) then
                                         return text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                     else
                                         return langs[msg.lang].errorTryAgain
                                     end
                                 end
-                            else
-                                return langs[msg.lang].noObject
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     end
                     return text
@@ -2560,6 +2550,7 @@ local function cron()
     -- clear those tables on the top of the plugin
     kick_ban_errors = { }
     invite_table = { }
+    keyboardActions = { }
 end
 
 return {
