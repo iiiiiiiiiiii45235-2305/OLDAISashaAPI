@@ -181,30 +181,38 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'enablenotices' then
-        if msg.from.is_owner then
-            if not redis:get('notice:' .. msg.chat.id) then
-                mystat('/enablenotices')
-                redis:set('notice:' .. msg.chat.id, 1)
-                return langs[msg.lang].noticesGroupEnabled
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if msg.from.is_owner then
+                if not redis:get('notice:' .. msg.chat.id) then
+                    mystat('/enablenotices')
+                    redis:set('notice:' .. msg.chat.id, 1)
+                    return langs[msg.lang].noticesGroupEnabled
+                else
+                    return langs[msg.lang].noticesGroupAlreadyEnabled
+                end
             else
-                return langs[msg.lang].noticesGroupAlreadyEnabled
+                return langs[msg.lang].require_owner
             end
         else
-            return langs[msg.lang].require_owner
+            return langs[msg.lang].useYourGroups
         end
     end
 
     if matches[1]:lower() == 'disablenotices' then
-        if msg.from.is_owner then
-            if redis:get('notice:' .. msg.chat.id) then
-                mystat('/disablenotices')
-                redis:del('notice:' .. msg.chat.id)
-                return langs[msg.lang].noticesGroupDisabled
+        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+            if msg.from.is_owner then
+                if redis:get('notice:' .. msg.chat.id) then
+                    mystat('/disablenotices')
+                    redis:del('notice:' .. msg.chat.id)
+                    return langs[msg.lang].noticesGroupDisabled
+                else
+                    return langs[msg.lang].noticesGroupAlreadyDisabled
+                end
             else
-                return langs[msg.lang].noticesGroupAlreadyDisabled
+                return langs[msg.lang].require_owner
             end
         else
-            return langs[msg.lang].require_owner
+            return langs[msg.lang].useYourGroups
         end
     end
 
