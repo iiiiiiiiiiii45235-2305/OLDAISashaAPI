@@ -630,7 +630,7 @@ function doSendBackup()
     io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
 
     local time = os.time()
-    local tar_command = 'tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
+    local tar_command = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- desktop
     '/home/pi/Desktop ' ..
     -- sasha user
