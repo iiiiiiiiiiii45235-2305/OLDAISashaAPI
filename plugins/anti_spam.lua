@@ -228,7 +228,7 @@ local function pre_process(msg)
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
-                            sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)) .. '\n#user' .. bot.id .. ' #executer' .. msg.from.id .. ' #restrict')
+                            sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)) .. '\n#user' .. msg.from.id .. ' #executer' .. bot.id .. ' #restrict')
                         else
                             sendMessage(msg.chat.id, tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)))
                         end
