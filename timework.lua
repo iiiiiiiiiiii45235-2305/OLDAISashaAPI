@@ -20,6 +20,9 @@ elseif action == 'deletemessage' then
         -- sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, message_id)
     end
 elseif action == 'kickuser' then
-    action, sleep_time, chat_id, user_id, reason = ...
+    action, sleep_time, chat_id, user_id = ...
+    kickChatMember(user_id, chat_id, os.time() + 45)
+elseif action == 'banuser' then
+    action, sleep_time, chat_id, user_id = ...
     kickChatMember(user_id, chat_id)
 end
