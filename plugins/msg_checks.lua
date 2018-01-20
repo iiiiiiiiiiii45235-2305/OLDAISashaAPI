@@ -77,15 +77,12 @@ local function test_bot_link(text)
 end
 
 local function check_if_link(text, links_whitelist, group_link)
-    print(pre_process_links(text))
     text = pre_process_links(text)
-    print(remove_whitelisted_links(text, links_whitelist, group_link))
     text = remove_whitelisted_links(text, links_whitelist, group_link)
     local is_text_link = text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
     -- or text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
 
-    print(is_text_link)
     if is_text_link then
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
         if is_bot then
@@ -201,9 +198,12 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
         end
-        if msg.text and not msg.media then
-            print('yes')
-            if mute_text then
+        if msg.text then
+            local textToUse = msg.text
+            if msg.caption then
+                textToUse = msg.caption
+            end
+            if mute_text and not msg.media then
                 if pre_process_function then
                     print('text muted')
                     action(msg, strict, langs[msg.lang].reasonMutedText)
@@ -214,9 +214,9 @@ local function check_msg(msg, settings, pre_process_function)
             end
             -- msg.text checks
             if lock_spam then
-                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
-                local _nl, real_digits = string.gsub(msg.text, '%d', '')
-                if string.len(msg.text) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
+                local _nl, ctrl_chars = string.gsub(textToUse, '%c', '')
+                local _nl, real_digits = string.gsub(textToUse, '%d', '')
+                if string.len(textToUse) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
                     if pre_process_function then
                         print('spam found')
                         action(msg, strict, langs[msg.lang].reasonLockSpam)
@@ -227,8 +227,7 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
             if lock_link then
-                local tmp = msg.text
-                print(check_if_link(tmp, links_whitelist, group_link))
+                local tmp = textToUse
                 if check_if_link(tmp, links_whitelist, group_link) then
                     if pre_process_function then
                         print('link found')
@@ -265,7 +264,7 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
             if lock_arabic then
-                local is_squig_msg = msg.text:match("[\216-\219][\128-\191]")
+                local is_squig_msg = textToUse:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
                     if pre_process_function then
                         print('arabic found')
@@ -277,79 +276,7 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
             if lock_rtl then
-                local is_rtl = msg.from.print_name:match("‮") or msg.text:match("‮")
-                if is_rtl then
-                    if pre_process_function then
-                        print('rtl found')
-                        action(msg, strict, langs[msg.lang].reasonLockRTL)
-                        return nil
-                    else
-                        text = text .. langs[msg.lang].reasonLockRTL
-                    end
-                end
-            end
-        end
-        if msg.caption then
-            if mute_text then
-                if pre_process_function then
-                    print('text muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedText)
-                    return nil
-                else
-                    text = text .. langs[msg.lang].reasonMutedText
-                end
-            end
-            if lock_link then
-                local tmp = msg.caption
-                if check_if_link(tmp, links_whitelist, group_link) then
-                    if pre_process_function then
-                        print('link found')
-                        action(msg, strict, langs[msg.lang].reasonLockLink)
-                        return nil
-                    else
-                        text = text .. langs[msg.lang].reasonLockLink
-                    end
-                end
-                if strict then
-                    tmp = tmp:lower()
-                    -- remove joinchat links
-                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
-                    -- remove ?start=blabla and things like that
-                    tmp = tmp:gsub('%?([^%s]+)', '')
-                    -- make links usernames
-                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-                    -- remove all whitelisted links
-                    tmp = remove_whitelisted_links(tmp, links_whitelist, group_link)
-                    while string.match(tmp, '@[^%s]+') do
-                        if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                            if pre_process_function then
-                                print('link (public channel/supergroup username) found')
-                                action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
-                                return nil
-                            else
-                                text = text .. langs[msg.lang].reasonLockLinkUsername
-                                tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                            end
-                        else
-                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                        end
-                    end
-                end
-            end
-            if lock_arabic then
-                local is_squig_caption = msg.caption:match("[\216-\219][\128-\191]")
-                if is_squig_caption then
-                    if pre_process_function then
-                        print('arabic found')
-                        action(msg, strict, langs[msg.lang].reasonLockArabic)
-                        return nil
-                    else
-                        text = text .. langs[msg.lang].reasonLockArabic
-                    end
-                end
-            end
-            if lock_rtl then
-                local is_rtl = msg.from.print_name:match("‮") or msg.caption:match("‮")
+                local is_rtl = msg.from.print_name:match("‮") or textToUse:match("‮")
                 if is_rtl then
                     if pre_process_function then
                         print('rtl found')
@@ -607,7 +534,6 @@ local function check_msg(msg, settings, pre_process_function)
         end
     end
     if pre_process_function then
-        printvardump(msg)
         return msg
     else
         if text == langs[msg.lang].checkMsg then
@@ -648,7 +574,6 @@ local function pre_process(msg)
                     end
                 end
                 if settings then
-                    print('in')
                     return check_msg(msg, settings, true)
                 end
             end
