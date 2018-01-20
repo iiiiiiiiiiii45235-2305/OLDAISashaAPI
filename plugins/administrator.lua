@@ -394,6 +394,8 @@ local function run(msg, matches)
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
+                elseif matches[2] == 'PAGES' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
                 elseif matches[2] == 'BACK' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')

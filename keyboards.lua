@@ -25,7 +25,7 @@ function keyboard_list_groups_pages(chat_id, page)
     end
     keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'administratorBACK' .. page }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'NONE' }
+    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'administratorPAGES' }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'administratorDELETE' }
     column = column + 1
@@ -389,7 +389,7 @@ function keyboard_help_pages(chat_id, rank, page)
     end
     keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' .. page }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'NONE' }
+    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'helpPAGES' }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
     column = column + 1
