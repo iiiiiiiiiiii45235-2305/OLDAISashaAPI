@@ -202,6 +202,7 @@ local function check_msg(msg, settings, pre_process_function)
             end
         end
         if msg.text and not msg.media then
+            print('yes')
             if mute_text then
                 if pre_process_function then
                     print('text muted')
@@ -606,6 +607,7 @@ local function check_msg(msg, settings, pre_process_function)
         end
     end
     if pre_process_function then
+        printvardump(msg)
         return msg
     else
         if text == langs[msg.lang].checkMsg then
@@ -646,6 +648,7 @@ local function pre_process(msg)
                     end
                 end
                 if settings then
+                    print('in')
                     return check_msg(msg, settings, true)
                 end
             end
