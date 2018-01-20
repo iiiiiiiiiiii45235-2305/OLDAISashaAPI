@@ -1,12 +1,13 @@
-﻿local restrictions_table = {
+﻿-- table to manage restrictions of a user in a keyboard
+-- TODO: REFINE
+local restrictionsTable = {
     -- user_id = { restrictions }
 }
-local kick_ban_errors = {
+-- temp table to not send the same error of kick again and again (just once per minute)
+local kickBanErrors = {
     -- chat_id = error
 }
-local invite_table = {
-    -- user_id
-}
+-- temp table to not send the pm notices again and again (just once per minute)
 local keyboardActions = {
     -- chat_id = { user_id = false/true }
 }
@@ -332,18 +333,18 @@ local function run(msg, matches)
                         chat_name = data[tostring(matches[6])].set_name or ''
                     end
                     if matches[4] == 'BACK' then
-                        if restrictions_table[tostring(matches[5])] then
+                        if restrictionsTable[tostring(matches[5])] then
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
-                            restrictions_table[tostring(matches[5])] = clone_table(default_restrictions)
-                            for k, v in pairs(restrictions_table[tostring(matches[5])]) do
-                                restrictions_table[tostring(matches[5])][k] = false
+                            restrictionsTable[tostring(matches[5])] = clone_table(default_restrictions)
+                            for k, v in pairs(restrictionsTable[tostring(matches[5])]) do
+                                restrictionsTable[tostring(matches[5])][k] = false
                             end
                         end
                     elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
-                        if restrictions_table[tostring(matches[7])] then
+                        if restrictionsTable[tostring(matches[7])] then
                             local remainder, weeks, days, hours, minutes, seconds = 0
                             weeks = math.floor(time / 604800)
                             remainder = time % 604800
@@ -415,7 +416,7 @@ local function run(msg, matches)
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                         end
                     elseif matches[4] == 'DONE' then
-                        if restrictions_table[tostring(matches[5])] then
+                        if restrictionsTable[tostring(matches[5])] then
                             local obj_user = getChat('@' ..(string.match(matches[5], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
@@ -423,7 +424,7 @@ local function run(msg, matches)
                                         keyboardActions[tostring(matches[6])] = { }
                                     end
                                     local text = ''
-                                    local restrictions = restrictions_table[tostring(obj_user.id)]
+                                    local restrictions = restrictionsTable[tostring(obj_user.id)]
                                     if restrictUser(matches[6], obj_user, restrictions, os.time() + time) then
                                         for k, v in pairs(restrictions) do
                                             if not restrictions[k] then
@@ -439,7 +440,7 @@ local function run(msg, matches)
                                         text = langs[msg.lang].errorTryAgain
                                     end
                                     answerCallbackQuery(msg.cb_id, text, false)
-                                    restrictions_table[tostring(obj_user.id)] = nil
+                                    restrictionsTable[tostring(obj_user.id)] = nil
                                     sendMessage(matches[6], text)
                                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
@@ -478,10 +479,10 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        if not invite_table[tostring(msg.reply_to_message.forward_from.id)] or is_admin(msg) then
+                                        if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] or is_admin(msg) then
                                             if not userInChat(msg.chat.id, msg.reply_to_message.forward_from.id, true) then
                                                 if sendMessage(msg.reply_to_message.forward_from.id, link, 'html') then
-                                                    invite_table[tostring(msg.reply_to_message.forward_from.id)] = true
+                                                    invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = true
                                                     return langs[msg.lang].ok
                                                 else
                                                     return langs[msg.lang].noObjectInvite
@@ -499,10 +500,10 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                if not invite_table[tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
+                                if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                            invite_table[tostring(msg.reply_to_message.from.id)] = true
+                                            invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
                                             return langs[msg.lang].ok
                                         else
                                             return langs[msg.lang].noObjectInvite
@@ -517,10 +518,10 @@ local function run(msg, matches)
                         else
                             if msg.reply_to_message.service then
                                 if msg.reply_to_message.service_type == 'chat_del_user' then
-                                    if not invite_table[tostring(msg.reply_to_message.removed.id)] or is_admin(msg) then
+                                    if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.removed.id)] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.removed.id, true) then
                                             if sendMessage(msg.reply_to_message.removed.id, link, 'html') then
-                                                invite_table[tostring(msg.reply_to_message.removed.id)] = true
+                                                invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.removed.id)] = true
                                                 return langs[msg.lang].ok
                                             else
                                                 return langs[msg.lang].noObjectInvite
@@ -532,10 +533,10 @@ local function run(msg, matches)
                                         return langs[msg.lang].userAlreadyInvited
                                     end
                                 else
-                                    if not invite_table[tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
+                                    if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                             if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                                invite_table[tostring(msg.reply_to_message.from.id)] = true
+                                                invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
                                                 return langs[msg.lang].ok
                                             else
                                                 return langs[msg.lang].noObjectInvite
@@ -548,10 +549,10 @@ local function run(msg, matches)
                                     end
                                 end
                             else
-                                if not invite_table[tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
+                                if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                            invite_table[tostring(msg.reply_to_message.from.id)] = true
+                                            invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
                                             return langs[msg.lang].ok
                                         else
                                             return langs[msg.lang].noObjectInvite
@@ -570,10 +571,10 @@ local function run(msg, matches)
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        if not invite_table[tostring(msg.entities[k].user.id)] or is_admin(msg) then
+                                        if not invitedTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] or is_admin(msg) then
                                             if not userInChat(msg.chat.id, msg.entities[k].user.id, true) then
                                                 if sendMessage(msg.entities[k].user.id, link, 'html') then
-                                                    invite_table[tostring(msg.entities[k].user.id)] = true
+                                                    invitedTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = true
                                                     return langs[msg.lang].ok
                                                 else
                                                     return langs[msg.lang].noObjectInvite
@@ -590,10 +591,10 @@ local function run(msg, matches)
                         end
                         matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
-                            if not invite_table[tostring(matches[2])] or is_admin(msg) then
+                            if not invitedTable[tostring(msg.chat.id)][tostring(matches[2])] or is_admin(msg) then
                                 if not userInChat(msg.chat.id, matches[2], true) then
                                     if sendMessage(matches[2], link, 'html') then
-                                        invite_table[tostring(matches[2])] = true
+                                        invitedTable[tostring(msg.chat.id)][tostring(matches[2])] = true
                                         return langs[msg.lang].ok
                                     else
                                         return langs[msg.lang].noObjectInvite
@@ -608,10 +609,10 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if not invite_table[tostring(obj_user.id)] or is_admin(msg) then
+                                    if not invitedTable[tostring(msg.chat.id)][tostring(obj_user.id)] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, obj_user.id, true) then
                                             if sendMessage(obj_user.id, link, 'html') then
-                                                invite_table[tostring(obj_user.id)] = true
+                                                invitedTable[tostring(msg.chat.id)][tostring(obj_user.id)] = true
                                                 return langs[msg.lang].ok
                                             else
                                                 return langs[msg.lang].noObjectInvite
@@ -1061,7 +1062,7 @@ local function run(msg, matches)
                                             if matches[3] then
                                                 restrictions = adjustRestrictions(matches[3]:lower())
                                             end
-                                            restrictions_table[tostring(msg.reply_to_message.forward_from.id)] = restrictions
+                                            restrictionsTable[tostring(msg.reply_to_message.forward_from.id)] = restrictions
                                             if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.forward_from.id .. ') ' ..(database[tostring(msg.reply_to_message.forward_from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1109,7 +1110,7 @@ local function run(msg, matches)
                                     if matches[2] then
                                         restrictions = adjustRestrictions(matches[2]:lower())
                                     end
-                                    restrictions_table[tostring(msg.reply_to_message.from.id)] = restrictions
+                                    restrictionsTable[tostring(msg.reply_to_message.from.id)] = restrictions
                                     if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.from.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1152,7 +1153,7 @@ local function run(msg, matches)
                                 if matches[2] then
                                     restrictions = adjustRestrictions(matches[2]:lower())
                                 end
-                                restrictions_table[tostring(msg.reply_to_message.from.id)] = restrictions
+                                restrictionsTable[tostring(msg.reply_to_message.from.id)] = restrictions
                                 if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.from.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1234,7 +1235,7 @@ local function run(msg, matches)
                                             if matches[3] then
                                                 restrictions = adjustRestrictions(matches[3]:lower())
                                             end
-                                            restrictions_table[tostring(msg.entities[k].user.id)] = restrictions
+                                            restrictionsTable[tostring(msg.entities[k].user.id)] = restrictions
                                             if sendKeyboard(msg.from.id, '(' .. msg.entities[k].user.id .. ') ' ..(database[tostring(msg.entities[k].user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.entities[k].user.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1254,7 +1255,7 @@ local function run(msg, matches)
                                 if matches[3] then
                                     restrictions = adjustRestrictions(matches[3]:lower())
                                 end
-                                restrictions_table[tostring(matches[2])] = restrictions
+                                restrictionsTable[tostring(matches[2])] = restrictions
                                 if sendKeyboard(msg.from.id, '(' .. matches[2] .. ') ' ..(database[tostring(matches[2])]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, matches[2])) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1272,7 +1273,7 @@ local function run(msg, matches)
                                         if matches[3] then
                                             restrictions = adjustRestrictions(matches[3]:lower())
                                         end
-                                        restrictions_table[tostring(obj_user.id)] = restrictions
+                                        restrictionsTable[tostring(obj_user.id)] = restrictions
                                         if sendKeyboard(msg.from.id, '(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, obj_user.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -2430,9 +2431,7 @@ end
 
 local function pre_process(msg)
     if msg then
-        if not keyboardActions[tostring(msg.chat.id)] then
-            keyboardActions[tostring(msg.chat.id)] = { }
-        end
+        keyboardActions[tostring(msg.chat.id)] = keyboardActions[tostring(msg.chat.id)] or { }
         -- SERVICE MESSAGE
         if msg.service then
             if msg.service_type then
@@ -2443,8 +2442,10 @@ local function pre_process(msg)
                     if #msg.added >= 5 then
                         if not is_owner(msg) then
                             inviteFlood = true
-                            text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood) .. '\n' ..
-                            gbanUser(msg.from.id, msg.lang) .. '\n'
+                            if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                                text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood) .. '\n' ..
+                                gbanUser(msg.from.id, msg.lang) .. '\n'
+                            end
                         end
                     end
                     local ban = false
@@ -2473,13 +2474,15 @@ local function pre_process(msg)
                             redis:incr(banhash)
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                             local banaddredis = redis:get(banhash)
-                            if banaddredis then
-                                if tonumber(banaddredis) >= 4 and not msg.from.is_owner then
+                            if banaddredis and not msg.from.is_owner then
+                                if tonumber(banaddredis) >= 4 and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                                     text = text .. kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'
                                     -- Kick user who adds ban ppl more than 3 times
                                 end
-                                if tonumber(banaddredis) >= 8 and not msg.from.is_owner then
-                                    text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'
+                                if tonumber(banaddredis) >= 8 then
+                                    if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                                        text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'
+                                    end
                                     -- Ban user who adds ban ppl more than 7 times
                                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                                     redis:set(banhash, 0)
@@ -2509,7 +2512,7 @@ local function pre_process(msg)
                         ban = true
                         reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
                     end
-                    if ban then
+                    if ban and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
                         -- Save to logs
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
@@ -2533,19 +2536,19 @@ local function pre_process(msg)
                 ban = true
                 reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
             end
-            if ban then
+            if ban and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                 -- Check it with redis
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs
                 local txt = banUser(bot.id, msg.from.id, msg.chat.id, reason)
                 if txt == langs[msg.lang].errors[1] or txt == langs[msg.lang].errors[2] or txt == langs[msg.lang].errors[3] or txt == langs[msg.lang].errors[4] then
-                    if kick_ban_errors[tostring(chat_id)] then
-                        if txt ~= kick_ban_errors[tostring(chat_id)] then
-                            kick_ban_errors[tostring(chat_id)] = txt
+                    if kickBanErrors[tostring(chat_id)] then
+                        if txt ~= kickBanErrors[tostring(chat_id)] then
+                            kickBanErrors[tostring(chat_id)] = txt
                             sendMessage(msg.chat.id, txt)
                         end
                     else
-                        kick_ban_errors[tostring(chat_id)] = txt
+                        kickBanErrors[tostring(chat_id)] = txt
                         sendMessage(msg.chat.id, txt)
                     end
                 else
@@ -2560,8 +2563,7 @@ end
 
 local function cron()
     -- clear those tables on the top of the plugin
-    kick_ban_errors = { }
-    invite_table = { }
+    kickBanErrors = { }
     keyboardActions = { }
 end
 

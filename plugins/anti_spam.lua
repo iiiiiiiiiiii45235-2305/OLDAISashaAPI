@@ -1,11 +1,8 @@
 -- Empty tables for solving multiple kicking problem(thanks to @topkecleon)
-local kicktable = {
-    -- chat_id = { user_id }
-}
-local cbwarntable = {
+local cbWarnTable = {
     -- user_id
 }
-local floodkicktable = {
+local floodKicksTable = {
     -- chat_id = counter
 }
 local modsContacted = {
@@ -14,26 +11,20 @@ local modsContacted = {
 local hashes = {
     -- chat_id = { msgHash = counter }
 }
+local restrictedTable = {
+    -- chat_id = { user_id = false/true }
+}
 
 local TIME_CHECK = 2
 -- seconds
 -- Save stats, ban user
 local function pre_process(msg)
     if msg then
-        if not kicktable[tostring(msg.chat.id)] then
-            kicktable[tostring(msg.chat.id)] = { }
-        end
-        if not hashes[tostring(msg.chat.id)] then
-            hashes[tostring(msg.chat.id)] = { }
-        end
+        hashes[tostring(msg.chat.id)] = hashes[tostring(msg.chat.id)] or { }
+        restrictedTable[tostring(msg.chat.id)] = restrictedTable[tostring(msg.chat.id)] or { }
 
         -- Ignore service msg
         if msg.service then
-            if msg.added then
-                for k, v in pairs(msg.added) do
-                    kicktable[tostring(msg.chat.id)][tostring(v.id)] = false
-                end
-            end
             return msg
         end
 
@@ -73,13 +64,13 @@ local function pre_process(msg)
         print('messages: ' .. usermsgs)
 
         if msg.cb then
-            if not cbwarntable[tostring(msg.from.id)] then
+            if not cbWarnTable[tostring(msg.from.id)] then
                 if usermsgs >= 4 then
-                    cbwarntable[tostring(msg.from.id)] = true
+                    cbWarnTable[tostring(msg.from.id)] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
             else
-                cbwarntable[tostring(msg.from.id)] = false
+                cbWarnTable[tostring(msg.from.id)] = false
             end
         else
             -- Total user msgs in that chat excluding keyboard interactions
@@ -148,6 +139,10 @@ local function pre_process(msg)
                 if not data[tostring(msg.chat.id)].settings.flood then
                     return msg
                 end
+                -- Ignore whitelisted
+                if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
+                    return msg
+                end
                 local NUM_MSG_MAX = 5
                 local strict = false
                 if data[tostring(msg.chat.id)] then
@@ -161,25 +156,8 @@ local function pre_process(msg)
                         end
                     end
                 end
-                floodkicktable[tostring(msg.chat.id)] =(floodkicktable[tostring(msg.chat.id)] or 0)
-                if usermsgs >= NUM_MSG_MAX then
-                    local user = msg.from.id
-                    -- Ignore whitelisted
-                    if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
-                        return msg
-                    end
-                    if kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] == true then
-                        local member = getChatMember(msg.chat.id, msg.from.id)
-                        if type(member) == 'table' then
-                            if member.ok and member.result then
-                                if member.result.status == 'left' or member.result.status == 'kicked' then
-                                    return
-                                else
-                                    kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] = false
-                                end
-                            end
-                        end
-                    end
+                floodKicksTable[tostring(msg.chat.id)] = floodKicksTable[tostring(msg.chat.id)] or 0
+                if usermsgs >= NUM_MSG_MAX and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                     local text = ''
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
@@ -219,20 +197,33 @@ local function pre_process(msg)
                             sendLog(gban_text, 'html', true)
                         end
                     end
-                    kicktable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
-                    floodkicktable[tostring(msg.chat.id)] = floodkicktable[tostring(msg.chat.id)] + 1
+                    floodKicksTable[tostring(msg.chat.id)] = floodKicksTable[tostring(msg.chat.id)] + 1
                 end
                 -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
                 local shitstormAlarm = false
-                if floodkicktable[tostring(msg.chat.id)] >= 4 or hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
+                if floodKicksTable[tostring(msg.chat.id)] >= 4 or hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
-                        local text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                        if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
-                            text = text .. ' #restrict'
+                        local var = false
+                        if not restrictedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            var = restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false })
+                            restrictedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                         end
-                        sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick)
-                        io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                        local text = ''
+                        if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            text = text .. tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
+                        end
+                        if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            if var then
+                                sendMessage(msg.chat.id, text .. ' #kick #restrict\n' .. langs[msg.lang].scheduledKick:gsub('X', '300') .. '\n' .. langs[msg.lang].allRestrictionsApplied)
+                                io.popen('lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                            else
+                                sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick:gsub('X', '10'))
+                                io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                            end
+                        elseif var then
+                            sendMessage(msg.chat.id, langs[msg.lang].allRestrictionsApplied .. ' #restrict')
+                        end
                     elseif not strict then
                         sendMessage(msg.chat.id, kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                     else
@@ -310,11 +301,11 @@ end
 
 local function cron()
     -- clear those tables on the top of the plugin
-    kicktable = { }
-    cbwarntable = { }
-    floodkicktable = { }
+    cbWarnTable = { }
+    floodKicksTable = { }
     modsContacted = { }
     hashes = { }
+    restrictedTable = { }
 end
 
 return {

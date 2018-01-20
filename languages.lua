@@ -444,7 +444,8 @@ return {
         gbannedFrom = " bannato globalmente da ",
         dontFloodKeyboard = "Non floodare la fottuta tastiera!\n",
         possibleShitstorm = "Attenzione, possibile shitstorm in corso!\nIl blocco dello spam è stato abilitato per prevenzione, per disabilitarlo usare \"/unlock spam\" nella chat.\n",
-        scheduledKick = "L'utente verrà rimosso in 10 secondi al massimo.",
+        scheduledKick = "L'utente verrà rimosso tra X secondi al massimo.",
+        allRestrictionsApplied = "All'utente sono state applicate tutte le restrizioni disponibili.",
 
         -- banhammer.lua --
         noUsernameFound = "Non trovo nessun utente con quell'username.",
@@ -1848,7 +1849,8 @@ return {
         gbannedFrom = " globally banned from ",
         dontFloodKeyboard = "Don't flood the fucking keyboard!",
         possibleShitstorm = "Attention, possible ongoing shistorm!\nLock spam has been enabled for security reasons, to disable it use \"/unlock spam\" in the chat.\n",
-        scheduledKick = "User will be kicked in 10 seconds maximum.",
+        scheduledKick = "User will be kicked in X seconds maximum.",
+        allRestrictionsApplied = "All available restrictions have been applied to the user.",
 
         -- banhammer.lua --
         noUsernameFound = "Can't find a user with that username.",

@@ -82,15 +82,15 @@ local function pre_process(msg)
                         local time = redis:hget(hash, temp)
                         if time == 'true' or time == '0' then
                             deleteMessage(msg.chat.id, msg.message_id)
-                            if data[tostring(msg.chat.id)].settings.lock_delword then
-                                if not data[tostring(msg.chat.id)].settings.strict then
-                                    sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
-                                else
-                                    sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
-                                end
-                            end
                         else
                             io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        end
+                        if data[tostring(msg.chat.id)].settings.lock_delword and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            if not data[tostring(msg.chat.id)].settings.strict then
+                                sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                            else
+                                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                            end
                         end
                         return nil
                     end

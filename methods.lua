@@ -1561,6 +1561,7 @@ function kickUser(executer, target, chat_id, reason, no_notice)
 
             if res then
                 -- if the user has been kicked, then...
+                kickedTable[tostring(chat_id)][tostring(target)] = true
                 savelog(chat_id, "[" .. executer .. "] kicked user " .. target)
                 redis:hincrby('bot:general', 'kick', 1)
                 local obj_chat = getChat(chat_id, true)
@@ -1617,6 +1618,7 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
             -- try to kick. "code" is already specific
             local res, code = kickChatMember(target, chat_id, until_date, true)
             if res then
+                kickedTable[tostring(chat_id)][tostring(target)] = true
                 if not tostring(chat_id):starts('-100') then
                     local hash = 'banned:' .. chat_id
                     redis:sadd(hash, tostring(target))

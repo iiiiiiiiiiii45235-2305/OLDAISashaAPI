@@ -1,4 +1,4 @@
-local resolveUsername = {
+local resolveUsernamesTable = {
     -- chat_id = { valMsg, valTot }
 }
 
@@ -392,8 +392,6 @@ end
 local function save_to_db(msg)
     if database then
         if not string.match(msg.from.id, '^%*%d') then
-            resolveUsername[tostring(msg.chat.id)] =(resolveUsername[tostring(msg.chat.id)] or { })
-            resolveUsername[tostring(msg.chat.id)].valMsg = 0
             if msg.from.type == 'private' then
                 db_user(msg.from, bot.id)
             end
@@ -453,10 +451,12 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            resolveUsername[tostring(msg.chat.id)].valTot = resolveUsername[tostring(msg.chat.id)].valTot or 0
-            while string.match(tmp, '(@[%w_]+)') and resolveUsername[tostring(msg.chat.id)].valMsg < 5 and resolveUsername[tostring(msg.chat.id)].valTot < 30 do
-                resolveUsername[tostring(msg.chat.id)].valMsg = resolveUsername[tostring(msg.chat.id)].valMsg + 1
-                resolveUsername[tostring(msg.chat.id)].valTot = resolveUsername[tostring(msg.chat.id)].valTot + 1
+            resolveUsernamesTable[tostring(msg.chat.id)] = resolveUsernamesTable[tostring(msg.chat.id)] or { }
+            resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
+            resolveUsernamesTable[tostring(msg.chat.id)].valTot = resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
+            while string.match(tmp, '(@[%w_]+)') and resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
+                resolveUsernamesTable[tostring(msg.chat.id)].valMsg = resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
+                resolveUsernamesTable[tostring(msg.chat.id)].valTot = resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
                 local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
@@ -519,7 +519,7 @@ end
 
 local function cron()
     -- clear that table on the top of the plugin
-    resolveUsername = { }
+    resolveUsernamesTable = { }
 end
 
 return {
