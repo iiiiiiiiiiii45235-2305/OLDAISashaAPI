@@ -392,6 +392,7 @@ end
 local function save_to_db(msg)
     if database then
         if not string.match(msg.from.id, '^%*%d') then
+            resolveUsername[tostring(msg.chat.id)] =(resolveUsername[tostring(msg.chat.id)] or { })
             resolveUsername[tostring(msg.chat.id)].valMsg = 0
             if msg.from.type == 'private' then
                 db_user(msg.from, bot.id)
