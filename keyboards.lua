@@ -15,7 +15,7 @@ function keyboard_list_groups_pages(chat_id, page)
         end
     end
     local max_pages = math.floor(tot_groups / max_groups)
-    if (tot_groups / max_groups) >= math.floor(tot_groups / max_groups) then
+    if (tot_groups / max_groups) > math.floor(tot_groups / max_groups) then
         max_pages = max_pages + 1
     end
     keyboard.inline_keyboard[row] = { }
@@ -352,7 +352,7 @@ function keyboard_help_pages(chat_id, rank, page)
         end
     end
     local max_pages = math.floor(plugins_available_for_rank / max_help_buttons)
-    if (plugins_available_for_rank / max_help_buttons) >= math.floor(plugins_available_for_rank / max_help_buttons) then
+    if (plugins_available_for_rank / max_help_buttons) > math.floor(plugins_available_for_rank / max_help_buttons) then
         max_pages = max_pages + 1
     end
     if tonumber(page) > max_pages then
