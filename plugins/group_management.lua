@@ -849,7 +849,6 @@ local function run(msg, matches)
                         local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                        return langs[msg.lang].ok
                     else
                         return langs[msg.lang].messageTooOld
                     end
@@ -863,16 +862,16 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'delto' then
             if msg.from.is_mod then
+                mystat('/delto')
+                delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                 if msg.reply then
-                    mystat('/delto')
-                    delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                     delAll[tostring(msg.chat.id)].to = msg.reply_to_message.message_id
-                    local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 else
-                    return langs[msg.lang].needReply
+                    delAll[tostring(msg.chat.id)].to = msg.message_id
                 end
+                local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             else
                 return langs[msg.lang].require_mod
             end
@@ -1936,6 +1935,9 @@ return {
         "MOD",
         "/del [{reply}]",
         "/delkeyboard {reply}",
+        "/delfrom {reply}",
+        "/delto [{reply}]",
+        "/delall",
         "/type",
         "/updategroupinfo",
         "/setrules {text}",
