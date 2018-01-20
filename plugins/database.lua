@@ -1,5 +1,5 @@
 local resolveUsername = {
-    -- chat_id = 0/10
+    -- chat_id = { valMsg, valTot }
 }
 
 local function db_user(user, chat_id)
@@ -392,6 +392,7 @@ end
 local function save_to_db(msg)
     if database then
         if not string.match(msg.from.id, '^%*%d') then
+            resolveUsername[tostring(msg.chat.id)].valMsg = 0
             if msg.from.type == 'private' then
                 db_user(msg.from, bot.id)
             end
@@ -451,9 +452,10 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            resolveUsername[tostring(msg.chat.id)] = resolveUsername[tostring(msg.chat.id)] or 0
-            while string.match(tmp, '(@[%w_]+)') and resolveUsername[tostring(msg.chat.id)] < 10 do
-                resolveUsername[tostring(msg.chat.id)] = resolveUsername[tostring(msg.chat.id)] + 1
+            resolveUsername[tostring(msg.chat.id)].valTot = resolveUsername[tostring(msg.chat.id)].valTot or 0
+            while string.match(tmp, '(@[%w_]+)') and resolveUsername[tostring(msg.chat.id)].valMsg < 5 and resolveUsername[tostring(msg.chat.id)].valTot < 30 do
+                resolveUsername[tostring(msg.chat.id)].valMsg = resolveUsername[tostring(msg.chat.id)].valMsg + 1
+                resolveUsername[tostring(msg.chat.id)].valTot = resolveUsername[tostring(msg.chat.id)].valTot + 1
                 local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
@@ -464,8 +466,6 @@ local function save_to_db(msg)
                             else
                                 db_user(obj, msg.chat.id)
                             end
-                        elseif obj.type == 'group' then
-                            db_group(obj)
                         elseif obj.type == 'supergroup' then
                             db_supergroup(obj)
                         elseif obj.type == 'channel' then
