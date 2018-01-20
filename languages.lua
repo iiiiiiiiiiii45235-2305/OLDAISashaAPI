@@ -748,7 +748,7 @@ return {
         needPhoto = "Mi serve una foto.",
         dontFloodAdmins = "Non stressare gli admin, hanno già ricevuto un avviso.",
         deletingMessages = "Sto eliminando i messaggi, quest'operazione potrebbe richiedere del tempo, sii paziente.",
-        errorDelall = "Devi prima usare /delfrom /delto e assicurarti che il messaggio di delfrom sia più vecchio di quello di delto.\nSolo il creatore del gruppo può eliminare più di 70 messaggi per volta.",
+        errorDelall = "Devi prima usare /delfrom /delto e assicurarti che il messaggio di delfrom sia più vecchio di quello di delto.\nSolo l'owner può eliminare più di 70 messaggi per volta.",
         messageTooOld = "Il messaggio è troppo vecchio (massimo 48h).",
 
         -- info.lua --
