@@ -897,6 +897,7 @@ return {
     patterns =
     {
         "^(###cbadministrator)(DELETE)$",
+        "^(###cbadministrator)(PAGES)$",
         "^(###cbadministrator)(BACK)(%d+)$",
         "^(###cbadministrator)(PAGEMINUS)(%d+)$",
         "^(###cbadministrator)(PAGEPLUS)(%d+)$",

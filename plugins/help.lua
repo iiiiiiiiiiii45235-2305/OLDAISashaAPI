@@ -413,6 +413,7 @@ return {
     patterns =
     {
         "^(###cbhelp)(DELETE)$",
+        "^(###cbhelp)(PAGES)$",
         "^(###cbhelp)(BACKFAQ)$",
         "^(###cbhelp)(BACK)(%d+)$",
         "^(###cbhelp)(BACK)$",
