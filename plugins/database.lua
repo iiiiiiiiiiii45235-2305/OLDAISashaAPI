@@ -1,3 +1,7 @@
+local resolveUsername = {
+    -- chat_id = 0/10
+}
+
 local function db_user(user, chat_id)
     if not user.print_name then
         user.print_name = user.first_name .. ' ' ..(user.last_name or '')
@@ -387,7 +391,6 @@ end
 
 local function save_to_db(msg)
     if database then
-        local max = 20
         if not string.match(msg.from.id, '^%*%d') then
             if msg.from.type == 'private' then
                 db_user(msg.from, bot.id)
@@ -448,7 +451,9 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            while string.match(tmp, '(@[%w_]+)') and max > 0 do
+            resolveUsername[tostring(msg.chat.id)] = resolveUsername[tostring(msg.chat.id)] or 0
+            while string.match(tmp, '(@[%w_]+)') and resolveUsername[tostring(msg.chat.id)] < 10 do
+                resolveUsername[tostring(msg.chat.id)] = resolveUsername[tostring(msg.chat.id)] + 1
                 local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
@@ -469,7 +474,6 @@ local function save_to_db(msg)
                     end
                 end
                 tmp = tmp:gsub(string.match(tmp, '(@[%w_]+)'), '')
-                max = max - 1
             end
 
             -- if forward save forward
@@ -512,8 +516,14 @@ local function pre_process(msg)
     end
 end
 
+local function cron()
+    -- clear that table on the top of the plugin
+    resolveUsername = { }
+end
+
 return {
     description = "DATABASE",
+    cron = cron,
     patterns =
     {
         "^[#!/]([Cc][Rr][Ee][Aa][Tt][Ee][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
