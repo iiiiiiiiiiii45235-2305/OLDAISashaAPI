@@ -212,7 +212,7 @@ local function check_msg(msg, settings, pre_process_function)
                     text = text .. langs[msg.lang].reasonMutedText
                 end
             end
-            -- msg.text checks
+            -- textToUse checks
             if lock_spam then
                 local _nl, ctrl_chars = string.gsub(textToUse, '%c', '')
                 local _nl, real_digits = string.gsub(textToUse, '%d', '')
@@ -414,7 +414,7 @@ local function check_msg(msg, settings, pre_process_function)
         end
         if msg.service_type == 'chat_add_user_link' then
             if lock_spam then
-                local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
+                local _nl, ctrl_chars = string.gsub(msg.from.print_name, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
                     if pre_process_function then
                         print('name spam found')
@@ -458,7 +458,7 @@ local function check_msg(msg, settings, pre_process_function)
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do
                 if lock_spam then
-                    local _nl, ctrl_chars = string.gsub(msg.text, '%c', '')
+                    local _nl, ctrl_chars = string.gsub(v.print_name, '%c', '')
                     if string.len(v.print_name) > 70 or ctrl_chars > 40 then
                         if pre_process_function then
                             print('name spam found')
