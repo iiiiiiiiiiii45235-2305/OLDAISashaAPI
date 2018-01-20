@@ -1,8 +1,10 @@
 local test_settings = {
     flood = true,
     flood_max = 5,
+    links_whitelist = { "@username", },
     lock_arabic = true,
     lock_bots = true,
+    lock_delword = true,
     lock_group_link = true,
     lock_leave = true,
     lock_link = true,
@@ -17,6 +19,7 @@ local test_settings = {
         audio = true,
         contact = true,
         document = true,
+        game = true,
         gif = true,
         location = true,
         photo = true,
@@ -31,6 +34,18 @@ local test_settings = {
     strict = true,
     warn_max = 3,
 }
+
+local function pre_process_links(text)
+    if text then
+        -- make all the telegram's links t.me
+        text = links_to_tdotme(text)
+        -- remove http(s)
+        text = text:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
+        -- remove www.
+        text = text:gsub("[Ww][Ww][Ww]%.", '')
+        return text:lower()
+    end
+end
 
 local function remove_whitelisted_links(text, links_whitelist, group_link)
     if links_whitelist then
@@ -52,18 +67,6 @@ local function remove_whitelisted_links(text, links_whitelist, group_link)
     return text
 end
 
-local function pre_process_links(text)
-    if text then
-        -- make all the telegram's links t.me
-        text = links_to_tdotme(text)
-        -- remove http(s)
-        text = text:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
-        -- remove www.
-        text = text:gsub("[Ww][Ww][Ww]%.", '')
-        return text:lower()
-    end
-end
-
 local function test_bot_link(text)
     -- remove all possible bot's links and test if link again
     text = text:gsub("[Tt]%.[Mm][Ee]/[%w_]+%?[Ss][Tt][Aa][Rr][Tt]=", '')
@@ -74,12 +77,15 @@ local function test_bot_link(text)
 end
 
 local function check_if_link(text, links_whitelist, group_link)
+    print(pre_process_links(text))
     text = pre_process_links(text)
+    print(remove_whitelisted_links(text, links_whitelist, group_link))
     text = remove_whitelisted_links(text, links_whitelist, group_link)
     local is_text_link = text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
     text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
     -- or text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
 
+    print(is_text_link)
     if is_text_link then
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
         if is_bot then
@@ -221,6 +227,7 @@ local function check_msg(msg, settings, pre_process_function)
             end
             if lock_link then
                 local tmp = msg.text
+                print(check_if_link(tmp, links_whitelist, group_link))
                 if check_if_link(tmp, links_whitelist, group_link) then
                     if pre_process_function then
                         print('link found')

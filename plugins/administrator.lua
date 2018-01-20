@@ -64,6 +64,7 @@ local default_settings = {
             video_note = false,
             voice_note = false,
         },
+        set_link = nil,
         -- false, true
         strict = false,
         warn_max = 3,
