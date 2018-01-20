@@ -846,6 +846,8 @@ local function run(msg, matches)
                         mystat('/delfrom')
                         delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                         delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         return langs[msg.lang].ok
                     else
@@ -865,8 +867,9 @@ local function run(msg, matches)
                     mystat('/delto')
                     delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                     delAll[tostring(msg.chat.id)].to = msg.reply_to_message.message_id
+                    local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return langs[msg.lang].ok
                 else
                     return langs[msg.lang].needReply
                 end
@@ -880,21 +883,27 @@ local function run(msg, matches)
                 if delAll[tostring(msg.chat.id)] then
                     if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
-                            mystat('/delall')
-                            for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
-                                local rndtime = math.random(1, 15)
-                                io.popen('lua timework.lua "deletemessage" "' .. rndtime .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
+                            if delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from > 70 and not msg.from.is_owner then
+                                mystat('/delall')
+                                for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
+                                    local rndtime = math.random(1, 15)
+                                    io.popen('lua timework.lua "deletemessage" "' .. rndtime .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
+                                end
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
+                                local message_id = sendReply(msg, langs[msg.lang].deletingMessages).result.message_id
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                            else
+                                return langs[msg.lang].errorDelall
                             end
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
-                            return langs[msg.lang].deletingMessages
                         else
-                            return langs[msg.lang].delallError
+                            return langs[msg.lang].errorDelall
                         end
                     else
-                        return langs[msg.lang].delallError
+                        return langs[msg.lang].errorDelall
                     end
                 else
-                    return langs[msg.lang].delallError
+                    return langs[msg.lang].errorDelall
                 end
                 return langs[msg.lang].ok
             else
