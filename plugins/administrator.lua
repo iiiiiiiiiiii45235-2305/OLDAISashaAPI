@@ -340,7 +340,7 @@ local function groupsPages(page)
         end
     end
     local max_pages = math.floor(tot_groups / max_groups)
-    if (tot_groups / max_groups) >= math.floor(tot_groups / max_groups) then
+    if (tot_groups / max_groups) > math.floor(tot_groups / max_groups) then
         max_pages = max_pages + 1
     end
     if tonumber(page) > max_pages then
