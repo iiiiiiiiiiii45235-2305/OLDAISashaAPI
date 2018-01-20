@@ -387,6 +387,7 @@ end
 
 local function save_to_db(msg)
     if database then
+        local max = 20
         if not string.match(msg.from.id, '^%*%d') then
             if msg.from.type == 'private' then
                 db_user(msg.from, bot.id)
@@ -447,7 +448,7 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            while string.match(tmp, '(@[%w_]+)') do
+            while string.match(tmp, '(@[%w_]+)') and max > 0 do
                 local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
@@ -468,6 +469,7 @@ local function save_to_db(msg)
                     end
                 end
                 tmp = tmp:gsub(string.match(tmp, '(@[%w_]+)'), '')
+                max = max - 1
             end
 
             -- if forward save forward
