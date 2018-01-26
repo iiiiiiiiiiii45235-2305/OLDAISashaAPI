@@ -4,7 +4,7 @@ function run(msg, matches)
         if path then
             if msg.cb then
                 if matches[1] == '###cbfilemanager' then
-                    local pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
+                    local pathString = langs[msg.lang].youAreHere .. path
                     if matches[2] == 'DELETE' then
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
@@ -32,7 +32,7 @@ function run(msg, matches)
                                 end
                                 if lastFolder ~= '' then
                                     path:gsub(lastFolder .. '/', '')
-                                    pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
+                                    pathString = langs[msg.lang].youAreHere .. path
                                     answerCallbackQuery(msg.cb_id, pathString)
                                     redis:set('api:path', path)
                                     editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
@@ -44,7 +44,7 @@ function run(msg, matches)
                             end
                         else
                             local folder = path .. '"' .. matches[3] .. '"/'
-                            pathString = langs[msg.lang].youAreHere .. folder .. '\n' .. io.popen('ls -a "' .. folder .. '"'):read("*all")
+                            pathString = langs[msg.lang].youAreHere .. folder
                             answerCallbackQuery(msg.cb_id, pathString)
                             redis:set('api:path', folder)
                             editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/'))
