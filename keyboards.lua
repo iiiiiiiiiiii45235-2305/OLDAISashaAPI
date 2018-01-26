@@ -341,17 +341,17 @@ function keyboard_filemanager(folder, page, no_action_buttons)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if tonumber(page) > 1 then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'filemanagerPAGEMINUS' .. page }
+        keyboard.inline_keyboard[row][column] = { text = langs['en'].previousPage, callback_data = 'filemanagerPAGEMINUS' .. page }
         column = column + 1
     end
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteKeyboard, callback_data = 'filemanagerDELETEKEYBOARD' }
+    keyboard.inline_keyboard[row][column] = { text = langs['en'].deleteKeyboard, callback_data = 'filemanagerDELETEKEYBOARD' }
     column = column + 1
     keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'filemanagerPAGES' }
     column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'filemanagerDELETE' }
+    keyboard.inline_keyboard[row][column] = { text = langs['en'].deleteMessage, callback_data = 'filemanagerDELETE' }
     column = column + 1
     if tonumber(page) < max_pages then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'filemanagerPAGEPLUS' .. page }
+        keyboard.inline_keyboard[row][column] = { text = langs['en'].nextPage, callback_data = 'filemanagerPAGEPLUS' .. page }
     end
     return keyboard
 end
