@@ -887,7 +887,7 @@ function match_plugins(msg)
                     end
                 end
                 -- One patterns matches
-                return
+                break
             end
         end
     end
