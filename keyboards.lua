@@ -330,21 +330,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
                 column = 1
                 keyboard.inline_keyboard[row] = { }
             end
-
-            print(folder .. object .. '/')
-            local ok, err, code = os.rename(folder .. object, folder .. object)
-            print(ok, err, code)
-            if not ok then
-                if code == 13 then
-                    -- Permission denied, but directory exists
-                    keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
-                else
-                    keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
-                end
-            else
-                keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
-            end
-
+            keyboard.inline_keyboard[row][column] = { text = object, callback_data = 'filemanagerCD' .. object }
             column = column + 1
             if column > 2 then
                 flag = true
