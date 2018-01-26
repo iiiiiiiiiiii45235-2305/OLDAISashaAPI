@@ -265,6 +265,7 @@ end
 -- end LOCK/UNLOCK FUNCTIONS
 
 local function run(msg, matches)
+    printvardump(msg)
     print('delllll??????')
     if msg.cb then
         print('cb??????')
