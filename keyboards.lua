@@ -340,7 +340,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
                     keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
                 end
             else
-                keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
+                keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
             end
 
             column = column + 1
