@@ -26,10 +26,12 @@ function run(msg, matches)
                                 local pathComponents = path:split('/')
                                 local lastFolder = ''
                                 for i, fldr in pairs(pathComponents) do
+                                    print(i, fldr)
                                     if fldr then
                                         lastFolder = fldr .. '/'
                                     end
                                 end
+                                print(lastFolder)
                                 if lastFolder ~= '' then
                                     path:gsub(lastFolder .. '/', '')
                                     pathString = langs[msg.lang].youAreHere .. path
