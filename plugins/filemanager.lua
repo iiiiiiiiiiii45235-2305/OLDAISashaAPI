@@ -19,17 +19,24 @@ function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 0) + 1))
                     elseif matches[2] == 'CD' then
                         if matches[3] == '.' then
+                            answerCallbackQuery(msg.cb_id, pathString)
                             editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
                         elseif matches[3] == '..' then
-                            local pathComponents = folder:split('/')
-                            local lastFolder = pathComponents[#pathComponents - 1]
-                            path:gsub(lastFolder .. '/', '')
-                            pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
-                            redis:set('api:path', path)
-                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                            if path ~= '/' then
+                                local pathComponents = folder:split('/')
+                                local lastFolder = pathComponents[#pathComponents - 1]
+                                path:gsub(lastFolder .. '/', '')
+                                pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
+                                answerCallbackQuery(msg.cb_id, pathString)
+                                redis:set('api:path', path)
+                                editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                            else
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].ok)
+                            end
                         else
                             local folder = path .. '"' .. matches[3] .. '"/'
                             pathString = langs[msg.lang].youAreHere .. folder .. '\n' .. io.popen('ls -a "' .. folder .. '"'):read("*all")
+                            answerCallbackQuery(msg.cb_id, pathString)
                             redis:set('api:path', folder)
                             editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/'))
                         end
