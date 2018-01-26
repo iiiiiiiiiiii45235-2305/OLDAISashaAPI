@@ -219,6 +219,7 @@ local function pre_process(msg)
                         local var = false
                         if not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             var = restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false })
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for possible shitstorm")
                             cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                         end
                         local text = ''
@@ -229,10 +230,13 @@ local function pre_process(msg)
                             if var then
                                 sendMessage(msg.chat.id, text .. ' #kick #restrict\n' .. langs[msg.lang].scheduledKick:gsub('X', '300') .. '\n' .. langs[msg.lang].allRestrictionsApplied)
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                                kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             else
                                 sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick:gsub('X', '10'))
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                                kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             end
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] will be kicked in 300 seconds at most for possible shitstorm")
                         elseif var then
                             sendMessage(msg.chat.id, langs[msg.lang].allRestrictionsApplied .. ' #restrict')
                         end

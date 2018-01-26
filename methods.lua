@@ -266,7 +266,7 @@ end
     can_delete_messages = true,
     can_invite_users = true,
     can_restrict_members = true,
-    can_pin_messages = true,  -- supergroups
+    can_pin_messages = true,
     can_promote_members = true]]
 function promoteChatMember(chat_id, user_id, permissions)
     user_id = tostring(user_id):gsub(' ', '')
