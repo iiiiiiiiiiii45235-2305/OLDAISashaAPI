@@ -24,7 +24,7 @@ function run(msg, matches)
                         elseif matches[3] == '..' then
                             if path ~= '/' then
                                 local pathComponents = path:split('/')
-                                local lastFolder = pathComponents[#pathComponents - 1]
+                                local lastFolder = pathComponents[table.getn(pathComponents) -1]
                                 path:gsub(lastFolder .. '/', '')
                                 pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
                                 answerCallbackQuery(msg.cb_id, pathString)
