@@ -265,7 +265,9 @@ end
 -- end LOCK/UNLOCK FUNCTIONS
 
 local function run(msg, matches)
+            print('delllll??????')
     if msg.cb then
+            print('cb??????')
         if matches[1] then
             if matches[1] == '###cbgroup_management' then
                 if matches[2] == 'DELETE' then
