@@ -26,7 +26,7 @@ function run(msg, matches)
                     return
                 end
             end
-            if matches[2]:lower() == "filemanager" then
+            if matches[1]:lower() == "filemanager" then
                 return sendKeyboard(msg.from.id, "@AISASHABOT FILEMANAGER TESTING KEYBOARD", keyboard_filemanager(path))
             end
             if matches[1]:lower() == 'folder' or matches[1]:lower() == 'path' then
