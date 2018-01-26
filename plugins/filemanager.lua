@@ -1,56 +1,52 @@
--- Base folder
-local BASE_FOLDER = "/"
-
 function run(msg, matches)
     if is_sudo(msg) then
         local folder = redis:get('api:folder')
         if folder then
             if matches[1]:lower() == 'folder' then
                 mystat('/folder')
-                return langs[msg.lang].youAreHere .. BASE_FOLDER .. folder
+                return langs[msg.lang].youAreHere .. folder
             end
             if matches[1]:lower() == 'cd' then
                 mystat('/cd')
                 if not matches[2] then
-                    redis:set('api:folder', '')
-                    return langs[msg.lang].backHomeFolder .. BASE_FOLDER
+                    redis:set('api:folder', '/')
+                    return langs[msg.lang].backHomeFolder .. '/'
                 else
                     redis:set('api:folder', matches[2])
-                    return langs[msg.lang].youAreHere .. BASE_FOLDER .. matches[2]
+                    return langs[msg.lang].youAreHere .. matches[2]
                 end
             end
-            local action = ''
             if matches[1]:lower() == 'ls' then
                 mystat('/ls')
-                action = io.popen('ls "' .. BASE_FOLDER .. folder .. '"'):read("*all")
+                return io.popen('ls -a "' .. folder .. '"'):read("*all")
             end
             if matches[1]:lower() == 'mkdir' and matches[2] then
                 mystat('/mkdir')
-                io.popen('cd "' .. BASE_FOLDER .. folder .. '" && mkdir \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. folder .. '" && mkdir \'' .. matches[2] .. '\''):read("*all")
                 return langs[msg.lang].folderCreated:gsub("X", matches[2])
             end
             if matches[1]:lower() == 'rm' and matches[2] then
                 mystat('/rm')
-                io.popen('cd "' .. BASE_FOLDER .. folder .. '" && rm -f \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. folder .. '" && rm -f \'' .. matches[2] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].deleted
             end
             if matches[1]:lower() == 'cat' and matches[2] then
                 mystat('/cat')
-                action = io.popen('cd "' .. BASE_FOLDER .. folder .. '" && cat \'' .. matches[2] .. '\''):read("*all")
+                return io.popen('cd "' .. folder .. '" && cat \'' .. matches[2] .. '\''):read("*all")
             end
             if matches[1]:lower() == 'rmdir' and matches[2] then
                 mystat('/rmdir')
-                io.popen('cd "' .. BASE_FOLDER .. folder .. '" && rmdir \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. folder .. '" && rmdir \'' .. matches[2] .. '\''):read("*all")
                 return langs[msg.lang].folderDeleted:gsub("X", matches[2])
             end
             if matches[1]:lower() == 'touch' and matches[2] then
                 mystat('/touch')
-                io.popen('cd "' .. BASE_FOLDER .. folder .. '" && touch \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. folder .. '" && touch \'' .. matches[2] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].created
             end
             if matches[1]:lower() == 'tofile' and matches[2] and matches[3] then
                 mystat('/tofile')
-                file_to_write = io.open(BASE_FOLDER .. folder .. matches[2], "w")
+                file_to_write = io.open(folder .. matches[2], "w")
                 file_to_write:write(matches[3])
                 file_to_write:flush()
                 file_to_write:close()
@@ -58,24 +54,24 @@ function run(msg, matches)
             end
             if matches[1]:lower() == 'shell' and matches[2] then
                 mystat('/shell')
-                action = io.popen('cd "' .. BASE_FOLDER .. folder .. '" && ' .. matches[2]:gsub('—', '--')):read('*all')
+                return io.popen('cd "' .. folder .. '" && ' .. matches[2]:gsub('—', '--')):read('*all')
             end
             if matches[1]:lower() == 'cp' and matches[2] and matches[3] then
                 mystat('/cp')
-                io.popen('cd "' .. BASE_FOLDER .. folder .. '" && cp -r \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
+                io.popen('cd "' .. folder .. '" && cp -r \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].copiedTo .. matches[3]
             end
             if matches[1]:lower() == 'mv' and matches[2] and matches[3] then
                 mystat('/mv')
-                io.popen('cd "' .. BASE_FOLDER .. folder .. '" && mv \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
+                io.popen('cd "' .. folder .. '" && mv \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].movedTo .. matches[3]
             end
             if matches[1]:lower() == 'upload' and matches[2] then
                 mystat('/upload')
-                if io.popen('find ' .. BASE_FOLDER .. folder .. matches[2]):read("*all") == '' then
+                if io.popen('find ' .. folder .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
-                    sendDocument(msg.chat.id, BASE_FOLDER .. folder .. matches[2])
+                    sendDocument(msg.chat.id, folder .. matches[2])
                     return langs[msg.lang].sendingYou .. matches[2]
                 end
             end
@@ -121,10 +117,10 @@ function run(msg, matches)
                     return langs[msg.lang].useQuoteOnFile
                 end
             end
-            return action
+            return
         else
-            redis:set('api:folder', '')
-            return langs[msg.lang].youAreHere .. BASE_FOLDER
+            redis:set('api:folder', '/')
+            return langs[msg.lang].youAreHere .. '/'
         end
     else
         return langs[msg.lang].require_sudo
