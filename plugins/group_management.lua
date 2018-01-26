@@ -265,9 +265,9 @@ end
 -- end LOCK/UNLOCK FUNCTIONS
 
 local function run(msg, matches)
-            print('delllll??????')
+    print('delllll??????')
     if msg.cb then
-            print('cb??????')
+        print('cb??????')
         if matches[1] then
             if matches[1] == '###cbgroup_management' then
                 if matches[2] == 'DELETE' then
@@ -516,7 +516,7 @@ local function run(msg, matches)
             return langs[msg.lang].require_owner
         end
     end
-            print('adminssss')
+    print('adminssss')
     if matches[1]:lower() == 'admin' or matches[1]:lower() == 'admins' then
         mystat('/admins')
         if is_group(msg) or is_super_group(msg) then
@@ -638,7 +638,7 @@ local function run(msg, matches)
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
         end
-            print('hereupdgrpinfo')
+        print('hereupdgrpinfo')
         if matches[1]:lower() == 'updategroupinfo' then
             if msg.from.is_mod then
                 mystat('/upgradegroupinfo')
@@ -837,11 +837,11 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 mystat('/del')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
-                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                if not deleteMessage(msg.chat.id, msg.message_id) then
                     -- sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                 end
                 if msg.reply then
-                    if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id, true) then
+                    if not deleteMessage(msg.chat.id, msg.reply_to_message.message_id) then
                         sendMessage(msg.chat.id, langs[msg.lang].cantDeleteMessage)
                     end
                 end
