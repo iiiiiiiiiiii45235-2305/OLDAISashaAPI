@@ -26,18 +26,17 @@ function run(msg, matches)
                                 local pathComponents = path:split('/')
                                 local lastFolder = ''
                                 for i, fldr in pairs(pathComponents) do
-                                    print(i, fldr)
                                     if fldr then
                                         lastFolder = fldr .. '/'
                                     end
                                 end
-                                print(lastFolder)
                                 if lastFolder ~= '' then
-                                    path = path:gsub(lastFolder .. '/', '')
-                                    pathString = langs[msg.lang].youAreHere .. path
+                                    local folder = path:gsub(lastFolder .. '/', '')
+                                    print(folder)
+                                    pathString = langs[msg.lang].youAreHere .. folder
                                     answerCallbackQuery(msg.cb_id, pathString)
-                                    redis:set('api:path', path)
-                                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                                    redis:set('api:path', folder)
+                                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                                 else
                                     answerCallbackQuery(msg.cb_id, pathString)
                                 end
