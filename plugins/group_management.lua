@@ -265,10 +265,7 @@ end
 -- end LOCK/UNLOCK FUNCTIONS
 
 local function run(msg, matches)
-    printvardump(msg)
-    print('delllll??????')
     if msg.cb then
-        print('cb??????')
         if matches[1] then
             if matches[1] == '###cbgroup_management' then
                 if matches[2] == 'DELETE' then
@@ -517,7 +514,6 @@ local function run(msg, matches)
             return langs[msg.lang].require_owner
         end
     end
-    print('adminssss')
     if matches[1]:lower() == 'admin' or matches[1]:lower() == 'admins' then
         mystat('/admins')
         if is_group(msg) or is_super_group(msg) then
@@ -639,7 +635,6 @@ local function run(msg, matches)
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
         end
-        print('hereupdgrpinfo')
         if matches[1]:lower() == 'updategroupinfo' then
             if msg.from.is_mod then
                 mystat('/upgradegroupinfo')
@@ -834,7 +829,6 @@ local function run(msg, matches)
             end
         end
         if matches[1]:lower() == 'del' then
-            print('here')
             if msg.from.is_mod then
                 mystat('/del')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted a message")
