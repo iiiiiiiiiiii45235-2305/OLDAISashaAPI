@@ -1,18 +1,30 @@
--- Empty tables for solving multiple kicking problem(thanks to @topkecleon)
-local cbWarnTable = {
-    -- user_id
-}
-local floodKicksTable = {
-    -- chat_id = counter
-}
-local modsContacted = {
-    -- chat_id = false/true
-}
-local hashes = {
-    -- chat_id = { msgHash = counter }
-}
-local restrictedTable = {
-    -- chat_id = { user_id = false/true }
+-- Empty tables for solving multiple problems(thanks to @topkecleon)
+local cronTable = {
+    -- temp table to warn users if they are spamming too much the keyboards
+    cbWarns =
+    {
+        -- user_id
+    },
+    -- temp table to prevent kicking an already kicked user
+    floodKicks =
+    {
+        -- chat_id = counter
+    },
+    -- temp table to prevent flooding mods^
+    modsContacted =
+    {
+        -- chat_id = false/true
+    },
+    -- temp table for messages hashes to prevent shitstorms
+    hashes =
+    {
+        -- chat_id = { msgHash = counter }
+    },
+    -- temp table to restricting an already restricted user
+    restrictedUsers =
+    {
+        -- chat_id = { user_id = false/true }
+    }
 }
 
 local TIME_CHECK = 2
@@ -20,8 +32,8 @@ local TIME_CHECK = 2
 -- Save stats, ban user
 local function pre_process(msg)
     if msg then
-        hashes[tostring(msg.chat.id)] = hashes[tostring(msg.chat.id)] or { }
-        restrictedTable[tostring(msg.chat.id)] = restrictedTable[tostring(msg.chat.id)] or { }
+        cronTable.hashes[tostring(msg.chat.id)] = cronTable.hashes[tostring(msg.chat.id)] or { }
+        cronTable.restrictedUsers[tostring(msg.chat.id)] = cronTable.restrictedUsers[tostring(msg.chat.id)] or { }
 
         -- Ignore service msg
         if msg.service then
@@ -64,13 +76,13 @@ local function pre_process(msg)
         print('messages: ' .. usermsgs)
 
         if msg.cb then
-            if not cbWarnTable[tostring(msg.from.id)] then
+            if not cronTable.cbWarns[tostring(msg.from.id)] then
                 if usermsgs >= 4 then
-                    cbWarnTable[tostring(msg.from.id)] = true
+                    cronTable.cbWarns[tostring(msg.from.id)] = true
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].dontFloodKeyboard, true)
                 end
             else
-                cbWarnTable[tostring(msg.from.id)] = false
+                cronTable.cbWarns[tostring(msg.from.id)] = false
             end
         else
             -- Total user msgs in that chat excluding keyboard interactions
@@ -117,11 +129,11 @@ local function pre_process(msg)
             else
                 hash = sha2.hash256(msg.text)
             end
-            hashes[tostring(msg.chat.id)][tostring(hash)] =(hashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
+            cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
 
             -- Check flood
             if msg.chat.type == 'private' then
-                if hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
+                if cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     -- don't write two times the same thing
                     usermsgs = 10
                 end
@@ -156,7 +168,7 @@ local function pre_process(msg)
                         end
                     end
                 end
-                floodKicksTable[tostring(msg.chat.id)] = floodKicksTable[tostring(msg.chat.id)] or 0
+                cronTable.floodKicks[tostring(msg.chat.id)] = cronTable.floodKicks[tostring(msg.chat.id)] or 0
                 if usermsgs >= NUM_MSG_MAX and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                     local text = ''
                     if string.match(getWarn(msg.chat.id), "%d+") then
@@ -197,17 +209,17 @@ local function pre_process(msg)
                             sendLog(gban_text, 'html', true)
                         end
                     end
-                    floodKicksTable[tostring(msg.chat.id)] = floodKicksTable[tostring(msg.chat.id)] + 1
+                    cronTable.floodKicks[tostring(msg.chat.id)] = cronTable.floodKicks[tostring(msg.chat.id)] + 1
                 end
                 -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
                 local shitstormAlarm = false
-                if floodKicksTable[tostring(msg.chat.id)] >= 4 or hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
+                if cronTable.floodKicks[tostring(msg.chat.id)] >= 4 or cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         local var = false
-                        if not restrictedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             var = restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false })
-                            restrictedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                            cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                         end
                         local text = ''
                         if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
@@ -230,8 +242,8 @@ local function pre_process(msg)
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                     end
                 end
-                if shitstormAlarm and not modsContacted[tostring(msg.chat.id)] then
-                    modsContacted[tostring(msg.chat.id)] = true
+                if shitstormAlarm and not cronTable.modsContacted[tostring(msg.chat.id)] then
+                    cronTable.modsContacted[tostring(msg.chat.id)] = true
                     local hashtag = '#alarm' .. tostring(msg.message_id)
                     local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
                     local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
@@ -301,11 +313,13 @@ end
 
 local function cron()
     -- clear those tables on the top of the plugin
-    cbWarnTable = { }
-    floodKicksTable = { }
-    modsContacted = { }
-    hashes = { }
-    restrictedTable = { }
+    cronTable = {
+        cbWarns = { },
+        floodKicks = { },
+        modsContacted = { },
+        hashes = { },
+        restrictedUsers = { }
+    }
 end
 
 return {

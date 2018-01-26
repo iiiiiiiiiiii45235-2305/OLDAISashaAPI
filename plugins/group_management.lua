@@ -1,12 +1,18 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
-local adminsContacted = {
-    -- chat_id
-}
-local noticeContacted = {
-    -- chat_id = false/true
-}
-local keyboardActions = {
-    -- chat_id = { user_id = false/true }
+-- Empty tables for solving multiple problems(thanks to @topkecleon)
+local cronTable = {
+    adminsContacted =
+    {
+        -- chat_id
+    },
+    noticeContacted =
+    {
+        -- chat_id = false/true
+    },
+    keyboardActions =
+    {
+        -- chat_id = { user_id = false/true }
+    }
 }
 
 local delAll = {
@@ -114,8 +120,8 @@ local function promoteTgAdmin(chat_id, user, permissions)
             data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
             save_data(config.moderation.data, data)
             if areNoticesEnabled(user.id, chat_id) then
-                if not keyboardActions[tostring(chat_id)][tostring(user.id)] then
-                    keyboardActions[tostring(chat_id)][tostring(user.id)] = true
+                if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
+                    cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
                     sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
                 end
             end
@@ -420,8 +426,8 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not keyboardActions[tostring(matches[5])] then
-                                keyboardActions[tostring(matches[5])] = { }
+                            if not cronTable.keyboardActions[tostring(matches[5])] then
+                                cronTable.keyboardActions[tostring(matches[5])] = { }
                             end
                             local permissions = adjustPermissions(obj_user)
                             permissions[permissionsDictionary[matches[4]:lower()]] = true
@@ -457,8 +463,8 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not keyboardActions[tostring(matches[5])] then
-                                keyboardActions[tostring(matches[5])] = { }
+                            if not cronTable.keyboardActions[tostring(matches[5])] then
+                                cronTable.keyboardActions[tostring(matches[5])] = { }
                             end
                             local permissions = adjustPermissions(obj_user)
                             permissions[permissionsDictionary[matches[4]:lower()]] = false
@@ -508,11 +514,11 @@ local function run(msg, matches)
             return langs[msg.lang].require_owner
         end
     end
-    if matches[1]:lower() == 'admins' then
+    if matches[1]:lower() == 'admin' or matches[1]:lower() == 'admins' then
         mystat('/admins')
         if is_group(msg) or is_super_group(msg) then
-            if not adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
-                adminsContacted[tostring(msg.chat.id)] = true
+            if not cronTable.adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
+                cronTable.adminsContacted[tostring(msg.chat.id)] = true
                 local hashtag = '#admins' .. tostring(msg.message_id)
                 local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
                 local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
@@ -591,8 +597,8 @@ local function run(msg, matches)
                 end
                 return
             else
-                if not noticeContacted[tostring(msg.chat.id)] then
-                    noticeContacted[tostring(msg.chat.id)] = true
+                if not cronTable.noticeContacted[tostring(msg.chat.id)] then
+                    cronTable.noticeContacted[tostring(msg.chat.id)] = true
                     return langs[msg.lang].dontFloodAdmins
                 end
             end
@@ -1710,7 +1716,7 @@ end
 
 local function pre_process(msg)
     if msg then
-        keyboardActions[tostring(msg.chat.id)] = keyboardActions[tostring(msg.chat.id)] or { }
+        cronTable.keyboardActions[tostring(msg.chat.id)] = cronTable.keyboardActions[tostring(msg.chat.id)] or { }
         if msg.service then
             if is_realm(msg) then
                 if msg.service_type == 'chat_add_user_link' then
@@ -1811,9 +1817,11 @@ end
 
 local function cron()
     -- clear those tables on the top of the plugin
-    adminsContacted = { }
-    noticeContacted = { }
-    keyboardActions = { }
+    cronTable = {
+        adminsContacted = { },
+        noticeContacted = { },
+        keyboardActions = { }
+    }
 end
 
 return {
@@ -1869,7 +1877,7 @@ return {
         "^[#!/]([Dd][Ee][Ll][Aa][Ll][Ll])$",
         "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
-        "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss])",
+        "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss]?)",
         "^[#!/]([Rr][Uu][Ll][Ee][Ss])$",
         "^[#!/]([Aa][Bb][Oo][Uu][Tt])$",
         "^[#!/]([Ss][Ee][Tt][Ff][Ll][Oo][Oo][Dd]) (%d+)$",
@@ -1924,7 +1932,7 @@ return {
         "/rules",
         "/modlist",
         "/owner",
-        "/admins [{reply}|{text}]",
+        "/admin[s] [{reply}|{text}]",
         "/link",
         "/settings",
         "/textualsettings",

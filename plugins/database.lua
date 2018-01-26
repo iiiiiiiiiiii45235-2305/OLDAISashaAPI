@@ -1,5 +1,9 @@
-local resolveUsernamesTable = {
-    -- chat_id = { valMsg, valTot }
+-- Empty tables for solving multiple problems(thanks to @topkecleon)
+local cronTable = {
+    resolveUsernamesTable =
+    {
+        -- chat_id = { valMsg, valTot }
+    }
 }
 
 local function db_user(user, chat_id)
@@ -451,12 +455,12 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            resolveUsernamesTable[tostring(msg.chat.id)] = resolveUsernamesTable[tostring(msg.chat.id)] or { }
-            resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
-            resolveUsernamesTable[tostring(msg.chat.id)].valTot = resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
-            while string.match(tmp, '(@[%w_]+)') and resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
-                resolveUsernamesTable[tostring(msg.chat.id)].valMsg = resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
-                resolveUsernamesTable[tostring(msg.chat.id)].valTot = resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
+            cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
+            cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
+            cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
+            while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
+                cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
+                cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
                 local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
@@ -519,7 +523,9 @@ end
 
 local function cron()
     -- clear that table on the top of the plugin
-    resolveUsernamesTable = { }
+    cronTable = {
+        resolveUsernamesTable = { }
+    }
 end
 
 return {

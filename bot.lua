@@ -752,7 +752,6 @@ function msg_valid(msg)
             end
             if not sudoMessage then
                 print(clr.yellow .. 'Not valid: not sudo message' .. clr.reset)
-
                 return false
             end
         end
@@ -844,58 +843,52 @@ end
 -- Go over enabled plugins patterns.
 function match_plugins(msg)
     for name, plugin in pairs(plugins) do
-        match_plugin(plugin, name, msg)
-    end
-end
+        -- Go over patterns. If match then enough.
+        for k, pattern in pairs(plugin.patterns) do
+            local matches = match_pattern(pattern, msg.text)
+            if matches then
+                print(clr.magenta .. "msg matches: ", name, " => ", pattern .. clr.reset)
 
-function match_plugin(plugin, plugin_name, msg)
-    -- Go over patterns. If one matches it's enough.
-    for k, pattern in pairs(plugin.patterns) do
-        local matches = match_pattern(pattern, msg.text)
-        if matches then
-            print(clr.magenta .. "msg matches: ", plugin_name, " => ", pattern .. clr.reset)
-
-            local disabled = plugin_disabled_on_chat(plugin_name, msg.chat.id)
-
-            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
-                if msg.chat.type == 'private' then
-                    if disabled then
-                        savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                local disabled = plugin_disabled_on_chat(name, msg.chat.id)
+                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
+                    if msg.chat.type == 'private' then
+                        if disabled then
+                            savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                            return
+                        else
+                            savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
+                        end
                     else
-                        savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
-                    end
-                else
-                    if disabled then
-                        savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
-                    else
-                        savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
-                    end
-                end
-            end
-
-            if disabled then
-                return nil
-            end
-            -- Function exists
-            if plugin.run then
-                --[[local result = plugin.run(msg, matches)
-                if result then
-                    sendMessage(msg.chat.id, result)
-                end]]
-                local res, err = pcall( function()
-                    local result = plugin.run(msg, matches)
-                    if result then
-                        if not sendReply(msg, result) then
-                            sendMessage(msg.chat.id, result)
+                        if disabled then
+                            savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                            return
+                        else
+                            savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
                         end
                     end
-                end )
-                if not res then
-                    sendLog('An #error occurred.\n' .. err .. '\n' .. vardumptext(msg))
                 end
+
+                -- Function exists
+                if plugin.run then
+                    --[[local result = plugin.run(msg, matches)
+                    if result then
+                        sendMessage(msg.chat.id, result)
+                    end]]
+                    local res, err = pcall( function()
+                        local result = plugin.run(msg, matches)
+                        if result then
+                            if not sendReply(msg, result) then
+                                sendMessage(msg.chat.id, result)
+                            end
+                        end
+                    end )
+                    if not res then
+                        sendLog('An #error occurred.\n' .. err .. '\n' .. vardumptext(msg))
+                    end
+                end
+                -- One patterns matches
+                return
             end
-            -- One patterns matches
-            return
         end
     end
 end

@@ -307,6 +307,20 @@ local default_alternatives = {
     },
 }
 
+local function isCommand(text)
+    for name, plugin in pairs(plugins) do
+        for k, pattern in pairs(plugin.patterns) do
+            local matches = match_pattern(pattern, text)
+            if matches then
+                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 local function run(msg, matches)
     if matches[1]:lower() == 'getalternatives' and matches[2] then
         mystat('/getalternatives')
@@ -401,6 +415,9 @@ local function run(msg, matches)
                     if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                         return langs[msg.lang].crossexecDenial
                     end
+                    if isCommand(matches[3]) then
+                        return langs[msg.lang].alreadyCommand
+                    end
                     matches[2] = matches[2]:gsub('[#!]', '/')
                     if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
                         alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
@@ -465,6 +482,9 @@ local function run(msg, matches)
                 if #matches[3] > 3 then
                     if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                         return langs[msg.lang].crossexecDenial
+                    end
+                    if isCommand(matches[3]) then
+                        return langs[msg.lang].alreadyCommand
                     end
                     matches[2] = matches[2]:gsub('[#!]', '/')
                     if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
@@ -720,20 +740,7 @@ local function pre_process(msg)
     if msg then
         if not msg.service then
             if data[tostring(msg.chat.id)] then
-                msg.command = false
-                for name, plugin in pairs(plugins) do
-                    for k, pattern in pairs(plugin.patterns) do
-                        local matches = match_pattern(pattern, msg.text)
-                        if matches then
-                            local disabled = plugin_disabled_on_chat(name, msg.chat.id)
-                            if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
-                                if not disabled then
-                                    msg.command = true
-                                end
-                            end
-                        end
-                    end
-                end
+                msg.command = isCommand(msg.text)
                 if alternatives[tostring(msg.chat.id)] then
                     for k, v in pairs(alternatives[tostring(msg.chat.id)].altCmd) do
                         if msg.media then

@@ -437,6 +437,7 @@ return {
         alternativesDeleted = "Tutti i comandi alternativi di X sono stati eliminati.",
         errorCommandTooShort = "Errore, comando alternativo troppo corto, minimo 4 caratteri.",
         alternativeCommandsRestored = "Comandi alternativi ripristinati.",
+        alreadyCommand = "Errore, è già un comando.",
 
         -- anti_spam.lua --
         blockedForSpam = " bloccato (SPAM).",
@@ -1843,6 +1844,7 @@ return {
         alternativesDeleted = "All X's alternative commands have been deleted.",
         errorCommandTooShort = "Error, alternative command too short, at least 4 characters.",
         alternativeCommandsRestored = "Alternative commands restored.",
+        alreadyCommand = "Error, it's already a command.",
 
         -- anti_spam.lua --
         blockedForSpam = " blocked (SPAM).",

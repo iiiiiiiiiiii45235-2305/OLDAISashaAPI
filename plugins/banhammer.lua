@@ -1,15 +1,19 @@
 ﻿-- table to manage restrictions of a user in a keyboard
--- TODO: REFINE
 local restrictionsTable = {
-    -- user_id = { restrictions }
+    -- chat_id = { user_id = { restrictions } }
 }
--- temp table to not send the same error of kick again and again (just once per minute)
-local kickBanErrors = {
-    -- chat_id = error
-}
--- temp table to not send the pm notices again and again (just once per minute)
-local keyboardActions = {
-    -- chat_id = { user_id = false/true }
+-- Empty tables for solving multiple problems(thanks to @topkecleon)
+local cronTable = {
+    -- temp table to not send the same error of kick again and again (just once per minute)
+    kickBanErrors =
+    {
+        -- chat_id = error
+    },
+    -- temp table to not send the pm notices again and again (just once per minute)
+    keyboardActions =
+    {
+        -- chat_id = { user_id = false/true }
+    }
 }
 
 local default_restrictions = {
@@ -89,8 +93,8 @@ local function restrictUser(chat_id, user, restrictions, until_date, no_notice)
     local lang = get_lang(chat_id)
     if restrictChatMember(chat_id, user.id, restrictions, until_date, no_notice) then
         if areNoticesEnabled(user.id, chat_id) and not no_notice then
-            if not keyboardActions[tostring(chat_id)][tostring(user.id)] then
-                keyboardActions[tostring(chat_id)][tostring(user.id)] = true
+            if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
+                cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
                 sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
                 langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
                 langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
@@ -107,8 +111,8 @@ local function unrestrictUser(chat_id, user, no_notice)
     local lang = get_lang(chat_id)
     if unrestrictChatMember(chat_id, user.id, no_notice) then
         if areNoticesEnabled(user.id, chat_id) and not no_notice then
-            if not keyboardActions[tostring(chat_id)][tostring(user.id)] then
-                keyboardActions[tostring(chat_id)][tostring(user.id)] = true
+            if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
+                cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
                 sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
                 langs[lang].restrictionSendMessages .. tostring(default_restrictions.can_send_messages) ..
                 langs[lang].restrictionSendMediaMessages .. tostring(default_restrictions.can_send_media_messages) ..
@@ -152,8 +156,8 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not keyboardActions[tostring(matches[5])] then
-                                keyboardActions[tostring(matches[5])] = { }
+                            if not cronTable.keyboardActions[tostring(matches[5])] then
+                                cronTable.keyboardActions[tostring(matches[5])] = { }
                             end
                             local restrictions = adjustRestrictions(obj_user)
                             if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
@@ -204,8 +208,8 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not keyboardActions[tostring(matches[5])] then
-                                keyboardActions[tostring(matches[5])] = { }
+                            if not cronTable.keyboardActions[tostring(matches[5])] then
+                                cronTable.keyboardActions[tostring(matches[5])] = { }
                             end
                             local restrictions = adjustRestrictions(obj_user)
                             if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
@@ -333,18 +337,18 @@ local function run(msg, matches)
                         chat_name = data[tostring(matches[6])].set_name or ''
                     end
                     if matches[4] == 'BACK' then
-                        if restrictionsTable[tostring(matches[5])] then
+                        if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
-                            restrictionsTable[tostring(matches[5])] = clone_table(default_restrictions)
-                            for k, v in pairs(restrictionsTable[tostring(matches[5])]) do
-                                restrictionsTable[tostring(matches[5])][k] = false
+                            restrictionsTable[tostring(matches[6])][tostring(matches[5])] = clone_table(default_restrictions)
+                            for k, v in pairs(restrictionsTable[tostring(matches[6])][tostring(matches[5])]) do
+                                restrictionsTable[tostring(matches[6])][tostring(matches[5])][k] = false
                             end
                         end
                     elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
-                        if restrictionsTable[tostring(matches[7])] then
+                        if restrictionsTable[tostring(matches[6])][tostring(matches[7])] then
                             local remainder, weeks, days, hours, minutes, seconds = 0
                             weeks = math.floor(time / 604800)
                             remainder = time % 604800
@@ -416,15 +420,15 @@ local function run(msg, matches)
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                         end
                     elseif matches[4] == 'DONE' then
-                        if restrictionsTable[tostring(matches[5])] then
+                        if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
                             local obj_user = getChat('@' ..(string.match(matches[5], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if not keyboardActions[tostring(matches[6])] then
-                                        keyboardActions[tostring(matches[6])] = { }
+                                    if not cronTable.keyboardActions[tostring(matches[6])] then
+                                        cronTable.keyboardActions[tostring(matches[6])] = { }
                                     end
                                     local text = ''
-                                    local restrictions = restrictionsTable[tostring(obj_user.id)]
+                                    local restrictions = restrictionsTable[tostring(matches[6])][tostring(obj_user.id)]
                                     if restrictUser(matches[6], obj_user, restrictions, os.time() + time) then
                                         for k, v in pairs(restrictions) do
                                             if not restrictions[k] then
@@ -440,7 +444,7 @@ local function run(msg, matches)
                                         text = langs[msg.lang].errorTryAgain
                                     end
                                     answerCallbackQuery(msg.cb_id, text, false)
-                                    restrictionsTable[tostring(obj_user.id)] = nil
+                                    restrictionsTable[tostring(matches[6])][tostring(obj_user.id)] = nil
                                     sendMessage(matches[6], text)
                                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
@@ -1062,7 +1066,7 @@ local function run(msg, matches)
                                             if matches[3] then
                                                 restrictions = adjustRestrictions(matches[3]:lower())
                                             end
-                                            restrictionsTable[tostring(msg.reply_to_message.forward_from.id)] = restrictions
+                                            restrictionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = restrictions
                                             if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.forward_from.id .. ') ' ..(database[tostring(msg.reply_to_message.forward_from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1110,7 +1114,7 @@ local function run(msg, matches)
                                     if matches[2] then
                                         restrictions = adjustRestrictions(matches[2]:lower())
                                     end
-                                    restrictionsTable[tostring(msg.reply_to_message.from.id)] = restrictions
+                                    restrictionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = restrictions
                                     if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.from.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1153,7 +1157,7 @@ local function run(msg, matches)
                                 if matches[2] then
                                     restrictions = adjustRestrictions(matches[2]:lower())
                                 end
-                                restrictionsTable[tostring(msg.reply_to_message.from.id)] = restrictions
+                                restrictionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = restrictions
                                 if sendKeyboard(msg.from.id, '(' .. msg.reply_to_message.from.id .. ') ' ..(database[tostring(msg.reply_to_message.from.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.reply_to_message.from.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1235,7 +1239,7 @@ local function run(msg, matches)
                                             if matches[3] then
                                                 restrictions = adjustRestrictions(matches[3]:lower())
                                             end
-                                            restrictionsTable[tostring(msg.entities[k].user.id)] = restrictions
+                                            restrictionsTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = restrictions
                                             if sendKeyboard(msg.from.id, '(' .. msg.entities[k].user.id .. ') ' ..(database[tostring(msg.entities[k].user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, msg.entities[k].user.id)) then
                                                 if msg.chat.type ~= 'private' then
                                                     local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1255,7 +1259,7 @@ local function run(msg, matches)
                                 if matches[3] then
                                     restrictions = adjustRestrictions(matches[3]:lower())
                                 end
-                                restrictionsTable[tostring(matches[2])] = restrictions
+                                restrictionsTable[tostring(msg.chat.id)][tostring(matches[2])] = restrictions
                                 if sendKeyboard(msg.from.id, '(' .. matches[2] .. ') ' ..(database[tostring(matches[2])]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, matches[2])) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -1273,7 +1277,7 @@ local function run(msg, matches)
                                         if matches[3] then
                                             restrictions = adjustRestrictions(matches[3]:lower())
                                         end
-                                        restrictionsTable[tostring(obj_user.id)] = restrictions
+                                        restrictionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = restrictions
                                         if sendKeyboard(msg.from.id, '(' .. obj_user.id .. ') ' ..(database[tostring(obj_user.id)]['print_name'] or '') .. ' in ' .. '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time('TEMPRESTRICT', msg.chat.id, obj_user.id)) then
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
@@ -2431,7 +2435,7 @@ end
 
 local function pre_process(msg)
     if msg then
-        keyboardActions[tostring(msg.chat.id)] = keyboardActions[tostring(msg.chat.id)] or { }
+        cronTable.keyboardActions[tostring(msg.chat.id)] = cronTable.keyboardActions[tostring(msg.chat.id)] or { }
         -- SERVICE MESSAGE
         if msg.service then
             if msg.service_type then
@@ -2542,13 +2546,13 @@ local function pre_process(msg)
                 -- Save to logs
                 local txt = banUser(bot.id, msg.from.id, msg.chat.id, reason)
                 if txt == langs[msg.lang].errors[1] or txt == langs[msg.lang].errors[2] or txt == langs[msg.lang].errors[3] or txt == langs[msg.lang].errors[4] then
-                    if kickBanErrors[tostring(chat_id)] then
-                        if txt ~= kickBanErrors[tostring(chat_id)] then
-                            kickBanErrors[tostring(chat_id)] = txt
+                    if cronTable.kickBanErrors[tostring(chat_id)] then
+                        if txt ~= cronTable.kickBanErrors[tostring(chat_id)] then
+                            cronTable.kickBanErrors[tostring(chat_id)] = txt
                             sendMessage(msg.chat.id, txt)
                         end
                     else
-                        kickBanErrors[tostring(chat_id)] = txt
+                        cronTable.kickBanErrors[tostring(chat_id)] = txt
                         sendMessage(msg.chat.id, txt)
                     end
                 else
@@ -2563,8 +2567,10 @@ end
 
 local function cron()
     -- clear those tables on the top of the plugin
-    kickBanErrors = { }
-    keyboardActions = { }
+    cronTable = {
+        kickBanErrors = { },
+        keyboardActions = { }
+    }
 end
 
 return {
