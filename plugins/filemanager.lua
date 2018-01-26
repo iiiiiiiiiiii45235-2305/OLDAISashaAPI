@@ -49,6 +49,14 @@ function run(msg, matches)
                             redis:set('api:path', folder)
                             editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                         end
+                    elseif matches[2] == 'UPLOAD' then
+                        if io.popen('find ' .. path .. matches[2]):read("*all") ~= '' then
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].sendingYou .. matches[2])
+                            sendDocument(msg.chat.id, path .. matches[2])
+                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain)
+                        end
                     end
                 end
                 return

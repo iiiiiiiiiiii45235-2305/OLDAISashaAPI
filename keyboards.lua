@@ -334,7 +334,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
             if tst ~= '' then
                 keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
             else
-                keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
+                keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerUPLOAD' .. object }
             end
             column = column + 1
             if column > 2 then
