@@ -18,13 +18,24 @@ function run(msg, matches)
                     elseif matches[2] == 'PAGEPLUS' then
                         editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 0) + 1))
                     elseif matches[2] == 'CD' then
-                        local folder = path .. '"' .. matches[3] .. '"/'
-                        pathString = langs[msg.lang].youAreHere .. folder .. '\n' .. io.popen('ls -a "' .. folder .. '"'):read("*all")
-                        redis:set('api:path', folder)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/'))
+                        if matches[3] == '.' then
+                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                        elseif matches[3] == '..' then
+                            local pathComponents = folder:split('/')
+                            local lastFolder = pathComponents[#pathComponents - 1]
+                            path:gsub(lastFolder .. '/', '')
+                            pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
+                            redis:set('api:path', path)
+                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                        else
+                            local folder = path .. '"' .. matches[3] .. '"/'
+                            pathString = langs[msg.lang].youAreHere .. folder .. '\n' .. io.popen('ls -a "' .. folder .. '"'):read("*all")
+                            redis:set('api:path', folder)
+                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/'))
+                        end
                     end
-                    return
                 end
+                return
             end
             if matches[1]:lower() == "filemanager" then
                 return sendKeyboard(msg.from.id, "@AISASHABOT FILEMANAGER TESTING KEYBOARD", keyboard_filemanager(path))
