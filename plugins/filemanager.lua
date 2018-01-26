@@ -23,7 +23,7 @@ function run(msg, matches)
                             editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
                         elseif matches[3] == '..' then
                             if path ~= '/' then
-                                local pathComponents = folder:split('/')
+                                local pathComponents = path:split('/')
                                 local lastFolder = pathComponents[#pathComponents - 1]
                                 path:gsub(lastFolder .. '/', '')
                                 pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
