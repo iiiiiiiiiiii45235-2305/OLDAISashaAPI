@@ -199,6 +199,7 @@ return {
         "^(###cbfilemanager)(PAGEMINUS)(%d+)$",
         "^(###cbfilemanager)(PAGEPLUS)(%d+)$",
         "^(###cbfilemanager)(CD)(.*)$",
+        "^(###cbfilemanager)(UP)(.*)$",
 
         "^[#!/]([Ff][Ii][Ll][Ee][Mm][Aa][Nn][Aa][Gg][Ee][Rr])$",
         "^[#!/]([Ff][Oo][Ll][Dd][Ee][Rr])$",
