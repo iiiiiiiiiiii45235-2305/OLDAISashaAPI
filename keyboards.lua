@@ -331,7 +331,9 @@ function keyboard_filemanager(folder, page, no_action_buttons)
                 keyboard.inline_keyboard[row] = { }
             end
 
+            print(folder .. object .. '/')
             local ok, err, code = os.rename(folder .. object .. '/', folder .. object .. '/')
+            print(ok, err, code)
             if not ok then
                 if code == 13 then
                     -- Permission denied, but directory exists
