@@ -31,8 +31,7 @@ function run(msg, matches)
                                     end
                                 end
                                 if lastFolder ~= '' then
-                                    local folder = path:gsub(lastFolder .. '/', '')
-                                    print(lastFolder .. '/', folder)
+                                    local folder = path:gsub(lastFolder, '')
                                     pathString = langs[msg.lang].youAreHere .. folder
                                     answerCallbackQuery(msg.cb_id, pathString)
                                     redis:set('api:path', folder)
