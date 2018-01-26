@@ -91,7 +91,7 @@ local function run(msg, matches)
                                 end
                             end
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[5], time))
-                            mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
                                 local tmp = { chat = { id = matches[4], type = '' }, lang = msg.lang }
@@ -107,7 +107,7 @@ local function run(msg, matches)
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                 end
-                                mystat('###cbdelword' .. matches[2] .. matches[3] .. matches[4])
+                                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                             end
                         end
                     else

@@ -1,52 +1,79 @@
 function run(msg, matches)
     if is_sudo(msg) then
-        local folder = redis:get('api:folder')
-        if folder then
-            if matches[1]:lower() == 'folder' then
+        local path = redis:get('api:path')
+        if path then
+            if msg.cb then
+                if matches[1] == '###cbfilemanager' then
+                    local pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
+                    if matches[2] == 'DELETE' then
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        end
+                    elseif matches[2] == 'DELETEKEYBOARD' then
+                        editMessage(msg.chat.id, msg.message_id, pathString)
+                    elseif matches[2] == 'PAGES' then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+                    elseif matches[2] == 'PAGEMINUS' then
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 2) -1))
+                    elseif matches[2] == 'PAGEPLUS' then
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 0) + 1))
+                    elseif matches[2] == 'CD' then
+                        local folder = path .. '"' .. matches[3] .. '"/'
+                        pathString = langs[msg.lang].youAreHere .. folder .. '\n' .. io.popen('ls -a "' .. folder .. '"'):read("*all")
+                        redis:set('api:path', folder)
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/', tonumber(matches[3] or 0) + 1))
+                    end
+                    return
+                end
+            end
+            if matches[2]:lower() == "filemanager" then
+                return sendKeyboard(msg.from.id, "@AISASHABOT FILEMANAGER TESTING KEYBOARD", keyboard_filemanager(path))
+            end
+            if matches[1]:lower() == 'folder' or matches[1]:lower() == 'path' then
                 mystat('/folder')
-                return langs[msg.lang].youAreHere .. folder
+                return langs[msg.lang].youAreHere .. path
             end
             if matches[1]:lower() == 'cd' then
                 mystat('/cd')
                 if not matches[2] then
-                    redis:set('api:folder', '/')
+                    redis:set('api:path', '/')
                     return langs[msg.lang].backHomeFolder .. '/'
                 else
-                    redis:set('api:folder', matches[2])
+                    redis:set('api:path', matches[2])
                     return langs[msg.lang].youAreHere .. matches[2]
                 end
             end
             if matches[1]:lower() == 'ls' then
                 mystat('/ls')
-                return io.popen('ls -a "' .. folder .. '"'):read("*all")
+                return io.popen('ls -a "' .. path .. '"'):read("*all")
             end
             if matches[1]:lower() == 'mkdir' and matches[2] then
                 mystat('/mkdir')
-                io.popen('cd "' .. folder .. '" && mkdir \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. path .. '" && mkdir \'' .. matches[2] .. '\''):read("*all")
                 return langs[msg.lang].folderCreated:gsub("X", matches[2])
             end
             if matches[1]:lower() == 'rm' and matches[2] then
                 mystat('/rm')
-                io.popen('cd "' .. folder .. '" && rm -f \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. path .. '" && rm -f \'' .. matches[2] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].deleted
             end
             if matches[1]:lower() == 'cat' and matches[2] then
                 mystat('/cat')
-                return io.popen('cd "' .. folder .. '" && cat \'' .. matches[2] .. '\''):read("*all")
+                return io.popen('cd "' .. path .. '" && cat \'' .. matches[2] .. '\''):read("*all")
             end
             if matches[1]:lower() == 'rmdir' and matches[2] then
                 mystat('/rmdir')
-                io.popen('cd "' .. folder .. '" && rmdir \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. path .. '" && rmdir \'' .. matches[2] .. '\''):read("*all")
                 return langs[msg.lang].folderDeleted:gsub("X", matches[2])
             end
             if matches[1]:lower() == 'touch' and matches[2] then
                 mystat('/touch')
-                io.popen('cd "' .. folder .. '" && touch \'' .. matches[2] .. '\''):read("*all")
+                io.popen('cd "' .. path .. '" && touch \'' .. matches[2] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].created
             end
             if matches[1]:lower() == 'tofile' and matches[2] and matches[3] then
                 mystat('/tofile')
-                file_to_write = io.open(folder .. matches[2], "w")
+                file_to_write = io.open(path .. matches[2], "w")
                 file_to_write:write(matches[3])
                 file_to_write:flush()
                 file_to_write:close()
@@ -54,24 +81,24 @@ function run(msg, matches)
             end
             if matches[1]:lower() == 'shell' and matches[2] then
                 mystat('/shell')
-                return io.popen('cd "' .. folder .. '" && ' .. matches[2]:gsub('—', '--')):read('*all')
+                return io.popen('cd "' .. path .. '" && ' .. matches[2]:gsub('—', '--')):read('*all')
             end
             if matches[1]:lower() == 'cp' and matches[2] and matches[3] then
                 mystat('/cp')
-                io.popen('cd "' .. folder .. '" && cp -r \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
+                io.popen('cd "' .. path .. '" && cp -r \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].copiedTo .. matches[3]
             end
             if matches[1]:lower() == 'mv' and matches[2] and matches[3] then
                 mystat('/mv')
-                io.popen('cd "' .. folder .. '" && mv \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
+                io.popen('cd "' .. path .. '" && mv \'' .. matches[2] .. '\' \'' .. matches[3] .. '\''):read("*all")
                 return matches[2] .. langs[msg.lang].movedTo .. matches[3]
             end
             if matches[1]:lower() == 'upload' and matches[2] then
                 mystat('/upload')
-                if io.popen('find ' .. folder .. matches[2]):read("*all") == '' then
+                if io.popen('find ' .. path .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
-                    sendDocument(msg.chat.id, folder .. matches[2])
+                    sendDocument(msg.chat.id, path .. matches[2])
                     return langs[msg.lang].sendingYou .. matches[2]
                 end
             end
@@ -110,7 +137,7 @@ function run(msg, matches)
                         end
                         local res = getFile(file_id)
                         local download_link = telegram_file_link(res)
-                        local file_path, res_code = download_to_file(download_link, folder .. file_name)
+                        local file_path, res_code = download_to_file(download_link, path .. file_name)
                         return langs[msg.lang].fileDownloadedTo ..(file_path or res_code)
                     end
                 else
@@ -119,7 +146,7 @@ function run(msg, matches)
             end
             return
         else
-            redis:set('api:folder', '/')
+            redis:set('api:path', '/')
             return langs[msg.lang].youAreHere .. '/'
         end
     else
@@ -131,6 +158,14 @@ return {
     description = "FILEMANAGER",
     patterns =
     {
+        "^(###cbfilemanager)(DELETE)$",
+        "^(###cbfilemanager)(DELETEKEYBOARD)$",
+        "^(###cbfilemanager)(PAGES)$",
+        "^(###cbfilemanager)(PAGEMINUS)(%d+)$",
+        "^(###cbfilemanager)(PAGEPLUS)(%d+)$",
+        "^(###cbfilemanager)(CD)(.*)$",
+
+        "^[#!/]([Ff][Ii][Ll][Ee][Mm][Aa][Nn][Aa][Gg][Ee][Rr])$",
         "^[#!/]([Ff][Oo][Ll][Dd][Ee][Rr])$",
         "^[#!/]([Cc][Dd])$",
         "^[#!/]([Cc][Dd]) (.*)$",
@@ -152,7 +187,8 @@ return {
     syntax =
     {
         "SUDO",
-        "/folder",
+        "/filemanager",
+        "/folder|/path",
         "/cd [{directory}]",
         "/ls",
         "/mkdir {directory}",

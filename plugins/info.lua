@@ -252,7 +252,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             local obj = getChat(matches[3])
                             editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -262,7 +262,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             local obj = getChat(matches[3])
                             editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
@@ -272,7 +272,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             local obj = getChat(matches[3])
                             editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
@@ -291,7 +291,7 @@ local function run(msg, matches)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].noLinkAvailable, true)
                             end
-                            mystat('###cbinfo' .. matches[2] .. matches[3])
+                            mystat(matches[1] .. matches[2] .. matches[3])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -311,7 +311,7 @@ local function run(msg, matches)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].sendMeLink, true)
                             end
-                            mystat('###cbinfo' .. matches[2] .. matches[3])
+                            mystat(matches[1] .. matches[2] .. matches[3])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -349,7 +349,7 @@ local function run(msg, matches)
                             end
                             answerCallbackQuery(msg.cb_id, text, true)
                             deeper = 'PROMOTIONS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
@@ -359,7 +359,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'PROMOTIONS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
@@ -369,7 +369,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'PROMOTIONS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
@@ -377,7 +377,7 @@ local function run(msg, matches)
                         if is_owner2(msg.from.id, matches[4]) then
                             answerCallbackQuery(msg.cb_id, promoteMod(matches[4], getChat(matches[3])), true)
                             deeper = 'PROMOTIONS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
@@ -385,7 +385,7 @@ local function run(msg, matches)
                         if is_owner2(msg.from.id, matches[4]) then
                             answerCallbackQuery(msg.cb_id, demoteMod(matches[4], getChat(matches[3])), true)
                             deeper = 'PROMOTIONS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                         end
@@ -405,7 +405,7 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].require_rank, true)
                             end
                             deeper = 'PUNISHMENTS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -421,7 +421,7 @@ local function run(msg, matches)
                                 sendMessage(matches[4], text)
                             end
                             deeper = 'PUNISHMENTS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -431,7 +431,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'PUNISHMENTS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -441,7 +441,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'PUNISHMENTS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_mod, true)
                         end
@@ -451,7 +451,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -461,7 +461,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -471,7 +471,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -481,7 +481,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, text, true)
                             sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat('###cbinfo' .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end

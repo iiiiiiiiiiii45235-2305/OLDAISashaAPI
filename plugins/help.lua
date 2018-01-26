@@ -168,7 +168,7 @@ local function run(msg, matches)
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
                 end
-                mystat('###cbhelp' .. matches[2] .. matches[3])
+                mystat(matches[1] .. matches[2] .. matches[3])
             else
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
                 if temp ~= nil then
@@ -180,7 +180,7 @@ local function run(msg, matches)
                 else
                     editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
                 end
-                mystat('###cbhelp' .. matches[2])
+                mystat(matches[1] .. matches[2])
             end
             return
         end

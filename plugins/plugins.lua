@@ -189,7 +189,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                         end
                     end
-                    mystat('###cbplugins' .. matches[2] .. matches[3] .. matches[4])
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
                     return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
@@ -207,7 +207,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                         end
                     end
-                    mystat('###cbplugins' .. matches[2] .. matches[3])
+                    mystat(matches[1] .. matches[2] .. matches[3])
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end

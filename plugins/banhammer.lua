@@ -188,7 +188,7 @@ local function run(msg, matches)
                             end
                             editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
                         end
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
@@ -240,7 +240,7 @@ local function run(msg, matches)
                             end
                             editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
                         end
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
@@ -320,7 +320,7 @@ local function run(msg, matches)
                             end
                         end
                         editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempBanIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                     elseif matches[4] == 'DONE' then
                         local text = banUser(msg.from.id, matches[5], matches[6], '', os.time() + time)
                         answerCallbackQuery(msg.cb_id, text, false)
@@ -328,7 +328,7 @@ local function run(msg, matches)
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
-                        mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                     end
                 elseif matches[2] == 'TEMPRESTRICT' then
                     local time = tonumber(matches[3])
@@ -415,7 +415,7 @@ local function run(msg, matches)
                                 end
                             end
                             editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[7], time, matches[8] or false))
-                            mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                         else
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                         end
@@ -449,7 +449,7 @@ local function run(msg, matches)
                                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                     end
-                                    mystat('###cbbanhammer' .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
+                                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                                 end
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].noObject, false)

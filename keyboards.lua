@@ -297,6 +297,65 @@ function keyboard_tag(chat_id, message_id, callback, user_id)
     return keyboard
 end
 
+-- filemanager
+local max_filemanager_buttons = 15
+function keyboard_filemanager(folder, page, no_action_buttons)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local row = 1
+    local column = 1
+    local flag = false
+    local count = 0
+    keyboard.inline_keyboard[row] = { }
+    if not page then
+        page = 1
+    end
+    local dir = io.popen('ls -a "' .. folder .. '"'):read("*all")
+    local t = dir:split('\n')
+    count = #t
+    local max_pages = math.floor(count / max_filemanager_buttons)
+    if (count / max_filemanager_buttons) > math.floor(count / max_filemanager_buttons) then
+        max_pages = max_pages + 1
+    end
+    if tonumber(page) > max_pages then
+        page = max_pages
+    end
+    count = 0
+    for i, fldr in pairs(t) do
+        count = count + 1
+        if count >=(((tonumber(page) -1) * max_filemanager_buttons) + 1) and count <=(max_filemanager_buttons * tonumber(page)) then
+            if flag then
+                flag = false
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+            end
+            keyboard.inline_keyboard[row][column] = { text = fldr, callback_data = 'filemanagerCD' .. fldr }
+            column = column + 1
+            if column > 2 then
+                flag = true
+            end
+        end
+    end
+    row = row + 1
+    column = 1
+    keyboard.inline_keyboard[row] = { }
+    if tonumber(page) > 1 then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'filemanagerPAGEMINUS' .. page }
+        column = column + 1
+    end
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteKeyboard, callback_data = 'filemanagerDELETEKEYBOARD' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'filemanagerPAGES' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'filemanagerDELETE' }
+    column = column + 1
+    if tonumber(page) < max_pages then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'filemanagerPAGEPLUS' .. page }
+    end
+    return keyboard
+end
+
 -- help
 -- function keyboard_help_list(chat_id, rank)
 --     local lang = get_lang(chat_id)

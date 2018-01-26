@@ -78,7 +78,7 @@ local function run(msg, matches)
                         else
                             redis:hset('tagalert:usernames', msg.from.id, true)
                         end
-                        mystat('###cbcheck_tag' .. matches[2] .. msg.from.id)
+                        mystat(matches[1] .. matches[2] .. msg.from.id)
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].userAlreadyRegistered, true)
                     end
@@ -94,7 +94,7 @@ local function run(msg, matches)
                                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
-                        mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                     elseif matches[2] == 'GOTO' then
                         local link_in_keyboard = false
                         if msg.from.username then
@@ -172,7 +172,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        mystat('###cbcheck_tag' .. matches[2] .. matches[3] .. matches[4])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                     end
                 end
                 return

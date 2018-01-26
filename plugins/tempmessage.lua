@@ -57,7 +57,7 @@ local function run(msg, matches)
                                 end
                             end
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].tempmessageIntro:gsub('X', text_table[tostring(msg.from.id)]), keyboard_tempmessage(matches[5], time))
-                            mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                         elseif matches[3] == 'DONE' then
                             if is_mod2(msg.from.id, matches[4], false) then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
@@ -69,7 +69,7 @@ local function run(msg, matches)
                                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                                 end
-                                mystat('###cbtempmessage' .. matches[2] .. matches[3] .. matches[4])
+                                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                             end
                         end
                     else

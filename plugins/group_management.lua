@@ -302,7 +302,7 @@ local function run(msg, matches)
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
@@ -314,7 +314,7 @@ local function run(msg, matches)
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
@@ -334,7 +334,7 @@ local function run(msg, matches)
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[4], matches[5] or false))
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
@@ -354,13 +354,13 @@ local function run(msg, matches)
                             chat_name = data[tostring(matches[4])].set_name or ''
                         end
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[4], matches[5] or false))
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'FLOODMINUS' or matches[2] == 'FLOODPLUS' then
                     if is_mod2(msg.from.id, matches[4]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         local flood = matches[3]
                         if matches[2] == 'FLOODPLUS' then
                             flood = flood + 1
@@ -384,7 +384,7 @@ local function run(msg, matches)
                     end
                 elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNS' or matches[2] == 'WARNSPLUS' then
                     if is_mod2(msg.from.id, matches[4]) then
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                         local warns = matches[3]
                         if matches[2] == 'WARNSMINUS' then
                             warns = warns - 1
@@ -443,7 +443,7 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
                         end
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
@@ -480,7 +480,7 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
                         end
-                        mystat('###cbgroup_management' .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
