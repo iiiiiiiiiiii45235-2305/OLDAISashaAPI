@@ -321,7 +321,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
         page = max_pages
     end
     count = 0
-    for i, fldr in pairs(t) do
+    for i, object in pairs(t) do
         count = count + 1
         if count >=(((tonumber(page) -1) * max_filemanager_buttons) + 1) and count <=(max_filemanager_buttons * tonumber(page)) then
             if flag then
@@ -330,7 +330,19 @@ function keyboard_filemanager(folder, page, no_action_buttons)
                 column = 1
                 keyboard.inline_keyboard[row] = { }
             end
-            keyboard.inline_keyboard[row][column] = { text = fldr, callback_data = 'filemanagerCD' .. fldr }
+
+            local ok, err, code = os.rename(object .. '/', object .. '/')
+            if not ok then
+                if code == 13 then
+                    -- Permission denied, but directory exists
+                    keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
+                else
+                    keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
+                end
+            else
+                keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
+            end
+
             column = column + 1
             if column > 2 then
                 flag = true

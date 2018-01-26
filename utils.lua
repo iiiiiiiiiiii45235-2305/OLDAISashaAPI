@@ -2,7 +2,7 @@ URL = require "socket.url"
 http = require "socket.http"
 HTTPS = require "ssl.https"
 ltn12 = require "ltn12"
-curl = require('cURL')
+curl = require "cURL"
 
 serpent =(loadfile "./libs/serpent.lua")()
 json =(loadfile "./libs/JSON.lua")()
