@@ -330,7 +330,12 @@ function keyboard_filemanager(folder, page, no_action_buttons)
                 column = 1
                 keyboard.inline_keyboard[row] = { }
             end
-            keyboard.inline_keyboard[row][column] = { text = object, callback_data = 'filemanagerCD' .. object }
+            local tst = io.popen('ls -a "' .. folder .. object .. '/"'):read("*all")
+            if tst ~= '' then
+                keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
+            else
+                keyboard.inline_keyboard[row][column] = { text = '📄 ' .. object, callback_data = 'filemanagerDOWNLOAD' .. object }
+            end
             column = column + 1
             if column > 2 then
                 flag = true
