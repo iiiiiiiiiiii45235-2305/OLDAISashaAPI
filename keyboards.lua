@@ -332,7 +332,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
             end
 
             print(folder .. object .. '/')
-            local ok, err, code = os.rename(folder .. object .. '/', folder .. object .. '/')
+            local ok, err, code = os.rename(folder .. object, folder .. object)
             print(ok, err, code)
             if not ok then
                 if code == 13 then
