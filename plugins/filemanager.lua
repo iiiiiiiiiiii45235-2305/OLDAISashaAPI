@@ -21,7 +21,7 @@ function run(msg, matches)
                         local folder = path .. '"' .. matches[3] .. '"/'
                         pathString = langs[msg.lang].youAreHere .. folder .. '\n' .. io.popen('ls -a "' .. folder .. '"'):read("*all")
                         redis:set('api:path', folder)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/', tonumber(matches[3] or 0) + 1))
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/'))
                     end
                     return
                 end
