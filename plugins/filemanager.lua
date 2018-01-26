@@ -33,7 +33,7 @@ function run(msg, matches)
                                 end
                                 print(lastFolder)
                                 if lastFolder ~= '' then
-                                    path:gsub(lastFolder .. '/', '')
+                                    path = path:gsub(lastFolder .. '/', '')
                                     pathString = langs[msg.lang].youAreHere .. path
                                     answerCallbackQuery(msg.cb_id, pathString)
                                     redis:set('api:path', path)
@@ -49,7 +49,7 @@ function run(msg, matches)
                             pathString = langs[msg.lang].youAreHere .. folder
                             answerCallbackQuery(msg.cb_id, pathString)
                             redis:set('api:path', folder)
-                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path .. '"' .. matches[3] .. '"/'))
+                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                         end
                     end
                 end
