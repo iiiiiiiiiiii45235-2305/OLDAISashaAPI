@@ -24,14 +24,23 @@ function run(msg, matches)
                         elseif matches[3] == '..' then
                             if path ~= '/' then
                                 local pathComponents = path:split('/')
-                                local lastFolder = pathComponents[table.getn(pathComponents) -1]
-                                path:gsub(lastFolder .. '/', '')
-                                pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
-                                answerCallbackQuery(msg.cb_id, pathString)
-                                redis:set('api:path', path)
-                                editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                                local lastFolder = ''
+                                for i, fldr in pairs(pathComponents) do
+                                    if fldr then
+                                        lastFolder = fldr .. '/'
+                                    end
+                                end
+                                if lastFolder ~= '' then
+                                    path:gsub(lastFolder .. '/', '')
+                                    pathString = langs[msg.lang].youAreHere .. path .. '\n' .. io.popen('ls -a "' .. path .. '"'):read("*all")
+                                    answerCallbackQuery(msg.cb_id, pathString)
+                                    redis:set('api:path', path)
+                                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                                else
+                                    answerCallbackQuery(msg.cb_id, pathString)
+                                end
                             else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].ok)
+                                answerCallbackQuery(msg.cb_id, pathString)
                             end
                         else
                             local folder = path .. '"' .. matches[3] .. '"/'
