@@ -269,7 +269,7 @@ return {
         youHaveBeenPromotedMod = "Sei stato promosso a moderatore in ",
         youHaveBeenDemotedMod = "Sei stato degradato da moderatore in ",
         youHaveBeenPromotedOwner = "Sei stato promosso a owner in ",
-        youHaveBeenRestrictedUnrestricted = "Ti sono state applicate/rimosse delle restrizioni in ",
+        youHaveBeenRestrictedUnrestricted = "Ti sono state applicate/rimosse delle limitazioni in ",
         youHaveBeenMuted = "Sei stato mutato in ",
         youHaveBeenUnmuted = "Sei stato smutato in ",
         youHaveBeenWarned = "Sei stato avvertito in ",
@@ -448,8 +448,8 @@ return {
         dontFloodKeyboard = "Non floodare la fottuta tastiera!\n",
         possibleShitstorm = "Attenzione, possibile shitstorm in corso!\nIl blocco dello spam è stato abilitato per prevenzione, per disabilitarlo usare \"/unlock spam\" nella chat.\n",
         scheduledKick = "L'utente verrà rimosso tra X secondi al massimo.",
-        allRestrictionsApplied = "All'utente sono state applicate tutte le restrizioni disponibili.",
-        commandsFlooderRestricted = "Stai spammando lo stesso comando troppe volte, tra 10 secondi ti saranno applicate tutte le restrizioni disponibili per 10 minuti, comincia ad implorare pietà.",
+        allRestrictionsApplied = "All'utente sono state applicate tutte le limitazioni disponibili.",
+        commandsFlooderRestricted = "Stai spammando lo stesso comando troppe volte, tra 10 secondi ti saranno applicate tutte le limitazioni disponibili per 10 minuti, comincia ad implorare pietà.",
 
         -- banhammer.lua --
         noUsernameFound = "Non trovo nessun utente con quell'username.",
@@ -457,20 +457,20 @@ return {
         cantKickWhitelisted = "Non posso kickare un utente in whitelist.",
         badLuck = "Sfortuna.",
         kickinactiveWarning = "Comando disattivato.\nE' ASSOLUTAMENTE SCONSIGLIATO utilizzare questo comando con @AISasha su gruppi con membri >= 200.",
-        restrictionsOf = "Restrizioni di X in Y:",
-        restrictionsIntro = "Legenda restrizioni:\n✅ Restrizione non applicata\n🚫 Restrizione applicata\n",
-        sendRestrictionsPvt = "Ti ho mandato le restrizioni dell'utente in <a href=\"" .. bot.link .. "\">privato</a>.",
-        restrictions = "Restrizioni: ",
+        restrictionsOf = "Limitazioni di X in Y:",
+        restrictionsIntro = "Legenda limitazioni:\n✅ Limitazione non applicata\n🚫 Limitazione applicata\n",
+        sendRestrictionsPvt = "Ti ho mandato le limitazioni dell'utente in <a href=\"" .. bot.link .. "\">privato</a>.",
+        restrictions = "Limitazioni: ",
         restrictionSendMessages = "\nPuò inviare ogni tipo di messaggio: ",
         restrictionSendMediaMessages = "\nPuò inviare audio, documenti, foto, video, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nPuò inviare gifs, giochi, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nPuò aggiungere anteprime di pagine web: ",
-        userUnrestricted = "Utente libero.",
+        userUnrestricted = "Utente non limitato.",
         tempBanIntro = "\nPuoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:\n",
         errorBanhammerTimeRange = "Errore, il valore non può essere negativo.",
         forever = "∞",
         untilWord = "fino a",
-        tempRestrictIntro = "\nPuoi applicare restrizioni temporaneamente alle persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range le restrizioni verranno applicate per sempre.\nTastiera del tempo:\n",
+        tempRestrictIntro = "\nPuoi applicare limitazioni temporaneamente alle persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range le limitazioni verranno applicate per sempre.\nTastiera del tempo:\n",
         noObjectInvite = "Nessun oggetto trovato.\nL'utente non esiste oppure non mi ha mai contattata.",
         invitedYouTo = " ti ha invitato nel gruppo ",
         userAlreadyInChat = 'Utente già nel gruppo.',
@@ -910,7 +910,7 @@ return {
         .. "<code>/faq14</code> api_patch.\n"
         .. "<code>/faq15</code> spam @AISashaBot.\n"
         .. "<code>/faq16</code> significato permessi.\n"
-        .. "<code>/faq17</code> significato restrizioni.\n",
+        .. "<code>/faq17</code> significato limitazioni.\n",
         faq =
         {
             [0] = "FAQ Inesistente.",
@@ -985,10 +985,10 @@ return {
             .. "R: Change_info => Cambiare info come nome gruppo, foto e altre impostazioni.\n"
             .. "Delete_messages => Eliminare messaggi di altri utenti.\n"
             .. "Invite_users => Invitare utenti tramite link.\n"
-            .. "Restrict_members => Restringere bannare o sbannare membri.\n"
+            .. "Restrict_members => Limitare, bannare o sbannare membri.\n"
             .. "Pin_messages => Fissare messaggi.\n"
             .. "Promote_members => Promuovere amministratori con gli stessi permessi o inferiori.\n",
-            [17] = "D: Cosa significano le restrizioni?\n"
+            [17] = "D: Cosa significano le limitazioni?\n"
             .. "R: Send_messages => Inviare ogni tipo di messaggio.\n"
             .. "Send_media_messages => Inviare audio, documenti, foto, video, video_notes, voice_notes.\n"
             .. "Send_other_messages => Inviare gifs, giochi, stickers, inline bots.\n"
@@ -1076,11 +1076,11 @@ return {
             "<code>/warn {user} [{reason}]</code>: Sasha avverte l'utente.",
             "<code>/unwarn {user} [{reason}]</code>: Sasha diminuisce di uno gli avvertimenti dell'utente.",
             "<code>/unwarnall {user} [{reason}]</code>: Sasha azzera gli avvertimenti dell'utente.",
-            "<code>/temprestrict {user} [{weeks} {days} {hours} {minutes} {seconds}] [{restrictions}]</code>: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate) per {weeks} {days} {hours} {minutes} {seconds} se specificati, altrimenti manda una tastiera del tempo in privato.",
-            "<code>/restrict {user} [{restrictions}]</code>: Sasha applica all'utente specificato le restrizioni specificate (se non specificate l'utente avrà di default tutte le restrizioni applicate).",
+            "<code>/temprestrict {user} [{weeks} {days} {hours} {minutes} {seconds}] [{restrictions}]</code>: Sasha applica all'utente specificato le limitazioni specificate (se non specificate l'utente avrà di default tutte le limitazioni) per {weeks} {days} {hours} {minutes} {seconds} se specificati, altrimenti manda una tastiera del tempo in privato.",
+            "<code>/restrict {user} [{restrictions}]</code>: Sasha applica all'utente specificato le limitazioni specificate (se non specificate l'utente avrà di default tutte le limitazioni applicate).",
             "<code>{restrictions}</code> può essere: <code>[send_messages] [send_media_messages] [send_other_messages] [add_web_page_previews]</code>.",
-            "<code>/unrestrict {user}</code>: Sasha rimuove le restrizioni dell'utente specificato.",
-            "<code>/[textual]restrictions {user}</code>: Sasha manda le restrizioni dell'utente specificato.",
+            "<code>/unrestrict {user}</code>: Sasha rimuove le limitazioni dell'utente specificato.",
+            "<code>/[textual]restrictions {user}</code>: Sasha manda le limitazioni dell'utente specificato.",
             "<code>/kick {user} [{reason}]</code>: Sasha kicka l'utente specificato.",
             "<code>/tempban {user} [{weeks} {days} {hours} {minutes} {seconds}] [{reason}]</code>: Sasha banna l'utente specificato per {weeks} {days} {hours} {minutes} {seconds} se specificati, altrimenti manda una tastiera del tempo in privato.",
             "<code>/ban {user} [{reason}]</code>: Sasha banna l'utente specificato e lo kicka, se tentasse di rientrare verrebbe nuovamente kickato.",
