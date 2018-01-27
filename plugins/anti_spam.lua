@@ -221,17 +221,19 @@ local function pre_process(msg)
                     -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
+                        local restrictedFlag = false
                         if not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             io.popen('lua timework.lua "restrictuser" "1" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for possible shitstorm")
                             cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                            restrictedFlag = true
                         end
                         local text = ''
                         if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             text = text .. tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                         end
                         if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            if cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            if restrictedFlag then
                                 sendMessage(msg.chat.id, text .. ' #kick #restrict\n' .. langs[msg.lang].scheduledKick:gsub('X', '300') .. '\n' .. langs[msg.lang].allRestrictionsApplied)
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                                 globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
@@ -241,7 +243,7 @@ local function pre_process(msg)
                                 globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             end
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] will be kicked in 300 seconds at most for possible shitstorm")
-                        elseif cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        elseif restrictedFlag then
                             sendMessage(msg.chat.id, langs[msg.lang].allRestrictionsApplied .. ' #restrict')
                         end
                     elseif not strict then
