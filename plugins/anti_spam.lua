@@ -152,31 +152,12 @@ local function pre_process(msg)
                 end
             elseif data[tostring(msg.chat.id)] then
                 -- Ignore mods,owner and admins
-                if msg.from.is_mod then
-                    return msg
-                end
-
-                cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
-                if not msg.cb and msg.command then
-                    cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] =(cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] or 0) + 1
-                    if cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] > 4 and not cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted then
-                        -- user spammed more than 4 equal commands in one minute (it has no sense, so restrict that user for 10 minutes)
-                        cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = true
-                        sendReply(msg, langs[msg.lang].commandsFlooderRestricted)
-                        -- restrict for 10 minutes
-                        io.popen('lua timework.lua "restrictuser" "0.5" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for flooding commands")
-                    end
-                end
-
                 -- Check if flood is on or off
-                if not data[tostring(msg.chat.id)].settings.flood then
-                    return msg
-                end
                 -- Ignore whitelisted
-                if isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
+                if msg.from.is_mod or not data[tostring(msg.chat.id)].settings.flood or isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
                     return msg
                 end
+                cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
                 local NUM_MSG_MAX = 5
                 local strict = false
                 if data[tostring(msg.chat.id)] then
@@ -191,6 +172,7 @@ local function pre_process(msg)
                     end
                 end
                 cronTable.floodKicks[tostring(msg.chat.id)] = cronTable.floodKicks[tostring(msg.chat.id)] or 0
+                -- ANTI FLOOD
                 if usermsgs >= NUM_MSG_MAX and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                     local text = ''
                     if string.match(getWarn(msg.chat.id), "%d+") then
@@ -233,9 +215,10 @@ local function pre_process(msg)
                     end
                     cronTable.floodKicks[tostring(msg.chat.id)] = cronTable.floodKicks[tostring(msg.chat.id)] + 1
                 end
-                -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
+                -- ANTI SHITSTORM
                 local shitstormAlarm = false
                 if cronTable.floodKicks[tostring(msg.chat.id)] >= 4 or cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
+                    -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         if not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
@@ -267,6 +250,19 @@ local function pre_process(msg)
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                     end
                 end
+                -- ANTI COMMANDSFLOOD
+                if not msg.cb and msg.command then
+                    cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] =(cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] or 0) + 1
+                    if cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] > 4 and not cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted and not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        -- user spammed more than 4 equal commands in one minute (it has no sense, so restrict that user for 10 minutes) and not restricted
+                        cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = true
+                        sendReply(msg, langs[msg.lang].commandsFlooderRestricted)
+                        -- restrict for 10 minutes
+                        io.popen('lua timework.lua "restrictuser" "10" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for flooding commands")
+                    end
+                end
+                -- CONTACT ADMINS
                 if shitstormAlarm and not cronTable.modsContacted[tostring(msg.chat.id)] then
                     cronTable.modsContacted[tostring(msg.chat.id)] = true
                     local hashtag = '#alarm' .. tostring(msg.message_id)
