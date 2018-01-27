@@ -421,7 +421,7 @@ local function run(msg, matches)
                         end
                     elseif matches[4] == 'DONE' then
                         if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
-                            local obj_user = getChat('@' ..(string.match(matches[5], '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(matches[5])
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if not cronTable.keyboardActions[tostring(matches[6])] then
