@@ -888,7 +888,17 @@ local function run(msg, matches)
                 if delAll[tostring(msg.chat.id)] then
                     if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
-                            if delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from > 70 and not msg.from.is_owner then
+                            if delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from > 70 and msg.from.is_owner then
+                                mystat('/delall')
+                                for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
+                                    local rndtime = math.random(1, 15)
+                                    io.popen('lua timework.lua "deletemessage" "' .. rndtime .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
+                                end
+                                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
+                                local message_id = sendReply(msg, langs[msg.lang].deletingMessages).result.message_id
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                            elseif delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from <= 70 then
                                 mystat('/delall')
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
                                     local rndtime = math.random(1, 15)
