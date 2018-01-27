@@ -1022,6 +1022,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == 'temprestrict' then
                 if msg.from.is_mod then
+                    restrictionsTable[tostring(msg.chat.id)] = restrictionsTable[tostring(msg.chat.id)] or { }
                     mystat('/restrict')
                     local restrictions = clone_table(default_restrictions)
                     for k, v in pairs(restrictions) do
