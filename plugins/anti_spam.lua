@@ -159,7 +159,7 @@ local function pre_process(msg)
                 cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
                 if not msg.cb and msg.command then
                     cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] =(cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] or 0) + 1
-                    if cronTable.commandsHashes[tostring(msg.chat.id)][tostring(hash)] > 4 and not cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted then
+                    if cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] > 4 and not cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted then
                         -- user spammed more than 4 equal commands in one minute (it has no sense, so restrict that user for 10 minutes)
                         cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = true
                         sendReply(msg.chat.id, langs[msg.lang].commandsFlooderRestricted)
