@@ -45,7 +45,7 @@ function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, pathString)
                             end
                         else
-                            local folder = path .. '"' .. matches[3] .. '"/'
+                            local folder = path .. '' .. matches[3] .. '/'
                             pathString = langs[msg.lang].youAreHere .. folder
                             answerCallbackQuery(msg.cb_id, pathString)
                             redis:set('api:path', folder)
@@ -64,7 +64,16 @@ function run(msg, matches)
                 return
             end
             if matches[1]:lower() == "filemanager" then
-                return sendKeyboard(msg.from.id, "@AISASHABOT FILEMANAGER TESTING KEYBOARD", keyboard_filemanager(path))
+                if sendKeyboard(msg.from.id, "@AISASHABOT FILEMANAGER TESTING KEYBOARD", keyboard_filemanager(path)) then
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        return
+                    end
+                else
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
             end
             if matches[1]:lower() == 'folder' or matches[1]:lower() == 'path' then
                 mystat('/folder')
