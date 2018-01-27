@@ -257,14 +257,26 @@ local function pre_process(msg)
                     local attentionText = langs[msg.lang].possibleShitstorm .. chat_name .. '\n' ..
                     'HASHTAG: ' .. hashtag
                     local already_contacted = { }
-                    already_contacted[tonumber(bot.id)] = bot.id
-                    already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
+                    already_contacted[tostring(bot.id)] = bot.id
+                    already_contacted[tostring(bot.userVersion.id)] = bot.userVersion.id
                     local cant_contact = ''
+                    for k, v in pairs(config.sudo_users) do
+                        if not already_contacted[tostring(v.id)] then
+                            already_contacted[tostring(v.id)] = v.id
+                            if sendChatAction(v.id, 'typing', true) then
+                                sendMessage(v.id, attentionText, 'html')
+                            else
+                                cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
+                            end
+                        end
+                    end
+
+
                     local list = getChatAdministrators(msg.chat.id)
                     if list then
                         for i, admin in pairs(list.result) do
-                            if not already_contacted[tonumber(admin.user.id)] then
-                                already_contacted[tonumber(admin.user.id)] = admin.user.id
+                            if not already_contacted[tostring(admin.user.id)] then
+                                already_contacted[tostring(admin.user.id)] = admin.user.id
                                 if sendChatAction(admin.user.id, 'typing', true) then
                                     sendMessage(admin.user.id, attentionText, 'html')
                                 else
@@ -277,8 +289,8 @@ local function pre_process(msg)
                     -- owner
                     local owner = data[tostring(msg.chat.id)]['set_owner']
                     if owner then
-                        if not already_contacted[tonumber(owner)] then
-                            already_contacted[tonumber(owner)] = owner
+                        if not already_contacted[tostring(owner)] then
+                            already_contacted[tostring(owner)] = owner
                             if sendChatAction(owner, 'typing', true) then
                                 sendMessage(owner, attentionText, 'html')
                             else
@@ -290,8 +302,8 @@ local function pre_process(msg)
                     -- determine if table is empty
                     if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
                         for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                            if not already_contacted[tonumber(k)] then
-                                already_contacted[tonumber(k)] = k
+                            if not already_contacted[tostring(k)] then
+                                already_contacted[tostring(k)] = k
                                 if sendChatAction(k, 'typing', true) then
                                     sendMessage(k, attentionText, 'html')
                                 else

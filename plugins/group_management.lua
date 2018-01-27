@@ -537,14 +537,14 @@ local function run(msg, matches)
                 sendMessage(msg.chat.id, hashtag)
 
                 local already_contacted = { }
-                already_contacted[tonumber(bot.id)] = bot.id
-                already_contacted[tonumber(bot.userVersion.id)] = bot.userVersion.id
+                already_contacted[tostring(bot.id)] = bot.id
+                already_contacted[tostring(bot.userVersion.id)] = bot.userVersion.id
                 local cant_contact = ''
                 local list = getChatAdministrators(msg.chat.id)
                 if list then
                     for i, admin in pairs(list.result) do
-                        if not already_contacted[tonumber(admin.user.id)] then
-                            already_contacted[tonumber(admin.user.id)] = admin.user.id
+                        if not already_contacted[tostring(admin.user.id)] then
+                            already_contacted[tostring(admin.user.id)] = admin.user.id
                             if sendChatAction(admin.user.id, 'typing', true) then
                                 if msg.reply then
                                     forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
@@ -560,8 +560,8 @@ local function run(msg, matches)
                 -- owner
                 local owner = data[tostring(msg.chat.id)]['set_owner']
                 if owner then
-                    if not already_contacted[tonumber(owner)] then
-                        already_contacted[tonumber(owner)] = owner
+                    if not already_contacted[tostring(owner)] then
+                        already_contacted[tostring(owner)] = owner
                         if sendChatAction(owner, 'typing', true) then
                             if msg.reply then
                                 forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
@@ -579,8 +579,8 @@ local function run(msg, matches)
                     return
                 else
                     for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                        if not already_contacted[tonumber(k)] then
-                            already_contacted[tonumber(k)] = k
+                        if not already_contacted[tostring(k)] then
+                            already_contacted[tostring(k)] = k
                             if sendChatAction(k, 'typing', true) then
                                 if msg.reply then
                                     forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
