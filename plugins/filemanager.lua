@@ -14,8 +14,10 @@ function run(msg, matches)
                     elseif matches[2] == 'PAGES' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
                     elseif matches[2] == 'PAGEMINUS' then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                         editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 2) -1))
                     elseif matches[2] == 'PAGEPLUS' then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                         editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 0) + 1))
                     elseif matches[2] == 'CD' then
                         if matches[3] == '.' then

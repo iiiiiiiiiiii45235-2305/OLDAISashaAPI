@@ -400,8 +400,10 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
                 elseif matches[2] == 'PAGEMINUS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) -1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 2) -1), 'html')
                 elseif matches[2] == 'PAGEPLUS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 0) + 1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 0) + 1), 'html')
                 end
                 return

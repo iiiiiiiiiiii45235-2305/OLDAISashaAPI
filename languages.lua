@@ -261,6 +261,7 @@ return {
         messageTooLong = "Messaggio troppo lungo, questo è un file con il testo che mi hai richiesto.",
         chatWillBeRemoved = "Mi hai rimosso dal tuo gruppo, i relativi dati saranno essere cancellati a breve.",
         uselessButton = "Tasto inutile.",
+        turningPage = "Sto girando la pagina...",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "Sei stato promosso ad admin in ",
@@ -1660,6 +1661,7 @@ return {
         messageTooLong = "Message too long, this is a file that includes the text that you needed.",
         chatWillBeRemoved = "You removed me from your group, those data will be removed soon.",
         uselessButton = "Useless button.",
+        turningPage = "I'm turning the page...",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "You have been promoted to admin in ",

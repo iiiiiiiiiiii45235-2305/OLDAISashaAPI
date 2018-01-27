@@ -156,13 +156,16 @@ local function run(msg, matches)
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
             elseif matches[2] == 'PAGEMINUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) -1), 'html')
             elseif matches[2] == 'PAGEPLUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + 1), 'html')
             elseif matches[2] == 'BACKFAQ' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
             elseif matches[2] == 'FAQ' then
+                answerCallbackQuery(msg.cb_id, 'FAQ' .. matches[3])
                 if langs[msg.lang].faq[tonumber(matches[3])] then
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
                 else
@@ -170,6 +173,7 @@ local function run(msg, matches)
                 end
                 mystat(matches[1] .. matches[2] .. matches[3])
             else
+                answerCallbackQuery(msg.cb_id, matches[2]:lower())
                 local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
                 if temp ~= nil then
                     if temp ~= '' then
