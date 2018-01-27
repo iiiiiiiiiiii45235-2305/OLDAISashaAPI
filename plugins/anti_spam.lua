@@ -273,6 +273,7 @@ local function pre_process(msg)
                     end
                     local attentionText = langs[msg.lang].possibleShitstorm .. chat_name .. '\n' ..
                     'HASHTAG: ' .. hashtag
+                    attentionText = attentionText:gsub('"', '\\"')
                     local already_contacted = { }
                     already_contacted[tostring(bot.id)] = bot.id
                     already_contacted[tostring(bot.userVersion.id)] = bot.userVersion.id
