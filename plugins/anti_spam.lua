@@ -281,7 +281,7 @@ local function pre_process(msg)
                         if not already_contacted[tostring(v.id)] then
                             already_contacted[tostring(v.id)] = v.id
                             if sendChatAction(v.id, 'typing', true) then
-                                sendMessage(v.id, attentionText, 'html')
+                                io.popen('lua timework.lua "sendmessage" "0" "' .. v.id .. '" "html" "' .. attentionText .. '"')
                             else
                                 cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
                             end
@@ -295,7 +295,7 @@ local function pre_process(msg)
                             if not already_contacted[tostring(admin.user.id)] then
                                 already_contacted[tostring(admin.user.id)] = admin.user.id
                                 if sendChatAction(admin.user.id, 'typing', true) then
-                                    sendMessage(admin.user.id, attentionText, 'html')
+                                    io.popen('lua timework.lua "sendmessage" "0" "' .. admin.user.id .. '" "html" "' .. attentionText .. '"')
                                 else
                                     cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                                 end
@@ -309,7 +309,7 @@ local function pre_process(msg)
                         if not already_contacted[tostring(owner)] then
                             already_contacted[tostring(owner)] = owner
                             if sendChatAction(owner, 'typing', true) then
-                                sendMessage(owner, attentionText, 'html')
+                                io.popen('lua timework.lua "sendmessage" "0" "' .. owner .. '" "html" "' .. attentionText .. '"')
                             else
                                 cant_contact = cant_contact .. owner .. '\n'
                             end
@@ -322,7 +322,7 @@ local function pre_process(msg)
                             if not already_contacted[tostring(k)] then
                                 already_contacted[tostring(k)] = k
                                 if sendChatAction(k, 'typing', true) then
-                                    sendMessage(k, attentionText, 'html')
+                                    io.popen('lua timework.lua "sendmessage" "0" "' .. k .. '" "html" "' .. attentionText .. '"')
                                 else
                                     cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                                 end
