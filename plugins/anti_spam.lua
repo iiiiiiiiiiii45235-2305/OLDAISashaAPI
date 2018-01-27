@@ -288,7 +288,6 @@ local function pre_process(msg)
                         end
                     end
 
-
                     local list = getChatAdministrators(msg.chat.id)
                     if list then
                         for i, admin in pairs(list.result) do
