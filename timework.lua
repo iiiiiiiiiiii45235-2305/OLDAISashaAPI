@@ -8,9 +8,9 @@ if sleep_time then
     end
 end
 if action == 'sendmessage' then
-    action, sleep_time, chat_id, text = ...
+    action, sleep_time, chat_id, parse_mode, text = ...
     text = text:gsub('\\"', '"')
-    sendMessage(chat_id, text)
+    sendMessage(chat_id, text, parse_mode)
 elseif action == 'forwardmessage' then
     action, sleep_time, chat_id, message_id = ...
     forwardMessage(chat_id, chat_id, message_id)
