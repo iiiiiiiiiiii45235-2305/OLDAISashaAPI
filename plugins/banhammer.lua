@@ -102,8 +102,9 @@ local function restrictUser(chat_id, user, restrictions, until_date, no_notice)
                 langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
             end
         end
+        return true
     else
-        return langs[lang].checkMyPermissions
+        return false
     end
 end
 
@@ -120,8 +121,9 @@ local function unrestrictUser(chat_id, user, no_notice)
                 langs[lang].restrictionAddWebPagePreviews .. tostring(default_restrictions.can_add_web_page_previews))
             end
         end
+        return true
     else
-        return langs[lang].checkMyPermissions
+        return false
     end
 end
 
@@ -441,7 +443,7 @@ local function run(msg, matches)
                                             text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                         end
                                     else
-                                        text = langs[msg.lang].errorTryAgain
+                                        text = langs[msg.lang].checkMyPermissions
                                     end
                                     answerCallbackQuery(msg.cb_id, text, false)
                                     restrictionsTable[tostring(matches[6])][tostring(obj_user.id)] = nil
@@ -1061,7 +1063,7 @@ local function run(msg, matches)
                                                     text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                                 end
                                             else
-                                                text = langs[msg.lang].errorTryAgain
+                                                text = langs[lang].checkMyPermissions
                                             end
                                         else
                                             if matches[3] then
@@ -1109,7 +1111,7 @@ local function run(msg, matches)
                                             text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                         end
                                     else
-                                        text = langs[msg.lang].errorTryAgain
+                                        text = langs[msg.lang].checkMyPermissions
                                     end
                                 else
                                     if matches[2] then
@@ -1152,7 +1154,7 @@ local function run(msg, matches)
                                         text = text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                     end
                                 else
-                                    text = langs[msg.lang].errorTryAgain
+                                    text = langs[msg.lang].checkMyPermissions
                                 end
                             else
                                 if matches[2] then
@@ -1200,7 +1202,7 @@ local function run(msg, matches)
                                                     text = text .. langs[msg.lang].denied .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                                 end
                                             else
-                                                text = langs[msg.lang].errorTryAgain
+                                                text = langs[msg.lang].checkMyPermissions
                                             end
                                         end
                                     end
@@ -1225,7 +1227,7 @@ local function run(msg, matches)
                                             text = text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #temprestrict ' .. langs[msg.lang].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + time)
                                         end
                                     else
-                                        text = langs[msg.lang].errorTryAgain
+                                        text = langs[msg.lang].checkMyPermissions
                                     end
                                 end
                             else
@@ -1325,7 +1327,7 @@ local function run(msg, matches)
                                         if restrictUser(msg.chat.id, msg.reply_to_message.forward_from, restrictions) then
                                             return text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                         else
-                                            return langs[msg.lang].errorTryAgain
+                                            return langs[msg.lang].checkMyPermissions
                                         end
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -1345,7 +1347,7 @@ local function run(msg, matches)
                                 if restrictUser(msg.chat.id, msg.reply_to_message.from, restrictions) then
                                     return text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                 else
-                                    return langs[msg.lang].errorTryAgain
+                                    return langs[msg.lang].checkMyPermissions
                                 end
                             end
                         else
@@ -1360,7 +1362,7 @@ local function run(msg, matches)
                             if restrictUser(msg.chat.id, msg.reply_to_message.from, restrictions) then
                                 return text .. langs[msg.lang].denied .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #restrict'
                             else
-                                return langs[msg.lang].errorTryAgain
+                                return langs[msg.lang].checkMyPermissions
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
@@ -1380,7 +1382,7 @@ local function run(msg, matches)
                                         if restrictUser(msg.chat.id, msg.entities[k].user, restrictions) then
                                             return text .. langs[msg.lang].denied .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                         else
-                                            return langs[msg.lang].errorTryAgain
+                                            return langs[msg.lang].checkMyPermissions
                                         end
                                     end
                                 end
@@ -1402,7 +1404,7 @@ local function run(msg, matches)
                                     if restrictUser(msg.chat.id, obj_user, restrictions) then
                                         return text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                     else
-                                        return langs[msg.lang].errorTryAgain
+                                        return langs[msg.lang].checkMyPermissions
                                     end
                                 else
                                     if matches[3] then
@@ -1416,7 +1418,7 @@ local function run(msg, matches)
                                     if restrictUser(msg.chat.id, obj_user, restrictions) then
                                         return text .. langs[msg.lang].denied .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict'
                                     else
-                                        return langs[msg.lang].errorTryAgain
+                                        return langs[msg.lang].checkMyPermissions
                                     end
                                 end
                             end
@@ -1440,7 +1442,7 @@ local function run(msg, matches)
                                         if unrestrictChatMember(msg.chat.id, msg.reply_to_message.forward_from.id) then
                                             return langs[msg.lang].userUnrestricted .. '\n#user' .. msg.reply_to_message.forward_from.id .. ' #executer' .. msg.from.id .. ' #unrestrict'
                                         else
-                                            return langs[msg.lang].errorTryAgain
+                                            return langs[msg.lang].checkMyPermissions
                                         end
                                     else
                                         return langs[msg.lang].cantDoThisToChat
@@ -1452,14 +1454,14 @@ local function run(msg, matches)
                                 if unrestrictChatMember(msg.chat.id, msg.reply_to_message.from.id) then
                                     return langs[msg.lang].userUnrestricted .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #unrestrict'
                                 else
-                                    return langs[msg.lang].errorTryAgain
+                                    return langs[msg.lang].checkMyPermissions
                                 end
                             end
                         else
                             if unrestrictChatMember(msg.chat.id, msg.reply_to_message.from.id) then
                                 return langs[msg.lang].userUnrestricted .. '\n#user' .. msg.reply_to_message.from.id .. ' #executer' .. msg.from.id .. ' #unrestrict'
                             else
-                                return langs[msg.lang].errorTryAgain
+                                return langs[msg.lang].checkMyPermissions
                             end
                         end
                     elseif matches[2] and matches[2] ~= '' then
@@ -1471,7 +1473,7 @@ local function run(msg, matches)
                                         if unrestrictChatMember(msg.chat.id, msg.entities[k].user.id) then
                                             return langs[msg.lang].userUnrestricted .. '\n#user' .. msg.entities[k].user.id .. ' #executer' .. msg.from.id .. ' #unrestrict'
                                         else
-                                            return langs[msg.lang].errorTryAgain
+                                            return langs[msg.lang].checkMyPermissions
                                         end
                                     end
                                 end
@@ -1482,7 +1484,7 @@ local function run(msg, matches)
                             if unrestrictChatMember(msg.chat.id, matches[2]) then
                                 return langs[msg.lang].userUnrestricted .. '\n#user' .. matches[2] .. ' #executer' .. msg.from.id .. ' #unrestrict'
                             else
-                                return langs[msg.lang].errorTryAgain
+                                return langs[msg.lang].checkMyPermissions
                             end
                         else
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
@@ -1491,7 +1493,7 @@ local function run(msg, matches)
                                     if unrestrictChatMember(msg.chat.id, obj_user.id) then
                                         return langs[msg.lang].userUnrestricted .. '\n#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #unrestrict'
                                     else
-                                        return langs[msg.lang].errorTryAgain
+                                        return langs[msg.lang].checkMyPermissions
                                     end
                                 end
                             else
