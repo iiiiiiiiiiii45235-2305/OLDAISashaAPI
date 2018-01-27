@@ -355,6 +355,7 @@ local function cron()
         floodKicks = { },
         modsContacted = { },
         msgsHashes = { },
+        commandsHashes = { },
         restrictedUsers = { }
     }
 end
