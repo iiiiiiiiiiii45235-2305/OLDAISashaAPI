@@ -163,8 +163,8 @@ local function pre_process(msg)
                         -- user spammed more than 4 equal commands in one minute (it has no sense, so restrict that user for 10 minutes)
                         cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = true
                         sendReply(msg, langs[msg.lang].commandsFlooderRestricted)
-                        -- restrict after 10 seconds for 10 minutes
-                        io.popen('lua timework.lua "restrictuser" "10" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
+                        -- restrict for 10 minutes
+                        io.popen('lua timework.lua "restrictuser" "0.5" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for flooding commands")
                     end
                 end

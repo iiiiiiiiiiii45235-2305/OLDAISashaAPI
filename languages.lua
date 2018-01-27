@@ -449,7 +449,7 @@ return {
         possibleShitstorm = "Attenzione, possibile shitstorm in corso!\nIl blocco dello spam è stato abilitato per prevenzione, per disabilitarlo usare \"/unlock spam\" nella chat.\n",
         scheduledKick = "L'utente verrà rimosso tra X secondi al massimo.",
         allRestrictionsApplied = "All'utente sono state applicate tutte le restrizioni disponibili.",
-        commandsFlooderRestricted = "Stai spammando lo stesso comando troppe volte, tra 10 secondi ti saranno applicate tutte le restrizioni disponibili per 10 minuti, comincia ad implorare pietà.",
+        commandsFlooderRestricted = "Stai spammando lo stesso comando troppe volte, ti saranno applicate tutte le restrizioni disponibili per 10 minuti, comincia ad implorare pietà.",
 
         -- banhammer.lua --
         noUsernameFound = "Non trovo nessun utente con quell'username.",
@@ -1858,7 +1858,7 @@ return {
         possibleShitstorm = "Attention, possible ongoing shistorm!\nLock spam has been enabled for security reasons, to disable it use \"/unlock spam\" in the chat.\n",
         scheduledKick = "User will be kicked in X seconds maximum.",
         allRestrictionsApplied = "All available restrictions have been applied to the user.",
-        commandsFlooderRestricted = "You are flooding the same command too many times, you will be restricted in 10 seconds for 10 minutes, start begging for mercy.",
+        commandsFlooderRestricted = "You are flooding the same command too many times, you will be restricted for 10 minutes, start begging for mercy.",
 
         -- banhammer.lua --
         noUsernameFound = "Can't find a user with that username.",
