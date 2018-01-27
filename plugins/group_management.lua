@@ -920,7 +920,6 @@ local function run(msg, matches)
                 else
                     return langs[msg.lang].errorDelall
                 end
-                return langs[msg.lang].ok
             else
                 return langs[msg.lang].require_mod
             end
