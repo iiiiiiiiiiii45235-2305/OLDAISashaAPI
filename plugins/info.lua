@@ -330,10 +330,10 @@ local function run(msg, matches)
                             end
                             local text = ''
                             if link then
-                                if not invitedTable[tostring(msg.chat.id)][tostring(matches[3])] then
+                                if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(matches[3])] then
                                     if not userInChat(matches[4], matches[3], true) then
                                         if sendMessage(matches[3], link, 'html') then
-                                            invitedTable[tostring(msg.chat.id)][tostring(matches[3])] = true
+                                            globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(matches[3])] = true
                                             text = langs[msg.lang].ok
                                         else
                                             text = langs[msg.lang].noObjectInvite

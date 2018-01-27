@@ -483,10 +483,10 @@ local function run(msg, matches)
                             if matches[2]:lower() == 'from' then
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
-                                        if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] or is_admin(msg) then
+                                        if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] or is_admin(msg) then
                                             if not userInChat(msg.chat.id, msg.reply_to_message.forward_from.id, true) then
                                                 if sendMessage(msg.reply_to_message.forward_from.id, link, 'html') then
-                                                    invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = true
+                                                    globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = true
                                                     return langs[msg.lang].ok
                                                 else
                                                     return langs[msg.lang].noObjectInvite
@@ -504,10 +504,10 @@ local function run(msg, matches)
                                     return langs[msg.lang].errorNoForward
                                 end
                             else
-                                if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
+                                if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                            invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
+                                            globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
                                             return langs[msg.lang].ok
                                         else
                                             return langs[msg.lang].noObjectInvite
@@ -522,10 +522,10 @@ local function run(msg, matches)
                         else
                             if msg.reply_to_message.service then
                                 if msg.reply_to_message.service_type == 'chat_del_user' then
-                                    if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.removed.id)] or is_admin(msg) then
+                                    if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.removed.id)] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.removed.id, true) then
                                             if sendMessage(msg.reply_to_message.removed.id, link, 'html') then
-                                                invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.removed.id)] = true
+                                                globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.removed.id)] = true
                                                 return langs[msg.lang].ok
                                             else
                                                 return langs[msg.lang].noObjectInvite
@@ -537,10 +537,10 @@ local function run(msg, matches)
                                         return langs[msg.lang].userAlreadyInvited
                                     end
                                 else
-                                    if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
+                                    if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                             if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                                invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
+                                                globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
                                                 return langs[msg.lang].ok
                                             else
                                                 return langs[msg.lang].noObjectInvite
@@ -553,10 +553,10 @@ local function run(msg, matches)
                                     end
                                 end
                             else
-                                if not invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
+                                if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] or is_admin(msg) then
                                     if not userInChat(msg.chat.id, msg.reply_to_message.from.id, true) then
                                         if sendMessage(msg.reply_to_message.from.id, link, 'html') then
-                                            invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
+                                            globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = true
                                             return langs[msg.lang].ok
                                         else
                                             return langs[msg.lang].noObjectInvite
@@ -575,10 +575,10 @@ local function run(msg, matches)
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        if not invitedTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] or is_admin(msg) then
+                                        if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] or is_admin(msg) then
                                             if not userInChat(msg.chat.id, msg.entities[k].user.id, true) then
                                                 if sendMessage(msg.entities[k].user.id, link, 'html') then
-                                                    invitedTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = true
+                                                    globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = true
                                                     return langs[msg.lang].ok
                                                 else
                                                     return langs[msg.lang].noObjectInvite
@@ -595,10 +595,10 @@ local function run(msg, matches)
                         end
                         matches[2] = tostring(matches[2]):gsub(' ', '')
                         if string.match(matches[2], '^%d+$') then
-                            if not invitedTable[tostring(msg.chat.id)][tostring(matches[2])] or is_admin(msg) then
+                            if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(matches[2])] or is_admin(msg) then
                                 if not userInChat(msg.chat.id, matches[2], true) then
                                     if sendMessage(matches[2], link, 'html') then
-                                        invitedTable[tostring(msg.chat.id)][tostring(matches[2])] = true
+                                        globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(matches[2])] = true
                                         return langs[msg.lang].ok
                                     else
                                         return langs[msg.lang].noObjectInvite
@@ -613,10 +613,10 @@ local function run(msg, matches)
                             local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if not invitedTable[tostring(msg.chat.id)][tostring(obj_user.id)] or is_admin(msg) then
+                                    if not globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(obj_user.id)] or is_admin(msg) then
                                         if not userInChat(msg.chat.id, obj_user.id, true) then
                                             if sendMessage(obj_user.id, link, 'html') then
-                                                invitedTable[tostring(msg.chat.id)][tostring(obj_user.id)] = true
+                                                globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(obj_user.id)] = true
                                                 return langs[msg.lang].ok
                                             else
                                                 return langs[msg.lang].noObjectInvite
@@ -2446,7 +2446,7 @@ local function pre_process(msg)
                     if #msg.added >= 5 then
                         if not is_owner(msg) then
                             inviteFlood = true
-                            if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                                 text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteFlood) .. '\n' ..
                                 gbanUser(msg.from.id, msg.lang) .. '\n'
                             end
@@ -2479,12 +2479,12 @@ local function pre_process(msg)
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                             local banaddredis = redis:get(banhash)
                             if banaddredis and not msg.from.is_owner then
-                                if tonumber(banaddredis) >= 4 and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                                if tonumber(banaddredis) >= 4 and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                                     text = text .. kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'
                                     -- Kick user who adds ban ppl more than 3 times
                                 end
                                 if tonumber(banaddredis) >= 8 then
-                                    if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                                    if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                                         text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'
                                     end
                                     -- Ban user who adds ban ppl more than 7 times
@@ -2516,7 +2516,7 @@ local function pre_process(msg)
                         ban = true
                         reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
                     end
-                    if ban and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                    if ban and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
                         -- Save to logs
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
@@ -2540,7 +2540,7 @@ local function pre_process(msg)
                 ban = true
                 reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
             end
-            if ban and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+            if ban and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                 -- Check it with redis
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking !")
                 -- Save to logs

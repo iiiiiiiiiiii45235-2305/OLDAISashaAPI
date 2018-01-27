@@ -85,7 +85,7 @@ local function pre_process(msg)
                         else
                             io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         end
-                        if data[tostring(msg.chat.id)].settings.lock_delword and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if data[tostring(msg.chat.id)].settings.lock_delword and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             if not data[tostring(msg.chat.id)].settings.strict then
                                 sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
                             else

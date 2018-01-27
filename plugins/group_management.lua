@@ -1731,7 +1731,7 @@ local function pre_process(msg)
                 if msg.service_type == 'chat_add_user_link' then
                     if msg.from.id ~= bot.userVersion.id then
                         -- if not admin and not bot then
-                        if not is_admin(msg) and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if not is_admin(msg) and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteRealm))
                         end
                     end
@@ -1740,7 +1740,7 @@ local function pre_process(msg)
                     for k, v in pairs(msg.added) do
                         if v.id ~= bot.userVersion.id then
                             -- if not admin and not bot then
-                            if not is_admin(msg) and not kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
+                            if not is_admin(msg) and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
                                 text = text .. banUser(bot.id, v.id, msg.chat.id) .. '\n'
                             end
                         end

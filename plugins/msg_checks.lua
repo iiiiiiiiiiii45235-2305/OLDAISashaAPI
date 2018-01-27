@@ -98,7 +98,7 @@ end
 
 local function action(msg, strict, reason)
     deleteMessage(msg.chat.id, msg.message_id)
-    if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+    if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
         if not strict then
             sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
         else
@@ -419,7 +419,7 @@ local function check_msg(msg, settings, pre_process_function)
                     if pre_process_function then
                         print('name spam found')
                         deleteMessage(msg.chat.id, msg.message_id)
-                        if strict and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                         end
                         return nil
@@ -434,7 +434,7 @@ local function check_msg(msg, settings, pre_process_function)
                     if pre_process_function then
                         print('rtl name found')
                         deleteMessage(msg.chat.id, msg.message_id)
-                        if strict and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                         end
                         return nil
@@ -447,7 +447,7 @@ local function check_msg(msg, settings, pre_process_function)
                 if pre_process_function then
                     print('member locked')
                     deleteMessage(msg.chat.id, msg.message_id)
-                    if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                    if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                     end
                     return nil
@@ -463,7 +463,7 @@ local function check_msg(msg, settings, pre_process_function)
                         if pre_process_function then
                             print('name spam found')
                             deleteMessage(msg.chat.id, msg.message_id)
-                            if strict and not kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
+                            if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
                                 sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
                             end
                             return nil
@@ -478,7 +478,7 @@ local function check_msg(msg, settings, pre_process_function)
                         if pre_process_function then
                             print('rtl name found')
                             deleteMessage(msg.chat.id, msg.message_id)
-                            if strict and not kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
+                            if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
                                 sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
                             end
                             return nil
@@ -491,10 +491,10 @@ local function check_msg(msg, settings, pre_process_function)
                     if pre_process_function then
                         print('member locked')
                         deleteMessage(msg.chat.id, msg.message_id)
-                        if not kickedTable[tostring(msg.chat.id)][tostring(msg.adder.id)] then
+                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.adder.id)] then
                             sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                         end
-                        if not kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
+                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
                             sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
                         end
                         return nil
@@ -506,7 +506,7 @@ local function check_msg(msg, settings, pre_process_function)
                     if v.is_bot then
                         if pre_process_function then
                             print('bots locked')
-                            if not kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
+                            if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
                                 sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
                             end
                             return nil
@@ -522,7 +522,7 @@ local function check_msg(msg, settings, pre_process_function)
                 if not is_mod2(msg.removed.id, msg.chat.id) then
                     if pre_process_function then
                         print('leave locked')
-                        if not kickedTable[tostring(msg.chat.id)][tostring(msg.removed.id)] then
+                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.removed.id)] then
                             sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id, langs[msg.lang].reasonLockLeave))
                         end
                         return nil

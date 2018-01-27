@@ -15,15 +15,19 @@ news_table = {
     tot_chats = 0,
     news = nil,
 }
--- GLOBAL CRON TABLES
--- temp table to not kick/ban the same user again and again (just once per minute)
--- kicks are tracked in the banUser and kickUser methods
-kickedTable = {
-    -- chat_id = { user_id = false/true }
-}
--- temp table to not invite the same user again and again (just once per minute or if (s)he is kicked)
-invitedTable = {
-    -- chat_id = { user_id = false/true }
+-- GLOBAL CRON TABLE
+globalCronTable = {
+    -- temp table to not kick/ban the same user again and again (just once per minute)
+    -- kicks are tracked in the banUser and kickUser methods
+    kickedTable =
+    {
+        -- chat_id = { user_id = false/true }
+    },
+    -- temp table to not invite the same user again and again (just once per minute or if (s)he is kicked)
+    invitedTable =
+    {
+        -- chat_id = { user_id = false/true }
+    }
 }
 
 -- Save the content of config to config.lua
@@ -952,17 +956,17 @@ function on_msg_receive(msg)
     msg = get_tg_rank(msg)
     tmp_msg = clone_table(msg)
     base_logging(msg)
-    kickedTable[tostring(msg.chat.id)] = kickedTable[tostring(msg.chat.id)] or { }
-    invitedTable[tostring(msg.chat.id)] = invitedTable[tostring(msg.chat.id)] or { }
+    globalCronTable.kickedTable[tostring(msg.chat.id)] = globalCronTable.kickedTable[tostring(msg.chat.id)] or { }
+    globalCronTable.invitedTable[tostring(msg.chat.id)] = globalCronTable.invitedTable[tostring(msg.chat.id)] or { }
     if msg.service then
         if msg.added then
             for k, v in pairs(msg.added) do
                 -- if kicked users are added again, remove them from kicked list
-                kickedTable[tostring(msg.chat.id)][tostring(v.id)] = false
+                globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] = false
             end
         end
         if msg.removed then
-            invitedTable[tostring(msg.chat.id)][tostring(msg.removed.id)] = false
+            globalCronTable.invitedTable[tostring(msg.chat.id)][tostring(msg.removed.id)] = false
         end
     end
     if msg_valid(msg) then
@@ -988,8 +992,10 @@ function cron_plugins()
                 end
             end
         end
-        kickedTable = { }
-        invitedTable = { }
+        globalCronTable = {
+            kickedTable = { },
+            invitedTable = { }
+        }
         -- Run cron jobs every minute.
         last_cron = last_redis_cron
     end

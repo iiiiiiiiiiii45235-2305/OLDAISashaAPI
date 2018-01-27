@@ -16,9 +16,14 @@ local cronTable = {
         -- chat_id = false/true
     },
     -- temp table for messages hashes to prevent shitstorms
-    hashes =
+    msgsHashes =
     {
         -- chat_id = { msgHash = counter }
+    },
+    -- temp table for commands hashes to avoid api limitations
+    commandsHashes =
+    {
+        -- chat_id = { user_id = { commandHash = counter } }
     },
     -- temp table to restricting an already restricted user
     restrictedUsers =
@@ -32,7 +37,10 @@ local TIME_CHECK = 2
 -- Save stats, ban user
 local function pre_process(msg)
     if msg then
-        cronTable.hashes[tostring(msg.chat.id)] = cronTable.hashes[tostring(msg.chat.id)] or { }
+        cronTable.msgsHashes[tostring(msg.chat.id)] = cronTable.msgsHashes[tostring(msg.chat.id)] or { }
+        cronTable.commandsHashes[tostring(msg.chat.id)] = cronTable.commandsHashes[tostring(msg.chat.id)] or { }
+        cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)] = cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)] or { }
+        cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted or false
         cronTable.restrictedUsers[tostring(msg.chat.id)] = cronTable.restrictedUsers[tostring(msg.chat.id)] or { }
 
         -- Ignore service msg
@@ -91,8 +99,8 @@ local function pre_process(msg)
         end
 
         if not msg.edited then
-            -- Ignore mods,owner and admins
-            if msg.from.is_mod then
+            -- Ignore admins
+            if is_admin(msg) then
                 return msg
             end
 
@@ -129,16 +137,12 @@ local function pre_process(msg)
             else
                 hash = sha2.hash256(msg.text)
             end
-            cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
 
             -- Check flood
             if msg.chat.type == 'private' then
-                if cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
-                    -- don't write two times the same thing
-                    usermsgs = 10
-                end
-                if usermsgs >= 7 then
-                    print("Pass2")
+                cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
+                if cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] > 10 or usermsgs >= 7 then
+                    print("user blocked")
                     -- Block user if spammed in private
                     blockUser(msg.from.id, msg.lang)
                     sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
@@ -147,6 +151,24 @@ local function pre_process(msg)
                     return nil
                 end
             elseif data[tostring(msg.chat.id)] then
+                -- Ignore mods,owner and admins
+                if msg.from.is_mod then
+                    return msg
+                end
+
+                cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
+                if not msg.cb and msg.command then
+                    cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] =(cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] or 0) + 1
+                    if cronTable.commandsHashes[tostring(msg.chat.id)][tostring(hash)] > 4 and not cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted then
+                        -- user spammed more than 4 equal commands in one minute (it has no sense, so restrict that user for 10 minutes)
+                        cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = true
+                        sendReply(msg.chat.id, langs[msg.lang].commandsFlooderRestricted)
+                        -- restrict after 10 seconds for 10 minutes
+                        io.popen('lua timework.lua "restrictuser" "10" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for flooding commands")
+                    end
+                end
+
                 -- Check if flood is on or off
                 if not data[tostring(msg.chat.id)].settings.flood then
                     return msg
@@ -169,7 +191,7 @@ local function pre_process(msg)
                     end
                 end
                 cronTable.floodKicks[tostring(msg.chat.id)] = cronTable.floodKicks[tostring(msg.chat.id)] or 0
-                if usermsgs >= NUM_MSG_MAX and not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                if usermsgs >= NUM_MSG_MAX and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                     local text = ''
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
@@ -213,31 +235,30 @@ local function pre_process(msg)
                 end
                 -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
                 local shitstormAlarm = false
-                if cronTable.floodKicks[tostring(msg.chat.id)] >= 4 or cronTable.hashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
+                if cronTable.floodKicks[tostring(msg.chat.id)] >= 4 or cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
-                        local var = false
                         if not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            var = restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false })
+                            io.popen('lua timework.lua "restrictuser" "1" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for possible shitstorm")
                             cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                         end
                         local text = ''
-                        if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             text = text .. tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
                         end
-                        if not kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            if var then
+                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                            if cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
                                 sendMessage(msg.chat.id, text .. ' #kick #restrict\n' .. langs[msg.lang].scheduledKick:gsub('X', '300') .. '\n' .. langs[msg.lang].allRestrictionsApplied)
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
-                                kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                                globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             else
                                 sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick:gsub('X', '10'))
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
-                                kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                                globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             end
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] will be kicked in 300 seconds at most for possible shitstorm")
-                        elseif var then
+                        elseif cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             sendMessage(msg.chat.id, langs[msg.lang].allRestrictionsApplied .. ' #restrict')
                         end
                     elseif not strict then
@@ -333,7 +354,7 @@ local function cron()
         cbWarns = { },
         floodKicks = { },
         modsContacted = { },
-        hashes = { },
+        msgsHashes = { },
         restrictedUsers = { }
     }
 end
