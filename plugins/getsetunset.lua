@@ -528,8 +528,8 @@ local function pre_process(msg)
         if vars ~= nil then
             local t = vars:split('\n')
             for i, word in pairs(t) do
-                local res, answer = pcall(check_word(msg, word:lower(), true))
-                if res and answer then
+                local answer = check_word(msg, word:lower(), true)
+                if answer then
                     if string.match(answer, '^photo') then
                         answer = answer:gsub('^photo', '')
                         local media_id = answer:match('^([^%s]+)')
@@ -597,8 +597,8 @@ local function pre_process(msg)
         if vars ~= nil then
             local t = vars:split('\n')
             for i, word in pairs(t) do
-                local res, answer = pcall(check_word(msg, word:lower(), true))
-                if res and answer then
+                local answer = check_word(msg, word:lower(), true)
+                if answer then
                     if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
                         if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
                             if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
