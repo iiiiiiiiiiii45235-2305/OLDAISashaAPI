@@ -311,6 +311,17 @@ local function run(msg, matches)
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
+                elseif matches[2] == 'PAGES' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+                elseif matches[2] == 'BACK' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                    editMessage(msg.chat.id, msg.message_id, logPages(matches[3] or 1), keyboard_log_pages(msg.chat.id, matches[3] or 1))
+                elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                    editMessage(msg.chat.id, msg.message_id, logPages(tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(msg.chat.id, tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))))
+                elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                    editMessage(msg.chat.id, msg.message_id, logPages(tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(msg.chat.id, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
                 elseif matches[2] == 'BACKSETTINGS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''
@@ -1896,6 +1907,10 @@ return {
     patterns =
     {
         "^(###cbgroup_management)(DELETE)$",
+        "^(###cbgroup_management)(PAGES)$",
+        "^(###cbgroup_management)(BACK)(%d+)$",
+        "^(###cbgroup_management)(PAGE%dMINUS)(%d+)$",
+        "^(###cbgroup_management)(PAGE%dPLUS)(%d+)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(.)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
