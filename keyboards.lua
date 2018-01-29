@@ -6,21 +6,31 @@ function add_useful_buttons(keyboard, chat_id, plugin, page, max_pages)
         rows = rows + 1
     end
     local row = rows + 1
-    local column = 1
 
     keyboard.inline_keyboard[row] = { }
     if page > 1 then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = plugin .. 'PAGE1MINUS' .. page }
-        column = column + 1
+        table.insert(keyboard.inline_keyboard[row], { text = langs[lang].previousPage, callback_data = plugin .. 'PAGE1MINUS' .. page })
     end
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = plugin .. 'BACK' .. page }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = plugin .. 'PAGES' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = plugin .. 'DELETE' }
-    column = column + 1
+    table.insert(keyboard.inline_keyboard[row], { text = langs[lang].updateKeyboard, callback_data = plugin .. 'BACK' .. page })
+    table.insert(keyboard.inline_keyboard[row], { text = page .. '/' .. max_pages, callback_data = plugin .. 'PAGES' })
+    table.insert(keyboard.inline_keyboard[row], { text = langs[lang].deleteMessage, callback_data = plugin .. 'DELETE' })
     if page < max_pages then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = plugin .. 'PAGE1PLUS' .. page }
+        table.insert(keyboard.inline_keyboard[row], { text = langs[lang].nextPage, callback_data = plugin .. 'PAGE1PLUS' .. page })
+    end
+    -- more buttons to speed things up
+    row = row + 1
+    keyboard.inline_keyboard[row] = { }
+    if max_pages > 7 and page > 7 then
+        table.insert(keyboard.inline_keyboard[row], { text = langs[lang].previousPage .. langs[lang].sevenNumber, callback_data = plugin .. 'PAGE7MINUS' .. page })
+    end
+    if max_pages > 3 and page > 3 then
+        table.insert(keyboard.inline_keyboard[row], { text = langs[lang].previousPage .. langs[lang].threeNumber, callback_data = plugin .. 'PAGE3MINUS' .. page })
+    end
+    if max_pages > 3 and page <= max_pages - 3 then
+        table.insert(keyboard.inline_keyboard[row], { text = langs[lang].threeNumber .. langs[lang].nextPage, callback_data = plugin .. 'PAGE3PLUS' .. page })
+    end
+    if max_pages > 7 and page <= max_pages - 7 then
+        table.insert(keyboard.inline_keyboard[row], { text = langs[lang].sevenNumber .. langs[lang].nextPage, callback_data = plugin .. 'PAGE7PLUS' .. page })
     end
     return keyboard
 end
@@ -494,19 +504,16 @@ function keyboard_log_pages(chat_id, page)
             v.callback_data = 'group_managementPAGE1PLUS' .. page .. chat_id
         end
     end
-    keyboard.inline_keyboard[2] = { }
-    -- more buttons to speed things up
-    if max_pages > 7 and page > 7 then
-        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].previousPage .. langs[lang].sevenNumber, callback_data = 'group_managementPAGE7MINUS' .. page .. chat_id })
-    end
-    if max_pages > 3 and page > 3 then
-        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].previousPage .. langs[lang].threeNumber, callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id })
-    end
-    if max_pages > 3 and page <= max_pages - 3 then
-        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].threeNumber .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page .. chat_id })
-    end
-    if max_pages > 7 and page <= max_pages - 7 then
-        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].sevenNumber .. langs[lang].nextPage, callback_data = 'group_managementPAGE7PLUS' .. page .. chat_id })
+    for k, v in pairs(keyboard.inline_keyboard[2]) do
+        if v.text == langs[lang].previousPage .. langs[lang].sevenNumber then
+            v.callback_data = 'group_managementPAGE7MINUS' .. page .. chat_id
+        elseif v.text == langs[lang].previousPage .. langs[lang].threeNumber then
+            v.callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id
+        elseif v.text == langs[lang].threeNumber .. langs[lang].nextPage then
+            v.callback_data = 'group_managementPAGE3PLUS' .. page .. chat_id
+        elseif v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
+            v.callback_data = 'group_managementPAGE7PLUS' .. page .. chat_id
+        end
     end
     return keyboard
 end
