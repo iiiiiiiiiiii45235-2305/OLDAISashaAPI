@@ -100,7 +100,14 @@ local function run(msg, matches)
                                 elseif matches[4]:starts('-') then
                                     tmp.chat.type = 'group'
                                 end
-                                local text = setunset_delword(tmp, delword_table[tostring(msg.from.id)], time)
+                                local text = ''
+                                if pcall( function()
+                                        string.match(delword_table[tostring(msg.from.id)], delword_table[tostring(msg.from.id)])
+                                    end ) then
+                                    text = setunset_delword(tmp, delword_table[tostring(msg.from.id)], time)
+                                else
+                                    text = langs[msg.lang].errorTryAgain
+                                end
                                 answerCallbackQuery(msg.cb_id, text, false)
                                 delword_table[tostring(msg.from.id)] = nil
                                 sendMessage(matches[4], text)

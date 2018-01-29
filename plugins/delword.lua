@@ -48,7 +48,13 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'delword' then
         if msg.from.is_mod then
-            return setunset_delword(msg, matches[2]:lower())
+            if pcall( function()
+                    string.match(matches[2]:lower(), matches[2]:lower())
+                end ) then
+                return setunset_delword(msg, matches[2]:lower())
+            else
+                return langs[msg.lang].errorTryAgain
+            end
         else
             return langs[msg.lang].require_mod
         end
