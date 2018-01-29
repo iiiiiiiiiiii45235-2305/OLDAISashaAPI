@@ -310,7 +310,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
     if not page then
         page = 1
     end
-    local dir = io.popen('ls -a "' .. folder .. '"'):read("*all")
+    local dir = io.popen('sudo ls -a "' .. folder .. '"'):read("*all")
     local t = dir:split('\n')
     count = #t
     local max_pages = math.floor(count / max_filemanager_buttons)
@@ -330,7 +330,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
                 column = 1
                 keyboard.inline_keyboard[row] = { }
             end
-            local tst = io.popen('ls -a "' .. folder .. object .. '/"'):read("*all")
+            local tst = io.popen('sudo ls -a "' .. folder .. object .. '/"'):read("*all")
             if tst ~= '' then
                 keyboard.inline_keyboard[row][column] = { text = '📁 ' .. object, callback_data = 'filemanagerCD' .. object }
             else
