@@ -485,18 +485,22 @@ function keyboard_log_pages(chat_id, page)
 
     keyboard = add_useful_buttons(keyboard, chat_id, 'group_management', page, max_pages)
     if page > 3 and page + 3 <= max_pages then
-        table.insert(keyboard.inline_keyboard[1], 1, { text = langs[lang].previousPage .. langs[lang].previousPage .. langs[lang].previousPage, callback_data = 'group_managementPAGE3MINUS' .. page })
+        table.insert(keyboard.inline_keyboard[1], 1, { text = langs[lang].previousPage .. langs[lang].previousPage .. langs[lang].previousPage, callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id })
     end
     if max_pages - 3 > 0 and page < max_pages - 3 then
         local columns = 0
         for k, v in pairs(keyboard.inline_keyboard[1]) do
             columns = columns + 1
         end
-        keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page }
+        keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page .. chat_id }
     end
     for k, v in pairs(keyboard.inline_keyboard[1]) do
         if v.text == langs[lang].updateKeyboard then
             v.callback_data = 'group_managementBACKLOG' .. chat_id
+        elseif v.text == langs[lang].previousPage then
+            v.callback_data = 'group_managementPAGE1MINUS' .. page .. chat_id
+        elseif v.text == langs[lang].nextPage then
+            v.callback_data = 'group_managementPAGE1PLUS' .. page .. chat_id
         end
     end
     return keyboard

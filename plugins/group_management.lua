@@ -315,13 +315,13 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
                 elseif matches[2] == 'BACKLOG' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    editMessage(msg.chat.id, msg.message_id, logPages(matches[3] or 1), keyboard_log_pages(msg.chat.id, matches[3] or 1))
+                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], matches[3]), keyboard_log_pages(matches[4], matches[3]))
                 elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, logPages(tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(msg.chat.id, tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))))
+                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))))
                 elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, logPages(tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(msg.chat.id, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
+                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
                 elseif matches[2] == 'BACKSETTINGS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''
@@ -1909,8 +1909,8 @@ return {
         "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(PAGES)$",
         "^(###cbgroup_management)(BACKLOG)(%-?%d+)$",
-        "^(###cbgroup_management)(PAGE%dMINUS)(%d+)$",
-        "^(###cbgroup_management)(PAGE%dPLUS)(%d+)$",
+        "^(###cbgroup_management)(PAGE%dMINUS)(%d+)(%-?%d+)$",
+        "^(###cbgroup_management)(PAGE%dPLUS)(%d+)(%-?%d+)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(.)$",
         "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
