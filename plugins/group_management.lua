@@ -264,6 +264,45 @@ local function unlockSetting(target, setting_type)
 end
 -- end LOCK/UNLOCK FUNCTIONS
 
+local max_lines = 20
+local function logPages(chat_id, page)
+    local message = ""
+    if not page then
+        page = 1
+    end
+    page = tonumber(page)
+    local tot_lines = 0
+    local f = assert(io.open("./groups/logs/" .. chat_id .. "log.txt", "rb"))
+    local log = f:read("*all")
+    f:close()
+    local t = log:split('\n')
+    local tmp = clone_table(t)
+    for k, v in pairs(tmp) do
+        if v ~= '' then
+            tot_lines = tot_lines + 1
+        else
+            table.remove(t, k)
+        end
+    end
+    local max_pages = math.floor(tot_lines / max_lines)
+    if (tot_lines / max_lines) > math.floor(tot_lines / max_lines) then
+        max_pages = max_pages + 1
+    end
+    if page > max_pages then
+        page = max_pages
+    end
+    tot_lines = 0
+    for k, v in pairs(t) do
+        if v ~= '' then
+            tot_lines = tot_lines + 1
+            if tot_lines >=(((page - 1) * max_lines) + 1) and tot_lines <=(max_lines * page) then
+                message = message .. v .. '\n'
+            end
+        end
+    end
+    return message
+end
+
 local function run(msg, matches)
     if msg.cb then
         if matches[1] then
@@ -506,6 +545,15 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'log' then
+        if msg.from.is_owner then
+            mystat('/log')
+            savelog(msg.chat.id, "log keyboard requested by owner/admin")
+            return sendKeyboard(msg.chat.id, logPages(msg.chat.id), keyboard_log_pages(msg.chat.id))
+        else
+            return langs[msg.lang].require_owner
+        end
+    end
+    if matches[1]:lower() == 'sendlog' then
         if msg.from.is_owner then
             mystat('/log')
             savelog(msg.chat.id, "log file created by owner/admin")

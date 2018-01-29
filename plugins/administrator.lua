@@ -331,6 +331,7 @@ local function groupsPages(page)
     if not page then
         page = 1
     end
+    page = tonumber(page)
     local tot_groups = 0
     for k, v in pairsByGroupName(data) do
         if data[tostring(k)] then
@@ -343,7 +344,7 @@ local function groupsPages(page)
     if (tot_groups / max_groups) > math.floor(tot_groups / max_groups) then
         max_pages = max_pages + 1
     end
-    if tonumber(page) > max_pages then
+    if page > max_pages then
         page = max_pages
     end
     tot_groups = 0
@@ -351,7 +352,7 @@ local function groupsPages(page)
         if data[tostring(k)] then
             if data[tostring(k)]['settings'] then
                 tot_groups = tot_groups + 1
-                if tot_groups >=(((tonumber(page) -1) * max_groups) + 1) and tot_groups <=(max_groups * tonumber(page)) then
+                if tot_groups >=(((page - 1) * max_groups) + 1) and tot_groups <=(max_groups * page) then
                     local name = ''
                     local grp = data[tostring(k)]
                     for m, n in pairs(grp) do
@@ -399,10 +400,10 @@ local function run(msg, matches)
                 elseif matches[2] == 'BACK' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
-                elseif matches[2] == 'PAGEMINUS' then
+                elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) -1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 2) -1), 'html')
-                elseif matches[2] == 'PAGEPLUS' then
+                elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 0) + 1), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 0) + 1), 'html')
                 end
@@ -901,8 +902,8 @@ return {
         "^(###cbadministrator)(DELETE)$",
         "^(###cbadministrator)(PAGES)$",
         "^(###cbadministrator)(BACK)(%d+)$",
-        "^(###cbadministrator)(PAGEMINUS)(%d+)$",
-        "^(###cbadministrator)(PAGEPLUS)(%d+)$",
+        "^(###cbadministrator)(PAGE%dMINUS)(%d+)$",
+        "^(###cbadministrator)(PAGE%dPLUS)(%d+)$",
 
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",

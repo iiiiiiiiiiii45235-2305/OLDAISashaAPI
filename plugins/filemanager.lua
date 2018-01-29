@@ -9,14 +9,15 @@ function run(msg, matches)
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
-                    elseif matches[2] == 'DELETEKEYBOARD' then
-                        editMessage(msg.chat.id, msg.message_id, pathString)
+                    elseif matches[2] == 'BACK' then
+                        answerCallbackQuery(msg.cb_id, pathString)
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, matches[3]))
                     elseif matches[2] == 'PAGES' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-                    elseif matches[2] == 'PAGEMINUS' then
+                    elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                         editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 2) -1))
-                    elseif matches[2] == 'PAGEPLUS' then
+                    elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                         editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 0) + 1))
                     elseif matches[2] == 'CD' then
@@ -205,10 +206,10 @@ return {
     patterns =
     {
         "^(###cbfilemanager)(DELETE)$",
-        "^(###cbfilemanager)(DELETEKEYBOARD)$",
+        "^(###cbfilemanager)(BACK)(%d+)$",
         "^(###cbfilemanager)(PAGES)$",
-        "^(###cbfilemanager)(PAGEMINUS)(%d+)$",
-        "^(###cbfilemanager)(PAGEPLUS)(%d+)$",
+        "^(###cbfilemanager)(PAGE%dMINUS)(%d+)$",
+        "^(###cbfilemanager)(PAGE%dPLUS)(%d+)$",
         "^(###cbfilemanager)(CD)(.*)$",
         "^(###cbfilemanager)(UP)(.*)$",
 

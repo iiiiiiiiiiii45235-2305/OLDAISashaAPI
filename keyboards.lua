@@ -1,12 +1,41 @@
+-- global
+function add_useful_buttons(keyboard, chat_id, plugin, page, max_pages)
+    local lang = get_lang(chat_id)
+    local rows = 0
+    for key, var in pairs(keyboard.inline_keyboard) do
+        rows = rows + 1
+    end
+    local row = rows + 1
+    local column = 1
+
+    keyboard.inline_keyboard[row] = { }
+    if page > 1 then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = plugin .. 'PAGE1MINUS' .. page }
+        column = column + 1
+    end
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = plugin .. 'BACK' .. page }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = plugin .. 'PAGES' }
+    column = column + 1
+    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = plugin .. 'DELETE' }
+    column = column + 1
+    if page < max_pages then
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = plugin .. 'PAGE1PLUS' .. page }
+    end
+    return keyboard
+end
+
 -- administrator
 local max_groups = 10
 function keyboard_list_groups_pages(chat_id, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
-    local row = 1
-    local column = 1
     local tot_groups = 0
+    if not page then
+        page = 1
+    end
+    page = tonumber(page)
     for k, v in pairsByGroupName(data) do
         if data[tostring(k)] then
             if data[tostring(k)]['settings'] then
@@ -18,20 +47,11 @@ function keyboard_list_groups_pages(chat_id, page)
     if (tot_groups / max_groups) > math.floor(tot_groups / max_groups) then
         max_pages = max_pages + 1
     end
-    keyboard.inline_keyboard[row] = { }
-    if tonumber(page) > 1 then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'administratorPAGEMINUS' .. page }
-        column = column + 1
+    if page > max_pages then
+        page = max_pages
     end
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'administratorBACK' .. page }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'administratorPAGES' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'administratorDELETE' }
-    column = column + 1
-    if tonumber(page) < max_pages then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'administratorPAGEPLUS' .. page }
-    end
+
+    keyboard = add_useful_buttons(keyboard, chat_id, 'administrator', page, max_pages)
     return keyboard
 end
 
@@ -299,7 +319,7 @@ end
 
 -- filemanager
 local max_filemanager_buttons = 15
-function keyboard_filemanager(folder, page, no_action_buttons)
+function keyboard_filemanager(folder, page)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
@@ -310,6 +330,7 @@ function keyboard_filemanager(folder, page, no_action_buttons)
     if not page then
         page = 1
     end
+    page = tonumber(page)
     local dir = io.popen('sudo ls -a "' .. folder .. '"'):read("*all")
     local t = dir:split('\n')
     count = #t
@@ -317,13 +338,13 @@ function keyboard_filemanager(folder, page, no_action_buttons)
     if (count / max_filemanager_buttons) > math.floor(count / max_filemanager_buttons) then
         max_pages = max_pages + 1
     end
-    if tonumber(page) > max_pages then
+    if page > max_pages then
         page = max_pages
     end
     count = 0
     for i, object in pairs(t) do
         count = count + 1
-        if count >=(((tonumber(page) -1) * max_filemanager_buttons) + 1) and count <=(max_filemanager_buttons * tonumber(page)) then
+        if count >=(((page - 1) * max_filemanager_buttons) + 1) and count <=(max_filemanager_buttons * page) then
             if flag then
                 flag = false
                 row = row + 1
@@ -342,60 +363,12 @@ function keyboard_filemanager(folder, page, no_action_buttons)
             end
         end
     end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    if tonumber(page) > 1 then
-        keyboard.inline_keyboard[row][column] = { text = langs['en'].previousPage, callback_data = 'filemanagerPAGEMINUS' .. page }
-        column = column + 1
-    end
-    keyboard.inline_keyboard[row][column] = { text = langs['en'].deleteKeyboard, callback_data = 'filemanagerDELETEKEYBOARD' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'filemanagerPAGES' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs['en'].deleteMessage, callback_data = 'filemanagerDELETE' }
-    column = column + 1
-    if tonumber(page) < max_pages then
-        keyboard.inline_keyboard[row][column] = { text = langs['en'].nextPage, callback_data = 'filemanagerPAGEPLUS' .. page }
-    end
+
+    keyboard = add_useful_buttons(keyboard, 41400331, 'filemanager', page, max_pages)
     return keyboard
 end
 
 -- help
--- function keyboard_help_list(chat_id, rank)
---     local lang = get_lang(chat_id)
---     local keyboard = { }
---     keyboard.inline_keyboard = { }
---     local row = 1
---     local column = 1
---     local i = 0
---     local flag = false
---     keyboard.inline_keyboard[row] = { }
---     for name in pairsByKeys(plugins) do
---         i = i + 1
---         if plugins[name].min_rank <= tonumber(rank) then
---             if flag then
---                 flag = false
---                 row = row + 1
---                 column = 1
---                 keyboard.inline_keyboard[row] = { }
---             end
---             -- keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. name:lower(), callback_data = 'help' .. name }
---             keyboard.inline_keyboard[row][column] = { text = --[[ '🅿️ ' .. ]] i .. '. ' .. adjust_plugin_names(name:lower(), lang), callback_data = 'help' .. name }
---             column = column + 1
---         end
---         if column > 2 then
---             flag = true
---         end
---     end
---     row = row + 1
---     column = 1
---     keyboard.inline_keyboard[row] = { }
---     keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' }
---     column = column + 1
---     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
---     return keyboard
--- end
 local max_help_buttons = 15
 function keyboard_help_pages(chat_id, rank, page)
     local lang = get_lang(chat_id)
@@ -410,6 +383,7 @@ function keyboard_help_pages(chat_id, rank, page)
     if not page then
         page = 1
     end
+    page = tonumber(page)
     for name in pairsByKeys(plugins) do
         if plugins[name].min_rank <= tonumber(rank) then
             plugins_available_for_rank = plugins_available_for_rank + 1
@@ -419,7 +393,7 @@ function keyboard_help_pages(chat_id, rank, page)
     if (plugins_available_for_rank / max_help_buttons) > math.floor(plugins_available_for_rank / max_help_buttons) then
         max_pages = max_pages + 1
     end
-    if tonumber(page) > max_pages then
+    if page > max_pages then
         page = max_pages
     end
     plugins_available_for_rank = 0
@@ -428,7 +402,7 @@ function keyboard_help_pages(chat_id, rank, page)
         -- index between the last plugin of the previous page and the last plugin of this page
         if plugins[name].min_rank <= tonumber(rank) then
             plugins_available_for_rank = plugins_available_for_rank + 1
-            if plugins_available_for_rank >=(((tonumber(page) -1) * max_help_buttons) + 1) and plugins_available_for_rank <=(max_help_buttons * tonumber(page)) then
+            if plugins_available_for_rank >=(((page - 1) * max_help_buttons) + 1) and plugins_available_for_rank <=(max_help_buttons * page) then
                 if flag then
                     flag = false
                     row = row + 1
@@ -444,22 +418,8 @@ function keyboard_help_pages(chat_id, rank, page)
             end
         end
     end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
-    if tonumber(page) > 1 then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'helpPAGEMINUS' .. page }
-        column = column + 1
-    end
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].updateKeyboard, callback_data = 'helpBACK' .. page }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = page .. '/' .. max_pages, callback_data = 'helpPAGES' }
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'helpDELETE' }
-    column = column + 1
-    if tonumber(page) < max_pages then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].nextPage, callback_data = 'helpPAGEPLUS' .. page }
-    end
+
+    keyboard = add_useful_buttons(keyboard, chat_id, 'help', page, max_pages)
     return keyboard
 end
 function keyboard_faq_list(chat_id)
@@ -495,6 +455,47 @@ function keyboard_faq_list(chat_id)
 end
 
 -- group_management
+local max_lines = 20
+function keyboard_log_pages(chat_id, page)
+    local lang = get_lang(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local tot_lines = 0
+    if not page then
+        page = 1
+    end
+    page = tonumber(page)
+    local f = assert(io.open("./groups/logs/" .. chat_id .. "log.txt", "rb"))
+    local log = f:read("*all")
+    f:close()
+    local t = log:split('\n')
+    for k, v in pairs(t) do
+        if v ~= '' then
+            tot_lines = tot_lines + 1
+        end
+    end
+
+    local max_pages = math.floor(tot_lines / max_lines)
+    if (tot_lines / max_lines) > math.floor(tot_lines / max_lines) then
+        max_pages = max_pages + 1
+    end
+    if page > max_pages then
+        page = max_pages
+    end
+
+    keyboard = add_useful_buttons(keyboard, chat_id, 'group_management', page, max_pages)
+    if page > 3 then
+        table.insert(keyboard.inline_keyboard[1], 1, { text = langs[lang].previousPage .. langs[lang].previousPage .. langs[lang].previousPage, callback_data = 'group_managementPAGE3MINUS' .. page })
+    end
+    if page < max_pages - 3 then
+        local columns = 0
+        for key, var in pairs(keyboard.inline_keyboard[1]) do
+            columns = columns + 1
+        end
+        keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = plugin .. 'PAGE3PLUS' .. page }
+    end
+    return keyboard
+end
 function keyboard_permissions_list(chat_id, user_id, param_permissions, from_other_plugin)
     local lang = get_lang(chat_id)
     if not param_permissions then

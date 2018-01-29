@@ -155,10 +155,10 @@ local function run(msg, matches)
             elseif matches[2] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
-            elseif matches[2] == 'PAGEMINUS' then
+            elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) -1), 'html')
-            elseif matches[2] == 'PAGEPLUS' then
+            elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + 1), 'html')
             elseif matches[2] == 'BACKFAQ' then
@@ -422,8 +422,8 @@ return {
         "^(###cbhelp)(BACK)(%d+)$",
         "^(###cbhelp)(BACK)$",
         "^(###cbhelp)(FAQ)(%d+)$",
-        "^(###cbhelp)(PAGEMINUS)(%d+)$",
-        "^(###cbhelp)(PAGEPLUS)(%d+)$",
+        "^(###cbhelp)(PAGE%dMINUS)(%d+)$",
+        "^(###cbhelp)(PAGE%dPLUS)(%d+)$",
         "^(###cbhelp)(.*)(%d+)$",
         "^(###cbhelp)(.*)$",
 
