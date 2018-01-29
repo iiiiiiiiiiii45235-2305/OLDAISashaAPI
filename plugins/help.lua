@@ -157,10 +157,10 @@ local function run(msg, matches)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
             elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) -1), 'html')
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), 'html')
             elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + 1), 'html')
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), 'html')
             elseif matches[2] == 'BACKFAQ' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
