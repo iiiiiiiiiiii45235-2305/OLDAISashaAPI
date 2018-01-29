@@ -496,7 +496,7 @@ function keyboard_log_pages(chat_id, page)
     end
     for k, v in pairs(keyboard.inline_keyboard[1]) do
         if v.text == langs[lang].updateKeyboard then
-            v.callback_data = 'group_managementBACKLOG' .. chat_id
+            v.callback_data = 'group_managementBACKLOG' .. page .. chat_id
         elseif v.text == langs[lang].previousPage then
             v.callback_data = 'group_managementPAGE1MINUS' .. page .. chat_id
         elseif v.text == langs[lang].nextPage then

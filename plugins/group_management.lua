@@ -1908,7 +1908,7 @@ return {
     {
         "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(PAGES)$",
-        "^(###cbgroup_management)(BACKLOG)(%-?%d+)$",
+        "^(###cbgroup_management)(BACKLOG)(%d+)(%-?%d+)$",
         "^(###cbgroup_management)(PAGE%dMINUS)(%d+)(%-?%d+)$",
         "^(###cbgroup_management)(PAGE%dPLUS)(%d+)(%-?%d+)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
