@@ -469,14 +469,8 @@ local function run(msg, matches)
                         if caption ~= '' then
                             caption = ' ' .. caption
                         end
-                        if pcall( function()
-                                string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
-                            end ) then
-                            redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), msg.reply_to_message.media_type .. file_id .. caption)
-                            return langs[msg.lang].mediaSaved
-                        else
-                            return langs[msg.lang].errorTryAgain
-                        end
+                        redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), msg.reply_to_message.media_type .. file_id .. caption)
+                        return langs[msg.lang].mediaSaved
                     end
                 end
             end
@@ -491,13 +485,7 @@ local function run(msg, matches)
             if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
-            if pcall( function()
-                    string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
-                end ) then
-                return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
-            else
-                return langs[msg.lang].errorTryAgain
-            end
+            return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
         else
             return langs[msg.lang].require_mod
         end
@@ -509,13 +497,7 @@ local function run(msg, matches)
             if string.match(matches[3], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
                 return langs[msg.lang].crossexecDenial
             end
-            if pcall( function()
-                    string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
-                end ) then
-                return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
-            else
-                return langs[msg.lang].errorTryAgain
-            end
+            return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
         else
             return langs[msg.lang].require_admin
         end

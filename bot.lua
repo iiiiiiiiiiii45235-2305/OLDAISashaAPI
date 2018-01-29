@@ -746,7 +746,9 @@ function msg_valid(msg)
 
         if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
             print(clr.white .. 'Preprocess', 'database')
-            plugins.database.pre_process(msg)
+            local res, err = pcall( function()
+                plugins.database.pre_process(msg)
+            end )
             -- if not a known group receive messages just from sudo
             local sudoMessage = false
             for k, v in pairs(config.sudo_users) do
@@ -766,28 +768,32 @@ function msg_valid(msg)
         if msg.date < os.time() -20 then
             -- Message sent more than 20 seconds ago
             msg = get_tg_rank(msg)
-            print(clr.white .. 'Preprocess edited message', 'database')
-            msg = plugins.database.pre_process(msg)
-            print(clr.white .. 'Preprocess edited message', 'delword')
-            msg = plugins.delword.pre_process(msg)
-            print(clr.white .. 'Preprocess edited message', 'msg_checks')
-            msg = plugins.msg_checks.pre_process(msg)
-            print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
+            local res, err = pcall( function()
+                print(clr.white .. 'Preprocess edited message', 'database')
+                msg = plugins.database.pre_process(msg)
+                print(clr.white .. 'Preprocess edited message', 'delword')
+                msg = plugins.delword.pre_process(msg)
+                print(clr.white .. 'Preprocess edited message', 'msg_checks')
+                msg = plugins.msg_checks.pre_process(msg)
+                print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
+            end )
             return false
         end
     else
         if msg.date < os.time() -5 then
             -- Before bot was started more or less
             msg = get_tg_rank(msg)
-            print(clr.white .. 'Preprocess old message', 'database')
-            msg = plugins.database.pre_process(msg)
-            print(clr.white .. 'Preprocess old message', 'banhammer')
-            msg = plugins.banhammer.pre_process(msg)
-            print(clr.white .. 'Preprocess old message', 'delword')
-            msg = plugins.delword.pre_process(msg)
-            print(clr.white .. 'Preprocess old message', 'msg_checks')
-            msg = plugins.msg_checks.pre_process(msg)
-            print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
+            local res, err = pcall( function()
+                print(clr.white .. 'Preprocess old message', 'database')
+                msg = plugins.database.pre_process(msg)
+                print(clr.white .. 'Preprocess old message', 'banhammer')
+                msg = plugins.banhammer.pre_process(msg)
+                print(clr.white .. 'Preprocess old message', 'delword')
+                msg = plugins.delword.pre_process(msg)
+                print(clr.white .. 'Preprocess old message', 'msg_checks')
+                msg = plugins.msg_checks.pre_process(msg)
+                print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
+            end )
             return false
         end
     end
@@ -813,34 +819,36 @@ end
 
 -- Apply plugin.pre_process function
 function pre_process_msg(msg)
-    print(clr.white .. 'Preprocess', 'alternatives')
-    msg = plugins.alternatives.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'database')
-    msg = plugins.database.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'banhammer')
-    msg = plugins.banhammer.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'anti_spam')
-    msg = plugins.anti_spam.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'msg_checks')
-    msg = plugins.msg_checks.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'group_management')
-    msg = plugins.group_management.pre_process(msg)
-    print(clr.white .. 'Preprocess', 'delword')
-    msg = plugins.delword.pre_process(msg)
-    for name, plugin in pairs(plugins) do
-        if plugin.pre_process and msg then
-            if plugin.description ~= 'ALTERNATIVES' and
-                plugin.description ~= 'ANTI_SPAM' and
-                plugin.description ~= 'BANHAMMER' and
-                plugin.description ~= 'DATABASE' and
-                plugin.description ~= 'DELWORD' and
-                plugin.description ~= 'GROUP_MANAGEMENT' and
-                plugin.description ~= 'MSG_CHECKS' then
-                print(clr.white .. 'Preprocess', name)
-                msg = plugin.pre_process(msg)
+    local res, err = pcall( function()
+        print(clr.white .. 'Preprocess', 'alternatives')
+        msg = plugins.alternatives.pre_process(msg)
+        print(clr.white .. 'Preprocess', 'database')
+        msg = plugins.database.pre_process(msg)
+        print(clr.white .. 'Preprocess', 'banhammer')
+        msg = plugins.banhammer.pre_process(msg)
+        print(clr.white .. 'Preprocess', 'anti_spam')
+        msg = plugins.anti_spam.pre_process(msg)
+        print(clr.white .. 'Preprocess', 'msg_checks')
+        msg = plugins.msg_checks.pre_process(msg)
+        print(clr.white .. 'Preprocess', 'group_management')
+        msg = plugins.group_management.pre_process(msg)
+        print(clr.white .. 'Preprocess', 'delword')
+        msg = plugins.delword.pre_process(msg)
+        for name, plugin in pairs(plugins) do
+            if plugin.pre_process and msg then
+                if plugin.description ~= 'ALTERNATIVES' and
+                    plugin.description ~= 'ANTI_SPAM' and
+                    plugin.description ~= 'BANHAMMER' and
+                    plugin.description ~= 'DATABASE' and
+                    plugin.description ~= 'DELWORD' and
+                    plugin.description ~= 'GROUP_MANAGEMENT' and
+                    plugin.description ~= 'MSG_CHECKS' then
+                    print(clr.white .. 'Preprocess', name)
+                    msg = plugin.pre_process(msg)
+                end
             end
         end
-    end
+    end )
     return msg
 end
 
