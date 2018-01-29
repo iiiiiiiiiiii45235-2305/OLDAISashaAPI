@@ -313,7 +313,7 @@ local function run(msg, matches)
                     end
                 elseif matches[2] == 'PAGES' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-                elseif matches[2] == 'BACK' then
+                elseif matches[2] == 'BACKLOG' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     editMessage(msg.chat.id, msg.message_id, logPages(matches[3] or 1), keyboard_log_pages(msg.chat.id, matches[3] or 1))
                 elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
@@ -1908,7 +1908,7 @@ return {
     {
         "^(###cbgroup_management)(DELETE)$",
         "^(###cbgroup_management)(PAGES)$",
-        "^(###cbgroup_management)(BACK)(%-%d+)$",
+        "^(###cbgroup_management)(BACKLOG)(%-?%d+)$",
         "^(###cbgroup_management)(PAGE%dMINUS)(%d+)$",
         "^(###cbgroup_management)(PAGE%dPLUS)(%d+)$",
         "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
