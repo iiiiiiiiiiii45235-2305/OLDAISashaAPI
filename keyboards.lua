@@ -2,7 +2,7 @@
 function add_useful_buttons(keyboard, chat_id, plugin, page, max_pages)
     local lang = get_lang(chat_id)
     local rows = 0
-    for key, var in pairs(keyboard.inline_keyboard) do
+    for k, v in pairs(keyboard.inline_keyboard) do
         rows = rows + 1
     end
     local row = rows + 1
@@ -489,10 +489,15 @@ function keyboard_log_pages(chat_id, page)
     end
     if max_pages - 3 > 0 and page < max_pages - 3 then
         local columns = 0
-        for key, var in pairs(keyboard.inline_keyboard[1]) do
+        for k, v in pairs(keyboard.inline_keyboard[1]) do
             columns = columns + 1
         end
         keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page }
+    end
+    for k, v in pairs(keyboard.inline_keyboard[1]) do
+        if v.text == langs[lang].updateKeyboard then
+            v.callback_data = 'group_managementBACK' .. chat_id
+        end
     end
     return keyboard
 end
