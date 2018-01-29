@@ -492,7 +492,7 @@ function keyboard_log_pages(chat_id, page)
         for key, var in pairs(keyboard.inline_keyboard[1]) do
             columns = columns + 1
         end
-        keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = plugin .. 'PAGE3PLUS' .. page }
+        keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page }
     end
     return keyboard
 end
