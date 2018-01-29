@@ -547,8 +547,17 @@ local function run(msg, matches)
     if matches[1]:lower() == 'log' then
         if msg.from.is_owner then
             mystat('/log')
-            savelog(msg.chat.id, "log keyboard requested by owner/admin")
-            return sendKeyboard(msg.chat.id, logPages(msg.chat.id), keyboard_log_pages(msg.chat.id))
+            if sendKeyboard(msg.from.id, logPages(msg.chat.id), keyboard_log_pages(msg.chat.id)) then
+                savelog(msg.chat.id, "log keyboard requested by owner/admin")
+                if msg.chat.type ~= 'private' then
+                    local message_id = sendReply(msg, langs[msg.lang].sendLogPvt, 'html').result.message_id
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                    return
+                end
+            else
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+            end
         else
             return langs[msg.lang].require_owner
         end

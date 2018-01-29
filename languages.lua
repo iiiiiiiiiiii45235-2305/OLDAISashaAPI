@@ -668,6 +668,7 @@ return {
         mutesOf = "Muti di ",
         sendSettingsPvt = "Ti ho mandato le impostazioni in <a href=\"" .. bot.link .. "\">privato</a>.",
         sendMutesPvt = "Ti ho mandato i muti in <a href=\"" .. bot.link .. "\">privato</a>.",
+        sendLogPvt = "Ti ho mandato il log in <a href=\"" .. bot.link .. "\">privato</a>.",
         -- ex common --
         newDescription = "Nuova descrizione:\n",
         noDescription = "Nessuna descrizione disponibile.",
@@ -2076,6 +2077,7 @@ return {
         mutesOf = "Mutes of ",
         sendSettingsPvt = "I've sent you the settings in <a href=\"" .. bot.link .. "\">private</a>.",
         sendMutesPvt = "I've sent you the mutes in <a href=\"" .. bot.link .. "\">private</a>.",
+        sendLogPvt = "I've sent you the log in <a href=\"" .. bot.link .. "\">private</a>.",
         -- ex common --
         newDescription = "New description:\n",
         noDescription = "No description available.",
