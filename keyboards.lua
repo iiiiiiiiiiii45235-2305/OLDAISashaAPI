@@ -484,16 +484,7 @@ function keyboard_log_pages(chat_id, page)
     end
 
     keyboard = add_useful_buttons(keyboard, chat_id, 'group_management', page, max_pages)
-    if max_pages > 3 and page > 3 then
-        table.insert(keyboard.inline_keyboard[1], 1, { text = langs[lang].previousPage .. langs[lang].previousPage .. langs[lang].previousPage, callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id })
-    end
-    if max_pages > 3 and page <= max_pages - 3 then
-        local columns = 0
-        for k, v in pairs(keyboard.inline_keyboard[1]) do
-            columns = columns + 1
-        end
-        keyboard.inline_keyboard[1][columns + 1] = { text = langs[lang].nextPage .. langs[lang].nextPage .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page .. chat_id }
-    end
+    -- adjust buttons
     for k, v in pairs(keyboard.inline_keyboard[1]) do
         if v.text == langs[lang].updateKeyboard then
             v.callback_data = 'group_managementBACKLOG' .. page .. chat_id
@@ -502,6 +493,20 @@ function keyboard_log_pages(chat_id, page)
         elseif v.text == langs[lang].nextPage then
             v.callback_data = 'group_managementPAGE1PLUS' .. page .. chat_id
         end
+    end
+    keyboard.inline_keyboard[2] = { }
+    -- more buttons to speed things up
+    if max_pages > 7 and page > 7 then
+        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].previousPage .. langs[lang].sevenNumber, callback_data = 'group_managementPAGE7MINUS' .. page .. chat_id })
+    end
+    if max_pages > 3 and page > 3 then
+        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].previousPage .. langs[lang].threeNumber, callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id })
+    end
+    if max_pages > 3 and page <= max_pages - 3 then
+        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].threeNumber .. langs[lang].nextPage, callback_data = 'group_managementPAGE3PLUS' .. page .. chat_id })
+    end
+    if max_pages > 7 and page <= max_pages - 7 then
+        table.insert(keyboard.inline_keyboard[2], { text = langs[lang].sevenNumber .. langs[lang].nextPage, callback_data = 'group_managementPAGE7PLUS' .. page .. chat_id })
     end
     return keyboard
 end
