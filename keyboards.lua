@@ -484,10 +484,10 @@ function keyboard_log_pages(chat_id, page)
     end
 
     keyboard = add_useful_buttons(keyboard, chat_id, 'group_management', page, max_pages)
-    if page > 3 and page + 3 <= max_pages then
+    if max_pages > 3 and page > 3 then
         table.insert(keyboard.inline_keyboard[1], 1, { text = langs[lang].previousPage .. langs[lang].previousPage .. langs[lang].previousPage, callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id })
     end
-    if max_pages - 3 > 0 and page <= max_pages - 3 then
+    if max_pages > 3 and page <= max_pages - 3 then
         local columns = 0
         for k, v in pairs(keyboard.inline_keyboard[1]) do
             columns = columns + 1
