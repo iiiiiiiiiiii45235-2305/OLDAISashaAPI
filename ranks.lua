@@ -1,10 +1,10 @@
 rank_table = {
-    ["USER"] = 0,
-    ["MOD"] = 1,
-    ["OWNER"] = 2,
-    ["ADMIN"] = 3,
-    ["SUDO"] = 4,
-    ["BOT"] = 5
+    ["USER"] = 1,
+    ["MOD"] = 2,
+    ["OWNER"] = 3,
+    ["ADMIN"] = 4,
+    ["SUDO"] = 5,
+    ["BOT"] = 6
 }
 reverse_rank_table = {
     "USER",
@@ -140,7 +140,7 @@ function is_sudo2(user_id)
         -- bot
         return true
     end
-    
+
     local var = false
     -- Check users id in config
     for k, v in pairs(config.sudo_users) do
@@ -157,7 +157,7 @@ function is_admin(param_msg)
         -- bot
         return true
     end
-    
+
     local var = false
     local user_id = param_msg.from.id
 
@@ -185,7 +185,7 @@ function is_admin2(user_id)
         -- bot
         return true
     end
-    
+
     local var = false
 
     if data.admins then
@@ -212,7 +212,7 @@ function is_owner(param_msg, check_local)
         -- bot
         return true
     end
-    
+
     local var = false
     local user_id = param_msg.from.id
     local chat_id = param_msg.chat.id
@@ -261,7 +261,7 @@ function is_owner2(user_id, chat_id, check_local, no_log)
         -- bot
         return true
     end
-    
+
     local var = false
 
     if not check_local then
@@ -308,7 +308,7 @@ function is_mod(param_msg, check_local)
         -- bot
         return true
     end
-    
+
     local var = false
     local user_id = param_msg.from.id
     local chat_id = param_msg.chat.id
@@ -366,7 +366,7 @@ function is_mod2(user_id, chat_id, check_local, no_log)
         -- bot
         return true
     end
-    
+
     local var = false
 
     if not check_local then

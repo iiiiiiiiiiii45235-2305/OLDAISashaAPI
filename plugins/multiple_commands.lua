@@ -16,7 +16,7 @@ end
 local function get_reverse_rank(chat_id, user_id, check_local)
     local lang = get_lang(chat_id)
     local rank = get_rank(user_id, chat_id, check_local)
-    return reverse_rank_table[rank + 1]
+    return reverse_rank_table[rank]
 end
 
 local function get_object_info(obj, chat_id)
@@ -101,7 +101,7 @@ local function get_object_info(obj, chat_id)
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
             local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
-            text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true) + 1] ..
+            text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true)] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
             local otherinfo = langs[lang].otherInfo
