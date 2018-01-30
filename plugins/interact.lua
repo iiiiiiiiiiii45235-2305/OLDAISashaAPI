@@ -402,7 +402,7 @@ return {
         "^[#!/]([Uu][Pp][Ll][Oo][Aa][Dd]_[Vv][Ii][Dd][Ee][Oo]_[Nn][Oo][Tt][Ee])$",
     },
     run = run,
-    min_rank = 0,
+    min_rank = 1,
     syntax =
     {
         "USER",

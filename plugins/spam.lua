@@ -50,7 +50,7 @@ return {
         "^[#!/]([Ss][Pp][Aa][Mm])$",
     },
     run = run,
-    min_rank = 3,
+    min_rank = 4,
     syntax =
     {
         "ADMIN",

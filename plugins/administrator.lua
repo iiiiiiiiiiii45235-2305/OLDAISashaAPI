@@ -954,7 +954,7 @@ return {
         "^[#!/]([Gg][Ee][Tt][Ii][Pp])$",
     },
     run = run,
-    min_rank = 3,
+    min_rank = 4,
     syntax =
     {
         "ADMIN",

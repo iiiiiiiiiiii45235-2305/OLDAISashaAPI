@@ -300,7 +300,7 @@ return {
         "^[#!/]([Ss][Cc][Hh][Ee][Dd][Uu][Ll][Ee]) ([^%s]+) (%-?%d+) (.*)$",
     },
     run = run,
-    min_rank = 1,
+    min_rank = 2,
     syntax =
     {
         "MOD",

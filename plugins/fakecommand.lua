@@ -48,7 +48,7 @@ return {
         "^[#!/]([Aa][Dd][Mm][Ii][Nn]) (.*)",
     },
     run = run,
-    min_rank = 1,
+    min_rank = 2,
     syntax =
     {
         "MOD",

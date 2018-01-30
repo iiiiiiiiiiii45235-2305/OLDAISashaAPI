@@ -130,7 +130,7 @@ return {
         "^[Ss][Aa][Ss][Hh][Aa] ([Oo][Ff][Ff]) (%-?%d+)$",
     },
     run = run,
-    min_rank = 0,
+    min_rank = 1,
     syntax =
     {
         "USER",

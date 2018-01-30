@@ -33,7 +33,7 @@ return {
         "^[#!/][Ss][Hh][Oo][Uu][Tt] (.*)$",
     },
     run = run,
-    min_rank = 0,
+    min_rank = 1,
     syntax =
     {
         "USER",
