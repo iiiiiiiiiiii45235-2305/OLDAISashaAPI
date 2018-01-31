@@ -1232,7 +1232,7 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
             end
         end
     end
-    print(chat_id, chat_id, chat_id, chat_id, chat_id, chat_id, chat_id)
+
     keyboard = add_useful_buttons(keyboard, user_id, 'plugins', page, max_pages)
     -- adjust buttons
     for k, v in pairs(keyboard.inline_keyboard[row + 1]) do
