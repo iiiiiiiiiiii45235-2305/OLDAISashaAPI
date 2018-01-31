@@ -112,7 +112,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
             end
         end
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
         if from_other_plugin then
@@ -130,7 +130,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         local column = 1
         keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
@@ -263,7 +263,7 @@ function keyboard_time(op, chat_id, user_id, time, from_other_plugin)
 
     local column = 1
     if from_other_plugin then
-        keyboard.inline_keyboard[12][column] = { text = langs[lang].previousPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+        keyboard.inline_keyboard[12][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -563,7 +563,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
             end
         end
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
         end
         if from_other_plugin then
@@ -581,7 +581,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         local column = 1
         keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
@@ -1236,7 +1236,9 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
     keyboard = add_useful_buttons(keyboard, user_id, 'plugins', page, max_pages)
     -- adjust buttons
     for k, v in pairs(keyboard.inline_keyboard[row + 1]) do
-        if v.text == langs[lang].previousPage or v.text == langs[lang].updateKeyboard or v.text == langs[lang].nextPage then
+        if v.text == langs[lang].previousPage or
+            v.text == langs[lang].updateKeyboard or
+            v.text == langs[lang].nextPage then
             if not privileged then
                 if from_other_plugin then
                     v.callback_data = v.callback_data .. chat_id .. 'I'
@@ -1250,7 +1252,10 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
         table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
     end
     for k, v in pairs(keyboard.inline_keyboard[row + 2]) do
-        if v.text == langs[lang].previousPage .. langs[lang].sevenNumber or v.text == langs[lang].previousPage .. langs[lang].threeNumber or v.text == langs[lang].threeNumber .. langs[lang].nextPage or v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
+        if v.text == langs[lang].previousPage .. langs[lang].sevenNumber or
+            v.text == langs[lang].previousPage .. langs[lang].threeNumber or
+            v.text == langs[lang].threeNumber .. langs[lang].nextPage or
+            v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
             if not privileged then
                 if from_other_plugin then
                     v.callback_data = v.callback_data .. chat_id .. 'I'
