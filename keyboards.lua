@@ -631,7 +631,7 @@ function keyboard_mutes_list(chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -752,7 +752,7 @@ function keyboard_settings_list(chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -1114,7 +1114,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK1' .. obj.id .. 'I' }
             end
         elseif obj.type == 'supergroup' then
             if is_mod2(executer, obj.id) then
@@ -1132,7 +1132,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK1' .. obj.id .. 'I' }
             end
         elseif obj.type == 'channel' then
             -- nothing
@@ -1142,14 +1142,14 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         if deeper then
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].previousPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][4] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         else
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         end
@@ -1160,73 +1160,97 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
 end
 
 -- plugins
-function keyboard_plugins_list(user_id, privileged, chat_id, from_other_plugin)
+local max_plugins_buttons = 10
+function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_plugin)
+    local lang = get_lang(user_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local row = 1
     local column = 1
+    local index = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
+    if not page then
+        page = 1
+    end
+    page = tonumber(page)
+    local tot_plugins = 0
     for k, name in pairs(plugins_names()) do
-        --  ✅ enabled, ☑️ disabled
-        local status = '☑️'
-        local enabled = false
-        -- get the name
-        name = string.match(name, "(.*)%.lua")
-        -- Check if is enabled
-        if plugin_enabled(name) then
-            status = '✅'
-            enabled = true
-        end
-        -- Check if system plugin, if not check if disabled on chat
-        if system_plugin(name) then
-            status = '💻'
-        elseif not privileged then
-            if plugin_disabled_on_chat(name, chat_id) then
-                status = '🚫'
-                enabled = false
+        tot_plugins = tot_plugins + 1
+    end
+    local max_pages = math.floor(tot_plugins / max_plugins_buttons)
+    if (tot_plugins / max_plugins_buttons) > math.floor(tot_plugins / max_plugins_buttons) then
+        max_pages = max_pages + 1
+    end
+    if page > max_pages then
+        page = max_pages
+    end
+    tot_plugins = 0
+
+    for k, name in pairs(plugins_names()) do
+        tot_plugins = tot_plugins + 1
+        if tot_plugins >=(((page - 1) * max_plugins_buttons) + 1) and tot_plugins <=(max_plugins_buttons * page) then
+            --  ✅ enabled, ☑️ disabled
+            local status = '☑️'
+            local enabled = false
+            -- get the name
+            name = string.match(name, "(.*)%.lua")
+            -- Check if is enabled
+            if plugin_enabled(name) then
+                status = '✅'
+                enabled = true
             end
-        end
-        if flag then
-            flag = false
-            row = row + 1
-            column = 1
-            keyboard.inline_keyboard[row] = { }
-        end
-        if enabled then
-            keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsDISABLE' .. name }
-        else
-            keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsENABLE' .. name }
-        end
-        if not privileged then
-            if from_other_plugin then
-                keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id .. 'I'
+            -- Check if system plugin, if not check if disabled on chat
+            if system_plugin(name) then
+                status = '💻'
+            elseif not privileged then
+                if plugin_disabled_on_chat(name, chat_id) then
+                    status = '🚫'
+                    enabled = false
+                end
+            end
+            if flag then
+                flag = false
+                row = row + 1
+                column = 1
+                keyboard.inline_keyboard[row] = { }
+            end
+            if enabled then
+                keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsDISABLE' .. name .. page }
             else
-                keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+                keyboard.inline_keyboard[row][column] = { text = status .. ' ' .. name, callback_data = 'pluginsENABLE' .. name .. page }
+            end
+            if not privileged then
+                if from_other_plugin then
+                    keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id .. 'I'
+                else
+                    keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
+                end
+            end
+            column = column + 1
+            if column > 2 then
+                flag = true
             end
         end
-        column = column + 1
-        if column > 2 then
-            flag = true
+    end
+
+    keyboard = add_useful_buttons(keyboard, user_id, 'plugins', page, max_pages)
+    -- adjust buttons
+    for k, v in pairs(keyboard.inline_keyboard[1]) do
+        if v.text == langs[lang].updateKeyboard then
+            v.callback_data = v.callback_data .. page
+            if not privileged then
+                if from_other_plugin then
+                    v.callback_data = v.callback_data .. chat_id .. 'I'
+                else
+                    v.callback_data = v.callback_data .. chat_id
+                end
+            end
         end
     end
-    row = row + 1
-    column = 1
-    keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].previousPage, callback_data = 'infoBACK' .. chat_id }
-        column = column + 1
+        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
     end
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].updateKeyboard, callback_data = 'pluginsBACK' }
-    if not privileged then
-        if from_other_plugin then
-            keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id .. 'I'
-        else
-            keyboard.inline_keyboard[row][column].callback_data = keyboard.inline_keyboard[row][column].callback_data .. chat_id
-        end
-    end
-    column = column + 1
-    keyboard.inline_keyboard[row][column] = { text = langs[get_lang(user_id)].deleteMessage, callback_data = 'pluginsDELETE' }
     return keyboard
 end
 

@@ -156,40 +156,64 @@ end
 local function run(msg, matches)
     if msg.cb then
         if matches[1] == '###cbplugins' then
-            if matches[2] == 'BACK' then
+            if matches[2] == 'DELETE' then
+                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                end
+            elseif matches[2] == 'PAGES' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+            elseif matches[2] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                if matches[3] then
-                    if is_owner2(msg.from.id, matches[3]) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[3], keyboard_plugins_list(msg.from.id, false, tonumber(matches[3]), matches[4] or false))
+                if matches[4] then
+                    if is_owner2(msg.from.id, matches[4]) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_pages(msg.from.id, false, matches[3] or 1, tonumber(matches[4]), matches[5] or false))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
                 else
                     if is_sudo(msg) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, matches[3] or 1))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
                 end
-            elseif matches[2] == 'DELETE' then
-                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+            elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                if matches[4] then
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                else
+                    if is_sudo(msg) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) - tonumber(matches[2]:match('%d'))))
+                    else
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
+                    end
                 end
-            elseif matches[4] then
+            elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                if matches[4] then
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                else
+                    if is_sudo(msg) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
+                    else
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
+                    end
+                end
+            elseif matches[5] then
                 -- Enable/Disable a plugin for this chat
-                if is_owner2(msg.from.id, matches[4]) then
+                if is_owner2(msg.from.id, matches[5]) then
                     if matches[2] == 'ENABLE' then
-                        answerCallbackQuery(msg.cb_id, reenable_plugin_on_chat(matches[3], tonumber(matches[4])), false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_list(msg.from.id, false, tonumber(matches[4]), matches[5] or false))
+                        answerCallbackQuery(msg.cb_id, reenable_plugin_on_chat(matches[3], tonumber(matches[5])), false)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[5], keyboard_plugins_pages(msg.from.id, false, matches[4] or 1, tonumber(matches[5]), matches[6] or false))
                     elseif matches[2] == 'DISABLE' then
                         if not system_plugin(matches[3]) then
-                            answerCallbackQuery(msg.cb_id, disable_plugin_on_chat(matches[3], tonumber(matches[4])), false)
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_list(msg.from.id, false, tonumber(matches[4]), matches[5] or false))
+                            answerCallbackQuery(msg.cb_id, disable_plugin_on_chat(matches[3], tonumber(matches[5])), false)
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[5], keyboard_plugins_pages(msg.from.id, false, matches[4] or 1, tonumber(matches[5]), matches[6] or false))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                         end
                     end
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[5])
                 else
                     return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
@@ -198,11 +222,11 @@ local function run(msg, matches)
                 if is_sudo(msg) then
                     if matches[2] == 'ENABLE' then
                         answerCallbackQuery(msg.cb_id, enable_plugin(matches[3], msg.chat.id), false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, matches[4] or 1))
                     elseif matches[2] == 'DISABLE' then
                         if not system_plugin(matches[3]) then
                             answerCallbackQuery(msg.cb_id, disable_plugin(matches[3], msg.chat.id), false)
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true))
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, matches[4] or 1))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                         end
@@ -227,7 +251,7 @@ local function run(msg, matches)
             if chat_plugins then
                 if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
-                    if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_list(msg.from.id, false, msg.chat.id)) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_pages(msg.from.id)) then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendPluginsPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -242,7 +266,7 @@ local function run(msg, matches)
                 end
             else
                 mystat('/plugins')
-                if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_list(msg.from.id, true, msg.chat.id)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendPluginsPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -373,15 +397,22 @@ return {
     patterns =
     {
         "^(###cbplugins)(DELETE)$",
-        "^(###cbplugins)(BACK)(%-%d+)$",
-        "^(###cbplugins)(BACK)(%-%d+)(.)$",
-        "^(###cbplugins)(BACK)$",
-        "^(###cbplugins)(ENABLE)(.*)(%-%d+)$",
-        "^(###cbplugins)(DISABLE)(.*)(%-%d+)$",
-        "^(###cbplugins)(ENABLE)(.*)(%-%d+)(.)$",
-        "^(###cbplugins)(DISABLE)(.*)(%-%d+)(.)$",
-        "^(###cbplugins)(ENABLE)(.*)$",
-        "^(###cbplugins)(DISABLE)(.*)$",
+        "^(###cbplugins)(PAGES)$",
+        "^(###cbplugins)(BACK)(%d+)(%-%d+)$",
+        "^(###cbplugins)(BACK)(%d+)(%-%d+)(.)$",
+        "^(###cbplugins)(BACK)(%d+)$",
+        "^(###cbplugins)(PAGE%dMINUS)(%d+)(%-%d+)$",
+        "^(###cbplugins)(PAGE%dPLUS)(%d+)(%-%d+)$",
+        "^(###cbplugins)(PAGE%dMINUS)(%d+)(%-%d+)(.)$",
+        "^(###cbplugins)(PAGE%dPLUS)(%d+)(%-%d+)(.)$",
+        "^(###cbplugins)(PAGE%dMINUS)(%d+)$",
+        "^(###cbplugins)(PAGE%dPLUS)(%d+)$",
+        "^(###cbplugins)(ENABLE)(.*)(%d+)(%-%d+)$",
+        "^(###cbplugins)(DISABLE)(.*)(%d+)(%-%d+)$",
+        "^(###cbplugins)(ENABLE)(.*)(%d+)(%-%d+)(.)$",
+        "^(###cbplugins)(DISABLE)(.*)(%d+)(%-%d+)(.)$",
+        "^(###cbplugins)(ENABLE)(.*)(%d+)$",
+        "^(###cbplugins)(DISABLE)(.*)(%d+)$",
 
         "^[#!/]([Pp][Ll][Uu][Gg][Ii][Nn][Ss])$",
         "^[#!/]([Pp][Ll][Uu][Gg][Ii][Nn][Ss]) ([Cc][Hh][Aa][Tt])$",

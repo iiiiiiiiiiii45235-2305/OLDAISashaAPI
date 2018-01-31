@@ -350,7 +350,6 @@ function system_plugin(p)
         p == 'bot' or
         p == 'check_tag' or
         p == 'database' or
-        p == 'feedback' or
         p == 'filemanager' or
         p == 'goodbyewelcome' or
         p == 'group_management' or
