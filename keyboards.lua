@@ -1238,7 +1238,6 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
     -- adjust buttons
     for k, v in pairs(keyboard.inline_keyboard[row + 1]) do
         if v.text == langs[lang].updateKeyboard then
-            v.callback_data = v.callback_data .. page
             if not privileged then
                 if from_other_plugin then
                     v.callback_data = v.callback_data .. chat_id .. 'I'
@@ -1253,7 +1252,6 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
             v.text == langs[lang].previousPage .. langs[lang].threeNumber or
             v.text == langs[lang].threeNumber .. langs[lang].nextPage or
             v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
-            v.callback_data = v.callback_data .. page
             if not privileged then
                 if from_other_plugin then
                     v.callback_data = v.callback_data .. chat_id .. 'I'
