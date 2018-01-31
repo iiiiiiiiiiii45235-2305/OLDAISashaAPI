@@ -339,19 +339,13 @@ local function run(msg, matches)
                         chat_name = data[tostring(matches[6])].set_name or ''
                     end
                     if matches[4] == 'BACK' then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
-                        if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                            editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
-                        else
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain, true)
-                            restrictionsTable[tostring(matches[6])][tostring(matches[5])] = clone_table(default_restrictions)
-                            for k, v in pairs(restrictionsTable[tostring(matches[6])][tostring(matches[5])]) do
-                                restrictionsTable[tostring(matches[6])][tostring(matches[5])][k] = false
-                            end
-                        end
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }
+                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                     elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                         restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }
                         if restrictionsTable[tostring(matches[6])][tostring(matches[7])] then
                             local remainder, weeks, days, hours, minutes, seconds = 0
                             weeks = math.floor(time / 604800)
@@ -425,6 +419,7 @@ local function run(msg, matches)
                         end
                     elseif matches[4] == 'DONE' then
                         restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }
                         if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
                             local obj_user = getChat(matches[5])
                             if obj_user then
