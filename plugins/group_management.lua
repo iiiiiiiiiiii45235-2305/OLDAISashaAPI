@@ -318,10 +318,10 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, logPages(matches[4], matches[3]), keyboard_log_pages(matches[4], matches[3]))
                 elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))))
+                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
                 elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
+                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
                 elseif matches[2] == 'BACKSETTINGS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     local chat_name = ''

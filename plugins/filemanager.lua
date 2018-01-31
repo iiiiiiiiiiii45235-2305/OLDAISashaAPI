@@ -16,10 +16,10 @@ function run(msg, matches)
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
                     elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))))
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
                     elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
                     elseif matches[2] == 'CD' then
                         if matches[3] == '.' then
                             answerCallbackQuery(msg.cb_id, pathString)

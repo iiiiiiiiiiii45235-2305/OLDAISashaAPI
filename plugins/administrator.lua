@@ -402,10 +402,10 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
                 elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 2) - tonumber(matches[2]:match('%d'))), 'html')
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
                 elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))), 'html')
+                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
                 end
                 return
             end
