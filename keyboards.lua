@@ -631,7 +631,7 @@ function keyboard_mutes_list(chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -752,7 +752,7 @@ function keyboard_settings_list(chat_id, from_other_plugin)
     column = 1
     keyboard.inline_keyboard[row] = { }
     if from_other_plugin then
-        keyboard.inline_keyboard[row][column] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id }
+        keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id }
         column = column + 1
     end
     if from_other_plugin then
@@ -1142,14 +1142,14 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         if deeper then
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][4] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         else
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         end
@@ -1247,7 +1247,7 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
         end
     end
     if from_other_plugin then
-        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
+        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
     end
     for k, v in pairs(keyboard.inline_keyboard[row + 2]) do
         if v.text == langs[lang].previousPage .. langs[lang].sevenNumber or v.text == langs[lang].previousPage .. langs[lang].threeNumber or v.text == langs[lang].threeNumber .. langs[lang].nextPage or v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
