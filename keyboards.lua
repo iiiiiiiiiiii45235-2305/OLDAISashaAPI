@@ -379,7 +379,7 @@ function keyboard_filemanager(folder, page)
 end
 
 -- help
-local max_help_buttons = 15
+local max_help_buttons = 10
 function keyboard_help_pages(chat_id, rank, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
@@ -1160,7 +1160,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
 end
 
 -- plugins
-local max_plugins_buttons = 10
+local max_plugins_buttons = 13
 function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_plugin)
     local lang = get_lang(user_id)
     local keyboard = { }
