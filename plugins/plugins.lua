@@ -183,7 +183,7 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
                 else
                     if is_sudo(msg) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) - tonumber(matches[2]:match('%d'))))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or 0) - tonumber(matches[2]:match('%d'))))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
@@ -194,7 +194,7 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
                 else
                     if is_sudo(msg) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or 0) + tonumber(matches[2]:match('%d'))))
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                     end
@@ -251,7 +251,7 @@ local function run(msg, matches)
             if chat_plugins then
                 if data[tostring(msg.chat.id)] then
                     mystat('/plugins chat')
-                    if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_pages(msg.from.id, false, msg.chat.id)) then
+                    if sendKeyboard(msg.from.id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. msg.chat.id, keyboard_plugins_pages(msg.from.id, false, 1, msg.chat.id)) then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendPluginsPvt, 'html').result.message_id
                             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
