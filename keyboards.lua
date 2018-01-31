@@ -563,7 +563,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
             end
         end
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
         end
         if from_other_plugin then
