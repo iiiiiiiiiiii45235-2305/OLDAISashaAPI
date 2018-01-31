@@ -1160,7 +1160,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
 end
 
 -- plugins
-local max_plugins_buttons = 13
+local max_plugins_buttons = 12
 function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_plugin)
     local lang = get_lang(user_id)
     local keyboard = { }
