@@ -1167,7 +1167,6 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
     keyboard.inline_keyboard = { }
     local row = 1
     local column = 1
-    local index = 0
     local flag = false
     keyboard.inline_keyboard[row] = { }
     if not page then
@@ -1247,11 +1246,12 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
             end
         end
     end
+    if from_other_plugin then
+        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
+    end
     for k, v in pairs(keyboard.inline_keyboard[row + 2]) do
-        if v.text == langs[lang].previousPage .. langs[lang].sevenNumber or
-            v.text == langs[lang].previousPage .. langs[lang].threeNumber or
-            v.text == langs[lang].threeNumber .. langs[lang].nextPage or
-            v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
+        print(v.text)
+        if v.text == langs[lang].previousPage .. langs[lang].sevenNumber or v.text == langs[lang].previousPage .. langs[lang].threeNumber or v.text == langs[lang].threeNumber .. langs[lang].nextPage or v.text == langs[lang].sevenNumber .. langs[lang].nextPage then
             if not privileged then
                 if from_other_plugin then
                     v.callback_data = v.callback_data .. chat_id .. 'I'
@@ -1260,9 +1260,6 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
                 end
             end
         end
-    end
-    if from_other_plugin then
-        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
     end
     return keyboard
 end

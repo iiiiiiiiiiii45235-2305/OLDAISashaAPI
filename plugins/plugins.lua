@@ -180,7 +180,11 @@ local function run(msg, matches)
             elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 if matches[4] then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                    if is_owner2(msg.from.id, matches[4]) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                    else
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    end
                 else
                     if is_sudo(msg) then
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
@@ -191,7 +195,11 @@ local function run(msg, matches)
             elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 if matches[4] then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                    if is_owner2(msg.from.id, matches[4]) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                    else
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    end
                 else
                     if is_sudo(msg) then
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
