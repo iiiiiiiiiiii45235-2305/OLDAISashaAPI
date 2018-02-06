@@ -968,8 +968,13 @@ local function run(msg, matches)
                                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                             elseif delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from <= 70 then
                                 mystat('/delall')
+                                local j = 1
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
-                                    local rndtime = math.random(1, 15)
+                                    -- 10 deletion per second
+                                    if i - delAll[tostring(msg.chat.id)].from > j * 10 then
+                                        j = j + 1
+                                    end
+                                    local rndtime = math.random(1, j)
                                     io.popen('lua timework.lua "deletemessage" "' .. rndtime .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
                                 end
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
