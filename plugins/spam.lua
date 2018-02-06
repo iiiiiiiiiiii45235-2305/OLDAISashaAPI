@@ -2,7 +2,7 @@ local function spamText(chat_id, text, messages, time_between_messages)
     local i = 0
     while i <(tonumber(messages or 5) /(0.5 / tonumber(time_between_messages or 2))) / 2 do
         i = i + tonumber(time_between_messages or 2)
-        io.popen('lua timework.lua "sendmessage" "' .. i .. '" "' .. chat_id .. '" "nil" "' .. text:gsub('"', '\\"') .. '"')
+        io.popen('sudo lua timework.lua "sendmessage" "' .. i .. '" "' .. chat_id .. '" "nil" "' .. text:gsub('"', '\\"') .. '"')
     end
 end
 
@@ -10,7 +10,7 @@ local function spamForward(chat_id, message_to_forward, messages, time_between_m
     local i = 0
     while i <(tonumber(messages or 5) /(0.5 / tonumber(time_between_messages or 2))) / 2 do
         i = i + tonumber(time_between_messages or 2)
-        io.popen('lua timework.lua "forwardmessage" "' .. i .. '" "' .. chat_id .. '" "' .. message_to_forward .. '"')
+        io.popen('sudo lua timework.lua "forwardmessage" "' .. i .. '" "' .. chat_id .. '" "' .. message_to_forward .. '"')
     end
 end
 
