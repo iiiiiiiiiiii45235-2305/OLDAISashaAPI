@@ -89,7 +89,7 @@ local function pre_process(msg)
                         if time == 'true' or time == '0' then
                             deleteMessage(msg.chat.id, msg.message_id)
                         else
-                            io.popen('sudo lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         end
                         if data[tostring(msg.chat.id)].settings.lock_delword and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             if not data[tostring(msg.chat.id)].settings.strict then

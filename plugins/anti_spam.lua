@@ -223,7 +223,7 @@ local function pre_process(msg)
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         local restrictedFlag = false
                         if not cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            io.popen('sudo lua timework.lua "restrictuser" "1" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                            io.popen('lua timework.lua "restrictuser" "1" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for possible shitstorm")
                             cronTable.restrictedUsers[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             restrictedFlag = true
@@ -235,11 +235,11 @@ local function pre_process(msg)
                         if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             if restrictedFlag then
                                 sendMessage(msg.chat.id, text .. ' #kick #restrict\n' .. langs[msg.lang].scheduledKick:gsub('X', '300') .. '\n' .. langs[msg.lang].allRestrictionsApplied)
-                                io.popen('sudo lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                                io.popen('lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                                 globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             else
                                 sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick:gsub('X', '10'))
-                                io.popen('sudo lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
+                                io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
                                 globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             end
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] will be kicked in 300 seconds at most for possible shitstorm")
@@ -260,7 +260,7 @@ local function pre_process(msg)
                         cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)].restricted = true
                         sendReply(msg, langs[msg.lang].commandsFlooderRestricted)
                         -- restrict for 10 minutes
-                        io.popen('sudo lua timework.lua "restrictuser" "10" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
+                        io.popen('lua timework.lua "restrictuser" "10" "' .. msg.chat.id .. '" "' .. msg.from.id .. '" "600"')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for flooding commands")
                     end
                 end
@@ -284,7 +284,7 @@ local function pre_process(msg)
                         if not already_contacted[tostring(v.id)] then
                             already_contacted[tostring(v.id)] = v.id
                             if sendChatAction(v.id, 'typing', true) then
-                                io.popen('sudo lua timework.lua "sendmessage" "0" "' .. v.id .. '" "html" "' .. attentionText .. '"')
+                                io.popen('lua timework.lua "sendmessage" "0" "' .. v.id .. '" "html" "' .. attentionText .. '"')
                             else
                                 cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
                             end
@@ -297,7 +297,7 @@ local function pre_process(msg)
                             if not already_contacted[tostring(admin.user.id)] then
                                 already_contacted[tostring(admin.user.id)] = admin.user.id
                                 if sendChatAction(admin.user.id, 'typing', true) then
-                                    io.popen('sudo lua timework.lua "sendmessage" "0" "' .. admin.user.id .. '" "html" "' .. attentionText .. '"')
+                                    io.popen('lua timework.lua "sendmessage" "0" "' .. admin.user.id .. '" "html" "' .. attentionText .. '"')
                                 else
                                     cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                                 end
@@ -311,7 +311,7 @@ local function pre_process(msg)
                         if not already_contacted[tostring(owner)] then
                             already_contacted[tostring(owner)] = owner
                             if sendChatAction(owner, 'typing', true) then
-                                io.popen('sudo lua timework.lua "sendmessage" "0" "' .. owner .. '" "html" "' .. attentionText .. '"')
+                                io.popen('lua timework.lua "sendmessage" "0" "' .. owner .. '" "html" "' .. attentionText .. '"')
                             else
                                 cant_contact = cant_contact .. owner .. '\n'
                             end
@@ -324,7 +324,7 @@ local function pre_process(msg)
                             if not already_contacted[tostring(k)] then
                                 already_contacted[tostring(k)] = k
                                 if sendChatAction(k, 'typing', true) then
-                                    io.popen('sudo lua timework.lua "sendmessage" "0" "' .. k .. '" "html" "' .. attentionText .. '"')
+                                    io.popen('lua timework.lua "sendmessage" "0" "' .. k .. '" "html" "' .. attentionText .. '"')
                                 else
                                     cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                                 end

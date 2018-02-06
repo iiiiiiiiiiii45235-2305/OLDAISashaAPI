@@ -18,7 +18,8 @@ elseif action == 'forwardmessage' then
     forwardMessage(chat_id, chat_id, message_id)
 elseif action == 'deletemessage' then
     print('TIMEWORK DELETEMESSAGE')
-    action, sleep_time, chat_id, message_id = ...
+    action, sleep_time, chat_id, message_ids = ...
+    local t = message_ids:split(',')
     if not deleteMessage(chat_id, message_id, true) then
         -- sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, message_id)
     end

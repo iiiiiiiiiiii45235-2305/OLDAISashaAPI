@@ -68,8 +68,8 @@ function run(msg, matches)
                 if sendKeyboard(msg.from.id, "@AISASHABOT FILEMANAGER TESTING KEYBOARD", keyboard_filemanager(path)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
-                        io.popen('sudo lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
-                        io.popen('sudo lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         return
                     end
                 else
