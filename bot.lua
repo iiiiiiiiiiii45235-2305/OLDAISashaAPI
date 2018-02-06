@@ -477,6 +477,7 @@ end
 function pre_process_forward(msg)
     if msg.forward_from or msg.forward_from_chat then
         msg.forward = true
+        msg.text = "FORWARDED " .. msg.text
     end
     if msg.reply then
         msg.reply_to_message = pre_process_forward(msg.reply_to_message)
