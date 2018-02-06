@@ -963,6 +963,7 @@ local function run(msg, matches)
                                     -- 10 deletion per second
                                     if i - delAll[tostring(msg.chat.id)].from > j * 10 then
                                         j = j + 1
+                                        print(i - delAll[tostring(msg.chat.id)].from, j)
                                     end
                                     io.popen('lua timework.lua "deletemessage" "' .. j .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
                                 end
