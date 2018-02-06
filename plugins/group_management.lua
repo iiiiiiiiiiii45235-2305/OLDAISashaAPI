@@ -958,14 +958,16 @@ local function run(msg, matches)
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
                             if delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from > 70 and msg.from.is_owner then
                                 mystat('/delall')
-                                local j = 1
+                                local time = 1
+                                local counter = 1
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
                                     -- 10 deletion per second
-                                    if i - delAll[tostring(msg.chat.id)].from > j * 50 then
-                                        j = j + 5
-                                        print(i - delAll[tostring(msg.chat.id)].from, j)
+                                    if i - delAll[tostring(msg.chat.id)].from > counter * 10 then
+                                        counter = counter + 1
+                                        time = time + 5
+                                        print(i - delAll[tostring(msg.chat.id)].from, time)
                                     end
-                                    io.popen('lua timework.lua "deletemessage" "' .. j .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
                                 end
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
                                 local message_id = sendReply(msg, langs[msg.lang].deletingMessages).result.message_id
