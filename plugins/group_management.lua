@@ -617,7 +617,8 @@ local function run(msg, matches)
                                 if msg.reply then
                                     forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
                                 end
-                                sendMessage(admin.user.id, text, 'html')
+                                io.popen('lua timework.lua "sendmessage" "' .. 1 .. '" "' .. admin.user.id .. '" "html" "' .. text:gsub('"', '\\"') .. '"')
+                                -- sendMessage(admin.user.id, text, 'html')
                             else
                                 cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                             end
@@ -634,7 +635,8 @@ local function run(msg, matches)
                             if msg.reply then
                                 forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
                             end
-                            sendMessage(owner, text, 'html')
+                            -- sendMessage(owner, text, 'html')
+                            io.popen('lua timework.lua "sendmessage" "' .. 1 .. '" "' .. owner .. '" "html" "' .. text:gsub('"', '\\"') .. '"')
                         else
                             cant_contact = cant_contact .. owner .. '\n'
                         end
@@ -653,7 +655,8 @@ local function run(msg, matches)
                                 if msg.reply then
                                     forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
                                 end
-                                sendMessage(k, text, 'html')
+                                -- sendMessage(k, text, 'html')
+                                io.popen('lua timework.lua "sendmessage" "' .. 1 .. '" "' .. k .. '" "html" "' .. text:gsub('"', '\\"') .. '"')
                             else
                                 cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                             end
@@ -971,7 +974,6 @@ local function run(msg, matches)
                                 local time = 1
                                 for key, var in pairs(t) do
                                     time = time + 5
-                                    print(key, var)
                                     io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. var:sub(1, -2) .. '"')
                                 end
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
