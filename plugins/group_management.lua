@@ -961,7 +961,7 @@ local function run(msg, matches)
                                 local j = 1
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
                                     -- 10 deletion per second
-                                    if i - delAll[tostring(msg.chat.id)].from > j * 10 then
+                                    if i - delAll[tostring(msg.chat.id)].from > j * 50 then
                                         j = j + 5
                                         print(i - delAll[tostring(msg.chat.id)].from, j)
                                     end
