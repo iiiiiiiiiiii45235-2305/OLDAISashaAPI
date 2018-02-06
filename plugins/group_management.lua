@@ -962,7 +962,8 @@ local function run(msg, matches)
                                 local t = { }
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
                                     -- 10 deletion per second
-                                    t[counter] = tostring(t[counter] or i) .. ','
+                                    t[counter] = t[counter] or ''
+                                    t[counter] = t[counter] .. i .. ','
                                     if i - delAll[tostring(msg.chat.id)].from > counter * 10 then
                                         counter = counter + 1
                                     end
