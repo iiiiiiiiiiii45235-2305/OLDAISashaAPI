@@ -974,8 +974,7 @@ local function run(msg, matches)
                                     if i - delAll[tostring(msg.chat.id)].from > j * 10 then
                                         j = j + 1
                                     end
-                                    local rndtime = math.random(1, j)
-                                    io.popen('lua timework.lua "deletemessage" "' .. rndtime .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "' .. j .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
                                 end
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
                                 local message_id = sendReply(msg, langs[msg.lang].deletingMessages).result.message_id
