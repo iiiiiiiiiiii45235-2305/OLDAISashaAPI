@@ -126,7 +126,7 @@ function bot_init()
     is_started = true
     -- whether the bot should be running or not.
     start_time = os.date('%c')
-    langs = dofile('languages.lua')
+    langs = loadfile("./languages.lua")()
 end
 
 function adjust_user(tab)
