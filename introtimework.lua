@@ -111,6 +111,7 @@ function bot_init()
         if obj then
             if obj.result then
                 bot = obj.result
+                bot.link = "t.me/" .. bot.username
             end
         end
     end
@@ -126,7 +127,7 @@ function bot_init()
     is_started = true
     -- whether the bot should be running or not.
     start_time = os.date('%c')
-    langs = loadfile("./languages.lua")()
+    langs = dofile('languages.lua')
 end
 
 function adjust_user(tab)
