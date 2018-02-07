@@ -295,7 +295,7 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'setnickname' and matches[2] then
         if redis:hget('tagalert:usernames', msg.from.id) then
-            if string.len(matches[2]) >= 3 then
+            if string.len(matches[2]) >= 3 and matches[2]:match('%w+') then
                 mystat('/setnickname')
                 redis:hset('tagalert:nicknames', msg.from.id, matches[2]:lower())
                 return langs[msg.lang].tagalertNicknameSet
