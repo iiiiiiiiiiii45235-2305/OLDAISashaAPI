@@ -85,15 +85,6 @@ function create_config()
     print(clr.white .. 'saved config into ./config.lua' .. clr.reset)
 end
 
-function reload_bot()
-    loadfile("./utils.lua")()
-    loadfile("./methods.lua")()
-    loadfile("./ranks.lua")()
-    loadfile("./keyboards.lua")()
-    langs = dofile('languages.lua')
-    load_plugins()
-end
-
 function bot_init()
     config = { }
     bot = nil
@@ -135,6 +126,7 @@ function bot_init()
     is_started = true
     -- whether the bot should be running or not.
     start_time = os.date('%c')
+    langs = dofile('languages.lua')
 end
 
 function adjust_user(tab)

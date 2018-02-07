@@ -599,7 +599,7 @@ local function run(msg, matches)
                 else
                     text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
                 end
-                text = text .. langs[msg.lang].msgText .. html_escape(msg.caption or msg.text) .. '\n' ..
+                text = text .. langs[msg.lang].msgText .. html_escape(msg.text or '') .. '\n' ..
                 'HASHTAG: ' .. hashtag
                 text = text:gsub('"', '\\"')
                 if msg.reply then

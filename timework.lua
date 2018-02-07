@@ -63,6 +63,7 @@ elseif action == 'contactadmins' then
     elseif tostring(shitstorm) ~= 'false' then
         fwd_msg = shitstorm
     end
+    sendMessage(chat_id, hashtag)
     if shitstormFlag then
         for k, v in pairs(config.sudo_users) do
             if not already_contacted[tostring(v.id)] then
@@ -128,5 +129,4 @@ elseif action == 'contactadmins' then
     if cant_contact ~= '' then
         sendMessage(chat_id, langs[get_lang(chat_id)].cantContact .. cant_contact)
     end
-    sendMessage(chat_id, hashtag)
 end
