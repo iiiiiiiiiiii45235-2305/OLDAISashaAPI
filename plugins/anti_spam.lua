@@ -276,66 +276,8 @@ local function pre_process(msg)
                     local attentionText = langs[msg.lang].possibleShitstorm .. chat_name .. '\n' ..
                     'HASHTAG: ' .. hashtag
                     attentionText = attentionText:gsub('"', '\\"')
-                    local already_contacted = { }
-                    already_contacted[tostring(bot.id)] = bot.id
-                    already_contacted[tostring(bot.userVersion.id)] = bot.userVersion.id
-                    local cant_contact = ''
-                    for k, v in pairs(config.sudo_users) do
-                        if not already_contacted[tostring(v.id)] then
-                            already_contacted[tostring(v.id)] = v.id
-                            if sendChatAction(v.id, 'typing', true) then
-                                io.popen('lua timework.lua "sendmessage" "0" "' .. v.id .. '" "html" "' .. attentionText .. '"')
-                            else
-                                cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
-                            end
-                        end
-                    end
-
-                    local list = getChatAdministrators(msg.chat.id)
-                    if list then
-                        for i, admin in pairs(list.result) do
-                            if not already_contacted[tostring(admin.user.id)] then
-                                already_contacted[tostring(admin.user.id)] = admin.user.id
-                                if sendChatAction(admin.user.id, 'typing', true) then
-                                    io.popen('lua timework.lua "sendmessage" "0" "' .. admin.user.id .. '" "html" "' .. attentionText .. '"')
-                                else
-                                    cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
-                                end
-                            end
-                        end
-                    end
-
-                    -- owner
-                    local owner = data[tostring(msg.chat.id)]['set_owner']
-                    if owner then
-                        if not already_contacted[tostring(owner)] then
-                            already_contacted[tostring(owner)] = owner
-                            if sendChatAction(owner, 'typing', true) then
-                                io.popen('lua timework.lua "sendmessage" "0" "' .. owner .. '" "html" "' .. attentionText .. '"')
-                            else
-                                cant_contact = cant_contact .. owner .. '\n'
-                            end
-                        end
-                    end
-
-                    -- determine if table is empty
-                    if next(data[tostring(msg.chat.id)]['moderators']) ~= nil then
-                        for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                            if not already_contacted[tostring(k)] then
-                                already_contacted[tostring(k)] = k
-                                if sendChatAction(k, 'typing', true) then
-                                    io.popen('lua timework.lua "sendmessage" "0" "' .. k .. '" "html" "' .. attentionText .. '"')
-                                else
-                                    cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
-                                end
-                            end
-                        end
-                    end
-                    if cant_contact ~= '' then
-                        sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
-                    end
+                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "true" "' .. hashtag .. '" "' .. attentionText .. '"')
                     data[tostring(msg.chat.id)]['settings']['lock_spam'] = true
-                    sendMessage(msg.chat.id, hashtag)
                 end
                 if usermsgs >= NUM_MSG_MAX then
                     return nil

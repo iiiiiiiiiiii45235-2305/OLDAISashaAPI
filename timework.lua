@@ -47,4 +47,86 @@ elseif action == 'banuser' then
     else
         kickChatMember(user_id, chat_id)
     end
+elseif action == 'contactadmins' then
+    print('TIMEWORK CONTACT ADMINS')
+    action, sleep_time, chat_id, shitstorm, hashtag, text = ...
+    local data = load_data(config.moderation.data)
+
+    local already_contacted = { }
+    already_contacted[tostring(bot.id)] = bot.id
+    already_contacted[tostring(bot.userVersion.id)] = bot.userVersion.id
+    local cant_contact = ''
+    local shitstormFlag = false
+    local fwd_msg = nil
+    if tostring(shitstorm) == 'true' then
+        shitstormFlag = true
+    elseif tostring(shitstorm) ~= 'false' then
+        fwd_msg = shitstorm
+    end
+    if shitstormFlag then
+        for k, v in pairs(config.sudo_users) do
+            if not already_contacted[tostring(v.id)] then
+                already_contacted[tostring(v.id)] = v.id
+                if sendChatAction(v.id, 'typing', true) then
+                    sendMessage(v.id, text, 'html')
+                else
+                    cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
+                end
+            end
+        end
+    end
+    local list = getChatAdministrators(chat_id)
+    if list then
+        for i, admin in pairs(list.result) do
+            if not already_contacted[tostring(admin.user.id)] then
+                already_contacted[tostring(admin.user.id)] = admin.user.id
+                if sendChatAction(admin.user.id, 'typing', true) then
+                    if not shitstormFlag and fwd_msg then
+                        -- @admins command
+                        forwardMessage(admin.user.id, chat_id, fwd_msg)
+                    end
+                    sendMessage(admin.user.id, text, 'html')
+                else
+                    cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
+                end
+            end
+        end
+    end
+    -- owner
+    local owner = data[tostring(chat_id)]['set_owner']
+    if owner then
+        if not already_contacted[tostring(owner)] then
+            already_contacted[tostring(owner)] = owner
+            if sendChatAction(owner, 'typing', true) then
+                if not shitstormFlag and fwd_msg then
+                    -- @admins command
+                    forwardMessage(owner, chat_id, fwd_msg)
+                end
+                sendMessage(owner, text, 'html')
+            else
+                cant_contact = cant_contact .. owner .. '\n'
+            end
+        end
+    end
+    -- determine if table is empty
+    if next(data[tostring(chat_id)]['moderators']) ~= nil then
+        for k, v in pairs(data[tostring(chat_id)]['moderators']) do
+            if not already_contacted[tostring(k)] then
+                already_contacted[tostring(k)] = k
+                if sendChatAction(k, 'typing', true) then
+                    if not shitstormFlag and fwd_msg then
+                        -- @admins command
+                        forwardMessage(k, chat_id, fwd_msg)
+                    end
+                    sendMessage(k, text, 'html')
+                else
+                    cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
+                end
+            end
+        end
+    end
+    if cant_contact ~= '' then
+        sendMessage(chat_id, langs[get_lang(chat_id)].cantContact .. cant_contact)
+    end
+    sendMessage(chat_id, hashtag)
 end

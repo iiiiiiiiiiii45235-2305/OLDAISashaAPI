@@ -599,72 +599,13 @@ local function run(msg, matches)
                 else
                     text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
                 end
-                text = text .. langs[msg.lang].msgText .. html_escape(msg.text or msg.caption) .. '\n' ..
+                text = text .. langs[msg.lang].msgText .. html_escape(msg.caption or msg.text) .. '\n' ..
                 'HASHTAG: ' .. hashtag
-
-                sendMessage(msg.chat.id, hashtag)
-
-                local already_contacted = { }
-                already_contacted[tostring(bot.id)] = bot.id
-                already_contacted[tostring(bot.userVersion.id)] = bot.userVersion.id
-                local cant_contact = ''
-                local list = getChatAdministrators(msg.chat.id)
-                if list then
-                    for i, admin in pairs(list.result) do
-                        if not already_contacted[tostring(admin.user.id)] then
-                            already_contacted[tostring(admin.user.id)] = admin.user.id
-                            if sendChatAction(admin.user.id, 'typing', true) then
-                                if msg.reply then
-                                    forwardMessage(admin.user.id, msg.chat.id, msg.reply_to_message.message_id)
-                                end
-                                io.popen('lua timework.lua "sendmessage" "' .. 1 .. '" "' .. admin.user.id .. '" "html" "' .. text:gsub('"', '\\"') .. '"')
-                                -- sendMessage(admin.user.id, text, 'html')
-                            else
-                                cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
-                            end
-                        end
-                    end
-                end
-
-                -- owner
-                local owner = data[tostring(msg.chat.id)]['set_owner']
-                if owner then
-                    if not already_contacted[tostring(owner)] then
-                        already_contacted[tostring(owner)] = owner
-                        if sendChatAction(owner, 'typing', true) then
-                            if msg.reply then
-                                forwardMessage(owner, msg.chat.id, msg.reply_to_message.message_id)
-                            end
-                            -- sendMessage(owner, text, 'html')
-                            io.popen('lua timework.lua "sendmessage" "' .. 1 .. '" "' .. owner .. '" "html" "' .. text:gsub('"', '\\"') .. '"')
-                        else
-                            cant_contact = cant_contact .. owner .. '\n'
-                        end
-                    end
-                end
-
-                -- determine if table is empty
-                if next(data[tostring(msg.chat.id)]['moderators']) == nil then
-                    -- fix way
-                    return
+                text = text:gsub('"', '\\"')
+                if msg.reply then
+                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "' .. msg.reply_to_message.message_id .. '" "' .. hashtag .. '" "' .. text .. '"')
                 else
-                    for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
-                        if not already_contacted[tostring(k)] then
-                            already_contacted[tostring(k)] = k
-                            if sendChatAction(k, 'typing', true) then
-                                if msg.reply then
-                                    forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
-                                end
-                                -- sendMessage(k, text, 'html')
-                                io.popen('lua timework.lua "sendmessage" "' .. 1 .. '" "' .. k .. '" "html" "' .. text:gsub('"', '\\"') .. '"')
-                            else
-                                cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
-                            end
-                        end
-                    end
-                end
-                if cant_contact ~= '' then
-                    sendMessage(msg.chat.id, langs[msg.lang].cantContact .. cant_contact)
+                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "false" "' .. hashtag .. '" "' .. text .. '"')
                 end
                 return
             else
