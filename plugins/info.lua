@@ -252,7 +252,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             local obj = getChat(matches[3])
                             editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
-                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3] ..(matches[4] or matches[3]))
                             updated = true
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -450,7 +450,7 @@ local function run(msg, matches)
                             local text = gbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -459,7 +459,7 @@ local function run(msg, matches)
                             local text = ungbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -468,7 +468,7 @@ local function run(msg, matches)
                             local text = blockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -477,7 +477,7 @@ local function run(msg, matches)
                             local text = unblockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3])
+                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -1363,13 +1363,13 @@ return {
     patterns =
     {
         "^(###cbinfo)(DELETE)$",
-        "^(###cbinfo)(DELETE)(%-?%d+)$",
-        "^(###cbinfo)(DELETE)(%-?%d+)(%-?%d+)$",
+        "^(###cbinfo)(DELETE)(%-%d+)$",
+        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)?$",
         "^(###cbinfo)(BACK)(%-?%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
-        "^(###cbinfo)(BACK)(%-?%d+)(%-?%d+)$",
+        "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)?$",
         "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
@@ -1379,13 +1379,13 @@ return {
         "^(###cbinfo)(WARNSPLUS)(%d+)(%-%d+)$",
         "^(###cbinfo)(UNBAN)(%d+)(%-%d+)$",
         "^(###cbinfo)(BAN)(%d+)(%-%d+)$",
-        "^(###cbinfo)(UNGBAN)(%d+)$",
-        "^(###cbinfo)(GBAN)(%d+)$",
-        "^(###cbinfo)(PMUNBLOCK)(%d+)$",
-        "^(###cbinfo)(PMBLOCK)(%d+)$",
+        "^(###cbinfo)(UNGBAN)(%d+)(%-%d+)?$",
+        "^(###cbinfo)(GBAN)(%d+)(%-%d+)?$",
+        "^(###cbinfo)(PMUNBLOCK)(%d+)(%-%d+)?$",
+        "^(###cbinfo)(PMBLOCK)(%d+)(%-%d+)?$",
         "^(###cbinfo)(DEMOTE)(%d+)(%-%d+)$",
         "^(###cbinfo)(PROMOTE)(%d+)(%-%d+)$",
-        "^(###cbinfo)(ADMINCOMMANDS)(%d+)(%-?%d+)$",
+        "^(###cbinfo)(ADMINCOMMANDS)(%d+)(%-%d+)?$",
         "^(###cbinfo)(PUNISHMENTS)(%d+)(%-%d+)$",
         "^(###cbinfo)(PROMOTIONS)(%d+)(%-%d+)$",
 

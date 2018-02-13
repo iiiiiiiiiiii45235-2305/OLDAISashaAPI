@@ -823,12 +823,15 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 if deeper == 'ADMINCOMMANDS' then
                     local is_executer_admin = is_admin2(executer)
                     if is_executer_admin then
+                        --[[if tonumber(chat_id) > 0 then
+                            chat_id = ''
+                        end]]
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
                         if isGbanned(obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED ✅', callback_data = 'infoUNGBAN' .. obj.id }
+                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED ✅', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
                         else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED ☑️', callback_data = 'infoGBAN' .. obj.id }
+                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED ☑️', callback_data = 'infoGBAN' .. obj.id .. chat_id }
                         end
                     end
                 else
@@ -977,19 +980,22 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 if deeper == 'ADMINCOMMANDS' then
                     local is_executer_admin = is_admin2(executer)
                     if is_executer_admin then
+                        --[[if tonumber(chat_id) > 0 then
+                            chat_id = ''
+                        end]]
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
                         if isGbanned(obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED ✅', callback_data = 'infoUNGBAN' .. obj.id }
+                            keyboard.inline_keyboard[row][column] = { text = '✅ GBANNED ✅', callback_data = 'infoUNGBAN' .. obj.id .. chat_id }
                         else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED ☑️', callback_data = 'infoGBAN' .. obj.id }
+                            keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED ☑️', callback_data = 'infoGBAN' .. obj.id .. chat_id }
                         end
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
                         if isBlocked(obj.id) then
-                            keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED ✅', callback_data = 'infoPMUNBLOCK' .. obj.id }
+                            keyboard.inline_keyboard[row][column] = { text = '✅ PM BLOCKED ✅', callback_data = 'infoPMUNBLOCK' .. obj.id .. chat_id }
                         else
-                            keyboard.inline_keyboard[row][column] = { text = '☑️ PM BLOCKED ☑️', callback_data = 'infoPMBLOCK' .. obj.id }
+                            keyboard.inline_keyboard[row][column] = { text = '☑️ PM BLOCKED ☑️', callback_data = 'infoPMBLOCK' .. obj.id .. chat_id }
                         end
                     end
                 else
