@@ -252,7 +252,7 @@ local function run(msg, matches)
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                             local obj = getChat(matches[3])
                             editMessage(msg.chat.id, msg.message_id, get_object_info(obj, matches[4] or matches[3]), get_object_info_keyboard(msg.from.id, obj, matches[4] or matches[3], matches[2]))
-                            mystat(matches[1] .. matches[2] .. matches[3] ..(matches[4] or matches[3]))
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                             updated = true
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
@@ -449,8 +449,9 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = gbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
+                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -458,8 +459,9 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = ungbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
+                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -467,8 +469,9 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = blockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
+                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -476,8 +479,9 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = unblockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
+                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. (matches[4] or matches[3]))
+                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -1327,30 +1331,11 @@ local function pre_process(msg)
         if msg.chat.type == 'private' and msg.forward then
             if get_rank(msg.from.id, msg.chat.id, true) > 0 then
                 -- if moderator in some group or higher
-                local txt = langs[msg.lang].noObject
-                local keyboard = nil
                 if msg.forward_from then
-                    txt = get_object_info(msg.forward_from, msg.chat.id)
-                    if txt ~= langs[msg.lang].noObject then
-                        keyboard = get_object_info_keyboard(msg.from.id, msg.forward_from, msg.chat.id)
-                    else
-                        sendMessage(msg.chat.id, txt)
-                    end
+                    sendMessage(msg.chat.id, get_object_info(msg.forward_from, msg.chat.id))
                 end
                 if msg.forward_from_chat then
-                    txt = get_object_info(msg.forward_from_chat, msg.chat.id)
-                    if txt ~= langs[msg.lang].noObject then
-                        keyboard = get_object_info_keyboard(msg.from.id, msg.forward_from_chat, msg.chat.id)
-                    else
-                        sendMessage(msg.chat.id, txt)
-                    end
-                end
-                if keyboard and txt ~= langs[msg.lang].noObject then
-                    if not sendKeyboard(msg.from.id, txt, keyboard) then
-                        sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
-                    end
-                else
-                    sendMessage(msg.chat.id, txt)
+                    sendMessage(msg.chat.id, get_object_info(msg.forward_from_chat, msg.chat.id))
                 end
             end
         end
@@ -1364,12 +1349,12 @@ return {
     {
         "^(###cbinfo)(DELETE)$",
         "^(###cbinfo)(DELETE)(%-%d+)$",
-        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)?$",
-        "^(###cbinfo)(BACK)(%-?%d+)$",
+        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)$",
+        "^(###cbinfo)(BACK)(%-%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
-        "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)?$",
+        "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
@@ -1379,13 +1364,13 @@ return {
         "^(###cbinfo)(WARNSPLUS)(%d+)(%-%d+)$",
         "^(###cbinfo)(UNBAN)(%d+)(%-%d+)$",
         "^(###cbinfo)(BAN)(%d+)(%-%d+)$",
-        "^(###cbinfo)(UNGBAN)(%d+)(%-%d+)?$",
-        "^(###cbinfo)(GBAN)(%d+)(%-%d+)?$",
-        "^(###cbinfo)(PMUNBLOCK)(%d+)(%-%d+)?$",
-        "^(###cbinfo)(PMBLOCK)(%d+)(%-%d+)?$",
+        "^(###cbinfo)(UNGBAN)(%d+)(%-%d+)$",
+        "^(###cbinfo)(GBAN)(%d+)(%-%d+)$",
+        "^(###cbinfo)(PMUNBLOCK)(%d+)(%-%d+)$",
+        "^(###cbinfo)(PMBLOCK)(%d+)(%-%d+)$",
         "^(###cbinfo)(DEMOTE)(%d+)(%-%d+)$",
         "^(###cbinfo)(PROMOTE)(%d+)(%-%d+)$",
-        "^(###cbinfo)(ADMINCOMMANDS)(%d+)(%-%d+)?$",
+        "^(###cbinfo)(ADMINCOMMANDS)(%d+)(%-%d+)$",
         "^(###cbinfo)(PUNISHMENTS)(%d+)(%-%d+)$",
         "^(###cbinfo)(PROMOTIONS)(%d+)(%-%d+)$",
 
