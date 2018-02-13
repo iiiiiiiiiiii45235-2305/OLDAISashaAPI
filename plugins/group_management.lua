@@ -484,8 +484,8 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'GRANT' then
-                    restrictionsTable[tostring(matches[5])] = restrictionsTable[tostring(matches[5])] or { }
-                    restrictionsTable[tostring(matches[5])][tostring(matches[3])] = restrictionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
+                    permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
+                    permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].denied, false)
                     local chat_name = ''
                     if data[tostring(matches[5])] then
@@ -495,6 +495,8 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'DENY' then
+                    permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
+                    permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].granted, false)
                     local chat_name = ''
                     if data[tostring(matches[5])] then
@@ -504,6 +506,8 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'PERMISSIONSDONE' then
+                    permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
+                    permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
                     if is_owner2(msg.from.id, matches[4]) then
                         local obj_user = getChatMember(matches[4], matches[3])
                         if type(obj_user) == 'table' then
