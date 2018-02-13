@@ -531,7 +531,7 @@ local function run(msg, matches)
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
                         end
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
