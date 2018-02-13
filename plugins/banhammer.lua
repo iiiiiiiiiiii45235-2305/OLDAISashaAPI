@@ -2515,8 +2515,23 @@ local function pre_process(msg)
                     end
                     if isGbanned(msg.from.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
                         print('User is gbanned!')
-                        ban = true
-                        reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
+                        local strict = false
+                        if data[tostring(msg.chat.id)] then
+                            if data[tostring(msg.chat.id)].settings then
+                                strict = data[tostring(msg.chat.id)].settings.strict
+                            end
+                        end
+                        if strict then
+                            ban = true
+                            reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
+                        else
+                            if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
+                                sendMessage(msg.chat.id, '#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict' .. '\n' .. langs[msg.lang].reasonGbannedUser)
+                            else
+                                redis:sadd('whitelist:gban:' .. msg.chat.tg_cli_id, msg.from.id)
+                                sendMessage(msg.chat.id, msg.from.id .. langs[msg.lang].whitelistGbanAdded)
+                            end
+                        end
                     end
                     if ban and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned and kicked ! ")
@@ -2539,8 +2554,23 @@ local function pre_process(msg)
             end
             if isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id) then
                 print('Gbanned user talking!')
-                ban = true
-                reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
+                local strict = false
+                if data[tostring(msg.chat.id)] then
+                    if data[tostring(msg.chat.id)].settings then
+                        strict = data[tostring(msg.chat.id)].settings.strict
+                    end
+                end
+                if strict then
+                    ban = true
+                    reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
+                else
+                    if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
+                        sendMessage(msg.chat.id, '#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict' .. '\n' .. langs[msg.lang].reasonGbannedUser)
+                    else
+                        redis:sadd('whitelist:gban:' .. msg.chat.tg_cli_id, msg.from.id)
+                        sendMessage(msg.chat.id, msg.from.id .. langs[msg.lang].whitelistGbanAdded)
+                    end
+                end
             end
             if ban and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                 -- Check it with redis

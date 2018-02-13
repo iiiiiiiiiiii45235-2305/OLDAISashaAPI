@@ -303,7 +303,7 @@ function demoteChatMember(chat_id, user_id)
     return promoteChatMember(chat_id, user_id, demote_table)
 end
 
-function restrictChatMember(chat_id, user_id, restrictions, until_date, no_notice)
+function restrictChatMember(chat_id, user_id, restrictions, until_date)
     user_id = tostring(user_id):gsub(' ', '')
     --[[local restrictions = { can_send_messages = true,
     can_send_media_messages = true, -- implies can_send_messages
@@ -329,7 +329,7 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date, no_notic
     end
 end
 
-function unrestrictChatMember(chat_id, user_id, no_notice)
+function unrestrictChatMember(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
     local unrestrict_table = {
         can_send_messages = true,
@@ -337,7 +337,7 @@ function unrestrictChatMember(chat_id, user_id, no_notice)
         can_send_other_messages = true,
         can_add_web_page_previews = true
     }
-    return restrictChatMember(chat_id, user_id, unrestrict_table, nil, no_notice)
+    return restrictChatMember(chat_id, user_id, unrestrict_table, nil)
 end
 
 function leaveChat(chat_id)
