@@ -1367,13 +1367,13 @@ return {
     patterns =
     {
         "^(###cbinfo)(DELETE)$",
-        "^(###cbinfo)(DELETE)(%-%d+)$",
-        "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)$",
-        "^(###cbinfo)(BACK)(%-%d+)$",
+        "^(###cbinfo)(DELETE)(%-?%d+)$",
+        "^(###cbinfo)(DELETE)(%-?%d+)(%-?%d+)$",
+        "^(###cbinfo)(BACK)(%-?%d+)$",
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
-        "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
+        "^(###cbinfo)(BACK)(%-?%d+)(%-?%d+)$",
         "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
