@@ -2445,7 +2445,11 @@ local function pre_process(msg)
                 if msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
                     local text = ''
                     local inviteFlood = false
-                    if #msg.added >= 5 then
+                    local counter = 0
+                    for k, v in pairs(msg.added) do
+                        counter = counter + 1
+                    end
+                    if counter >= 5 then
                         if not is_owner(msg) then
                             inviteFlood = true
                             if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
@@ -2462,12 +2466,12 @@ local function pre_process(msg)
                             ban = true
                             reason = reason .. langs[msg.lang].reasonInviteFlood .. '\n'
                         end
-                        if isBanned(v.id, msg.chat.id) and not msg.from.is_mod then
+                        if isBanned(v.id, msg.chat.id) and not is_mod2(v.id, msg.chat.id, true) then
                             print('User is banned!')
                             ban = true
                             reason = reason .. langs[msg.lang].reasonBannedUser .. '\n'
                         end
-                        if isGbanned(v.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, v.id)) then
+                        if isGbanned(v.id) and not(is_mod2(v.id, msg.chat.id, true) or isWhitelistedGban(msg.chat.tg_cli_id, v.id)) then
                             print('User is gbanned!')
                             ban = true
                             reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
@@ -2513,7 +2517,7 @@ local function pre_process(msg)
                         ban = true
                         reason = reason .. langs[msg.lang].reasonBannedUser .. '\n'
                     end
-                    if isGbanned(msg.from.id) and not(is_admin2(msg.from.id) or isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
+                    if isGbanned(msg.from.id) and not(msg.from.is_mod or isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
                         print('User is gbanned!')
                         local strict = false
                         if data[tostring(msg.chat.id)] then
@@ -2547,12 +2551,12 @@ local function pre_process(msg)
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             local ban = false
             local reason = ''
-            if isBanned(msg.from.id, msg.chat.id) then
+            if isBanned(msg.from.id, msg.chat.id) and not msg.from.is_mod then
                 print('Banned user talking!')
                 ban = true
                 reason = reason .. langs[msg.lang].reasonBannedUser .. '\n'
             end
-            if isGbanned(msg.from.id) and not isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id) then
+            if isGbanned(msg.from.id) and not(msg.from.is_mod or isWhitelistedGban(msg.chat.tg_cli_id, msg.from.id)) then
                 print('Gbanned user talking!')
                 local strict = false
                 if data[tostring(msg.chat.id)] then
