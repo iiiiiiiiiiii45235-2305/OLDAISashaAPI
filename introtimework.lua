@@ -105,20 +105,29 @@ function bot_init()
     loadfile("./ranks.lua")()
     loadfile("./keyboards.lua")()
 
-    while not bot do
-        -- Get bot info and retry if unable to connect.
-        local obj = getMe()
-        if obj then
-            if obj.result then
-                bot = obj.result
-                bot.link = "t.me/" .. bot.username
-            end
-        end
-    end
-    local obj = getChat(149998353)
-    if type(obj) == 'table' then
-        bot.userVersion = obj
-    end
+    bot = {
+        first_name = "Sasha A.I. BOT",
+        id = 283058260,
+        is_bot = true,
+        link = "t.me/AISashaBot",
+        print_name = "Sasha A.I. BOT",
+        tg_cli_id = 283058260,
+        type = "bot",
+        userVersion =
+        {
+            first_name = "Sasha",
+            id = 149998353,
+            last_name = "A.I.",
+            photo =
+            {
+                big_file_id = "AQADBAAD-KgxGxHL8AgACBWlRBkABL0Kzoc82qQS8woAAgI",
+                small_file_id = "AQADBAAD-KgxGxHL8AgACBWlRBkABKD2Z-Gkcg4f8QoAAgI"
+            },
+            type = "private",
+            username = "AISasha"
+        },
+        username = "AISashaBot"
+    }
 
     last_update = last_update or 0
     -- Set loop variables: Update offset,
