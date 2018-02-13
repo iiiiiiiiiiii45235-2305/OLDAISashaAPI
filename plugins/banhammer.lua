@@ -163,14 +163,22 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
                 elseif matches[2] == 'RESTRICT' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].ok, false)
+                    local chat_name = ''
+                    if data[tostring(matches[4])] then
+                        chat_name = data[tostring(matches[4])].set_name or ''
+                    end
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'UNRESTRICT' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].ok, false)
+                    local chat_name = ''
+                    if data[tostring(matches[4])] then
+                        chat_name = data[tostring(matches[4])].set_name or ''
+                    end
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'RESTRICTIONSDONE' then
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
                     if is_mod2(msg.from.id, matches[4]) then

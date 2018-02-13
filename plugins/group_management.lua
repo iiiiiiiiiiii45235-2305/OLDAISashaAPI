@@ -485,14 +485,22 @@ local function run(msg, matches)
                     end
                 elseif matches[2] == 'GRANT' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].denied, false)
+                    local chat_name = ''
+                    if data[tostring(matches[4])] then
+                        chat_name = data[tostring(matches[4])].set_name or ''
+                    end
                     permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = true
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'DENY' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].granted, false)
+                    local chat_name = ''
+                    if data[tostring(matches[4])] then
+                        chat_name = data[tostring(matches[4])].set_name or ''
+                    end
                     permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = true
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'PERMISSIONSDONE' then
                     if is_owner2(msg.from.id, matches[4]) then
                         local obj_user = getChatMember(matches[4], matches[3])
