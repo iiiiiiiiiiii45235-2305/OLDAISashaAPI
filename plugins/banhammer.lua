@@ -169,7 +169,23 @@ local function run(msg, matches)
                     if data[tostring(matches[5])] then
                         chat_name = data[tostring(matches[5])].set_name or ''
                     end
-                    restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_media_messages'] = false
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_other_messages'] = false
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_add_web_page_previews'] = false
+                    end
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_send_media_messages' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_other_messages'] = false
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_add_web_page_previews'] = false
+                    end
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_send_other_messages' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
+                    end
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
+                    end
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'UNRESTRICT' then
@@ -180,7 +196,23 @@ local function run(msg, matches)
                     if data[tostring(matches[5])] then
                         chat_name = data[tostring(matches[5])].set_name or ''
                     end
-                    restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
+                    end
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_send_media_messages' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_messages'] = true
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
+                    end
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_send_other_messages' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_messages'] = true
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_media_messages'] = true
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
+                    end
+                    if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_messages'] = true
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_media_messages'] = true
+                        restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
+                    end
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'RESTRICTIONSDONE' then
