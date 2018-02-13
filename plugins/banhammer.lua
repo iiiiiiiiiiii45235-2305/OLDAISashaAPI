@@ -162,25 +162,30 @@ local function run(msg, matches)
                     end
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
                 elseif matches[2] == 'RESTRICT' then
+                    restrictionsTable[tostring(matches[5])] = restrictionsTable[tostring(matches[5])] or { }
+                    restrictionsTable[tostring(matches[5])][tostring(matches[3])] = restrictionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_restrictions)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].ok, false)
                     local chat_name = ''
-                    if data[tostring(matches[4])] then
-                        chat_name = data[tostring(matches[4])].set_name or ''
+                    if data[tostring(matches[5])] then
+                        chat_name = data[tostring(matches[5])].set_name or ''
                     end
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'UNRESTRICT' then
+                    restrictionsTable[tostring(matches[5])] = restrictionsTable[tostring(matches[5])] or { }
+                    restrictionsTable[tostring(matches[5])][tostring(matches[3])] = restrictionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_restrictions)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].ok, false)
                     local chat_name = ''
-                    if data[tostring(matches[4])] then
-                        chat_name = data[tostring(matches[4])].set_name or ''
+                    if data[tostring(matches[5])] then
+                        chat_name = data[tostring(matches[5])].set_name or ''
                     end
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                 elseif matches[2] == 'RESTRICTIONSDONE' then
-                    restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
+                    restrictionsTable[tostring(matches[4])] = restrictionsTable[tostring(matches[4])] or { }
+                    restrictionsTable[tostring(matches[4])][tostring(matches[3])] = restrictionsTable[tostring(matches[4])][tostring(matches[3])] or clone_table(default_restrictions)
                     if is_mod2(msg.from.id, matches[4]) then
                         local obj_user = getChatMember(matches[4], matches[3])
                         if type(obj_user) == 'table' then
@@ -199,9 +204,9 @@ local function run(msg, matches)
                             if not cronTable.keyboardActions[tostring(matches[4])] then
                                 cronTable.keyboardActions[tostring(matches[4])] = { }
                             end
-                            if restrictUser(matches[5], obj_user.user, restrictionsTable[tostring(matches[4])][tostring(matches[3])]) then
+                            if restrictUser(matches[4], obj_user.user, restrictionsTable[tostring(matches[4])][tostring(matches[3])]) then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
-                                restrictionsTable[tostring(matches[6])][tostring(obj_user.id)] = nil
+                                restrictionsTable[tostring(matches[4])][tostring(obj_user.id)] = nil
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
