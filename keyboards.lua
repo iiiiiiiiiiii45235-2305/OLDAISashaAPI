@@ -823,9 +823,10 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 if deeper == 'ADMINCOMMANDS' then
                     local is_executer_admin = is_admin2(executer)
                     if is_executer_admin then
-                        --[[if tonumber(chat_id) > 0 then
+                        local tmp = chat_id
+                        if tonumber(chat_id) > 0 then
                             chat_id = ''
-                        end]]
+                        end
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
                         if isGbanned(obj.id) then
@@ -833,6 +834,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                         else
                             keyboard.inline_keyboard[row][column] = { text = '☑️ GBANNED ☑️', callback_data = 'infoGBAN' .. obj.id .. chat_id }
                         end
+                        chat_id = tmp
                     end
                 else
                     if tonumber(chat_id) < 0 then
@@ -980,9 +982,10 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 if deeper == 'ADMINCOMMANDS' then
                     local is_executer_admin = is_admin2(executer)
                     if is_executer_admin then
-                        --[[if tonumber(chat_id) > 0 then
+                        local tmp = chat_id
+                        if tonumber(chat_id) > 0 then
                             chat_id = ''
-                        end]]
+                        end
                         row = row + 1
                         keyboard.inline_keyboard[row] = { }
                         if isGbanned(obj.id) then
@@ -997,6 +1000,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                         else
                             keyboard.inline_keyboard[row][column] = { text = '☑️ PM BLOCKED ☑️', callback_data = 'infoPMBLOCK' .. obj.id .. chat_id }
                         end
+                        chat_id = tmp
                     end
                 else
                     if tonumber(chat_id) < 0 then
