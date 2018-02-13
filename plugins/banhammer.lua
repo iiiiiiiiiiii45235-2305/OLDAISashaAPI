@@ -2526,7 +2526,7 @@ local function pre_process(msg)
                             reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
                         else
                             if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
-                                sendMessage(msg.chat.id, '#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict' .. '\n' .. langs[msg.lang].reasonGbannedUser)
+                                sendMessage(msg.chat.id, '#user' .. msg.from.id .. ' #executer' .. bot.id .. ' #restrict' .. '\n' .. langs[msg.lang].reasonGbannedUser)
                             else
                                 redis:sadd('whitelist:gban:' .. msg.chat.tg_cli_id, msg.from.id)
                                 sendMessage(msg.chat.id, msg.from.id .. langs[msg.lang].whitelistGbanAdded)
@@ -2565,7 +2565,7 @@ local function pre_process(msg)
                     reason = reason .. langs[msg.lang].reasonGbannedUser .. '\n'
                 else
                     if restrictChatMember(msg.chat.id, msg.from.id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }) then
-                        sendMessage(msg.chat.id, '#user' .. obj_user.id .. ' #executer' .. msg.from.id .. ' #restrict' .. '\n' .. langs[msg.lang].reasonGbannedUser)
+                        sendMessage(msg.chat.id, '#user' .. msg.from.id .. ' #executer' .. bot.id .. ' #restrict' .. '\n' .. langs[msg.lang].reasonGbannedUser)
                     else
                         redis:sadd('whitelist:gban:' .. msg.chat.tg_cli_id, msg.from.id)
                         sendMessage(msg.chat.id, msg.from.id .. langs[msg.lang].whitelistGbanAdded)
