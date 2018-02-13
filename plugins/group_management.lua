@@ -1,4 +1,8 @@
 ﻿-- REFACTORING OF INPM.LUA INREALM.LUA INGROUP.LUA AND SUPERGROUP.LUA
+-- table to manage restrictions of a user in a keyboard
+local permissionsTable = {
+    -- chat_id = { user_id = { permissions } }
+}
 -- Empty tables for solving multiple problems(thanks to @topkecleon)
 local cronTable = {
     adminsContacted =
@@ -303,6 +307,25 @@ local function logPages(chat_id, page)
     return message
 end
 
+local function userPermissions(chat_id, user_id)
+    local obj_user = getChatMember(chat_id, user_id)
+    if type(obj_user) == 'table' then
+        if obj_user.result then
+            obj_user = obj_user.result
+            if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                obj_user = nil
+            end
+        else
+            obj_user = nil
+        end
+    else
+        obj_user = nil
+    end
+    if obj_user then
+        return adjustPermissions(obj_user)
+    end
+end
+
 local function run(msg, matches)
     if msg.cb then
         if matches[1] then
@@ -461,45 +484,18 @@ local function run(msg, matches)
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                     end
                 elseif matches[2] == 'GRANT' then
-                    if is_owner2(msg.from.id, matches[5]) then
-                        local obj_user = getChatMember(matches[5], matches[3])
-                        if type(obj_user) == 'table' then
-                            if obj_user.result then
-                                obj_user = obj_user.result
-                                if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
-                                    obj_user = nil
-                                end
-                            else
-                                obj_user = nil
-                            end
-                        else
-                            obj_user = nil
-                        end
-                        if obj_user then
-                            if not cronTable.keyboardActions[tostring(matches[5])] then
-                                cronTable.keyboardActions[tostring(matches[5])] = { }
-                            end
-                            local permissions = adjustPermissions(obj_user)
-                            permissions[permissionsDictionary[matches[4]:lower()]] = true
-                            local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
-                            if res ~= langs[get_lang(matches[5])].checkMyPermissions and res ~= langs[get_lang(matches[5])].notMyGroup then
-                                answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
-                                local chat_name = ''
-                                if data[tostring(matches[5])] then
-                                    chat_name = data[tostring(matches[5])].set_name or ''
-                                end
-                                editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissions, matches[6] or false))
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
-                            end
-                        end
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
-                    end
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].denied, false)
+                    permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = true
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                 elseif matches[2] == 'DENY' then
-                    if is_owner2(msg.from.id, matches[5]) then
-                        local obj_user = getChatMember(matches[5], matches[3])
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].granted, false)
+                    permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = true
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                elseif matches[2] == 'PERMISSIONSDONE' then
+                    if is_owner2(msg.from.id, matches[4]) then
+                        local obj_user = getChatMember(matches[4], matches[3])
                         if type(obj_user) == 'table' then
                             if obj_user.result then
                                 obj_user = obj_user.result
@@ -513,19 +509,14 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not cronTable.keyboardActions[tostring(matches[5])] then
-                                cronTable.keyboardActions[tostring(matches[5])] = { }
+                            if not cronTable.keyboardActions[tostring(matches[4])] then
+                                cronTable.keyboardActions[tostring(matches[4])] = { }
                             end
-                            local permissions = adjustPermissions(obj_user)
-                            permissions[permissionsDictionary[matches[4]:lower()]] = false
-                            local res = promoteTgAdmin(matches[5], obj_user.user, permissions)
-                            if res ~= langs[get_lang(matches[5])].checkMyPermissions and res ~= langs[get_lang(matches[5])].notMyGroup then
-                                answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
-                                local chat_name = ''
-                                if data[tostring(matches[5])] then
-                                    chat_name = data[tostring(matches[5])].set_name or ''
-                                end
-                                editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissions, matches[6] or false))
+                            local res = promoteTgAdmin(matches[4], obj_user.user, permissionsTable[tostring(matches[4])][tostring(matches[3])])
+                            if res ~= langs[get_lang(matches[4])].checkMyPermissions and res ~= langs[get_lang(matches[4])].notMyGroup then
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
+                                permissionsTable[tostring(matches[4])][tostring(matches[3])] = nil
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].done)
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
@@ -1190,16 +1181,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. msg.entities[k].user.id .. "] as owner")
-                                    local obj_user = getChat(msg.entities[k].user.id)
-                                    if type(obj_user) == 'table' then
-                                        if obj_user then
-                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                return setOwner(obj_user, msg.chat.id)
-                                            end
-                                        else
-                                            return langs[msg.lang].noObject
-                                        end
-                                    end
+                                    return setOwner(msg.entities[k].user, msg.chat.id)
                                 end
                             end
                         end
@@ -1275,19 +1257,10 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    local obj_user = getChat(msg.entities[k].user.id)
-                                    if type(obj_user) == 'table' then
-                                        if obj_user then
-                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                if matches[3] then
-                                                    permissions = adjustPermissions(matches[3]:lower())
-                                                end
-                                                return promoteTgAdmin(msg.chat.id, obj_user, permissions)
-                                            end
-                                        else
-                                            return langs[msg.lang].noObject
-                                        end
+                                    if matches[3] then
+                                        permissions = adjustPermissions(matches[3]:lower())
                                     end
+                                    return promoteTgAdmin(msg.chat.id, msg.entities[k].user, permissions)
                                 end
                             end
                         end
@@ -1351,16 +1324,7 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    local obj_user = getChat(msg.entities[k].user.id)
-                                    if type(obj_user) == 'table' then
-                                        if obj_user then
-                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                return demoteTgAdmin(msg.chat.id, obj_user)
-                                            end
-                                        else
-                                            return langs[msg.lang].noObject
-                                        end
-                                    end
+                                    return demoteTgAdmin(msg.chat.id, msg.entities[k].user)
                                 end
                             end
                         end
@@ -1418,16 +1382,7 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    local obj_user = getChat(msg.entities[k].user.id)
-                                    if type(obj_user) == 'table' then
-                                        if obj_user then
-                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                return promoteMod(msg.chat.id, obj_user)
-                                            end
-                                        else
-                                            return langs[msg.lang].noObject
-                                        end
-                                    end
+                                    return promoteMod(msg.chat.id, msg.entities[k].user)
                                 end
                             end
                         end
@@ -1485,16 +1440,7 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    local obj_user = getChat(msg.entities[k].user.id)
-                                    if type(obj_user) == 'table' then
-                                        if obj_user then
-                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                return demoteMod(msg.chat.id, obj_user)
-                                            end
-                                        else
-                                            return langs[msg.lang].noObject
-                                        end
-                                    end
+                                    return demoteMod(msg.chat.id, msg.entities[k].user)
                                 end
                             end
                         end
@@ -1537,6 +1483,7 @@ local function run(msg, matches)
             if data[tostring(msg.chat.id)] then
                 chat_name = data[tostring(msg.chat.id)].set_name or ''
             end
+            permissionsTable[tostring(msg.chat.id)] = permissionsTable[tostring(msg.chat.id)] or { }
             if msg.reply then
                 if msg.from.is_mod then
                     if matches[2] then
@@ -1544,6 +1491,7 @@ local function run(msg, matches)
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                        permissionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = userPermissions(msg.chat.id, msg.reply_to_message.forward_from.id)
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1562,6 +1510,7 @@ local function run(msg, matches)
                         end
                     else
                         if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                            permissionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = userPermissions(msg.chat.id, msg.reply_to_message.from.id)
                             if msg.chat.type ~= 'private' then
                                 local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1582,24 +1531,16 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    local obj_user = getChat(msg.entities[k].user.id)
-                                    if type(obj_user) == 'table' then
-                                        if obj_user then
-                                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
-                                                    if msg.chat.type ~= 'private' then
-                                                        local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
-                                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                                        return
-                                                    end
-                                                else
-                                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                                                end
-                                            end
-                                        else
-                                            return langs[msg.lang].noObject
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.entities[k].user.id .. ') ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, msg.entities[k].user.id)) then
+                                        permissionsTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = userPermissions(msg.chat.id, msg.entities[k].user.id)
+                                        if msg.chat.type ~= 'private' then
+                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                                            return
                                         end
+                                    else
+                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                     end
                                 end
                             end
@@ -1612,6 +1553,7 @@ local function run(msg, matches)
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                        permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1631,6 +1573,7 @@ local function run(msg, matches)
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                    permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
                                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1894,6 +1837,8 @@ return {
         "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)(.)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
         "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)(.)$",
+        "^(###cbgroup_management)(PERMISSIONSDONE)(%d+)(%-%d+)$",
+        "^(###cbgroup_management)(PERMISSIONSDONE)(%d+)(%-%d+)(.)$",
 
         -- SUPERGROUP
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",

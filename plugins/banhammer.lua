@@ -17,10 +17,10 @@ local cronTable = {
 }
 
 local default_restrictions = {
-    can_send_messages = true,
-    can_send_media_messages = true,
-    can_send_other_messages = true,
-    can_add_web_page_previews = true
+    can_send_messages = false,
+    can_send_media_messages = false,
+    can_send_other_messages = false,
+    can_add_web_page_previews = false
 }
 
 local function user_msgs(user_id, chat_id)
@@ -115,15 +115,34 @@ local function unrestrictUser(chat_id, user, no_notice)
             if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
                 cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
                 sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
-                langs[lang].restrictionSendMessages .. tostring(default_restrictions.can_send_messages) ..
-                langs[lang].restrictionSendMediaMessages .. tostring(default_restrictions.can_send_media_messages) ..
-                langs[lang].restrictionSendOtherMessages .. tostring(default_restrictions.can_send_other_messages) ..
-                langs[lang].restrictionAddWebPagePreviews .. tostring(default_restrictions.can_add_web_page_previews))
+                langs[lang].restrictionSendMessages .. tostring(true) ..
+                langs[lang].restrictionSendMediaMessages .. tostring(true) ..
+                langs[lang].restrictionSendOtherMessages .. tostring(true) ..
+                langs[lang].restrictionAddWebPagePreviews .. tostring(true))
             end
         end
         return true
     else
         return false
+    end
+end
+
+local function userRestrictions(chat_id, user_id)
+    local obj_user = getChatMember(chat_id, user_id)
+    if type(obj_user) == 'table' then
+        if obj_user.result then
+            obj_user = obj_user.result
+            if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
+                obj_user = nil
+            end
+        else
+            obj_user = nil
+        end
+    else
+        obj_user = nil
+    end
+    if obj_user then
+        return adjustRestrictions(obj_user)
     end
 end
 
@@ -143,60 +162,19 @@ local function run(msg, matches)
                     end
                     editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
                 elseif matches[2] == 'RESTRICT' then
-                    if is_mod2(msg.from.id, matches[5]) then
-                        local obj_user = getChatMember(matches[5], matches[3])
-                        if type(obj_user) == 'table' then
-                            if obj_user.result then
-                                obj_user = obj_user.result
-                                if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
-                                    obj_user = nil
-                                end
-                            else
-                                obj_user = nil
-                            end
-                        else
-                            obj_user = nil
-                        end
-                        if obj_user then
-                            if not cronTable.keyboardActions[tostring(matches[5])] then
-                                cronTable.keyboardActions[tostring(matches[5])] = { }
-                            end
-                            local restrictions = adjustRestrictions(obj_user)
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = false
-                                restrictions['can_send_media_messages'] = false
-                                restrictions['can_send_other_messages'] = false
-                                restrictions['can_add_web_page_previews'] = false
-                            end
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_send_media_messages' then
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = false
-                                restrictions['can_send_other_messages'] = false
-                                restrictions['can_add_web_page_previews'] = false
-                            end
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_send_other_messages' then
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = false
-                            end
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = false
-                            end
-                            if restrictUser(matches[5], obj_user.user, restrictions) then
-                                answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].denied, false)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
-                            end
-                            local chat_name = ''
-                            if data[tostring(matches[5])] then
-                                chat_name = data[tostring(matches[5])].set_name or ''
-                            end
-                            editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
-                        end
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].ok, false)
+                    restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                 elseif matches[2] == 'UNRESTRICT' then
-                    if is_mod2(msg.from.id, matches[5]) then
-                        local obj_user = getChatMember(matches[5], matches[3])
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].ok, false)
+                    restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                elseif matches[2] == 'RESTRICTIONSDONE' then
+                    restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
+                    if is_mod2(msg.from.id, matches[4]) then
+                        local obj_user = getChatMember(matches[4], matches[3])
                         if type(obj_user) == 'table' then
                             if obj_user.result then
                                 obj_user = obj_user.result
@@ -210,37 +188,16 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not cronTable.keyboardActions[tostring(matches[5])] then
-                                cronTable.keyboardActions[tostring(matches[5])] = { }
+                            if not cronTable.keyboardActions[tostring(matches[4])] then
+                                cronTable.keyboardActions[tostring(matches[4])] = { }
                             end
-                            local restrictions = adjustRestrictions(obj_user)
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_send_messages' then
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = true
-                            end
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_send_media_messages' then
-                                restrictions['can_send_messages'] = true
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = true
-                            end
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_send_other_messages' then
-                                restrictions['can_send_messages'] = true
-                                restrictions['can_send_media_messages'] = true
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = true
-                            end
-                            if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
-                                restrictions['can_send_messages'] = true
-                                restrictions['can_send_media_messages'] = true
-                                restrictions[restrictionsDictionary[matches[4]:lower()]] = true
-                            end
-                            if restrictUser(matches[5], obj_user.user, restrictions) then
-                                answerCallbackQuery(msg.cb_id, matches[4] .. langs[msg.lang].granted, false)
+                            if restrictUser(matches[5], obj_user.user, restrictionsTable[tostring(matches[4])][tostring(matches[3])]) then
+                                answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
+                                restrictionsTable[tostring(matches[6])][tostring(obj_user.id)] = nil
                             else
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                             end
-                            local chat_name = ''
-                            if data[tostring(matches[5])] then
-                                chat_name = data[tostring(matches[5])].set_name or ''
-                            end
-                            editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(matches[5], matches[3], restrictions, matches[6] or false))
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].done)
                         end
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     else
@@ -341,11 +298,11 @@ local function run(msg, matches)
                     if matches[4] == 'BACK' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                         restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
-                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
                         editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempRestrictIntro, keyboard_time(matches[2], matches[6], matches[5], time, matches[7] or false))
                     elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                         restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
-                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
                         if restrictionsTable[tostring(matches[6])][tostring(matches[7])] then
                             local remainder, weeks, days, hours, minutes, seconds = 0
                             weeks = math.floor(time / 604800)
@@ -419,7 +376,7 @@ local function run(msg, matches)
                         end
                     elseif matches[4] == 'DONE' then
                         restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
-                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
                         if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
                             local obj_user = getChat(matches[5])
                             if obj_user then
@@ -1026,9 +983,6 @@ local function run(msg, matches)
                     restrictionsTable[tostring(msg.chat.id)] = restrictionsTable[tostring(msg.chat.id)] or { }
                     mystat('/restrict')
                     local restrictions = clone_table(default_restrictions)
-                    for k, v in pairs(restrictions) do
-                        restrictions[k] = false
-                    end
                     local chat_name = ''
                     if data[tostring(msg.chat.id)] then
                         chat_name = data[tostring(msg.chat.id)].set_name or ''
@@ -1306,9 +1260,6 @@ local function run(msg, matches)
                 if msg.from.is_mod then
                     mystat('/restrict')
                     local restrictions = clone_table(default_restrictions)
-                    for k, v in pairs(restrictions) do
-                        restrictions[k] = false
-                    end
                     local text = ''
                     if msg.reply then
                         if matches[2] then
@@ -1511,6 +1462,7 @@ local function run(msg, matches)
                 if data[tostring(msg.chat.id)] then
                     chat_name = data[tostring(msg.chat.id)].set_name or ''
                 end
+                restrictionsTable[tostring(msg.chat.id)] = restrictionsTable[tostring(msg.chat.id)] or { }
                 if msg.from.is_mod then
                     if msg.reply then
                         if matches[2] then
@@ -1518,6 +1470,7 @@ local function run(msg, matches)
                                 if msg.reply_to_message.forward then
                                     if msg.reply_to_message.forward_from then
                                         if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                            restrictionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = userRestrictions(msg.chat.id, msg.reply_to_message.forward_from.id)
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendRestrictionsPvt, 'html').result.message_id
                                                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1536,6 +1489,7 @@ local function run(msg, matches)
                             end
                         else
                             if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                                restrictionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = userRestrictions(msg.chat.id, msg.reply_to_message.from.id)
                                 if msg.chat.type ~= 'private' then
                                     local message_id = sendReply(msg, langs[msg.lang].sendRestrictionsPvt, 'html').result.message_id
                                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1553,24 +1507,16 @@ local function run(msg, matches)
                                 -- check if there's a text_mention
                                 if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                     if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                        local obj_user = getChat(msg.entities[k].user.id)
-                                        if type(obj_user) == 'table' then
-                                            if obj_user then
-                                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(msg.chat.id, obj_user.id)) then
-                                                        if msg.chat.type ~= 'private' then
-                                                            local message_id = sendReply(msg, langs[msg.lang].sendRestrictionsPvt, 'html').result.message_id
-                                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
-                                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                                            return
-                                                        end
-                                                    else
-                                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                                                    end
-                                                end
-                                            else
-                                                return langs[msg.lang].noObject
+                                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.entities[k].user.id .. ') ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(msg.chat.id, msg.entities[k].user.id)) then
+                                            restrictionsTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = userRestrictions(msg.chat.id, msg.entities[k].user.id)
+                                            if msg.chat.type ~= 'private' then
+                                                local message_id = sendReply(msg, langs[msg.lang].sendRestrictionsPvt, 'html').result.message_id
+                                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                                                return
                                             end
+                                        else
+                                            return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                         end
                                     end
                                 end
@@ -1583,6 +1529,7 @@ local function run(msg, matches)
                                 if obj_user then
                                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                         if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(msg.chat.id, obj_user.id)) then
+                                            restrictionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userRestrictions(msg.chat.id, obj_user.id)
                                             if msg.chat.type ~= 'private' then
                                                 local message_id = sendReply(msg, langs[msg.lang].sendRestrictionsPvt, 'html').result.message_id
                                                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -1602,6 +1549,7 @@ local function run(msg, matches)
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[17], keyboard_restrictions_list(msg.chat.id, obj_user.id)) then
+                                        restrictionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userRestrictions(msg.chat.id, obj_user.id)
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendRestrictionsPvt, 'html').result.message_id
                                             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -2617,6 +2565,8 @@ return {
         "^(###cbbanhammer)(DELETE)$",
         "^(###cbbanhammer)(BACK)(%d+)(%-%d+)$",
         "^(###cbbanhammer)(BACK)(%d+)(%-%d+)(.)$",
+        "^(###cbbanhammer)(RESTRICTIONSDONE)(%d+)(%-%d+)$",
+        "^(###cbbanhammer)(RESTRICTIONSDONE)(%d+)(%-%d+)(.)$",
         "^(###cbbanhammer)(RESTRICT)(%d+)(.*)(%-%d+)$",
         "^(###cbbanhammer)(RESTRICT)(%d+)(.*)(%-%d+)(.)$",
         "^(###cbbanhammer)(UNRESTRICT)(%d+)(.*)(%-%d+)$",

@@ -112,6 +112,13 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
             end
         end
         if from_other_plugin then
+            keyboard.inline_keyboard[row][column] = { text = '💎 ' .. langs[lang].done .. ' 💎', callback_data = 'banhammerRESTRICTIONSDONE' .. user_id .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '💎 ' .. langs[lang].done .. ' 💎', callback_data = 'banhammerRESTRICTIONSDONE' .. user_id .. chat_id }
+        end
+        row = row + 1
+        keyboard.inline_keyboard[row] = { }
+        if from_other_plugin then
             keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
@@ -562,6 +569,13 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
                 keyboard.inline_keyboard[row] = { }
             end
         end
+        if from_other_plugin then
+            keyboard.inline_keyboard[row][column] = { text = '💎 ' .. langs[lang].done .. ' 💎', callback_data = 'group_managementPERMISSIONSDONE' .. user_id .. chat_id .. 'I' }
+        else
+            keyboard.inline_keyboard[row][column] = { text = '💎 ' .. langs[lang].done .. ' 💎', callback_data = 'group_managementPERMISSIONSDONE' .. user_id .. chat_id }
+        end
+        row = row + 1
+        keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
             keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
