@@ -449,9 +449,8 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = gbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
-                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -459,9 +458,8 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = ungbanUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
-                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -469,9 +467,8 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = blockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
-                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -479,9 +476,8 @@ local function run(msg, matches)
                         if is_admin2(msg.from.id) then
                             local text = unblockUser(matches[3], msg.lang)
                             answerCallbackQuery(msg.cb_id, text, true)
-                            sendMessage(matches[4], text)
                             deeper = 'ADMINCOMMANDS'
-                            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                            mystat(matches[1] .. matches[2] .. matches[3])
                         else
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].require_admin, true)
                         end
@@ -1383,10 +1379,10 @@ return {
         "^(###cbinfo)(WARNSPLUS)(%d+)(%-%d+)$",
         "^(###cbinfo)(UNBAN)(%d+)(%-%d+)$",
         "^(###cbinfo)(BAN)(%d+)(%-%d+)$",
-        "^(###cbinfo)(UNGBAN)(%d+)(%-?%d+)$",
-        "^(###cbinfo)(GBAN)(%d+)(%-?%d+)$",
-        "^(###cbinfo)(PMUNBLOCK)(%d+)(%-?%d+)$",
-        "^(###cbinfo)(PMBLOCK)(%d+)(%-?%d+)$",
+        "^(###cbinfo)(UNGBAN)(%d+)$",
+        "^(###cbinfo)(GBAN)(%d+)$",
+        "^(###cbinfo)(PMUNBLOCK)(%d+)$",
+        "^(###cbinfo)(PMBLOCK)(%d+)$",
         "^(###cbinfo)(DEMOTE)(%d+)(%-%d+)$",
         "^(###cbinfo)(PROMOTE)(%d+)(%-%d+)$",
         "^(###cbinfo)(ADMINCOMMANDS)(%d+)(%-?%d+)$",
