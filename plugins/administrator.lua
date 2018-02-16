@@ -303,7 +303,7 @@ local function groupsList(msg, get_links)
                 if data[tostring(k)]['settings']['set_link'] then
                     group_link = data[tostring(k)]['settings']['set_link']
                 elseif get_links and data[tostring(k)]['group_type']:lower() == 'supergroup' then
-                    local link = exportChatInviteLink(k)
+                    local link = exportChatInviteLink(k, true)
                     if link then
                         data[tostring(k)]['settings']['set_link'] = link
                         save_data(config.moderation.data, data)
@@ -367,13 +367,6 @@ local function groupsPages(page)
                     local group_link = nil
                     if data[tostring(k)]['settings']['set_link'] then
                         group_link = data[tostring(k)]['settings']['set_link']
-                    elseif get_links and data[tostring(k)]['group_type']:lower() == 'supergroup' then
-                        local link = exportChatInviteLink(k)
-                        if link then
-                            data[tostring(k)]['settings']['set_link'] = link
-                            save_data(config.moderation.data, data)
-                            group_link = link
-                        end
                     end
                     if group_link then
                         message = message .. '<a href="' .. group_link .. '">' .. html_escape(name) .. '</a>' .. ' ' .. k .. ' ' .. group_owner .. '\n'

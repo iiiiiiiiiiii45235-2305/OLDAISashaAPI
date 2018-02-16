@@ -1307,7 +1307,7 @@ local function run(msg, matches)
         if is_admin(msg) then
             local group_link = data[tostring(matches[2])]['settings']['set_link']
             if not group_link then
-                local link = exportChatInviteLink(matches[2])
+                local link = exportChatInviteLink(matches[2], true)
                 if link then
                     data[tostring(matches[2])]['settings']['set_link'] = link
                     save_data(config.moderation.data, data)

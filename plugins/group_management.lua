@@ -1090,7 +1090,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'newlink' then
             if msg.from.is_mod then
                 mystat('/newlink')
-                local link = exportChatInviteLink(msg.chat.id)
+                local link = exportChatInviteLink(msg.chat.id, true)
                 if link then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] created new group link [" .. tostring(link) .. "]")
                     data[tostring(msg.chat.id)].settings.set_link = tostring(link)
