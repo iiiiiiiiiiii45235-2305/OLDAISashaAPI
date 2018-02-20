@@ -9,11 +9,6 @@ local cronTable = {
     {
         -- chat_id = error
     },
-    -- temp table to not send the pm notices again and again (just once per minute)
-    keyboardActions =
-    {
-        -- chat_id = { user_id = false/true }
-    }
 }
 
 local default_restrictions = {
@@ -93,14 +88,11 @@ local function restrictUser(chat_id, user, restrictions, until_date, no_notice)
     local lang = get_lang(chat_id)
     if restrictChatMember(chat_id, user.id, restrictions, until_date, no_notice) then
         if areNoticesEnabled(user.id, chat_id) and not no_notice then
-            if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
-                cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
-                sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
-                langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
-                langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
-                langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
-                langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
-            end
+            sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+            langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
+            langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
+            langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
+            langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
         end
         return true
     else
@@ -112,14 +104,11 @@ local function unrestrictUser(chat_id, user, no_notice)
     local lang = get_lang(chat_id)
     if unrestrictChatMember(chat_id, user.id, no_notice) then
         if areNoticesEnabled(user.id, chat_id) and not no_notice then
-            if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
-                cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
-                sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
-                langs[lang].restrictionSendMessages .. tostring(true) ..
-                langs[lang].restrictionSendMediaMessages .. tostring(true) ..
-                langs[lang].restrictionSendOtherMessages .. tostring(true) ..
-                langs[lang].restrictionAddWebPagePreviews .. tostring(true))
-            end
+            sendMessage(user.id, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+            langs[lang].restrictionSendMessages .. tostring(true) ..
+            langs[lang].restrictionSendMediaMessages .. tostring(true) ..
+            langs[lang].restrictionSendOtherMessages .. tostring(true) ..
+            langs[lang].restrictionAddWebPagePreviews .. tostring(true))
         end
         return true
     else
@@ -233,9 +222,6 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not cronTable.keyboardActions[tostring(matches[4])] then
-                                cronTable.keyboardActions[tostring(matches[4])] = { }
-                            end
                             if restrictUser(matches[4], obj_user.user, restrictionsTable[tostring(matches[4])][tostring(matches[3])]) then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                                 restrictionsTable[tostring(matches[4])][tostring(obj_user.id)] = nil
@@ -426,9 +412,6 @@ local function run(msg, matches)
                             local obj_user = getChat(matches[5])
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if not cronTable.keyboardActions[tostring(matches[6])] then
-                                        cronTable.keyboardActions[tostring(matches[6])] = { }
-                                    end
                                     local text = ''
                                     local restrictions = restrictionsTable[tostring(matches[6])][tostring(obj_user.id)]
                                     if restrictUser(matches[6], obj_user, restrictions, os.time() + time) then
@@ -2430,7 +2413,6 @@ end
 
 local function pre_process(msg)
     if msg then
-        cronTable.keyboardActions[tostring(msg.chat.id)] = cronTable.keyboardActions[tostring(msg.chat.id)] or { }
         -- SERVICE MESSAGE
         if msg.service then
             if msg.service_type then
@@ -2598,7 +2580,6 @@ local function cron()
     -- clear those tables on the top of the plugin
     cronTable = {
         kickBanErrors = { },
-        keyboardActions = { }
     }
 end
 

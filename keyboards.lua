@@ -906,13 +906,13 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 if tostring(chat_id):starts('-100') then
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
-                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏱ TEMPBAN ⏱⌨️', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
+                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏳ TEMPBAN ⏳⌨️', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
                                     keyboard.inline_keyboard[row][column] = { text = '⌨️ RESTRICTIONS ⌨️', callback_data = 'banhammerBACK' .. obj.id .. chat_id .. 'I' }
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
-                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏱ TEMPRESTRICT ⏱⌨️ ', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
+                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏳ TEMPRESTRICT ⏳⌨️ ', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
                                 end
                             end
                         elseif deeper == 'PROMOTIONS' then
@@ -1065,13 +1065,13 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 if tostring(chat_id):starts('-100') then
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
-                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏱ TEMPBAN ⏱⌨️', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
+                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏳ TEMPBAN ⏳⌨️', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
                                     keyboard.inline_keyboard[row][column] = { text = '⌨️ RESTRICTIONS ⌨️', callback_data = 'banhammerBACK' .. obj.id .. chat_id .. 'I' }
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
-                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏱ TEMPRESTRICT ⏱⌨️', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
+                                    keyboard.inline_keyboard[row][column] = { text = '⌨️⏳ TEMPRESTRICT ⏳⌨️', callback_data = 'banhammerTEMPRESTRICT0BACK' .. obj.id .. chat_id .. 'I' }
                                 end
                             end
                         elseif deeper == 'PROMOTIONS' then

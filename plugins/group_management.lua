@@ -13,10 +13,6 @@ local cronTable = {
     {
         -- chat_id = false/true
     },
-    keyboardActions =
-    {
-        -- chat_id = { user_id = false/true }
-    }
 }
 
 local delAll = {
@@ -124,10 +120,7 @@ local function promoteTgAdmin(chat_id, user, permissions)
             data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
             save_data(config.moderation.data, data)
             if areNoticesEnabled(user.id, chat_id) then
-                if not cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] then
-                    cronTable.keyboardActions[tostring(chat_id)][tostring(user.id)] = true
-                    sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
-                end
+                sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
             end
             return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
         end
@@ -523,9 +516,6 @@ local function run(msg, matches)
                             obj_user = nil
                         end
                         if obj_user then
-                            if not cronTable.keyboardActions[tostring(matches[4])] then
-                                cronTable.keyboardActions[tostring(matches[4])] = { }
-                            end
                             local res = promoteTgAdmin(matches[4], obj_user.user, permissionsTable[tostring(matches[4])][tostring(matches[3])])
                             if res ~= langs[get_lang(matches[4])].checkMyPermissions and res ~= langs[get_lang(matches[4])].notMyGroup then
                                 answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
@@ -1705,7 +1695,6 @@ end
 
 local function pre_process(msg)
     if msg then
-        cronTable.keyboardActions[tostring(msg.chat.id)] = cronTable.keyboardActions[tostring(msg.chat.id)] or { }
         if msg.service then
             if is_realm(msg) then
                 if msg.service_type == 'chat_add_user_link' then
@@ -1809,7 +1798,6 @@ local function cron()
     cronTable = {
         adminsContacted = { },
         noticeContacted = { },
-        keyboardActions = { }
     }
 end
 
