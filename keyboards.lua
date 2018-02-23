@@ -531,30 +531,27 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
     if data[tostring(chat_id)] then
         if tonumber(page) == 1 then
             keyboard.inline_keyboard[row][1] = { text = reverseGroupDataDictionary['lock_grouplink'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_grouplink'] }
-            if data[tostring(chat_id)].lock_grouplink then
-                keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['lock_grouplink'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_grouplink'] .. page .. chat_id }
-            else
-                keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_grouplink'] .. ' ☑️', callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_grouplink'] .. page .. chat_id }
-            end
+            keyboard.inline_keyboard[row][2] = { text = reverseGroupDataDictionary['lock_name'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_name'] }
+            keyboard.inline_keyboard[row][3] = { text = reverseGroupDataDictionary['lock_photo'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_photo'] }
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = reverseGroupDataDictionary['lock_name'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_name'] }
+            if data[tostring(chat_id)].lock_grouplink then
+                keyboard.inline_keyboard[row][1] = { text = '✅ ' .. reverseGroupDataDictionary['lock_grouplink'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_grouplink'] .. page .. chat_id }
+            else
+                keyboard.inline_keyboard[row][1] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_grouplink'] .. ' ☑️', callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_grouplink'] .. page .. chat_id }
+            end
             if data[tostring(chat_id)].lock_name then
                 keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['lock_name'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_name'] .. page .. chat_id }
             else
                 keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_name'] .. ' ☑️', callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_name'] .. page .. chat_id }
             end
-            row = row + 1
-            keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = reverseGroupDataDictionary['lock_photo'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_photo'] }
             if data[tostring(chat_id)].lock_photo then
-                keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['lock_photo'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_photo'] .. page .. chat_id }
+                keyboard.inline_keyboard[row][3] = { text = '✅ ' .. reverseGroupDataDictionary['lock_photo'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_photo'] .. page .. chat_id }
             else
-                keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_photo'] .. ' ☑️', callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_photo'] .. page .. chat_id }
+                keyboard.inline_keyboard[row][3] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_photo'] .. ' ☑️', callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_photo'] .. page .. chat_id }
             end
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.locks) do
                 if var:lower() == 'flood' then
                     keyboard.inline_keyboard[row][1] = { text = '--', callback_data = 'group_managementFLOOD--' .. page .. chat_id }
