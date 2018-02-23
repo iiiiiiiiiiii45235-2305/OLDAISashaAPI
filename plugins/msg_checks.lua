@@ -60,7 +60,9 @@ local function remove_whitelisted_links(text, links_whitelist, group_link)
         for k, v in pairs(links_whitelist) do
             if string.starts(v, '@') then
                 for word in string.gmatch(text, '(@[%w_]+)') do
+                    print('testremove')
                     if word == v then
+                        print('remove')
                         text = text:gsub(word:gsub('@', ''), '')
                     end
                 end
@@ -70,6 +72,7 @@ local function remove_whitelisted_links(text, links_whitelist, group_link)
         end
     end
     if group_link then
+        print('removegrouplink')
         text = text:gsub(group_link, '')
     end
     return text
