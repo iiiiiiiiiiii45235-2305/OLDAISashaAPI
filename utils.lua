@@ -1331,11 +1331,11 @@ function setPunishment(target, setting_type, punishment)
         punishment = false
     end
     local lang = get_lang(target)
-    if data[tostring(target)].settings[tostring(setting_type)] then
+    if data[tostring(target)].settings[tostring(setting_type)] ~= nil then
         data[tostring(target)].settings[tostring(setting_type)] = punishment
-    elseif data[tostring(target)].settings.locks[tostring(setting_type)] then
+    elseif data[tostring(target)].settings.locks[tostring(setting_type)] ~= nil then
         data[tostring(target)].settings.locks[tostring(setting_type)] = punishment
-    elseif data[tostring(target)].settings.mutes[tostring(setting_type)] then
+    elseif data[tostring(target)].settings.mutes[tostring(setting_type)] ~= nil then
         data[tostring(target)].settings.mutes[tostring(setting_type)] = punishment
     else
         return langs[lang].settingNotFound
@@ -1349,11 +1349,11 @@ function setPunishment(target, setting_type, punishment)
 end
 function getPunishment(target, setting_type)
     local punishment = false
-    if data[tostring(target)].settings[tostring(setting_type)] then
+    if data[tostring(target)].settings[tostring(setting_type)] ~= nil then
         punishment = data[tostring(target)].settings[tostring(setting_type)]
-    elseif data[tostring(target)].settings.locks[tostring(setting_type)] then
+    elseif data[tostring(target)].settings.locks[tostring(setting_type)] ~= nil then
         punishment = data[tostring(target)].settings.locks[tostring(setting_type)]
-    elseif data[tostring(target)].settings.mutes[tostring(setting_type)] then
+    elseif data[tostring(target)].settings.mutes[tostring(setting_type)] ~= nil then
         punishment = data[tostring(target)].settings.mutes[tostring(setting_type)]
     end
     return punishment
