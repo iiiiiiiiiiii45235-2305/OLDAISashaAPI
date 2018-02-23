@@ -62,7 +62,6 @@ local function remove_whitelisted_links(text, links_whitelist, group_link)
                 for word in string.gmatch(text, '(@[%w_]+)') do
                     print('testremove')
                     if word == v then
-                        print('remove')
                         text = text:gsub(word:gsub('@', ''), '')
                     end
                 end
@@ -72,7 +71,6 @@ local function remove_whitelisted_links(text, links_whitelist, group_link)
         end
     end
     if group_link then
-        print('removegrouplink')
         text = text:gsub(group_link, '')
     end
     return text
@@ -101,10 +99,13 @@ local function check_if_link(text, links_whitelist, group_link)
     tmp = tmp:gsub('%?([^%s]+)', '')
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+    print('precron')
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
+    print('postcron')
     while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
+        print('incron')
         cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
         cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
         if APIgetChat(string.match(tmp, '@[%w_]+'), true) then
@@ -113,6 +114,7 @@ local function check_if_link(text, links_whitelist, group_link)
             tmp = tmp:gsub(string.match(tmp, '@[%w_]+'), '')
         end
     end
+    print('endcron')
     if is_text_link then
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
         if is_bot then
