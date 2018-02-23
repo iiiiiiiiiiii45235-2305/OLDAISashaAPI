@@ -2060,16 +2060,16 @@ function lockSetting(target, setting_type, punishment)
             return langs[lang].tagalertGroupEnabled
         end
     elseif setting_type == 'strict' then
-        if data[tostring(target)].strict ~= nil then
-            if data[tostring(target)].strict then
+        if data[tostring(target)].settings.strict ~= nil then
+            if data[tostring(target)].settings.strict then
                 return langs[lang].settingAlreadyLocked
             else
-                data[tostring(target)].strict = true
+                data[tostring(target)].settings.strict = true
                 save_data(config.moderation.data, data)
                 return langs[lang].settingLocked
             end
         else
-            data[tostring(target)].strict = true
+            data[tostring(target)].settings.strict = true
             save_data(config.moderation.data, data)
             return langs[lang].settingLocked
         end

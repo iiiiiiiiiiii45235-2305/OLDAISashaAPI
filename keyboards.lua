@@ -578,7 +578,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
         row = row + 1
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['strict'], callback_data = 'group_management' .. reverseGroupDataDictionary['strict'] }
-        if data[tostring(chat_id)].strict then
+        if data[tostring(chat_id)].settings.strict then
             keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['strict'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['strict'] .. page .. chat_id }
         else
             keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['strict'] .. ' ☑️', callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['strict'] .. page .. chat_id }
