@@ -1286,7 +1286,7 @@ function adjust_punishment(setting, punishment, change)
                     punishment = 6
                 end
             end
-        elseif setting == 'tgservice' then
+        elseif setting == 'tgservices' then
             if punishment > 1 then
                 -- if not delete disable
                 if decrement then
