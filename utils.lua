@@ -1160,14 +1160,9 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
     end
     if not globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] then
         if tonumber(punishment) >= 3 then
-            if tonumber(punishment) == 3 then
-                if not data[tostring(chat_id)].settings.strict then
-                    -- temprestrict
-                    text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
-                else
-                    -- restrict
-                    text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
-                end
+            if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
+                -- temprestrict
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
             else
                 -- restrict
                 text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
@@ -1178,14 +1173,9 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
             text = text .. tostring(kickUser(executer, target, chat_id, reason)) .. '\n'
         end
         if tonumber(punishment) >= 6 then
-            if tonumber(punishment) == 6 then
-                if not data[tostring(chat_id)].settings.strict then
-                    -- tempban
-                    text = text .. tostring(banUser(executer, target, chat_id, reason, data[tostring(chat_id)].settings.time_ban)) .. '\n'
-                else
-                    -- ban
-                    text = text .. tostring(banUser(executer, target, chat_id, reason)) .. '\n'
-                end
+            if tonumber(punishment) == 6 and not data[tostring(chat_id)].settings.strict then
+                -- tempban
+                text = text .. tostring(banUser(executer, target, chat_id, reason, data[tostring(chat_id)].settings.time_ban)) .. '\n'
             else
                 -- ban
                 text = text .. tostring(banUser(executer, target, chat_id, reason)) .. '\n'
