@@ -339,6 +339,9 @@ local function run(msg, matches)
             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 2, matches[4] or false))
         elseif matches[2] == 'LOCK' then
             if is_mod2(msg.from.id, matches[5]) then
+                if (groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
+                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                end
                 answerCallbackQuery(msg.cb_id, lockSetting(matches[5], matches[3]), false)
                 local chat_name = ''
                 if data[tostring(matches[5])] then
@@ -351,6 +354,9 @@ local function run(msg, matches)
             end
         elseif matches[2] == 'UNLOCK' then
             if is_mod2(msg.from.id, matches[5]) then
+                if (groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
+                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                end
                 answerCallbackQuery(msg.cb_id, unlockSetting(matches[5], matches[3]), false)
                 local chat_name = ''
                 if data[tostring(matches[5])] then
