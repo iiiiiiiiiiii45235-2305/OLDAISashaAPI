@@ -1730,12 +1730,6 @@ return {
         "^(###cbgroup_management)(GOTOLOCKS)(%-%d+)$",
         "^(###cbgroup_management)(GOTOMUTES)(%-%d+)(%u)$",
         "^(###cbgroup_management)(GOTOMUTES)(%-%d+)$",
-        -- info of the setting
-        "^(###cbgroup_management)([%w_]+)(%u)$",
-        "^(###cbgroup_management)([%w_]+)$",
-        -- punishment increase
-        "^(###cbgroup_management)([%w_]+)(%d)(%-%d+)(%u)$",
-        "^(###cbgroup_management)([%w_]+)(%d)(%-%d+)$",
         "^(###cbgroup_management)(LOCK)([%w_]+)(%d)(%-%d+)(%u)$",
         "^(###cbgroup_management)(LOCK)([%w_]+)(%d)(%-%d+)$",
         "^(###cbgroup_management)(UNLOCK)([%w_]+)(%d)(%-%d+)(%u)$",
@@ -1748,6 +1742,12 @@ return {
         "^(###cbgroup_management)(WARNS%+%+)(%d)(%-%d+)$",
         "^(###cbgroup_management)(WARNS%-%-)(%d)(%-%d+)(%u)$",
         "^(###cbgroup_management)(WARNS%-%-)(%d)(%-%d+)$",
+        -- info of the setting
+        "^(###cbgroup_management)([%w_]+)(%u)$",
+        "^(###cbgroup_management)([%w_]+)$",
+        -- punishment increase
+        "^(###cbgroup_management)([%w_]+)(%d)(%-%d+)(%u)$",
+        "^(###cbgroup_management)([%w_]+)(%d)(%-%d+)$",
 
         -- SUPERGROUP
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
