@@ -99,7 +99,10 @@ local function check_if_link(text, links_whitelist, group_link)
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
     printvardump(cronTable.resolveUsernamesTable)
-    cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
+    if not cronTable.resolveUsernamesTable[tostring(msg.chat.id)] then
+        print('in')
+        cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = { valMsg = 0, valTot = 0 }
+    end
     print('1')
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
     print('2')
