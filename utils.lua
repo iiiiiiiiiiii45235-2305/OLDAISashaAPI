@@ -1186,23 +1186,13 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
     return text
 end
 function adjust_punishment(setting, punishment, change)
-    if not punishment then
-        -- if nil or false
-        return false
-    end
-
+    punishment = tonumber(punishment) or 0
     local increment = false
     local decrement = false
     if tostring(change) == '+' then
-        if not punishment then
-            punishment = 0
-        end
         punishment = punishment + 1
         increment = true
     elseif tostring(change) == '-' then
-        if not punishment then
-            punishment = 0
-        end
         punishment = punishment - 1
         decrement = true
     end
