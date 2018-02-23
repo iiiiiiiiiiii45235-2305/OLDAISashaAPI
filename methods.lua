@@ -2035,16 +2035,16 @@ function lockSetting(target, setting_type, punishment)
     elseif setting_type == 'pmnotices' then
         if data[tostring(target)].pmnotices ~= nil then
             if data[tostring(target)].pmnotices then
-                return langs[lang].pmnoticesAlreadyEnabled
+                return langs[lang].noticesGroupAlreadyEnabled
             else
                 data[tostring(target)].pmnotices = true
                 save_data(config.moderation.data, data)
-                return langs[lang].pmnoticesEnabled
+                return langs[lang].noticesGroupEnabled
             end
         else
             data[tostring(target)].pmnotices = true
             save_data(config.moderation.data, data)
-            return langs[lang].pmnoticesEnabled
+            return langs[lang].noticesGroupEnabled
         end
     elseif setting_type == 'tagalert' then
         if data[tostring(target)].tagalert ~= nil then
