@@ -1325,7 +1325,7 @@ function adjust_punishment(setting, punishment, change)
     return punishment
 end
 function setPunishment(target, setting_type, punishment)
-    print(target, setting_type, punishment)
+    print(target, setting_type, punishment, data[tostring(target)].settings[tostring(setting_type)])
     punishment = tonumber(punishment) or 0
     if punishment == 0 then
         punishment = false

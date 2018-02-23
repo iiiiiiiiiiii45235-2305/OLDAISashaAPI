@@ -422,10 +422,9 @@ local function run(msg, matches)
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     local punishment = getPunishment(matches[4], groupDataDictionary[matches[2]:lower()])
                     local new_punishment = adjust_punishment(matches[2]:lower(), punishment, '+')
-                    print(matches[4], groupDataDictionary[matches[2]:lower()], new_punishment)
                     local text = setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], new_punishment)
                     answerCallbackQuery(msg.cb_id, text, false)
-                    savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. groupDataDictionary[matches[2]:lower()] .. " to " .. tostring(punishment))
+                    savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. groupDataDictionary[matches[2]:lower()] .. " to " .. tostring(new_punishment))
                     local chat_name = ''
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].name or ''
