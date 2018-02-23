@@ -590,7 +590,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
         keyboard.inline_keyboard[row][3] = { text = '++', callback_data = 'group_managementWARNS++' .. page .. chat_id }
         row = row + 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][1] = { text = reverseGroupDataDictionary['warns_punishment'], callback_data = 'group_management' .. reverseGroupDataDictionary['warns_punishment'] }
+        keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['warns_punishment'], callback_data = 'group_management' .. reverseGroupDataDictionary['warns_punishment'] }
         keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[data[tostring(chat_id)].settings.warns_punishment] .. reverse_punishments_table[data[tostring(chat_id)].settings.warns_punishment] .. reverse_punishments_table_emoji[data[tostring(chat_id)].settings.warns_punishment], callback_data = 'group_management' .. reverseGroupDataDictionary['warns_punishment'] .. page .. chat_id }
     end
     row = row + 1
