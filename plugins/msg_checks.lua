@@ -168,8 +168,10 @@ local function check_msg(msg, group_data, pre_process_function)
     local mute_video_notes = group_data.settings.mutes.video_notes
     local mute_voice_notes = group_data.settings.mutes.voice_notes
 
+    print('test')
     local text = langs[msg.lang].checkMsg
     if not msg.service then
+        print('not service')
         if isMutedUser(msg.chat.id, msg.from.id) then
             if pre_process_function then
                 print('muted user')
@@ -179,6 +181,7 @@ local function check_msg(msg, group_data, pre_process_function)
                 text = text .. langs[msg.lang].reasonMutedUser
             end
         end
+        print('pass muted user')
         if tonumber(mute_all) > 0 then
             if pre_process_function then
                 print('all muted')
@@ -188,6 +191,7 @@ local function check_msg(msg, group_data, pre_process_function)
                 text = text .. langs[msg.lang].reasonMutedAll
             end
         end
+        print('pass mute_all')
         if msg.entities then
             for k, v in pairs(msg.entities) do
                 if v.url then
