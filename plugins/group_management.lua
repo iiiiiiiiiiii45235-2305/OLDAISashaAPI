@@ -329,7 +329,7 @@ local function run(msg, matches)
             if data[tostring(matches[3])] then
                 chat_name = data[tostring(matches[3])].name or ''
             end
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntr, keyboard_settings_list(matches[3], 1, matches[4] or false))
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 1, matches[4] or false))
         elseif matches[2] == 'GOTOMUTES' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].mutesWord, false)
             local chat_name = ''
