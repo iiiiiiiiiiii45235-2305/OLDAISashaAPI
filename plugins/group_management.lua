@@ -424,7 +424,7 @@ local function run(msg, matches)
                     end
                 end
                 if increasePunishment then
-                    if groupDataDictionary[matches[2]:lower()] == 'all' and not is_owner2(msg.from.id, matches[5]) then
+                    if (groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not is_owner2(msg.from.id, matches[5]) then
                         return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
@@ -872,6 +872,9 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
                     mystat('/lock ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
+                    if (groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
+                        return langs[msg.lang].require_owner
+                    end
                     return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
                 end
                 return
@@ -893,16 +896,11 @@ local function run(msg, matches)
         if matches[1]:lower() == 'mute' then
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
-                    mystat('/mute ' .. matches[2]:lower())
-                    if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
-                        if msg.from.is_owner then
-                            return lockSetting(msg.chat.id, matches[2]:lower())
-                        else
-                            return langs[msg.lang].require_owner
-                        end
-                    else
-                        return lockSetting(msg.chat.id, matches[2]:lower())
+                    mystat('/mute ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
+                    if (groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
+                        return langs[msg.lang].require_owner
                     end
+                    return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
                 end
                 return
             else
