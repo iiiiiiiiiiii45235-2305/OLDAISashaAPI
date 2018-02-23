@@ -169,6 +169,7 @@ local function check_msg(msg, settings, pre_process_function)
     local mute_voice_notes = group_data.settings.mutes.voice_notes
 
     local text = langs[msg.lang].checkMsg
+    print('test')
     if not msg.service then
         if isMutedUser(msg.chat.id, msg.from.id) then
             if pre_process_function then
@@ -545,7 +546,7 @@ local function pre_process(msg)
         -- Begin 'RondoMsgChecks' text checks by @rondoozle
         if data[tostring(msg.chat.id)] and not isWhitelisted(msg.chat.id, msg.from.id) and not msg.from.is_mod then
             -- if regular user
-            return check_msg(msg, clone_table(data[tostring(msg.chat.id)]), true)
+            msg = check_msg(msg, clone_table(data[tostring(msg.chat.id)]), true)
         end
         return msg
     end
