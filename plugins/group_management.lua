@@ -424,7 +424,9 @@ local function run(msg, matches)
                     end
                 end
                 if increasePunishment then
-                    print(matches[1], matches[2], matches[3], matches[4], matches[5])
+                    if groupDataDictionary[matches[2]:lower()] == 'all' and not is_owner2(msg.from.id, matches[5]) then
+                        return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    end
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     local punishment = getPunishment(matches[4], groupDataDictionary[matches[2]:lower()])
                     local new_punishment = adjust_punishment(matches[2]:lower(), punishment, '+')
