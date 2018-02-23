@@ -765,7 +765,6 @@ groupDataDictionary = {
     ["photo"] = "lock_photo",
     ["pmnotices"] = "pmnotices",
     ["private_notices"] = "pmnotices",
-    ["pmnotices"] = "pmnotices",
     ["tagalert"] = "tagalert",
     -- settings
     ["max_flood"] = "max_flood",
@@ -833,9 +832,8 @@ reverseGroupDataDictionary = {
     ["name"] = "name",
     ["lock_photo"] = "photo",
     ["photo"] = "photo",
-    ["pmnotices"] = "private_notices",
-    ["private_notices"] = "private_notices",
-    ["pmnotices"] = "private_notices",
+    ["pmnotices"] = "pmnotices",
+    ["private_notices"] = "pmnotices",
     ["tagalert"] = "tagalert",
     -- settings
     ["max_flood"] = "max_flood",
