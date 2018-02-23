@@ -1604,7 +1604,7 @@ function unrestrictUser(executer, target, chat_id, no_notice)
         local lang = get_lang(chat_id)
         if compare_ranks(executer, target, chat_id, false, true) then
             if unrestrictChatMember(chat_id, target) then
-                savelog(chat_id, "[" .. executer .. "] unrestricted user " .. target .. ' ' .. text)
+                savelog(chat_id, "[" .. executer .. "] unrestricted user " .. target)
                 if areNoticesEnabled(target, chat_id) and not no_notice then
                     sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
                     langs[lang].restrictionSendMessages .. tostring(true) ..
