@@ -2120,7 +2120,7 @@ function showSettings(target, lang)
         langs[lang].warnSensibility .. tostring(data[tostring(target)].settings.max_warns) ..
         langs[lang].warnPunishment .. tostring(data[tostring(target)].settings.warns_punishment) ..
         langs[lang].strictrules .. tostring(data[tostring(target)].settings.strict) ..
-        langs[lang].locksWord ..
+        '\n' .. langs[lang].locksWord ..
         langs[lang].arabicLock .. tostring(data[tostring(target)].settings.locks.arabic) ..
         langs[lang].botsLock .. tostring(data[tostring(target)].settings.locks.bots) ..
         langs[lang].censorshipsLock .. tostring(data[tostring(target)].settings.locks.delword) ..
@@ -2133,7 +2133,7 @@ function showSettings(target, lang)
         langs[lang].membersLock .. tostring(data[tostring(target)].settings.locks.members) ..
         langs[lang].rtlLock .. tostring(data[tostring(target)].settings.locks.rtl) ..
         langs[lang].spamLock .. tostring(data[tostring(target)].settings.locks.spam) ..
-        langs[lang].mutesWord ..
+        '\n' .. langs[lang].mutesWord ..
         langs[lang].allMute .. tostring(data[tostring(target)].settings.mutes.all) ..
         langs[lang].audiosMute .. tostring(data[tostring(target)].settings.mutes.audios) ..
         langs[lang].contactsMute .. tostring(data[tostring(target)].settings.mutes.contacts) ..
