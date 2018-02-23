@@ -563,7 +563,6 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
                     row = row + 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                print(var)
                 keyboard.inline_keyboard[row][1] = { text = reverseGroupDataDictionary[var:lower()], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
                 keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value] .. reverse_punishments_table_emoji[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 row = row + 1
@@ -572,7 +571,6 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
             keyboard.inline_keyboard[row][1] = { text = langs[lang].gotoMutes, callback_data = 'group_managementGOTOMUTES' .. chat_id }
         elseif tonumber(page) == 2 then
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-                print(var)
                 keyboard.inline_keyboard[row][1] = { text = reverseGroupDataDictionary[var:lower()], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
                 keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value] .. reverse_punishments_table_emoji[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 row = row + 1

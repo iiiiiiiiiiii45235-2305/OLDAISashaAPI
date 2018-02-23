@@ -1983,7 +1983,6 @@ end
 function lockSetting(target, setting_type, punishment)
     local lang = get_lang(target)
     setting_type = groupDataDictionary[setting_type:lower()]
-    print(setting_type)
     if setting_type == 'lock_grouplink' then
         if data[tostring(target)].lock_grouplink ~= nil then
             if data[tostring(target)].lock_grouplink then
@@ -2070,7 +2069,6 @@ end
 function unlockSetting(target, setting_type)
     local lang = get_lang(target)
     setting_type = groupDataDictionary[setting_type:lower()]
-
     if setting_type == 'pmnotices' then
         data[tostring(target)][tostring(setting_type)] = false
         save_data(config.moderation.data, data)
