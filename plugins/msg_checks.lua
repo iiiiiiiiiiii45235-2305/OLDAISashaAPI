@@ -101,7 +101,9 @@ local function check_if_link(text, links_whitelist, group_link)
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
     print('precron')
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
+    print('1')
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
+    print('2')
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
     print('postcron')
     while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
@@ -561,6 +563,7 @@ end
 -- Begin pre_process function
 local function pre_process(msg)
     if msg then
+        cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
         -- Begin 'RondoMsgChecks' text checks by @rondoozle
         if data[tostring(msg.chat.id)] and not isWhitelisted(msg.chat.id, msg.from.id) and not msg.from.is_mod then
             -- if regular user
