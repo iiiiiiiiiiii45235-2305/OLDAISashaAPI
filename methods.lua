@@ -1983,6 +1983,7 @@ end
 function lockSetting(target, setting_type, punishment)
     local lang = get_lang(target)
     setting_type = groupDataDictionary[setting_type:lower()]
+    print(setting_type)
     if setting_type == 'lock_grouplink' then
         if data[tostring(target)].lock_grouplink ~= nil then
             if data[tostring(target)].lock_grouplink then
