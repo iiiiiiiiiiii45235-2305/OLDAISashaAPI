@@ -1082,7 +1082,7 @@ function areNoticesEnabled(user_id, chat_id)
         pm = true
     end
     if data[tostring(chat_id)] then
-        return data[tostring(msg.chat.id)].pmnotices
+        return data[tostring(chat_id)].pmnotices
     else
         return false
     end
