@@ -419,9 +419,9 @@ local function run(msg, matches)
                 end
                 if increasePunishment then
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                    local punishment = getPunishment(matches[4], matches[2]:lower())
-                    setPunishment(matches[4], matches[2]:lower(), adjust_punishment(matches[2]:lower(), punishment, '+'))
-                    savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. matches[2]:lower() .. " to " .. punishment)
+                    local punishment = getPunishment(matches[4], groupDataDictionary[matches[2]:lower()])
+                    setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], adjust_punishment(groupDataDictionary[matches[2]:lower()], punishment, '+'))
+                    savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. groupDataDictionary[matches[2]:lower()] .. " to " .. punishment)
                     local chat_name = ''
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].name or ''
@@ -429,7 +429,7 @@ local function run(msg, matches)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
                 else
                     mystat(matches[1] .. matches[2] ..(matches[3] or ''))
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].settingsDictionary[matches[2]:lower()], true)
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].settingsDictionary[groupDataDictionary[matches[2]:lower()]], true)
                 end
             else
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].settingNotFound, true)
