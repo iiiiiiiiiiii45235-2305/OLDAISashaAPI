@@ -1147,6 +1147,7 @@ reverse_punishments_table_emoji = {
     " 🚫 ",
 }
 function punishmentAction(executer, target, chat_id, punishment, reason, message_id)
+    print(executer, target, chat_id, punishment, reason, message_id)
     local lang = get_lang(chat_id)
     local text = ''
     if tonumber(punishment) >= 1 and message_id then
