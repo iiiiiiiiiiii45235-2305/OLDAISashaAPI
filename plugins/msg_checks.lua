@@ -134,6 +134,10 @@ local function oldAction(msg, strict, reason)
     end
 end
 
+local function my_tonumber(field)
+    return tonumber(field) or 0
+end
+
 local function check_msg(msg, group_data, pre_process_function)
     local group_link = nil
     if group_data.link then
@@ -182,7 +186,7 @@ local function check_msg(msg, group_data, pre_process_function)
             end
         end
         print('pass muted user')
-        if tonumber(mute_all) > 0 then
+        if my_tonumber(mute_all) > 0 then
             if pre_process_function then
                 print('all muted')
                 sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_all, langs[msg.lang].reasonMutedAll, msg.message_id))
@@ -195,7 +199,7 @@ local function check_msg(msg, group_data, pre_process_function)
         if msg.entities then
             for k, v in pairs(msg.entities) do
                 if v.url then
-                    if tonumber(lock_links) > 0 then
+                    if my_tonumber(lock_links) > 0 then
                         local tmp = v.url
                         if check_if_link(tmp, links_whitelist, group_link) then
                             if pre_process_function then
@@ -212,7 +216,7 @@ local function check_msg(msg, group_data, pre_process_function)
         end
         if msg.forward then
             if msg.forward_from_chat then
-                if tonumber(lock_forward) > 0 then
+                if my_tonumber(lock_forward) > 0 then
                     local whitelisted = false
                     for k, v in pairs(links_whitelist) do
                         if tostring(v) == tostring(msg.forward_from_chat.id) then
@@ -236,8 +240,8 @@ local function check_msg(msg, group_data, pre_process_function)
             if msg.caption then
                 textToUse = msg.caption
             end
-            print(mute_text, tonumber(mute_text), tonumber(mute_text) > 0)
-            if tonumber(mute_text) > 0 and not msg.media then
+            print(mute_text, my_tonumber(mute_text), my_tonumber(mute_text) > 0)
+            if my_tonumber(mute_text) > 0 and not msg.media then
                 if pre_process_function then
                     print('text muted')
                     sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_text, langs[msg.lang].reasonMutedText, msg.message_id))
@@ -247,7 +251,7 @@ local function check_msg(msg, group_data, pre_process_function)
                 end
             end
             -- textToUse checks
-            if tonumber(lock_spam) > 0 then
+            if my_tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(textToUse, '%c', '')
                 local _nl, real_digits = string.gsub(textToUse, '%d', '')
                 if string.len(textToUse) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
@@ -260,7 +264,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            if tonumber(lock_links) > 0 then
+            if my_tonumber(lock_links) > 0 then
                 local tmp = textToUse
                 if check_if_link(tmp, links_whitelist, group_link) then
                     if pre_process_function then
@@ -272,7 +276,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            if tonumber(lock_arabic) > 0 then
+            if my_tonumber(lock_arabic) > 0 then
                 local is_squig_msg = textToUse:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
                     if pre_process_function then
@@ -284,7 +288,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            if tonumber(lock_rtl) > 0 then
+            if my_tonumber(lock_rtl) > 0 then
                 local is_rtl = msg.from.print_name:match("‮") or textToUse:match("‮")
                 if is_rtl then
                     if pre_process_function then
@@ -300,7 +304,7 @@ local function check_msg(msg, group_data, pre_process_function)
         -- msg.media checks
         if msg.media and msg.media_type then
             if msg.media_type == 'audio' then
-                if tonumber(mute_audio) > 0 then
+                if my_tonumber(mute_audio) > 0 then
                     if pre_process_function then
                         print('audio muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_audio, langs[msg.lang].reasonMutedAudio, msg.message_id))
@@ -310,7 +314,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'contact' then
-                if tonumber(mute_contacts) > 0 then
+                if my_tonumber(mute_contacts) > 0 then
                     if pre_process_function then
                         print('contact muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_contacts, langs[msg.lang].reasonMutedContacts, msg.message_id))
@@ -320,7 +324,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'document' then
-                if tonumber(mute_documents) > 0 then
+                if my_tonumber(mute_documents) > 0 then
                     if pre_process_function then
                         print('document muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_documents, langs[msg.lang].reasonMutedDocuments, msg.message_id))
@@ -330,7 +334,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'game' then
-                if tonumber(mute_games) > 0 then
+                if my_tonumber(mute_games) > 0 then
                     if pre_process_function then
                         print('game muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_games, langs[msg.lang].reasonMutedGame, msg.message_id))
@@ -340,7 +344,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'gif' then
-                if tonumber(mute_gifs) > 0 then
+                if my_tonumber(mute_gifs) > 0 then
                     if pre_process_function then
                         print('gif muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_gifs, langs[msg.lang].reasonMutedGifs, msg.message_id))
@@ -350,7 +354,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'location' then
-                if tonumber(mute_locations) > 0 then
+                if my_tonumber(mute_locations) > 0 then
                     if pre_process_function then
                         print('location muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_locations, langs[msg.lang].reasonMutedLocations, msg.message_id))
@@ -360,7 +364,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'photo' then
-                if tonumber(mute_photos) > 0 then
+                if my_tonumber(mute_photos) > 0 then
                     if pre_process_function then
                         print('photo muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_photos, langs[msg.lang].reasonMutedPhoto, msg.message_id))
@@ -370,7 +374,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'sticker' then
-                if tonumber(mute_stickers) > 0 then
+                if my_tonumber(mute_stickers) > 0 then
                     if pre_process_function then
                         print('sticker muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_stickers, langs[msg.lang].reasonMutedStickers, msg.message_id))
@@ -380,7 +384,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'video' then
-                if tonumber(mute_videos) > 0 then
+                if my_tonumber(mute_videos) > 0 then
                     if pre_process_function then
                         print('video muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_videos, langs[msg.lang].reasonMutedVideo, msg.message_id))
@@ -390,7 +394,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'video_note' then
-                if tonumber(mute_video_notes) > 0 then
+                if my_tonumber(mute_video_notes) > 0 then
                     if pre_process_function then
                         print('video_note muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_video_notes, langs[msg.lang].reasonMutedVideonotes, msg.message_id))
@@ -400,7 +404,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'voice_note' then
-                if tonumber(mute_voice_notes) > 0 then
+                if my_tonumber(mute_voice_notes) > 0 then
                     if pre_process_function then
                         print('voice_note muted')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_voice_notes, langs[msg.lang].reasonMutedVoicenotes, msg.message_id))
@@ -412,7 +416,7 @@ local function check_msg(msg, group_data, pre_process_function)
             end
         end
     else
-        if tonumber(mute_tgservices) > 0 then
+        if my_tonumber(mute_tgservices) > 0 then
             if pre_process_function then
                 print('tgservice muted')
                 deleteMessage(msg.chat.id, msg.message_id)
@@ -422,7 +426,7 @@ local function check_msg(msg, group_data, pre_process_function)
             end
         end
         if msg.service_type == 'chat_add_user_link' then
-            if tonumber(lock_spam) > 0 then
+            if my_tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(msg.from.print_name, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
                     if pre_process_function then
@@ -434,7 +438,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            if tonumber(lock_rtl) > 0 then
+            if my_tonumber(lock_rtl) > 0 then
                 local is_rtl_name = msg.from.print_name:match("‮")
                 if is_rtl_name then
                     if pre_process_function then
@@ -446,7 +450,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            if tonumber(lock_members) > 0 then
+            if my_tonumber(lock_members) > 0 then
                 if pre_process_function then
                     print('members locked')
                     sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_members, langs[msg.lang].reasonLockMembers, msg.message_id))
@@ -457,7 +461,7 @@ local function check_msg(msg, group_data, pre_process_function)
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do
-                if tonumber(lock_spam) > 0 then
+                if my_tonumber(lock_spam) > 0 then
                     local _nl, ctrl_chars = string.gsub(v.print_name, '%c', '')
                     if string.len(v.print_name) > 70 or ctrl_chars > 40 then
                         if pre_process_function then
@@ -469,7 +473,7 @@ local function check_msg(msg, group_data, pre_process_function)
                         end
                     end
                 end
-                if tonumber(lock_rtl) > 0 then
+                if my_tonumber(lock_rtl) > 0 then
                     local is_rtl_name = v.print_name:match("‮")
                     if is_rtl_name then
                         if pre_process_function then
@@ -481,7 +485,7 @@ local function check_msg(msg, group_data, pre_process_function)
                         end
                     end
                 end
-                if tonumber(lock_members) > 0 then
+                if my_tonumber(lock_members) > 0 then
                     if pre_process_function then
                         print('member locked')
                         deleteMessage(msg.chat.id, msg.message_id)
@@ -492,7 +496,7 @@ local function check_msg(msg, group_data, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockMembers
                     end
                 end
-                if tonumber(lock_bots) > 0 then
+                if my_tonumber(lock_bots) > 0 then
                     if v.is_bot then
                         if pre_process_function then
                             print('bots locked')
@@ -506,7 +510,7 @@ local function check_msg(msg, group_data, pre_process_function)
             end
         end
         if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
-            if tonumber(lock_leave) > 0 then
+            if my_tonumber(lock_leave) > 0 then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
                     if pre_process_function then
                         print('leave locked')
