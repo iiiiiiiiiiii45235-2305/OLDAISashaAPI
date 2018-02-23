@@ -512,7 +512,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
 
     local row = 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['tagalert'] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary['tagalert'] }
+    keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_management' .. reverseGroupDataDictionary['tagalert'] }
     if data[tostring(chat_id)].tagalert then
         keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['tagalert'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['tagalert'] .. page .. chat_id }
     else
@@ -520,7 +520,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
     end
     row = row + 1
     keyboard.inline_keyboard[row] = { }
-    keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['pmnotices'] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary['pmnotices'] }
+    keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_management' .. reverseGroupDataDictionary['pmnotices'] }
     if data[tostring(chat_id)].pmnotices then
         keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['pmnotices'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['pmnotices'] .. page .. chat_id }
     else
@@ -530,9 +530,9 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
     keyboard.inline_keyboard[row] = { }
     if data[tostring(chat_id)] then
         if tonumber(page) == 1 then
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_grouplink'] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary['lock_grouplink'] }
-            keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_name'] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary['lock_name'] }
-            keyboard.inline_keyboard[row][3] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_photo'] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary['lock_photo'] }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_grouplink'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_grouplink'] }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_name'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_name'] }
+            keyboard.inline_keyboard[row][3] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_photo'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_photo'] }
             row = row + 1
             keyboard.inline_keyboard[row] = { }
             if data[tostring(chat_id)].lock_grouplink then
@@ -555,12 +555,12 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.locks) do
                 if var:lower() == 'flood' then
                     keyboard.inline_keyboard[row][1] = { text = '--', callback_data = 'group_managementFLOOD--' .. page .. chat_id }
-                    keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['max_flood'] .. langs[lang].infoEmoji .. ' (' .. data[tostring(chat_id)].settings.max_flood .. ')', callback_data = 'group_management' .. reverseGroupDataDictionary['max_flood'] }
+                    keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['max_flood'] .. ' (' .. data[tostring(chat_id)].settings.max_flood .. ')', callback_data = 'group_management' .. reverseGroupDataDictionary['max_flood'] }
                     keyboard.inline_keyboard[row][3] = { text = '++', callback_data = 'group_managementFLOOD++' .. page .. chat_id }
                     row = row + 1
                     keyboard.inline_keyboard[row] = { }
                 end
-                keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary[var:lower()] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
+                keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary[var:lower()], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
                 keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value] .. reverse_punishments_table_emoji[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
@@ -568,7 +568,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
             keyboard.inline_keyboard[row][1] = { text = langs[lang].gotoMutes, callback_data = 'group_managementGOTOMUTES' .. chat_id }
         elseif tonumber(page) == 2 then
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-                keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary[var:lower()] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
+                keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary[var:lower()], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
                 keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value] .. reverse_punishments_table_emoji[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
@@ -577,7 +577,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
         end
         row = row + 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['strict'] .. langs[lang].infoEmoji, callback_data = 'group_management' .. reverseGroupDataDictionary['strict'] }
+        keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['strict'], callback_data = 'group_management' .. reverseGroupDataDictionary['strict'] }
         if data[tostring(chat_id)].strict then
             keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['strict'] .. ' ✅', callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['strict'] .. page .. chat_id }
         else
