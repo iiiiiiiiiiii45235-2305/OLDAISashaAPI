@@ -2,9 +2,10 @@
 local cronTable = {
     resolveUsernamesTable =
     {
-        -- chat_id = { valMsg, valTot }
+        -- chat_id = valMsg
     }
 }
+local valTot = 0
 
 local test_data = {
     link = nil,
@@ -99,14 +100,12 @@ local function check_if_link(text, links_whitelist, group_link)
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
     print('1')
-    cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
-    print('2')
-    cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
+    cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = 0
     print('postcron')
-    while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
+    while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)] < 5 and valTot < 30 do
         print('incron')
-        cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
-        cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
+        cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] + 1
+        valTot = valTot + 1
         if APIgetChat(string.match(tmp, '@[%w_]+'), true) then
             return true
         else
@@ -577,6 +576,7 @@ local function cron()
     cronTable = {
         resolveUsernamesTable = { }
     }
+    valTot = 0
 end
 
 return {
