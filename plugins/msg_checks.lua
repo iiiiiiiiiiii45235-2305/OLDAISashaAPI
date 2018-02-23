@@ -134,11 +134,11 @@ local function oldAction(msg, strict, reason)
     end
 end
 
-local function check_msg(msg, settings, pre_process_function)
+local function check_msg(msg, group_data, pre_process_function)
     print('test')
     local group_link = nil
-    if settings.link then
-        group_link = settings.link
+    if group_data.link then
+        group_link = group_data.link
         group_link = links_to_tdotme(group_link)
         group_link = pre_process_links(group_link)
     end
