@@ -60,7 +60,8 @@ return {
     description = "STRINGS",
     patterns =
     {
-        "^(###cblangs)(..)(%u)?$",
+        "^(###cblangs)(..)(%u)$",
+        "^(###cblangs)(..)$",
 
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ii][Tt])$',
