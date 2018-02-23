@@ -555,7 +555,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.locks) do
                 if var:lower() == 'flood' then
                     keyboard.inline_keyboard[row][1] = { text = '--', callback_data = 'group_managementFLOOD--' .. page .. chat_id }
-                    keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['max_flood'] .. ' (' .. data[tostring(chat_id)].settings.max_flood .. ')', callback_data = 'group_management' .. reverseGroupDataDictionary['max_flood'] }
+                    keyboard.inline_keyboard[row][2] = { text = reverseGroupDataDictionary['max_flood'] .. ' (' .. data[tostring(chat_id)].settings.max_flood .. ')', callback_data = 'group_management' .. reverseGroupDataDictionary['max_flood'] }
                     keyboard.inline_keyboard[row][3] = { text = '++', callback_data = 'group_managementFLOOD++' .. page .. chat_id }
                     row = row + 1
                     keyboard.inline_keyboard[row] = { }
