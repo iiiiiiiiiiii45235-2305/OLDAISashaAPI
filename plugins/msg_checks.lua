@@ -85,7 +85,7 @@ local function test_bot_link(text)
     return is_now_link
 end
 
-local function check_if_link(text, links_whitelist, group_link)
+local function check_if_link(chat_id, text, links_whitelist, group_link)
     text = pre_process_links(text)
     text = remove_whitelisted_links(text, links_whitelist, group_link)
     local is_text_link = text:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or
@@ -100,11 +100,11 @@ local function check_if_link(text, links_whitelist, group_link)
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
     print('1')
-    cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = 0
+    cronTable.resolveUsernamesTable[tostring(chat_id)] = 0
     print('postcron')
-    while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)] < 5 and valTot < 30 do
+    while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(chat_id)] < 5 and valTot < 30 do
         print('incron')
-        cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] + 1
+        cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
         valTot = valTot + 1
         if APIgetChat(string.match(tmp, '@[%w_]+'), true) then
             return true
@@ -124,17 +124,6 @@ local function check_if_link(text, links_whitelist, group_link)
         end
     end
     return false
-end
-
-local function oldAction(msg, strict, reason)
-    deleteMessage(msg.chat.id, msg.message_id)
-    if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-        if not strict then
-            sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
-        else
-            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, reason))
-        end
-    end
 end
 
 local function my_tonumber(field)
@@ -200,7 +189,7 @@ local function check_msg(msg, group_data, pre_process_function)
                 if v.url then
                     if my_tonumber(lock_links) > 0 then
                         local tmp = v.url
-                        if check_if_link(tmp, links_whitelist, group_link) then
+                        if check_if_link(msg.chat.id, tmp, links_whitelist, group_link) then
                             if pre_process_function then
                                 print('link found entities')
                                 sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLinkEntities, msg.message_id))
@@ -266,7 +255,7 @@ local function check_msg(msg, group_data, pre_process_function)
             print('lockspam passed')
             if my_tonumber(lock_links) > 0 then
                 local tmp = textToUse
-                if check_if_link(tmp, links_whitelist, group_link) then
+                if check_if_link(msg.chat.id, tmp, links_whitelist, group_link) then
                     if pre_process_function then
                         print('link found')
                         sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLink, msg.message_id))
