@@ -1613,7 +1613,6 @@ function unrestrictUser(executer, target, chat_id, no_notice)
                     langs[lang].restrictionAddWebPagePreviews .. tostring(true))
                 end
                 return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unrestricted ..
-                '\n' .. text ..
                 '\n#user' .. target .. ' #executer' .. executer .. ' #unrestrict'
             else
                 return langs[lang].checkMyPermissions
