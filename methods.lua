@@ -2031,7 +2031,7 @@ function lockSetting(target, setting_type, punishment)
                 end
             end
         end
-        return langs[lang].errorTryAgain
+        return langs[lang].needPhoto
     elseif setting_type == 'pmnotices' then
         if data[tostring(target)].pmnotices ~= nil then
             if data[tostring(target)].pmnotices then
