@@ -1575,14 +1575,14 @@ function restrictUser(executer, target, chat_id, restrictions, until_date, no_no
                 end
                 local temprestrict = false
                 if until_date then
-                    if until_date >= 30 or until_date <= 31622400 then
+                    if os.time() + until_date >= 30 or os.time() + until_date <= 31622400 then
                         temprestrict = true
                     end
                 end
                 if temprestrict then
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted ..
                     '\n' .. text ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', until_date)
+                    '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date)
                 else
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted ..
                     '\n' .. text ..
@@ -1716,14 +1716,14 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 end
                 local tempban = false
                 if until_date then
-                    if until_date >= 30 or until_date <= 31622400 then
+                    if os.time() + until_date >= 30 or os.time() + until_date <= 31622400 then
                         tempban = true
                     end
                 end
                 if tempban then
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #tempban ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', until_date) ..(reason or '')
+                    '\n#user' .. target .. ' #executer' .. executer .. ' #tempban ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date) ..(reason or '')
                 else
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
