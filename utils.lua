@@ -12,6 +12,23 @@ sha2 =(loadfile "./libs/sha2.lua")()
 
 http.TIMEOUT = 10
 
+
+default_restrictions = {
+    can_send_messages = false,
+    can_send_media_messages = false,
+    can_send_other_messages = false,
+    can_add_web_page_previews = false
+}
+
+default_permissions = {
+    can_change_info = true,
+    can_delete_messages = true,
+    can_invite_users = true,
+    can_restrict_members = true,
+    can_pin_messages = true,
+    can_promote_members = false,
+}
+
 -- custom add
 function load_data(filename)
     local f = io.open(filename)
@@ -25,11 +42,18 @@ function load_data(filename)
     return decodeddata
 end
 
-function save_data(filename, data)
-    local s = json:encode_pretty(data)
-    local f = io.open(filename, 'w')
-    f:write(s)
-    f:close()
+function save_data(filename, data, uglify)
+    local s
+    if not uglify then
+        s = json:encode_pretty(data)
+    else
+        s = json:encode(data)
+    end
+    if s then
+        local f = io.open(filename, 'w')
+        f:write(s)
+        f:close()
+    end
 end
 
 function get_word(s, i)
@@ -359,7 +383,7 @@ function system_plugin(p)
         p == 'multiple_commands' or
         p == 'plugins' or
         p == 'strings' or
-        p == 'tgcli_to_api_migration' or
+        -- p == 'tgcli_to_api_migration' or
         p == 'whitelist' then
         return true
     end
@@ -563,8 +587,8 @@ function pairsByGroupName(t)
     end
     function byval(a, b)
         if t[a] and t[b] then
-            if t[a].set_name and t[b].set_name then
-                return t[a].set_name < t[b].set_name
+            if t[a].name and t[b].name then
+                return t[a].name < t[b].name
             end
         end
         return false
@@ -586,12 +610,21 @@ end
 -- End Table Sort
 
 function get_lang(chat_id)
-    local lang = redis:get('lang:' .. chat_id)
-    if not lang then
-        redis:set('lang:' .. chat_id, 'en')
-        lang = 'en'
+    if tonumber(chat_id) < 0 then
+        if data[tostring(chat_id)] then
+            data[tostring(chat_id)].lang = data[tostring(chat_id)].lang or 'en'
+            return data[tostring(chat_id)].lang
+        else
+            return 'en'
+        end
+    else
+        local lang = redis:get('lang:' .. chat_id)
+        if not lang then
+            redis:set('lang:' .. chat_id, 'en')
+            lang = 'en'
+        end
+        return lang
     end
-    return lang
 end
 
 function obj_id_to_cli(obj)
@@ -722,67 +755,38 @@ function adjustPermissions(param_permissions)
     return permissions
 end
 
-settingsDictionary = {
-    ["lock_arabic"] = "lock_arabic",
-    ["arabic"] = "lock_arabic",
-    ["lock_bots"] = "lock_bots",
-    ["bots"] = "lock_bots",
-    ["flood"] = "flood",
-    ["lock_delword"] = "lock_delword",
-    ["delword"] = "lock_delword",
-    ["lock_group_link"] = "lock_group_link",
-    ["group_link"] = "lock_group_link",
-    ["grouplink"] = "lock_group_link",
-    ["lock_leave"] = "lock_leave",
-    ["leave"] = "lock_leave",
-    ["lock_link"] = "lock_link",
-    ["links"] = "lock_link",
-    ["link"] = "lock_link",
-    ["lock_member"] = "lock_member",
-    ["members"] = "lock_member",
-    ["member"] = "lock_member",
+groupDataDictionary = {
+    ["lock_group_link"] = "lock_grouplink",
+    ["group_link"] = "lock_grouplink",
+    ["grouplink"] = "lock_grouplink",
     ["lock_name"] = "lock_name",
     ["name"] = "lock_name",
     ["lock_photo"] = "lock_photo",
     ["photo"] = "lock_photo",
-    ["lock_rtl"] = "lock_rtl",
-    ["rtl"] = "lock_rtl",
-    ["lock_spam"] = "lock_spam",
-    ["spam"] = "lock_spam",
+    ["pmnotices"] = "pmnotices",
+    ["private_notices"] = "pmnotices",
+    ["pmnotices"] = "pmnotices",
+    ["tagalert"] = "tagalert",
+    -- settings
+    ["max_flood"] = "max_flood",
+    ["max_warns"] = "max_warns",
     ["strict"] = "strict",
-}
-
-reverseSettingsDictionary = {
-    ["lock_arabic"] = "arabic",
+    ["warns_punishment"] = "warns_punishment",
+    ["warns"] = "warns_punishment",
+    ["warn"] = "warns_punishment",
+    -- locks
     ["arabic"] = "arabic",
-    ["lock_bots"] = "bots",
     ["bots"] = "bots",
-    ["flood"] = "flood",
-    ["lock_delword"] = "delword",
     ["delword"] = "delword",
-    ["lock_group_link"] = "grouplink",
-    ["group_link"] = "grouplink",
-    ["grouplink"] = "grouplink",
-    ["lock_leave"] = "leave",
+    ["flood"] = "flood",
     ["leave"] = "leave",
-    ["lock_link"] = "links",
-    ["links"] = "links",
-    ["link"] = "links",
-    ["lock_member"] = "members",
-    ["members"] = "members",
-    ["member"] = "members",
-    ["lock_name"] = "name",
-    ["name"] = "name",
-    ["lock_photo"] = "photo",
-    ["photo"] = "photo",
-    ["lock_rtl"] = "rtl",
+    ["links"] = "link",
+    ["link"] = "link",
+    ["members"] = "member",
+    ["member"] = "member",
     ["rtl"] = "rtl",
-    ["lock_spam"] = "spam",
     ["spam"] = "spam",
-    ["strict"] = "strict",
-}
-
-mutesDictionary = {
+    -- mutes
     ["all"] = "all",
     ["audio"] = "audio",
     ["audios"] = "audio",
@@ -814,10 +818,78 @@ mutesDictionary = {
     ["tgservices"] = "tgservice",
     ["video"] = "video",
     ["videos"] = "video",
-    ["voice_note"] = "video_note",
-    ["voice_notes"] = "video_note",
     ["video_note"] = "voice_note",
     ["video_notes"] = "voice_note",
+    ["voice_note"] = "video_note",
+    ["voice_notes"] = "video_note",
+}
+reverseGroupDataDictionary = {
+    ["lock_grouplink"] = "grouplink",
+    ["group_link"] = "grouplink",
+    ["grouplink"] = "grouplink",
+    ["lock_name"] = "name",
+    ["name"] = "name",
+    ["lock_photo"] = "photo",
+    ["photo"] = "photo",
+    ["pmnotices"] = "private_notices",
+    ["private_notices"] = "private_notices",
+    ["pmnotices"] = "private_notices",
+    ["tagalert"] = "tagalert",
+    -- settings
+    ["max_flood"] = "max_flood",
+    ["max_warns"] = "max_warns",
+    ["strict"] = "strict",
+    ["warns_punishment"] = "warns",
+    ["warns"] = "warns",
+    ["warn"] = "warns",
+    -- locks
+    ["arabic"] = "arabic",
+    ["bots"] = "bots",
+    ["delword"] = "delword",
+    ["flood"] = "flood",
+    ["leave"] = "leave",
+    ["links"] = "links",
+    ["link"] = "links",
+    ["members"] = "members",
+    ["member"] = "members",
+    ["rtl"] = "rtl",
+    ["spam"] = "spam",
+    -- mutes
+    ["all"] = "all",
+    ["audio"] = "audios",
+    ["audios"] = "audios",
+    ["contact"] = "contacts",
+    ["contacts"] = "contacts",
+    ["document"] = "documents",
+    ["documents"] = "documents",
+    ["game"] = "games",
+    ["games"] = "games",
+    ["gif"] = "gifs",
+    ["gifs"] = "gifs",
+    ["location"] = "locations",
+    ["locations"] = "locations",
+    ["position"] = "locations",
+    ["positions"] = "locations",
+    ["image"] = "photos",
+    ["images"] = "photos",
+    ["photo"] = "photos",
+    ["photos"] = "photos",
+    ["pic"] = "photos",
+    ["pics"] = "photos",
+    ["picture"] = "photos",
+    ["pictures"] = "photos",
+    ["sticker"] = "stickers",
+    ["stickers"] = "stickers",
+    ["text"] = "text",
+    ["texts"] = "text",
+    ["tgservice"] = "tgservices",
+    ["tgservices"] = "tgservices",
+    ["video"] = "videos",
+    ["videos"] = "videos",
+    ["video_note"] = "voice_notes",
+    ["video_notes"] = "voice_notes",
+    ["voice_note"] = "video_notes",
+    ["voice_notes"] = "video_notes",
 }
 
 restrictionsDictionary = {
@@ -976,121 +1048,6 @@ function adjust_plugin_names(p, lang)
     return 'ERR'
 end
 
-delete_tab = {
-    "lock_arabic",
-    "lock_link",
-    "lock_rtl",
-    "lock_spam",
-    "all",
-    "audio",
-    "contact",
-    "document",
-    "game",
-    "gif",
-    "location",
-    "photo",
-    "sticker",
-    "text",
-    "tgservice",
-    "video",
-    "video_note",
-    "voice_note",
-}
-warn_tab = {
-    "lock_arabic",
-    "lock_link",
-    "lock_rtl",
-    "lock_spam",
-    "all",
-    "audio",
-    "contact",
-    "document",
-    "game",
-    "gif",
-    "location",
-    "photo",
-    "sticker",
-    "text",
-    "video",
-    "video_note",
-    "voice_note",
-}
-kick_tab = {
-    "lock_arabic",
-    "lock_link",
-    "lock_rtl",
-    "lock_spam",
-    "all",
-    "audio",
-    "contact",
-    "document",
-    "game",
-    "gif",
-    "location",
-    "photo",
-    "sticker",
-    "text",
-    "video",
-    "video_note",
-    "voice_note",
-}
-kick_warn_tab = {
-    "flood",
-    "lock_arabic",
-    "lock_link",
-    "lock_rtl",
-    "lock_spam",
-    "all",
-    "audio",
-    "contact",
-    "document",
-    "game",
-    "gif",
-    "location",
-    "photo",
-    "sticker",
-    "text",
-    "video",
-    "video_note",
-    "voice_note",
-}
-ban_tab = {
-    "flood",
-    "lock_arabic",
-    "lock_bots",
-    "lock_leave",
-    "lock_link",
-    "lock_member",
-    "lock_rtl",
-    "lock_spam",
-    "all",
-    "audio",
-    "contact",
-    "document",
-    "game",
-    "gif",
-    "location",
-    "photo",
-    "sticker",
-    "text",
-    "video",
-    "video_note",
-    "voice_note",
-}
-
-function punishment_plus_plus(punishment)
-    if not punishment then
-        punishment = 'delete'
-    elseif punishment == 'delete' then
-        punishment = 'warn'
-    elseif punishment == 'warn' then
-        punishment = 'kick'
-    elseif punishment == 'kick' then
-        punishment = 'ban'
-    end
-    return punishment
-end
-
 function check_chat_msgs(chat_id)
     -- Chat bot msgs in 60 seconds
     local hash = 'bot:' .. chat_id .. ':msgs'
@@ -1122,14 +1079,309 @@ function areNoticesEnabled(user_id, chat_id)
     if redis:get('notice:' .. user_id) then
         pm = true
     end
-    if redis:get('notice:' .. chat_id) then
-        pm = true
+    if data[tostring(chat_id)] then
+        return data[tostring(msg.chat.id)].pmnotices
     else
-        pm = false
+        return false
     end
     return pm
 end
 
 function profileLink(id, name)
     return "<a href=\"tg://user?id=" .. id .. "\">" .. html_escape(name) .. "</a>"
+end
+
+punishments_table = {
+    ["false"] = false,
+    ["nothing"] = false,
+    ["delete"] = 1,
+    ["warn"] = 2,
+    ["temprestrict"] = 3,
+    ["restrict"] = 4,
+    ["kick"] = 5,
+    ["tempban"] = 6,
+    ["ban"] = 7,
+    [0] = false,
+    [1] = 1,
+    [2] = 2,
+    [3] = 3,
+    [4] = 4,
+    [5] = 5,
+    [6] = 6,
+    [7] = 7,
+    ["0"] = false,
+    ["1"] = 1,
+    ["2"] = 2,
+    ["3"] = 3,
+    ["4"] = 4,
+    ["5"] = 5,
+    ["6"] = 6,
+    ["7"] = 7,
+    ["🆗"] = false,
+    ["🗑"] = 1,
+    ["⚠️"] = 2,
+    ["⏳📴"] = 3,
+    ["📴"] = 4,
+    ["👟"] = 5,
+    ["⏳🚫"] = 6,
+    ["🚫"] = 7,
+}
+reverse_punishments_table = {
+    [nil] = "nothing",
+    [false] = "nothing",
+    "delete",
+    "warn",
+    "temprestrict",
+    "restrict",
+    "kick",
+    "tempban",
+    "ban",
+}
+reverse_punishments_table_emoji = {
+    [nil] = " 🆗 ",
+    [false] = " 🆗 ",
+    " 🗑 ",
+    " ⚠️ ",
+    " ⏳📴 ",
+    " 📴 ",
+    " 👟 ",
+    " ⏳🚫 ",
+    " 🚫 ",
+}
+function punishmentAction(executer, target, chat_id, punishment, reason, message_id)
+    local lang = get_lang(chat_id)
+    local text = ''
+    if tonumber(punishment) >= 1 and message_id then
+        -- delete
+        deleteMessage(chat_id, message_id, true)
+    end
+    if tonumber(punishment) >= 2 and string.match(getWarn(chat_id), "%d+") then
+        -- warn
+        text = text .. tostring(warnUser(executer, target, chat_id, reason)) .. '\n'
+    end
+    if not globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] then
+        if tonumber(punishment) >= 3 then
+            if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
+                -- temprestrict
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
+            else
+                -- restrict
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
+            end
+        end
+        if tonumber(punishment) == 5 then
+            -- kick
+            text = text .. tostring(kickUser(executer, target, chat_id, reason)) .. '\n'
+        end
+        if tonumber(punishment) >= 6 then
+            if tonumber(punishment) == 6 and not data[tostring(chat_id)].settings.strict then
+                -- tempban
+                text = text .. tostring(banUser(executer, target, chat_id, reason, data[tostring(chat_id)].settings.time_ban)) .. '\n'
+            else
+                -- ban
+                text = text .. tostring(banUser(executer, target, chat_id, reason)) .. '\n'
+            end
+        end
+    end
+    return text
+end
+function adjust_punishment(setting, punishment, change)
+    if not punishment then
+        -- if nil or false
+        return false
+    end
+
+    local increment = false
+    local decrement = false
+    if tostring(change) == '+' then
+        if not punishment then
+            punishment = 0
+        end
+        punishment = punishment + 1
+        increment = true
+    elseif tostring(change) == '-' then
+        if not punishment then
+            punishment = 0
+        end
+        punishment = punishment - 1
+        decrement = true
+    end
+
+    if groupDataDictionary[setting] then
+        local setting = groupDataDictionary[setting]
+        if setting == 'warns_punishment' then
+            if punishment < 3 then
+                -- if not temprestrict or higher
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 3
+                end
+            elseif punishment == 5 then
+                -- if kick move to tempban
+                if decrement then
+                    punishment = 4
+                else
+                    punishment = 6
+                end
+            end
+        elseif setting == 'bots' then
+            if punishment < 3 then
+                -- if not temprestrict or higher
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 3
+                end
+            elseif punishment == 5 then
+                -- if kick move to tempban
+                if decrement then
+                    punishment = 4
+                else
+                    punishment = 6
+                end
+            end
+        elseif setting == 'flood' then
+            if punishment < 2 then
+                -- if not warn or higher move to warn
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 2
+                end
+            end
+        elseif setting == 'gbanned' then
+            if punishment < 4 then
+                -- if not restrict or higher move to restrict
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 4
+                end
+            elseif punishment == 5 then
+                -- if kick move to tempban
+                if decrement then
+                    punishment = 4
+                else
+                    punishment = 6
+                end
+            end
+        elseif setting == 'leave' then
+            if punishment < 3 then
+                -- if not temprestrict or higher move to temprestrict
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 3
+                end
+            elseif punishment == 5 then
+                -- if kick move to tempban
+                if decrement then
+                    punishment = 4
+                else
+                    punishment = 6
+                end
+            end
+        elseif setting == 'members' then
+            if punishment < 3 then
+                -- if not temprestrict or higher move to temprestrict
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 3
+                end
+            elseif punishment == 5 then
+                -- if kick move to tempban
+                if decrement then
+                    punishment = 4
+                else
+                    punishment = 6
+                end
+            end
+        elseif setting == 'tgservice' then
+            if punishment < 1 then
+                -- if not delete disable
+                if decrement then
+                    punishment = 0
+                else
+                    punishment = 1
+                end
+            end
+        end
+    else
+        print('not a setting')
+        return false
+    end
+
+    if tonumber(punishment) < 0 then
+        -- if less than disable
+        if decrement then
+            return 7
+        else
+            return false
+        end
+    elseif tonumber(punishment) > 7 then
+        -- if more than ban
+        if increment then
+            return false
+        else
+            return 7
+        end
+    elseif punishment == 0 then
+        -- if disable
+        return false
+    end
+    -- nothing else to check, return punishment
+    return punishment
+end
+function setPunishment(target, setting_type, punishment)
+    punishment = tonumber(punishment) or 0
+    if punishment == 0 then
+        punishment = false
+    end
+    local lang = get_lang(target)
+    if data[tostring(target)].settings[tostring(setting_type)] then
+        data[tostring(target)].settings[tostring(setting_type)] = punishment
+    elseif data[tostring(target)].settings.locks[tostring(setting_type)] then
+        data[tostring(target)].settings.locks[tostring(setting_type)] = punishment
+    elseif data[tostring(target)].settings.mutes[tostring(setting_type)] then
+        data[tostring(target)].settings.mutes[tostring(setting_type)] = punishment
+    else
+        return langs[lang].settingNotFound
+    end
+    save_data(config.moderation.data, data)
+    if not punishment then
+        return reverseGroupDataDictionary[setting_type] .. langs[lang].nowWillNotBePunished
+    else
+        return reverseGroupDataDictionary[setting_type] .. langs[lang].nowWillBePunishedWith .. reverse_punishments_table[punishment]
+    end
+end
+function getPunishment(target, setting_type)
+    local punishment = false
+    if data[tostring(target)].settings[tostring(setting_type)] then
+        punishment = data[tostring(target)].settings[tostring(setting_type)]
+    elseif data[tostring(target)].settings.locks[tostring(setting_type)] then
+        punishment = data[tostring(target)].settings.locks[tostring(setting_type)]
+    elseif data[tostring(target)].settings.mutes[tostring(setting_type)] then
+        punishment = data[tostring(target)].settings.mutes[tostring(setting_type)]
+    end
+    return punishment
+end
+
+function unixToDate(unix)
+    local remainder, weeks, days, hours, minutes, seconds = 0
+    weeks = math.floor(unix / 604800)
+    remainder = unix % 604800
+    days = math.floor(remainder / 86400)
+    remainder = remainder % 86400
+    hours = math.floor(remainder / 3600)
+    remainder = remainder % 3600
+    minutes = math.floor(remainder / 60)
+    seconds = remainder % 60
+    return seconds, minutes, hours, days, weeks
+end
+
+function dateToUnix(seconds, minutes, hours, days, weeks)
+    local time =((weeks or 0) * 7 * 24 * 60 * 60) +((days or 0) * 24 * 60 * 60) +((hours or 0) * 60 * 60) +((minutes or 0) * 60) +(seconds or 0)
+    return time
 end

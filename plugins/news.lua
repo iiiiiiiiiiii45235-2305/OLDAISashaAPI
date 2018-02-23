@@ -42,7 +42,7 @@ local function pre_process(msg)
                 local text = "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats) .. '\n'
                 for k, v in pairsByGroupName(data) do
                     if not news_table.chats[k] then
-                        text = text .. v.set_name .. '\n'
+                        text = text .. v.name .. '\n'
                     end
                 end
                 editMessage(news_table.chat_msg_to_update, news_table.msg_to_update, text)

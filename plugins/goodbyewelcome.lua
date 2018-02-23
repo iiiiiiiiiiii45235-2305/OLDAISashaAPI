@@ -13,7 +13,7 @@ local last_welcome = { }
 local function set_welcome(chat_id, welcome)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        data[tostring(chat_id)]['welcome'] = welcome
+        data[tostring(chat_id)].welcome = welcome
         save_data(config.moderation.data, data)
         return langs[lang].newWelcome .. welcome
     end
@@ -21,8 +21,8 @@ end
 
 local function get_welcome(chat_id)
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['welcome'] then
-            local welcome = data[tostring(chat_id)]['welcome']
+        if data[tostring(chat_id)].welcome then
+            local welcome = data[tostring(chat_id)].welcome
             return welcome
         end
     end
@@ -31,7 +31,7 @@ end
 local function unset_welcome(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        data[tostring(chat_id)]['welcome'] = nil
+        data[tostring(chat_id)].welcome = nil
         save_data(config.moderation.data, data)
         return langs[lang].welcomeRemoved
     end
@@ -40,7 +40,7 @@ end
 local function set_memberswelcome(chat_id, value)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        data[tostring(chat_id)]['welcomemembers'] = value
+        data[tostring(chat_id)].welcomemembers = value
         save_data(config.moderation.data, data)
         return string.gsub(langs[lang].newWelcomeNumber, 'X', tostring(value))
     end
@@ -49,10 +49,10 @@ end
 local function get_memberswelcome(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        if not data[tostring(chat_id)]['welcomemembers'] then
+        if not data[tostring(chat_id)].welcomemembers then
             return langs[lang].noSetValue
         end
-        local value = data[tostring(chat_id)]['welcomemembers']
+        local value = data[tostring(chat_id)].welcomemembers
         return value
     end
 end
@@ -60,7 +60,7 @@ end
 local function set_goodbye(chat_id, goodbye)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        data[tostring(chat_id)]['goodbye'] = goodbye
+        data[tostring(chat_id)].goodbye = goodbye
         save_data(config.moderation.data, data)
         return langs[lang].newGoodbye .. goodbye
     end
@@ -68,8 +68,8 @@ end
 
 local function get_goodbye(chat_id)
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['goodbye'] then
-            local goodbye = data[tostring(chat_id)]['goodbye']
+        if data[tostring(chat_id)].goodbye then
+            local goodbye = data[tostring(chat_id)].goodbye
             return goodbye
         end
     end
@@ -78,7 +78,7 @@ end
 local function unset_goodbye(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        data[tostring(chat_id)]['goodbye'] = nil
+        data[tostring(chat_id)].goodbye = nil
         save_data(config.moderation.data, data)
         return langs[lang].goodbyeRemoved
     end
@@ -87,8 +87,8 @@ end
 local function get_rules(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['rules'] then
-            return data[tostring(chat_id)]['rules']
+        if data[tostring(chat_id)].rules then
+            return data[tostring(chat_id)].rules
         else
             return langs[lang].noRules
         end
@@ -114,8 +114,8 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user, parse_mode)
         goodbyewelcome = goodbyewelcome:gsub('$rules', get_rules(chat.id))
     end
     if string.find(goodbyewelcome, '$grouplink') then
-        if data[tostring(chat.id)].settings.set_link then
-            goodbyewelcome = goodbyewelcome:gsub('$grouplink', data[tostring(chat.id)].settings.set_link)
+        if data[tostring(chat.id)].link then
+            goodbyewelcome = goodbyewelcome:gsub('$grouplink', data[tostring(chat.id)].link)
         else
             goodbyewelcome = goodbyewelcome:gsub('$grouplink', 'NO GROUP LINK SET')
         end

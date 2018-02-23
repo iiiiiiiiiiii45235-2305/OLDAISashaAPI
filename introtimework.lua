@@ -111,7 +111,6 @@ function bot_init()
         is_bot = true,
         link = "t.me/AISashaBot",
         print_name = "Sasha A.I. BOT",
-        tg_cli_id = 283058260,
         type = "bot",
         userVersion =
         {
@@ -146,7 +145,6 @@ function adjust_user(tab)
         else
             tab.type = 'private'
         end
-        tab.tg_cli_id = tonumber(tab.id)
         tab.print_name = tab.first_name
         if tab.last_name then
             tab.print_name = tab.print_name .. ' ' .. tab.last_name
@@ -160,8 +158,6 @@ end
 function adjust_group(tab)
     if tab then
         tab.type = 'group'
-        local id_without_minus = tostring(tab.id):gsub('-', '')
-        tab.tg_cli_id = tonumber(id_without_minus)
         tab.print_name = tab.title
         return tab
     else
@@ -171,9 +167,7 @@ end
 
 function adjust_supergroup(tab)
     if tab then
-        local id_without_minus = tostring(tab.id):gsub('-100', '')
         tab.type = 'supergroup'
-        tab.tg_cli_id = tonumber(id_without_minus)
         tab.print_name = tab.title
         return tab
     else
@@ -183,9 +177,7 @@ end
 
 function adjust_channel(tab)
     if tab then
-        local id_without_minus = tostring(tab.id):gsub('-100', '')
         tab.type = 'channel'
-        tab.tg_cli_id = tonumber(id_without_minus)
         tab.print_name = tab.title
         return tab
     else
@@ -196,7 +188,7 @@ end
 -- adjust message for cli plugins
 -- recursive to simplify code
 function adjust_msg(msg)
-    -- sender print_name and tg_cli_id
+    -- sender print_name
     msg.from = adjust_user(msg.from)
     if msg.adder then
         msg.adder = adjust_user(msg.adder)
@@ -225,19 +217,15 @@ function adjust_msg(msg)
             -- private chat
             msg.bot = adjust_user(bot)
             msg.chat = adjust_user(msg.chat)
-            msg.receiver = 'user#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'group' then
             -- group
             msg.chat = adjust_group(msg.chat)
-            msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'supergroup' then
             -- supergroup
             msg.chat = adjust_supergroup(msg.chat)
-            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'channel' then
             -- channel
             msg.chat = adjust_channel(msg.chat)
-            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
         end
     end
 

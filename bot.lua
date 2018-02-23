@@ -17,9 +17,10 @@ news_table = {
 }
 -- GLOBAL CRON TABLE
 globalCronTable = {
-    -- temp table to not kick/ban the same user again and again (just once per minute)
+    -- temp table to not restrict/kick/ban the same user again and again (just once per minute)
     -- kicks are tracked in the banUser and kickUser methods
-    kickedTable =
+    -- restrictions are tracked in the restrictUser method
+    punishedTable =
     {
         -- chat_id = { user_id = false/true }
     },
@@ -301,7 +302,6 @@ function adjust_user(tab)
     else
         tab.type = 'private'
     end
-    tab.tg_cli_id = tonumber(tab.id)
     tab.print_name = tab.first_name
     if tab.last_name then
         tab.print_name = tab.print_name .. ' ' .. tab.last_name
@@ -311,24 +311,18 @@ end
 
 function adjust_group(tab)
     tab.type = 'group'
-    local id_without_minus = tostring(tab.id):gsub('-', '')
-    tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
 end
 
 function adjust_supergroup(tab)
-    local id_without_minus = tostring(tab.id):gsub('-100', '')
     tab.type = 'supergroup'
-    tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
 end
 
 function adjust_channel(tab)
-    local id_without_minus = tostring(tab.id):gsub('-100', '')
     tab.type = 'channel'
-    tab.tg_cli_id = tonumber(id_without_minus)
     tab.print_name = tab.title
     return tab
 end
@@ -336,7 +330,7 @@ end
 -- adjust message for cli plugins
 -- recursive to simplify code
 function adjust_msg(msg)
-    -- sender print_name and tg_cli_id
+    -- sender print_name
     msg.from = adjust_user(msg.from)
     if msg.adder then
         msg.adder = adjust_user(msg.adder)
@@ -365,19 +359,15 @@ function adjust_msg(msg)
             -- private chat
             msg.bot = adjust_user(bot)
             msg.chat = adjust_user(msg.chat)
-            msg.receiver = 'user#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'group' then
             -- group
             msg.chat = adjust_group(msg.chat)
-            msg.receiver = 'chat#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'supergroup' then
             -- supergroup
             msg.chat = adjust_supergroup(msg.chat)
-            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
         elseif msg.chat.type == 'channel' then
             -- channel
             msg.chat = adjust_channel(msg.chat)
-            msg.receiver = 'channel#id' .. msg.chat.tg_cli_id
         end
     end
 
@@ -568,6 +558,8 @@ function migrate_to_supergroup(msg)
     data[tostring(old)] = nil
     data['groups'][tostring(new)] = tonumber(new)
     data['groups'][tostring(old)] = nil
+    data[tostring(new)].type = 'SuperGroup'
+    save_data(config.moderation.data, data)
 
     -- migrate get
     local vars = redis:hgetall('group:' .. old .. ':variables')
@@ -609,7 +601,7 @@ function migrate_to_supergroup(msg)
             end
         end
     end
-    save_data(config.database.db, database)
+    save_data(config.database.db, database, true)
     sendMessage(new, langs[get_lang(old)].groupToSupergroup)
 end
 
@@ -711,8 +703,8 @@ function msg_valid(msg)
             if tostring(msg.removed.id) == tostring(bot.id) then
                 sendLog('#REMOVEDFROM ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
                 if data[tostring(msg.chat.id)] then
-                    if data[tostring(msg.chat.id)].set_owner then
-                        sendMessage(data[tostring(msg.chat.id)].set_owner, langs[get_lang(data[tostring(msg.chat.id)].set_owner)].chatWillBeRemoved)
+                    if data[tostring(msg.chat.id)].owner then
+                        sendMessage(data[tostring(msg.chat.id)].owner, langs[get_lang(data[tostring(msg.chat.id)].owner)].chatWillBeRemoved)
                     end
                 end
             end
@@ -868,17 +860,17 @@ function match_plugins(msg)
                 if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
                     if msg.chat.type == 'private' then
                         if disabled then
-                            savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                            savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
                             return
                         else
-                            savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
+                            savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
                         end
                     else
                         if disabled then
-                            savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
+                            savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
                             return
                         else
-                            savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.tg_cli_id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.tg_cli_id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
+                            savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. ' Sender: ' .. msg.from.print_name:gsub('_', ' ') .. ' [' .. msg.from.id .. ']' .. '\nCommand "' .. msg.text .. '" executed.')
                         end
                     end
                 end
@@ -967,13 +959,13 @@ function on_msg_receive(msg)
     msg = get_tg_rank(msg)
     tmp_msg = clone_table(msg)
     base_logging(msg)
-    globalCronTable.kickedTable[tostring(msg.chat.id)] = globalCronTable.kickedTable[tostring(msg.chat.id)] or { }
+    globalCronTable.punishedTable[tostring(msg.chat.id)] = globalCronTable.punishedTable[tostring(msg.chat.id)] or { }
     globalCronTable.invitedTable[tostring(msg.chat.id)] = globalCronTable.invitedTable[tostring(msg.chat.id)] or { }
     if msg.service then
         if msg.added then
             for k, v in pairs(msg.added) do
                 -- if kicked users are added again, remove them from kicked list
-                globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] = false
+                globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(v.id)] = false
             end
         end
         if msg.removed then
@@ -1004,7 +996,7 @@ function cron_plugins()
             end
         end
         globalCronTable = {
-            kickedTable = { },
+            punishedTable = { },
             invitedTable = { }
         }
         -- Run cron jobs every minute.
@@ -1015,7 +1007,7 @@ end
 function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- save database
-        save_data(config.database.db, database)
+        save_data(config.database.db, database, true)
         -- deletes all previous backups (they're in telegram so no problem)
         io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
         sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')

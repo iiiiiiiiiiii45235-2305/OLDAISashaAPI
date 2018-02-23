@@ -161,7 +161,7 @@ local function run(msg, matches)
                     end
                 end
             end
-            save_data(config.database.db, database)
+            save_data(config.database.db, database, true)
             return langs[msg.lang].dataLeaked
         end]]
 
@@ -266,7 +266,7 @@ local function run(msg, matches)
                     old_usernames = old_usernames,
                     groups = groups,
                 }
-                save_data(config.database.db, database)
+                save_data(config.database.db, database, true)
                 return langs[msg.lang].userManuallyAdded
             elseif matches[2]:lower() == 'group' then
                 local id = t[1]
@@ -281,7 +281,7 @@ local function run(msg, matches)
                     lang = lang,
                     type = type,
                 }
-                save_data(config.database.db, database)
+                save_data(config.database.db, database, true)
                 return langs[msg.lang].groupManuallyAdded
             elseif matches[2]:lower() == 'supergroup' then
                 local id = t[1]
@@ -307,7 +307,7 @@ local function run(msg, matches)
                     username = username,
                     old_usernames = old_usernames,
                 }
-                save_data(config.database.db, database)
+                save_data(config.database.db, database, true)
                 return langs[msg.lang].supergroupManuallyAdded
             elseif matches[2]:lower() == 'channel' then
                 local id = t[1]
@@ -333,7 +333,7 @@ local function run(msg, matches)
                     username = username,
                     old_usernames = old_usernames,
                 }
-                save_data(config.database.db, database)
+                save_data(config.database.db, database, true)
                 return langs[msg.lang].channelManuallyAdded
             end
         end
@@ -342,7 +342,7 @@ local function run(msg, matches)
             mystat('/dbdelete')
             if database[tostring(matches[2])] then
                 database[tostring(matches[2])] = nil
-                save_data(config.database.db, database)
+                save_data(config.database.db, database, true)
                 return langs[msg.lang].recordDeleted
             else
                 return matches[2] .. langs[msg.lang].notFound
@@ -352,7 +352,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'uploaddb' then
             mystat('/uploaddb')
             print('SAVING USERS/GROUPS DATABASE')
-            save_data(config.database.db, database)
+            save_data(config.database.db, database, true)
             if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
                 sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
                 return langs[msg.lang].databaseSent
@@ -364,7 +364,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'savedb' then
             mystat('/savedb')
             print('SAVING USERS/GROUPS DATABASE')
-            save_data(config.database.db, database)
+            save_data(config.database.db, database, true)
             return langs[msg.lang].databaseSaved
         end
 
@@ -512,9 +512,9 @@ local function pre_process(msg)
             end
         end
         if data[tostring(msg.chat.id)] then
-            if data[tostring(msg.chat.id)].set_name then
+            if data[tostring(msg.chat.id)].name then
                 -- update chat's names
-                data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                data[tostring(msg.chat.id)].name = string.gsub(msg.chat.print_name, '_', ' ')
             end
         end
         return msg

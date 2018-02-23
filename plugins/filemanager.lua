@@ -3,63 +3,61 @@ function run(msg, matches)
         local path = redis:get('api:path')
         if path then
             if msg.cb then
-                if matches[1] == '###cbfilemanager' then
-                    local pathString = langs[msg.lang].youAreHere .. path
-                    if matches[2] == 'DELETE' then
-                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                        end
-                    elseif matches[2] == 'BACK' then
+                local pathString = langs[msg.lang].youAreHere .. path
+                if matches[2] == 'DELETE' then
+                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    end
+                elseif matches[2] == 'BACK' then
+                    answerCallbackQuery(msg.cb_id, pathString)
+                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, matches[3]))
+                elseif matches[2] == 'PAGES' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+                elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+                elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+                elseif matches[2] == 'CD' then
+                    if matches[3] == '.' then
                         answerCallbackQuery(msg.cb_id, pathString)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, matches[3]))
-                    elseif matches[2] == 'PAGES' then
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-                    elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
-                    elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
-                    elseif matches[2] == 'CD' then
-                        if matches[3] == '.' then
-                            answerCallbackQuery(msg.cb_id, pathString)
-                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
-                        elseif matches[3] == '..' then
-                            if path ~= '/' then
-                                local pathComponents = path:split('/')
-                                local lastFolder = ''
-                                for i, fldr in pairs(pathComponents) do
-                                    if fldr then
-                                        lastFolder = fldr .. '/'
-                                    end
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                    elseif matches[3] == '..' then
+                        if path ~= '/' then
+                            local pathComponents = path:split('/')
+                            local lastFolder = ''
+                            for i, fldr in pairs(pathComponents) do
+                                if fldr then
+                                    lastFolder = fldr .. '/'
                                 end
-                                if lastFolder ~= '' then
-                                    local folder = path:gsub(lastFolder, '')
-                                    pathString = langs[msg.lang].youAreHere .. folder
-                                    answerCallbackQuery(msg.cb_id, pathString)
-                                    redis:set('api:path', folder)
-                                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
-                                else
-                                    answerCallbackQuery(msg.cb_id, pathString)
-                                end
+                            end
+                            if lastFolder ~= '' then
+                                local folder = path:gsub(lastFolder, '')
+                                pathString = langs[msg.lang].youAreHere .. folder
+                                answerCallbackQuery(msg.cb_id, pathString)
+                                redis:set('api:path', folder)
+                                editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                             else
                                 answerCallbackQuery(msg.cb_id, pathString)
                             end
                         else
-                            local folder = path .. '' .. matches[3] .. '/'
-                            pathString = langs[msg.lang].youAreHere .. folder
                             answerCallbackQuery(msg.cb_id, pathString)
-                            redis:set('api:path', folder)
-                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                         end
-                    elseif matches[2] == 'UP' then
-                        if io.popen('find ' .. path .. matches[3]):read("*all") ~= '' then
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].sendingYou .. matches[3])
-                            sendDocument(msg.chat.id, path .. matches[3])
-                            editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
-                        else
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain)
-                        end
+                    else
+                        local folder = path .. '' .. matches[3] .. '/'
+                        pathString = langs[msg.lang].youAreHere .. folder
+                        answerCallbackQuery(msg.cb_id, pathString)
+                        redis:set('api:path', folder)
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
+                    end
+                elseif matches[2] == 'UP' then
+                    if io.popen('find ' .. path .. matches[3]):read("*all") ~= '' then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].sendingYou .. matches[3])
+                        sendDocument(msg.chat.id, path .. matches[3])
+                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                    else
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain)
                     end
                 end
                 return

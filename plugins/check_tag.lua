@@ -63,156 +63,140 @@ end
 
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] then
-            if matches[1] == '###cbcheck_tag' then
-                if matches[2] == 'ALREADYREAD' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
-                    end
-                elseif matches[2] == 'REGISTER' then
-                    if not redis:hget('tagalert:usernames', msg.from.id) then
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
-                        if msg.from.username then
-                            redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
-                        else
-                            redis:hset('tagalert:usernames', msg.from.id, true)
-                        end
-                        mystat(matches[1] .. matches[2] .. msg.from.id)
-                    else
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].userAlreadyRegistered, true)
-                    end
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
-                    -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
+        if matches[2] == 'ALREADYREAD' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
+            end
+        elseif matches[2] == 'REGISTER' then
+            if not redis:hget('tagalert:usernames', msg.from.id) then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
+                if msg.from.username then
+                    redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
                 else
-                    if matches[2] == 'DELETEUP' then
-                        if tonumber(matches[3]) == tonumber(msg.from.id) then
-                            if deleteMessage(msg.chat.id, msg.message_id) then
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                            end
-                        end
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
-                    elseif matches[2] == 'GOTO' then
-                        local link_in_keyboard = false
-                        if msg.from.username then
-                            local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
-                            if data[tostring(matches[4])] then
-                                if data[tostring(matches[4])].settings then
-                                    if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].settings.lock_group_link) then
-                                        if data[tostring(matches[4])].settings.set_link then
-                                            link_in_keyboard = true
-                                            if res then
-                                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
-                                            else
-                                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                            if not link_in_keyboard then
-                                if res then
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
-                                else
-                                    answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                                end
-                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                    if sent then
-                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
-                                    else
-                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
-                                    end
-                                end
-                            end
-                        else
-                            local sent = false
-                            local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name:mEscape_hard() .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3], true)
-                            if res then
-                                sent = true
-                            else
-                                res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. html_escape(msg.from.first_name) .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3], true)
-                                if res then
-                                    sent = true
-                                else
-                                    res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
-                                    if res then
-                                        sent = true
-                                    end
-                                end
-                            end
-                            if data[tostring(matches[4])] then
-                                if data[tostring(matches[4])].settings then
-                                    if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].settings.lock_group_link) then
-                                        if data[tostring(matches[4])].settings.set_link then
-                                            link_in_keyboard = true
-                                            if sent then
-                                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
-                                            else
-                                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].settings.set_link } } } }, false, false, true)
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                            if sent then
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
-                            end
-                            if not link_in_keyboard then
-                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                    if sent then
-                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
-                                    else
-                                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
-                                    end
-                                end
-                            end
-                        end
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                    redis:hset('tagalert:usernames', msg.from.id, true)
+                end
+                mystat(matches[1] .. matches[2] .. msg.from.id)
+            else
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].userAlreadyRegistered, true)
+            end
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
+            -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
+        else
+            if matches[2] == 'DELETEUP' then
+                if tonumber(matches[3]) == tonumber(msg.from.id) then
+                    if deleteMessage(msg.chat.id, msg.message_id) then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
+                    else
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 end
-                return
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+            elseif matches[2] == 'GOTO' then
+                local link_in_keyboard = false
+                if msg.from.username then
+                    local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
+                    if data[tostring(matches[4])] then
+                        if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].lock_grouplink) then
+                            if data[tostring(matches[4])].link then
+                                link_in_keyboard = true
+                                if res then
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                else
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                end
+                            end
+                        end
+                    end
+                    if not link_in_keyboard then
+                        if res then
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                        end
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            if sent then
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                            else
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                            end
+                        end
+                    end
+                else
+                    local sent = false
+                    local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name:mEscape_hard() .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3], true)
+                    if res then
+                        sent = true
+                    else
+                        res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. html_escape(msg.from.first_name) .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3], true)
+                        if res then
+                            sent = true
+                        else
+                            res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
+                            if res then
+                                sent = true
+                            end
+                        end
+                    end
+                    if data[tostring(matches[4])] then
+                        if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].lock_grouplink) then
+                            if data[tostring(matches[4])].link then
+                                link_in_keyboard = true
+                                if sent then
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                else
+                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                end
+                            end
+                        end
+                    end
+                    if sent then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].repliedToMessage, true)
+                    else
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].cantFindMessage, true)
+                    end
+                    if not link_in_keyboard then
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            if sent then
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                            else
+                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                            end
+                        end
+                    end
+                end
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
             end
         end
+        return
     end
 
     if matches[1]:lower() == 'enablenotices' then
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if msg.from.is_owner then
-                if not redis:get('notice:' .. msg.chat.id) then
-                    mystat('/enablenotices')
-                    redis:set('notice:' .. msg.chat.id, 1)
-                    return langs[msg.lang].noticesGroupEnabled
-                else
-                    return langs[msg.lang].noticesGroupAlreadyEnabled
-                end
+        if data[tostring(msg.chat.id)] and msg.from.is_owner then
+            if not data[tostring(msg.chat.id)].pmnotices then
+                mystat('/enablenotices')
+                data[tostring(msg.chat.id)].pmnotices = true
+                return langs[msg.lang].noticesGroupEnabled
             else
-                return langs[msg.lang].require_owner
+                return langs[msg.lang].noticesGroupAlreadyEnabled
             end
         else
-            return langs[msg.lang].useYourGroups
+            return langs[msg.lang].useYourGroups .. '\n' .. langs[msg.lang].require_owner
         end
     end
 
     if matches[1]:lower() == 'disablenotices' then
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if msg.from.is_owner then
-                if redis:get('notice:' .. msg.chat.id) then
-                    mystat('/disablenotices')
-                    redis:del('notice:' .. msg.chat.id)
-                    return langs[msg.lang].noticesGroupDisabled
-                else
-                    return langs[msg.lang].noticesGroupAlreadyDisabled
-                end
+        if data[tostring(msg.chat.id)] and msg.from.is_owner then
+            if data[tostring(msg.chat.id)].pmnotices then
+                mystat('/disablenotices')
+                data[tostring(msg.chat.id)].pmnotices = false
+                return langs[msg.lang].noticesGroupDisabled
             else
-                return langs[msg.lang].require_owner
+                return langs[msg.lang].noticesGroupAlreadyDisabled
             end
         else
-            return langs[msg.lang].useYourGroups
+            return langs[msg.lang].useYourGroups .. '\n' .. langs[msg.lang].require_owner
         end
     end
 
@@ -245,22 +229,30 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'enabletagalert' then
-        if msg.from.is_owner then
-            mystat('/enabletagalert')
-            redis:set('tagalert:' .. tostring(msg.chat.id), true)
-            return langs[msg.lang].tagalertGroupEnabled
+        if data[tostring(msg.chat.id)] and msg.from.is_owner then
+            if not data[tostring(msg.chat.id)].tagalert then
+                mystat('/enabletagalert')
+                data[tostring(msg.chat.id)].tagalert = true
+                return langs[msg.lang].tagalertGroupEnabled
+            else
+                return langs[msg.lang].tagalertGroupAlreadyEnabled
+            end
         else
-            return langs[msg.lang].require_owner
+            return langs[msg.lang].useYourGroups .. '\n' .. langs[msg.lang].require_owner
         end
     end
 
     if matches[1]:lower() == 'disabletagalert' then
-        if msg.from.is_owner then
-            mystat('/disabletagalert')
-            redis:del('tagalert:' .. tostring(msg.chat.id))
-            return langs[msg.lang].tagalertGroupDisabled
+        if data[tostring(msg.chat.id)] and msg.from.is_owner then
+            if data[tostring(msg.chat.id)].tagalert then
+                mystat('/disabletagalert')
+                data[tostring(msg.chat.id)].tagalert = false
+                return langs[msg.lang].tagalertGroupDisabled
+            else
+                return langs[msg.lang].tagalertGroupAlreadyDisabled
+            end
         else
-            return langs[msg.lang].require_owner
+            return langs[msg.lang].useYourGroups .. '\n' .. langs[msg.lang].require_owner
         end
     end
 
@@ -362,7 +354,7 @@ local function pre_process(msg)
                 redis:hset('tagalert:usernames', msg.from.id, true)
             end
         end
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+        if data[tostring(msg.chat.id)] then
             -- exclude private chats with bot
             for k, v in pairs(config.sudo_users) do
                 if not notified[tostring(k)] then
@@ -399,7 +391,7 @@ local function pre_process(msg)
                     end
                 end
             end
-            if redis:get('tagalert:' .. msg.chat.id) then
+            if data[tostring(msg.chat.id)].tagalert then
                 -- if group is enabled to tagalert notifications then
                 local usernames = redis:hkeys('tagalert:usernames')
                 for i = 1, #usernames do

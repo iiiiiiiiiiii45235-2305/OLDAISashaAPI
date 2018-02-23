@@ -57,10 +57,10 @@ local function get_object_info(obj, chat_id)
                         end
                     end
                 end
-                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                if isWhitelisted(chat_id, obj.id) then
                     otherinfo = otherinfo .. 'WHITELISTED '
                 end
-                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                if isWhitelistedGban(chat_id, obj.id) then
                     otherinfo = otherinfo .. 'GBANWHITELISTED '
                 end
                 if isBanned(obj.id, chat_id) then
@@ -70,7 +70,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'MUTED '
                 end
                 if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0) .. ' WARN '
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.max_warns or 0) .. ' WARN '
                 end
             end
             if isGbanned(obj.id) then
@@ -117,10 +117,10 @@ local function get_object_info(obj, chat_id)
                         end
                     end
                 end
-                if isWhitelisted(id_to_cli(chat_id), obj.id) then
+                if isWhitelisted(chat_id, obj.id) then
                     otherinfo = otherinfo .. 'WHITELISTED '
                 end
-                if isWhitelistedGban(id_to_cli(chat_id), obj.id) then
+                if isWhitelistedGban(chat_id, obj.id) then
                     otherinfo = otherinfo .. 'GBANWHITELISTED '
                 end
                 if isBanned(obj.id, chat_id) then
@@ -130,7 +130,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'MUTED '
                 end
                 if string.match(getUserWarns(obj.id, chat_id), '%d+') then
-                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.warn_max or 0) .. ' WARN '
+                    otherinfo = otherinfo .. string.match(getUserWarns(obj.id, chat_id), '%d+') .. '/' ..(data[tostring(chat_id)].settings.max_warns or 0) .. ' WARN '
                 end
             end
             if isGbanned(obj.id) then
@@ -804,7 +804,7 @@ local function run(msg, matches)
                     txt = txt .. '\n'
                     found = false
                 end
-                save_data(config.database.db, database)
+                save_data(config.database.db, database, true)
                 return txt
             else
                 return langs[msg.lang].require_sudo
@@ -818,10 +818,10 @@ local function run(msg, matches)
                     local chat_title = ''
                     local group_link = langs[msg.lang].noLinkAvailable
                     if data[tostring(id)] then
-                        chat_title = data[tostring(id)].set_name
+                        chat_title = data[tostring(id)].name
                         if data[tostring(id)].settings then
-                            if data[tostring(id)].settings.set_link then
-                                group_link = data[tostring(id)].settings.set_link
+                            if data[tostring(id)].link then
+                                group_link = data[tostring(id)].link
                             end
                         end
                     end
@@ -843,7 +843,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. blockUser(msg.entities[k].user.id, msg.lang, true)
+                                    txt = txt .. user .. ' ' .. blockUser(msg.entities[k].user.id, true)
                                 end
                             end
                         end
@@ -851,12 +851,12 @@ local function run(msg, matches)
                     if not found then
                         txt = txt .. user .. ' '
                         if string.match(user, '^%d+$') then
-                            txt = txt .. blockUser(user, msg.lang, true)
+                            txt = txt .. blockUser(user, true)
                         else
                             local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    txt = txt .. blockUser(obj_user.id, msg.lang, true)
+                                    txt = txt .. blockUser(obj_user.id, true)
                                 end
                             else
                                 txt = txt .. langs[msg.lang].noObject
@@ -882,7 +882,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. unblockUser(msg.entities[k].user.id, msg.lang, true)
+                                    txt = txt .. user .. ' ' .. unblockUser(msg.entities[k].user.id, true)
                                 end
                             end
                         end
@@ -890,12 +890,12 @@ local function run(msg, matches)
                     if not found then
                         txt = txt .. user .. ' '
                         if string.match(user, '^%d+$') then
-                            txt = txt .. unblockUser(user, msg.lang, true)
+                            txt = txt .. unblockUser(user, true)
                         else
                             local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    txt = txt .. unblockUser(obj_user.id, msg.lang, true)
+                                    txt = txt .. unblockUser(obj_user.id, true)
                                 end
                             else
                                 txt = txt .. langs[msg.lang].noObject
@@ -921,7 +921,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, msg.lang, true, true)
+                                    txt = txt .. user .. ' ' .. gbanUser(msg.entities[k].user.id, true, true)
                                 end
                             end
                         end
@@ -929,12 +929,12 @@ local function run(msg, matches)
                     if not found then
                         txt = txt .. user .. ' '
                         if string.match(user, '^%d+$') then
-                            txt = txt .. gbanUser(user, msg.lang, true, true)
+                            txt = txt .. gbanUser(user, true, true)
                         else
                             local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    txt = txt .. gbanUser(obj_user.id, msg.lang, true, true)
+                                    txt = txt .. gbanUser(obj_user.id, true, true)
                                 end
                             else
                                 txt = txt .. langs[msg.lang].noObject
@@ -960,7 +960,7 @@ local function run(msg, matches)
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, user) or 0) -1) == msg.entities[k].offset then
                                     found = true
-                                    txt = txt .. user .. ' ' .. ungbanUser(msg.entities[k].user.id, msg.lang, true)
+                                    txt = txt .. user .. ' ' .. ungbanUser(msg.entities[k].user.id, true)
                                 end
                             end
                         end
@@ -968,12 +968,12 @@ local function run(msg, matches)
                     if not found then
                         txt = txt .. user .. ' '
                         if string.match(user, '^%d+$') then
-                            txt = txt .. ungbanUser(user, msg.lang, true)
+                            txt = txt .. ungbanUser(user, true)
                         else
                             local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    txt = txt .. ungbanUser(obj_user.id, msg.lang, true)
+                                    txt = txt .. ungbanUser(obj_user.id, true)
                                 end
                             else
                                 txt = txt .. langs[msg.lang].noObject

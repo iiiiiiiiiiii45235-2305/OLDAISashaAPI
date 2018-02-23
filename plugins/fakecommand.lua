@@ -16,7 +16,6 @@ local function run(msg, matches)
             copied_msg.text = copied_msg.text:gsub('/' .. matches[1] .. ' ', '')
             -- replace the id of the executer with a '*' followed by the rank value so when it's checked with (e.g.) is_mod(msg) bot knows it's a fakecommand
             copied_msg.from.id = - fakerank
-            copied_msg.from.tg_cli_id = - fakerank
             copied_msg.from.is_mod = false
             copied_msg.from.is_owner = false
             if is_owner(copied_msg, true) then

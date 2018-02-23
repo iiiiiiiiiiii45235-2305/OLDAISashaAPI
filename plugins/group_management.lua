@@ -22,15 +22,6 @@ local delAll = {
 -- table that contains 'group_id' = message_id to delete old rules messages
 local last_rules = { }
 
-local default_permissions = {
-    ['can_change_info'] = true,
-    ['can_delete_messages'] = true,
-    ['can_invite_users'] = true,
-    ['can_restrict_members'] = true,
-    ['can_pin_messages'] = true,
-    ['can_promote_members'] = false,
-}
-
 local function showPermissions(chat_id, user_id, lang)
     local obj_user = getChatMember(chat_id, user_id)
     if type(obj_user) == 'table' then
@@ -88,7 +79,7 @@ end
 -- begin RANKS MANAGEMENT
 local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
-    data[tostring(chat_id)]['set_owner'] = tostring(user.id)
+    data[tostring(chat_id)].owner = tostring(user.id)
     save_data(config.moderation.data, data)
     if areNoticesEnabled(user.id, chat_id) then
         sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedOwner .. database[tostring(chat_id)].print_name)
@@ -117,7 +108,7 @@ local function promoteTgAdmin(chat_id, user, permissions)
             end
         end
         if promote then
-            data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
+            data[tostring(chat_id)].moderators[tostring(user.id)] =(user.username or user.print_name or user.first_name)
             save_data(config.moderation.data, data)
             if areNoticesEnabled(user.id, chat_id) then
                 sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
@@ -132,8 +123,8 @@ end
 local function demoteTgAdmin(chat_id, user)
     local lang = get_lang(chat_id)
     if demoteChatMember(chat_id, user.id) then
-        if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
-            data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
+        if data[tostring(chat_id)].moderators[tostring(user.id)] then
+            data[tostring(chat_id)].moderators[tostring(user.id)] = nil
             save_data(config.moderation.data, data)
         end
         if areNoticesEnabled(user.id, chat_id) then
@@ -147,10 +138,10 @@ end
 
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    if data[tostring(chat_id)]['moderators'][tostring(user.id)] then
+    if data[tostring(chat_id)].moderators[tostring(user.id)] then
         return(user.username or user.print_name or user.first_name) .. langs[lang].alreadyMod
     end
-    data[tostring(chat_id)]['moderators'][tostring(user.id)] =(user.username or user.print_name or user.first_name)
+    data[tostring(chat_id)].moderators[tostring(user.id)] =(user.username or user.print_name or user.first_name)
     save_data(config.moderation.data, data)
     if areNoticesEnabled(user.id, chat_id) then
         sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedMod .. database[tostring(chat_id)].print_name)
@@ -160,10 +151,10 @@ end
 
 local function demoteMod(chat_id, user)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)]['moderators'][tostring(user.id)] then
+    if not data[tostring(chat_id)].moderators[tostring(user.id)] then
         return(user.username or user.print_name or user.first_name) .. langs[lang].notMod
     end
-    data[tostring(chat_id)]['moderators'][tostring(user.id)] = nil
+    data[tostring(chat_id)].moderators[tostring(user.id)] = nil
     save_data(config.moderation.data, data)
     if areNoticesEnabled(user.id, chat_id) then
         sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenDemotedMod .. database[tostring(chat_id)].print_name)
@@ -172,94 +163,23 @@ local function demoteMod(chat_id, user)
 end
 
 local function modList(msg)
-    if not data['groups'][tostring(msg.chat.id)] then
+    if not data[tostring(msg.chat.id)] then
         return langs[msg.lang].groupNotAdded
     end
     -- determine if table is empty
-    if next(data[tostring(msg.chat.id)]['moderators']) == nil then
+    if next(data[tostring(msg.chat.id)].moderators) == nil then
         -- fix way
         return langs[msg.lang].noGroupMods
     end
     local i = 1
     local message = langs[msg.lang].modListStart .. string.gsub(msg.chat.print_name, '_', ' ') .. ':\n'
-    for k, v in pairs(data[tostring(msg.chat.id)]['moderators']) do
+    for k, v in pairs(data[tostring(msg.chat.id)].moderators) do
         message = message .. i .. '. ' .. v .. ' - ' .. k .. '\n'
         i = i + 1
     end
     return message
 end
 -- end RANKS MANAGEMENT
-
-local function showSettings(target, lang)
-    if data[tostring(target)] then
-        if data[tostring(target)]['settings'] then
-            local settings = data[tostring(target)]['settings']
-            local text = langs[lang].groupSettings ..
-            langs[lang].arabicLock .. tostring(settings.lock_arabic) ..
-            langs[lang].botsLock .. tostring(settings.lock_bots) ..
-            langs[lang].censorshipsLock .. tostring(settings.lock_delword) ..
-            langs[lang].floodLock .. tostring(settings.flood) ..
-            langs[lang].floodSensibility .. tostring(settings.flood_max) ..
-            langs[lang].grouplinkLock .. tostring(settings.lock_group_link) ..
-            langs[lang].leaveLock .. tostring(settings.lock_leave) ..
-            langs[lang].linksLock .. tostring(settings.lock_link) ..
-            langs[lang].membersLock .. tostring(settings.lock_member) ..
-            langs[lang].rtlLock .. tostring(settings.lock_rtl) ..
-            langs[lang].spamLock .. tostring(settings.lock_spam) ..
-            langs[lang].strictrules .. tostring(settings.strict) ..
-            langs[lang].warnSensibility .. tostring(settings.warn_max)
-            return text
-        end
-    end
-end
-
--- begin LOCK/UNLOCK FUNCTIONS
-local function lockSetting(target, setting_type)
-    local lang = get_lang(target)
-    setting_type = settingsDictionary[setting_type:lower()]
-    if setting_type == 'photo' then
-        local obj = getChat(target)
-        if type(obj) == 'table' then
-            if obj.photo then
-                data[tostring(target)].photo = obj.photo.big_file_id
-            end
-        end
-    end
-    local setting = data[tostring(target)].settings[tostring(setting_type)]
-    if setting ~= nil then
-        if setting then
-            return langs[lang].settingAlreadyLocked
-        else
-            data[tostring(target)].settings[tostring(setting_type)] = true
-            save_data(config.moderation.data, data)
-            return langs[lang].settingLocked
-        end
-    else
-        data[tostring(target)].settings[tostring(setting_type)] = true
-        save_data(config.moderation.data, data)
-        return langs[lang].settingLocked
-    end
-end
-
-local function unlockSetting(target, setting_type)
-    local lang = get_lang(target)
-    setting_type = settingsDictionary[setting_type:lower()]
-    local setting = data[tostring(target)].settings[tostring(setting_type)]
-    if setting ~= nil then
-        if setting then
-            data[tostring(target)].settings[tostring(setting_type)] = false
-            save_data(config.moderation.data, data)
-            return langs[lang].settingUnlocked
-        else
-            return langs[lang].settingAlreadyUnlocked
-        end
-    else
-        data[tostring(target)].settings[tostring(setting_type)] = false
-        save_data(config.moderation.data, data)
-        return langs[lang].settingUnlocked
-    end
-end
--- end LOCK/UNLOCK FUNCTIONS
 
 local max_lines = 20
 local function logPages(chat_id, page)
@@ -321,228 +241,208 @@ end
 
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] then
-            if matches[1] == '###cbgroup_management' then
-                if matches[2] == 'DELETE' then
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                    end
-                elseif matches[2] == 'PAGES' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-                elseif matches[2] == 'BACKLOG' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], matches[3]), keyboard_log_pages(matches[4], matches[3]))
-                elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
-                elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
-                elseif matches[2] == 'BACKSETTINGS' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    local chat_name = ''
-                    if data[tostring(matches[3])] then
-                        chat_name = data[tostring(matches[3])].set_name or ''
-                    end
-                    print(matches[3])
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[3], matches[4] or false))
-                elseif matches[2] == 'BACKMUTES' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    local chat_name = ''
-                    if data[tostring(matches[3])] then
-                        chat_name = data[tostring(matches[3])].set_name or ''
-                    end
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[3], matches[4] or false))
-                elseif matches[2] == 'BACKPERMISSIONS' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    local chat_name = ''
-                    if data[tostring(matches[4])] then
-                        chat_name = data[tostring(matches[4])].set_name or ''
-                    end
-                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[4], matches[3], nil, matches[5] or false))
-                elseif matches[2] == 'LOCK' then
-                    if is_mod2(msg.from.id, matches[4]) then
-                        answerCallbackQuery(msg.cb_id, lockSetting(tonumber(matches[4]), matches[3]), false)
-                        local chat_name = ''
-                        if data[tostring(matches[4])] then
-                            chat_name = data[tostring(matches[4])].set_name or ''
-                        end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
-                elseif matches[2] == 'UNLOCK' then
-                    if is_mod2(msg.from.id, matches[4]) then
-                        answerCallbackQuery(msg.cb_id, unlockSetting(tonumber(matches[4]), matches[3]), false)
-                        local chat_name = ''
-                        if data[tostring(matches[4])] then
-                            chat_name = data[tostring(matches[4])].set_name or ''
-                        end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
-                elseif matches[2] == 'MUTE' then
-                    if is_mod2(msg.from.id, matches[4]) then
-                        if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
-                            if is_owner2(msg.from.id, matches[4]) then
-                                answerCallbackQuery(msg.cb_id, mute(matches[4], matches[3]), false)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
-                            end
-                        else
-                            answerCallbackQuery(msg.cb_id, mute(matches[4], matches[3]), false)
-                        end
-                        local chat_name = ''
-                        if data[tostring(matches[4])] then
-                            chat_name = data[tostring(matches[4])].set_name or ''
-                        end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[4], matches[5] or false))
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
-                elseif matches[2] == 'UNMUTE' then
-                    if is_mod2(msg.from.id, matches[4]) then
-                        if matches[3]:lower() == 'all' or matches[3]:lower() == 'text' then
-                            if is_owner2(msg.from.id, matches[4]) then
-                                answerCallbackQuery(msg.cb_id, unmute(matches[4], matches[3]), false)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
-                            end
-                        else
-                            answerCallbackQuery(msg.cb_id, unmute(matches[4], matches[3]), false)
-                        end
-                        local chat_name = ''
-                        if data[tostring(matches[4])] then
-                            chat_name = data[tostring(matches[4])].set_name or ''
-                        end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].mutesOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[4], matches[5] or false))
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
-                elseif matches[2] == 'FLOODMINUS' or matches[2] == 'FLOODPLUS' then
-                    if is_mod2(msg.from.id, matches[4]) then
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                        local flood = matches[3]
-                        if matches[2] == 'FLOODPLUS' then
-                            flood = flood + 1
-                        elseif matches[2] == 'FLOODMINUS' then
-                            flood = flood - 1
-                        end
-                        if tonumber(flood) < 3 or tonumber(flood) > 20 then
-                            return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
-                        end
-                        answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
-                        data[tostring(matches[4])].settings.flood_max = flood
-                        save_data(config.moderation.data, data)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
-                        local chat_name = ''
-                        if data[tostring(matches[4])] then
-                            chat_name = data[tostring(matches[4])].set_name or ''
-                        end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
-                elseif matches[2] == 'WARNSMINUS' or matches[2] == 'WARNS' or matches[2] == 'WARNSPLUS' then
-                    if is_mod2(msg.from.id, matches[4]) then
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
-                        local warns = matches[3]
-                        if matches[2] == 'WARNSMINUS' then
-                            warns = warns - 1
-                        elseif matches[2] == 'WARNSPLUS' then
-                            warns = warns + 1
-                        end
-                        if tonumber(warns) < 0 or tonumber(warns) > 10 then
-                            return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorWarnRange, false)
-                        end
-                        if tonumber(warns) == 0 then
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].neverWarn, false)
-                        else
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
-                        end
-                        data[tostring(matches[4])].settings.warn_max = warns
-                        save_data(config.moderation.data, data)
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set warns to [" .. warns .. "]")
-                        local chat_name = ''
-                        if data[tostring(matches[4])] then
-                            chat_name = data[tostring(matches[4])].set_name or ''
-                        end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[4], matches[5] or false))
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
-                    end
-                elseif matches[2] == 'GRANT' then
-                    permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
-                    permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].granted, false)
-                    local chat_name = ''
-                    if data[tostring(matches[5])] then
-                        chat_name = data[tostring(matches[5])].set_name or ''
-                    end
-                    permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = true
-                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                elseif matches[2] == 'DENY' then
-                    permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
-                    permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].denied, false)
-                    local chat_name = ''
-                    if data[tostring(matches[5])] then
-                        chat_name = data[tostring(matches[5])].set_name or ''
-                    end
-                    permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = false
-                    editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
-                elseif matches[2] == 'PERMISSIONSDONE' then
-                    permissionsTable[tostring(matches[4])] = permissionsTable[tostring(matches[4])] or { }
-                    permissionsTable[tostring(matches[4])][tostring(matches[3])] = permissionsTable[tostring(matches[4])][tostring(matches[3])] or clone_table(default_permissions)
-                    if is_owner2(msg.from.id, matches[4]) then
-                        local obj_user = getChatMember(matches[4], matches[3])
-                        if type(obj_user) == 'table' then
-                            if obj_user.result then
-                                obj_user = obj_user.result
-                                if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
-                                    obj_user = nil
-                                end
-                            else
-                                obj_user = nil
-                            end
-                        else
+        if matches[2] == 'DELETE' then
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+            end
+        elseif matches[2] == 'PAGES' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+        elseif matches[2] == 'BACKLOG' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+            editMessage(msg.chat.id, msg.message_id, logPages(matches[4], matches[3]), keyboard_log_pages(matches[4], matches[3]))
+        elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+            editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+        elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+            editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+        elseif matches[2] == 'BACKPERMISSIONS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+            local chat_name = ''
+            if data[tostring(matches[4])] then
+                chat_name = data[tostring(matches[4])].name or ''
+            end
+            editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[4], matches[3], nil, matches[5] or false))
+        elseif matches[2] == 'GRANT' then
+            permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
+            permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].granted, false)
+            local chat_name = ''
+            if data[tostring(matches[5])] then
+                chat_name = data[tostring(matches[5])].name or ''
+            end
+            permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = true
+            editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+        elseif matches[2] == 'DENY' then
+            permissionsTable[tostring(matches[5])] = permissionsTable[tostring(matches[5])] or { }
+            permissionsTable[tostring(matches[5])][tostring(matches[3])] = permissionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_permissions)
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].denied, false)
+            local chat_name = ''
+            if data[tostring(matches[5])] then
+                chat_name = data[tostring(matches[5])].name or ''
+            end
+            permissionsTable[tostring(matches[5])][tostring(matches[3])][permissionsDictionary[matches[4]:lower()]] = false
+            editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[16], keyboard_permissions_list(matches[5], matches[3], permissionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+            mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
+        elseif matches[2] == 'PERMISSIONSDONE' then
+            permissionsTable[tostring(matches[4])] = permissionsTable[tostring(matches[4])] or { }
+            permissionsTable[tostring(matches[4])][tostring(matches[3])] = permissionsTable[tostring(matches[4])][tostring(matches[3])] or clone_table(default_permissions)
+            if is_owner2(msg.from.id, matches[4]) then
+                local obj_user = getChatMember(matches[4], matches[3])
+                if type(obj_user) == 'table' then
+                    if obj_user.result then
+                        obj_user = obj_user.result
+                        if obj_user.status == 'creator' or obj_user.status == 'left' or obj_user.status == 'kicked' then
                             obj_user = nil
                         end
-                        if obj_user then
-                            local res = promoteTgAdmin(matches[4], obj_user.user, permissionsTable[tostring(matches[4])][tostring(matches[3])])
-                            if res ~= langs[get_lang(matches[4])].checkMyPermissions and res ~= langs[get_lang(matches[4])].notMyGroup then
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
-                                permissionsTable[tostring(matches[4])][tostring(matches[3])] = nil
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].done)
-                            else
-                                answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
-                            end
-                        end
-                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                     else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                        obj_user = nil
+                    end
+                else
+                    obj_user = nil
+                end
+                if obj_user then
+                    local res = promoteTgAdmin(matches[4], obj_user.user, permissionsTable[tostring(matches[4])][tostring(matches[3])])
+                    if res ~= langs[get_lang(matches[4])].checkMyPermissions and res ~= langs[get_lang(matches[4])].notMyGroup then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
+                        permissionsTable[tostring(matches[4])][tostring(matches[3])] = nil
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].done)
+                    else
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                     end
                 end
-                return
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+            else
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+            end
+        elseif matches[2] == 'BACKSETTINGS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+            local chat_name = ''
+            if data[tostring(matches[4])] then
+                chat_name = data[tostring(matches[4])].name or ''
+            end
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+        elseif matches[2] == 'GOTOLOCKS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].locksWord, false)
+            local chat_name = ''
+            if data[tostring(matches[3])] then
+                chat_name = data[tostring(matches[3])].name or ''
+            end
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntr, keyboard_settings_list(matches[3], 1, matches[4] or false))
+        elseif matches[2] == 'GOTOMUTES' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].mutesWord, false)
+            local chat_name = ''
+            if data[tostring(matches[3])] then
+                chat_name = data[tostring(matches[3])].name or ''
+            end
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 2, matches[4] or false))
+        elseif matches[2] == 'LOCK' then
+            if is_mod2(msg.from.id, matches[5]) then
+                answerCallbackQuery(msg.cb_id, lockSetting(matches[5], matches[4]), false)
+                local chat_name = ''
+                if data[tostring(matches[5])] then
+                    chat_name = data[tostring(matches[5])].name or ''
+                end
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], matches[6] or false))
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
+            else
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+            end
+        elseif matches[2] == 'UNLOCK' then
+            if is_mod2(msg.from.id, matches[5]) then
+                answerCallbackQuery(msg.cb_id, unlockSetting(matches[5], matches[4]), false)
+                local chat_name = ''
+                if data[tostring(matches[5])] then
+                    chat_name = data[tostring(matches[5])].name or ''
+                end
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], matches[6] or false))
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
+            else
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+            end
+        elseif matches[2] == 'FLOOD--' or matches[2] == 'FLOOD++' then
+            if is_mod2(msg.from.id, matches[4]) then
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                local flood = data[tostring(matches[4])].settings.max_flood
+                if matches[2] == 'FLOOD++' then
+                    flood = flood + 1
+                elseif matches[2] == 'FLOOD--' then
+                    flood = flood - 1
+                end
+                if tonumber(flood) < 3 or tonumber(flood) > 20 then
+                    return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorFloodRange, false)
+                end
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].floodSet .. flood, false)
+                data[tostring(matches[4])].settings.max_flood = flood
+                save_data(config.moderation.data, data)
+                savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. flood .. "]")
+                local chat_name = ''
+                if data[tostring(matches[4])] then
+                    chat_name = data[tostring(matches[4])].name or ''
+                end
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+            else
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+            end
+        elseif matches[2] == 'WARNS--' or matches[2] == 'WARNS++' then
+            if is_mod2(msg.from.id, matches[4]) then
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                local warns = data[tostring(matches[4])].settings.max_warns
+                if matches[2] == 'WARNS--' then
+                    warns = warns - 1
+                elseif matches[2] == 'WARNS++' then
+                    warns = warns + 1
+                end
+                if tonumber(warns) < 1 or tonumber(warns) > 10 then
+                    return answerCallbackQuery(msg.cb_id, langs[msg.lang].errorWarnRange, false)
+                end
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].warnSet .. warns, false)
+                data[tostring(matches[4])].settings.max_warns = warns
+                save_data(config.moderation.data, data)
+                savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] set warns to [" .. warns .. "]")
+                local chat_name = ''
+                if data[tostring(matches[4])] then
+                    chat_name = data[tostring(matches[4])].name or ''
+                end
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+            else
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+            end
+        else
+            if groupDataDictionary[matches[2]:lower()] then
+                local increasePunishment = false
+                if matches[3] then
+                    if matches[3]:match('%d') then
+                        increasePunishment = true
+                    end
+                end
+                if increasePunishment then
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
+                    local punishment = getPunishment(matches[4], matches[2]:lower())
+                    setPunishment(matches[4], matches[2]:lower(), adjust_punishment(matches[2]:lower(), punishment, '+'))
+                    savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. matches[2]:lower() .. " to " .. punishment)
+                    local chat_name = ''
+                    if data[tostring(matches[4])] then
+                        chat_name = data[tostring(matches[4])].name or ''
+                    end
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+                else
+                    mystat(matches[1] .. matches[2] ..(matches[3] or ''))
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].settingsDictionary[matches[2]:lower()], true)
+                end
+            else
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].settingNotFound, true)
             end
         end
+        return
     end
+
     if matches[1]:lower() == 'type' then
         if msg.from.is_mod then
             mystat('/type')
             if data[tostring(msg.chat.id)] then
-                if data[tostring(msg.chat.id)]['group_type'] then
-                    return data[tostring(msg.chat.id)]['group_type']
-                else
-                    return langs[msg.lang].chatTypeNotFound
-                end
+                return data[tostring(msg.chat.id)].type or langs[msg.lang].chatTypeNotFound
             else
                 return langs[msg.lang].useYourGroups
             end
@@ -584,7 +484,7 @@ local function run(msg, matches)
                 cronTable.adminsContacted[tostring(msg.chat.id)] = true
                 local hashtag = '#admins' .. tostring(msg.message_id)
                 local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-                local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                local group_link = data[tostring(msg.chat.id)].link
                 if group_link then
                     chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
                 end
@@ -624,7 +524,7 @@ local function run(msg, matches)
                 last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(last_rules[tostring(msg.chat.id)].result.message_id or '') .. '"')
             else
-                last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)]['rules'])
+                last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules)
             end
             if last_rules[tostring(msg.chat.id)] then
                 if last_rules[tostring(msg.chat.id)].result then
@@ -645,7 +545,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'updategroupinfo' then
             if msg.from.is_mod then
                 mystat('/upgradegroupinfo')
-                data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
+                data[tostring(msg.chat.id)].name = string.gsub(msg.chat.print_name, '_', ' ')
                 local list = getChatAdministrators(msg.chat.id)
                 if list then
                     if list.result then
@@ -703,7 +603,7 @@ local function run(msg, matches)
                     return langs[msg.lang].errorFloodRange
                 end
                 mystat('/setflood')
-                data[tostring(msg.chat.id)].settings.flood_max = matches[2]
+                data[tostring(msg.chat.id)].settings.max_flood = matches[2]
                 save_data(config.moderation.data, data)
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set flood to [" .. matches[2] .. "]")
                 return langs[msg.lang].floodSet .. matches[2]
@@ -718,18 +618,13 @@ local function run(msg, matches)
         if matches[1]:lower() == 'setwarn' and matches[2] then
             if msg.from.is_mod then
                 mystat('/setwarn')
-                if tonumber(matches[2]) < 0 or tonumber(matches[2]) > 10 then
+                if tonumber(matches[2]) < 1 or tonumber(matches[2]) > 10 then
                     return langs[msg.lang].errorWarnRange
                 end
-                local warn_max = matches[2]
-                data[tostring(msg.chat.id)].settings.warn_max = warn_max
+                data[tostring(msg.chat.id)].settings.max_warns = tonumber(matches[2])
                 save_data(config.moderation.data, data)
                 savelog(msg.chat.id, " [" .. msg.from.id .. "] set warn to [" .. matches[2] .. "]")
-                if tonumber(matches[2]) == 0 then
-                    return langs[msg.lang].neverWarn
-                else
-                    return langs[msg.lang].warnSet .. matches[2]
-                end
+                return langs[msg.lang].warnSet .. matches[2]
             else
                 return langs[msg.msg.lang].require_mod
             end
@@ -855,7 +750,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'delfrom' then
             if msg.from.is_mod then
                 if msg.reply then
-                    if msg.reply_to_message.date > os.time() -48 * 60 * 60 then
+                    if msg.reply_to_message.date > os.time() - dateToUnix(0, 0, 48, 0, 0) then
                         mystat('/delfrom')
                         delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                         delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
@@ -900,7 +795,7 @@ local function run(msg, matches)
                                 local counter = 1
                                 local t = { }
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
-                                    -- 10 deletion per second
+                                    -- 10 Deletion of per second
                                     t[counter] = t[counter] or ''
                                     t[counter] = t[counter] .. i .. ','
                                     if i - delAll[tostring(msg.chat.id)].from > counter * 10 then
@@ -964,9 +859,9 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'lock' then
             if msg.from.is_mod then
-                if settingsDictionary[matches[2]:lower()] then
-                    mystat('/lock ' .. matches[2]:lower())
-                    return lockSetting(msg.chat.id, matches[2]:lower())
+                if groupDataDictionary[matches[2]:lower()] then
+                    mystat('/lock ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
+                    return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
                 end
                 return
             else
@@ -975,7 +870,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'unlock' then
             if msg.from.is_mod then
-                if settingsDictionary[matches[2]:lower()] then
+                if groupDataDictionary[matches[2]:lower()] then
                     mystat('/unlock ' .. matches[2]:lower())
                     return unlockSetting(msg.chat.id, matches[2]:lower())
                 end
@@ -986,16 +881,16 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'mute' then
             if msg.from.is_mod then
-                if mutesDictionary[matches[2]:lower()] then
+                if groupDataDictionary[matches[2]:lower()] then
                     mystat('/mute ' .. matches[2]:lower())
                     if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
                         if msg.from.is_owner then
-                            return mute(msg.chat.id, matches[2]:lower())
+                            return lockSetting(msg.chat.id, matches[2]:lower())
                         else
                             return langs[msg.lang].require_owner
                         end
                     else
-                        return mute(msg.chat.id, matches[2]:lower())
+                        return lockSetting(msg.chat.id, matches[2]:lower())
                     end
                 end
                 return
@@ -1005,16 +900,16 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'unmute' then
             if msg.from.is_mod then
-                if mutesDictionary[matches[2]:lower()] then
+                if groupDataDictionary[matches[2]:lower()] then
                     mystat('/unmute ' .. matches[2]:lower())
                     if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
                         if msg.from.is_owner then
-                            return unmute(msg.chat.id, matches[2]:lower())
+                            return unlockSetting(msg.chat.id, matches[2]:lower())
                         else
                             return langs[msg.lang].require_owner
                         end
                     else
-                        return unmute(msg.chat.id, matches[2]:lower())
+                        return unlockSetting(msg.chat.id, matches[2]:lower())
                     end
                 end
                 return
@@ -1027,9 +922,9 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 local chat_name = ''
                 if data[tostring(msg.chat.id)] then
-                    chat_name = data[tostring(msg.chat.id)].set_name or ''
+                    chat_name = data[tostring(msg.chat.id)].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(msg.chat.id)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 2)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
@@ -1042,22 +937,22 @@ local function run(msg, matches)
                 end
             else
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                return mutesList(msg.chat.id)
+                return showSettings(msg.chat.id, msg.lang)
             end
         end
         if matches[1]:lower() == 'textualmuteslist' then
             mystat('/muteslist')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-            return mutesList(msg.chat.id)
+            return showSettings(msg.chat.id, msg.lang)
         end
         if matches[1]:lower() == 'settings' then
             mystat('/settings')
             if msg.from.is_mod then
                 local chat_name = ''
                 if data[tostring(msg.chat.id)] then
-                    chat_name = data[tostring(msg.chat.id)].set_name or ''
+                    chat_name = data[tostring(msg.chat.id)].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(msg.chat.id)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 1)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
@@ -1083,7 +978,7 @@ local function run(msg, matches)
                 local link = exportChatInviteLink(msg.chat.id, true)
                 if link then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] created new group link [" .. tostring(link) .. "]")
-                    data[tostring(msg.chat.id)].settings.set_link = tostring(link)
+                    data[tostring(msg.chat.id)].link = tostring(link)
                     save_data(config.moderation.data, data)
                     return langs[msg.lang].linkCreated
                 else
@@ -1096,7 +991,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'setlink' and matches[2] then
             if msg.from.is_owner then
                 mystat('/setlink')
-                data[tostring(msg.chat.id)].settings.set_link = matches[2]
+                data[tostring(msg.chat.id)].link = matches[2]
                 save_data(config.moderation.data, data)
                 return langs[msg.lang].linkSaved
             else
@@ -1106,7 +1001,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'unsetlink' then
             if msg.from.is_owner then
                 mystat('/unsetlink')
-                data[tostring(msg.chat.id)].settings.set_link = nil
+                data[tostring(msg.chat.id)].link = nil
                 save_data(config.moderation.data, data)
                 return langs[msg.lang].linkDeleted
             else
@@ -1115,11 +1010,11 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'link' then
             mystat('/link')
-            if data[tostring(msg.chat.id)].settings.lock_group_link then
+            if data[tostring(msg.chat.id)].lock_grouplink then
                 if msg.from.is_mod then
-                    if data[tostring(msg.chat.id)].settings.set_link then
-                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                        if sendMessage(msg.from.id, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html') then
+                    if data[tostring(msg.chat.id)].link then
+                        savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].link .. "]")
+                        if sendMessage(msg.from.id, "<a href=\"" .. data[tostring(msg.chat.id)].link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html') then
                             if msg.chat.type ~= 'private' then
                                 return sendReply(msg, langs[msg.lang].sendLinkPvt, 'html')
                             end
@@ -1133,9 +1028,9 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             else
-                if data[tostring(msg.chat.id)].settings.set_link then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].settings.set_link .. "]")
-                    return sendReply(msg, "<a href=\"" .. data[tostring(msg.chat.id)].settings.set_link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html')
+                if data[tostring(msg.chat.id)].link then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].link .. "]")
+                    return sendReply(msg, "<a href=\"" .. data[tostring(msg.chat.id)].link .. "\">" .. html_escape(msg.chat.title) .. "</a>", 'html')
                 else
                     return langs[msg.lang].createLink
                 end
@@ -1152,7 +1047,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'owner' then
             mystat('/owner')
-            local group_owner = data[tostring(msg.chat.id)].set_owner
+            local group_owner = data[tostring(msg.chat.id)].owner
             if not group_owner then
                 return langs[msg.lang].noOwnerCallAdmin
             end
@@ -1485,7 +1380,7 @@ local function run(msg, matches)
             mystat('/permissions')
             local chat_name = ''
             if data[tostring(msg.chat.id)] then
-                chat_name = data[tostring(msg.chat.id)].set_name or ''
+                chat_name = data[tostring(msg.chat.id)].name or ''
             end
             permissionsTable[tostring(msg.chat.id)] = permissionsTable[tostring(msg.chat.id)] or { }
             if msg.reply then
@@ -1669,20 +1564,21 @@ local function run(msg, matches)
                     return langs[msg.lang].rulesCleaned
                 elseif matches[2]:lower() == 'whitelist' then
                     mystat('/clean whitelist')
-                    redis:del('whitelist:' .. msg.chat.tg_cli_id)
+                    data[tostring(chat_id)].whitelist.users = { }
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelist")
                     return langs[msg.lang].whitelistCleaned
                 elseif matches[2]:lower() == 'whitelistgban' then
                     mystat('/clean whitelistgban')
-                    redis:del('whitelist:gban:' .. msg.chat.tg_cli_id)
+                    data[tostring(chat_id)].whitelist.gbanned = { }
+                    save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelistgban")
                     return langs[msg.lang].whitelistGbanCleaned
                 elseif matches[2]:lower() == 'whitelistlink' then
                     mystat('/clean whitelistlink')
-                    data[tostring(msg.chat.id)].settings.links_whitelist = { }
+                    data[tostring(msg.chat.id)].settings.whitelist.links = { }
                     save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned links_whitelist")
-                    --
                     return langs[msg.lang].whitelistLinkCleaned
                 end
                 return
@@ -1700,7 +1596,7 @@ local function pre_process(msg)
                 if msg.service_type == 'chat_add_user_link' then
                     if msg.from.id ~= bot.userVersion.id then
                         -- if not admin and not bot then
-                        if not is_admin(msg) and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if not is_admin(msg) and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteRealm))
                         end
                     end
@@ -1709,7 +1605,7 @@ local function pre_process(msg)
                     for k, v in pairs(msg.added) do
                         if v.id ~= bot.userVersion.id then
                             -- if not admin and not bot then
-                            if not is_admin(msg) and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
+                            if not is_admin(msg) and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(v.id)] then
                                 text = text .. banUser(bot.id, v.id, msg.chat.id) .. '\n'
                             end
                         end
@@ -1754,14 +1650,14 @@ local function pre_process(msg)
                 end
             end
             if msg.service_type == 'chat_rename' then
-                if data[tostring(msg.chat.id)].settings.lock_name then
-                    setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].set_name)
+                if data[tostring(msg.chat.id)].lock_name then
+                    setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].name)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat N")
                 else
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat Y")
                 end
             elseif msg.service_type == 'chat_change_photo' then
-                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                if data[tostring(msg.chat.id)].lock_photo and data[tostring(msg.chat.id)].photo then
                     setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo N")
                 else
@@ -1779,7 +1675,7 @@ local function pre_process(msg)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo Y")
                 end
             elseif msg.service_type == 'delete_chat_photo' then
-                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                if data[tostring(msg.chat.id)].lock_photo and data[tostring(msg.chat.id)].photo then
                     setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted chat's photo N")
                 else
@@ -1806,41 +1702,28 @@ return {
     cron = cron,
     patterns =
     {
-        "^(###cbgroup_management)(DELETE)$",
-        "^(###cbgroup_management)(PAGES)$",
+        "^(###cbgroup_management)(DELETE)(%u)?$",
+        "^(###cbgroup_management)(PAGES)(%u)?$",
         "^(###cbgroup_management)(BACKLOG)(%d+)(%-?%d+)$",
         "^(###cbgroup_management)(PAGE%dMINUS)(%d+)(%-?%d+)$",
         "^(###cbgroup_management)(PAGE%dPLUS)(%d+)(%-?%d+)$",
-        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)$",
-        "^(###cbgroup_management)(BACKSETTINGS)(%-%d+)(.)$",
-        "^(###cbgroup_management)(BACKMUTES)(%-%d+)$",
-        "^(###cbgroup_management)(BACKMUTES)(%-%d+)(.)$",
-        "^(###cbgroup_management)(BACKPERMISSIONS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(BACKPERMISSIONS)(%d+)(%-%d+)(.)$",
-        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(LOCK)(.*)(%-%d+)(.)$",
-        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(UNLOCK)(.*)(%-%d+)(.)$",
-        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(MUTE)(.*)(%-%d+)(.)$",
-        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(UNMUTE)(.*)(%-%d+)(.)$",
-        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(FLOODPLUS)(%d+)(%-%d+)(.)$",
-        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(FLOODMINUS)(%d+)(%-%d+)(.)$",
-        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(WARNS)(%d+)(%-%d+)(.)$",
-        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(WARNSPLUS)(%d+)(%-%d+)(.)$",
-        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(WARNSMINUS)(%d+)(%-%d+)(.)$",
-        "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)(.)$",
-        "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)$",
-        "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)(.)$",
-        "^(###cbgroup_management)(PERMISSIONSDONE)(%d+)(%-%d+)$",
-        "^(###cbgroup_management)(PERMISSIONSDONE)(%d+)(%-%d+)(.)$",
+        "^(###cbgroup_management)(BACKPERMISSIONS)(%d+)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(GRANT)(%d+)(.*)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(DENY)(%d+)(.*)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(PERMISSIONSDONE)(%d+)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(BACKSETTINGS)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(GOTOLOCKS)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(GOTOMUTES)(%-%d+)(%u)?$",
+        -- info of the setting
+        "^(###cbgroup_management)([%w_]+)(%u)?$",
+        -- punishment increase
+        "^(###cbgroup_management)([%w_]+)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(LOCK)(.*)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(UNLOCK)(.*)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(FLOOD%+%+)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(FLOOD%-%-)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(WARNS%+%+)(%d)(%-%d+)(%u)?$",
+        "^(###cbgroup_management)(WARNS%-%-)(%d)(%-%d+)(%u)?$",
 
         -- SUPERGROUP
         "^[#!/]([Gg][Ee][Tt][Aa][Dd][Mm][Ii][Nn][Ss])$",
@@ -1882,8 +1765,8 @@ return {
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee])$",
         "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
+        "^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+) ([^%s]+)",
         "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) ([^%s]+)",
-        "^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+)",
         "^[#!/]([Nn][Ee][Ww][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
@@ -1896,7 +1779,7 @@ return {
         "^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
         "^[#!/]([Oo][Ww][Nn][Ee][Rr])$",
-        "^[#!/]([Ll][Oo][Cc][Kk]) ([^%s]+)$",
+        "^[#!/]([Ll][Oo][Cc][Kk]) ([^%s]+) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Cc][Ll][Ee][Aa][Nn]) ([^%s]+)$",
@@ -1936,10 +1819,8 @@ return {
         "/setwarn {value}",
         "/setflood {value}",
         "/newlink",
-        "/lock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "/unlock arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "/mute audio|contact|document|gif|location|photo|sticker|tgservice|video|video_note|voice_note",
-        "/unmute audio|contact|document|gif|location|photo|sticker|tgservice|video|video_note|voice_note",
+        "/lock|/mute arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment {punishment}",
+        "/unlock|/unmute arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment",
         "/pin {reply}",
         "/silentpin {reply}",
         "/unpin",

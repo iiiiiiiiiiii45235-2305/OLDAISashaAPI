@@ -1,38 +1,46 @@
-local test_settings = {
-    flood = true,
-    flood_max = 5,
-    links_whitelist = { "@username", },
-    lock_arabic = true,
-    lock_bots = true,
-    lock_delword = true,
-    lock_group_link = true,
-    lock_leave = true,
-    lock_link = true,
-    lock_member = true,
-    lock_name = true,
-    lock_photo = true,
-    lock_rtl = true,
-    lock_spam = true,
-    mutes =
+-- Empty tables for solving multiple problems(thanks to @topkecleon)
+local cronTable = {
+    resolveUsernamesTable =
     {
-        all = true,
-        audio = true,
-        contact = true,
-        document = true,
-        game = true,
-        gif = true,
-        location = true,
-        photo = true,
-        sticker = true,
-        text = true,
-        tgservice = true,
-        video = true,
-        video_note = true,
-        voice_note = true,
+        -- chat_id = { valMsg, valTot }
+    }
+}
+
+local test_data = {
+    link = nil,
+    settings =
+    {
+        locks =
+        {
+            arabic = 7,
+            bots = 7,
+            forward = 7,
+            gbanned = 7,
+            leave = 7,
+            links = 7,
+            members = 7,
+            rtl = 7,
+            spam = 7,
+        },
+        mutes =
+        {
+            all = 7,
+            audios = 7,
+            contacts = 7,
+            documents = 7,
+            games = 7,
+            gifs = 7,
+            locations = 7,
+            photos = 7,
+            stickers = 7,
+            text = 7,
+            tgservices = 7,
+            videos = 7,
+            video_notes = 7,
+            voice_notes = 7,
+        },
     },
-    set_link = nil,
-    strict = true,
-    warn_max = 3,
+    whitelist = { links = { "@username", }, },
 }
 
 local function pre_process_links(text)
@@ -83,6 +91,25 @@ local function check_if_link(text, links_whitelist, group_link)
     text:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")
     -- or text:match("[Aa][Dd][Ff]%.[Ll][Yy]/") or text:match("[Bb][Ii][Tt]%.[Ll][Yy]/") or text:match("[Gg][Oo][Oo]%.[Gg][Ll]/")
 
+    local tmp = text
+    -- remove joinchat links
+    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
+    -- remove ?start=blabla and things like that
+    tmp = tmp:gsub('%?([^%s]+)', '')
+    -- make links usernames
+    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
+    cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
+    cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
+    cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
+    while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
+        cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
+        cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
+        if APIgetChat(string.match(tmp, '@[%w_]+'), true) then
+            return true
+        else
+            tmp = tmp:gsub(string.match(tmp, '@[%w_]+'), '')
+        end
+    end
     if is_text_link then
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
         if is_bot then
@@ -96,9 +123,9 @@ local function check_if_link(text, links_whitelist, group_link)
     return false
 end
 
-local function action(msg, strict, reason)
+local function oldAction(msg, strict, reason)
     deleteMessage(msg.chat.id, msg.message_id)
-    if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+    if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
         if not strict then
             sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, reason))
         else
@@ -108,36 +135,38 @@ local function action(msg, strict, reason)
 end
 
 local function check_msg(msg, settings, pre_process_function)
-    local links_whitelist = settings.links_whitelist
-    local lock_arabic = settings.lock_arabic
-    local lock_bots = settings.lock_bots
-    local lock_leave = settings.lock_leave
-    local lock_link = settings.lock_link
     local group_link = nil
-    if settings.set_link then
-        group_link = settings.set_link
+    if settings.link then
+        group_link = settings.link
         group_link = links_to_tdotme(group_link)
         group_link = pre_process_links(group_link)
     end
-    local lock_member = settings.lock_member
-    local lock_rtl = settings.lock_rtl
-    local lock_spam = settings.lock_spam
-    local strict = settings.strict
-
-    local mute_all = settings.mutes['all']
-    local mute_audio = settings.mutes['audio']
-    local mute_contact = settings.mutes['contact']
-    local mute_document = settings.mutes['document']
-    local mute_game = settings.mutes['game']
-    local mute_gif = settings.mutes['gif']
-    local mute_location = settings.mutes['location']
-    local mute_photo = settings.mutes['photo']
-    local mute_sticker = settings.mutes['sticker']
-    local mute_text = settings.mutes['text']
-    local mute_tgservice = settings.mutes['tgservice']
-    local mute_video = settings.mutes['video']
-    local mute_video_note = settings.mutes['video_note']
-    local mute_voice_note = settings.mutes['voice_note']
+    local links_whitelist = group_data.whitelist.links
+    -- locks
+    local lock_arabic = group_data.settings.locks.arabic
+    local lock_bots = group_data.settings.locks.bots
+    local lock_forward = group_data.settings.locks.forward
+    local lock_gbanned = group_data.settings.locks.gbanned
+    local lock_leave = group_data.settings.locks.leave
+    local lock_links = group_data.settings.locks.links
+    local lock_members = group_data.settings.locks.members
+    local lock_rtl = group_data.settings.locks.rtl
+    local lock_spam = group_data.settings.locks.spam
+    -- mutes
+    local mute_all = group_data.settings.mutes.all
+    local mute_audio = group_data.settings.mutes.audios
+    local mute_contacts = group_data.settings.mutes.contacts
+    local mute_documents = group_data.settings.mutes.documents
+    local mute_games = group_data.settings.mutes.games
+    local mute_gifs = group_data.settings.mutes.gifs
+    local mute_locations = group_data.settings.mutes.locations
+    local mute_photos = group_data.settings.mutes.photos
+    local mute_stickers = group_data.settings.mutes.stickers
+    local mute_text = group_data.settings.mutes.text
+    local mute_tgservices = group_data.settings.mutes.tgservices
+    local mute_videos = group_data.settings.mutes.videos
+    local mute_video_notes = group_data.settings.mutes.video_notes
+    local mute_voice_notes = group_data.settings.mutes.voice_notes
 
     local text = langs[msg.lang].checkMsg
     if not msg.service then
@@ -150,10 +179,10 @@ local function check_msg(msg, settings, pre_process_function)
                 text = text .. langs[msg.lang].reasonMutedUser
             end
         end
-        if mute_all then
+        if tonumber(mute_all) > 0 then
             if pre_process_function then
                 print('all muted')
-                deleteMessage(msg.chat.id, msg.message_id)
+                sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_all, langs[msg.lang].reasonMutedAll, msg.message_id))
                 return nil
             else
                 text = text .. langs[msg.lang].reasonMutedAll
@@ -162,12 +191,12 @@ local function check_msg(msg, settings, pre_process_function)
         if msg.entities then
             for k, v in pairs(msg.entities) do
                 if v.url then
-                    if lock_link then
+                    if tonumber(lock_links) > 0 then
                         local tmp = v.url
                         if check_if_link(tmp, links_whitelist, group_link) then
                             if pre_process_function then
                                 print('link found entities')
-                                action(msg, strict, langs[msg.lang].reasonLockLinkEntities)
+                                sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLinkEntities, msg.message_id))
                                 return nil
                             else
                                 text = text .. langs[msg.lang].reasonLockLinkEntities
@@ -177,9 +206,9 @@ local function check_msg(msg, settings, pre_process_function)
                 end
             end
         end
-        if strict then
-            if msg.forward then
-                if msg.forward_from_chat then
+        if msg.forward then
+            if msg.forward_from_chat then
+                if tonumber(lock_forward) > 0 then
                     local whitelisted = false
                     for k, v in pairs(links_whitelist) do
                         if tostring(v) == tostring(msg.forward_from_chat.id) then
@@ -189,7 +218,7 @@ local function check_msg(msg, settings, pre_process_function)
                     if not whitelisted then
                         if pre_process_function then
                             print('link (forward) found')
-                            action(msg, strict, langs[msg.lang].reasonLockLinkForward)
+                            sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_forward, langs[msg.lang].reasonLockLinkForward, msg.message_id))
                             return nil
                         else
                             text = text .. langs[msg.lang].reasonLockLinkForward
@@ -203,84 +232,59 @@ local function check_msg(msg, settings, pre_process_function)
             if msg.caption then
                 textToUse = msg.caption
             end
-            if mute_text and not msg.media then
+            if tonumber(mute_text) > 0 and not msg.media then
                 if pre_process_function then
                     print('text muted')
-                    action(msg, strict, langs[msg.lang].reasonMutedText)
+                    sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_text, langs[msg.lang].reasonMutedText, msg.message_id))
                     return nil
                 else
                     text = text .. langs[msg.lang].reasonMutedText
                 end
             end
             -- textToUse checks
-            if lock_spam then
+            if tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(textToUse, '%c', '')
                 local _nl, real_digits = string.gsub(textToUse, '%d', '')
                 if string.len(textToUse) > 2049 or ctrl_chars > 40 or real_digits > 2000 then
                     if pre_process_function then
                         print('spam found')
-                        action(msg, strict, langs[msg.lang].reasonLockSpam)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockSpam
                     end
                 end
             end
-            if lock_link then
+            if tonumber(lock_links) > 0 then
                 local tmp = textToUse
                 if check_if_link(tmp, links_whitelist, group_link) then
                     if pre_process_function then
                         print('link found')
-                        action(msg, strict, langs[msg.lang].reasonLockLink)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLink, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockLink
                     end
                 end
-                if strict then
-                    tmp = tmp:lower()
-                    -- remove joinchat links
-                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/([^%s]+)', '')
-                    -- remove ?start=blabla and things like that
-                    tmp = tmp:gsub('%?([^%s]+)', '')
-                    -- make links usernames
-                    tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-                    -- remove all whitelisted links
-                    tmp = remove_whitelisted_links(tmp, links_whitelist, group_link)
-                    while string.match(tmp, '@[^%s]+') do
-                        if APIgetChat(string.match(tmp, '@[^%s]+'), true) then
-                            if pre_process_function then
-                                print('link (public channel/supergroup username) found')
-                                action(msg, strict, langs[msg.lang].reasonLockLinkUsername)
-                                return nil
-                            else
-                                text = text .. langs[msg.lang].reasonLockLinkUsername
-                                tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                            end
-                        else
-                            tmp = tmp:gsub(string.match(tmp, '@[^%s]+'), '')
-                        end
-                    end
-                end
             end
-            if lock_arabic then
+            if tonumber(lock_arabic) > 0 then
                 local is_squig_msg = textToUse:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
                     if pre_process_function then
                         print('arabic found')
-                        action(msg, strict, langs[msg.lang].reasonLockArabic)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_arabic, langs[msg.lang].reasonLockArabic, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockArabic
                     end
                 end
             end
-            if lock_rtl then
+            if tonumber(lock_rtl) > 0 then
                 local is_rtl = msg.from.print_name:match("‮") or textToUse:match("‮")
                 if is_rtl then
                     if pre_process_function then
                         print('rtl found')
-                        action(msg, strict, langs[msg.lang].reasonLockRTL)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockRTL
@@ -291,110 +295,110 @@ local function check_msg(msg, settings, pre_process_function)
         -- msg.media checks
         if msg.media and msg.media_type then
             if msg.media_type == 'audio' then
-                if mute_audio then
+                if tonumber(mute_audio) > 0 then
                     if pre_process_function then
                         print('audio muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedAudio)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_audio, langs[msg.lang].reasonMutedAudio, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedAudio
                     end
                 end
             elseif msg.media_type == 'contact' then
-                if mute_contact then
+                if tonumber(mute_contacts) > 0 then
                     if pre_process_function then
                         print('contact muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedContacts)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_contacts, langs[msg.lang].reasonMutedContacts, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedContacts
                     end
                 end
             elseif msg.media_type == 'document' then
-                if mute_document then
+                if tonumber(mute_documents) > 0 then
                     if pre_process_function then
                         print('document muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedDocuments)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_documents, langs[msg.lang].reasonMutedDocuments, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedDocuments
                     end
                 end
             elseif msg.media_type == 'game' then
-                if mute_game then
+                if tonumber(mute_games) > 0 then
                     if pre_process_function then
                         print('game muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedGame)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_games, langs[msg.lang].reasonMutedGame, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedGame
                     end
                 end
             elseif msg.media_type == 'gif' then
-                if mute_gif then
+                if tonumber(mute_gifs) > 0 then
                     if pre_process_function then
                         print('gif muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedGifs)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_gifs, langs[msg.lang].reasonMutedGifs, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedGifs
                     end
                 end
             elseif msg.media_type == 'location' then
-                if mute_location then
+                if tonumber(mute_locations) > 0 then
                     if pre_process_function then
                         print('location muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedLocations)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_locations, langs[msg.lang].reasonMutedLocations, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedLocations
                     end
                 end
             elseif msg.media_type == 'photo' then
-                if mute_photo then
+                if tonumber(mute_photos) > 0 then
                     if pre_process_function then
                         print('photo muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedPhoto)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_photos, langs[msg.lang].reasonMutedPhoto, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedPhoto
                     end
                 end
             elseif msg.media_type == 'sticker' then
-                if mute_sticker then
+                if tonumber(mute_stickers) > 0 then
                     if pre_process_function then
                         print('sticker muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedStickers)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_stickers, langs[msg.lang].reasonMutedStickers, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedStickers
                     end
                 end
             elseif msg.media_type == 'video' then
-                if mute_video then
+                if tonumber(mute_videos) > 0 then
                     if pre_process_function then
                         print('video muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedVideo)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_videos, langs[msg.lang].reasonMutedVideo, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedVideo
                     end
                 end
             elseif msg.media_type == 'video_note' then
-                if mute_video_note then
+                if tonumber(mute_video_notes) > 0 then
                     if pre_process_function then
                         print('video_note muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedVideonotes)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_video_notes, langs[msg.lang].reasonMutedVideonotes, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedVideonotes
                     end
                 end
             elseif msg.media_type == 'voice_note' then
-                if mute_voice_note then
+                if tonumber(mute_voice_notes) > 0 then
                     if pre_process_function then
                         print('voice_note muted')
-                        action(msg, strict, langs[msg.lang].reasonMutedVoicenotes)
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_voice_notes, langs[msg.lang].reasonMutedVoicenotes, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonMutedVoicenotes
@@ -403,7 +407,7 @@ local function check_msg(msg, settings, pre_process_function)
             end
         end
     else
-        if mute_tgservice then
+        if tonumber(mute_tgservices) > 0 then
             if pre_process_function then
                 print('tgservice muted')
                 deleteMessage(msg.chat.id, msg.message_id)
@@ -413,43 +417,34 @@ local function check_msg(msg, settings, pre_process_function)
             end
         end
         if msg.service_type == 'chat_add_user_link' then
-            if lock_spam then
+            if tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(msg.from.print_name, '%c', '')
                 if string.len(msg.from.print_name) > 70 or ctrl_chars > 40 then
                     if pre_process_function then
                         print('name spam found')
-                        deleteMessage(msg.chat.id, msg.message_id)
-                        if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
-                        end
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockSpam
                     end
                 end
             end
-            if lock_rtl then
+            if tonumber(lock_rtl) > 0 then
                 local is_rtl_name = msg.from.print_name:match("‮")
                 if is_rtl_name then
                     if pre_process_function then
                         print('rtl name found')
-                        deleteMessage(msg.chat.id, msg.message_id)
-                        if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
-                        end
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockRTL
                     end
                 end
             end
-            if lock_member then
+            if tonumber(lock_members) > 0 then
                 if pre_process_function then
-                    print('member locked')
-                    deleteMessage(msg.chat.id, msg.message_id)
-                    if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                        sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                    end
+                    print('members locked')
+                    sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_members, langs[msg.lang].reasonLockMembers, msg.message_id))
                     return nil
                 else
                     text = text .. langs[msg.lang].reasonLockMembers
@@ -457,58 +452,46 @@ local function check_msg(msg, settings, pre_process_function)
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do
-                if lock_spam then
+                if tonumber(lock_spam) > 0 then
                     local _nl, ctrl_chars = string.gsub(v.print_name, '%c', '')
                     if string.len(v.print_name) > 70 or ctrl_chars > 40 then
                         if pre_process_function then
                             print('name spam found')
-                            deleteMessage(msg.chat.id, msg.message_id)
-                            if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
-                                sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockSpam))
-                            end
+                            sendMessage(msg.chat.id, punishmentAction(bot.id, v.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id))
                             return nil
                         else
                             text = text .. langs[msg.lang].reasonLockSpam
                         end
                     end
                 end
-                if lock_rtl then
+                if tonumber(lock_rtl) > 0 then
                     local is_rtl_name = v.print_name:match("‮")
                     if is_rtl_name then
                         if pre_process_function then
                             print('rtl name found')
-                            deleteMessage(msg.chat.id, msg.message_id)
-                            if strict and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
-                                sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockRTL))
-                            end
+                            sendMessage(msg.chat.id, punishmentAction(bot.id, v.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id))
                             return nil
                         else
                             text = text .. langs[msg.lang].reasonLockRTL
                         end
                     end
                 end
-                if lock_member then
+                if tonumber(lock_members) > 0 then
                     if pre_process_function then
                         print('member locked')
                         deleteMessage(msg.chat.id, msg.message_id)
-                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.adder.id)] then
-                            sendMessage(msg.chat.id, warnUser(bot.id, msg.adder.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                        end
-                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
-                            sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockMembers))
-                        end
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.adder.id, msg.chat.id, lock_members, langs[msg.lang].reasonLockMembers, msg.message_id))
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, v.id, msg.chat.id, lock_members, langs[msg.lang].reasonLockMembers, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockMembers
                     end
                 end
-                if lock_bots then
+                if tonumber(lock_bots) > 0 then
                     if v.is_bot then
                         if pre_process_function then
                             print('bots locked')
-                            if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(v.id)] then
-                                sendMessage(msg.chat.id, banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonLockBots))
-                            end
+                            sendMessage(msg.chat.id, punishmentAction(bot.id, v.id, msg.chat.id, lock_bots, langs[msg.lang].reasonLockBots, msg.message_id))
                             return nil
                         else
                             text = text .. langs[msg.lang].reasonLockBots
@@ -518,13 +501,11 @@ local function check_msg(msg, settings, pre_process_function)
             end
         end
         if msg.service_type == 'chat_del_user' or msg.service_type == 'chat_del_user_leave' then
-            if lock_leave then
+            if tonumber(lock_leave) > 0 then
                 if not is_mod2(msg.removed.id, msg.chat.id) then
                     if pre_process_function then
                         print('leave locked')
-                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.removed.id)] then
-                            sendMessage(msg.chat.id, banUser(bot.id, msg.removed.id, msg.chat.id, langs[msg.lang].reasonLockLeave))
-                        end
+                        sendMessage(msg.chat.id, punishmentAction(bot.id, msg.removed.id, msg.chat.id, lock_leave, langs[msg.lang].reasonLockLeave, msg.message_id))
                         return nil
                     else
                         text = text .. langs[msg.lang].reasonLockLeave
@@ -546,11 +527,9 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'checkmsg' then
-        local settings = clone_table(test_settings)
+        local settings = clone_table(test_data)
         if data[tostring(msg.chat.id)] then
-            if data[tostring(msg.chat.id)].settings then
-                settings = clone_table(data[tostring(msg.chat.id)].settings)
-            end
+            settings = clone_table(data[tostring(msg.chat.id)])
         end
         if msg.reply then
             return sendReply(msg.reply_to_message, check_msg(msg.reply_to_message, settings), false)
@@ -564,28 +543,26 @@ end
 local function pre_process(msg)
     if msg then
         -- Begin 'RondoMsgChecks' text checks by @rondoozle
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
-            if not isWhitelisted(msg.chat.tg_cli_id, msg.from.id) and not msg.from.is_mod then
-                -- if regular user
-                local settings = nil
-                if data[tostring(msg.chat.id)] then
-                    if data[tostring(msg.chat.id)].settings then
-                        settings = clone_table(data[tostring(msg.chat.id)].settings)
-                    end
-                end
-                if settings then
-                    return check_msg(msg, settings, true)
-                end
-            end
+        if data[tostring(msg.chat.id)] and not isWhitelisted(msg.chat.id, msg.from.id) and not msg.from.is_mod then
+            -- if regular user
+            return check_msg(msg, clone_table(data[tostring(msg.chat.id)]), true)
         end
-        -- End 'RondoMsgChecks' text checks by @Rondoozle
         return msg
     end
+    -- End 'RondoMsgChecks' text checks by @Rondoozle
 end
 -- End pre_process function
 
+local function cron()
+    -- clear that table on the top of the plugin
+    cronTable = {
+        resolveUsernamesTable = { }
+    }
+end
+
 return {
     description = "MSG_CHECKS",
+    cron = cron,
     patterns =
     {
         "^[#!/]([Cc][Hh][Ee][Cc][Kk][Mm][Ss][Gg])$",

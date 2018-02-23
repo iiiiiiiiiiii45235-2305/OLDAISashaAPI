@@ -62,10 +62,10 @@ end
 
 local function get_rules(chat_id)
     local lang = get_lang(chat_id)
-    if not data[tostring(chat_id)]['rules'] then
+    if not data[tostring(chat_id)].rules then
         return langs[lang].noRules
     end
-    local rules = data[tostring(chat_id)]['rules']
+    local rules = data[tostring(chat_id)].rules
     return rules
 end
 
@@ -89,8 +89,8 @@ local function adjust_value(value, msg, parse_mode)
         value = value:gsub('$rules', get_rules(chat.id))
     end
     if string.find(value, '$grouplink') then
-        if data[tostring(chat.id)].settings.set_link then
-            value = value:gsub('$grouplink', data[tostring(chat.id)].settings.set_link)
+        if data[tostring(chat.id)].link then
+            value = value:gsub('$grouplink', data[tostring(chat.id)].link)
         else
             value = value:gsub('$grouplink', 'NO GROUP LINK SET')
         end

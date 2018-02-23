@@ -94,7 +94,7 @@ elseif action == 'contactadmins' then
         end
     end
     -- owner
-    local owner = data[tostring(chat_id)]['set_owner']
+    local owner = data[tostring(chat_id)].owner
     if owner then
         if not already_contacted[tostring(owner)] then
             already_contacted[tostring(owner)] = owner
@@ -110,8 +110,8 @@ elseif action == 'contactadmins' then
         end
     end
     -- determine if table is empty
-    if next(data[tostring(chat_id)]['moderators']) ~= nil then
-        for k, v in pairs(data[tostring(chat_id)]['moderators']) do
+    if next(data[tostring(chat_id)].moderators) ~= nil then
+        for k, v in pairs(data[tostring(chat_id)].moderators) do
             if not already_contacted[tostring(k)] then
                 already_contacted[tostring(k)] = k
                 if sendChatAction(k, 'typing', true) then

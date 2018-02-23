@@ -5,12 +5,12 @@ local cronTable = {
     {
         -- user_id
     },
-    -- temp table to prevent kicking an already kicked user
+    -- temp table to avoid kicking an already kicked user
     floodKicks =
     {
         -- chat_id = counter
     },
-    -- temp table to prevent flooding mods^
+    -- temp table to avoid flooding mods^
     modsContacted =
     {
         -- chat_id = false/true
@@ -25,7 +25,7 @@ local cronTable = {
     {
         -- chat_id = { user_id = { commandHash = counter } }
     },
-    -- temp table to restricting an already restricted user
+    -- temp table to avoid restricting an already restricted user
     restrictedUsers =
     {
         -- chat_id = { user_id = false/true }
@@ -144,52 +144,43 @@ local function pre_process(msg)
                 if cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] > 10 or usermsgs >= 7 then
                     print("user blocked")
                     -- Block user if spammed in private
-                    blockUser(msg.from.id, msg.lang)
+                    blockUser(msg.from.id)
                     sendMessage(msg.from.id, langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam)
                     sendLog(langs[msg.lang].user .. "[" .. msg.from.id .. "]" .. langs[msg.lang].blockedForSpam, false, true)
                     savelog(msg.from.id .. " PM", "User [" .. msg.from.id .. "] blocked for spam.")
                     return nil
                 end
             elseif data[tostring(msg.chat.id)] then
-                -- Ignore mods,owner and admins
+                -- Ignore mods^
                 -- Check if flood is on or off
                 -- Ignore whitelisted
-                if msg.from.is_mod or not data[tostring(msg.chat.id)].settings.flood or isWhitelisted(msg.chat.tg_cli_id, msg.from.id) then
+                if msg.from.is_mod or not data[tostring(msg.chat.id)].settings.locks.flood or isWhitelisted(msg.chat.id, msg.from.id) then
                     return msg
                 end
                 cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] =(cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] or 0) + 1
                 local NUM_MSG_MAX = 5
-                local strict = false
                 if data[tostring(msg.chat.id)] then
                     if data[tostring(msg.chat.id)].settings then
-                        if data[tostring(msg.chat.id)].settings.flood_max then
-                            NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.flood_max)
+                        if data[tostring(msg.chat.id)].settings.max_flood then
+                            NUM_MSG_MAX = tonumber(data[tostring(msg.chat.id)].settings.max_flood)
                             -- Obtain group flood sensitivity
-                        end
-                        if data[tostring(msg.chat.id)].settings.strict then
-                            strict = data[tostring(msg.chat.id)].settings.strict
                         end
                     end
                 end
                 cronTable.floodKicks[tostring(msg.chat.id)] = cronTable.floodKicks[tostring(msg.chat.id)] or 0
                 -- ANTI FLOOD
-                if usermsgs >= NUM_MSG_MAX and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                    local text = ''
-                    if string.match(getWarn(msg.chat.id), "%d+") then
-                        text = tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                        text = text .. '\n' .. tostring(kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                    elseif not strict then
-                        text = kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
-                    else
-                        text = banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood)
+                if usermsgs >= NUM_MSG_MAX and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                    local text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.flood, langs[msg.lang].reasonFlood, msg.message_id)
+                    if text == '' then
+                        return msg
                     end
                     local username = msg.from.username or 'USERNAME'
                     if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
                         if msg.from.username then
-                            savelog(msg.chat.id, msg.from.print_name .. " @" .. username .. " [" .. msg.from.id .. "] kicked for #spam")
+                            savelog(msg.chat.id, msg.from.print_name .. " @" .. username .. " [" .. msg.from.id .. "] punished for #flood punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.flood))
                             sendMessage(msg.chat.id, text)
                         else
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] kicked for #spam")
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for #flood punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.flood))
                             sendMessage(msg.chat.id, text)
                         end
                     end
@@ -202,7 +193,7 @@ local function pre_process(msg)
                     if gbanspamonredis then
                         if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
                             -- Global ban that user
-                            gbanUser(msg.from.id, msg.lang)
+                            gbanUser(msg.from.id)
                             local gbanspam = 'gban:spam' .. msg.from.id
                             -- reset the counter
                             redis:set(gbanspam, 0)
@@ -218,7 +209,7 @@ local function pre_process(msg)
                 -- ANTI SHITSTORM
                 local shitstormAlarm = false
                 if cronTable.floodKicks[tostring(msg.chat.id)] >= 4 or cronTable.msgsHashes[tostring(msg.chat.id)][tostring(hash)] > 10 then
-                    -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals) in 1 minute
+                    -- check if there's a possible ongoing shitstorm (if flooders are more than 4 or more than 10 messages all equals in 1 minute)
                     shitstormAlarm = true
                     if string.match(getWarn(msg.chat.id), "%d+") then
                         local restrictedFlag = false
@@ -229,18 +220,16 @@ local function pre_process(msg)
                             restrictedFlag = true
                         end
                         local text = ''
-                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
+                        if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             text = text .. tostring(warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood))
-                        end
-                        if not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                             if restrictedFlag then
                                 sendMessage(msg.chat.id, text .. ' #kick #restrict\n' .. langs[msg.lang].scheduledKick:gsub('X', '300') .. '\n' .. langs[msg.lang].allRestrictionsApplied)
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(120, 300) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
-                                globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                                globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             else
                                 sendMessage(msg.chat.id, text .. ' #kick\n' .. langs[msg.lang].scheduledKick:gsub('X', '10'))
                                 io.popen('lua timework.lua "kickuser" "' .. math.random(1, 10) .. '" "' .. msg.chat.id .. '" "' .. msg.from.id .. '"')
-                                globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
+                                globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                             end
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] will be kicked in 300 seconds at most for possible shitstorm")
                         elseif restrictedFlag then
@@ -269,7 +258,7 @@ local function pre_process(msg)
                     cronTable.modsContacted[tostring(msg.chat.id)] = true
                     local hashtag = '#alarm' .. tostring(msg.message_id)
                     local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-                    local group_link = data[tostring(msg.chat.id)]['settings']['set_link']
+                    local group_link = data[tostring(msg.chat.id)].link
                     if group_link then
                         chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
                     end
@@ -277,7 +266,7 @@ local function pre_process(msg)
                     'HASHTAG: ' .. hashtag
                     attentionText = attentionText:gsub('"', '\\"')
                     io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "true" "' .. hashtag .. '" "' .. attentionText .. '"')
-                    data[tostring(msg.chat.id)]['settings']['lock_spam'] = true
+                    data[tostring(msg.chat.id)].settings.locks.spam = 3
                 end
                 if usermsgs >= NUM_MSG_MAX then
                     return nil

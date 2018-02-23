@@ -63,42 +63,42 @@ end
 
 local function pre_process(msg)
     if msg then
-        if not msg.from.is_mod then
-            local found = false
-            local vars = list_censorships(msg)
+        if data[tostring(msg.chat.id)].settings.locks.delword then
+            if not msg.from.is_mod then
+                local found = false
+                local vars = list_censorships(msg)
 
-            if vars ~= nil then
-                local t = vars:split('\n')
-                for i, word in pairs(t) do
-                    local temp = word:lower()
-                    if msg.text then
-                        if string.match(msg.text:lower(), temp) then
-                            found = true
-                        end
-                    end
-                    if msg.media then
-                        if msg.caption then
-                            if string.match(msg.caption:lower(), temp) then
+                if vars ~= nil then
+                    local t = vars:split('\n')
+                    for i, word in pairs(t) do
+                        local temp = word:lower()
+                        if msg.text then
+                            if string.match(msg.text:lower(), temp) then
                                 found = true
                             end
                         end
-                    end
-                    if found then
-                        local hash = get_censorships_hash(msg)
-                        local time = redis:hget(hash, temp)
-                        if time == 'true' or time == '0' then
-                            deleteMessage(msg.chat.id, msg.message_id)
-                        else
-                            io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                        end
-                        if data[tostring(msg.chat.id)].settings.lock_delword and not globalCronTable.kickedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                            if not data[tostring(msg.chat.id)].settings.strict then
-                                sendMessage(msg.chat.id, warnUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
-                            else
-                                sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonLockDelword))
+                        if msg.media then
+                            if msg.caption then
+                                if string.match(msg.caption:lower(), temp) then
+                                    found = true
+                                end
                             end
                         end
-                        return nil
+                        if found then
+                            local hash = get_censorships_hash(msg)
+                            local time = redis:hget(hash, temp)
+                            local text = ''
+                            if time == 'true' or time == '0' then
+                                text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)
+                            else
+                                io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                                text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)
+                            end
+                            if text ~= '' then
+                                sendMessage(msg.chat.id, text)
+                            end
+                            return nil
+                        end
                     end
                 end
             end

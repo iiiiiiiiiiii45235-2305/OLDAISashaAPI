@@ -303,6 +303,7 @@ function demoteChatMember(chat_id, user_id)
     return promoteChatMember(chat_id, user_id, demote_table)
 end
 
+-- never call this outside this file
 function restrictChatMember(chat_id, user_id, restrictions, until_date)
     user_id = tostring(user_id):gsub(' ', '')
     --[[local restrictions = { can_send_messages = true,
@@ -329,6 +330,7 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date)
     end
 end
 
+-- never call this outside this file
 function unrestrictChatMember(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
     local unrestrict_table = {
@@ -347,105 +349,102 @@ end
 
 local max_msgs = 2
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound, no_log)
-    if sendChatAction(chat_id, 'typing', true) then
-        if text then
-            if type(text) ~= 'table' then
-                text = tostring(text)
-                if text ~= '' then
-                    text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
-                    local text_max = 4096
-                    local text_len = string.len(text)
-                    local num_msg = math.ceil(text_len / text_max)
-                    if parse_mode then
-                        max_msgs = 1
+    if sendChatAction(chat_id, 'typing', true) and text and type(text) ~= 'table' then
+        text = tostring(text)
+        if text == '' then
+            return nil
+        end
+        text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
+        local text_max = 4096
+        local text_len = string.len(text)
+        local num_msg = math.ceil(text_len / text_max)
+        if parse_mode then
+            max_msgs = 1
+        end
+        if num_msg > max_msgs then
+            local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or ''):gsub('/', 'forwardslash') .. ".txt"
+            text = text:gsub('<code>', '')
+            text = text:gsub('</code>', '')
+            text = text:gsub('<b>', '')
+            text = text:gsub('</b>', '')
+            text = text:gsub('<pre>', '')
+            text = text:gsub('</pre>', '')
+            text = text:gsub('<i>', '')
+            text = text:gsub('</i>', '')
+            text = text:gsub('<a href="', '')
+            text = text:gsub('">', '')
+            text = text:gsub('</a>', '')
+            local file_msg = io.open(path, "w")
+            file_msg:write(text)
+            file_msg:close()
+            sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
+            return true
+        else
+            local url = BASE_URL ..
+            '/sendMessage?chat_id=' .. chat_id ..
+            '&disable_web_page_preview=true'
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            if parse_mode then
+                if parse_mode:lower() == 'html' then
+                    url = url .. '&parse_mode=HTML'
+                elseif parse_mode:lower() == 'markdown' then
+                    url = url .. '&parse_mode=Markdown'
+                else
+                    -- no parse_mode
+                end
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
+
+            if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+                if num_msg <= 1 then
+                    url = url .. '&text=' .. URL.escape(text)
+                    local res, code = sendRequest(url, no_log)
+                    if not res and code then
+                        -- if the request failed and a code is returned (not 403 and 429)
+                        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                            savelog('send_msg', code .. '\n' .. text)
+                        end
                     end
-                    if num_msg > max_msgs then
-                        local path = "./data/tmp/" .. tostring(chat_id) .. tostring(tmp_msg.text or ''):gsub('/', 'forwardslash') .. ".txt"
-                        text = text:gsub('<code>', '')
-                        text = text:gsub('</code>', '')
-                        text = text:gsub('<b>', '')
-                        text = text:gsub('</b>', '')
-                        text = text:gsub('<pre>', '')
-                        text = text:gsub('</pre>', '')
-                        text = text:gsub('<i>', '')
-                        text = text:gsub('</i>', '')
-                        text = text:gsub('<a href="', '')
-                        text = text:gsub('">', '')
-                        text = text:gsub('</a>', '')
-                        local file_msg = io.open(path, "w")
-                        file_msg:write(text)
-                        file_msg:close()
-                        sendDocument(chat_id, path, langs[get_lang(chat_id)].messageTooLong, reply_to_message_id)
-                        return true
+                    if print_res_msg(res) then
+                        msgs_plus_plus(chat_id)
+                        return res, code
                     else
-                        local url = BASE_URL ..
-                        '/sendMessage?chat_id=' .. chat_id ..
-                        '&disable_web_page_preview=true'
-                        local reply = false
-                        if reply_to_message_id then
-                            url = url .. '&reply_to_message_id=' .. reply_to_message_id
-                            reply = true
-                        end
-                        if parse_mode then
-                            if parse_mode:lower() == 'html' then
-                                url = url .. '&parse_mode=HTML'
-                            elseif parse_mode:lower() == 'markdown' then
-                                url = url .. '&parse_mode=Markdown'
-                            else
-                                -- no parse_mode
-                            end
-                        end
-                        if not send_sound then
-                            url = url .. '&disable_notification=true'
-                            -- messages are silent by default
-                        end
+                        local obj = getChat(chat_id)
+                        local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
+                        print_msg(sent_msg)
+                    end
+                else
+                    local my_text = string.sub(text, 1, 4090)
+                    local rest = string.sub(text, 4090, text_len)
+                    url = url .. '&text=' .. URL.escape(my_text)
 
-                        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
-                            if num_msg <= 1 then
-                                url = url .. '&text=' .. URL.escape(text)
-                                local res, code = sendRequest(url, no_log)
-                                if not res and code then
-                                    -- if the request failed and a code is returned (not 403 and 429)
-                                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                        savelog('send_msg', code .. '\n' .. text)
-                                    end
-                                end
-                                if print_res_msg(res) then
-                                    msgs_plus_plus(chat_id)
-                                    return res, code
-                                else
-                                    local obj = getChat(chat_id)
-                                    local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
-                                    print_msg(sent_msg)
-                                end
-                            else
-                                local my_text = string.sub(text, 1, 4090)
-                                local rest = string.sub(text, 4090, text_len)
-                                url = url .. '&text=' .. URL.escape(my_text)
-
-                                local res, code = sendRequest(url, no_log)
-                                if not res and code then
-                                    -- if the request failed and a code is returned (not 403 and 429)
-                                    if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                                        savelog('send_msg', code .. '\n' .. text)
-                                    end
-                                end
-                                if print_res_msg(res) then
-                                    msgs_plus_plus(chat_id)
-                                    res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
-                                else
-                                    local obj = getChat(chat_id)
-                                    local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
-                                    print_msg(sent_msg)
-                                    msgs_plus_plus(chat_id)
-                                    res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
-                                end
-                            end
-                            return res, code
-                            -- return false, and the code
+                    local res, code = sendRequest(url, no_log)
+                    if not res and code then
+                        -- if the request failed and a code is returned (not 403 and 429)
+                        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                            savelog('send_msg', code .. '\n' .. text)
                         end
+                    end
+                    if print_res_msg(res) then
+                        msgs_plus_plus(chat_id)
+                        res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
+                    else
+                        local obj = getChat(chat_id)
+                        local sent_msg = { from = bot, chat = obj, text = my_text, reply = reply }
+                        print_msg(sent_msg)
+                        msgs_plus_plus(chat_id)
+                        res, code = sendMessage(chat_id, rest, parse_mode, reply_to_message_id, send_sound)
                     end
                 end
+                return res, code
+                -- return false, and the code
             end
         end
     end
@@ -733,7 +732,7 @@ function setChatTitle(chat_id, title)
                     savelog('set_title', code)
                 end
             end
-            data[tostring(chat_id)].set_name = title
+            data[tostring(chat_id)].name = title
             save_data(config.moderation.data, data)
             msgs_plus_plus(chat_id)
             return res
@@ -1547,11 +1546,90 @@ function userInChat(chat_id, user_id, no_log)
     end
 end
 
+-- call this to restrict
+function restrictUser(executer, target, chat_id, restrictions, until_date, no_notice)
+    if sendChatAction(chat_id, 'typing', true) then
+        local lang = get_lang(chat_id)
+        if isWhitelisted(chat_id, target) then
+            savelog(chat_id, "[" .. executer .. "] tried to restrict user " .. target .. " that is whitelisted")
+            return langs[lang].cantRestrictWhitelisted
+        end
+        if compare_ranks(executer, target, chat_id, false, true) then
+            if restrictChatMember(chat_id, target, restrictions, until_date) then
+                -- if the user has been restricted, then...
+                globalCronTable.punishedTable[tostring(chat_id)] = globalCronTable.punishedTable[tostring(chat_id)] or { }
+                globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
+                local text = ''
+                for k, v in pairs(restrictions) do
+                    if not restrictions[k] then
+                        text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                    end
+                end
+                savelog(chat_id, "[" .. executer .. "] restricted user " .. target .. ' ' .. text)
+                if areNoticesEnabled(target, chat_id) and not no_notice then
+                    sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+                    langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
+                    langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
+                    langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
+                    langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
+                end
+                local temprestrict = false
+                if until_date then
+                    if until_date >= 30 or until_date <= 31622400 then
+                        temprestrict = true
+                    end
+                end
+                if temprestrict then
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted ..
+                    '\n' .. text ..
+                    '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', until_date)
+                else
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted ..
+                    '\n' .. text ..
+                    '\n#user' .. target .. ' #executer' .. executer .. ' #restrict'
+                end
+            else
+                return langs[lang].checkMyPermissions
+            end
+        else
+            savelog(chat_id, "[" .. executer .. "] tried to restrict user " .. target .. " require higher rank")
+            return langs[get_lang(chat_id)].require_rank
+        end
+    end
+end
+
+-- call this to unrestrict
+function unrestrictUser(executer, target, chat_id, no_notice)
+    if sendChatAction(chat_id, 'typing', true) then
+        local lang = get_lang(chat_id)
+        if compare_ranks(executer, target, chat_id, false, true) then
+            if unrestrictChatMember(chat_id, target) then
+                savelog(chat_id, "[" .. executer .. "] unrestricted user " .. target .. ' ' .. text)
+                if areNoticesEnabled(target, chat_id) and not no_notice then
+                    sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+                    langs[lang].restrictionSendMessages .. tostring(true) ..
+                    langs[lang].restrictionSendMediaMessages .. tostring(true) ..
+                    langs[lang].restrictionSendOtherMessages .. tostring(true) ..
+                    langs[lang].restrictionAddWebPagePreviews .. tostring(true))
+                end
+                return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unrestricted ..
+                '\n' .. text ..
+                '\n#user' .. target .. ' #executer' .. executer .. ' #unrestrict'
+            else
+                return langs[lang].checkMyPermissions
+            end
+        else
+            savelog(chat_id, "[" .. executer .. "] tried to unrestrict user " .. target .. " require higher rank")
+            return langs[get_lang(chat_id)].require_rank
+        end
+    end
+end
+
 -- call this to kick
 function kickUser(executer, target, chat_id, reason, no_notice)
     target = tostring(target):gsub(' ', '')
     if sendChatAction(chat_id, 'typing', true) then
-        if isWhitelisted(id_to_cli(chat_id), target) then
+        if isWhitelisted(chat_id, target) then
             savelog(chat_id, "[" .. executer .. "] tried to kick user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
@@ -1561,8 +1639,8 @@ function kickUser(executer, target, chat_id, reason, no_notice)
 
             if res then
                 -- if the user has been kicked, then...
-                globalCronTable.kickedTable[tostring(chat_id)] = globalCronTable.kickedTable[tostring(chat_id)] or { }
-                globalCronTable.kickedTable[tostring(chat_id)][tostring(target)] = true
+                globalCronTable.punishedTable[tostring(chat_id)] = globalCronTable.punishedTable[tostring(chat_id)] or { }
+                globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
                 savelog(chat_id, "[" .. executer .. "] kicked user " .. target)
                 redis:hincrby('bot:general', 'kick', 1)
                 local obj_chat = getChat(chat_id, true)
@@ -1571,7 +1649,7 @@ function kickUser(executer, target, chat_id, reason, no_notice)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if areNoticesEnabled(target, chat_id) and not no_notice then
-                    io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/')):gsub('"', '\\"') .. '"')
+                    sendMessage(target, langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
                 end
                 return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
                 '\n#user' .. target .. ' #executer' .. executer .. ' #kick ' ..(reason or '')
@@ -1587,7 +1665,7 @@ end
 
 function preBanUser(executer, target, chat_id, reason)
     target = tostring(target):gsub(' ', '')
-    if isWhitelisted(id_to_cli(chat_id), target) then
+    if isWhitelisted(chat_id, target) then
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
         return langs[get_lang(chat_id)].cantKickWhitelisted
     end
@@ -1611,7 +1689,7 @@ end
 function banUser(executer, target, chat_id, reason, until_date, no_notice)
     target = tostring(target):gsub(' ', '')
     if sendChatAction(chat_id, 'typing', true) then
-        if isWhitelisted(id_to_cli(chat_id), target) then
+        if isWhitelisted(chat_id, target) then
             savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " that is whitelisted")
             return langs[get_lang(chat_id)].cantKickWhitelisted
         end
@@ -1619,13 +1697,13 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
             -- try to kick. "code" is already specific
             local res, code = kickChatMember(target, chat_id, until_date, true)
             if res then
-                globalCronTable.kickedTable[tostring(chat_id)] = globalCronTable.kickedTable[tostring(chat_id)] or { }
-                globalCronTable.kickedTable[tostring(chat_id)][tostring(target)] = true
+                -- if the user has been banned, then...
+                globalCronTable.punishedTable[tostring(chat_id)] = globalCronTable.punishedTable[tostring(chat_id)] or { }
+                globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
                 if not tostring(chat_id):starts('-100') then
                     local hash = 'banned:' .. chat_id
                     redis:sadd(hash, tostring(target))
                 end
-                -- if the user has been kicked, then...
                 savelog(chat_id, "[" .. executer .. "] banned user " .. target)
                 redis:hincrby('bot:general', 'ban', 1)
                 -- general: save how many kicks
@@ -1635,7 +1713,7 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if areNoticesEnabled(target, chat_id) and not no_notice then
-                    io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/')):gsub('"', '\\"') .. '"')
+                    sendMessage(target, langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
                 end
                 local tempban = false
                 if until_date then
@@ -1674,7 +1752,7 @@ function unbanUser(executer, target, chat_id, reason, no_notice)
             local res, code = unbanChatMember(target, chat_id)
         end
         if areNoticesEnabled(target, chat_id) and not no_notice then
-            io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(target)].youHaveBeenUnbanned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/')):gsub('"', '\\"') .. '"')
+            sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
         end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
@@ -1712,7 +1790,8 @@ function banList(chat_id)
 end
 
 -- Global ban
-function gbanUser(user_id, lang, no_log, no_notice)
+function gbanUser(user_id, no_log, no_notice)
+    local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     if tonumber(user_id) == tonumber(bot.id) then
         -- Ignore bot
@@ -1729,19 +1808,20 @@ function gbanUser(user_id, lang, no_log, no_notice)
         sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
     end
     if not no_notice then
-        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenGbanned)
+        sendMessage(user_id, langs[lang].youHaveBeenGbanned)
     end
     return langs[lang].user .. user_id .. langs[lang].gbanned
 end
 
 -- Global unban
-function ungbanUser(user_id, lang, no_notice)
+function ungbanUser(user_id, no_notice)
+    local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'gbanned'
     redis:srem(hash, user_id)
     if not no_notice then
-        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUngbanned)
+        sendMessage(user_id, langs[lang].youHaveBeenUngbanned)
     end
     return langs[lang].user .. user_id .. langs[lang].ungbanned
 end
@@ -1755,12 +1835,13 @@ function isGbanned(user_id)
     return gbanned or false
 end
 
-function blockUser(user_id, lang, no_notice)
+function blockUser(user_id, no_notice)
+    local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     if not is_admin2(user_id) then
         redis:sadd('bot:blocked', user_id)
         if not no_notice then
-            sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenBlocked)
+            sendMessage(user_id, langs[lang].youHaveBeenBlocked)
         end
         return langs[lang].userBlocked
     else
@@ -1768,11 +1849,12 @@ function blockUser(user_id, lang, no_notice)
     end
 end
 
-function unblockUser(user_id, lang, no_notice)
+function unblockUser(user_id, no_notice)
+    local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     redis:srem('bot:blocked', user_id)
     if not no_notice then
-        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnblocked)
+        sendMessage(user_id, langs[lang].youHaveBeenUnblocked)
     end
     return langs[lang].userUnblocked
 end
@@ -1789,30 +1871,29 @@ end
 -- Check if user_id is whitelisted or not
 function isWhitelisted(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
-    -- Save on redis
-    local hash = 'whitelist:' .. chat_id
-    local whitelisted = redis:sismember(hash, user_id)
-    return whitelisted or false
+    if data[tostring(chat_id)] then
+        return data[tostring(chat_id)].whitelist.users[tostring(user_id)]
+    end
+    return false
 end
 
 -- Check if user_id is gban whitelisted or not
 function isWhitelistedGban(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
-    -- Save on redis
-    local hash = 'whitelist:gban:' .. chat_id
-    local whitelisted = redis:sismember(hash, user_id)
-    return whitelisted or false
+    if data[tostring(chat_id)] then
+        return data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)]
+    end
+    return false
 end
 
 function getWarn(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            local warn_max = data[tostring(chat_id)].settings.warn_max
-            if not warn_max then
+            if not data[tostring(chat_id)].settings.max_warns then
                 return langs[lang].noWarnSet
             end
-            return langs[lang].warnSet .. warn_max
+            return langs[lang].warnSet .. data[tostring(chat_id)].settings.max_warns .. '\n' .. langs[lang].punishedWith .. reverse_punishments_table[data[tostring(chat_id)].settings.warns_punishment]
         end
     end
     return langs[lang].noWarnSet
@@ -1823,7 +1904,7 @@ function getUserWarns(user_id, chat_id)
     local lang = get_lang(chat_id)
     local hashonredis = redis:get(chat_id .. ':warn:' .. user_id) or 0
     local warn_msg = langs[lang].yourWarnings
-    local warn_chat = data[tostring(chat_id)].settings.warn_max or 0
+    local warn_chat = data[tostring(chat_id)].settings.max_warns or 0
     return string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
 end
 
@@ -1831,7 +1912,7 @@ function warnUser(executer, target, chat_id, reason, no_notice)
     target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local warn_chat = tonumber(data[tostring(chat_id)].settings.warn_max or 0)
+        local warn_chat = tonumber(data[tostring(chat_id)].settings.max_warns or 0)
         redis:incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis:get(chat_id .. ':warn:' .. target)
         if not hashonredis then
@@ -1842,15 +1923,15 @@ function warnUser(executer, target, chat_id, reason, no_notice)
         if tonumber(warn_chat) > 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
-                return banUser(executer, target, chat_id, langs[lang].reasonWarnMax)
+                return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, langs[lang].reasonWarnMax)
             end
             if areNoticesEnabled(target, chat_id) and not no_notice then
-                io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/')):gsub('"', '\\"') .. '"')
+                sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].warned:gsub('X', tostring(hashonredis)) ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #warn ' ..(reason or '')
         else
-            return banUser(executer, target, chat_id, reason)
+            return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, reason)
         end
     else
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " N")
@@ -1870,7 +1951,7 @@ function unwarnUser(executer, target, chat_id, reason, no_notice)
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
             if areNoticesEnabled(target, chat_id) and not no_notice then
-                io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/')):gsub('"', '\\"') .. '"')
+                sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #unwarn ' ..(reason or '')
@@ -1888,7 +1969,7 @@ function unwarnallUser(executer, target, chat_id, reason, no_notice)
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
         if areNoticesEnabled(target, chat_id) and not no_notice then
-            io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/')):gsub('"', '\\"') .. '"')
+            sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
         end
         return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unwarnall ' ..(reason or '')
@@ -1898,50 +1979,173 @@ function unwarnallUser(executer, target, chat_id, reason, no_notice)
     end
 end
 
-function mute(chat_id, msg_type)
-    local lang = get_lang(chat_id)
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)].settings then
-            if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] ~= nil then
-                if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] then
-                    return mutesDictionary[msg_type:lower()] .. langs[lang].alreadyMuted
-                else
-                    data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] = true
-                    save_data(config.moderation.data, data)
-                    return mutesDictionary[msg_type:lower()] .. langs[lang].muted
-                end
+-- begin LOCK/UNLOCK/MUTE/UNMUTE FUNCTIONS
+function lockSetting(target, setting_type, punishment)
+    local lang = get_lang(target)
+    setting_type = groupDataDictionary[setting_type:lower()]
+    if setting_type == 'lock_grouplink' then
+        if data[tostring(target)].lock_grouplink ~= nil then
+            if data[tostring(target)].lock_grouplink then
+                return langs[lang].settingAlreadyLocked
             else
-                return langs[lang].noSuchMuteType
+                data[tostring(target)].lock_grouplink = true
+                save_data(config.moderation.data, data)
+                return langs[lang].settingLocked
+            end
+        else
+            data[tostring(target)].lock_grouplink = true
+            save_data(config.moderation.data, data)
+            return langs[lang].settingLocked
+        end
+    elseif setting_type == 'lock_name' then
+        if data[tostring(target)].lock_name ~= nil then
+            if data[tostring(target)].lock_name then
+                return langs[lang].settingAlreadyLocked
+            else
+                data[tostring(target)].lock_name = true
+                save_data(config.moderation.data, data)
+                return langs[lang].settingLocked
+            end
+        else
+            data[tostring(target)].lock_name = true
+            save_data(config.moderation.data, data)
+            return langs[lang].settingLocked
+        end
+    elseif setting_type == 'lock_photo' then
+        local obj = getChat(target)
+        if type(obj) == 'table' then
+            if obj.photo then
+                data[tostring(target)].photo = obj.photo.big_file_id
+                if data[tostring(target)].lock_photo ~= nil then
+                    if data[tostring(target)].lock_photo then
+                        return langs[lang].settingAlreadyLocked
+                    else
+                        data[tostring(target)].lock_photo = true
+                        save_data(config.moderation.data, data)
+                        return langs[lang].settingLocked
+                    end
+                else
+                    data[tostring(target)].lock_photo = true
+                    save_data(config.moderation.data, data)
+                    return langs[lang].settingLocked
+                end
             end
         end
+    elseif setting_type == 'pmnotices' then
+        if data[tostring(target)].pmnotices ~= nil then
+            if data[tostring(target)].pmnotices then
+                return langs[lang].pmnoticesAlreadyEnabled
+            else
+                data[tostring(target)].pmnotices = true
+                save_data(config.moderation.data, data)
+                return langs[lang].pmnoticesEnabled
+            end
+        else
+            data[tostring(target)].pmnotices = true
+            save_data(config.moderation.data, data)
+            return langs[lang].pmnoticesEnabled
+        end
+    elseif setting_type == 'tagalert' then
+        if data[tostring(target)].tagalert ~= nil then
+            if data[tostring(target)].tagalert then
+                return langs[lang].tagalertGroupAlreadyEnabled
+            else
+                data[tostring(target)].tagalert = true
+                save_data(config.moderation.data, data)
+                return langs[lang].tagalertGroupEnabled
+            end
+        else
+            data[tostring(target)].tagalert = true
+            save_data(config.moderation.data, data)
+            return langs[lang].tagalertGroupEnabled
+        end
+    end
+    if not punishments_table[punishment] then
+        return langs[lang].punishmentNotFound
+    end
+    return setPunishment(target, setting_type, adjust_punishment(setting_type, punishment))
+end
+
+function unlockSetting(target, setting_type)
+    local lang = get_lang(target)
+    setting_type = groupDataDictionary[setting_type:lower()]
+
+    if setting_type == 'pmnotices' then
+        data[tostring(target)][tostring(setting_type)] = false
+        save_data(config.moderation.data, data)
+        return langs[lang].noticesGroupDisabled
+    elseif setting_type == 'tagalert' then
+        data[tostring(target)][tostring(setting_type)] = false
+        save_data(config.moderation.data, data)
+        return langs[lang].tagalertGroupDisabled
+    end
+
+    if data[tostring(target)][tostring(setting_type)] then
+        data[tostring(target)][tostring(setting_type)] = false
+        save_data(config.moderation.data, data)
+        return langs[lang].settingUnlocked
+    else
+        return setPunishment(target, setting_type, false)
     end
 end
 
-function unmute(chat_id, msg_type)
-    local lang = get_lang(chat_id)
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)].settings then
-            if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] ~= nil then
-                if data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] then
-                    data[tostring(chat_id)].settings.mutes[mutesDictionary[msg_type:lower()]] = false
-                    save_data(config.moderation.data, data)
-                    return mutesDictionary[msg_type:lower()] .. langs[lang].unmuted
-                else
-                    return mutesDictionary[msg_type:lower()] .. langs[lang].alreadyUnmuted
-                end
-            else
-                return langs[lang].noSuchMuteType
-            end
-        end
+function showSettings(target, lang)
+    if data[tostring(target)] then
+        local seconds, minutes, hours, days, weeks = unixToDate(data[tostring(target)].settings.time_restrict)
+        local time_restrict = weeks .. langs[lang].weeksWord .. days .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord
+        seconds, minutes, hours, days, weeks = unixToDate(data[tostring(target)].settings.time_ban)
+        local time_ban = weeks .. langs[lang].weeksWord .. days .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord
+
+        local text = langs[lang].groupSettings ..
+        langs[lang].tagalert .. tostring(data[tostring(target)].tagalert) ..
+        langs[lang].pmnotices .. tostring(data[tostring(target)].pmnotices) ..
+        langs[lang].grouplinkLock .. tostring(data[tostring(target)].lock_grouplink) ..
+        langs[lang].nameLock .. tostring(data[tostring(target)].lock_name) ..
+        langs[lang].photoLock .. tostring(data[tostring(target)].lock_photo) ..
+        langs[lang].tempRestrictTime .. tostring(time_restrict) ..
+        langs[lang].tempBanTime .. tostring(time_ban) ..
+        langs[lang].warnSensibility .. tostring(data[tostring(target)].settings.max_warns) ..
+        langs[lang].warnPunishment .. tostring(data[tostring(target)].settings.warns_punishment) ..
+        langs[lang].strictrules .. tostring(data[tostring(target)].settings.strict) ..
+        langs[lang].locksWord ..
+        langs[lang].arabicLock .. tostring(data[tostring(target)].settings.locks.arabic) ..
+        langs[lang].botsLock .. tostring(data[tostring(target)].settings.locks.bots) ..
+        langs[lang].censorshipsLock .. tostring(data[tostring(target)].settings.locks.delword) ..
+        langs[lang].floodLock .. tostring(data[tostring(target)].settings.locks.flood) ..
+        langs[lang].floodSensibility .. tostring(data[tostring(target)].settings.max_flood) ..
+        langs[lang].forwardLock .. tostring(data[tostring(target)].settings.locks.forward) ..
+        langs[lang].gbannedLock .. tostring(data[tostring(target)].settings.locks.gbanned) ..
+        langs[lang].leaveLock .. tostring(data[tostring(target)].settings.locks.leave) ..
+        langs[lang].linksLock .. tostring(data[tostring(target)].settings.locks.links) ..
+        langs[lang].membersLock .. tostring(data[tostring(target)].settings.locks.members) ..
+        langs[lang].rtlLock .. tostring(data[tostring(target)].settings.locks.rtl) ..
+        langs[lang].spamLock .. tostring(data[tostring(target)].settings.locks.spam) ..
+        langs[lang].mutesWord ..
+        langs[lang].allMute .. tostring(data[tostring(target)].settings.mutes.all) ..
+        langs[lang].audiosMute .. tostring(data[tostring(target)].settings.mutes.audios) ..
+        langs[lang].contactsMute .. tostring(data[tostring(target)].settings.mutes.contacts) ..
+        langs[lang].documentsMute .. tostring(data[tostring(target)].settings.mutes.documents) ..
+        langs[lang].gamesMute .. tostring(data[tostring(target)].settings.mutes.games) ..
+        langs[lang].gifsMute .. tostring(data[tostring(target)].settings.mutes.gifs) ..
+        langs[lang].locationsMute .. tostring(data[tostring(target)].settings.mutes.locations) ..
+        langs[lang].photosMute .. tostring(data[tostring(target)].settings.mutes.photos) ..
+        langs[lang].stickersMute .. tostring(data[tostring(target)].settings.mutes.stickers) ..
+        langs[lang].textMute .. tostring(data[tostring(target)].settings.mutes.text) ..
+        langs[lang].tgservicesMute .. tostring(data[tostring(target)].settings.mutes.tgservices) ..
+        langs[lang].videosMute .. tostring(data[tostring(target)].settings.mutes.videos) ..
+        langs[lang].videoNotesMute .. tostring(data[tostring(target)].settings.mutes.video_notes) ..
+        langs[lang].voiceNotesMute .. tostring(data[tostring(target)].settings.mutes.voice_notes)
+        return text
     end
 end
+-- end LOCK/UNLOCK/MUTE/UNMUTE FUNCTIONS
 
 function muteUser(chat_id, user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:sadd(hash, user_id)
     if areNoticesEnabled(user_id, chat_id) and not no_notice then
-        io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(user_id)].youHaveBeenMuted .. database[tostring(chat_id)].print_name):gsub('"', '\\"') .. '"')
+        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenMuted .. database[tostring(chat_id)].print_name)
     end
     return user_id .. langs[lang].muteUserAdd
 end
@@ -1958,24 +2162,9 @@ function unmuteUser(chat_id, user_id, lang, no_notice)
     local hash = 'mute_user:' .. chat_id
     redis:srem(hash, user_id)
     if areNoticesEnabled(user_id, chat_id) and not no_notice then
-        io.popen('lua timework.lua "sendmessage" "1" "' .. target .. '" "nil" "' ..(langs[get_lang(user_id)].youHaveBeenUnmuted .. database[tostring(chat_id)].print_name):gsub('"', '\\"') .. '"')
+        sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnmuted .. database[tostring(chat_id)].print_name)
     end
     return user_id .. langs[lang].muteUserRemove
-end
-
--- Returns chat_id mute list
-function mutesList(chat_id)
-    local lang = get_lang(chat_id)
-    if data[tostring(chat_id)] then
-        if data[tostring(chat_id)].settings then
-            local text = langs[lang].mutedTypesStart .. chat_id .. "\n\n"
-            for k, v in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
-                text = text .. langs[lang].mute .. k .. ': ' .. tostring(v) .. "\n"
-            end
-            text = text .. langs[lang].strictrules .. tostring(data[tostring(chat_id)].settings.strict)
-            return text
-        end
-    end
 end
 
 -- Returns chat_id user mute list

@@ -1,19 +1,23 @@
-﻿local function whitelist_user(tgcli_chat_id, user_id, lang)
-    if isWhitelisted(tgcli_chat_id, user_id) then
-        redis:srem('whitelist:' .. tgcli_chat_id, user_id)
+﻿local function whitelist_user(chat_id, user_id, lang)
+    if isWhitelisted(chat_id, user_id) then
+        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = nil
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
     else
-        redis:sadd('whitelist:' .. tgcli_chat_id, user_id)
+        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = true
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
     end
 end
 
-local function whitegban_user(tgcli_chat_id, user_id, lang)
-    if isWhitelistedGban(tgcli_chat_id, user_id) then
-        redis:srem('whitelist:gban:' .. tgcli_chat_id, user_id)
+local function whitegban_user(chat_id, user_id, lang)
+    if isWhitelistedGban(chat_id, user_id) then
+        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = nil
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
     else
-        redis:sadd('whitelist:gban:' .. tgcli_chat_id, user_id)
+        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = true
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
     end
 end
@@ -49,21 +53,15 @@ local function whitelist_link(chat_id, link)
         end
         -- else
         -- private link
-        if data[tostring(chat_id)] then
-            if data[tostring(chat_id)].settings then
-                if data[tostring(chat_id)].settings.links_whitelist then
-                    for k, v in pairs(data[tostring(chat_id)].settings.links_whitelist) do
-                        if v == link then
-                            -- already whitelisted
-                            data[tostring(chat_id)].settings.links_whitelist[k] = nil
-                            save_data(config.moderation.data, data)
-                            return link .. langs[lang].whitelistLinkRemoved
-                        end
-                    end
-                end
+        for k, v in pairs(data[tostring(chat_id)].whitelist.links) do
+            if v == link then
+                -- already whitelisted
+                data[tostring(chat_id)].whitelist.links[k] = nil
+                save_data(config.moderation.data, data)
+                return link .. langs[lang].whitelistLinkRemoved
             end
         end
-        table.insert(data[tostring(chat_id)].settings.links_whitelist, link)
+        table.insert(data[tostring(chat_id)].whitelist.links, link)
         save_data(config.moderation.data, data)
         return link .. langs[lang].whitelistLinkAdded
     else
@@ -72,7 +70,7 @@ local function whitelist_link(chat_id, link)
 end
 
 local function run(msg, matches)
-    if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+    if data[tostring(chat_id)] then
         if matches[1]:lower() == "whitelist" then
             if msg.reply then
                 if is_owner(msg) then
@@ -81,7 +79,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return whitelist_user(msg.chat.tg_cli_id, msg.reply_to_message.forward_from.id, msg.lang)
+                                    return whitelist_user(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -90,7 +88,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        return whitelist_user(msg.chat.tg_cli_id, msg.reply_to_message.from.id, msg.lang)
+                        return whitelist_user(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                     end
                 else
                     return langs[msg.lang].require_owner
@@ -103,19 +101,19 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    return whitelist_user(msg.chat.tg_cli_id, msg.entities[k].user.id, msg.lang)
+                                    return whitelist_user(msg.chat.id, msg.entities[k].user.id, msg.lang)
                                 end
                             end
                         end
                     end
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
-                        return whitelist_user(msg.chat.tg_cli_id, matches[2], msg.lang)
+                        return whitelist_user(msg.chat.id, matches[2], msg.lang)
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return whitelist_user(msg.chat.tg_cli_id, obj_user.id, msg.lang)
+                                return whitelist_user(msg.chat.id, obj_user.id, msg.lang)
                             end
                         else
                             return langs[msg.lang].noObject
@@ -127,9 +125,8 @@ local function run(msg, matches)
                 end
             else
                 mystat('/whitelist')
-                local list = redis:smembers('whitelist:' .. msg.chat.tg_cli_id)
                 local text = langs[msg.lang].whitelistStart .. msg.chat.title .. '\n'
-                for k, v in pairs(list) do
+                for k, v in pairs(data[tostring(chat_id)].whitelist.users) do
                     local user_info = redis:hgetall('user:' .. v)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
@@ -149,7 +146,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return whitegban_user(msg.chat.tg_cli_id, msg.reply_to_message.forward_from.id, msg.lang)
+                                    return whitegban_user(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -158,7 +155,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        return whitegban_user(msg.chat.tg_cli_id, msg.reply_to_message.from.id, msg.lang)
+                        return whitegban_user(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
                     end
                 else
                     return langs[msg.lang].require_owner
@@ -171,19 +168,19 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    return whitegban_user(msg.chat.tg_cli_id, msg.entities[k].user.id, msg.lang)
+                                    return whitegban_user(msg.chat.id, msg.entities[k].user.id, msg.lang)
                                 end
                             end
                         end
                     end
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
-                        return whitegban_user(msg.chat.tg_cli_id, matches[2], msg.lang)
+                        return whitegban_user(msg.chat.id, matches[2], msg.lang)
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return whitegban_user(msg.chat.tg_cli_id, obj_user.id, msg.lang)
+                                return whitegban_user(msg.chat.id, obj_user.id, msg.lang)
                             end
                         else
                             return langs[msg.lang].noObject
@@ -195,9 +192,8 @@ local function run(msg, matches)
                 end
             else
                 mystat('/whitelistgban')
-                local list = redis:smembers('whitelist:gban:' .. msg.chat.tg_cli_id)
                 local text = langs[msg.lang].whitelistGbanStart .. msg.chat.title .. '\n'
-                for k, v in pairs(list) do
+                for k, v in pairs(data[tostring(chat_id)].whitelist.gbanned) do
                     local user_info = redis:hgetall('user:' .. v)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
@@ -220,18 +216,14 @@ local function run(msg, matches)
             else
                 mystat('/whitelistlink')
                 local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
-                if data[tostring(msg.chat.id)] then
-                    if data[tostring(msg.chat.id)].settings then
-                        if data[tostring(msg.chat.id)].settings.links_whitelist then
-                            for k, v in pairs(data[tostring(msg.chat.id)].settings.links_whitelist) do
-                                text = text .. k .. ". " .. v .. "\n"
-                            end
-                        end
-                    end
+                for k, v in pairs(data[tostring(chat_id)].whitelist.links) do
+                    text = text .. k .. ". " .. v .. "\n"
                 end
                 return text
             end
         end
+    else
+        return langs[msg.lang].useYourGroups
     end
 end
 

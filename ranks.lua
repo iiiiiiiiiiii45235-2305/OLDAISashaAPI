@@ -231,8 +231,8 @@ function is_owner(param_msg, check_local)
     end
 
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['set_owner'] then
-            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
+        if data[tostring(chat_id)].owner then
+            if data[tostring(chat_id)].owner == tostring(user_id) then
                 -- owner
                 var = true
             end
@@ -278,8 +278,8 @@ function is_owner2(user_id, chat_id, check_local, no_log)
     end
 
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['set_owner'] then
-            if data[tostring(chat_id)]['set_owner'] == tostring(user_id) then
+        if data[tostring(chat_id)].owner then
+            if data[tostring(chat_id)].owner == tostring(user_id) then
                 -- owner
                 var = true
             end
@@ -331,8 +331,8 @@ function is_mod(param_msg, check_local)
     end
 
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['moderators'] then
-            if data[tostring(chat_id)]['moderators'][tostring(user_id)] then
+        if data[tostring(chat_id)].moderators then
+            if data[tostring(chat_id)].moderators[tostring(user_id)] then
                 -- mod
                 var = true
             end
@@ -387,8 +387,8 @@ function is_mod2(user_id, chat_id, check_local, no_log)
     end
 
     if data[tostring(chat_id)] then
-        if data[tostring(chat_id)]['moderators'] then
-            if data[tostring(chat_id)]['moderators'][tostring(user_id)] then
+        if data[tostring(chat_id)].moderators then
+            if data[tostring(chat_id)].moderators[tostring(user_id)] then
                 -- mod
                 var = true
             end

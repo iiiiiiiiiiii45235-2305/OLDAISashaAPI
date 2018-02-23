@@ -221,6 +221,8 @@ return {
         opsError = "Ops, errore.",
         useYourGroups = "Usalo nei tuoi gruppi!",
         user = "Utente ",
+        restricted = " limitato.",
+        unrestricted = " liberato dalle limitazioni.",
         kicked = " kickato.",
         banned = " bannato.",
         unbanned = " unbannato.",
@@ -458,6 +460,7 @@ return {
         noUsernameFound = "Non trovo nessun utente con quell'username.",
         massacre = "Massacro => X",
         cantKickWhitelisted = "Non posso kickare un utente in whitelist.",
+        cantRestrictWhitelisted = "Non posso limitare un utente in whitelist.",
         badLuck = "Sfortuna.",
         kickinactiveWarning = "Comando disattivato.\nE' ASSOLUTAMENTE SCONSIGLIATO utilizzare questo comando con @AISasha su gruppi con membri >= 200.",
         restrictionsOf = "Limitazioni di X in Y:",
@@ -468,7 +471,6 @@ return {
         restrictionSendMediaMessages = "\nPuò inviare audio, documenti, foto, video, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nPuò inviare gifs, giochi, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nPuò aggiungere anteprime di pagine web: ",
-        userUnrestricted = "Utente non limitato.",
         tempBanIntro = "\nPuoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:\n",
         errorBanhammerTimeRange = "Errore, il valore non può essere negativo.",
         forever = "∞",
@@ -489,6 +491,8 @@ return {
         -- check_tag.lua --
         tagalertGroupEnabled = "Tagalert abilitato su questo gruppo.",
         tagalertGroupDisabled = "Tagalert disabilitato su questo gruppo.",
+        tagalertGroupAlreadyEnabled = "Tagalert già abilitato su questo gruppo.",
+        tagalertGroupAlreadyDisabled = "Tagalert già disabilitato su questo gruppo.",
         tagalertUserRegistered = "Registrazione a tagalert effettuata.",
         tagalertUserUnregistered = "Deregistrazione a tagalert effettuata.",
         tagalertNicknameSet = "Nickname alternativo impostato.",
@@ -506,8 +510,8 @@ return {
         repliedToMessage = "Ho risposto a quel messaggio.",
         whatDoYouWantToDo = "Cosa vuoi fare?",
         nowSetNickname = "Ora puoi impostare un nickname (solitamente il nome con cui ti chiamano su telegram senza taggarti) con /setnickname {nickname} per ricevere le notifiche quando vieni citato senza tag.",
-        noticesGroupEnabled = "Avvisi in privato per le azioni su questo gruppo abilitati.",
-        noticesGroupDisabled = "Avvisi in privato per le azioni su questo gruppo disabilitati.",
+        noticesGroupEnabled = "Avvisi in privato per le azioni su utenti di questo gruppo abilitati.",
+        noticesGroupDisabled = "Avvisi in privato per le azioni su utenti di questo gruppo disabilitati.",
         noticesGroupAlreadyEnabled = "Avvisi su questo gruppo già abilitati.",
         noticesGroupAlreadyDisabled = "Avvisi su questo gruppo già disabilitati.",
         noticesUserRegistered = "Registrazione effettuata per le azioni di cui sei bersaglio, verrai avvisato in privato ogni volta che sarai il bersaglio di un comando che ha conseguenze sulla tua permanenza in un gruppo.",
@@ -645,28 +649,58 @@ return {
         noSetValue = "Nessun valore impostato.",
 
         -- group_management.lua --
+        gotoLocks = "GOTO LOCKS 🔐",
+        gotoMutes = "GOTO MUTES 🔇",
+        locksWord = "🔐 BLOCCHI 🔐",
+        mutesWord = "🔇 MUTI 🔇",
         -- locks --
         settingAlreadyLocked = "Blocco già attivato.",
         settingLocked = "Blocco attivato.",
-        settingAlreadyUnlocked = "Blocco già disattivato.",
         settingUnlocked = "Blocco disattivato.",
         alreadyMuted = " già silenziato.",
         muted = " silenziato.",
         alreadyUnmuted = " già desilenziato.",
         unmuted = " desilenziato.",
+        tagalert = '\nTagalert: ',
+        pmnotices = '\nAvvisi in privato: ',
+        grouplinkLock = "\nBlocco link del gruppo: ",
+        nameLock = "\nBlocco nome del gruppo: ",
+        photoLock = "\nBlocco foto del gruppo: ",
+        tempRestrictTime = "\nDurata temprestrict: ",
+        tempBanTime = "\nDurata tempban: ",
         arabicLock = "\nBlocco arabo: ",
         botsLock = "\nBlocco bots: ",
         censorshipsLock = "\nBlocco censure: ",
         floodLock = "\nBlocco flood: ",
         floodSensibility = "\nSensibilità flood: ",
-        grouplinkLock = "\nBlocco link gruppo: ",
+        forwardLock = "\nBlocco messaggi inoltrati (canali): ",
+        gbannedLock = "\nBlocco utenti bannati globalmente: ",
         leaveLock = "\nBlocco abbandono: ",
         linksLock = "\nBlocco link: ",
         membersLock = "\nBlocco membri: ",
         rtlLock = "\nBlocco RTL: ",
         spamLock = "\nBlocco spam: ",
+        allMute = "\nMuto totale: ",
+        audiosMute = "\nMuto audio: ",
+        contactsMute = "\nMuto contatti: ",
+        documentsMute = "\nMuto files: ",
+        gamesMute = "\nMuto giochi: ",
+        gifsMute = "\nMuto gifs: ",
+        locationsMute = "\nMuto posizioni: ",
+        photosMute = "\nMuto foto: ",
+        stickersMute = "\nMuto stickers: ",
+        textMute = "\nMuto testo: ",
+        tgservicesMute = "\nMuto tgservices: ",
+        videosMute = "\nMuto video: ",
+        videoNotesMute = "\nMute note video: ",
+        voiceNotesMute = "\nMute note vocali: ",
         strictrules = "\nPugno di ferro: ",
         warnSensibility = "\nAvvertimenti massimi: ",
+        warnPunishment = "\nPunizione al raggiungimento di max_warns: ",
+        settingNotFound = "Impostazione non trovata.",
+        punishmentNotFound = "Punizione non trovata.",
+        nowWillBePunishedWith = " sarà punito con ",
+        punishment = "Punizione: ",
         noSuchMuteType = "Nessun muto applicabile sulla variabile specificata.",
         mutesOf = "Muti di ",
         sendSettingsPvt = "Ti ho mandato le impostazioni in <a href=\"" .. bot.link .. "\">privato</a>.",
@@ -714,7 +748,7 @@ return {
         cantContact = "Se non mi scrive per primo/a non posso contattare ",
         groupInfoUpdated = "Nome gruppo e moderatori aggiornati.",
         modListSynced = "Lista moderatori sincronizzata con quella di telegram.",
-        locksIntro = "Legenda blocchi:\n✅ Blocco attivato\n☑️ Blocco disattivato\n",
+        settingsIntro = "Legenda impostazioni:\n✅ Bloccato\n☑️ Sbloccato\n🆗 Nessuna punizione\n🗑 Eliminazione\n⚠️ Avvertimento\n📴 Limitazione\n👟 Kick\n🚫 Ban\n⏳ Punizione temporanea",
         checkMyPermissions = "Errore, controlla i miei permessi.",
         promoteModAdmin = " è stato promosso a moderatore e amministratore di telegram con i permessi specificati.",
         demoteModAdmin = " è stato degradato da moderatore e amministratore di telegram.",
@@ -888,6 +922,45 @@ return {
         -- use @AISasha
         useAISasha = "Comando disattivato.\nUsa il comando taggando @AISasha in questo modo\n@AISasha <command>",
 
+        -- settings dictionary
+        settingsDictionary =
+        {
+            ["pmnotices"] = "Avvisi in privato agli utenti quando sono bersagli di svariati comandi.",
+            ["tagalert"] = "Notifiche dei tag agli utenti.",
+            ["lock_grouplink"] = "Rendi il link del gruppo privato o pubblico.",
+            ["lock_name"] = "Previeni cambiamenti al nome del gruppo.",
+            ["lock_photo"] = "Previeni cambiamenti alla foto del gruppo.",
+            ["arabic"] = "Blocca caratteri arabi (punizione minima delete).",
+            ["bots"] = "Blocca l'aggiunta dei bot (punizione minima temprestrict).",
+            ["delword"] = "Punizione in caso vengano inviate cose censurate (punizione minima delete).",
+            ["flood"] = "Blocco del flood (punizione minima warn).",
+            ["forward"] = "Blocco dei messaggi inoltrati da canali (punizione minima delete).",
+            ["gbanned"] = "Blocco degli utenti bannati globalmente (punizione minima restrict).",
+            ["leave"] = "Punizione in caso di abbandono del gruppo (punizione minima temprestrict).",
+            ["links"] = "Blocco dei link non in whitelist (punizione minima delete).",
+            ["members"] = "Punizione per gli utenti che entrano nel gruppo (punizione minima temprestrict).",
+            ["rtl"] = "Blocco dei caratteri right to left (punizione minima delete).",
+            ["spam"] = "Blocco dei messaggi con più di 2048 caratteri o con più di 40 caratteri non stampabili o di nomi con più di 70 caratteri (punizione minima delete).",
+            ["max_flood"] = "Massimo numero di messaggi in 2 secondi.",
+            ["max_warns"] = "Massimo numero di avvertimenti.",
+            ["all"] = "Eliminazione di ogni messaggio (punizione minima delete).",
+            ["audios"] = "Eliminazione di ogni audio (punizione minima delete).",
+            ["contacts"] = "Eliminazione di ogni contatto (punizione minima delete).",
+            ["documents"] = "Eliminazione di ogni file (punizione minima delete).",
+            ["games"] = "Eliminazione di ogni gioco (punizione minima delete).",
+            ["gifs"] = "Eliminazione di ogni gif (punizione minima delete).",
+            ["locations"] = "Eliminazione di ogni posizione (punizione minima delete).",
+            ["photos"] = "Eliminazione di ogni foto (punizione minima delete).",
+            ["stickers"] = "Eliminazione di ogni sticker (punizione minima delete).",
+            ["text"] = "Eliminazione di ogni messaggio di testo (punizione minima delete).",
+            ["tgservices"] = "Eliminazione di ogni messaggio di servizio di telegram (utenti che entrano ed escono) (solo delete).",
+            ["videos"] = "Eliminazione di ogni video (punizione minima delete).",
+            ["video_notes"] = "Eliminazione di ogni nota video (punizione minima delete).",
+            ["voice_notes"] = "Eliminazione di ogni nota vocale (punizione minima delete).",
+            ["strict"] = "Innalzamento punizioni temporanee a permanenti.",
+            ["warns_punishment"] = "Punizione al raggiungimento degli warn massimi (punizione minima temprestrict).",
+        },
+
         -- errors
         errors =
         {
@@ -909,12 +982,11 @@ return {
         .. "<code>/faq9</code> tagalert @AISasha.\n"
         .. "<code>/faq10</code> impostazioni gruppo divise tra i due bot.\n"
         .. "<code>/faq11</code> significato impostazioni.\n"
-        .. "<code>/faq12</code> significato muti.\n"
-        .. "<code>/faq13</code> ruleta @AISashaBot.\n"
-        .. "<code>/faq14</code> api_patch.\n"
-        .. "<code>/faq15</code> spam @AISashaBot.\n"
-        .. "<code>/faq16</code> significato permessi.\n"
-        .. "<code>/faq17</code> significato limitazioni.\n",
+        .. "<code>/faq12</code> ruleta @AISashaBot.\n"
+        .. "<code>/faq13</code> api_patch.\n"
+        .. "<code>/faq14</code> spam @AISashaBot.\n"
+        .. "<code>/faq15</code> significato permessi.\n"
+        .. "<code>/faq16</code> significato limitazioni.\n",
         faq =
         {
             [0] = "FAQ Inesistente.",
@@ -955,17 +1027,20 @@ return {
             .. "Bots => Altri bot.\n"
             .. "Delword => Se abilitato aggiunge uno warn all'utente, se Strict è attivato l'utente viene bannato.\n"
             .. "Flood => N messaggi in 2 secondi.\n"
+            .. "Forward => Messages from channels not in the whitelist.\n"
+            .. "Gbanned => Globally banned users.\n"
             .. "Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n"
             .. "Leave => Abbandono del gruppo.\n"
             .. "Link => Link di altri gruppi/canali, se Strict è attivato anche messaggi inoltrati e username.\n"
             .. "Member => Entrata di nuovi membri.\n"
             .. "Name => Nome del gruppo.\n"
             .. "Photo => Foto del gruppo.\n"
+            .. "PMnotices => Notices in private to users.\n"
             .. "RTL => Caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n"
             .. "Spam => Messaggio più lungo di 2048 caratteri o con più di 40 caratteri non stampabili oppure nomi più lunghi di 70 caratteri o con più di 40 caratteri non stampabili.\n"
-            .. "Strict => Aumento di \"pena\" da kick a ban.\n",
-            [12] = "D: Cosa significano i muti?\n"
-            .. "R: All => Tutto.\n"
+            .. "Strict => Aumento delle punizioni temporanee a permanenti.\n"
+            .. "Tagalert => Tag alerts to users.\n"
+            .. "All => Tutto.\n"
             .. "Audio => Audio (non note vocali).\n"
             .. "Contact => Contatti.\n"
             .. "Document => Documenti generici (qualsiasi file inviato come tale).\n"
@@ -979,20 +1054,20 @@ return {
             .. "Video => Video (non video messaggi).\n"
             .. "Video_note => Video messaggi.\n"
             .. "Voice_note => Note vocali.\n",
-            [13] = "D: Perchè non porti ruleta anche su @AISashaAPI?\n"
+            [12] = "D: Perchè non porti ruleta anche su @AISashaAPI?\n"
             .. "R: Perchè sono sicuro al 90% che il numero di kick sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
-            [14] = "D: Cos'è l'api_patch?\n"
+            [13] = "D: Cos'è l'api_patch?\n"
             .. "R: L'api_patch è una modalità di utilizzo di @AISasha che dà la giusta integrazione con @AISashaBot senza creare confusione.",
-            [15] = "D: Perchè spam su @AISashaAPI è per soli admin?\n"
+            [14] = "D: Perchè spam su @AISashaAPI è per soli admin?\n"
             .. "R: Perchè sono sicuro al 90% che il numero di messaggi inviati sarebbe talmente alto da violare i limiti imposti da telegram causando così malfunzionamenti.",
-            [16] = "D: Cosa significano i permessi?\n"
+            [15] = "D: Cosa significano i permessi?\n"
             .. "R: Change_info => Cambiare info come nome gruppo, foto e altre impostazioni.\n"
             .. "Delete_messages => Eliminare messaggi di altri utenti.\n"
             .. "Invite_users => Invitare utenti tramite link.\n"
             .. "Restrict_members => Limitare, bannare o sbannare membri.\n"
             .. "Pin_messages => Fissare messaggi.\n"
             .. "Promote_members => Promuovere amministratori con gli stessi permessi o inferiori.\n",
-            [17] = "D: Cosa significano le limitazioni?\n"
+            [16] = "D: Cosa significano le limitazioni?\n"
             .. "R: Send_messages => Inviare ogni tipo di messaggio.\n"
             .. "Send_media_messages => Inviare audio, documenti, foto, video, video_notes, voice_notes.\n"
             .. "Send_other_messages => Inviare gifs, giochi, stickers, inline bots.\n"
@@ -1025,9 +1100,9 @@ return {
             "<b>REGNO</b>",
             "<code>/setgpowner {group_id} {user_id}</code>: Sasha imposta {user_id} come proprietario di {group_id}.",
             "<code>/setrules {group_id} {text}</code>: Sasha cambia le regole di {group_id} in {text}.",
-            "<code>/[un]lock {group_id} {setting}</code>: Sasha [s]blocca {setting} in {group_id}.",
+            "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha blocca/muta {setting} con {punishment}.",
+            "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha sblocca/smuta {setting}.",
             "<code>/[textual]settings {group_id}</code>: Sasha manda le impostazioni di {group_id}.",
-            "<code>/[un]mute {group_id} {mute}</code>: Sasha [s]muta {mute} in {group_id}.",
             "<code>/[textual]muteslist {group_id}</code>: Sasha manda la lista dei muti di {group_id}.",
             "<code>/rem {group_id}</code>: Sasha rimuove il gruppo.",
             "<b>SUDO</b>",
@@ -1301,10 +1376,10 @@ return {
             "<code>/setwarn {value}</code>: Sasha imposta gli avvertimenti massimi a {value}, se zero gli avvertimenti non funzioneranno più.",
             "<code>/newlink</code>: Sasha crea un link per il gruppo.",
             "<code>/setflood {value}</code>: Sasha imposta il flood massimo del gruppo a {value}.",
-            "<code>/[un]lock {setting}</code>: Sasha [s]blocca {setting}.",
-            "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|grouplink|leave|link|member|name|photo|rtl|spam|strict</code>.",
-            "<code>/[un]mute {mute}</code>: Sasha [s]muta {mute}.",
-            "<code>{mute}</code> può essere: <code>all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note</code>.",
+            "<code>/lock|/mute {setting} {punishment}</code>: Sasha blocca/muta {setting} con {punishment}.",
+            "<code>/unlock|/unmute {setting}</code>: Sasha sblocca/smuta {setting}.",
+            "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
+            "<code>{punishment}</code> può essere: <code>nothing|delete|warn|temprestrict|restrict|kick|tempban|ban</code>.",
             "<b>SUPERGRUPPO</b>",
             "<code>/[silent]pin {reply}</code>: Sasha fissa [silenziosamente] {reply}.",
             "<code>/unpin</code>: Sasha stacca il messaggio fissato.",
@@ -1625,6 +1700,8 @@ return {
         opsError = "Ops, error.",
         useYourGroups = "Use it in your groups!",
         user = "User ",
+        restricted = " restricted.",
+        unrestricted = " unrestricted.",
         kicked = " kicked.",
         banned = " banned.",
         unbanned = " unbanned.",
@@ -1745,10 +1822,6 @@ return {
         mutedTypesStart = "Mutes of: ",
         mute = "Mute ",
         mutesSet = "Mutes set.",
-        alreadyEnabled = " already enabled.",
-        enabled = " enabled.",
-        alreadyDisabled = " already disabled.",
-        disabled = " disabled",
         noAutoKick = "You can't kick yourself.",
         noAutoBan = "You can't ban yourself.",
         errorWarnRange = "Error, range is [0-10].",
@@ -1870,7 +1943,8 @@ return {
         -- banhammer.lua --
         noUsernameFound = "Can't find a user with that username.",
         massacre = "Massacre => X",
-        cantKickWhitelisted = "Can't kick a whitelisted user.",
+        cantKickWhitelisted = "I can't kick a whitelisted user.",
+        cantRestrictWhitelisted = "I can't restrict a whitelisted user.",
         badLuck = "Bad luck.",
         kickinactiveWarning = "Deactivated command.\nIt is STRONGLY SUGGESTED NOT TO USE this command with @AISasha in groups with members >= 200.",
         restrictionsOf = "Restrictions of X in Y:",
@@ -1881,7 +1955,6 @@ return {
         restrictionSendMediaMessages = "\nCan send audios, documents, photos, videos, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nCan send gifs, games, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nCan add web page previews: ",
-        userUnrestricted = "User unrestricted.",
         tempBanIntro = "\nYou can temporary ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be banned forever.\nTime keyboard:\n",
         errorBanhammerTimeRange = "Error, the value can't be negative.",
         forever = "∞",
@@ -1902,6 +1975,8 @@ return {
         -- check_tag.lua --
         tagalertGroupEnabled = "Tagalert enabled on this group.",
         tagalertGroupDisabled = "Tagalert disabled on this group.",
+        tagalertGroupAlreadyEnabled = "Tagalert already enabled on this group.",
+        tagalertGroupAlreadyDisabled = "Tagalert already disabled on this group.",
         tagalertUserRegistered = "Registration to tagalert completed.",
         tagalertUserUnregistered = "Unregistration to tagalert completed.",
         tagalertNicknameSet = "Alternative nickname set.",
@@ -1918,10 +1993,10 @@ return {
         repliedToMessage = "I've replied to that message.",
         whatDoYouWantToDo = "What do you want to do?",
         nowSetNickname = "Now you can set a nickname (usually the name users use when talking to you) with /setnickname {nickname} to receive notification even when not mentioned with tags.",
-        noticesGroupEnabled = "Private notices for the actions that target in this group are enabled.",
-        noticesGroupDisabled = "Private notices for the actions that target in this group are disabled.",
-        noticesGroupAlreadyEnabled = "Private notices for the actions that target in this group are already enabled.",
-        noticesGroupAlreadyDisabled = "Private notices for the actions that target in this group are already disabled.",
+        noticesGroupEnabled = "Private notices for the actions that target users in this group are enabled.",
+        noticesGroupDisabled = "Private notices for the actions that target users in this group are disabled.",
+        noticesGroupAlreadyEnabled = "Private notices for the actions that target users in this group are already enabled.",
+        noticesGroupAlreadyDisabled = "Private notices for the actions that target users in this group are already disabled.",
         noticesUserRegistered = "Registration to private notices completed, you will know everytime you will be a target of a command that has concequences on your permanence on a group.",
         noticesUserUnregistered = "Unregistration to private notices completed.",
         userAlreadyRegistered = "Already registered.",
@@ -2057,30 +2132,60 @@ return {
         noSetValue = "No value set.",
 
         -- group_management.lua --
+        gotoLocks = "GOTO LOCKS 🔐",
+        gotoMutes = "GOTO MUTES 🔇",
+        locksWord = "🔐 LOCKS 🔐",
+        mutesWord = "🔇 MUTES 🔇",
         -- locks --
         settingAlreadyLocked = "Setting already locked.",
         settingLocked = "Setting locked.",
-        settingAlreadyUnlocked = "Setting already unlocked.",
         settingUnlocked = "Setting unlocked.",
         alreadyMuted = " already muted.",
         muted = " muted.",
         alreadyUnmuted = " already unmuted.",
         unmuted = " unmuted.",
+        tagalert = '\nTagalert: ',
+        pmnotices = '\nPM notices: ',
+        grouplinkLock = "\nLock group's link: ",
+        nameLock = "\nLock group's name: ",
+        photoLock = "\nLock group's photo: ",
+        tempRestrictTime = "\nTemprestrict duration: ",
+        tempBanTime = "\nTempban duration: ",
         arabicLock = "\nLock arabic: ",
         botsLock = "\nLock bots: ",
         censorshipsLock = "\nLock censorships: ",
         floodLock = "\nLock flood: ",
         floodSensibility = "\nFlood sensibility: ",
-        grouplinkLock = "\nLock link group: ",
+        forwardLock = "\nLock forwarded messages from channels: ",
+        gbannedLock = "\nLock gbanned users: ",
         leaveLock = "\nLock leave: ",
         linksLock = "\nLock links: ",
         membersLock = "\nLock members: ",
         rtlLock = "\nLock RTL: ",
         spamLock = "\nLock spam: ",
-        strictrules = "\nStrict rules: ",
+        allMute = "\nMute all: ",
+        audiosMute = "\nMute audios: ",
+        contactsMute = "\nMute contacts: ",
+        documentsMute = "\nMute documents: ",
+        gamesMute = "\nMute games: ",
+        gifsMute = "\nMute gifs: ",
+        locationsMute = "\nMute locations: ",
+        photosMute = "\nMute photos: ",
+        stickersMute = "\nMute stickers: ",
+        textMute = "\nMute text: ",
+        tgservicesMute = "\nMute tgservices: ",
+        videosMute = "\nMute videos: ",
+        videoNotesMute = "\nMute video notes: ",
+        voiceNotesMute = "\nMute voice notes: ",
         warnSensibility = "\nMax warns: ",
+        warnPunishment = "\nPunishment when max_warns is reached: ",
+        strictrules = "\nStrict rules: ",
+        settingNotFound = "Setting not found.",
+        punishmentNotFound = "Punishment not found.",
+        nowWillBePunishedWith = " will be punished with ",
         noSuchMuteType = "No mute applicable to the specified variable.",
         mutesOf = "Mutes of ",
+        punishment = "Punishment: ",
         sendSettingsPvt = "I've sent you the settings in <a href=\"" .. bot.link .. "\">private</a>.",
         sendMutesPvt = "I've sent you the mutes in <a href=\"" .. bot.link .. "\">private</a>.",
         sendLogPvt = "I've sent you the log in <a href=\"" .. bot.link .. "\">private</a>.",
@@ -2124,7 +2229,7 @@ return {
         cantContact = "If (s)he doesn't write me first I can't contact ",
         groupInfoUpdated = "Group name and mods updated.",
         modListSynced = "Modlist synced with telegram's one.",
-        locksIntro = "Locks' legend:\n✅ Locked\n☑️ Unlocked\n",
+        settingsIntro = "Settings' legend:\n✅ Locked\n☑️ Unlocked\n🆗 Not punished\n🗑 Deletion\n⚠️ Warning\n📴 Restriction\n👟 Kick\n🚫 Ban\n⏳ Temporary punishment",
         checkMyPermissions = "Error, check my permissions.",
         promoteModAdmin = " promoted to moderator and telegram's administrator with the specified permissions.",
         demoteModAdmin = " demoted from moderator and telegram's administrator.",
@@ -2307,6 +2412,45 @@ return {
         -- use @AISasha
         useAISasha = "Deactivated command.\nUse the commmand tagging @AISasha in this way\n@AISasha <command>",
 
+        -- settings dictionary
+        settingsDictionary =
+        {
+            ["pmnotices"] = "PM notices of actions targeting users.",
+            ["tagalert"] = "Tags notifications to users.",
+            ["lock_grouplink"] = "Make group's link private or public.",
+            ["lock_name"] = "Prevent group's name changes.",
+            ["lock_photo"] = "Prevent group's photo changes.",
+            ["arabic"] = "Block of arabic characters (minimum punishment delete).",
+            ["bots"] = "Punishment of adding bots (minimum punishment temprestrict).",
+            ["delword"] = "Punishment of writing something censored (minimum punishment delete).",
+            ["flood"] = "Block of flood (minimum punishment warn).",
+            ["forward"] = "Block of forwarded messages from channels (minimum punishment delete).",
+            ["gbanned"] = "Block of globally banned users (minimum punishment restrict).",
+            ["leave"] = "Punishment to users leaving the group (minimum punishment temprestrict).",
+            ["links"] = "Block of links of other groups that are not in the whitelist (minimum punishment delete).",
+            ["members"] = "Punishment to users joining the group (minimum punishment temprestrict).",
+            ["rtl"] = "Block of characters right to left (minimum punishment delete).",
+            ["spam"] = "Block of messages with more than 2048 characters or with more than 40 non-printable characters or users with more than 70 characters in the name (minimum punishment delete).",
+            ["max_flood"] = "Maximum number of messages every 2 seconds.",
+            ["max_warns"] = "Maximum number of warns.",
+            ["all"] = "Deletion of every message (minimum punishment delete).",
+            ["audios"] = "Deletion of every audio (minimum punishment delete).",
+            ["contacts"] = "Deletion of every contact (minimum punishment delete).",
+            ["documents"] = "Deletion of every file (minimum punishment delete).",
+            ["games"] = "Deletion of every game (minimum punishment delete).",
+            ["gifs"] = "Deletion of every gif (minimum punishment delete).",
+            ["locations"] = "Deletion of every location (minimum punishment delete).",
+            ["photos"] = "Deletion of every photo (minimum punishment delete).",
+            ["stickers"] = "Deletion of every sticker (minimum punishment delete).",
+            ["text"] = "Deletion of every text message (minimum punishment delete).",
+            ["tgservices"] = "Deletion of every message of service of telegram (users that join and leave and adds) (delete only).",
+            ["videos"] = "Deletion of every video (minimum punishment delete).",
+            ["video_notes"] = "Deletion of every video note (minimum punishment delete).",
+            ["voice_notes"] = "Deletion of every voice note (minimum punishment delete).",
+            ["strict"] = "Increasing of temporary punishments to permanent.",
+            ["warns_punishment"] = "Punishment of reaching the maximum number of warns (minimum punishment temprestrict).",
+        },
+
         -- errors
         errors =
         {
@@ -2328,12 +2472,11 @@ return {
         .. "<code>/faq9</code> tagalert @AISasha.\n"
         .. "<code>/faq10</code> group settings divided between the bots.\n"
         .. "<code>/faq11</code> settings meaning.\n"
-        .. "<code>/faq12</code> mutes meaning.\n"
-        .. "<code>/faq13</code> ruleta @AISashaBot.\n"
-        .. "<code>/faq14</code> api_patch.\n"
-        .. "<code>/faq15</code> spam @AISashaBot.\n"
-        .. "<code>/faq16</code> permissions meaning.\n"
-        .. "<code>/faq17</code> restrictions meaning.\n",
+        .. "<code>/faq12</code> ruleta @AISashaBot.\n"
+        .. "<code>/faq13</code> api_patch.\n"
+        .. "<code>/faq14</code> spam @AISashaBot.\n"
+        .. "<code>/faq15</code> permissions meaning.\n"
+        .. "<code>/faq16</code> restrictions meaning.\n",
         faq =
         {
             [0] = "No such FAQ.",
@@ -2374,44 +2517,47 @@ return {
             .. "Bots => Other bots.\n"
             .. "Delword => If enabled adds a warn to the user, if Strict is enabled the user is banned.\n"
             .. "Flood => N messages in 2 seconds.\n"
+            .. "Forward => Messages from channels not in the whitelist.\n"
+            .. "Gbanned => Globally banned users.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
             .. "Leave => Group leave.\n"
-            .. "Link => Other groups'/channels' links, if Strict is enabled also forwarded messages and usernames.\n"
-            .. "Member => New members.\n"
+            .. "Links => Other groups'/channels' links, if Strict is enabled also forwarded messages and usernames.\n"
+            .. "Members => New members.\n"
             .. "Name => Group's name.\n"
             .. "Photo => Group's photo.\n"
+            .. "PMnotices => Notices in private to users.\n"
             .. "RTL => Right to left characters (those that reverse messages).\n"
             .. "Spam => Message longer than 2048 characters or with more than 40 non-printable characters or names longer than 70 characters or with more than 40 non-printable characters.\n"
-            .. "Strict => Increase punishment from kick to ban.\n",
-            [12] = "D: What do mutes mean?\n"
-            .. "R: All => Everything.\n"
-            .. "Audio => Audios (not voice notes).\n"
-            .. "Contact => Contacts.\n"
-            .. "Document => Generic documents (everything sent as a file).\n"
-            .. "Game => Inline games.\n"
-            .. "Gif => Gifs.\n"
-            .. "Location => Positions.\n"
-            .. "Photo => Photos.\n"
-            .. "Sticker => Stickers.\n"
+            .. "Strict => Increase from temporary to permanent punishments.\n"
+            .. "Tagalert => Tag alerts to users.\n"
+            .. "All => Everything.\n"
+            .. "Audios => Audios (not voice notes).\n"
+            .. "Contacts => Contacts.\n"
+            .. "Documents => Generic documents (everything sent as a file).\n"
+            .. "Games => Inline games.\n"
+            .. "Gifs => Gifs.\n"
+            .. "Locations => Positions.\n"
+            .. "Photos => Photos.\n"
+            .. "Stickers => Stickers.\n"
             .. "Text => Normal text or captions.\n"
-            .. "Tgservice => Service messages.\n"
-            .. "Video => Videos (not video messages).\n"
-            .. "Video_note => Video messages.\n"
-            .. "Voice_note => Voice notes.\n",
-            [13] = "D: Why don't you port ruleta on @AISashaAPI?\n"
+            .. "Tgservices => Service messages.\n"
+            .. "Videos => Videos (not video messages).\n"
+            .. "Video_notes => Video messages.\n"
+            .. "Voice_notes => Voice notes.\n",
+            [12] = "D: Why don't you port ruleta on @AISashaAPI?\n"
             .. "R: Because I'm 90% sure that kicks number would be high enough to hit telegram limits causing problems.",
-            [14] = "D: What is the api_patch?\n"
+            [13] = "D: What is the api_patch?\n"
             .. "R: The api_patch is a way in which @AISasha integrates barely perfectly @AISashaBot without creating confusion.",
-            [15] = "D: Why spam on @AISashaAPI is only for admins?\n"
+            [14] = "D: Why spam on @AISashaAPI is only for admins?\n"
             .. "R: Because I'm 90% sure that sent messages number would be high enough to hit telegram limits and so causing problems.",
-            [16] = "D: What do permissions mean?\n"
+            [15] = "D: What do permissions mean?\n"
             .. "R: Change_info => Change info as group's name, pic and other settings.\n"
             .. "Delete_messages => Delete other's messages.\n"
             .. "Invite_users => Invite users with link.\n"
             .. "Restrict_members => Restrict, ban, unban members.\n"
             .. "Pin_messages => Pin messages.\n"
             .. "Promote_members => Promote other members as admins with the same permissions or lower.\n",
-            [17] = "D: What do restrictions mean?\n"
+            [16] = "D: What do restrictions mean?\n"
             .. "R: Send_messages => Send any type of message.\n"
             .. "Send_media_messages => Send audios, documents, photos, videos, video_notes, voice_notes.\n"
             .. "Send_other_messages => Send gifs, games, stickers, inline bots.\n"
@@ -2444,9 +2590,9 @@ return {
             "<b>REALM</b>",
             "<code>/setgpowner {group_id} {user_id}</code>: Sasha sets {user_id} as owner of {group_id}.",
             "<code>/setrules {group_id} {text}</code>: Sasha changes {group_id}'s rules with {text}.",
-            "<code>/[un]lock {group_id} {setting}</code>: Sasha [un]locks {group_id}'s {setting}.",
+            "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha locks/mutes {setting} with {punishment} in {group_id}.",
+            "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha unlocks/unmutes {setting} in {group_id}.",
             "<code>/[textual]settings {group_id}</code>: Sasha sends {group_id}'s settings.",
-            "<code>/[un]mute {group_id} {mute}</code>: Sasha [un]mutes {group_id}'s {mute}.",
             "<code>/[textual]muteslist {group_id}</code>: Sasha sends {group_id}'s mutes.",
             "<code>/rem {group_id}</code>: Sasha removes group.",
             "<b>SUDO</b>",
@@ -2720,10 +2866,10 @@ return {
             "<code>/setwarn {value}</code>: Sasha sets max warns to {value}, if zero warns will not work.",
             "<code>/newlink</code>: Sasha creates a new link of the group.",
             "<code>/setflood {value}</code>: Sasha sets {value} as max flood.",
-            "<code>/[un]lock {setting}</code>: Sasha [un]locks {setting}.",
-            "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|grouplink|leave|link|member|name|photo|rtl|spam|strict</code>.",
-            "<code>/[un]mute {mute}</code>: Sasha [un]mutes the specified parameter.",
-            "<code>{mute}</code> can be: <code>all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note</code>.",
+            "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha locks/mutes {setting} with {punishment}.",
+            "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha unlocks/unmutes {setting}.",
+            "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
+            "<code>{punishment}</code> può essere: <code>nothing|delete|warn|temprestrict|restrict|kick|tempban|ban</code>.",
             "<b>SUPERGROUP</b>",
             "<code>/[silent]pin {reply}</code>: Sasha [silently] pins {reply}.",
             "<code>/unpin</code>: Sasha unpins the pinned message.",

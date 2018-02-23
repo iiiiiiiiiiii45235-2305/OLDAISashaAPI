@@ -1,33 +1,32 @@
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] == '###cblangs' then
-            local change_lang = true
-            if msg.chat.type ~= 'private' then
-                if not is_owner(msg) then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
-                    change_lang = false
-                end
+        local change_lang = true
+        if msg.chat.type ~= 'private' then
+            if not is_owner(msg) then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                change_lang = false
             end
-            if change_lang then
-                if matches[2] == 'IT' then
-                    redis:set('lang:' .. msg.chat.id, 'it')
-                elseif matches[2] == 'EN' then
-                    redis:set('lang:' .. msg.chat.id, 'en')
-                end
-                local lang = get_lang(msg.chat.id)
-                if matches[3] == 'B' then
-                    if not redis:hget('tagalert:usernames', msg.from.id) then
-                        return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage, keyboard_tagalert_tutorial(lang))
-                    else
-                        return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage)
-                        -- return editMessage(msg.chat.id, msg.message_id, langs[lang].startMessage, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
-                    end
-                elseif matches[3] == 'S' then
-                    return editMessage(msg.chat.id, msg.message_id, langs[lang].langSet)
-                end
-            end
-            return
         end
+        if change_lang then
+            if data[tostring(msg.chat.id)] then
+                data[tostring(msg.chat.id)].lang = matches[2]:lower()
+            else
+                redis:set('lang:' .. msg.chat.id, matches[2]:lower())
+            end
+
+            msg.lang = get_lang(msg.chat.id)
+            if matches[3] == 'B' then
+                if not redis:hget('tagalert:usernames', msg.from.id) then
+                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage, keyboard_tagalert_tutorial(msg.lang))
+                else
+                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
+                    -- return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
+                end
+            elseif matches[3] == 'S' then
+                return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].langSet)
+            end
+        end
+        return
     end
     if matches[1]:lower() == 'setlang' then
         mystat('/setlang')
@@ -35,8 +34,8 @@ local function run(msg, matches)
             if msg.chat.type == 'private' then
                 redis:set('lang:' .. msg.chat.id, matches[2]:lower())
                 return langs[matches[2]:lower()].langSet
-            elseif msg.from.is_owner then
-                redis:set('lang:' .. msg.chat.id, matches[2]:lower())
+            elseif msg.from.is_owner and data[tostring(msg.chat.id)] then
+                data[tostring(msg.chat.id)].lang = matches[2]:lower()
                 return langs[matches[2]:lower()].langSet
             else
                 return langs[msg.lang].require_owner
@@ -61,8 +60,7 @@ return {
     description = "STRINGS",
     patterns =
     {
-        "^(###cblangs)(..)$",
-        "^(###cblangs)(..)(.)$",
+        "^(###cblangs)(..)(%u)?$",
 
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg])$',
         '^[#!/]([Ss][Ee][Tt][Ll][Aa][Nn][Gg]) ([Ii][Tt])$',

@@ -1,6 +1,19 @@
-local default_settings = {
+local default_group_data = {
     goodbye = nil,
-    group_type = 'Unknown',
+    welcome = nil,
+    welcomemembers = 0,
+    lang = 'en',
+    link = nil,
+    lock_grouplink = true,
+    name = 'TITLE',
+    lock_name = false,
+    owner = '41400331',
+    photo = nil,
+    lock_photo = false,
+    rules = nil,
+    type = nil,
+    pmnotices = false,
+    tagalert = false,
     moderators =
     {
         -- user_id = username or printname
@@ -10,67 +23,76 @@ local default_settings = {
         -- various permissions
         -- }
     },
-    photo = nil,
-    rules = nil,
-    set_name = 'TITLE',
-    set_owner = '41400331',
     settings =
     {
-        -- false, 'warn', 'ban'
-        flood = true,
-        flood_max = 5,
-        links_whitelist =
+        -- punishments
+        -- 0/false = allowed
+        -- 1 = delete
+        -- 2 = warn
+        -- 3 = temprestrict
+        -- 4 = restrict
+        -- 5 = kick
+        -- 6 = tempban
+        -- 7 = ban
+        -- 24h default
+        time_ban = 86400,
+        time_restrict = 86400,
+        -- locks
+        locks =
         {
-            -- whitelisted links, usernames, channel ids
-            "@username",
+            -- lock = punishment
+            arabic = false,
+            bots = 3,
+            delword = 1,
+            flood = 4,
+            forward = false,
+            gbanned = 4,
+            leave = false,
+            links = 2,
+            members = false,
+            rtl = false,
+            spam = false,
         },
-        -- false, 'delete', 'warn', 'kick', 'ban'
-        lock_arabic = false,
-        -- false, 'ban'
-        lock_bots = true,
-        -- false, 'delete', 'warn', 'kick', 'ban'
-        lock_delword = false,
-        -- false, true
-        lock_group_link = true,
-        -- false, true='ban'
-        lock_leave = false,
-        -- false, 'delete', 'warn', 'kick', 'ban'
-        lock_link = false,
-        -- false, true='ban'
-        lock_member = false,
-        -- false, true
-        lock_name = false,
-        -- false, true
-        lock_photo = false,
-        -- false, 'delete', 'warn', 'kick', 'ban'
-        lock_rtl = false,
-        -- false, 'delete', 'warn', 'kick', 'ban'
-        lock_spam = false,
-        -- false, 'delete', 'warn', 'kick', 'ban'
+        max_flood = 5,
+        max_warns = 3,
+        -- mutes
         mutes =
         {
+            -- mute = punishment
             all = false,
-            audio = false,
-            contact = false,
-            document = false,
-            game = false,
-            gif = false,
-            location = false,
-            photo = false,
-            sticker = false,
+            audios = false,
+            contacts = false,
+            documents = false,
+            games = false,
+            gifs = false,
+            locations = false,
+            photos = false,
+            stickers = false,
             text = false,
-            tgservice = false,
-            video = false,
-            video_note = false,
-            voice_note = false,
+            tgservices = false,
+            videos = false,
+            video_notes = false,
+            voice_notes = false,
         },
-        set_link = nil,
-        -- false, true
         strict = false,
-        warn_max = 3,
+        warns_punishment = 7,
     },
-    welcome = nil,
-    welcomemembers = 0,
+    whitelist =
+    {
+        gbanned =
+        {
+            -- user_id
+        },
+        links =
+        {
+            -- links, usernames, channel ids
+            "@username",
+        },
+        users =
+        {
+            -- user_id
+        },
+    },
 }
 
 -- begin ADD/REM GROUPS
@@ -84,10 +106,10 @@ local function addGroup(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- Group configuration
-                    data[tostring(msg.chat.id)] = clone_table(default_settings)
-                    data[tostring(msg.chat.id)].group_type = 'Group'
-                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
-                    data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
+                    data[tostring(msg.chat.id)] = clone_table(default_group_data)
+                    data[tostring(msg.chat.id)].type = 'Group'
+                    data[tostring(msg.chat.id)].name = string.gsub(msg.chat.print_name, '_', ' ')
+                    data[tostring(msg.chat.id)].owner = tostring(admin.user.id)
                     save_data(config.moderation.data, data)
                     if not data['groups'] then
                         data['groups'] = { }
@@ -143,10 +165,10 @@ local function addRealm(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- Realm configuration
-                    data[tostring(msg.chat.id)] = clone_table(default_settings)
-                    data[tostring(msg.chat.id)].group_type = 'Realm'
-                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
-                    data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
+                    data[tostring(msg.chat.id)] = clone_table(default_group_data)
+                    data[tostring(msg.chat.id)].type = 'Realm'
+                    data[tostring(msg.chat.id)].name = string.gsub(msg.chat.print_name, '_', ' ')
+                    data[tostring(msg.chat.id)].owner = tostring(admin.user.id)
                     save_data(config.moderation.data, data)
                     if not data['realms'] then
                         data['realms'] = { }
@@ -192,10 +214,10 @@ local function addSuperGroup(msg)
             for i, admin in pairs(list.result) do
                 if admin.status == 'creator' then
                     -- SuperGroup configuration
-                    data[tostring(msg.chat.id)] = clone_table(default_settings)
-                    data[tostring(msg.chat.id)].group_type = 'SuperGroup'
-                    data[tostring(msg.chat.id)].set_name = string.gsub(msg.chat.print_name, '_', ' ')
-                    data[tostring(msg.chat.id)].set_owner = tostring(admin.user.id)
+                    data[tostring(msg.chat.id)] = clone_table(default_group_data)
+                    data[tostring(msg.chat.id)].type = 'SuperGroup'
+                    data[tostring(msg.chat.id)].name = string.gsub(msg.chat.print_name, '_', ' ')
+                    data[tostring(msg.chat.id)].owner = tostring(admin.user.id)
                     save_data(config.moderation.data, data)
                     if not data['groups'] then
                         data['groups'] = { }
@@ -287,25 +309,25 @@ local function groupsList(msg, get_links)
     local message = langs[msg.lang].groupListStart
     for k, v in pairsByGroupName(data) do
         if data[tostring(k)] then
-            if data[tostring(k)]['settings'] then
+            if data[tostring(k)].settings then
                 local name = ''
                 local grp = data[tostring(k)]
                 for m, n in pairs(grp) do
-                    if m == 'set_name' then
+                    if m == 'name' then
                         name = n
                     end
                 end
                 local group_owner = "No owner"
-                if data[tostring(k)]['set_owner'] then
-                    group_owner = tostring(data[tostring(k)]['set_owner'])
+                if data[tostring(k)].owner then
+                    group_owner = tostring(data[tostring(k)].owner)
                 end
                 local group_link = nil
-                if data[tostring(k)]['settings']['set_link'] then
-                    group_link = data[tostring(k)]['settings']['set_link']
-                elseif get_links and data[tostring(k)]['group_type']:lower() == 'supergroup' then
+                if data[tostring(k)].link then
+                    group_link = data[tostring(k)].link
+                elseif get_links and data[tostring(k)].type:lower() == 'supergroup' then
                     local link = exportChatInviteLink(k, true)
                     if link then
-                        data[tostring(k)]['settings']['set_link'] = link
+                        data[tostring(k)].link = link
                         save_data(config.moderation.data, data)
                         group_link = link
                     end
@@ -335,7 +357,7 @@ local function groupsPages(page)
     local tot_groups = 0
     for k, v in pairsByGroupName(data) do
         if data[tostring(k)] then
-            if data[tostring(k)]['settings'] then
+            if data[tostring(k)].settings then
                 tot_groups = tot_groups + 1
             end
         end
@@ -350,23 +372,23 @@ local function groupsPages(page)
     tot_groups = 0
     for k, v in pairsByGroupName(data) do
         if data[tostring(k)] then
-            if data[tostring(k)]['settings'] then
+            if data[tostring(k)].settings then
                 tot_groups = tot_groups + 1
                 if tot_groups >=(((page - 1) * max_groups) + 1) and tot_groups <=(max_groups * page) then
                     local name = ''
                     local grp = data[tostring(k)]
                     for m, n in pairs(grp) do
-                        if m == 'set_name' then
+                        if m == 'name' then
                             name = n
                         end
                     end
                     local group_owner = "No owner"
-                    if data[tostring(k)]['set_owner'] then
-                        group_owner = tostring(data[tostring(k)]['set_owner'])
+                    if data[tostring(k)].owner then
+                        group_owner = tostring(data[tostring(k)].owner)
                     end
                     local group_link = nil
-                    if data[tostring(k)]['settings']['set_link'] then
-                        group_link = data[tostring(k)]['settings']['set_link']
+                    if data[tostring(k)].link then
+                        group_link = data[tostring(k)].link
                     end
                     if group_link then
                         message = message .. '<a href="' .. group_link .. '">' .. html_escape(name) .. '</a>' .. ' ' .. k .. ' ' .. group_owner .. '\n'
@@ -383,25 +405,23 @@ end
 local function run(msg, matches)
     if is_admin(msg) then
         if msg.cb then
-            if matches[1] == '###cbadministrator' then
-                if matches[2] == 'DELETE' then
-                    if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                    end
-                elseif matches[2] == 'PAGES' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-                elseif matches[2] == 'BACK' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
-                elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
-                elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
+            if matches[2] == 'DELETE' then
+                if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
-                return
+            elseif matches[2] == 'PAGES' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+            elseif matches[2] == 'BACK' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
+            elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
+            elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
             end
+            return
         end
 
         if is_realm(msg) then
@@ -416,31 +436,31 @@ local function run(msg, matches)
                 save_data(config.moderation.data, data)
                 return langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed
             end
-            if matches[1]:lower() == 'lock' and matches[2] and matches[3] then
-                if settingsDictionary[matches[3]:lower()] then
-                    mystat('/lock <group_id> ' .. matches[3]:lower())
-                    return lockSetting(matches[2], matches[3]:lower())
+            if matches[1]:lower() == 'lock' and matches[2] and matches[3] and matches[4] then
+                if groupDataDictionary[matches[3]:lower()] then
+                    mystat('/lock <group_id> ' .. matches[3]:lower() .. ' ' .. matches[4]:lower())
+                    return lockSetting(matches[2], matches[3]:lower(), matches[4]:lower())
                 end
                 return
             end
             if matches[1]:lower() == 'unlock' and matches[2] and matches[3] then
-                if settingsDictionary[matches[3]:lower()] then
+                if groupDataDictionary[matches[3]:lower()] then
                     mystat('/unlock <group_id> ' .. matches[3]:lower())
                     return unlockSetting(matches[2], matches[3]:lower())
                 end
                 return
             end
-            if matches[1]:lower() == 'mute' and matches[2] and matches[3] then
-                if mutesDictionary[matches[3]:lower()] then
-                    mystat('/mute <group_id> ' .. matches[3]:lower())
-                    return mute(msg.chat.id, matches[3]:lower())
+            if matches[1]:lower() == 'mute' and matches[2] and matches[3] and matches[4] then
+                if groupDataDictionary[matches[3]:lower()] then
+                    mystat('/mute <group_id> ' .. matches[3]:lower() .. ' ' .. matches[4]:lower())
+                    return lockSetting(msg.chat.id, matches[3]:lower(), matches[4]:lower())
                 end
                 return
             end
             if matches[1]:lower() == 'unmute' and matches[2] and matches[3] then
-                if mutesDictionary[matches[3]:lower()] then
+                if groupDataDictionary[matches[3]:lower()] then
                     mystat('/unmute <group_id> ' .. matches[3]:lower())
-                    return unmute(msg.chat.id, matches[3]:lower())
+                    return unlockSetting(msg.chat.id, matches[3]:lower())
                 end
                 return
             end
@@ -448,9 +468,9 @@ local function run(msg, matches)
                 mystat('/muteslist <group_id>')
                 local chat_name = ''
                 if data[tostring(matches[2])] then
-                    chat_name = data[tostring(matches[2])].set_name or ''
+                    chat_name = data[tostring(matches[2])].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].faq[12], keyboard_mutes_list(matches[2])) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 2)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
@@ -465,15 +485,15 @@ local function run(msg, matches)
             if matches[1]:lower() == 'textualmuteslist' and matches[2] then
                 mystat('/muteslist <group_id>')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
-                return mutesList(matches[2])
+                return showSettings(matches[2], msg.lang)
             end
             if matches[1]:lower() == 'settings' and matches[2] then
                 mystat('/settings <group_id>')
                 local chat_name = ''
                 if data[tostring(matches[2])] then
-                    chat_name = data[tostring(matches[2])].set_name or ''
+                    chat_name = data[tostring(matches[2])].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].locksIntro .. langs[msg.lang].faq[11], keyboard_settings_list(matches[2])) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 1)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
@@ -498,7 +518,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'setgpowner' and matches[2] and matches[3] then
                 if data[tostring(matches[2])] then
                     mystat('/setgpowner <group_id> <user_id>')
-                    data[tostring(matches[2])].set_owner = matches[3]
+                    data[tostring(matches[2])].owner = matches[3]
                     save_data(config.moderation.data, data)
                     sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
                     if areNoticesEnabled(matches[3], matches[2]) then
@@ -596,7 +616,7 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                return blockUser(msg.reply_to_message.forward_from.id, msg.lang)
+                                return blockUser(msg.reply_to_message.forward_from.id)
                             else
                                 return langs[msg.lang].cantDoThisToChat
                             end
@@ -604,10 +624,10 @@ local function run(msg, matches)
                             return langs[msg.lang].errorNoForward
                         end
                     else
-                        return blockUser(msg.reply_to_message.from.id, msg.lang)
+                        return blockUser(msg.reply_to_message.from.id)
                     end
                 else
-                    return blockUser(msg.reply_to_message.from.id, msg.lang)
+                    return blockUser(msg.reply_to_message.from.id)
                 end
             elseif matches[2] and matches[2] ~= '' then
                 if msg.entities then
@@ -615,19 +635,19 @@ local function run(msg, matches)
                         -- check if there's a text_mention
                         if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                             if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                return blockUser(msg.entities[k].user.id, msg.lang)
+                                return blockUser(msg.entities[k].user.id)
                             end
                         end
                     end
                 end
                 matches[2] = tostring(matches[2]):gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
-                    return blockUser(matches[2], msg.lang)
+                    return blockUser(matches[2])
                 else
                     local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            return blockUser(obj_user.id, msg.lang)
+                            return blockUser(obj_user.id)
                         end
                     else
                         return langs[msg.lang].noObject
@@ -643,7 +663,7 @@ local function run(msg, matches)
                     if matches[2]:lower() == 'from' then
                         if msg.reply_to_message.forward then
                             if msg.reply_to_message.forward_from then
-                                return unblockUser(msg.reply_to_message.forward_from.id, msg.lang)
+                                return unblockUser(msg.reply_to_message.forward_from.id)
                             else
                                 return langs[msg.lang].cantDoThisToChat
                             end
@@ -651,10 +671,10 @@ local function run(msg, matches)
                             return langs[msg.lang].errorNoForward
                         end
                     else
-                        return unblockUser(msg.reply_to_message.from.id, msg.lang)
+                        return unblockUser(msg.reply_to_message.from.id)
                     end
                 else
-                    return unblockUser(msg.reply_to_message.from.id, msg.lang)
+                    return unblockUser(msg.reply_to_message.from.id)
                 end
             elseif matches[2] and matches[2] ~= '' then
                 if msg.entities then
@@ -662,19 +682,19 @@ local function run(msg, matches)
                         -- check if there's a text_mention
                         if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                             if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                return unblockUser(msg.entities[k].user.id, msg.lang)
+                                return unblockUser(msg.entities[k].user.id)
                             end
                         end
                     end
                 end
                 matches[2] = tostring(matches[2]):gsub(' ', '')
                 if string.match(matches[2], '^%d+$') then
-                    return unblockUser(matches[2], msg.lang)
+                    return unblockUser(matches[2])
                 else
                     local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                            return unblockUser(obj_user.id, msg.lang)
+                            return unblockUser(obj_user.id)
                         end
                     else
                         return langs[msg.lang].noObject
@@ -901,11 +921,11 @@ return {
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
         "^[#!/]([Ss][Ee][Tt][Gg][Pp][Oo][Ww][Nn][Ee][Rr]) (%-?%d+) (%d+)$",-- (group id) (owner id)
-        "^[#!/]([Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
+        "^[#!/]([Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+) ([^%s]+)",
         "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) (%-?%d+) ([^%s]+)",
         "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt]) (%-?%d+)$",
-        "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
+        "^[#!/]([Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) (%-?%d+) ([^%s]+)$",
         "^[#!/]([Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss]) (%-?%d+)$",
@@ -969,12 +989,10 @@ return {
         "REALM",
         "/setgpowner {group_id} {user_id}",
         "/setgprules {group_id} {text}",
-        "/mute {group_id} all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
-        "/unmute {group_id} all|audio|contact|document|gif|location|photo|sticker|text|tgservice|video|video_note|voice_note",
+        "/lock|/mute {group_id} arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment {punishment}",
+        "/unlock|/unmute {group_id} arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment",
         "/muteslist {group_id}",
         "/textualmuteslist {group_id}",
-        "/lock {group_id} arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
-        "/unlock {group_id} arabic|bots|flood|grouplink|leave|link|member|rtl|spam|strict",
         "/settings {group_id}",
         "/textualsettings {group_id}",
         "/rem {group_id}",

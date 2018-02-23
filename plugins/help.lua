@@ -145,70 +145,54 @@ end
 
 local function run(msg, matches)
     if msg.cb then
-        if matches[1] == '###cbhelp' then
-            if matches[2] == 'DELETE' then
-                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                end
-            elseif matches[2] == 'PAGES' then
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-            elseif matches[2] == 'BACK' then
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
-            elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
-            elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
-            elseif matches[2] == 'BACKFAQ' then
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
-            elseif matches[2] == 'FAQ' then
-                answerCallbackQuery(msg.cb_id, 'FAQ' .. matches[3])
-                if langs[msg.lang].faq[tonumber(matches[3])] then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
-                else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
-                end
-                mystat(matches[1] .. matches[2] .. matches[3])
-            else
-                answerCallbackQuery(msg.cb_id, matches[2]:lower())
-                local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
-                if temp ~= nil then
-                    if temp ~= '' then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } }, 'html')
-                    else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
-                    end
-                else
-                    editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
-                end
-                mystat(matches[1] .. matches[2])
+        if matches[2] == 'DELETE' then
+            if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             end
-            return
-        end
-    end
-    if matches[1]:lower() == 'converttime' then
-        if matches[2] and matches[3] and matches[4] and matches[5] and matches[6] then
-            local time, weeks, days, hours, minutes, seconds = 0
-            weeks = tonumber(matches[2])
-            days = tonumber(matches[3])
-            hours = tonumber(matches[4])
-            minutes = tonumber(matches[5])
-            seconds = tonumber(matches[6])
-            time =(weeks * 7 * 24 * 60 * 60) +(days * 24 * 60 * 60) +(hours * 60 * 60) +(minutes * 60) + seconds
-            return time .. langs[msg.lang].secondsWord
+        elseif matches[2] == 'PAGES' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
+        elseif matches[2] == 'BACK' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
+        elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
+        elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
+        elseif matches[2] == 'BACKFAQ' then
+            answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
+        elseif matches[2] == 'FAQ' then
+            answerCallbackQuery(msg.cb_id, 'FAQ' .. matches[3])
+            if langs[msg.lang].faq[tonumber(matches[3])] then
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
+            else
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } })
+            end
+            mystat(matches[1] .. matches[2] .. matches[3])
         else
-            local remainder, weeks, days, hours, minutes, seconds = 0
-            weeks = math.floor(matches[2] / 604800)
-            remainder = matches[2] % 604800
-            days = math.floor(remainder / 86400)
-            remainder = remainder % 86400
-            hours = math.floor(remainder / 3600)
-            remainder = remainder % 3600
-            minutes = math.floor(remainder / 60)
-            seconds = remainder % 60
+            answerCallbackQuery(msg.cb_id, matches[2]:lower())
+            local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
+            if temp ~= nil then
+                if temp ~= '' then
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } }, 'html')
+                else
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
+                end
+            else
+                editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) } } } })
+            end
+            mystat(matches[1] .. matches[2])
+        end
+        return
+    end
+    if matches[1]:lower() == 'converttime' and matches[2] then
+        if matches[3] and matches[4] and matches[5] and matches[6] then
+            local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
+            return unix .. langs[msg.lang].secondsWord
+        else
+            local seconds, minutes, hours, days, weeks = unixToDate(matches[2])
             return weeks .. langs[msg.lang].weeksWord .. days .. langs[msg.lang].daysWord .. hours .. langs[msg.lang].hoursWord .. minutes .. langs[msg.lang].minutesWord .. seconds .. langs[msg.lang].secondsWord
         end
     end
