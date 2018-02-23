@@ -339,7 +339,7 @@ local function run(msg, matches)
             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 2, matches[4] or false))
         elseif matches[2] == 'LOCK' then
             if is_mod2(msg.from.id, matches[5]) then
-                answerCallbackQuery(msg.cb_id, lockSetting(matches[5], matches[4]), false)
+                answerCallbackQuery(msg.cb_id, lockSetting(matches[5], matches[3]), false)
                 local chat_name = ''
                 if data[tostring(matches[5])] then
                     chat_name = data[tostring(matches[5])].name or ''
@@ -351,7 +351,7 @@ local function run(msg, matches)
             end
         elseif matches[2] == 'UNLOCK' then
             if is_mod2(msg.from.id, matches[5]) then
-                answerCallbackQuery(msg.cb_id, unlockSetting(matches[5], matches[4]), false)
+                answerCallbackQuery(msg.cb_id, unlockSetting(matches[5], matches[3]), false)
                 local chat_name = ''
                 if data[tostring(matches[5])] then
                     chat_name = data[tostring(matches[5])].name or ''
@@ -417,10 +417,12 @@ local function run(msg, matches)
                         increasePunishment = true
                     end
                 end
+                print(increasePunishment)
                 if increasePunishment then
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     local punishment = getPunishment(matches[4], groupDataDictionary[matches[2]:lower()])
-                    setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], adjust_punishment(groupDataDictionary[matches[2]:lower()], punishment, '+'))
+                    local text = setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], adjust_punishment(groupDataDictionary[matches[2]:lower()], punishment, '+'))
+                    answerCallbackQuery(msg.cb_id, text, false)
                     savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. groupDataDictionary[matches[2]:lower()] .. " to " .. tostring(punishment))
                     local chat_name = ''
                     if data[tostring(matches[4])] then
