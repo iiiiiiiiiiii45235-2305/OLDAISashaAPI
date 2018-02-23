@@ -70,7 +70,7 @@ local function whitelist_link(chat_id, link)
 end
 
 local function run(msg, matches)
-    if data[tostring(chat_id)] then
+    if data[tostring(msg.chat.id)] then
         if matches[1]:lower() == "whitelist" then
             if msg.reply then
                 if is_owner(msg) then
@@ -126,7 +126,7 @@ local function run(msg, matches)
             else
                 mystat('/whitelist')
                 local text = langs[msg.lang].whitelistStart .. msg.chat.title .. '\n'
-                for k, v in pairs(data[tostring(chat_id)].whitelist.users) do
+                for k, v in pairs(data[tostring(msg.chat.id)].whitelist.users) do
                     local user_info = redis:hgetall('user:' .. v)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
@@ -193,7 +193,7 @@ local function run(msg, matches)
             else
                 mystat('/whitelistgban')
                 local text = langs[msg.lang].whitelistGbanStart .. msg.chat.title .. '\n'
-                for k, v in pairs(data[tostring(chat_id)].whitelist.gbanned) do
+                for k, v in pairs(data[tostring(msg.chat.id)].whitelist.gbanned) do
                     local user_info = redis:hgetall('user:' .. v)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
@@ -216,7 +216,7 @@ local function run(msg, matches)
             else
                 mystat('/whitelistlink')
                 local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
-                for k, v in pairs(data[tostring(chat_id)].whitelist.links) do
+                for k, v in pairs(data[tostring(msg.chat.id)].whitelist.links) do
                     text = text .. k .. ". " .. v .. "\n"
                 end
                 return text
