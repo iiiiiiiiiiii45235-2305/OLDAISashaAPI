@@ -818,10 +818,10 @@ groupDataDictionary = {
     ["tgservices"] = "tgservices",
     ["video"] = "videos",
     ["videos"] = "videos",
-    ["video_note"] = "voice_notes",
-    ["video_notes"] = "voice_notes",
-    ["voice_note"] = "video_notes",
-    ["voice_notes"] = "video_notes",
+    ["video_note"] = "video_notes",
+    ["video_notes"] = "video_notes",
+    ["voice_note"] = "voice_notes",
+    ["voice_notes"] = "voice_notes",
 }
 reverseGroupDataDictionary = {
     ["lock_grouplink"] = "grouplink",
@@ -886,10 +886,10 @@ reverseGroupDataDictionary = {
     ["tgservices"] = "tgservice",
     ["video"] = "video",
     ["videos"] = "video",
-    ["video_note"] = "voice_note",
-    ["video_notes"] = "voice_note",
-    ["voice_note"] = "video_note",
-    ["voice_notes"] = "video_note",
+    ["video_note"] = "video_note",
+    ["video_notes"] = "video_note",
+    ["voice_note"] = "voice_note",
+    ["voice_notes"] = "voice_note",
 }
 
 restrictionsDictionary = {

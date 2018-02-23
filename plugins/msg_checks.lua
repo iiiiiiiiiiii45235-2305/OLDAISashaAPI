@@ -99,11 +99,8 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
     tmp = tmp:gsub('%?([^%s]+)', '')
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-    print('1')
     cronTable.resolveUsernamesTable[tostring(chat_id)] = 0
-    print('postcron')
     while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(chat_id)] < 5 and valTot < 30 do
-        print('incron')
         cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
         valTot = valTot + 1
         if APIgetChat(string.match(tmp, '@[%w_]+'), true) then
@@ -112,7 +109,6 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
             tmp = tmp:gsub(string.match(tmp, '@[%w_]+'), '')
         end
     end
-    print('endcron')
     if is_text_link then
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
         if is_bot then
@@ -237,7 +233,6 @@ local function check_msg(msg, group_data, pre_process_function)
                     text = text .. langs[msg.lang].reasonMutedText
                 end
             end
-            print('mutetext passed')
             -- textToUse checks
             if my_tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(textToUse, '%c', '')
@@ -252,7 +247,6 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            print('lockspam passed')
             if my_tonumber(lock_links) > 0 then
                 local tmp = textToUse
                 if check_if_link(msg.chat.id, tmp, links_whitelist, group_link) then
@@ -265,7 +259,6 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            print('locklinks passed')
             if my_tonumber(lock_arabic) > 0 then
                 local is_squig_msg = textToUse:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
@@ -278,7 +271,6 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            print('lockarabic passed')
             if my_tonumber(lock_rtl) > 0 then
                 local is_rtl = msg.from.print_name:match("‮") or textToUse:match("‮")
                 if is_rtl then
@@ -291,12 +283,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
-            print('lockrtl passed')
         end
-        print('before media check')
         -- msg.media checks
         if msg.media and msg.media_type then
-            print('media check')
             if msg.media_type == 'audio' then
                 if my_tonumber(mute_audio) > 0 then
                     if pre_process_function then
@@ -388,9 +377,6 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'video_note' then
-                print('video_note')
-                print(mute_video_notes)
-                print(my_tonumber(mute_video_notes))
                 if my_tonumber(mute_video_notes) > 0 then
                     if pre_process_function then
                         print('video_note muted')
