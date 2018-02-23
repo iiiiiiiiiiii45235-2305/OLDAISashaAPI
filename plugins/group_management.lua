@@ -241,6 +241,7 @@ end
 
 local function run(msg, matches)
     if msg.cb then
+        print(matches[1], matches[2], matches[3], matches[4], matches[5], matches[6])
         if matches[2] == 'DELETE' then
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
