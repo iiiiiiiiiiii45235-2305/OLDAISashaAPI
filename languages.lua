@@ -650,8 +650,8 @@ return {
         noSetValue = "Nessun valore impostato.",
 
         -- group_management.lua --
-        gotoLocks = "GOTO LOCKS 🔐",
-        gotoMutes = "GOTO MUTES 🔇",
+        gotoLocks = "🔐 VAI AI BLOCCHI 🔐",
+        gotoMutes = "🔇 VAI AI MUTI 🔇",
         locksWord = "🔐 BLOCCHI 🔐",
         mutesWord = "🔇 MUTI 🔇",
         -- locks --
@@ -2136,8 +2136,8 @@ return {
         noSetValue = "No value set.",
 
         -- group_management.lua --
-        gotoLocks = "GOTO LOCKS 🔐",
-        gotoMutes = "GOTO MUTES 🔇",
+        gotoLocks = "🔐 GOTO LOCKS 🔐",
+        gotoMutes = "🔇 GOTO MUTES 🔇",
         locksWord = "🔐 LOCKS 🔐",
         mutesWord = "🔇 MUTES 🔇",
         -- locks --
