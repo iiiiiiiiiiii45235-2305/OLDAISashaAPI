@@ -245,6 +245,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     text = text .. langs[msg.lang].reasonMutedText
                 end
             end
+            print('mutetext passed')
             -- textToUse checks
             if my_tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(textToUse, '%c', '')
@@ -259,6 +260,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
+            print('lockspam passed')
             if my_tonumber(lock_links) > 0 then
                 local tmp = textToUse
                 if check_if_link(tmp, links_whitelist, group_link) then
@@ -271,6 +273,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
+            print('locklinks passed')
             if my_tonumber(lock_arabic) > 0 then
                 local is_squig_msg = textToUse:match("[\216-\219][\128-\191]")
                 if is_squig_msg then
@@ -283,6 +286,7 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
+            print('lockarabic passed')
             if my_tonumber(lock_rtl) > 0 then
                 local is_rtl = msg.from.print_name:match("‮") or textToUse:match("‮")
                 if is_rtl then
@@ -295,9 +299,12 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             end
+            print('lockrtl passed')
         end
+        print('before media check')
         -- msg.media checks
         if msg.media and msg.media_type then
+            print('media check')
             if msg.media_type == 'audio' then
                 if my_tonumber(mute_audio) > 0 then
                     if pre_process_function then
