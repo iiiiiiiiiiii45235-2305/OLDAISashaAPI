@@ -135,6 +135,7 @@ local function oldAction(msg, strict, reason)
 end
 
 local function check_msg(msg, settings, pre_process_function)
+    print('test')
     local group_link = nil
     if settings.link then
         group_link = settings.link
@@ -142,6 +143,7 @@ local function check_msg(msg, settings, pre_process_function)
         group_link = pre_process_links(group_link)
     end
     local links_whitelist = group_data.whitelist.links
+    print('testlinks')
     -- locks
     local lock_arabic = group_data.settings.locks.arabic
     local lock_bots = group_data.settings.locks.bots
@@ -152,6 +154,7 @@ local function check_msg(msg, settings, pre_process_function)
     local lock_members = group_data.settings.locks.members
     local lock_rtl = group_data.settings.locks.rtl
     local lock_spam = group_data.settings.locks.spam
+    print('testlocks')
     -- mutes
     local mute_all = group_data.settings.mutes.all
     local mute_audio = group_data.settings.mutes.audios
@@ -167,6 +170,7 @@ local function check_msg(msg, settings, pre_process_function)
     local mute_videos = group_data.settings.mutes.videos
     local mute_video_notes = group_data.settings.mutes.video_notes
     local mute_voice_notes = group_data.settings.mutes.voice_notes
+    print('testmutes')
 
     local text = langs[msg.lang].checkMsg
     print('test')
