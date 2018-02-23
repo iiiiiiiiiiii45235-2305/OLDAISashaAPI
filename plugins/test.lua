@@ -34,6 +34,7 @@ local function run(msg, matches)
                     data[tostring(k)].tagalert = false
                 end
                 data[tostring(k)].settings.warns_punishment = 7
+                data[tostring(k)].settings.locks = { }
                 if data[tostring(k)].settings.lock_arabic then
                     data[tostring(k)].settings.locks.arabic = 2
                 else
