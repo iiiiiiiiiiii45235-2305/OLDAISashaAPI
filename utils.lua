@@ -1127,7 +1127,6 @@ punishments_table = {
     ["🚫"] = 7,
 }
 reverse_punishments_table = {
-    [nil] = "nothing",
     [false] = "nothing",
     "delete",
     "warn",
@@ -1138,7 +1137,6 @@ reverse_punishments_table = {
     "ban",
 }
 reverse_punishments_table_emoji = {
-    [nil] = " 🆗 ",
     [false] = " 🆗 ",
     " 🗑 ",
     " ⚠️ ",
