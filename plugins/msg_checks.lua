@@ -389,6 +389,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     end
                 end
             elseif msg.media_type == 'video_note' then
+                print('video_note')
+                print(mute_video_notes)
+                print(my_tonumber(mute_video_notes))
                 if my_tonumber(mute_video_notes) > 0 then
                     if pre_process_function then
                         print('video_note muted')
