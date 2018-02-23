@@ -60,7 +60,6 @@ local function remove_whitelisted_links(text, links_whitelist, group_link)
         for k, v in pairs(links_whitelist) do
             if string.starts(v, '@') then
                 for word in string.gmatch(text, '(@[%w_]+)') do
-                    print('testremove')
                     if word == v then
                         text = text:gsub(word:gsub('@', ''), '')
                     end
@@ -99,7 +98,7 @@ local function check_if_link(text, links_whitelist, group_link)
     tmp = tmp:gsub('%?([^%s]+)', '')
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-    print('precron')
+    printvardump(cronTable.resolveUsernamesTable)
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
     print('1')
     cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
