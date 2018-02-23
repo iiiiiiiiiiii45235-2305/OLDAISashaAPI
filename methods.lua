@@ -244,7 +244,7 @@ function kickChatMember(user_id, chat_id, until_date, no_log)
     local url = BASE_URL .. '/kickChatMember?chat_id=' .. chat_id ..
     '&user_id=' .. user_id
     if until_date then
-        url = url .. '&until_date=' .. until_date
+        url = url .. '&until_date=' .. os.time() + until_date
     end
     local res, code = sendRequest(url, no_log)
     return res, code
@@ -314,7 +314,7 @@ function restrictChatMember(chat_id, user_id, restrictions, until_date)
         local url = BASE_URL .. '/restrictChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
         if until_date then
-            url = url .. '&until_date=' .. until_date
+            url = url .. '&until_date=' .. os.time() + until_date
         end
         for k, v in pairs(restrictions) do
             url = url .. '&' .. k .. '=' .. tostring(restrictions[k])
@@ -1634,7 +1634,7 @@ function kickUser(executer, target, chat_id, reason, no_notice)
         end
         if compare_ranks(executer, target, chat_id, false, true) then
             -- try to kick
-            local res, code = kickChatMember(target, chat_id, os.time() + 45, true)
+            local res, code = kickChatMember(target, chat_id, 45, true)
 
             if res then
                 -- if the user has been kicked, then...

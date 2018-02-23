@@ -31,19 +31,19 @@ elseif action == 'restrictuser' then
     print('TIMEWORK RESTRICTUSER')
     action, sleep_time, chat_id, user_id, time = ...
     if time then
-        restrictChatMember(chat_id, user_id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }, os.time() + time)
+        restrictChatMember(chat_id, user_id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false }, time)
     else
         restrictChatMember(chat_id, user_id, { can_send_messages = false, can_send_media_messages = false, can_send_other_messages = false, can_add_web_page_previews = false })
     end
 elseif action == 'kickuser' then
     print('TIMEWORK KICKUSER')
     action, sleep_time, chat_id, user_id = ...
-    kickChatMember(user_id, chat_id, os.time() + 45)
+    kickChatMember(user_id, chat_id, 45)
 elseif action == 'banuser' then
     print('TIMEWORK BANUSER')
     action, sleep_time, chat_id, user_id, time = ...
     if time then
-        kickChatMember(user_id, chat_id, os.time() + time)
+        kickChatMember(user_id, chat_id, time)
     else
         kickChatMember(user_id, chat_id)
     end
