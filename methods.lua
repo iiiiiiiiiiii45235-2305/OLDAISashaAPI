@@ -2059,6 +2059,20 @@ function lockSetting(target, setting_type, punishment)
             save_data(config.moderation.data, data)
             return langs[lang].tagalertGroupEnabled
         end
+    elseif setting_type == 'strict' then
+        if data[tostring(target)].strict ~= nil then
+            if data[tostring(target)].strict then
+                return langs[lang].settingAlreadyLocked
+            else
+                data[tostring(target)].strict = true
+                save_data(config.moderation.data, data)
+                return langs[lang].settingLocked
+            end
+        else
+            data[tostring(target)].strict = true
+            save_data(config.moderation.data, data)
+            return langs[lang].settingLocked
+        end
     end
     if not punishments_table[punishment] then
         return langs[lang].punishmentNotFound
