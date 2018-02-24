@@ -267,6 +267,7 @@ local function pre_process(msg)
                     attentionText = attentionText:gsub('"', '\\"')
                     io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "true" "' .. hashtag .. '" "' .. attentionText .. '"')
                     data[tostring(msg.chat.id)].settings.locks.spam = 3
+                    save_data(config.moderation.data, data)
                 end
                 if usermsgs >= NUM_MSG_MAX then
                     return nil
