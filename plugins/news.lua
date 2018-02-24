@@ -1,10 +1,10 @@
 local function run(msg, matches)
     if matches[1]:lower() == 'news' then
-        return news_table.news or langs.news
+        return news_table.news or langs[msg.lang].news
     end
     if matches[1]:lower() == 'spamnews' then
         if is_sudo(msg) then
-            news_table.news = matches[2] or langs.news
+            news_table.news = matches[2] or langs[msg.lang].news
             news_table.tot_chats = 0
             news_table.chats = { }
             for k, v in pairsByGroupName(data) do
@@ -36,7 +36,7 @@ local function pre_process(msg)
     if msg then
         if news_table.spam and news_table.chats then
             if news_table.chats[tostring(msg.chat.id)] then
-                sendMessage(msg.chat.id, news_table.news or langs.news)
+                sendMessage(msg.chat.id, news_table.news or langs[msg.lang].news)
                 news_table.chats[tostring(msg.chat.id)] = false
                 news_table.counter = news_table.counter + 1
                 local text = "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats) .. '\n'
