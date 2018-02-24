@@ -402,7 +402,7 @@ local function groupsPages(page)
     return message
 end
 
-local max_lines = 20
+local max_lines = 40
 local function requestsPages(chat_id, page)
     local message = ""
     if not page then
@@ -434,7 +434,7 @@ local function requestsPages(chat_id, page)
         if v ~= '' then
             tot_lines = tot_lines + 1
             if tot_lines >=(((page - 1) * max_lines) + 1) and tot_lines <=(max_lines * page) then
-                message = message .. v .. '\n'
+                message = message .. v
             end
         end
     end

@@ -185,7 +185,7 @@ function keyboard_list_groups_pages(chat_id, page)
     keyboard = add_useful_buttons(keyboard, chat_id, 'administratorGROUPS', page, max_pages)
     return keyboard
 end
-local max_requests_lines = 20
+local max_requests_lines = 40
 function keyboard_requests_pages(chat_id, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
