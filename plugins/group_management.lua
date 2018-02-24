@@ -423,7 +423,7 @@ local function run(msg, matches)
             end
             if matches[4] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
+                editMessage(msg.chat.id, msg.message_id, chat_name .. '(' .. matches[5] .. ') ' .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
             elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                 local seconds, minutes, hours, days, weeks = unixToDate(time)
                 if matches[4] == 'SECONDS' then
@@ -482,7 +482,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                editMessage(msg.chat.id, msg.message_id, '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[6], time, matches[7] or false))
+                editMessage(msg.chat.id, msg.message_id, chat_name .. '(' .. matches[6] .. ') ' .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[6], time, matches[7] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
             elseif matches[4] == 'DONE' then
                 if time > 30 and time < dateToUnix(0, 0, 0, 366, 0) then
