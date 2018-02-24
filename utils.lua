@@ -1221,6 +1221,10 @@ function adjust_punishment(setting, punishment, change)
         punishment = punishment - 1
         decrement = true
     end
+    if punishment == 0 then
+        -- if disable
+        return false
+    end
 
     if groupDataDictionary[setting] then
         local setting = groupDataDictionary[setting]
@@ -1342,9 +1346,6 @@ function adjust_punishment(setting, punishment, change)
         else
             return 7
         end
-    elseif punishment == 0 then
-        -- if disable
-        return false
     end
     -- nothing else to check, return punishment
     return punishment
