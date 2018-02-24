@@ -448,17 +448,17 @@ local function run(msg, matches)
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
-            elseif matches[2] == 'PAGES' then
+            elseif matches[2] == 'REQUESTSPAGES' or matches[2] == 'GROUPSPAGES' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
             elseif matches[2] == 'LOGBACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], matches[3]), keyboard_requests_pages(matches[4], matches[3]))
             elseif matches[2]:gsub('%d', '') == 'REQUESTSPAGEMINUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_requests_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+                editMessage(msg.chat.id, msg.message_id, requestsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_requests_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
             elseif matches[2]:gsub('%d', '') == 'REQUESTSPAGEPLUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_requests_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+                editMessage(msg.chat.id, msg.message_id, requestsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_requests_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
             elseif matches[2] == 'GROUPSBACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
@@ -976,7 +976,8 @@ return {
     {
         "^(###cbadministrator)(REQUESTSDELETE)$",
         "^(###cbadministrator)(GROUPSDELETE)$",
-        "^(###cbadministrator)(PAGES)$",
+        "^(###cbadministrator)(REQUESTSPAGES)$",
+        "^(###cbadministrator)(GROUPSPAGES)$",
         "^(###cbadministrator)(LOGBACK)(%d+)$",
         "^(###cbadministrator)(REQUESTSPAGE%dMINUS)(%d+)$",
         "^(###cbadministrator)(REQUESTSPAGE%dPLUS)(%d+)$",
