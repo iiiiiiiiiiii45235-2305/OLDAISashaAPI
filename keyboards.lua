@@ -637,7 +637,10 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 if groupDataDictionary[setting_add_row] == var:lower() then
-                    keyboard.inline_keyboard[row] = add_punishments_row(chat_id, page, setting_add_row)
+                    local row1, row2 = add_punishments_rows(chat_id, page, setting_add_row)
+                    keyboard.inline_keyboard[row] = row1
+                    row = row + 1
+                    keyboard.inline_keyboard[row] = row2
                     row = row + 1
                     keyboard.inline_keyboard[row] = { }
                 end
@@ -650,7 +653,10 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 if groupDataDictionary[setting_add_row] == var:lower() then
-                    keyboard.inline_keyboard[row] = add_punishments_row(chat_id, page, setting_add_row)
+                    local row1, row2 = add_punishments_rows(chat_id, page, setting_add_row)
+                    keyboard.inline_keyboard[row] = row1
+                    row = row + 1
+                    keyboard.inline_keyboard[row] = row2
                     row = row + 1
                     keyboard.inline_keyboard[row] = { }
                 end
@@ -681,7 +687,10 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
         if groupDataDictionary[setting_add_row] == 'warns_punishment' then
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row] = add_punishments_row(chat_id, page, setting_add_row)
+            local row1, row2 = add_punishments_rows(chat_id, page, setting_add_row)
+            keyboard.inline_keyboard[row] = row1
+            row = row + 1
+            keyboard.inline_keyboard[row] = row2
         end
     end
     row = row + 1
@@ -697,17 +706,18 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
     return keyboard
 end
-function add_punishments_row(chat_id, page, setting)
-    local row = { }
-    row[1] = { text = reverse_punishments_table_emoji[false], callback_data = 'group_management0' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[2] = { text = reverse_punishments_table_emoji[1], callback_data = 'group_management1' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[3] = { text = reverse_punishments_table_emoji[2], callback_data = 'group_management2' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[4] = { text = reverse_punishments_table_emoji[3], callback_data = 'group_management3' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[5] = { text = reverse_punishments_table_emoji[4], callback_data = 'group_management4' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[6] = { text = reverse_punishments_table_emoji[5], callback_data = 'group_management5' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[7] = { text = reverse_punishments_table_emoji[6], callback_data = 'group_management6' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    row[8] = { text = reverse_punishments_table_emoji[7], callback_data = 'group_management7' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
-    return row
+function add_punishments_rows(chat_id, page, setting)
+    local row1 = { }
+    row1[1] = { text = reverse_punishments_table_emoji[false], callback_data = 'group_management0' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row1[2] = { text = reverse_punishments_table_emoji[1], callback_data = 'group_management1' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row1[3] = { text = reverse_punishments_table_emoji[2], callback_data = 'group_management2' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row1[4] = { text = reverse_punishments_table_emoji[3], callback_data = 'group_management3' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    local row2 = { }
+    row2[1] = { text = reverse_punishments_table_emoji[4], callback_data = 'group_management4' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row2[2] = { text = reverse_punishments_table_emoji[5], callback_data = 'group_management5' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row2[3] = { text = reverse_punishments_table_emoji[6], callback_data = 'group_management6' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row2[4] = { text = reverse_punishments_table_emoji[7], callback_data = 'group_management7' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    return row1, row2
 end
 
 -- info
