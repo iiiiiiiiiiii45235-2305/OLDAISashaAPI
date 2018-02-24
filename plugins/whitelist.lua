@@ -4,7 +4,7 @@
         save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
     else
-        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = true
+        table.insert(data[tostring(chat_id)].whitelist.users, user_id)
         save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
     end
@@ -16,7 +16,7 @@ local function whitegban_user(chat_id, user_id, lang)
         save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
     else
-        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = true
+        table.insert(data[tostring(chat_id)].whitelist.gbanned, user_id)
         save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
     end
