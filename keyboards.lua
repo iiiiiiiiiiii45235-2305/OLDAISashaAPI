@@ -182,7 +182,56 @@ function keyboard_list_groups_pages(chat_id, page)
         page = max_pages
     end
 
-    keyboard = add_useful_buttons(keyboard, chat_id, 'administrator', page, max_pages)
+    keyboard = add_useful_buttons(keyboard, chat_id, 'administratorGROUPS', page, max_pages)
+    return keyboard
+end
+local max_requests_lines = 20
+function keyboard_requests_pages(chat_id, page)
+    local lang = get_lang(chat_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    local tot_lines = 0
+    page = tonumber(page) or 1
+    local f = assert(io.open("./groups/logs/requestslog.txt", "rb"))
+    local log = f:read("*all")
+    f:close()
+    local t = log:split('\n')
+    for k, v in pairs(t) do
+        if v ~= '' then
+            tot_lines = tot_lines + 1
+        end
+    end
+
+    local max_pages = math.floor(tot_lines / max_requests_lines)
+    if (tot_lines / max_requests_lines) > math.floor(tot_lines / max_requests_lines) then
+        max_pages = max_pages + 1
+    end
+    if page > max_pages then
+        page = max_pages
+    end
+
+    keyboard = add_useful_buttons(keyboard, chat_id, 'administratorREQUESTS', page, max_pages)
+    -- adjust buttons
+    for k, v in pairs(keyboard.inline_keyboard[1]) do
+        if keyboard.inline_keyboard[1][k].text == langs[lang].updateKeyboard then
+            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSBACK' .. page .. chat_id
+        elseif keyboard.inline_keyboard[1][k].text == langs[lang].previousPage then
+            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSPAGE1MINUS' .. page .. chat_id
+        elseif keyboard.inline_keyboard[1][k].text == langs[lang].nextPage then
+            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSPAGE1PLUS' .. page .. chat_id
+        end
+    end
+    for k, v in pairs(keyboard.inline_keyboard[2]) do
+        if keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].sevenNumber then
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE7MINUS' .. page .. chat_id
+        elseif keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].threeNumber then
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE3MINUS' .. page .. chat_id
+        elseif keyboard.inline_keyboard[2][k].text == langs[lang].threeNumber .. langs[lang].nextPage then
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE3PLUS' .. page .. chat_id
+        elseif keyboard.inline_keyboard[2][k].text == langs[lang].sevenNumber .. langs[lang].nextPage then
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE7PLUS' .. page .. chat_id
+        end
+    end
     return keyboard
 end
 
@@ -434,7 +483,7 @@ function keyboard_faq_list(chat_id)
 end
 
 -- group_management
-local max_lines = 20
+local max_log_lines = 20
 function keyboard_log_pages(chat_id, page)
     local lang = get_lang(chat_id)
     local keyboard = { }
@@ -451,8 +500,8 @@ function keyboard_log_pages(chat_id, page)
         end
     end
 
-    local max_pages = math.floor(tot_lines / max_lines)
-    if (tot_lines / max_lines) > math.floor(tot_lines / max_lines) then
+    local max_pages = math.floor(tot_lines / max_log_lines)
+    if (tot_lines / max_log_lines) > math.floor(tot_lines / max_log_lines) then
         max_pages = max_pages + 1
     end
     if page > max_pages then

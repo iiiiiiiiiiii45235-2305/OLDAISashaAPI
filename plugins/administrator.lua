@@ -402,6 +402,45 @@ local function groupsPages(page)
     return message
 end
 
+local max_lines = 20
+local function requestsPages(chat_id, page)
+    local message = ""
+    if not page then
+        page = 1
+    end
+    page = tonumber(page)
+    local tot_lines = 0
+    local f = assert(io.open("./groups/logs/" .. chat_id .. "log.txt", "rb"))
+    local log = f:read("*all")
+    f:close()
+    local t = log:split('\n')
+    local tmp = clone_table(t)
+    for k, v in pairs(tmp) do
+        if v ~= '' then
+            tot_lines = tot_lines + 1
+        else
+            table.remove(t, k)
+        end
+    end
+    local max_pages = math.floor(tot_lines / max_lines)
+    if (tot_lines / max_lines) > math.floor(tot_lines / max_lines) then
+        max_pages = max_pages + 1
+    end
+    if page > max_pages then
+        page = max_pages
+    end
+    tot_lines = 0
+    for k, v in pairs(t) do
+        if v ~= '' then
+            tot_lines = tot_lines + 1
+            if tot_lines >=(((page - 1) * max_lines) + 1) and tot_lines <=(max_lines * page) then
+                message = message .. v .. '\n'
+            end
+        end
+    end
+    return message
+end
+
 local function run(msg, matches)
     if is_admin(msg) then
         if msg.cb then
@@ -411,13 +450,22 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'PAGES' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-            elseif matches[2] == 'BACK' then
+            elseif matches[2] == 'LOGBACK' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], matches[3]), keyboard_requests_pages(matches[4], matches[3]))
+            elseif matches[2]:gsub('%d', '') == 'REQUESTSPAGEMINUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_requests_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+            elseif matches[2]:gsub('%d', '') == 'REQUESTSPAGEPLUS' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
+                editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_requests_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+            elseif matches[2] == 'GROUPSBACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, groupsPages(matches[3] or 1), keyboard_list_groups_pages(msg.chat.id, matches[3] or 1), 'html')
-            elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
+            elseif matches[2]:gsub('%d', '') == 'GROUPSPAGEMINUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
-            elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
+            elseif matches[2]:gsub('%d', '') == 'GROUPSPAGEPLUS' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
                 editMessage(msg.chat.id, msg.message_id, groupsPages(tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_list_groups_pages(msg.chat.id, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
             end
@@ -705,6 +753,20 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'requestslog' then
             mystat('/requestslog')
+            if sendKeyboard(msg.from.id, requestsPages(msg.chat.id), keyboard_requests_pages(msg.chat.id)) then
+                savelog(msg.chat.id, "requestslog keyboard requested by admin")
+                if msg.chat.type ~= 'private' then
+                    local message_id = sendReply(msg, langs[msg.lang].sendLogPvt, 'html').result.message_id
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                    return
+                end
+            else
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+            end
+        end
+        if matches[1]:lower() == 'sendrequestslog' then
+            mystat('/requestslog')
             return sendDocument(msg.chat.id, "./groups/logs/requestslog.txt")
         end
         if matches[1]:lower() == 'vardump' then
@@ -914,9 +976,12 @@ return {
     {
         "^(###cbadministrator)(DELETE)$",
         "^(###cbadministrator)(PAGES)$",
-        "^(###cbadministrator)(BACK)(%d+)$",
-        "^(###cbadministrator)(PAGE%dMINUS)(%d+)$",
-        "^(###cbadministrator)(PAGE%dPLUS)(%d+)$",
+        "^(###cbadministrator)(LOGBACK)(%d+)$",
+        "^(###cbadministrator)(REQUESTSPAGE%dMINUS)(%d+)$",
+        "^(###cbadministrator)(REQUESTSPAGE%dPLUS)(%d+)$",
+        "^(###cbadministrator)(GROUPSBACK)(%d+)$",
+        "^(###cbadministrator)(GROUPSPAGE%dMINUS)(%d+)$",
+        "^(###cbadministrator)(GROUPSPAGE%dPLUS)(%d+)$",
 
         -- INREALM
         "^[#!/]([Rr][Ee][Mm]) (%-?%d+)$",
@@ -952,6 +1017,7 @@ return {
         "^[#!/]([Bb][Aa][Cc][Kk][Uu][Pp])$",
         "^[#!/]([Uu][Pp][Dd][Aa][Tt][Ee])$",
         "^[#!/]([Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
+        "^[#!/]([Ss][Ee][Nn][Dd][Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
