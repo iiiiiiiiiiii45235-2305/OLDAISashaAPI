@@ -154,7 +154,7 @@ function keyboard_time(plugin, op, chat_id, user_id, time, from_other_plugin)
     column = column + 1
     if plugin == 'banhammer' and from_other_plugin then
         keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-        table.insert(keyboard.inline_keyboard[12], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id })
+        table.insert(keyboard.inline_keyboard[12], 1, { text = langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id })
         column = column + 1
     end
     keyboard.inline_keyboard[12][column] = { text = langs[lang].deleteMessage, callback_data = plugin .. 'DELETE' }
@@ -260,7 +260,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         column = column + 1
         if from_other_plugin then
             keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-            table.insert(keyboard.inline_keyboard[row], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id })
+            table.insert(keyboard.inline_keyboard[row], 1, { text = langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id })
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
@@ -272,7 +272,7 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         local column = 1
         keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].infoPage, callback_data = 'infoPUNISHMENTS' .. user_id .. chat_id }
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'banhammerDELETE' }
@@ -556,7 +556,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         column = column + 1
         if from_other_plugin then
             keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-            table.insert(keyboard.inline_keyboard[row], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id })
+            table.insert(keyboard.inline_keyboard[row], 1, { text = langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id })
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
@@ -568,7 +568,7 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         local column = 1
         keyboard.inline_keyboard[row] = { }
         if from_other_plugin then
-            keyboard.inline_keyboard[row][column] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
+            keyboard.inline_keyboard[row][column] = { text = langs[lang].infoPage, callback_data = 'infoPROMOTIONS' .. user_id .. chat_id }
             column = column + 1
         end
         keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
@@ -691,7 +691,7 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
     column = column + 1
     if from_other_plugin then
         keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-        table.insert(keyboard.inline_keyboard[row], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
+        table.insert(keyboard.inline_keyboard[row], 1, { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
         column = column + 1
     end
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
@@ -1087,7 +1087,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         if deeper then
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
             keyboard.inline_keyboard[row][4] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
@@ -1194,7 +1194,7 @@ function keyboard_plugins_pages(user_id, privileged, page, chat_id, from_other_p
     end
     if from_other_plugin then
         keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].previousPage .. langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
+        table.insert(keyboard.inline_keyboard[row + 1], 1, { text = langs[lang].infoPage, callback_data = 'infoBACK' .. chat_id })
     end
     return keyboard
 end
