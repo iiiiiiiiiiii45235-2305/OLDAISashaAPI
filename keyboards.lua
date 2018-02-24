@@ -526,10 +526,10 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
     else
         keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['pmnotices'] .. page .. chat_id }
     end
-    row = row + 1
-    keyboard.inline_keyboard[row] = { }
     if data[tostring(chat_id)] then
         if tonumber(page) == 1 then
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
             keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_grouplink'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_grouplink'] }
             keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_name'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_name'] }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_photo'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_photo'] }
@@ -569,6 +569,8 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
         elseif tonumber(page) == 2 then
             local column = 1
             local flag = false
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
             keyboard.inline_keyboard[row + 1] = { }
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
                 if flag then
