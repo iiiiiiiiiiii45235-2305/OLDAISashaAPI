@@ -716,16 +716,13 @@ function keyboard_time_punishments(punishment, chat_id, time, from_other_plugin)
         keyboard.inline_keyboard[11][1] = { text = punishment .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'group_management' .. punishment .. time .. 'DONE' .. chat_id }
     end
 
-    local column = 1
     keyboard.inline_keyboard[12] = { }
-    keyboard.inline_keyboard[12][column] = { text = langs[lang].updateKeyboard, callback_data = 'group_management' .. punishment .. time .. 'BACK' .. chat_id }
-    column = column + 1
+    keyboard.inline_keyboard[12][1] = { text = langs[lang].previousPage, callback_data = 'group_managementBACKSETTINGS1' .. chat_id }
+    keyboard.inline_keyboard[12][2] = { text = langs[lang].updateKeyboard, callback_data = 'group_management' .. punishment .. time .. 'BACK' .. chat_id }
     if from_other_plugin then
         keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-        table.insert(keyboard.inline_keyboard[12], 1, { text = langs[lang].previousPage, callback_data = 'group_managementBACKSETTINGS1' .. chat_id .. from_other_plugin })
-        column = column + 1
     end
-    keyboard.inline_keyboard[12][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
+    keyboard.inline_keyboard[12][3] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
     return keyboard
 end
 
