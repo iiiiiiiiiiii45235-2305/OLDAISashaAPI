@@ -1573,13 +1573,13 @@ local function run(msg, matches)
                     return langs[msg.lang].rulesCleaned
                 elseif matches[2]:lower() == 'whitelist' then
                     mystat('/clean whitelist')
-                    data[tostring(chat_id)].whitelist.users = { }
+                    data[tostring(msg.chat.id)].whitelist.users = { }
                     save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelist")
                     return langs[msg.lang].whitelistCleaned
                 elseif matches[2]:lower() == 'whitelistgban' then
                     mystat('/clean whitelistgban')
-                    data[tostring(chat_id)].whitelist.gbanned = { }
+                    data[tostring(msg.chat.id)].whitelist.gbanned = { }
                     save_data(config.moderation.data, data)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned whitelistgban")
                     return langs[msg.lang].whitelistGbanCleaned
