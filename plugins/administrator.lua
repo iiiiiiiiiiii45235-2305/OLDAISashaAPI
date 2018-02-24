@@ -444,7 +444,7 @@ end
 local function run(msg, matches)
     if is_admin(msg) then
         if msg.cb then
-            if matches[2] == 'DELETE' then
+            if matches[2] == 'REQUESTSDELETE' or matches[2] == 'GROUPSDELETE' then
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
@@ -974,7 +974,8 @@ return {
     description = "ADMINISTRATOR",
     patterns =
     {
-        "^(###cbadministrator)(DELETE)$",
+        "^(###cbadministrator)(REQUESTSDELETE)$",
+        "^(###cbadministrator)(GROUPSDELETE)$",
         "^(###cbadministrator)(PAGES)$",
         "^(###cbadministrator)(LOGBACK)(%d+)$",
         "^(###cbadministrator)(REQUESTSPAGE%dMINUS)(%d+)$",
