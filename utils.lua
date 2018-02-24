@@ -1092,6 +1092,7 @@ function profileLink(id, name)
 end
 
 punishments_table = {
+    [false] = false,
     ["false"] = false,
     ["nothing"] = false,
     ["delete"] = 1,
