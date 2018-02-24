@@ -567,12 +567,25 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
             end
             keyboard.inline_keyboard[row][1] = { text = langs[lang].gotoMutes, callback_data = 'group_managementGOTOMUTES' .. chat_id }
         elseif tonumber(page) == 2 then
+            local column = 1
+            local flag = false
+            keyboard.inline_keyboard[row + 1] = { }
             for var, value in pairsByKeys(data[tostring(chat_id)].settings.mutes) do
+                if flag then
+                    flag = false
+                    row = row + 2
+                    column = 1
+                    keyboard.inline_keyboard[row] = { }
+                    keyboard.inline_keyboard[row + 1] = { }
+                end
                 keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary[var:lower()], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
-                keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
-                row = row + 1
-                keyboard.inline_keyboard[row] = { }
+                keyboard.inline_keyboard[row + 1][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
+                if column > 3 then
+                    flag = true
+                end
             end
+            row = row + 2
+            keyboard.inline_keyboard[row] = { }
             keyboard.inline_keyboard[row][1] = { text = langs[lang].gotoLocks, callback_data = 'group_managementGOTOLOCKS' .. chat_id }
         end
         row = row + 1
