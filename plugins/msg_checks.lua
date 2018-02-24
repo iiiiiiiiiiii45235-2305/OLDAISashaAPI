@@ -109,6 +109,7 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
     while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(chat_id)] < 5 and valTot < 30 do
         local tmpmatch = string.match(tmp, '(@[%w_]+)'):lower()
         print(tmpmatch)
+        print(cronTable.alreadyResolved[tmpmatch])
         if cronTable.alreadyResolved[tmpmatch] then
             return true
         elseif type(cronTable.alreadyResolved[tmpmatch]) == nil then
@@ -128,7 +129,6 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
             else
                 cronTable.alreadyResolved[tmpmatch] = false
             end
-            print(cronTable.alreadyResolved[tmpmatch])
         end
         tmp = tmp:gsub(tmpmatch, '')
     end
