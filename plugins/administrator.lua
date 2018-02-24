@@ -484,6 +484,46 @@ local function run(msg, matches)
                 save_data(config.moderation.data, data)
                 return langs[msg.lang].chat .. matches[2] .. langs[msg.lang].removed
             end
+            if matches[1]:lower() == 'settimerestrict' and matches[2] and matches[3] then
+                if matches[4] and matches[5] and matches[6] and matches[7] then
+                    local unix = dateToUnix(matches[7], matches[6], matches[5], matches[4], matches[3])
+                    if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(matches[2])].settings['time_restrict'] = unix
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
+                else
+                    if tonumber(matches[3]) > 30 and tonumber(matches[3]) < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(matches[2])].settings['time_restrict'] = tonumber(matches[3])
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
+                end
+            end
+            if matches[1]:lower() == 'settimeban' and matches[2] and matches[3] then
+                if matches[4] and matches[5] and matches[6] and matches[7] then
+                    local unix = dateToUnix(matches[7], matches[6], matches[5], matches[4], matches[3])
+                    if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(matches[2])].settings['time_ban'] = unix
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
+                else
+                    if tonumber(matches[3]) > 30 and tonumber(matches[3]) < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(matches[2])].settings['time_ban'] = tonumber(matches[3])
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
+                end
+            end
             if matches[1]:lower() == 'lock' and matches[2] and matches[3] and matches[4] then
                 if groupDataDictionary[matches[3]:lower()] then
                     mystat('/lock <group_id> ' .. matches[3]:lower() .. ' ' .. matches[4]:lower())

@@ -963,7 +963,7 @@ local function run(msg, matches)
             if matches[3] and matches[4] and matches[5] and matches[6] then
                 local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
                 if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(matches[5])].settings['time_restrict'] = unix
+                    data[tostring(msg.chat.id)].settings['time_restrict'] = unix
                     save_data(config.moderation.data, data)
                     return langs[msg.lang].done
                 else
@@ -971,7 +971,7 @@ local function run(msg, matches)
                 end
             else
                 if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(matches[5])].settings['time_restrict'] = tonumber(matches[2])
+                    data[tostring(msg.chat.id)].settings['time_restrict'] = tonumber(matches[2])
                     save_data(config.moderation.data, data)
                     return langs[msg.lang].done
                 else
@@ -983,7 +983,7 @@ local function run(msg, matches)
             if matches[3] and matches[4] and matches[5] and matches[6] then
                 local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
                 if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(matches[5])].settings['time_ban'] = unix
+                    data[tostring(msg.chat.id)].settings['time_ban'] = unix
                     save_data(config.moderation.data, data)
                     return langs[msg.lang].done
                 else
@@ -991,7 +991,7 @@ local function run(msg, matches)
                 end
             else
                 if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(matches[5])].settings['time_ban'] = tonumber(matches[2])
+                    data[tostring(msg.chat.id)].settings['time_ban'] = tonumber(matches[2])
                     save_data(config.moderation.data, data)
                     return langs[msg.lang].done
                 else
