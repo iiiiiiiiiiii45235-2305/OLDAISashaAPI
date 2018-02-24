@@ -1096,10 +1096,10 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].linkWord, callback_data = 'infoLINK' .. obj.id }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementBACKMUTES' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementBACKSETTINGS2' .. obj.id .. 'I' }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS1' .. obj.id .. 'I' }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK1' .. obj.id .. 'I' }
@@ -1114,10 +1114,10 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].newlinkWord, callback_data = 'infoNEWLINK' .. obj.id }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementBACKMUTES' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].muteslistWord, callback_data = 'group_managementBACKSETTINGS2' .. obj.id .. 'I' }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
-                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS' .. obj.id .. 'I' }
+                keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS1' .. obj.id .. 'I' }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].pluginsWord, callback_data = 'pluginsBACK1' .. obj.id .. 'I' }
