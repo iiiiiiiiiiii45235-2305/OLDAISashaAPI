@@ -581,7 +581,7 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
                     keyboard.inline_keyboard[row + 1] = { }
                 end
                 keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary[var:lower()], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] }
-                keyboard.inline_keyboard[row + 1][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
+                keyboard.inline_keyboard[row + 1][1] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 if column > 3 then
                     flag = true
                 end
