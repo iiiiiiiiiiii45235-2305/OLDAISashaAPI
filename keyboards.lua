@@ -186,8 +186,7 @@ function keyboard_list_groups_pages(chat_id, page)
     return keyboard
 end
 local max_requests_lines = 40
-function keyboard_requests_pages(chat_id, page)
-    local lang = get_lang(chat_id)
+function keyboard_requests_pages(page)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     local tot_lines = 0
@@ -210,26 +209,26 @@ function keyboard_requests_pages(chat_id, page)
         page = max_pages
     end
 
-    keyboard = add_useful_buttons(keyboard, chat_id, 'administratorREQUESTS', page, max_pages)
+    keyboard = add_useful_buttons(keyboard, nil, 'administratorREQUESTS', page, max_pages)
     -- adjust buttons
     for k, v in pairs(keyboard.inline_keyboard[1]) do
         if keyboard.inline_keyboard[1][k].text == langs[lang].updateKeyboard then
-            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSBACK' .. page .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSBACK' .. page
         elseif keyboard.inline_keyboard[1][k].text == langs[lang].previousPage then
-            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSPAGE1MINUS' .. page .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSPAGE1MINUS' .. page
         elseif keyboard.inline_keyboard[1][k].text == langs[lang].nextPage then
-            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSPAGE1PLUS' .. page .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'administratorREQUESTSPAGE1PLUS' .. page
         end
     end
     for k, v in pairs(keyboard.inline_keyboard[2]) do
         if keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].sevenNumber then
-            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE7MINUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE7MINUS' .. page
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].threeNumber then
-            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE3MINUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE3MINUS' .. page
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].threeNumber .. langs[lang].nextPage then
-            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE3PLUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE3PLUS' .. page
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].sevenNumber .. langs[lang].nextPage then
-            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE7PLUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'administratorREQUESTSPAGE7PLUS' .. page
         end
     end
     return keyboard

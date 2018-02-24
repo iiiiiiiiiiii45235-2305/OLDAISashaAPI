@@ -610,6 +610,9 @@ end
 -- End Table Sort
 
 function get_lang(chat_id)
+    if not chat_id then
+        return 'en'
+    end
     if tonumber(chat_id) < 0 then
         if data[tostring(chat_id)] then
             data[tostring(chat_id)].lang = data[tostring(chat_id)].lang or 'en'
