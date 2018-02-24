@@ -486,7 +486,7 @@ local function run(msg, matches)
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] ..(matches[7] or ''))
             elseif matches[4] == 'DONE' then
                 if time > 30 and time < dateToUnix(0, 0, 0, 366, 0) then
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                     data[tostring(matches[5])].settings[groupDataDictionary[matches[2]:lower()]] = time
                     save_data(config.moderation.data, data)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, matches[6] or false))
