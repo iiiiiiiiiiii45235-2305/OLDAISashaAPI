@@ -270,6 +270,7 @@ return {
         turningPage = "Sto girando la pagina...",
         tempActionIntro = "\nPuoi applicare limitazioni/bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà limitato/bannato per sempre.\nTastiera del tempo:\n",
         errorTimeRange = "Errore, il valore non può essere negativo.",
+        errorTimeRangePunishments = "Errore, il valore non può essere meno di 30 secondi o più di 366 giorni.",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "Sei stato promosso ad admin in ",
@@ -1103,6 +1104,8 @@ return {
             "<b>REGNO</b>",
             "<code>/setgpowner {group_id} {user_id}</code>: Sasha imposta {user_id} come proprietario di {group_id}.",
             "<code>/setrules {group_id} {text}</code>: Sasha cambia le regole di {group_id} in {text}.",
+            "<code>/settime(restrict|ban) {group_id} {seconds}</code>: Sasha imposta la punizione temporanea specificata a {seconds}.",
+            "<code>/settime(restrict|ban) {group_id} {weeks} {days} {hours} {minutes} {seconds}</code>: Sasha imposta la punizione temporanea specificata a {weeks} {days} {hours} {minutes} {seconds}.",
             "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha blocca/muta {setting} con {punishment}.",
             "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha sblocca/smuta {setting}.",
             "<code>/[textual]settings {group_id}</code>: Sasha manda le impostazioni di {group_id}.",
@@ -1379,6 +1382,8 @@ return {
             "<code>/setwarn {value}</code>: Sasha imposta gli avvertimenti massimi a {value}, se zero gli avvertimenti non funzioneranno più.",
             "<code>/newlink</code>: Sasha crea un link per il gruppo.",
             "<code>/setflood {value}</code>: Sasha imposta il flood massimo del gruppo a {value}.",
+            "<code>/settime(restrict|ban) {seconds}</code>: Sasha imposta la punizione temporanea specificata a {seconds}.",
+            "<code>/settime(restrict|ban) {weeks} {days} {hours} {minutes} {seconds}</code>: Sasha imposta la punizione temporanea specificata a {weeks} {days} {hours} {minutes} {seconds}.",
             "<code>/lock|/mute {setting} {punishment}</code>: Sasha blocca/muta {setting} con {punishment}.",
             "<code>/unlock|/unmute {setting}</code>: Sasha sblocca/smuta {setting}.",
             "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
@@ -1752,6 +1757,7 @@ return {
         turningPage = "I'm turning the page...",
         tempActionIntro = "\nYou can temporary restrict/ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be restricted/banned forever.\nTime keyboard:\n",
         errorTimeRange = "Error, the value can't be negative.",
+        errorTimeRangePunishments = "Error, the value can't be less than 30 seconds or more than 366 days.",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "You have been promoted to admin in ",
@@ -2596,6 +2602,8 @@ return {
             "<b>REALM</b>",
             "<code>/setgpowner {group_id} {user_id}</code>: Sasha sets {user_id} as owner of {group_id}.",
             "<code>/setrules {group_id} {text}</code>: Sasha changes {group_id}'s rules with {text}.",
+            "<code>/settime(restrict|ban) {group_id} {seconds}</code>: Sasha sets the specified temporary punishment to {seconds}.",
+            "<code>/settime(restrict|ban) {group_id} {weeks} {days} {hours} {minutes} {seconds}</code>: Sasha sets the specified temporary punishment to {weeks} {days} {hours} {minutes} {seconds}.",
             "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha locks/mutes {setting} with {punishment} in {group_id}.",
             "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha unlocks/unmutes {setting} in {group_id}.",
             "<code>/[textual]settings {group_id}</code>: Sasha sends {group_id}'s settings.",
@@ -2872,6 +2880,8 @@ return {
             "<code>/setwarn {value}</code>: Sasha sets max warns to {value}, if zero warns will not work.",
             "<code>/newlink</code>: Sasha creates a new link of the group.",
             "<code>/setflood {value}</code>: Sasha sets {value} as max flood.",
+            "<code>/settime(restrict|ban) {seconds}</code>: Sasha sets the specified temporary punishment to {seconds}.",
+            "<code>/settime(restrict|ban) {weeks} {days} {hours} {minutes} {seconds}</code>: Sasha sets the specified temporary punishment to {weeks} {days} {hours} {minutes} {seconds}.",
             "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha locks/mutes {setting} with {punishment}.",
             "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha unlocks/unmutes {setting}.",
             "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",

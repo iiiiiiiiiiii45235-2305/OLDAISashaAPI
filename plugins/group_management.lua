@@ -491,7 +491,7 @@ local function run(msg, matches)
                     save_data(config.moderation.data, data)
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, nil, matches[6] or false))
                 else
-                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRangePunishments, true)
                 end
             end
         elseif matches[2]:match('^%d$') then
@@ -958,6 +958,46 @@ local function run(msg, matches)
                 return langs[msg.lang].needReply
             end
             return
+        end
+        if matches[1]:lower() == 'settimerestrict' and matches[2] then
+            if matches[3] and matches[4] and matches[5] and matches[6] then
+                local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
+                if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
+                    data[tostring(matches[5])].settings['time_restrict'] = unix
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].done
+                else
+                    return langs[msg.lang].errorTimeRangePunishments
+                end
+            else
+                if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
+                    data[tostring(matches[5])].settings['time_restrict'] = tonumber(matches[2])
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].done
+                else
+                    return langs[msg.lang].errorTimeRangePunishments
+                end
+            end
+        end
+        if matches[1]:lower() == 'settimeban' and matches[2] then
+            if matches[3] and matches[4] and matches[5] and matches[6] then
+                local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
+                if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
+                    data[tostring(matches[5])].settings['time_ban'] = unix
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].done
+                else
+                    return langs[msg.lang].errorTimeRangePunishments
+                end
+            else
+                if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
+                    data[tostring(matches[5])].settings['time_ban'] = tonumber(matches[2])
+                    save_data(config.moderation.data, data)
+                    return langs[msg.lang].done
+                else
+                    return langs[msg.lang].errorTimeRangePunishments
+                end
+            end
         end
         if matches[1]:lower() == 'lock' then
             if msg.from.is_mod then
@@ -1967,6 +2007,10 @@ return {
         "/setwarn {value}",
         "/setflood {value}",
         "/newlink",
+        "/settimerestrict {seconds}",
+        "/settimeban {seconds}",
+        "/settimerestrict {weeks} {days} {hours} {minutes} {seconds}",
+        "/settimeban {weeks} {days} {hours} {minutes} {seconds}",
         "/lock|/mute arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment {punishment}",
         "/unlock|/unmute arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment",
         "/pin {reply}",
