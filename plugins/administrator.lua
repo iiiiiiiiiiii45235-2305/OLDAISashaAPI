@@ -410,7 +410,7 @@ local function requestsPages(chat_id, page)
     end
     page = tonumber(page)
     local tot_lines = 0
-    local f = assert(io.open("./groups/logs/" .. chat_id .. "log.txt", "rb"))
+    local f = assert(io.open("./groups/logs/requestslog.txt", "rb"))
     local log = f:read("*all")
     f:close()
     local t = log:split('\n')
