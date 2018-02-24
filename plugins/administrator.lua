@@ -450,7 +450,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'REQUESTSPAGES' or matches[2] == 'GROUPSPAGES' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
-            elseif matches[2] == 'LOGBACK' then
+            elseif matches[2] == 'REQUESTSBACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                 editMessage(msg.chat.id, msg.message_id, requestsPages(matches[4], matches[3]), keyboard_requests_pages(matches[4], matches[3]))
             elseif matches[2]:gsub('%d', '') == 'REQUESTSPAGEMINUS' then
@@ -978,7 +978,7 @@ return {
         "^(###cbadministrator)(GROUPSDELETE)$",
         "^(###cbadministrator)(REQUESTSPAGES)$",
         "^(###cbadministrator)(GROUPSPAGES)$",
-        "^(###cbadministrator)(LOGBACK)(%d+)$",
+        "^(###cbadministrator)(REQUESTSBACK)(%d+)$",
         "^(###cbadministrator)(REQUESTSPAGE%dMINUS)(%d+)$",
         "^(###cbadministrator)(REQUESTSPAGE%dPLUS)(%d+)$",
         "^(###cbadministrator)(GROUPSBACK)(%d+)$",
