@@ -204,7 +204,7 @@ return {
     -- ####
     it =
     {
-        news = "SASHA'S NEWS\n#sashasnews\n" ..
+        newsText = "SASHA'S NEWS\n#sashasnews\n" ..
         "E' passato un sacco di tempo dall'ultimo aggiornamento (pochi bugfixes e qualche miglioramento), quindi ecco un aggiornamento ENORME.\n" ..
         "UN BEL PO' di bugfixes e miglioramenti per il codice.\n" ..
         "Migliore gestione delle shitstorm.\n" ..
@@ -1708,7 +1708,7 @@ return {
     -- ####
     en =
     {
-        news = "SASHA'S NEWS\n#sashasnews\n" ..
+        newsText = "SASHA'S NEWS\n#sashasnews\n" ..
         "It's been a long long time since the last updates (just little bugfixes and improvements), so here it is a HUGE update.\n" ..
         "A LOT of bugfixes and improvements under the hood.\n" ..
         "Better shitstorm management.\n" ..
