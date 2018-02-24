@@ -228,10 +228,10 @@ local function check_msg(msg, group_data, pre_process_function)
                     if not whitelisted then
                         if pre_process_function then
                             print('link (forward) found')
-                            sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_forward, langs[msg.lang].reasonLockLinkForward, msg.message_id))
+                            sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_forward, langs[msg.lang].reasonLockForward, msg.message_id))
                             return nil
                         else
-                            text = text .. langs[msg.lang].reasonLockLinkForward
+                            text = text .. langs[msg.lang].reasonLockForward
                         end
                     end
                 end
