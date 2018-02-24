@@ -463,18 +463,20 @@ local function save_to_db(msg)
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
             cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = 0
             cronTable.alreadyResolved = cronTable.alreadyResolved or { }
-                printvardump(cronTable.alreadyResolved)
+            printvardump(cronTable.alreadyResolved)
             while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)] < 5 and valTot < 30 do
-                if cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')] then
+                local tmpmatch = string.match(tmp, '(@[%w_]+)'):lower()
+                print(tmpmatch)
+                if cronTable.alreadyResolved[tmpmatch] then
                     return true
-                elseif type(cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')]) == nil then
+                elseif type(cronTable.alreadyResolved[tmpmatch]) == nil then
                     cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
                     valTot = valTot + 1
-                    local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
+                    local obj = getChat(tmpmatch, true)
                     if obj then
                         if obj.result then
                             obj = obj.result
-                            cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')] = true
+                            cronTable.alreadyResolved[tmpmatch] = true
                             if obj.type == 'private' then
                                 if msg.bot then
                                     db_user(obj, bot.id)
@@ -487,13 +489,13 @@ local function save_to_db(msg)
                                 db_channel(obj)
                             end
                         else
-                            cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')] = false
+                            cronTable.alreadyResolved[tmpmatch] = false
                         end
                     else
-                        cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')] = false
+                        cronTable.alreadyResolved[tmpmatch] = false
                     end
                 end
-                tmp = tmp:gsub(string.match(tmp, '(@[%w_]+)'), '')
+                tmp = tmp:gsub(tmpmatch, '')
             end
 
             -- if forward save forward
