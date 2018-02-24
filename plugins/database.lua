@@ -2,9 +2,10 @@
 local cronTable = {
     resolveUsernamesTable =
     {
-        -- chat_id = { valMsg, valTot }
+        -- chat_id = valMsg
     }
 }
+local valTot = 0
 
 local function db_user(user, chat_id)
     if not user.print_name then
@@ -455,12 +456,11 @@ local function save_to_db(msg)
             tmp = tmp:gsub('%?([^%s]+)', '')
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
-            cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] or { }
-            cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = 0
-            cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot or 0
-            while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg < 5 and cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot < 30 do
-                cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valMsg + 1
-                cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot = cronTable.resolveUsernamesTable[tostring(msg.chat.id)].valTot + 1
+            cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = 0
+            valTot = valTot or 0
+            while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)] < 5 and valTot < 30 do
+                cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] + 1
+                valTot = valTot + 1
                 local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
                 if obj then
                     if obj.result then
@@ -526,6 +526,7 @@ local function cron()
     cronTable = {
         resolveUsernamesTable = { }
     }
+    valTot = 0
 end
 
 return {
