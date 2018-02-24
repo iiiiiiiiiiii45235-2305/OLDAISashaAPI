@@ -500,7 +500,7 @@ local function run(msg, matches)
                 if (groupDataDictionary[matches[3]:lower()] == 'all' or groupDataDictionary[matches[3]:lower()] == 'text') and not is_owner2(msg.from.id, matches[5]) then
                     return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
-                local new_punishment = adjust_punishment(matches[3]:lower(), matches[2])
+                local new_punishment = adjust_punishment(matches[3]:lower(), matches[2], '+')
                 answerCallbackQuery(msg.cb_id, setPunishment(matches[5], groupDataDictionary[matches[3]:lower()], new_punishment), false)
                 savelog(matches[5], msg.from.print_name .. " [" .. msg.from.id .. "] set punishment of " .. groupDataDictionary[matches[3]:lower()] .. " to " .. tostring(new_punishment))
                 local chat_name = ''
