@@ -322,21 +322,21 @@ local function run(msg, matches)
             if data[tostring(matches[4])] then
                 chat_name = data[tostring(matches[4])].name or ''
             end
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], nil, matches[5] or false))
         elseif matches[2] == 'GOTOLOCKS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].locksWord, false)
             local chat_name = ''
             if data[tostring(matches[3])] then
                 chat_name = data[tostring(matches[3])].name or ''
             end
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 1, matches[4] or false))
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 1, nil, matches[4] or false))
         elseif matches[2] == 'GOTOMUTES' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].mutesWord, false)
             local chat_name = ''
             if data[tostring(matches[3])] then
                 chat_name = data[tostring(matches[3])].name or ''
             end
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 2, matches[4] or false))
+            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 2, nil, matches[4] or false))
         elseif matches[2] == 'LOCK' then
             if is_mod2(msg.from.id, matches[5]) then
                 if (groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
@@ -347,7 +347,7 @@ local function run(msg, matches)
                 if data[tostring(matches[5])] then
                     chat_name = data[tostring(matches[5])].name or ''
                 end
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], matches[6] or false))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], nil, matches[6] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
             else
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
@@ -362,7 +362,7 @@ local function run(msg, matches)
                 if data[tostring(matches[5])] then
                     chat_name = data[tostring(matches[5])].name or ''
                 end
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], matches[6] or false))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], nil, matches[6] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
             else
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
@@ -387,7 +387,7 @@ local function run(msg, matches)
                 if data[tostring(matches[4])] then
                     chat_name = data[tostring(matches[4])].name or ''
                 end
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], nil, matches[5] or false))
             else
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
@@ -411,7 +411,7 @@ local function run(msg, matches)
                 if data[tostring(matches[4])] then
                     chat_name = data[tostring(matches[4])].name or ''
                 end
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], nil, matches[5] or false))
             else
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
@@ -489,34 +489,47 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                     data[tostring(matches[5])].settings[groupDataDictionary[matches[2]:lower()]] = time
                     save_data(config.moderation.data, data)
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, matches[6] or false))
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, nil, matches[6] or false))
                 else
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
                 end
             end
+        elseif matches[2]:match('^%d$') then
+            -- change punishment
+            if groupDataDictionary[matches[3]:lower()] then
+                if (groupDataDictionary[matches[3]:lower()] == 'all' or groupDataDictionary[matches[3]:lower()] == 'text') and not is_owner2(msg.from.id, matches[5]) then
+                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                end
+                local new_punishment = adjust_punishment(matches[3]:lower(), matches[2])
+                answerCallbackQuery(msg.cb_id, setPunishment(matches[5], groupDataDictionary[matches[3]:lower()], new_punishment), false)
+                savelog(matches[5], msg.from.print_name .. " [" .. msg.from.id .. "] set punishment of " .. groupDataDictionary[matches[3]:lower()] .. " to " .. tostring(new_punishment))
+                local chat_name = ''
+                if data[tostring(matches[5])] then
+                    chat_name = data[tostring(matches[5])].name or ''
+                end
+                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], matches[4], nil, matches[6] or false))
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
+            else
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].settingNotFound, true)
+            end
         else
             if groupDataDictionary[matches[2]:lower()] then
-                local increasePunishment = false
+                local updatePunishment = false
                 if matches[3] then
                     if matches[3]:match('%d') then
-                        increasePunishment = true
+                        updatePunishment = true
                     end
                 end
-                if increasePunishment then
-                    if (groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not is_owner2(msg.from.id, matches[4]) then
-                        return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
-                    end
-                    local punishment = getPunishment(matches[4], groupDataDictionary[matches[2]:lower()])
-                    local new_punishment = adjust_punishment(matches[2]:lower(), punishment, '+')
-                    answerCallbackQuery(msg.cb_id, setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], new_punishment), false)
-                    savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. groupDataDictionary[matches[2]:lower()] .. " to " .. tostring(new_punishment))
+                if updatePunishment then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].selectNewPunishment, false)
                     local chat_name = ''
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].name or ''
                     end
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], groupDataDictionary[matches[2]:lower()], matches[5] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                 else
+                    -- info of variable
                     mystat(matches[1] .. matches[2] ..(matches[3] or ''))
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].settingsDictionary[groupDataDictionary[matches[2]:lower()]], true)
                 end
@@ -1850,6 +1863,9 @@ return {
         "^(###cbgroup_management)(time_restrict)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)$",
         "^(###cbgroup_management)(time_restrict)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)$",
         "^(###cbgroup_management)(time_restrict)(%d+)(DONE)(%-%d+)$",
+        -- punishments row
+        "^(###cbgroup_management)(%d)([%w_]+)(%d)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(%d)([%w_]+)(%d)(%-%d+)$",
         -- info of the setting
         "^(###cbgroup_management)([%w_]+)(%u)$",
         "^(###cbgroup_management)([%w_]+)$",

@@ -575,11 +575,12 @@ function keyboard_permissions_list(chat_id, user_id, param_permissions, from_oth
         return keyboard
     end
 end
-function keyboard_settings_list(chat_id, page, from_other_plugin)
+function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugin)
     local lang = get_lang(chat_id)
     local keyboard = { }
     keyboard.inline_keyboard = { }
     page = tonumber(page) or 1
+    setting_add_row = tostring(setting_add_row):lower() or ''
 
     local row = 1
     keyboard.inline_keyboard[row] = { }
@@ -635,6 +636,11 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
                 keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
+                if groupDataDictionary[setting_add_row] == var:lower() then
+                    keyboard.inline_keyboard[row] = add_punishments_row(chat_id, page, setting_add_row)
+                    row = row + 1
+                    keyboard.inline_keyboard[row] = { }
+                end
             end
             keyboard.inline_keyboard[row][1] = { text = langs[lang].gotoMutes, callback_data = 'group_managementGOTOMUTES' .. chat_id }
         elseif tonumber(page) == 2 then
@@ -643,6 +649,11 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
                 keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[value] .. reverse_punishments_table[value], callback_data = 'group_management' .. reverseGroupDataDictionary[var:lower()] .. page .. chat_id }
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
+                if groupDataDictionary[setting_add_row] == var:lower() then
+                    keyboard.inline_keyboard[row] = add_punishments_row(chat_id, page, setting_add_row)
+                    row = row + 1
+                    keyboard.inline_keyboard[row] = { }
+                end
             end
             keyboard.inline_keyboard[row][1] = { text = langs[lang].gotoLocks, callback_data = 'group_managementGOTOLOCKS' .. chat_id }
         end
@@ -667,6 +678,11 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['warns_punishment'], callback_data = 'group_management' .. reverseGroupDataDictionary['warns_punishment'] }
         keyboard.inline_keyboard[row][2] = { text = reverse_punishments_table_emoji[data[tostring(chat_id)].settings.warns_punishment] .. reverse_punishments_table[data[tostring(chat_id)].settings.warns_punishment], callback_data = 'group_management' .. reverseGroupDataDictionary['warns_punishment'] .. page .. chat_id }
+        if groupDataDictionary[setting_add_row] == 'warns_punishment' then
+            row = row + 1
+            keyboard.inline_keyboard[row] = { }
+            keyboard.inline_keyboard[row] = add_punishments_row(chat_id, page, setting_add_row)
+        end
     end
     row = row + 1
     local column = 1
@@ -681,76 +697,17 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
     keyboard.inline_keyboard[row][column] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
     return keyboard
 end
-function keyboard_time_punishments(punishment, chat_id, time, from_other_plugin)
-    if not time then
-        time = 16115430
-    end
-    local seconds, minutes, hours, days, weeks = unixToDate(time)
-    local lang = get_lang(chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    for i = 1, 12 do
-        keyboard.inline_keyboard[i] = { }
-    end
-
-    keyboard.inline_keyboard[1][1] = { text = langs[lang].seconds:gsub('X', seconds), callback_data = 'group_management' .. punishment .. time .. 'SECONDS0' .. chat_id }
-    keyboard.inline_keyboard[2][1] = { text = "-10", callback_data = 'group_management' .. punishment .. time .. 'SECONDS-10' .. chat_id }
-    keyboard.inline_keyboard[2][2] = { text = "-5", callback_data = 'group_management' .. punishment .. time .. 'SECONDS-5' .. chat_id }
-    keyboard.inline_keyboard[2][3] = { text = "-1", callback_data = 'group_management' .. punishment .. time .. 'SECONDS-1' .. chat_id }
-    keyboard.inline_keyboard[2][4] = { text = "+1", callback_data = 'group_management' .. punishment .. time .. 'SECONDS+1' .. chat_id }
-    keyboard.inline_keyboard[2][5] = { text = "+5", callback_data = 'group_management' .. punishment .. time .. 'SECONDS+5' .. chat_id }
-    keyboard.inline_keyboard[2][6] = { text = "+10", callback_data = 'group_management' .. punishment .. time .. 'SECONDS+10' .. chat_id }
-
-    keyboard.inline_keyboard[3][1] = { text = langs[lang].minutes:gsub('X', minutes), callback_data = 'group_management' .. punishment .. time .. 'MINUTES0' .. chat_id }
-
-    keyboard.inline_keyboard[4][1] = { text = "-10", callback_data = 'group_management' .. punishment .. time .. 'MINUTES-10' .. chat_id }
-    keyboard.inline_keyboard[4][2] = { text = "-5", callback_data = 'group_management' .. punishment .. time .. 'MINUTES-5' .. chat_id }
-    keyboard.inline_keyboard[4][3] = { text = "-1", callback_data = 'group_management' .. punishment .. time .. 'MINUTES-1' .. chat_id }
-    keyboard.inline_keyboard[4][4] = { text = "+1", callback_data = 'group_management' .. punishment .. time .. 'MINUTES+1' .. chat_id }
-    keyboard.inline_keyboard[4][5] = { text = "+5", callback_data = 'group_management' .. punishment .. time .. 'MINUTES+5' .. chat_id }
-    keyboard.inline_keyboard[4][6] = { text = "+10", callback_data = 'group_management' .. punishment .. time .. 'MINUTES+10' .. chat_id }
-
-    keyboard.inline_keyboard[5][1] = { text = langs[lang].hours:gsub('X', hours), callback_data = 'group_management' .. punishment .. time .. 'HOURS0' .. chat_id }
-
-    keyboard.inline_keyboard[6][1] = { text = "-10", callback_data = 'group_management' .. punishment .. time .. 'HOURS-10' .. chat_id }
-    keyboard.inline_keyboard[6][2] = { text = "-5", callback_data = 'group_management' .. punishment .. time .. 'HOURS-5' .. chat_id }
-    keyboard.inline_keyboard[6][3] = { text = "-1", callback_data = 'group_management' .. punishment .. time .. 'HOURS-1' .. chat_id }
-    keyboard.inline_keyboard[6][4] = { text = "+1", callback_data = 'group_management' .. punishment .. time .. 'HOURS+1' .. chat_id }
-    keyboard.inline_keyboard[6][5] = { text = "+5", callback_data = 'group_management' .. punishment .. time .. 'HOURS+5' .. chat_id }
-    keyboard.inline_keyboard[6][6] = { text = "+10", callback_data = 'group_management' .. punishment .. time .. 'HOURS+10' .. chat_id }
-
-    keyboard.inline_keyboard[7][1] = { text = langs[lang].days:gsub('X', days), callback_data = 'group_management' .. punishment .. time .. 'DAYS0' .. chat_id }
-
-    keyboard.inline_keyboard[8][1] = { text = "-5", callback_data = 'group_management' .. punishment .. time .. 'DAYS-5' .. chat_id }
-    keyboard.inline_keyboard[8][2] = { text = "-3", callback_data = 'group_management' .. punishment .. time .. 'DAYS-3' .. chat_id }
-    keyboard.inline_keyboard[8][3] = { text = "-1", callback_data = 'group_management' .. punishment .. time .. 'DAYS-1' .. chat_id }
-    keyboard.inline_keyboard[8][4] = { text = "+1", callback_data = 'group_management' .. punishment .. time .. 'DAYS+1' .. chat_id }
-    keyboard.inline_keyboard[8][5] = { text = "+3", callback_data = 'group_management' .. punishment .. time .. 'DAYS+3' .. chat_id }
-    keyboard.inline_keyboard[8][6] = { text = "+5", callback_data = 'group_management' .. punishment .. time .. 'DAYS+5' .. chat_id }
-
-    keyboard.inline_keyboard[9][1] = { text = langs[lang].weeks:gsub('X', weeks), callback_data = 'group_management' .. punishment .. time .. 'WEEKS0' .. chat_id }
-
-    keyboard.inline_keyboard[10][1] = { text = "-10", callback_data = 'group_management' .. punishment .. time .. 'WEEKS-10' .. chat_id }
-    keyboard.inline_keyboard[10][2] = { text = "-5", callback_data = 'group_management' .. punishment .. time .. 'WEEKS-5' .. chat_id }
-    keyboard.inline_keyboard[10][3] = { text = "-1", callback_data = 'group_management' .. punishment .. time .. 'WEEKS-1' .. chat_id }
-    keyboard.inline_keyboard[10][4] = { text = "+1", callback_data = 'group_management' .. punishment .. time .. 'WEEKS+1' .. chat_id }
-    keyboard.inline_keyboard[10][5] = { text = "+5", callback_data = 'group_management' .. punishment .. time .. 'WEEKS+5' .. chat_id }
-    keyboard.inline_keyboard[10][6] = { text = "+10", callback_data = 'group_management' .. punishment .. time .. 'WEEKS+10' .. chat_id }
-
-    if time < 30 or time > 31622400 then
-        keyboard.inline_keyboard[11][1] = { text = punishment .. ' ' .. langs[lang].forever, callback_data = 'group_management' .. punishment .. time .. 'DONE' .. chat_id }
-    else
-        keyboard.inline_keyboard[11][1] = { text = punishment .. ' ' ..(days + weeks * 7) .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord, callback_data = 'group_management' .. punishment .. time .. 'DONE' .. chat_id }
-    end
-
-    keyboard.inline_keyboard[12] = { }
-    keyboard.inline_keyboard[12][1] = { text = langs[lang].previousPage, callback_data = 'group_managementBACKSETTINGS1' .. chat_id }
-    keyboard.inline_keyboard[12][2] = { text = langs[lang].updateKeyboard, callback_data = 'group_management' .. punishment .. time .. 'BACK' .. chat_id }
-    if from_other_plugin then
-        keyboard = add_from_other_plugin(keyboard, from_other_plugin)
-    end
-    keyboard.inline_keyboard[12][3] = { text = langs[lang].deleteMessage, callback_data = 'group_managementDELETE' }
-    return keyboard
+function add_punishments_row(chat_id, page, setting)
+    local row = { }
+    row[1] = { text = reverse_punishments_table_emoji[false], callback_data = 'group_management0' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[2] = { text = reverse_punishments_table_emoji[1], callback_data = 'group_management1' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[3] = { text = reverse_punishments_table_emoji[2], callback_data = 'group_management2' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[4] = { text = reverse_punishments_table_emoji[3], callback_data = 'group_management3' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[5] = { text = reverse_punishments_table_emoji[4], callback_data = 'group_management4' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[6] = { text = reverse_punishments_table_emoji[5], callback_data = 'group_management5' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[7] = { text = reverse_punishments_table_emoji[6], callback_data = 'group_management6' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    row[8] = { text = reverse_punishments_table_emoji[7], callback_data = 'group_management7' .. reverseGroupDataDictionary[setting] .. page .. chat_id }
+    return row
 end
 
 -- info
