@@ -2074,6 +2074,7 @@ function lockSetting(target, setting_type, punishment)
             return langs[lang].settingLocked
         end
     end
+    print(punishment, punishments_table[punishment])
     if not punishments_table[punishment] then
         return langs[lang].punishmentNotFound
     end
