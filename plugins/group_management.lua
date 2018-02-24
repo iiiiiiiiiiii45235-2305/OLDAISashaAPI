@@ -503,20 +503,19 @@ local function run(msg, matches)
                     end
                 end
                 if increasePunishment then
-                    if (groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not is_owner2(msg.from.id, matches[5]) then
+                    if (groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not is_owner2(msg.from.id, matches[4]) then
                         return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                     end
-                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                     local punishment = getPunishment(matches[4], groupDataDictionary[matches[2]:lower()])
                     local new_punishment = adjust_punishment(matches[2]:lower(), punishment, '+')
-                    local text = setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], new_punishment)
-                    answerCallbackQuery(msg.cb_id, text, false)
+                    answerCallbackQuery(msg.cb_id, setPunishment(matches[4], groupDataDictionary[matches[2]:lower()], new_punishment), false)
                     savelog(matches[4], msg.from.print_name .. " [" .. msg.from.id .. "] increased punishment of " .. groupDataDictionary[matches[2]:lower()] .. " to " .. tostring(new_punishment))
                     local chat_name = ''
                     if data[tostring(matches[4])] then
                         chat_name = data[tostring(matches[4])].name or ''
                     end
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[4] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[4], matches[3], matches[5] or false))
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] ..(matches[5] or ''))
                 else
                     mystat(matches[1] .. matches[2] ..(matches[3] or ''))
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].settingsDictionary[groupDataDictionary[matches[2]:lower()]], true)
