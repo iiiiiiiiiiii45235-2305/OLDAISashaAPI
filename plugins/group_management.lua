@@ -483,7 +483,7 @@ local function run(msg, matches)
                     end
                 end
                 editMessage(msg.chat.id, msg.message_id, chat_name .. ' (' .. matches[6] .. ')' .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[6], time, matches[7] or false))
-                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] ..(matches[7] or ''))
             elseif matches[4] == 'DONE' then
                 if time > 30 and time < dateToUnix(0, 0, 0, 366, 0) then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
