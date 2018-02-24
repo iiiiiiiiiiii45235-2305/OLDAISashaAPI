@@ -463,7 +463,7 @@ local function save_to_db(msg)
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
             cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = 0
             cronTable.alreadyResolved = cronTable.alreadyResolved or { }
-            valTot = valTot or 0
+                printvardump(cronTable.alreadyResolved)
             while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)] < 5 and valTot < 30 do
                 if cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')] then
                     return true

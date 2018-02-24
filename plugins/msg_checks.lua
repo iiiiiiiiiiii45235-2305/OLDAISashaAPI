@@ -105,6 +105,7 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
     -- make links usernames
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
     cronTable.resolveUsernamesTable[tostring(chat_id)] = 0
+    printvardump(cronTable.alreadyResolved)
     while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(chat_id)] < 5 and valTot < 30 do
         if cronTable.alreadyResolved[string.match(tmp, '(@[%w_]+)')] then
             return true
