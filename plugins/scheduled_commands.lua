@@ -50,7 +50,7 @@ local function run(msg, matches)
                     local time = tonumber(matches[2])
                     if matches[3] == 'BACK' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[4], time))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_less_time('delword', matches[4], time))
                     elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                         local seconds, minutes, hours = unixToDate(time)
                         if matches[3] == 'SECONDS' then
@@ -87,7 +87,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_scheduledelword(matches[5], time))
+                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].delwordIntro:gsub('X', delword_table[tostring(msg.from.id)]), keyboard_less_time('delword', matches[5], time))
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
                     elseif matches[3] == 'DONE' then
                         if is_mod2(msg.from.id, matches[4], false) then
@@ -129,7 +129,7 @@ local function run(msg, matches)
                         local time = tonumber(matches[2])
                         if matches[3] == 'BACK' then
                             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                            editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[4], time))
+                            editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_less_time('schedule', matches[4], time))
                         elseif matches[3] == 'SECONDS' or matches[3] == 'MINUTES' or matches[3] == 'HOURS' then
                             local seconds, minutes, hours = unixToDate(time)
                             if matches[3] == 'SECONDS' then
@@ -166,7 +166,7 @@ local function run(msg, matches)
                                     end
                                 end
                             end
-                            editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_schedule(matches[5], time))
+                            editMessage(msg.chat.id, msg.message_id, 'SCHEDULE', keyboard_less_time('schedule', matches[5], time))
                         elseif matches[3] == 'DONE' then
                             answerCallbackQuery(msg.cb_id, 'SCHEDULED', false)
                             io.popen('lua timework.lua "' .. schedule_table[tostring(msg.from.id)].method .. '" "' .. time .. '" "' .. schedule_table[tostring(msg.from.id)].chat_id .. '" "' .. schedule_table[tostring(msg.from.id)].text .. '"')
@@ -200,7 +200,7 @@ local function run(msg, matches)
                         redis:hdel(hash, matches[2]:lower())
                         return langs[msg.lang].delwordRemoved .. matches[2]:lower()
                     else
-                        if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_scheduledelword(msg.chat.id)) then
+                        if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_less_time('delword', msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
                                 local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
                                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
@@ -228,7 +228,7 @@ local function run(msg, matches)
                 return 'SCHEDULED'
             else
                 schedule_table[tostring(msg.from.id)] = { method = matches[2]:lower(), chat_id = matches[3], text = matches[4] }
-                if sendKeyboard(msg.from.id, 'SCHEDULE', keyboard_schedule(msg.chat.id)) then
+                if sendKeyboard(msg.from.id, 'SCHEDULE', keyboard_less_time('schedule', msg.chat.id)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')

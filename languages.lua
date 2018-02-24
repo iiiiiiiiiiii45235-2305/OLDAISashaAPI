@@ -268,6 +268,8 @@ return {
         chatWillBeRemoved = "Mi hai rimosso dal tuo gruppo, i relativi dati saranno essere cancellati a breve.",
         uselessButton = "Tasto inutile.",
         turningPage = "Sto girando la pagina...",
+        tempActionIntro = "\nPuoi applicare limitazioni/bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà limitato/bannato per sempre.\nTastiera del tempo:\n",
+        errorTimeRange = "Errore, il valore non può essere negativo.",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "Sei stato promosso ad admin in ",
@@ -472,11 +474,8 @@ return {
         restrictionSendMediaMessages = "\nPuò inviare audio, documenti, foto, video, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nPuò inviare gifs, giochi, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nPuò aggiungere anteprime di pagine web: ",
-        tempBanIntro = "\nPuoi bannare temporaneamente le persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range l'utente verrà bannato per sempre.\nTastiera del tempo:\n",
-        errorBanhammerTimeRange = "Errore, il valore non può essere negativo.",
         forever = "∞",
         untilWord = "fino a",
-        tempRestrictIntro = "\nPuoi applicare limitazioni temporaneamente alle persone da 30 secondi a 366 giorni, se viene specificato un valore che non rientra nel range le limitazioni verranno applicate per sempre.\nTastiera del tempo:\n",
         noObjectInvite = "Nessun oggetto trovato.\nL'utente non esiste oppure non mi ha mai contattata.",
         invitedYouTo = " ti ha invitato nel gruppo ",
         userAlreadyInChat = 'Utente già nel gruppo.',
@@ -1750,6 +1749,8 @@ return {
         chatWillBeRemoved = "You removed me from your group, those data will be removed soon.",
         uselessButton = "Useless button.",
         turningPage = "I'm turning the page...",
+        tempActionIntro = "\nYou can temporary restrict/ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be restricted/banned forever.\nTime keyboard:\n",
+        errorTimeRange = "Error, the value can't be negative.",
 
         -- warn/kick/ban reasons --
         youHaveBeenPromotedAdmin = "You have been promoted to admin in ",
@@ -1959,11 +1960,8 @@ return {
         restrictionSendMediaMessages = "\nCan send audios, documents, photos, videos, video_notes, voice_notes: ",
         restrictionSendOtherMessages = "\nCan send gifs, games, stickers, inline bots: ",
         restrictionAddWebPagePreviews = "\nCan add web page previews: ",
-        tempBanIntro = "\nYou can temporary ban people from 30 seconds to 366 days, if the specified value is not in the range the user will be banned forever.\nTime keyboard:\n",
-        errorBanhammerTimeRange = "Error, the value can't be negative.",
         forever = "∞",
         untilWord = "until",
-        tempRestrictIntro = "\nYou can temporary restrict people from 30 seconds to 366 days, if the specified value is not in the range the user will be restricted forever.\nTime keyboard:\n",
         noObjectInvite = "No object found.\nThe user doesn't exist or (s)he didn't write to me.",
         invitedYouTo = " invited you to join ",
         userAlreadyInChat = 'User already in this chat.',

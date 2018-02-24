@@ -415,6 +415,85 @@ local function run(msg, matches)
             else
                 editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
+        elseif matches[2] == 'time_ban' or matches[2] == 'time_restrict' then
+            local time = tonumber(matches[3])
+            local chat_name = ''
+            if data[tostring(matches[5])] then
+                chat_name = data[tostring(matches[5])].name or ''
+            end
+            if matches[4] == 'BACK' then
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
+                editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
+            elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
+                local seconds, minutes, hours, days, weeks = unixToDate(time)
+                if matches[4] == 'SECONDS' then
+                    if tonumber(matches[5]) == 0 then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].secondsReset, false)
+                        time = time - dateToUnix(seconds, 0, 0, 0, 0)
+                    else
+                        if (time + dateToUnix(tonumber(matches[5]), 0, 0, 0, 0)) >= 0 then
+                            time = time + dateToUnix(tonumber(matches[5]), 0, 0, 0, 0)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
+                        end
+                    end
+                elseif matches[4] == 'MINUTES' then
+                    if tonumber(matches[5]) == 0 then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].minutesReset, false)
+                        time = time - dateToUnix(0, minutes, 0, 0, 0)
+                    else
+                        if (time + dateToUnix(0, tonumber(matches[5]), 0, 0, 0)) >= 0 then
+                            time = time + dateToUnix(0, tonumber(matches[5]), 0, 0, 0)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
+                        end
+                    end
+                elseif matches[4] == 'HOURS' then
+                    if tonumber(matches[5]) == 0 then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].hoursReset, false)
+                        time = time - dateToUnix(0, 0, hours, 0, 0)
+                    else
+                        if (time + dateToUnix(0, 0, tonumber(matches[5]), 0, 0)) >= 0 then
+                            time = time + dateToUnix(0, 0, tonumber(matches[5]), 0, 0)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
+                        end
+                    end
+                elseif matches[4] == 'DAYS' then
+                    if tonumber(matches[5]) == 0 then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].daysReset, false)
+                        time = time - dateToUnix(0, 0, 0, days, 0)
+                    else
+                        if (time + dateToUnix(0, 0, 0, tonumber(matches[5]), 0)) >= 0 then
+                            time = time + dateToUnix(0, 0, 0, tonumber(matches[5]), 0)
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
+                        end
+                    end
+                elseif matches[4] == 'WEEKS' then
+                    if tonumber(matches[5]) == 0 then
+                        answerCallbackQuery(msg.cb_id, langs[msg.lang].weeksReset, false)
+                        time = time - dateToUnix(0, 0, 0, 0, weeks)
+                    else
+                        if (time + dateToUnix(0, 0, 0, 0, tonumber(matches[5]))) >= 0 then
+                            time = time + dateToUnix(0, 0, 0, 0, tonumber(matches[5]))
+                        else
+                            answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, true)
+                        end
+                    end
+                end
+                editMessage(msg.chat.id, msg.message_id, '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[6], time, matches[7] or false))
+                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
+            elseif matches[4] == 'DONE' then
+                if time > 30 and time < dateToUnix(0, 0, 0, 366, 0) then
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
+                    data[tostring(matches[5])].settings[groupDataDictionary[matches[2]:lower()]] = time
+                    save_data(config.moderation.data, data)
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, matches[6] or false))
+                else
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRange, false)
+                end
+            end
         else
             if groupDataDictionary[matches[2]:lower()] then
                 local increasePunishment = false
@@ -1744,6 +1823,34 @@ return {
         "^(###cbgroup_management)(WARNS%+%+)(%d)(%-%d+)$",
         "^(###cbgroup_management)(WARNS%-%-)(%d)(%-%d+)(%u)$",
         "^(###cbgroup_management)(WARNS%-%-)(%d)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(BACK)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(DONE)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(BACK)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_ban)(%d+)(DONE)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(BACK)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(DONE)(%-%d+)(%u)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(BACK)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(SECONDS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(MINUTES)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(HOURS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(DAYS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(WEEKS)([%+%-]?%d+)(%-%d+)$",
+        "^(###cbgroup_management)(time_restrict)(%d+)(DONE)(%-%d+)$",
         -- info of the setting
         "^(###cbgroup_management)([%w_]+)(%u)$",
         "^(###cbgroup_management)([%w_]+)$",
