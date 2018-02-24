@@ -404,6 +404,7 @@ local function pre_process(msg)
                                 usr = nil
                             end
                             if check_tag(msg, usernames[i], usr) then
+                                print('username', usernames[i])
                                 if not msg.command then
                                     local lang = get_lang(usernames[i])
                                     -- set user as notified to not send multiple notifications
@@ -444,6 +445,7 @@ local function pre_process(msg)
                         if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(nicknames[i]) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags from tg-cli version and tags of tg-cli version
                             if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
+                                print('nickname', nicknames[i])
                                 if not msg.command then
                                     local obj = getChatMember(msg.chat.id, nicknames[i])
                                     if type(obj) == 'table' then
