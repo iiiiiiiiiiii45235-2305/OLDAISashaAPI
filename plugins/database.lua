@@ -440,7 +440,7 @@ local function save_to_db(msg)
                 end
             end
 
-            local tmp = ''
+            --[[local tmp = ''
             if msg.text then
                 tmp = msg.text:lower()
             end
@@ -496,7 +496,7 @@ local function save_to_db(msg)
                     end
                 end
                 tmp = tmp:gsub(tmpmatch, '')
-            end
+            end]]
 
             -- if forward save forward
             if msg.forward then
