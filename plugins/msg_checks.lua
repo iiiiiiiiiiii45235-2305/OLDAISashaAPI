@@ -112,9 +112,11 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
         if cronTable.alreadyResolved[tmpmatch] then
             return true
         elseif type(cronTable.alreadyResolved[tmpmatch]) == nil then
+            print('in nil')
             cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
             valTot = valTot + 1
             local obj = APIgetChat(tmpmatch, true)
+            printvardump(obj)
             if obj then
                 if obj.result then
                     obj = obj.result
@@ -126,6 +128,7 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
             else
                 cronTable.alreadyResolved[tmpmatch] = false
             end
+            print(cronTable.alreadyResolved[tmpmatch])
         end
         tmp = tmp:gsub(tmpmatch, '')
     end
