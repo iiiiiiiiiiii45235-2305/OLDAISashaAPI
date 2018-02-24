@@ -3,6 +3,11 @@ local cronTable = {
     resolveUsernamesTable =
     {
         -- chat_id = valMsg
+    },
+    -- temp table to not resolve the same usernames again and again (just once per minute or if (s)he is kicked)
+    alreadyResolved =
+    {
+        -- username/id = false/true
     }
 }
 local valTot = 0
@@ -101,13 +106,25 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
     tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
     cronTable.resolveUsernamesTable[tostring(chat_id)] = 0
     while string.match(tmp, '@[%w_]+') and cronTable.resolveUsernamesTable[tostring(chat_id)] < 5 and valTot < 30 do
-        cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
-        valTot = valTot + 1
-        if APIgetChat(string.match(tmp, '@[%w_]+'), true) then
+        if cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] then
             return true
-        else
-            tmp = tmp:gsub(string.match(tmp, '@[%w_]+'), '')
+        elseif type(cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')]) == nil then
+            cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
+            valTot = valTot + 1
+            local obj = APIgetChat(string.match(tmp, '@[%w_]+'), true)
+            if obj then
+                if obj.result then
+                    obj = obj.result
+                    cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] = true
+                    return true
+                else
+                    cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] = false
+                end
+            else
+                cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] = false
+            end
         end
+        tmp = tmp:gsub(string.match(tmp, '@[%w_]+'), '')
     end
     if is_text_link then
         local is_bot = text:match("%?[Ss][Tt][Aa][Rr][Tt]=")
@@ -549,7 +566,8 @@ end
 local function cron()
     -- clear that table on the top of the plugin
     cronTable = {
-        resolveUsernamesTable = { }
+        resolveUsernamesTable = { },
+        alreadyResolved = { }
     }
     valTot = 0
 end

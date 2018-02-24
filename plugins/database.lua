@@ -3,6 +3,11 @@ local cronTable = {
     resolveUsernamesTable =
     {
         -- chat_id = valMsg
+    },
+    -- temp table to not resolve the same usernames again and again (just once per minute or if (s)he is kicked)
+    alreadyResolved =
+    {
+        -- username/id = false/true
     }
 }
 local valTot = 0
@@ -457,28 +462,38 @@ local function save_to_db(msg)
             -- make links usernames
             tmp = tmp:gsub('[Tt]%.[Mm][Ee]/', '@')
             cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = 0
+            cronTable.alreadyResolved = cronTable.alreadyResolved or { }
             valTot = valTot or 0
             while string.match(tmp, '(@[%w_]+)') and cronTable.resolveUsernamesTable[tostring(msg.chat.id)] < 5 and valTot < 30 do
-                cronTable.resolveUsernamesTable[tostring(msg.chat.id)] = cronTable.resolveUsernamesTable[tostring(msg.chat.id)] + 1
-                valTot = valTot + 1
-                local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
-                if obj then
-                    if obj.result then
-                        obj = obj.result
-                        if obj.type == 'private' then
-                            if msg.bot then
-                                db_user(obj, bot.id)
-                            else
-                                db_user(obj, msg.chat.id)
+                if cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] then
+                    return true
+                elseif type(cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')]) == nil then
+                    cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
+                    valTot = valTot + 1
+                    local obj = getChat(string.match(tmp, '(@[%w_]+)'), true)
+                    if obj then
+                        if obj.result then
+                            obj = obj.result
+                            cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] = true
+                            if obj.type == 'private' then
+                                if msg.bot then
+                                    db_user(obj, bot.id)
+                                else
+                                    db_user(obj, msg.chat.id)
+                                end
+                            elseif obj.type == 'supergroup' then
+                                db_supergroup(obj)
+                            elseif obj.type == 'channel' then
+                                db_channel(obj)
                             end
-                        elseif obj.type == 'supergroup' then
-                            db_supergroup(obj)
-                        elseif obj.type == 'channel' then
-                            db_channel(obj)
+                        else
+                            cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] = false
                         end
+                    else
+                        cronTable.alreadyResolved[string.match(tmp, '@[%w_]+')] = false
                     end
                 end
-                tmp = tmp:gsub(string.match(tmp, '(@[%w_]+)'), '')
+                tmp = tmp:gsub(string.match(tmp, '@[%w_]+'), '')
             end
 
             -- if forward save forward
@@ -524,7 +539,8 @@ end
 local function cron()
     -- clear that table on the top of the plugin
     cronTable = {
-        resolveUsernamesTable = { }
+        resolveUsernamesTable = { },
+        alreadyResolved = { }
     }
     valTot = 0
 end
