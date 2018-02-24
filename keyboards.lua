@@ -621,8 +621,8 @@ function keyboard_settings_list(chat_id, page, from_other_plugin)
         end
         row = row + 1
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][1] = { text = '⌨️⏳ ' .. reverseGroupDataDictionary['time_ban'] .. ' ⏳⌨️', callback_data = 'group_management' .. reverseGroupDataDictionary['time_ban'] .. data[tostring(chat_id)].settings.time_ban .. chat_id }
-        keyboard.inline_keyboard[row][2] = { text = '⌨️⏳ ' .. reverseGroupDataDictionary['time_restrict'] .. ' ⏳⌨️', callback_data = 'group_management' .. reverseGroupDataDictionary['time_restrict'] .. data[tostring(chat_id)].settings.time_restrict .. chat_id }
+        keyboard.inline_keyboard[row][1] = { text = '⌨️⏳ ' .. reverseGroupDataDictionary['time_ban'] .. ' ⏳⌨️', callback_data = 'group_management' .. reverseGroupDataDictionary['time_ban'] .. data[tostring(chat_id)].settings.time_ban .. 'BACK' .. chat_id }
+        keyboard.inline_keyboard[row][2] = { text = '⌨️⏳ ' .. reverseGroupDataDictionary['time_restrict'] .. ' ⏳⌨️', callback_data = 'group_management' .. reverseGroupDataDictionary['time_restrict'] .. data[tostring(chat_id)].settings.time_restrict .. 'BACK' .. chat_id }
         row = row + 1
         keyboard.inline_keyboard[row] = { }
         keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['strict'], callback_data = 'group_management' .. reverseGroupDataDictionary['strict'] }
