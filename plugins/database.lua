@@ -1,4 +1,4 @@
--- Empty tables for solving multiple problems(thanks to @topkecleon)
+--[[-- Empty tables for solving multiple problems(thanks to @topkecleon)
 local cronTable = {
     resolveUsernamesTable =
     {
@@ -10,7 +10,7 @@ local cronTable = {
         -- username/id = false/true
     }
 }
-local valTot = 0
+local valTot = 0]]
 
 local function db_user(user, chat_id)
     if not user.print_name then
@@ -538,18 +538,18 @@ local function pre_process(msg)
     end
 end
 
-local function cron()
+--[[local function cron()
     -- clear that table on the top of the plugin
     cronTable = {
         resolveUsernamesTable = { },
         alreadyResolved = { }
     }
     valTot = 0
-end
+end]]
 
 return {
     description = "DATABASE",
-    cron = cron,
+    -- cron = cron,
     patterns =
     {
         "^[#!/]([Cc][Rr][Ee][Aa][Tt][Ee][Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee])$",
