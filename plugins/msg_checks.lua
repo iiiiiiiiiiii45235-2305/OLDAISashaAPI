@@ -112,7 +112,7 @@ local function check_if_link(chat_id, text, links_whitelist, group_link)
         print(cronTable.alreadyResolved[tmpmatch])
         if cronTable.alreadyResolved[tmpmatch] then
             return true
-        elseif type(cronTable.alreadyResolved[tmpmatch]) == nil then
+        elseif type(cronTable.alreadyResolved[tmpmatch]) == 'nil' then
             print('in nil')
             cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
             valTot = valTot + 1

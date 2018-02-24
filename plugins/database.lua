@@ -469,7 +469,7 @@ local function save_to_db(msg)
                 print(tmpmatch)
                 if cronTable.alreadyResolved[tmpmatch] then
                     return true
-                elseif type(cronTable.alreadyResolved[tmpmatch]) == nil then
+                elseif type(cronTable.alreadyResolved[tmpmatch]) == 'nil' then
                     cronTable.resolveUsernamesTable[tostring(chat_id)] = cronTable.resolveUsernamesTable[tostring(chat_id)] + 1
                     valTot = valTot + 1
                     local obj = getChat(tmpmatch, true)
