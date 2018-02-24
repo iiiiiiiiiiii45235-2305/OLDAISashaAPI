@@ -434,7 +434,7 @@ local function requestsPages(chat_id, page)
         if v ~= '' then
             tot_lines = tot_lines + 1
             if tot_lines >=(((page - 1) * max_lines) + 1) and tot_lines <=(max_lines * page) then
-                message = message .. v
+                message = message .. v .. '\n'
             end
         end
     end
