@@ -403,7 +403,7 @@ local function groupsPages(page)
 end
 
 local max_lines = 40
-local function requestsPages(chat_id, page)
+local function requestsPages(page)
     local message = ""
     if not page then
         page = 1
