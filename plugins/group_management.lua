@@ -423,7 +423,7 @@ local function run(msg, matches)
             end
             if matches[4] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                editMessage(msg.chat.id, msg.message_id, chat_name .. ' (' .. matches[5] .. ')' .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
+                editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ')' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
             elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                 local seconds, minutes, hours, days, weeks = unixToDate(time)
                 if matches[4] == 'SECONDS' then
@@ -482,7 +482,7 @@ local function run(msg, matches)
                         end
                     end
                 end
-                editMessage(msg.chat.id, msg.message_id, chat_name .. ' (' .. matches[6] .. ')' .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[6], time, matches[7] or false))
+                editMessage(msg.chat.id, msg.message_id, '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[6], time, matches[7] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] ..(matches[7] or ''))
             elseif matches[4] == 'DONE' then
                 if time > 30 and time < dateToUnix(0, 0, 0, 366, 0) then
@@ -959,43 +959,71 @@ local function run(msg, matches)
             end
             return
         end
-        if matches[1]:lower() == 'settimerestrict' and matches[2] then
-            if matches[3] and matches[4] and matches[5] and matches[6] then
-                local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
-                if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(msg.chat.id)].settings['time_restrict'] = unix
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].done
+        if matches[1]:lower() == 'settimerestrict' then
+            if matches[2] then
+                if matches[3] and matches[4] and matches[5] and matches[6] then
+                    local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
+                    if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(msg.chat.id)].settings['time_restrict'] = unix
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
                 else
-                    return langs[msg.lang].errorTimeRangePunishments
+                    if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(msg.chat.id)].settings['time_restrict'] = tonumber(matches[2])
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
                 end
             else
-                if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(msg.chat.id)].settings['time_restrict'] = tonumber(matches[2])
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].done
+                if sendKeyboard(msg.from.id, '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_restrict', msg.chat.id, data[tostring(msg.chat.id)].settings.time_restrict)) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_restrict ")
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        return
+                    end
                 else
-                    return langs[msg.lang].errorTimeRangePunishments
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             end
         end
-        if matches[1]:lower() == 'settimeban' and matches[2] then
-            if matches[3] and matches[4] and matches[5] and matches[6] then
-                local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
-                if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(msg.chat.id)].settings['time_ban'] = unix
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].done
+        if matches[1]:lower() == 'settimeban' then
+            if matches[2] then
+                if matches[3] and matches[4] and matches[5] and matches[6] then
+                    local unix = dateToUnix(matches[6], matches[5], matches[4], matches[3], matches[2])
+                    if unix > 30 and unix < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(msg.chat.id)].settings['time_ban'] = unix
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
                 else
-                    return langs[msg.lang].errorTimeRangePunishments
+                    if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
+                        data[tostring(msg.chat.id)].settings['time_ban'] = tonumber(matches[2])
+                        save_data(config.moderation.data, data)
+                        return langs[msg.lang].done
+                    else
+                        return langs[msg.lang].errorTimeRangePunishments
+                    end
                 end
             else
-                if tonumber(matches[2]) > 30 and tonumber(matches[2]) < dateToUnix(0, 0, 0, 366, 0) then
-                    data[tostring(msg.chat.id)].settings['time_ban'] = tonumber(matches[2])
-                    save_data(config.moderation.data, data)
-                    return langs[msg.lang].done
+                if sendKeyboard(msg.from.id, '(' .. msg.chat.id .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_ban', msg.chat.id, data[tostring(msg.chat.id)].settings.time_ban)) then
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_ban ")
+                    if msg.chat.type ~= 'private' then
+                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        return
+                    end
                 else
-                    return langs[msg.lang].errorTimeRangePunishments
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             end
         end
@@ -2011,6 +2039,8 @@ return {
         "/setwarn {value}",
         "/setflood {value}",
         "/newlink",
+        "/settimerestrict",
+        "/settimeban",
         "/settimerestrict {seconds}",
         "/settimeban {seconds}",
         "/settimerestrict {weeks} {days} {hours} {minutes} {seconds}",
