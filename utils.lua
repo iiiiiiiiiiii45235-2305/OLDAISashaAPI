@@ -1185,13 +1185,13 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
         text = text .. tostring(warnUser(executer, target, chat_id, reason)) .. '\n'
     end
     if not globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] then
-        if tonumber(punishment) >= 3 then
+        if tonumber(punishment) >= 3 and data[tostring(chat_id)].type ~= 'Group' then
             if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
                 -- temprestrict
-                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict, false, true)) .. '\n'
             else
                 -- restrict
-                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, false, false, true)) .. '\n'
             end
         end
         if tonumber(punishment) == 5 then
@@ -1199,7 +1199,7 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
             text = text .. tostring(kickUser(executer, target, chat_id, reason)) .. '\n'
         end
         if tonumber(punishment) >= 6 then
-            if tonumber(punishment) == 6 and not data[tostring(chat_id)].settings.strict then
+            if tonumber(punishment) == 6 and not data[tostring(chat_id)].settings.strict and data[tostring(chat_id)].type ~= 'Group' then
                 -- tempban
                 text = text .. tostring(banUser(executer, target, chat_id, reason, data[tostring(chat_id)].settings.time_ban)) .. '\n'
             else

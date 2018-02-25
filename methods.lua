@@ -1547,7 +1547,7 @@ function userInChat(chat_id, user_id, no_log)
 end
 
 -- call this to restrict
-function restrictUser(executer, target, chat_id, restrictions, until_date, no_notice)
+function restrictUser(executer, target, chat_id, restrictions, until_date, no_notice, send_no_restrictions)
     if sendChatAction(chat_id, 'typing', true) then
         local lang = get_lang(chat_id)
         if isWhitelisted(chat_id, target) then
