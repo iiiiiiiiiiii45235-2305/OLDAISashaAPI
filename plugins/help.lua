@@ -130,6 +130,7 @@ local function syntax_all(chat, rank, filter)
     local i = 0
     local temp
     for name in pairsByKeys(plugins) do
+        i = i + 1
         temp = plugin_syntax(name, chat, rank, filter)
         if temp ~= nil and temp ~= '' then
             -- if not filter then
@@ -138,7 +139,6 @@ local function syntax_all(chat, rank, filter)
             --     text = text .. temp
             -- end
         end
-        i = i + 1
     end
     return text
 end
