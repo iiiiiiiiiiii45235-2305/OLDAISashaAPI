@@ -983,7 +983,7 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, '(' .. msg.chat.id .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_restrict', msg.chat.id, data[tostring(msg.chat.id)].settings.time_restrict)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_restrict ")
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         return
@@ -1017,7 +1017,7 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, '(' .. msg.chat.id .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_ban', msg.chat.id, data[tostring(msg.chat.id)].settings.time_ban)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_ban ")
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
+                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. '"')
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                         return
