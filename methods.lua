@@ -1912,6 +1912,9 @@ end
 function warnUser(executer, target, chat_id, reason, no_notice)
     target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
+    if reason == langs[lang].reasonWarnMax then
+        return ''
+    end
     if compare_ranks(executer, target, chat_id) then
         local warn_chat = tonumber(data[tostring(chat_id)].settings.max_warns or 0)
         redis:incr(chat_id .. ':warn:' .. target)
