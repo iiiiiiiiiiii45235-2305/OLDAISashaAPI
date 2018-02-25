@@ -1573,19 +1573,21 @@ function restrictUser(executer, target, chat_id, restrictions, until_date, no_no
                     langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
                     langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
                 end
+                text = '\n' .. text
                 local temprestrict = false
                 if until_date then
                     if os.time() + until_date >= 30 or os.time() + until_date <= 31622400 then
                         temprestrict = true
                     end
                 end
+                if send_no_restrictions then
+                    text = ''
+                end
                 if temprestrict then
-                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted ..
-                    '\n' .. text ..
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
                     '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date)
                 else
-                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted ..
-                    '\n' .. text ..
+                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
                     '\n#user' .. target .. ' #executer' .. executer .. ' #restrict'
                 end
             else
