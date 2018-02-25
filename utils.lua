@@ -1208,6 +1208,11 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
             end
         end
     end
+    local userTag = text:match('(#user%d+)')
+    local executerTag = text:match('(#executer%d+)')
+    text = text:gsub(userTag .. ' ', '')
+    text = text:gsub(executerTag .. ' ', '')
+    text = text .. '\n' .. userTag .. ' ' .. executerTag
     return text
 end
 function adjust_punishment(setting, punishment, change)
