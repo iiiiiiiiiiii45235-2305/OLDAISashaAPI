@@ -1188,10 +1188,10 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
         if tonumber(punishment) >= 3 and data[tostring(chat_id)].type ~= 'Group' then
             if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
                 -- temprestrict
-                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict, false, true)) .. '\n'
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
             else
                 -- restrict
-                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, false, false, true)) .. '\n'
+                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
             end
         end
         if tonumber(punishment) == 5 then

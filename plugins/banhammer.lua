@@ -1210,11 +1210,11 @@ local function run(msg, matches)
                     end
                     return text
                 else
-                    return langs[msg.lang].require_owner
+                    return langs[msg.lang].require_mod
                 end
             end
             if matches[1]:lower() == 'unrestrict' then
-                if msg.from.is_owner then
+                if msg.from.is_mod then
                     mystat('/unrestrict')
                     if msg.reply then
                         if matches[2] then
@@ -1285,7 +1285,7 @@ local function run(msg, matches)
                     end
                     return
                 else
-                    return langs[msg.lang].require_owner
+                    return langs[msg.lang].require_mod
                 end
             end
             if matches[1]:lower() == 'restrictions' then
