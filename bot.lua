@@ -457,7 +457,6 @@ function pre_process_callback(msg)
     if msg.cb_id then
         msg.cb = true
         msg.text = "###cb" .. msg.data
-        msg.target_id = msg.data:match('(-%d+)$')
     end
     if msg.reply then
         msg.reply_to_message = pre_process_callback(msg.reply_to_message)
@@ -485,20 +484,6 @@ function pre_process_media_msg(msg)
     if msg.caption_entities then
         msg.entities = clone_table(msg.caption_entities)
         msg.caption_entities = nil
-    end
-    if msg.entities then
-        for i, entity in pairs(msg.entities) do
-            if entity.type == 'url' or entity.type == 'text_link' then
-                msg.url = true
-                msg.media = true
-                msg.media_type = 'link'
-                break
-            end
-        end
-        if not msg.url then
-            msg.media = false
-        end
-        -- if the entity it's not an url (username/bot command), set msg.media as false
     end
 
     if msg.audio then
@@ -859,7 +844,7 @@ function match_plugins(msg)
                 print(clr.magenta .. "msg matches: ", name, " => ", pattern .. clr.reset)
 
                 local disabled = plugin_disabled_on_chat(name, msg.chat.id)
-                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and pattern ~= "%[(document)%]" and pattern ~= "%[(photo)%]" and pattern ~= "%[(video)%]" and pattern ~= "%[(video_note)%]" and pattern ~= "%[(audio)%]" and pattern ~= "%[(contact)%]" and pattern ~= "%[(location)%]" and pattern ~= "%[(gif)%]" and pattern ~= "%[(sticker)%]" and pattern ~= "%[(voice_note)%]" then
+                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media then
                     if msg.chat.type == 'private' then
                         if disabled then
                             savelog(msg.chat.id .. ' PM', msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
