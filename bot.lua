@@ -189,12 +189,14 @@ function load_plugins()
 end
 
 function reload_bot()
+    print("Reloading bot")
     loadfile("./utils.lua")()
     loadfile("./methods.lua")()
     loadfile("./ranks.lua")()
     loadfile("./keyboards.lua")()
     langs = dofile('languages.lua')
     load_plugins()
+    print("Bot reloaded")
 end
 
 function bot_init()

@@ -661,6 +661,18 @@ local function run(msg, matches)
             end
         end
 
+        if matches[1]:lower() == 'type' then
+            mystat('/type')
+            return msg.chat.type or langs[msg.lang].chatTypeNotFound
+        end
+        if matches[1]:lower() == 'msgid' then
+            mystat('/msgid')
+            if msg.reply then
+                return msg.reply_to_message.message_id
+            else
+                return msg.message_id
+            end
+        end
         if matches[1] == 'todo' then
             mystat('/todo <text>')
             if msg.reply then
@@ -861,6 +873,12 @@ local function run(msg, matches)
             end
         end
         if is_sudo(msg) then
+            -- Reload the entire bot!
+            if matches[1]:lower() == 'reloadbot' then
+                mystat('/reloadbot')
+                reload_bot()
+                return langs[msg.lang].botReloaded
+            end
             if matches[1] == 'broadcast' then
                 mystat('/broadcast')
                 for k, v in pairs(data['groups']) do
@@ -1063,6 +1081,7 @@ return {
         "^[#!/]([Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Ss][Ee][Nn][Dd][Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
+        "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Bb][Oo][Tt])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
@@ -1075,6 +1094,8 @@ return {
         "^[#!/]([Ll][Ee][Aa][Vv][Ee]) (%-?%d+)$",
         "^[#!/]([Ll][Ee][Aa][Vv][Ee])$",
         "^[#!/]([Gg][Ee][Tt][Ii][Pp])$",
+        "^[#!/]([Mm][Ss][Gg][Ii][Dd])$",
+        "^[#!/]([Tt][Yy][Pp][Ee])$",
     },
     run = run,
     min_rank = 4,
@@ -1083,6 +1104,8 @@ return {
         "ADMIN",
         "/todo {reply} [{text}]",
         "/todo {text}",
+        "/type",
+        "/msgid",
         "/pm {id} {msg}",
         "/pmblock {user}",
         "/pmunblock {user}",
@@ -1113,6 +1136,7 @@ return {
         "SUDO",
         "/addadmin {user_id}|{username}",
         "/removeadmin {user_id}|{username}",
+        "/reloadbot",
         "/botrestart",
         "/redissave",
         "/update",

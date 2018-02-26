@@ -381,19 +381,6 @@ local function run(msg, matches)
             return langs[msg.lang].require_sudo
         end
     end
-
-    -- Reload the entire bot!
-    if matches[1]:lower() == 'reloadbot' then
-        if is_sudo(msg) then
-            mystat('/reloadbot')
-            print("Reloading bot")
-            reload_bot()
-            print("Bot reloaded")
-            return langs[msg.lang].botReloaded
-        else
-            return langs[msg.lang].require_sudo
-        end
-    end
 end
 
 return {
@@ -429,7 +416,6 @@ return {
         "^[#!/]([Ee][Nn][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee]) ([%w_%.%-]+) ([Cc][Hh][Aa][Tt])",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd])$",
-        "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Bb][Oo][Tt])$",
         "^[#!/]([Dd][Ii][Ss][Aa][Bb][Ll][Ee][Dd][Ll][Ii][Ss][Tt])",
     },
     run = run,
@@ -448,6 +434,5 @@ return {
         "/enable {plugin} [chat]",
         "/disable {plugin} [chat]",
         "/reload",
-        "/reloadbot",
     },
 }

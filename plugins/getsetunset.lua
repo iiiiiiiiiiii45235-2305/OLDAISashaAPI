@@ -1,3 +1,9 @@
+-- tables that contains 'group_id' = message_id to delete old commands responses
+local oldResponses = {
+    lastGet = { },
+    lastGetGlobal = { },
+}
+
 local function get_variables_hash(msg, global)
     if global then
         if not redis:get(msg.chat.id .. ':gvariables') then
@@ -332,7 +338,24 @@ local function run(msg, matches)
     if matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' then
         if not matches[2] then
             mystat('/get')
-            return list_variables(msg, false)
+            local tmp = oldResponses.lastGet[tostring(msg.chat.id)]
+            oldResponses.lastGet[tostring(msg.chat.id)] = sendMessage(msg.chat.id, list_variables(msg, false))
+            if oldResponses.lastGet[tostring(msg.chat.id)] then
+                if oldResponses.lastGet[tostring(msg.chat.id)].result then
+                    if oldResponses.lastGet[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastGet[tostring(msg.chat.id)] = oldResponses.lastGet[tostring(msg.chat.id)].result.message_id
+                    else
+                        oldResponses.lastGet[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    oldResponses.lastGet[tostring(msg.chat.id)] = nil
+                end
+            end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            return
         else
             mystat('/get <var_name>')
             local vars = list_variables(msg, false)
@@ -361,7 +384,24 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' then
         mystat('/getglobal')
-        return list_variables(msg, true)
+        local tmp = oldResponses.lastGetGlobal[tostring(msg.chat.id)]
+        oldResponses.lastGetGlobal[tostring(msg.chat.id)] = sendMessage(msg.chat.id, list_variables(msg, true))
+        if oldResponses.lastGetGlobal[tostring(msg.chat.id)] then
+            if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result then
+                if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id then
+                    oldResponses.lastGetGlobal[tostring(msg.chat.id)] = oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id
+                else
+                    oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
+                end
+            else
+                oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
+            end
+        end
+        if tmp then
+            deleteMessage(msg.chat.id, tmp, true)
+        end
+        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+        return
     end
 
     if matches[1]:lower() == 'exportgroupsets' then

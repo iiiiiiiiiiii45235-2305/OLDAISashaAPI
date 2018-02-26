@@ -1,4 +1,11 @@
-﻿local function whitelist_user(chat_id, user_id, lang)
+﻿-- tables that contains 'group_id' = message_id to delete old commands responses
+local oldResponses = {
+    lastWhitelist = { },
+    lastWhitelistGban = { },
+    lastWhitelistLink = { },
+}
+
+local function whitelist_user(chat_id, user_id, lang)
     if isWhitelisted(chat_id, user_id) then
         data[tostring(chat_id)].whitelist.users[tostring(user_id)] = nil
         save_data(config.moderation.data, data)
@@ -135,7 +142,24 @@ local function run(msg, matches)
                         text = text .. k .. " - " .. v .. "\n"
                     end
                 end
-                return text
+                local tmp = oldResponses.lastWhitelist[tostring(msg.chat.id)]
+                oldResponses.lastWhitelist[tostring(msg.chat.id)] = sendMessage(msg.chat.id, text)
+                if oldResponses.lastWhitelist[tostring(msg.chat.id)] then
+                    if oldResponses.lastWhitelist[tostring(msg.chat.id)].result then
+                        if oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastWhitelist[tostring(msg.chat.id)] = oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
+                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return
             end
         end
         if matches[1]:lower() == "whitelistgban" then
@@ -202,7 +226,24 @@ local function run(msg, matches)
                         text = text .. k .. " - " .. v .. "\n"
                     end
                 end
-                return text
+                local tmp = oldResponses.lastWhitelistGban[tostring(msg.chat.id)]
+                oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = sendMessage(msg.chat.id, text)
+                if oldResponses.lastWhitelistGban[tostring(msg.chat.id)] then
+                    if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result then
+                        if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
+                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return
             end
         end
         if matches[1]:lower() == "whitelistlink" then
@@ -219,7 +260,24 @@ local function run(msg, matches)
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.links) do
                     text = text .. k .. ". " .. v .. "\n"
                 end
-                return text
+                local tmp = oldResponses.lastWhitelistLink[tostring(msg.chat.id)]
+                oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = sendMessage(msg.chat.id, text)
+                if oldResponses.lastWhitelistLink[tostring(msg.chat.id)] then
+                    if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result then
+                        if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
+                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return
             end
         end
     else

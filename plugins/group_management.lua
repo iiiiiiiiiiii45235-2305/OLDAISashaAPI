@@ -16,11 +16,15 @@ local cronTable = {
 }
 
 local delAll = {
-    -- chat_id = { from = msgid1, to = msgid2 }
+    -- chat_id = { from = msgidBegin, to = msgidEnd }
 }
 
--- table that contains 'group_id' = message_id to delete old rules messages
-local last_rules = { }
+-- tables that contains 'group_id' = message_id to delete old commands responses
+local oldResponses = {
+    lastRules = { },
+    lastModlist = { },
+    lastSettings = { },
+}
 
 local function showPermissions(chat_id, user_id, lang)
     local obj_user = getChatMember(chat_id, user_id)
@@ -162,18 +166,18 @@ local function demoteMod(chat_id, user)
     return(user.username or user.print_name or user.first_name) .. langs[lang].demoteMod
 end
 
-local function modList(msg)
-    if not data[tostring(msg.chat.id)] then
-        return langs[msg.lang].groupNotAdded
+local function modList(chat_id, lang)
+    if not data[tostring(chat_id)] then
+        return langs[lang].groupNotAdded
     end
     -- determine if table is empty
-    if next(data[tostring(msg.chat.id)].moderators) == nil then
+    if next(data[tostring(chat_id)].moderators) == nil then
         -- fix way
-        return langs[msg.lang].noGroupMods
+        return langs[lang].noGroupMods
     end
     local i = 1
-    local message = langs[msg.lang].modListStart .. string.gsub(msg.chat.print_name, '_', ' ') .. ':\n'
-    for k, v in pairs(data[tostring(msg.chat.id)].moderators) do
+    local message = langs[lang].modListStart .. string.gsub(data[tostring(chat_id)].name, '_', ' ') .. ':\n'
+    for k, v in pairs(data[tostring(chat_id)].moderators) do
         message = message .. i .. '. ' .. v .. ' - ' .. k .. '\n'
         i = i + 1
     end
@@ -540,18 +544,6 @@ local function run(msg, matches)
         return
     end
 
-    if matches[1]:lower() == 'type' then
-        if msg.from.is_mod then
-            mystat('/type')
-            if data[tostring(msg.chat.id)] then
-                return data[tostring(msg.chat.id)].type or langs[msg.lang].chatTypeNotFound
-            else
-                return langs[msg.lang].useYourGroups
-            end
-        else
-            return langs[msg.lang].require_mod
-        end
-    end
     if matches[1]:lower() == 'log' then
         if msg.from.is_owner then
             mystat('/log')
@@ -620,22 +612,22 @@ local function run(msg, matches)
         if matches[1]:lower() == 'rules' then
             mystat('/rules')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
-            local tmp = last_rules[tostring(msg.chat.id)]
+            local tmp = oldResponses.lastRules[tostring(msg.chat.id)]
             if not data[tostring(msg.chat.id)].rules then
-                last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(last_rules[tostring(msg.chat.id)].result.message_id or '') .. '"')
+                oldResponses.lastRules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(oldResponses.lastRules[tostring(msg.chat.id)].result.message_id or '') .. '"')
             else
-                last_rules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules)
+                oldResponses.lastRules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules)
             end
-            if last_rules[tostring(msg.chat.id)] then
-                if last_rules[tostring(msg.chat.id)].result then
-                    if last_rules[tostring(msg.chat.id)].result.message_id then
-                        last_rules[tostring(msg.chat.id)] = last_rules[tostring(msg.chat.id)].result.message_id
+            if oldResponses.lastRules[tostring(msg.chat.id)] then
+                if oldResponses.lastRules[tostring(msg.chat.id)].result then
+                    if oldResponses.lastRules[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastRules[tostring(msg.chat.id)] = oldResponses.lastRules[tostring(msg.chat.id)].result.message_id
                     else
-                        last_rules[tostring(msg.chat.id)] = nil
+                        oldResponses.lastRules[tostring(msg.chat.id)] = nil
                     end
                 else
-                    last_rules[tostring(msg.chat.id)] = nil
+                    oldResponses.lastRules[tostring(msg.chat.id)] = nil
                 end
             end
             if tmp then
@@ -822,14 +814,6 @@ local function run(msg, matches)
                 return unpinChatMessage(msg.chat.id)
             else
                 return langs[msg.lang].require_mod
-            end
-        end
-        if matches[1]:lower() == 'msgid' then
-            mystat('/msgid')
-            if msg.reply then
-                return msg.reply_to_message.message_id
-            else
-                return msg.message_id
             end
         end
         if matches[1]:lower() == 'del' then
@@ -1098,13 +1082,47 @@ local function run(msg, matches)
                 end
             else
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-                return showSettings(msg.chat.id, msg.lang)
+                local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
+                oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
+                if oldResponses.lastSettings[tostring(msg.chat.id)] then
+                    if oldResponses.lastSettings[tostring(msg.chat.id)].result then
+                        if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return
             end
         end
         if matches[1]:lower() == 'textualmuteslist' then
             mystat('/muteslist')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-            return showSettings(msg.chat.id, msg.lang)
+            local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
+            oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
+            if oldResponses.lastSettings[tostring(msg.chat.id)] then
+                if oldResponses.lastSettings[tostring(msg.chat.id)].result then
+                    if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
+                    else
+                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                end
+            end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            return
         end
         if matches[1]:lower() == 'settings' then
             mystat('/settings')
@@ -1124,13 +1142,48 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
-                return showSettings(msg.chat.id, msg.lang)
+                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+                local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
+                oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
+                if oldResponses.lastSettings[tostring(msg.chat.id)] then
+                    if oldResponses.lastSettings[tostring(msg.chat.id)].result then
+                        if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                        end
+                    else
+                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return
             end
         end
         if matches[1]:lower() == 'textualsettings' then
             mystat('/settings')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-            return showSettings(msg.chat.id, msg.lang)
+            local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
+            oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
+            if oldResponses.lastSettings[tostring(msg.chat.id)] then
+                if oldResponses.lastSettings[tostring(msg.chat.id)].result then
+                    if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
+                    else
+                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+                end
+            end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            return
         end
         if matches[1]:lower() == 'newlink' then
             if msg.from.is_mod then
@@ -1277,7 +1330,24 @@ local function run(msg, matches)
         if matches[1]:lower() == 'modlist' then
             mystat('/modlist')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
-            return modList(msg)
+            local tmp = oldResponses.lastModlist[tostring(msg.chat.id)]
+            oldResponses.lastModlist[tostring(msg.chat.id)] = sendMessage(msg.chat.id, modList(msg.chat.id, msg.lang))
+            if oldResponses.lastModlist[tostring(msg.chat.id)] then
+                if oldResponses.lastModlist[tostring(msg.chat.id)].result then
+                    if oldResponses.lastModlist[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastModlist[tostring(msg.chat.id)] = oldResponses.lastModlist[tostring(msg.chat.id)].result.message_id
+                    else
+                        oldResponses.lastModlist[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    oldResponses.lastModlist[tostring(msg.chat.id)] = nil
+                end
+            end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            return
         end
         if matches[1]:lower() == 'promoteadmin' then
             if msg.from.is_owner then
@@ -1944,7 +2014,6 @@ return {
         "^[#!/]([Dd][Ee][Ll][Ff][Rr][Oo][Mm])$",
         "^[#!/]([Dd][Ee][Ll][Tt][Oo])$",
         "^[#!/]([Dd][Ee][Ll][Aa][Ll][Ll])$",
-        "^[#!/]([Tt][Yy][Pp][Ee])$",
         "^[#!/]([Ll][Oo][Gg])$",
         "^[#!/]([Ss][Ee][Nn][Dd][Ll][Oo][Gg])$",
         "^[#!/@]([Aa][Dd][Mm][Ii][Nn][Ss]?)",
@@ -1996,7 +2065,6 @@ return {
         "^[#!/]([Ss][Ee][Tt][Oo][Ww][Nn][Ee][Rr])$",
         "^[#!/]([Ss][Ee][Tt][Ww][Aa][Rr][Nn]) (%d+)$",
         "^[#!/]([Gg][Ee][Tt][Ww][Aa][Rr][Nn])$",
-        "^[#!/]([Mm][Ss][Gg][Ii][Dd])$",
     },
     run = run,
     pre_process = pre_process,
@@ -2022,7 +2090,6 @@ return {
         "/delfrom {reply}",
         "/delto [{reply}]",
         "/delall",
-        "/type",
         "/updategroupinfo",
         "/setrules {text}",
         "/setwarn {value}",
