@@ -226,7 +226,7 @@ local function run(msg, matches)
         if sendMessage(msg.from.id, langs[msg.lang].helpIntro .. help_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
             if msg.chat.type ~= 'private' then
                 local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                 return
             end
         else
@@ -240,7 +240,7 @@ local function run(msg, matches)
             if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
                 if msg.chat.type ~= 'private' then
                     local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                     return
                 end
             else
@@ -254,7 +254,7 @@ local function run(msg, matches)
                     if sendKeyboard(msg.from.id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }, 'html') then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
-                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                             return
                         end
                     else
@@ -264,7 +264,7 @@ local function run(msg, matches)
                     if sendKeyboard(msg.from.id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                         if msg.chat.type ~= 'private' then
                             local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
-                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                             return
                         end
                     else
@@ -275,7 +275,7 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' } } } }) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendHelpPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 else
@@ -307,7 +307,7 @@ local function run(msg, matches)
         if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. syntax_all(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true)), 'html') then
             if msg.chat.type ~= 'private' then
                 local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt, 'html').result.message_id
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                 return
             end
         else
@@ -326,7 +326,7 @@ local function run(msg, matches)
                 if sendMessage(msg.from.id, langs[msg.lang].syntaxIntro .. text, 'html') then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSyntaxPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 else
@@ -344,7 +344,7 @@ local function run(msg, matches)
             if sendKeyboard(msg.from.id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html') then
                 if msg.chat.type ~= 'private' then
                     local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt, 'html').result.message_id
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                     return
                 end
             else
@@ -356,7 +356,7 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, langs[msg.lang].faq[tonumber(matches[2])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } }) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 else
@@ -366,7 +366,7 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' } } } }) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendFAQPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 else

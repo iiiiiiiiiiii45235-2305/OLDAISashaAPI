@@ -878,7 +878,7 @@ local function run(msg, matches)
                                     if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from, msg.chat.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                             return
                                         end
                                     else
@@ -886,7 +886,7 @@ local function run(msg, matches)
                                     end
                                 else
                                     local message_id = sendReply(msg, txt).result.message_id
-                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                     return
                                 end
                             elseif msg.reply_to_message.forward_from_chat then
@@ -895,7 +895,7 @@ local function run(msg, matches)
                                     if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.forward_from_chat, msg.chat.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                             return
                                         end
                                     else
@@ -903,7 +903,7 @@ local function run(msg, matches)
                                     end
                                 else
                                     local message_id = sendReply(msg, txt).result.message_id
-                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                     return
                                 end
                             else
@@ -944,7 +944,7 @@ local function run(msg, matches)
                                 end
                             end
                             local message_id = sendReply(msg, text, 'html').result.message_id
-                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                             return
                         elseif msg.reply_to_message.service_type == 'chat_add_user_link' then
                             local txt = get_object_info(msg.reply_to_message.from, msg.chat.id)
@@ -952,7 +952,7 @@ local function run(msg, matches)
                                 if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                         return
                                     end
                                 else
@@ -960,7 +960,7 @@ local function run(msg, matches)
                                 end
                             else
                                 local message_id = sendReply(msg, txt).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                         elseif msg.reply_to_message.service_type == 'chat_del_user' then
@@ -969,7 +969,7 @@ local function run(msg, matches)
                                 if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.remover, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                         return
                                     end
                                 else
@@ -977,7 +977,7 @@ local function run(msg, matches)
                                 end
                             else
                                 local message_id = sendReply(msg, txt).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                             local txt = get_object_info(msg.reply_to_message.removed, msg.chat.id)
@@ -985,7 +985,7 @@ local function run(msg, matches)
                                 if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                         return
                                     end
                                 else
@@ -993,7 +993,7 @@ local function run(msg, matches)
                                 end
                             else
                                 local message_id = sendReply(msg, txt).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                         elseif msg.reply_to_message.service_type == 'chat_del_user_leave' then
@@ -1002,7 +1002,7 @@ local function run(msg, matches)
                                 if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.removed, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                         return
                                     end
                                 else
@@ -1010,7 +1010,7 @@ local function run(msg, matches)
                                 end
                             else
                                 local message_id = sendReply(msg, txt).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                         else
@@ -1019,7 +1019,7 @@ local function run(msg, matches)
                                 if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)) then
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                         return
                                     end
                                 else
@@ -1027,7 +1027,7 @@ local function run(msg, matches)
                                 end
                             else
                                 local message_id = sendReply(msg, txt).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                         end
@@ -1037,7 +1037,7 @@ local function run(msg, matches)
                             if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.reply_to_message.from, msg.chat.id)) then
                                 if msg.chat.type ~= 'private' then
                                     local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                     return
                                 end
                             else
@@ -1045,7 +1045,7 @@ local function run(msg, matches)
                             end
                         else
                             local message_id = sendReply(msg, txt).result.message_id
-                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                             return
                         end
                     end
@@ -1065,7 +1065,7 @@ local function run(msg, matches)
                                     if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, msg.entities[k].user, msg.chat.id)) then
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                             return
                                         end
                                     else
@@ -1073,7 +1073,7 @@ local function run(msg, matches)
                                     end
                                 else
                                     local message_id = sendReply(msg, txt).result.message_id
-                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                     return
                                 end
                             end
@@ -1087,7 +1087,7 @@ local function run(msg, matches)
                         if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, obj, msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
                                 local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                         else
@@ -1095,7 +1095,7 @@ local function run(msg, matches)
                         end
                     else
                         local message_id = sendReply(msg, txt).result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 else
@@ -1105,7 +1105,7 @@ local function run(msg, matches)
                         if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, obj, msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
                                 local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                                 return
                             end
                         else
@@ -1113,7 +1113,7 @@ local function run(msg, matches)
                         end
                     else
                         local message_id = sendReply(msg, txt).result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 end
@@ -1242,7 +1242,7 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, get_object_info(msg.chat, msg.chat.id), get_object_info_keyboard(msg.from.id, msg.chat, msg.chat.id)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendInfoPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                         return
                     end
                 else
@@ -1250,7 +1250,7 @@ local function run(msg, matches)
                 end
             else
                 local message_id = sendReply(msg, txt).result.message_id
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. message_id .. ',' .. msg.message_id .. '"')
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
                 return
             end
         else
