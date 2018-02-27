@@ -134,12 +134,12 @@ local function run(msg, matches)
                 mystat('/whitelist')
                 local text = langs[msg.lang].whitelistStart .. msg.chat.title .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.users) do
-                    local user_info = redis:hgetall('user:' .. v)
+                    local user_info = redis:hgetall('user:' .. k)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
-                        text = text .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+                        text = text .. print_name .. " [" .. k .. "]\n"
                     else
-                        text = text .. k .. " - " .. v .. "\n"
+                        text = text .. " [" .. k .. "]\n"
                     end
                 end
                 local tmp = oldResponses.lastWhitelist[tostring(msg.chat.id)]
@@ -218,12 +218,12 @@ local function run(msg, matches)
                 mystat('/whitelistgban')
                 local text = langs[msg.lang].whitelistGbanStart .. msg.chat.title .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.gbanned) do
-                    local user_info = redis:hgetall('user:' .. v)
+                    local user_info = redis:hgetall('user:' .. k)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
-                        text = text .. k .. " - " .. print_name .. " [" .. v .. "]\n"
+                        text = text .. print_name .. " [" .. k .. "]\n"
                     else
-                        text = text .. k .. " - " .. v .. "\n"
+                        text = text .. " [" .. k .. "]\n"
                     end
                 end
                 local tmp = oldResponses.lastWhitelistGban[tostring(msg.chat.id)]
