@@ -187,22 +187,26 @@ local function get_object_info(obj, chat_id)
     end
 end
 
-local function whitelist_user(group_id, user_id, lang)
-    if isWhitelisted(group_id, user_id) then
-        redis:srem('whitelist:' .. group_id, user_id)
+local function whitelist_user(chat_id, user_id, lang)
+    if isWhitelisted(chat_id, user_id) then
+        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = nil
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
     else
-        redis:sadd('whitelist:' .. group_id, user_id)
+        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = true
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
     end
 end
 
-local function whitegban_user(group_id, user_id, lang)
-    if isWhitelistedGban(group_id, user_id) then
-        redis:srem('whitelist:gban:' .. group_id, user_id)
+local function whitegban_user(chat_id, user_id, lang)
+    if isWhitelistedGban(chat_id, user_id) then
+        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = nil
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
     else
-        redis:sadd('whitelist:gban:' .. group_id, user_id)
+        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = true
+        save_data(config.moderation.data, data)
         return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
     end
 end
@@ -353,7 +357,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'WHITELIST' then
                 if is_owner2(msg.from.id, matches[4]) then
-                    local text = whitelist_user(id_to_cli(matches[4]), matches[3], msg.lang)
+                    local text = whitelist_user(matches[4], matches[3], msg.lang)
                     answerCallbackQuery(msg.cb_id, text, true)
                     sendMessage(matches[4], text)
                     deeper = 'PROMOTIONS'
@@ -363,7 +367,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'GBANWHITELIST' then
                 if is_owner2(msg.from.id, matches[4]) then
-                    local text = whitegban_user(id_to_cli(matches[4]), matches[3], msg.lang)
+                    local text = whitegban_user(matches[4], matches[3], msg.lang)
                     answerCallbackQuery(msg.cb_id, text, true)
                     sendMessage(matches[4], text)
                     deeper = 'PROMOTIONS'
