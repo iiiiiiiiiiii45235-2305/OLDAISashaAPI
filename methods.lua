@@ -1881,6 +1881,19 @@ function isWhitelisted(chat_id, user_id)
     return false
 end
 
+function whitelist_user(chat_id, user_id)
+    local lang = get_lang(chat_id)
+    if isWhitelisted(chat_id, user_id) then
+        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = nil
+        save_data(config.moderation.data, data)
+        return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
+    else
+        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = true
+        save_data(config.moderation.data, data)
+        return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
+    end
+end
+
 -- Check if user_id is gban whitelisted or not
 function isWhitelistedGban(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
@@ -1888,6 +1901,19 @@ function isWhitelistedGban(chat_id, user_id)
         return data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)]
     end
     return false
+end
+
+function whitegban_user(chat_id, user_id)
+    local lang = get_lang(chat_id)
+    if isWhitelistedGban(chat_id, user_id) then
+        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = nil
+        save_data(config.moderation.data, data)
+        return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
+    else
+        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = true
+        save_data(config.moderation.data, data)
+        return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
+    end
 end
 
 function getWarn(chat_id)

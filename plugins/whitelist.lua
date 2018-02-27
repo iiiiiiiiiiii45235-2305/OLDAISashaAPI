@@ -5,30 +5,6 @@ local oldResponses = {
     lastWhitelistLink = { },
 }
 
-local function whitelist_user(chat_id, user_id, lang)
-    if isWhitelisted(chat_id, user_id) then
-        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = nil
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
-    else
-        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = true
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
-    end
-end
-
-local function whitegban_user(chat_id, user_id, lang)
-    if isWhitelistedGban(chat_id, user_id) then
-        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = nil
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
-    else
-        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = true
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
-    end
-end
-
 local function whitelist_link(chat_id, link)
     local lang = get_lang(chat_id)
     link = link:lower()
@@ -86,7 +62,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return whitelist_user(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
+                                    return whitelist_user(msg.chat.id, msg.reply_to_message.forward_from.id)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -95,7 +71,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        return whitelist_user(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
+                        return whitelist_user(msg.chat.id, msg.reply_to_message.from.id)
                     end
                 else
                     return langs[msg.lang].require_owner
@@ -108,19 +84,19 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    return whitelist_user(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                    return whitelist_user(msg.chat.id, msg.entities[k].user.id)
                                 end
                             end
                         end
                     end
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
-                        return whitelist_user(msg.chat.id, matches[2], msg.lang)
+                        return whitelist_user(msg.chat.id, matches[2])
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return whitelist_user(msg.chat.id, obj_user.id, msg.lang)
+                                return whitelist_user(msg.chat.id, obj_user.id)
                             end
                         else
                             return langs[msg.lang].noObject
@@ -170,7 +146,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    return whitegban_user(msg.chat.id, msg.reply_to_message.forward_from.id, msg.lang)
+                                    return whitegban_user(msg.chat.id, msg.reply_to_message.forward_from.id)
                                 else
                                     return langs[msg.lang].cantDoThisToChat
                                 end
@@ -179,7 +155,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        return whitegban_user(msg.chat.id, msg.reply_to_message.from.id, msg.lang)
+                        return whitegban_user(msg.chat.id, msg.reply_to_message.from.id)
                     end
                 else
                     return langs[msg.lang].require_owner
@@ -192,19 +168,19 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    return whitegban_user(msg.chat.id, msg.entities[k].user.id, msg.lang)
+                                    return whitegban_user(msg.chat.id, msg.entities[k].user.id)
                                 end
                             end
                         end
                     end
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
-                        return whitegban_user(msg.chat.id, matches[2], msg.lang)
+                        return whitegban_user(msg.chat.id, matches[2])
                     else
                         local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                return whitegban_user(msg.chat.id, obj_user.id, msg.lang)
+                                return whitegban_user(msg.chat.id, obj_user.id)
                             end
                         else
                             return langs[msg.lang].noObject

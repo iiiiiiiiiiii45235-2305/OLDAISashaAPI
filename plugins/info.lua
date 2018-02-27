@@ -187,30 +187,6 @@ local function get_object_info(obj, chat_id)
     end
 end
 
-local function whitelist_user(chat_id, user_id, lang)
-    if isWhitelisted(chat_id, user_id) then
-        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = nil
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistRemoved
-    else
-        data[tostring(chat_id)].whitelist.users[tostring(user_id)] = true
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistAdded
-    end
-end
-
-local function whitegban_user(chat_id, user_id, lang)
-    if isWhitelistedGban(chat_id, user_id) then
-        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = nil
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanRemoved
-    else
-        data[tostring(chat_id)].whitelist.gbanned[tostring(user_id)] = true
-        save_data(config.moderation.data, data)
-        return langs[lang].userBot .. user_id .. langs[lang].whitelistGbanAdded
-    end
-end
-
 local function promoteMod(chat_id, user)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)].moderators[tostring(user.id)] then
@@ -357,7 +333,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'WHITELIST' then
                 if is_owner2(msg.from.id, matches[4]) then
-                    local text = whitelist_user(matches[4], matches[3], msg.lang)
+                    local text = whitelist_user(matches[4], matches[3])
                     answerCallbackQuery(msg.cb_id, text, true)
                     sendMessage(matches[4], text)
                     deeper = 'PROMOTIONS'
@@ -367,7 +343,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'GBANWHITELIST' then
                 if is_owner2(msg.from.id, matches[4]) then
-                    local text = whitegban_user(matches[4], matches[3], msg.lang)
+                    local text = whitegban_user(matches[4], matches[3])
                     answerCallbackQuery(msg.cb_id, text, true)
                     sendMessage(matches[4], text)
                     deeper = 'PROMOTIONS'
