@@ -67,7 +67,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'WHITELISTED '
                 end
                 if isWhitelistedGban(chat_id, obj.id) then
-                    otherinfo = otherinfo .. 'GBANWHITELISTED '
+                    otherinfo = otherinfo .. 'WHITELISTEDGBAN '
                 end
                 if isBanned(obj.id, chat_id) then
                     if status ~= 'kicked' then
@@ -132,7 +132,7 @@ local function get_object_info(obj, chat_id)
                     otherinfo = otherinfo .. 'WHITELISTED '
                 end
                 if isWhitelistedGban(chat_id, obj.id) then
-                    otherinfo = otherinfo .. 'GBANWHITELISTED '
+                    otherinfo = otherinfo .. 'WHITELISTEDGBAN '
                 end
                 if isBanned(obj.id, chat_id) then
                     if status ~= 'kicked' then
@@ -341,7 +341,7 @@ local function run(msg, matches)
                 else
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
                 end
-            elseif matches[2] == 'GBANWHITELIST' then
+            elseif matches[2] == 'WHITELISTGBAN' then
                 if is_owner2(msg.from.id, matches[4]) then
                     local text = whitegban_user(matches[4], matches[3])
                     answerCallbackQuery(msg.cb_id, text, true)
@@ -1321,7 +1321,7 @@ return {
         "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
-        "^(###cbinfo)(GBANWHITELIST)(%d+)(%-%d+)$",
+        "^(###cbinfo)(WHITELISTGBAN)(%d+)(%-%d+)$",
         "^(###cbinfo)(MUTEUSER)(%d+)(%-%d+)$",
         "^(###cbinfo)(WARNS)(%d+)(%-%d+)$",
         "^(###cbinfo)(WARNS%-%-)(%d+)(%-%d+)$",

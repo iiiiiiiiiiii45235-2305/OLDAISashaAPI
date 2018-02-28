@@ -939,9 +939,9 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 row = row + 1
                                 keyboard.inline_keyboard[row] = { }
                                 if isWhitelistedGban(chat_id, obj.id) then
-                                    keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED ✅', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                    keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTEDGBAN ✅', callback_data = 'infoWHITELISTGBAN' .. obj.id .. chat_id }
                                 else
-                                    keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED ☑️', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                    keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTEDGBAN ☑️', callback_data = 'infoWHITELISTGBAN' .. obj.id .. chat_id }
                                 end
                             end
                             if tostring(chat_id):starts('-100') then
@@ -1104,9 +1104,9 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
                                     if isWhitelistedGban(chat_id, obj.id) then
-                                        keyboard.inline_keyboard[row][column] = { text = '✅ GBANWHITELISTED ✅', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                        keyboard.inline_keyboard[row][column] = { text = '✅ WHITELISTEDGBAN ✅', callback_data = 'infoWHITELISTGBAN' .. obj.id .. chat_id }
                                     else
-                                        keyboard.inline_keyboard[row][column] = { text = '☑️ GBANWHITELISTED ☑️', callback_data = 'infoGBANWHITELIST' .. obj.id .. chat_id }
+                                        keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTEDGBAN ☑️', callback_data = 'infoWHITELISTGBAN' .. obj.id .. chat_id }
                                     end
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
