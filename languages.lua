@@ -976,7 +976,7 @@ return {
             ["video_notes"] = "Eliminazione di ogni nota video (punizione minima delete).",
             ["voice_notes"] = "Eliminazione di ogni nota vocale (punizione minima delete).",
             ["strict"] = "Innalzamento punizioni temporanee a permanenti.",
-            ["warns_punishment"] = "Punizione al raggiungimento degli warn massimi (punizione minima temprestrict).",
+            ["warns_punishment"] = "Punizione per il raggiungimento degli warn massimi (punizione minima temprestrict).",
         },
 
         -- errors
@@ -2466,8 +2466,8 @@ return {
             ["lock_name"] = "Prevent group's name changes.",
             ["lock_photo"] = "Prevent group's photo changes.",
             ["arabic"] = "Block of arabic characters (minimum punishment delete).",
-            ["bots"] = "Punishment of adding bots (punishment is for adder, bots are banned directly) (minimum punishment temprestrict).",
-            ["delword"] = "Punishment of writing something censored (minimum punishment delete).",
+            ["bots"] = "Punishment for adding bots (punishment is for adder, bots are banned directly) (minimum punishment temprestrict).",
+            ["delword"] = "Punishment for writing something censored (minimum punishment delete).",
             ["flood"] = "Block of flood (minimum punishment warn).",
             ["forward"] = "Block of forwarded messages from channels (minimum punishment delete).",
             ["gbanned"] = "Block of globally banned users (minimum punishment restrict).",
@@ -2493,7 +2493,7 @@ return {
             ["video_notes"] = "Deletion of every video note (minimum punishment delete).",
             ["voice_notes"] = "Deletion of every voice note (minimum punishment delete).",
             ["strict"] = "Increasing of temporary punishments to permanent.",
-            ["warns_punishment"] = "Punishment of reaching the maximum number of warns (minimum punishment temprestrict).",
+            ["warns_punishment"] = "Punishment for reaching the maximum number of warns (minimum punishment temprestrict).",
         },
 
         -- errors
