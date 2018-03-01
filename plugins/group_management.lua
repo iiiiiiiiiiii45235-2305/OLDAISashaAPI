@@ -647,7 +647,7 @@ local function run(msg, matches)
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1101,7 +1101,7 @@ local function run(msg, matches)
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1132,7 +1132,7 @@ local function run(msg, matches)
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1159,7 +1159,7 @@ local function run(msg, matches)
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
         end
@@ -1189,7 +1189,7 @@ local function run(msg, matches)
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
