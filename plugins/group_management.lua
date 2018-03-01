@@ -637,15 +637,18 @@ local function run(msg, matches)
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 return
             else
+                local txt = ''
                 if not data[tostring(msg.chat.id)].rules then
-                    if not sendMessage(msg.from.id, langs[msg.lang].noRules) then
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                    end
+                    txt = langs[msg.lang].noRules
                 else
-                    if not sendMessage(msg.from.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules) then
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
-                    end
+                    txt = langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules
                 end
+                if not sendMessage(msg.from.id, txt) then
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
         end
@@ -1095,9 +1098,11 @@ local function run(msg, matches)
                 end
             else
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
         end
@@ -1124,9 +1129,11 @@ local function run(msg, matches)
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             else
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
         end
@@ -1149,9 +1156,11 @@ local function run(msg, matches)
                 end
             else
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
         end
         if matches[1]:lower() == 'textualsettings' then
@@ -1177,9 +1186,11 @@ local function run(msg, matches)
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             else
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt).result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
         end
