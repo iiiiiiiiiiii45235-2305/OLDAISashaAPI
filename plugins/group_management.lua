@@ -1162,6 +1162,7 @@ local function run(msg, matches)
                 local tmp = sendMessage(msg.chat.id, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
+            return
         end
         if matches[1]:lower() == 'textualsettings' then
             mystat('/settings')
