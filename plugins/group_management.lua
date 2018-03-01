@@ -612,28 +612,41 @@ local function run(msg, matches)
         if matches[1]:lower() == 'rules' then
             mystat('/rules')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")
-            local tmp = oldResponses.lastRules[tostring(msg.chat.id)]
-            if not data[tostring(msg.chat.id)].rules then
-                oldResponses.lastRules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(oldResponses.lastRules[tostring(msg.chat.id)].result.message_id or '') .. '"')
-            else
-                oldResponses.lastRules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules)
-            end
-            if oldResponses.lastRules[tostring(msg.chat.id)] then
-                if oldResponses.lastRules[tostring(msg.chat.id)].result then
-                    if oldResponses.lastRules[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastRules[tostring(msg.chat.id)] = oldResponses.lastRules[tostring(msg.chat.id)].result.message_id
+            if msg.from.is_mod then
+                local tmp = oldResponses.lastRules[tostring(msg.chat.id)]
+                if not data[tostring(msg.chat.id)].rules then
+                    oldResponses.lastRules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].noRules)
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(oldResponses.lastRules[tostring(msg.chat.id)].result.message_id or '') .. '"')
+                else
+                    oldResponses.lastRules[tostring(msg.chat.id)] = sendMessage(msg.chat.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules)
+                end
+                if oldResponses.lastRules[tostring(msg.chat.id)] then
+                    if oldResponses.lastRules[tostring(msg.chat.id)].result then
+                        if oldResponses.lastRules[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastRules[tostring(msg.chat.id)] = oldResponses.lastRules[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastRules[tostring(msg.chat.id)] = nil
+                        end
                     else
                         oldResponses.lastRules[tostring(msg.chat.id)] = nil
                     end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return
+            else
+                if not data[tostring(msg.chat.id)].rules then
+                    if not sendMessage(msg.from.id, langs[msg.lang].noRules) then
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    end
                 else
-                    oldResponses.lastRules[tostring(msg.chat.id)] = nil
+                    if not sendMessage(msg.from.id, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules) then
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    end
                 end
             end
-            if tmp then
-                deleteMessage(msg.chat.id, tmp, true)
-            end
-            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             return
         end
         if matches[1]:lower() == 'updategroupinfo' then
@@ -1065,13 +1078,13 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'muteslist' then
             mystat('/muteslist')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
             if msg.from.is_mod then
                 local chat_name = ''
                 if data[tostring(msg.chat.id)] then
                     chat_name = data[tostring(msg.chat.id)].name or ''
                 end
                 if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 2)) then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
@@ -1081,7 +1094,17 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+                if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            end
+            return
+        end
+        if matches[1]:lower() == 'textualmuteslist' then
+            mystat('/muteslist')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
+            if msg.from.is_mod then
                 local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
                 oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
                 if oldResponses.lastSettings[tostring(msg.chat.id)] then
@@ -1099,40 +1122,23 @@ local function run(msg, matches)
                     deleteMessage(msg.chat.id, tmp, true)
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                return
-            end
-        end
-        if matches[1]:lower() == 'textualmuteslist' then
-            mystat('/muteslist')
-            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
-            local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
-            oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
-            if oldResponses.lastSettings[tostring(msg.chat.id)] then
-                if oldResponses.lastSettings[tostring(msg.chat.id)].result then
-                    if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+            else
+                if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             end
-            if tmp then
-                deleteMessage(msg.chat.id, tmp, true)
-            end
-            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             return
         end
         if matches[1]:lower() == 'settings' then
             mystat('/settings')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
             if msg.from.is_mod then
                 local chat_name = ''
                 if data[tostring(msg.chat.id)] then
                     chat_name = data[tostring(msg.chat.id)].name or ''
                 end
                 if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 1)) then
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
@@ -1142,7 +1148,16 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
-                savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+                if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            end
+        end
+        if matches[1]:lower() == 'textualsettings' then
+            mystat('/settings')
+            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
+            if msg.from.is_mod then
                 local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
                 oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
                 if oldResponses.lastSettings[tostring(msg.chat.id)] then
@@ -1160,29 +1175,12 @@ local function run(msg, matches)
                     deleteMessage(msg.chat.id, tmp, true)
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                return
-            end
-        end
-        if matches[1]:lower() == 'textualsettings' then
-            mystat('/settings')
-            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
-            local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
-            oldResponses.lastSettings[tostring(msg.chat.id)] = sendMessage(msg.chat.id, showSettings(msg.chat.id, msg.lang))
-            if oldResponses.lastSettings[tostring(msg.chat.id)] then
-                if oldResponses.lastSettings[tostring(msg.chat.id)].result then
-                    if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastSettings[tostring(msg.chat.id)] = nil
+            else
+                if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             end
-            if tmp then
-                deleteMessage(msg.chat.id, tmp, true)
-            end
-            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             return
         end
         if matches[1]:lower() == 'newlink' then
