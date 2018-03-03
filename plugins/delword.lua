@@ -121,13 +121,16 @@ local function pre_process(msg)
                             local time = redis:hget(hash, temp)
                             local text = ''
                             if time == 'true' or time == '0' then
-                                text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)
+                                local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)).result.message_id
+                                if not data[tostring(msg.chat.id)].settings.groupnotices then
+                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                end
                             else
                                 io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)
-                            end
-                            if text ~= '' then
-                                sendMessage(msg.chat.id, text)
+                                local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)).result.message_id
+                                if not data[tostring(msg.chat.id)].settings.groupnotices then
+                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                end
                             end
                             return nil
                         end

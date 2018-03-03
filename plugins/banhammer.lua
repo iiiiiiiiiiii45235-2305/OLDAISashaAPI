@@ -2177,18 +2177,18 @@ local function pre_process(msg)
                         else
                             if isGbanned(v.id) and data[tostring(msg.chat.id)].settings.locks.gbanned and not(is_mod2(v.id, msg.chat.id, true) or isWhitelistedGban(msg.chat.id, v.id)) and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(v.id)] then
                                 flag = true
-                                -- if gbanned and lockgbanned and (not mod neither whitelisted) and not already punished for something
+                                -- if gbanned and lockgbanned and (not mod neither whitelisted) and not yet punished for something
                                 print('User is gbanned!')
                                 local txt = punishmentAction(bot.id, v.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.gbanned, langs[msg.lang].reasonGbannedUser)
                                 if txt ~= '' then
                                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                                     redis:incr(banhash)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a [g]banned user > " .. v.id)
-                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. v.id .. "] is gbanned! punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
+                                    savelog(msg.chat.id, msg.from.print_name .. " [" .. v.id .. "] is gbanned! punishment = " .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
                                     text = text .. txt
                                 end
                             elseif isBanned(v.id, msg.chat.id) and not is_mod2(v.id, msg.chat.id, true) and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(v.id)] then
-                                -- if banned and not mod and not already punished for something
+                                -- if banned and not mod and not yet punished for something
                                 print('User is banned!')
                                 local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
                                 redis:incr(banhash)
@@ -2220,17 +2220,20 @@ local function pre_process(msg)
                 if msg.service_type == 'chat_add_user_link' then
                     print('Checking invited user ' .. msg.from.id)
                     if isGbanned(msg.from.id) and data[tostring(msg.chat.id)].settings.locks.gbanned and not(msg.from.is_mod or isWhitelistedGban(msg.chat.id, msg.from.id)) and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                        -- if gbanned and lockgbanned and (not mod neither whitelisted) and not already punished for something
+                        -- if gbanned and lockgbanned and (not mod neither whitelisted) and not yet punished for something
                         print('User is gbanned!')
                         local text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.gbanned, langs[msg.lang].reasonGbannedUser)
                         if text ~= '' then
-                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is gbanned! punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
-                            sendKeyboard(msg.chat.id, text, keyboard_whitelist_gbanned(msg.chat.id, msg.from.id))
+                            savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is gbanned! punishment = " .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
+                            local message_id = sendKeyboard(msg.chat.id, text, keyboard_whitelist_gbanned(msg.chat.id, msg.from.id)).result.message_id
+                            if not data[tostring(msg.chat.id)].settings.groupnotices then
+                                io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            end
                             return nil
                         end
                         return msg
                     elseif isBanned(msg.from.id, msg.chat.id) and not msg.from.is_mod and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                        -- if banned and not mod and not already punished for something
+                        -- if banned and not mod and not yet punished for something
                         print('User is banned!')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is banned!")
                         sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonBannedUser))
@@ -2242,7 +2245,7 @@ local function pre_process(msg)
         -- banned user is talking !
         if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
             if isGbanned(msg.from.id) and data[tostring(msg.chat.id)].settings.locks.gbanned and not(msg.from.is_mod or isWhitelistedGban(msg.chat.id, msg.from.id)) and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                -- if gbanned and lockgbanned and (not mod neither whitelisted) and not already punished for something
+                -- if gbanned and lockgbanned and (not mod neither whitelisted) and not yet punished for something
                 print('User is gbanned!')
                 local text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.gbanned, langs[msg.lang].reasonGbannedUser)
                 if text ~= '' then
@@ -2252,13 +2255,16 @@ local function pre_process(msg)
                             sendMessage(msg.chat.id, text)
                         end
                     end]]
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] gbanned user is talking! punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
-                    sendKeyboard(msg.chat.id, text, keyboard_whitelist_gbanned(msg.chat.id, msg.from.id))
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] gbanned user is talking! punishment = " .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
+                    local message_id = sendKeyboard(msg.chat.id, text, keyboard_whitelist_gbanned(msg.chat.id, msg.from.id)).result.message_id
+                    if not data[tostring(msg.chat.id)].settings.groupnotices then
+                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    end
                     return nil
                 end
                 return msg
             elseif isBanned(msg.from.id, msg.chat.id) and not msg.from.is_mod and not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
-                -- if banned and not mod and not already punished for something
+                -- if banned and not mod and not yet punished for something
                 print('User is banned!')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] banned user is talking!")
                 sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonBannedUser))
