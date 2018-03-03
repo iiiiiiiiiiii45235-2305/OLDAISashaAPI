@@ -1032,11 +1032,11 @@ local function run(msg, matches)
         if matches[1]:lower() == 'lock' then
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
-                    mystat('/lock ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
+                    mystat('/lock ' .. matches[2]:lower() .. ' ' ..(matches[3] or ''):lower())
                     if (groupDataDictionary[matches[2]:lower()] == 'groupnotices' or groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
                         return langs[msg.lang].require_owner
                     end
-                    return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
+                    return lockSetting(msg.chat.id, matches[2]:lower(),(matches[3] or ''):lower())
                 end
                 return
             else
@@ -1060,11 +1060,11 @@ local function run(msg, matches)
         if matches[1]:lower() == 'mute' then
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
-                    mystat('/mute ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
+                    mystat('/mute ' .. matches[2]:lower() .. ' ' ..(matches[3] or ''):lower())
                     if (groupDataDictionary[matches[2]:lower()] == 'groupnotices' or groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
                         return langs[msg.lang].require_owner
                     end
-                    return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
+                    return lockSetting(msg.chat.id, matches[2]:lower(),(matches[3] or ''):lower())
                 end
                 return
             else
