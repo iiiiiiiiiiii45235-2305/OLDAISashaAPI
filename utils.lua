@@ -12,23 +12,6 @@ sha2 =(loadfile "./libs/sha2.lua")()
 
 http.TIMEOUT = 10
 
-
-default_restrictions = {
-    can_send_messages = false,
-    can_send_media_messages = false,
-    can_send_other_messages = false,
-    can_add_web_page_previews = false
-}
-
-default_permissions = {
-    can_change_info = true,
-    can_delete_messages = true,
-    can_invite_users = true,
-    can_restrict_members = true,
-    can_pin_messages = true,
-    can_promote_members = false,
-}
-
 -- custom add
 function load_data(filename)
     local f = io.open(filename)
@@ -693,42 +676,14 @@ function doSendBackup()
     end
 end
 
-permissionsDictionary = {
-    ["can_change_info"] = "can_change_info",
-    ["change_info"] = "can_change_info",
-    ["can_delete_messages"] = "can_delete_messages",
-    ["delete_messages"] = "can_delete_messages",
-    ["can_invite_users"] = "can_invite_users",
-    ["invite_users"] = "can_invite_users",
-    ["can_restrict_members"] = "can_restrict_members",
-    ["restrict_members"] = "can_restrict_members",
-    ["can_pin_messages"] = "can_pin_messages",
-    ["pin_messages"] = "can_pin_messages",
-    ["can_promote_members"] = "can_promote_members",
-    ["promote_members"] = "can_promote_members",
-}
-reversePermissionsDictionary = {
-    ["can_change_info"] = "change_info",
-    ["change_info"] = "change_info",
-    ["can_delete_messages"] = "delete_messages",
-    ["delete_messages"] = "delete_messages",
-    ["can_invite_users"] = "invite_users",
-    ["invite_users"] = "invite_users",
-    ["can_restrict_members"] = "restrict_members",
-    ["restrict_members"] = "restrict_members",
-    ["can_pin_messages"] = "pin_messages",
-    ["pin_messages"] = "pin_messages",
-    ["can_promote_members"] = "promote_members",
-    ["promote_members"] = "promote_members",
-}
 function adjustPermissions(param_permissions)
     local permissions = {
-        ['can_change_info'] = false,
-        ['can_delete_messages'] = false,
-        ['can_invite_users'] = false,
-        ['can_restrict_members'] = false,
-        ['can_pin_messages'] = false,
-        ['can_promote_members'] = false,
+        can_change_info = false,
+        can_delete_messages = false,
+        can_invite_users = false,
+        can_restrict_members = false,
+        can_pin_messages = false,
+        can_promote_members = false,
     }
     if param_permissions then
         if type(param_permissions) == 'table' then
@@ -749,167 +704,6 @@ function adjustPermissions(param_permissions)
     return permissions
 end
 
-groupDataDictionary = {
-    ["lock_group_link"] = "lock_grouplink",
-    ["group_link"] = "lock_grouplink",
-    ["grouplink"] = "lock_grouplink",
-    ["lock_name"] = "lock_name",
-    ["name"] = "lock_name",
-    ["lock_photo"] = "lock_photo",
-    ["pmnotices"] = "pmnotices",
-    ["private_notices"] = "pmnotices",
-    ["tagalert"] = "tagalert",
-    -- settings
-    ["max_flood"] = "max_flood",
-    ["max_warns"] = "max_warns",
-    ["strict"] = "strict",
-    ["time_ban"] = "time_ban",
-    ["time_restrict"] = "time_restrict",
-    ["warns_punishment"] = "warns_punishment",
-    ["warns"] = "warns_punishment",
-    ["warn"] = "warns_punishment",
-    -- locks
-    ["arabic"] = "arabic",
-    ["bots"] = "bots",
-    ["delword"] = "delword",
-    ["flood"] = "flood",
-    ["forward"] = "forward",
-    ["gbanned"] = "gbanned",
-    ["leave"] = "leave",
-    ["links"] = "links",
-    ["link"] = "links",
-    ["members"] = "members",
-    ["member"] = "members",
-    ["rtl"] = "rtl",
-    ["spam"] = "spam",
-    -- mutes
-    ["all"] = "all",
-    ["audio"] = "audios",
-    ["audios"] = "audios",
-    ["contact"] = "contacts",
-    ["contacts"] = "contacts",
-    ["document"] = "documents",
-    ["documents"] = "documents",
-    ["game"] = "games",
-    ["games"] = "games",
-    ["gif"] = "gifs",
-    ["gifs"] = "gifs",
-    ["location"] = "locations",
-    ["locations"] = "locations",
-    ["position"] = "locations",
-    ["positions"] = "locations",
-    ["image"] = "photos",
-    ["images"] = "photos",
-    ["photo"] = "photos",
-    ["photos"] = "photos",
-    ["pic"] = "photos",
-    ["pics"] = "photos",
-    ["picture"] = "photos",
-    ["pictures"] = "photos",
-    ["sticker"] = "stickers",
-    ["stickers"] = "stickers",
-    ["text"] = "text",
-    ["texts"] = "text",
-    ["tgservice"] = "tgservices",
-    ["tgservices"] = "tgservices",
-    ["video"] = "videos",
-    ["videos"] = "videos",
-    ["video_note"] = "video_notes",
-    ["video_notes"] = "video_notes",
-    ["voice_note"] = "voice_notes",
-    ["voice_notes"] = "voice_notes",
-}
-reverseGroupDataDictionary = {
-    ["lock_grouplink"] = "grouplink",
-    ["group_link"] = "grouplink",
-    ["grouplink"] = "grouplink",
-    ["lock_name"] = "name",
-    ["name"] = "name",
-    ["lock_photo"] = "lock_photo",
-    ["pmnotices"] = "pmnotices",
-    ["private_notices"] = "pmnotices",
-    ["tagalert"] = "tagalert",
-    -- settings
-    ["max_flood"] = "max_flood",
-    ["max_warns"] = "max_warns",
-    ["strict"] = "strict",
-    ["time_ban"] = "time_ban",
-    ["time_restrict"] = "time_restrict",
-    ["warns_punishment"] = "warns",
-    ["warns"] = "warns",
-    ["warn"] = "warns",
-    -- locks
-    ["arabic"] = "arabic",
-    ["bots"] = "bots",
-    ["delword"] = "delword",
-    ["flood"] = "flood",
-    ["forward"] = "forward",
-    ["gbanned"] = "gbanned",
-    ["leave"] = "leave",
-    ["links"] = "link",
-    ["link"] = "link",
-    ["members"] = "member",
-    ["member"] = "member",
-    ["rtl"] = "rtl",
-    ["spam"] = "spam",
-    -- mutes
-    ["all"] = "all",
-    ["audio"] = "audio",
-    ["audios"] = "audio",
-    ["contact"] = "contact",
-    ["contacts"] = "contact",
-    ["document"] = "document",
-    ["documents"] = "document",
-    ["game"] = "game",
-    ["games"] = "game",
-    ["gif"] = "gif",
-    ["gifs"] = "gif",
-    ["location"] = "location",
-    ["locations"] = "location",
-    ["position"] = "location",
-    ["positions"] = "location",
-    ["image"] = "photo",
-    ["images"] = "photo",
-    ["photo"] = "photo",
-    ["photos"] = "photo",
-    ["pic"] = "photo",
-    ["pics"] = "photo",
-    ["picture"] = "photo",
-    ["pictures"] = "photo",
-    ["sticker"] = "sticker",
-    ["stickers"] = "sticker",
-    ["text"] = "text",
-    ["texts"] = "text",
-    ["tgservice"] = "tgservice",
-    ["tgservices"] = "tgservice",
-    ["video"] = "video",
-    ["videos"] = "video",
-    ["video_note"] = "video_note",
-    ["video_notes"] = "video_note",
-    ["voice_note"] = "voice_note",
-    ["voice_notes"] = "voice_note",
-}
-
-restrictionsDictionary = {
-    ["can_send_messages"] = "can_send_messages",
-    ["send_messages"] = "can_send_messages",
-    ["can_send_media_messages"] = "can_send_media_messages",
-    ["send_media_messages"] = "can_send_media_messages",
-    ["can_send_other_messages"] = "can_send_other_messages",
-    ["send_other_messages"] = "can_send_other_messages",
-    ["can_add_web_page_previews"] = "can_add_web_page_previews",
-    ["add_web_page_previews"] = "can_add_web_page_previews",
-}
-reverseRestrictionsDictionary = {
-    ["can_send_messages"] = "send_messages",
-    ["send_messages"] = "send_messages",
-    ["can_send_media_messages"] = "send_media_messages",
-    ["send_media_messages"] = "send_media_messages",
-    ["can_send_other_messages"] = "send_other_messages",
-    ["send_other_messages"] = "send_other_messages",
-    ["can_add_web_page_previews"] = "add_web_page_previews",
-    ["add_web_page_previews"] = "add_web_page_previews",
-}
 function adjustRestrictions(param_restrictions)
     local restrictions = {
         can_send_messages = true,
@@ -1069,7 +863,7 @@ function msgs_plus_plus(chat_id)
     redis:setex(hash, 1, tot_msgs + 1)
 end
 
-function areNoticesEnabled(user_id, chat_id)
+function arePMNoticesEnabled(user_id, chat_id)
     if is_admin2(user_id) then
         return true
     end
@@ -1078,7 +872,7 @@ function areNoticesEnabled(user_id, chat_id)
         pm = true
     end
     if data[tostring(chat_id)] then
-        return data[tostring(chat_id)].pmnotices
+        return data[tostring(chat_id)].settings.pmnotices
     else
         return false
     end
@@ -1089,80 +883,6 @@ function profileLink(id, name)
     return "<a href=\"tg://user?id=" .. id .. "\">" .. html_escape(name) .. "</a>"
 end
 
-punishments_table = {
-    [false] = false,
-    ["false"] = false,
-    ["nothing"] = false,
-    ["delete"] = 1,
-    ["warn"] = 2,
-    ["temprestrict"] = 3,
-    ["restrict"] = 4,
-    ["kick"] = 5,
-    ["tempban"] = 6,
-    ["ban"] = 7,
-    [0] = false,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    ["0"] = false,
-    ["1"] = 1,
-    ["2"] = 2,
-    ["3"] = 3,
-    ["4"] = 4,
-    ["5"] = 5,
-    ["6"] = 6,
-    ["7"] = 7,
-    ["🆗"] = false,
-    ["🗑"] = 1,
-    ["⚠️"] = 2,
-    ["⏳📴"] = 3,
-    ["📴"] = 4,
-    ["👟"] = 5,
-    ["⏳🚫"] = 6,
-    ["🚫"] = 7,
-}
-reverse_punishments_table = {
-    [false] = "nothing",
-    ["false"] = "nothing",
-    [0] = "nothing",
-    ["0"] = "nothing",
-    ["1"] = "delete",
-    ["2"] = "warn",
-    ["3"] = "temprestrict",
-    ["4"] = "restrict",
-    ["5"] = "kick",
-    ["6"] = "tempban",
-    ["7"] = "ban",
-    "delete",
-    "warn",
-    "temprestrict",
-    "restrict",
-    "kick",
-    "tempban",
-    "ban",
-    ["🆗"] = "nothing",
-    ["🗑"] = "delete",
-    ["⚠️"] = "warn",
-    ["⏳📴"] = "temprestrict",
-    ["📴"] = "restrict",
-    ["👟"] = "kick",
-    ["⏳🚫"] = "tempban",
-    ["🚫"] = "ban",
-}
-reverse_punishments_table_emoji = {
-    [false] = " 🆗 ",
-    " 🗑 ",
-    " ⚠️ ",
-    " ⏳📴 ",
-    " 📴 ",
-    " 👟 ",
-    " ⏳🚫 ",
-    " 🚫 ",
-}
 function punishmentAction(executer, target, chat_id, punishment, reason, message_id)
     print(executer, target, chat_id, punishment, reason, message_id)
     local lang = get_lang(chat_id)

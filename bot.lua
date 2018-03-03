@@ -190,6 +190,7 @@ end
 
 function reload_bot()
     print("Reloading bot")
+    loadfile("./dictionaries.lua")()
     loadfile("./utils.lua")()
     loadfile("./methods.lua")()
     loadfile("./ranks.lua")()
@@ -207,6 +208,7 @@ function bot_init()
     data = nil
     alternatives = { }
 
+    loadfile("./dictionaries.lua")()
     loadfile("./utils.lua")()
     config = load_config()
     alternatives = load_alternatives()

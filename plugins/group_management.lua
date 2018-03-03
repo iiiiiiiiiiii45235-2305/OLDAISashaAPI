@@ -85,7 +85,7 @@ local function setOwner(user, chat_id)
     local lang = get_lang(chat_id)
     data[tostring(chat_id)].owner = tostring(user.id)
     save_data(config.moderation.data, data)
-    if areNoticesEnabled(user.id, chat_id) then
+    if arePMNoticesEnabled(user.id, chat_id) then
         sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedOwner .. database[tostring(chat_id)].print_name)
     end
     return(user.username or user.print_name or user.first_name) .. ' [' .. user.id .. ']' .. langs[lang].setOwner
@@ -114,7 +114,7 @@ local function promoteTgAdmin(chat_id, user, permissions)
         if promote then
             data[tostring(chat_id)].moderators[tostring(user.id)] =(user.username or user.print_name or user.first_name)
             save_data(config.moderation.data, data)
-            if areNoticesEnabled(user.id, chat_id) then
+            if arePMNoticesEnabled(user.id, chat_id) then
                 sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedAdmin .. database[tostring(chat_id)].print_name)
             end
             return(user.username or user.print_name or user.first_name) .. langs[lang].promoteModAdmin
@@ -131,7 +131,7 @@ local function demoteTgAdmin(chat_id, user)
             data[tostring(chat_id)].moderators[tostring(user.id)] = nil
             save_data(config.moderation.data, data)
         end
-        if areNoticesEnabled(user.id, chat_id) then
+        if arePMNoticesEnabled(user.id, chat_id) then
             sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenDemotedAdmin .. database[tostring(chat_id)].print_name)
         end
         return(user.username or user.print_name or user.first_name) .. langs[lang].demoteModAdmin
@@ -147,7 +147,7 @@ local function promoteMod(chat_id, user)
     end
     data[tostring(chat_id)].moderators[tostring(user.id)] =(user.username or user.print_name or user.first_name)
     save_data(config.moderation.data, data)
-    if areNoticesEnabled(user.id, chat_id) then
+    if arePMNoticesEnabled(user.id, chat_id) then
         sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedMod .. database[tostring(chat_id)].print_name)
     end
     return(user.username or user.print_name or user.first_name) .. langs[lang].promoteMod
@@ -160,7 +160,7 @@ local function demoteMod(chat_id, user)
     end
     data[tostring(chat_id)].moderators[tostring(user.id)] = nil
     save_data(config.moderation.data, data)
-    if areNoticesEnabled(user.id, chat_id) then
+    if arePMNoticesEnabled(user.id, chat_id) then
         sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenDemotedMod .. database[tostring(chat_id)].print_name)
     end
     return(user.username or user.print_name or user.first_name) .. langs[lang].demoteMod
@@ -343,7 +343,7 @@ local function run(msg, matches)
             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[3] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[3], 2, nil, matches[4] or false))
         elseif matches[2] == 'LOCK' then
             if is_mod2(msg.from.id, matches[5]) then
-                if (groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
+                if (groupDataDictionary[matches[3]:lower()] == 'groupnotices' or groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
                     return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
                 answerCallbackQuery(msg.cb_id, lockSetting(matches[5], matches[3]), false)
@@ -358,7 +358,7 @@ local function run(msg, matches)
             end
         elseif matches[2] == 'UNLOCK' then
             if is_mod2(msg.from.id, matches[5]) then
-                if (groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
+                if (groupDataDictionary[matches[3]:lower()] == 'groupnotices' or groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
                     return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
                 answerCallbackQuery(msg.cb_id, unlockSetting(matches[5], matches[3]), false)
@@ -1033,7 +1033,7 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
                     mystat('/lock ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
-                    if (groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
+                    if (groupDataDictionary[matches[2]:lower()] == 'groupnotices' or groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
                         return langs[msg.lang].require_owner
                     end
                     return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
@@ -1047,6 +1047,9 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
                     mystat('/unlock ' .. matches[2]:lower())
+                    if (groupDataDictionary[matches[2]:lower()] == 'groupnotices' or groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
+                        return langs[msg.lang].require_owner
+                    end
                     return unlockSetting(msg.chat.id, matches[2]:lower())
                 end
                 return
@@ -1058,7 +1061,7 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
                     mystat('/mute ' .. matches[2]:lower() .. ' ' .. matches[3]:lower())
-                    if (groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
+                    if (groupDataDictionary[matches[2]:lower()] == 'groupnotices' or groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
                         return langs[msg.lang].require_owner
                     end
                     return lockSetting(msg.chat.id, matches[2]:lower(), matches[3]:lower())
@@ -1072,15 +1075,10 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 if groupDataDictionary[matches[2]:lower()] then
                     mystat('/unmute ' .. matches[2]:lower())
-                    if matches[2]:lower() == 'all' or matches[2]:lower() == 'text' then
-                        if msg.from.is_owner then
-                            return unlockSetting(msg.chat.id, matches[2]:lower())
-                        else
-                            return langs[msg.lang].require_owner
-                        end
-                    else
-                        return unlockSetting(msg.chat.id, matches[2]:lower())
+                    if (groupDataDictionary[matches[2]:lower()] == 'groupnotices' or groupDataDictionary[matches[2]:lower()] == 'pmnotices' or groupDataDictionary[matches[2]:lower()] == 'tagalert' or groupDataDictionary[matches[2]:lower()] == 'all' or groupDataDictionary[matches[2]:lower()] == 'text') and not msg.from.is_owner then
+                        return langs[msg.lang].require_owner
                     end
+                    return unlockSetting(msg.chat.id, matches[2]:lower())
                 end
                 return
             else
@@ -1245,7 +1243,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'link' then
             mystat('/link')
-            if data[tostring(msg.chat.id)].lock_grouplink then
+            if data[tostring(msg.chat.id)].settings.lock_grouplink then
                 if msg.from.is_mod then
                     if data[tostring(msg.chat.id)].link then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group link [" .. data[tostring(msg.chat.id)].link .. "]")
@@ -1907,14 +1905,14 @@ local function pre_process(msg)
                 end
             end
             if msg.service_type == 'chat_rename' then
-                if data[tostring(msg.chat.id)].lock_name then
+                if data[tostring(msg.chat.id)].settings.lock_name then
                     setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].name)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat N")
                 else
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat Y")
                 end
             elseif msg.service_type == 'chat_change_photo' then
-                if data[tostring(msg.chat.id)].lock_photo and data[tostring(msg.chat.id)].photo then
+                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
                     setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo N")
                 else
@@ -1932,7 +1930,7 @@ local function pre_process(msg)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo Y")
                 end
             elseif msg.service_type == 'delete_chat_photo' then
-                if data[tostring(msg.chat.id)].lock_photo and data[tostring(msg.chat.id)].photo then
+                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
                     setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted chat's photo N")
                 else

@@ -70,7 +70,7 @@ local function run(msg, matches)
             end
         elseif matches[2] == 'REGISTER' then
             if not redis:hget('tagalert:usernames', msg.from.id) then
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertUserRegistered, true)
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertRegistered, true)
                 if msg.from.username then
                     redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
                 else
@@ -78,7 +78,7 @@ local function run(msg, matches)
                 end
                 mystat(matches[1] .. matches[2] .. msg.from.id)
             else
-                answerCallbackQuery(msg.cb_id, langs[msg.lang].userAlreadyRegistered, true)
+                answerCallbackQuery(msg.cb_id, langs[msg.lang].pmnoticesAlreadyRegistered, true)
             end
             editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
             -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
@@ -98,7 +98,7 @@ local function run(msg, matches)
                 if msg.from.username then
                     local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
                     if data[tostring(matches[4])] then
-                        if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].lock_grouplink) then
+                        if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].settings.lock_grouplink) then
                             if data[tostring(matches[4])].link then
                                 link_in_keyboard = true
                                 if res then
@@ -140,7 +140,7 @@ local function run(msg, matches)
                         end
                     end
                     if data[tostring(matches[4])] then
-                        if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].lock_grouplink) then
+                        if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].settings.lock_grouplink) then
                             if data[tostring(matches[4])].link then
                                 link_in_keyboard = true
                                 if sent then
@@ -174,12 +174,12 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'enablenotices' then
         if data[tostring(msg.chat.id)] and msg.from.is_owner then
-            if not data[tostring(msg.chat.id)].pmnotices then
+            if not data[tostring(msg.chat.id)].settings.pmnotices then
                 mystat('/enablenotices')
-                data[tostring(msg.chat.id)].pmnotices = true
-                return langs[msg.lang].noticesGroupEnabled
+                data[tostring(msg.chat.id)].settings.pmnotices = true
+                return langs[msg.lang].noticesEnabledGroup
             else
-                return langs[msg.lang].noticesGroupAlreadyEnabled
+                return langs[msg.lang].noticesAlreadyEnabledGroup
             end
         else
             return langs[msg.lang].useYourGroups .. '\n' .. langs[msg.lang].require_owner
@@ -188,10 +188,10 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'disablenotices' then
         if data[tostring(msg.chat.id)] and msg.from.is_owner then
-            if data[tostring(msg.chat.id)].pmnotices then
+            if data[tostring(msg.chat.id)].settings.pmnotices then
                 mystat('/disablenotices')
-                data[tostring(msg.chat.id)].pmnotices = false
-                return langs[msg.lang].noticesGroupDisabled
+                data[tostring(msg.chat.id)].settings.pmnotices = false
+                return langs[msg.lang].noticesDisabledGroup
             else
                 return langs[msg.lang].noticesGroupAlreadyDisabled
             end
@@ -205,9 +205,9 @@ local function run(msg, matches)
             if not redis:get('notice:' .. msg.from.id) then
                 mystat('/registernotices')
                 redis:set('notice:' .. msg.from.id, 1)
-                return langs[msg.lang].noticesUserRegistered
+                return langs[msg.lang].pmnoticesRegistered
             else
-                return langs[msg.lang].userAlreadyRegistered
+                return langs[msg.lang].pmnoticesAlreadyRegistered
             end
         else
             return sendReply(msg, langs[msg.lang].require_private, 'html')
@@ -219,9 +219,9 @@ local function run(msg, matches)
             if redis:get('notice:' .. msg.from.id) then
                 mystat('/unregisternotices')
                 redis:del('notice:' .. msg.from.id)
-                return langs[msg.lang].noticesUserUnregistered
+                return langs[msg.lang].pmnoticesUnregistered
             else
-                return langs[msg.lang].userAlreadyUnregistered
+                return langs[msg.lang].pmnoticesAlreadyUnregistered
             end
         else
             return sendReply(msg, langs[msg.lang].require_private, 'html')
@@ -230,9 +230,9 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'enabletagalert' then
         if data[tostring(msg.chat.id)] and msg.from.is_owner then
-            if not data[tostring(msg.chat.id)].tagalert then
+            if not data[tostring(msg.chat.id)].settings.tagalert then
                 mystat('/enabletagalert')
-                data[tostring(msg.chat.id)].tagalert = true
+                data[tostring(msg.chat.id)].settings.tagalert = true
                 return langs[msg.lang].tagalertGroupEnabled
             else
                 return langs[msg.lang].tagalertGroupAlreadyEnabled
@@ -244,9 +244,9 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'disabletagalert' then
         if data[tostring(msg.chat.id)] and msg.from.is_owner then
-            if data[tostring(msg.chat.id)].tagalert then
+            if data[tostring(msg.chat.id)].settings.tagalert then
                 mystat('/disabletagalert')
-                data[tostring(msg.chat.id)].tagalert = false
+                data[tostring(msg.chat.id)].settings.tagalert = false
                 return langs[msg.lang].tagalertGroupDisabled
             else
                 return langs[msg.lang].tagalertGroupAlreadyDisabled
@@ -265,9 +265,9 @@ local function run(msg, matches)
                 else
                     redis:hset('tagalert:usernames', msg.from.id, true)
                 end
-                return langs[msg.lang].tagalertUserRegistered
+                return langs[msg.lang].tagalertRegistered
             else
-                return langs[msg.lang].userAlreadyRegistered
+                return langs[msg.lang].tagalertAlreadyRegistered
             end
         else
             return sendReply(msg, langs[msg.lang].require_private, 'html')
@@ -279,9 +279,9 @@ local function run(msg, matches)
             mystat('/unregistertagalert')
             redis:hdel('tagalert:usernames', msg.from.id)
             redis:hdel('tagalert:nicknames', msg.from.id)
-            return langs[msg.lang].tagalertUserUnregistered
+            return langs[msg.lang].tagalertUnregistered
         else
-            return langs[msg.lang].tagalertRegistrationNeeded
+            return langs[msg.lang].tagalertAlreadyUnregistered
         end
     end
 
@@ -391,7 +391,7 @@ local function pre_process(msg)
                     end
                 end
             end
-            if data[tostring(msg.chat.id)].tagalert then
+            if data[tostring(msg.chat.id)].settings.tagalert then
                 -- if group is enabled to tagalert notifications then
                 local usernames = redis:hkeys('tagalert:usernames')
                 for i = 1, #usernames do

@@ -1,22 +1,3 @@
-rank_table = {
-    ["USER"] = 1,
-    ["MOD"] = 2,
-    ["OWNER"] = 3,
-    ["ADMIN"] = 4,
-    ["SUDO"] = 5,
-    ["BOT"] = 6
-}
-reverse_rank_table = {
-    "USER",
-    "MOD",
-    "OWNER",
-    "ADMIN",
-    "SUDO",
-    "BOT"
-}
-
-local last_chat_member = { }
-
 function get_rank(user_id, chat_id, check_local, no_log)
     if tonumber(user_id) ~= tonumber(chat_id) then
         -- if get_rank in a group check only in that group

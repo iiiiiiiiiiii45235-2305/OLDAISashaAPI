@@ -303,13 +303,13 @@ function demoteChatMember(chat_id, user_id)
     return promoteChatMember(chat_id, user_id, demote_table)
 end
 
+--[[can_send_messages = true,
+    can_send_media_messages = true, -- implies can_send_messages
+    can_send_other_messages = true, -- implies can_send_media_messages
+    can_add_web_page_previews = true -- implies can_send_media_messages]]
 -- never call this outside this file
 function restrictChatMember(chat_id, user_id, restrictions, until_date)
     user_id = tostring(user_id):gsub(' ', '')
-    --[[local restrictions = { can_send_messages = true,
-    can_send_media_messages = true, -- implies can_send_messages
-    can_send_other_messages = true, -- implies can_send_media_messages
-    can_add_web_page_previews = true -- implies can_send_media_messages}]]
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/restrictChatMember?chat_id=' .. chat_id ..
         '&user_id=' .. user_id
@@ -1587,7 +1587,7 @@ function restrictUser(executer, target, chat_id, restrictions, until_date, no_no
                     end
                 end
                 savelog(chat_id, "[" .. executer .. "] restricted user " .. target .. ' ' .. text)
-                if areNoticesEnabled(target, chat_id) and not no_notice then
+                if arePMNoticesEnabled(target, chat_id) and not no_notice then
                     sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
                     langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
                     langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
@@ -1628,7 +1628,7 @@ function unrestrictUser(executer, target, chat_id, no_notice)
         if compare_ranks(executer, target, chat_id, false, true) then
             if unrestrictChatMember(chat_id, target) then
                 savelog(chat_id, "[" .. executer .. "] unrestricted user " .. target)
-                if areNoticesEnabled(target, chat_id) and not no_notice then
+                if arePMNoticesEnabled(target, chat_id) and not no_notice then
                     sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
                     langs[lang].restrictionSendMessages .. tostring(true) ..
                     langs[lang].restrictionSendMediaMessages .. tostring(true) ..
@@ -1670,7 +1670,7 @@ function kickUser(executer, target, chat_id, reason, no_notice)
                 local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                if areNoticesEnabled(target, chat_id) and not no_notice then
+                if arePMNoticesEnabled(target, chat_id) and not no_notice then
                     sendMessage(target, langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
                 end
                 return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
@@ -1734,7 +1734,7 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 local obj_removed = getChat(target, true)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
-                if areNoticesEnabled(target, chat_id) and not no_notice then
+                if arePMNoticesEnabled(target, chat_id) and not no_notice then
                     sendMessage(target, langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
                 end
                 local tempban = false
@@ -1773,7 +1773,7 @@ function unbanUser(executer, target, chat_id, reason, no_notice)
         if getChat(target, true) then
             local res, code = unbanChatMember(target, chat_id)
         end
-        if areNoticesEnabled(target, chat_id) and not no_notice then
+        if arePMNoticesEnabled(target, chat_id) and not no_notice then
             sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
         end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
@@ -1973,7 +1973,7 @@ function warnUser(executer, target, chat_id, reason, no_notice)
                 redis:getset(chat_id .. ':warn:' .. target, 0)
                 return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, langs[lang].reasonWarnMax)
             end
-            if areNoticesEnabled(target, chat_id) and not no_notice then
+            if arePMNoticesEnabled(target, chat_id) and not no_notice then
                 sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].warned:gsub('X', tostring(hashonredis)) ..
@@ -1998,7 +1998,7 @@ function unwarnUser(executer, target, chat_id, reason, no_notice)
             return langs[lang].user .. target .. ' ' .. langs[lang].alreadyZeroWarnings
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
-            if areNoticesEnabled(target, chat_id) and not no_notice then
+            if arePMNoticesEnabled(target, chat_id) and not no_notice then
                 sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
@@ -2016,7 +2016,7 @@ function unwarnallUser(executer, target, chat_id, reason, no_notice)
     if compare_ranks(executer, target, chat_id) then
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
-        if areNoticesEnabled(target, chat_id) and not no_notice then
+        if arePMNoticesEnabled(target, chat_id) and not no_notice then
             sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
         end
         return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
@@ -2032,30 +2032,30 @@ function lockSetting(target, setting_type, punishment)
     local lang = get_lang(target)
     setting_type = groupDataDictionary[setting_type:lower()]
     if setting_type == 'lock_grouplink' then
-        if data[tostring(target)].lock_grouplink ~= nil then
-            if data[tostring(target)].lock_grouplink then
+        if data[tostring(target)].settings.lock_grouplink ~= nil then
+            if data[tostring(target)].settings.lock_grouplink then
                 return langs[lang].settingAlreadyLocked
             else
-                data[tostring(target)].lock_grouplink = true
+                data[tostring(target)].settings.lock_grouplink = true
                 save_data(config.moderation.data, data)
                 return langs[lang].settingLocked
             end
         else
-            data[tostring(target)].lock_grouplink = true
+            data[tostring(target)].settings.lock_grouplink = true
             save_data(config.moderation.data, data)
             return langs[lang].settingLocked
         end
     elseif setting_type == 'lock_name' then
-        if data[tostring(target)].lock_name ~= nil then
-            if data[tostring(target)].lock_name then
+        if data[tostring(target)].settings.lock_name ~= nil then
+            if data[tostring(target)].settings.lock_name then
                 return langs[lang].settingAlreadyLocked
             else
-                data[tostring(target)].lock_name = true
+                data[tostring(target)].settings.lock_name = true
                 save_data(config.moderation.data, data)
                 return langs[lang].settingLocked
             end
         else
-            data[tostring(target)].lock_name = true
+            data[tostring(target)].settings.lock_name = true
             save_data(config.moderation.data, data)
             return langs[lang].settingLocked
         end
@@ -2064,47 +2064,61 @@ function lockSetting(target, setting_type, punishment)
         if type(obj) == 'table' then
             if obj.photo then
                 data[tostring(target)].photo = obj.photo.big_file_id
-                if data[tostring(target)].lock_photo ~= nil then
-                    if data[tostring(target)].lock_photo then
+                if data[tostring(target)].settings.lock_photo ~= nil then
+                    if data[tostring(target)].settings.lock_photo then
                         return langs[lang].settingAlreadyLocked
                     else
-                        data[tostring(target)].lock_photo = true
+                        data[tostring(target)].settings.lock_photo = true
                         save_data(config.moderation.data, data)
                         return langs[lang].settingLocked
                     end
                 else
-                    data[tostring(target)].lock_photo = true
+                    data[tostring(target)].settings.lock_photo = true
                     save_data(config.moderation.data, data)
                     return langs[lang].settingLocked
                 end
             end
         end
         return langs[lang].needPhoto
-    elseif setting_type == 'pmnotices' then
-        if data[tostring(target)].pmnotices ~= nil then
-            if data[tostring(target)].pmnotices then
-                return langs[lang].noticesGroupAlreadyEnabled
+    elseif setting_type == 'groupnotices' then
+        if data[tostring(target)].settings.groupnotices ~= nil then
+            if data[tostring(target)].settings.groupnotices then
+                return langs[lang].groupnoticesEnabled
             else
-                data[tostring(target)].pmnotices = true
+                data[tostring(target)].settings.groupnotices = true
                 save_data(config.moderation.data, data)
-                return langs[lang].noticesGroupEnabled
+                return langs[lang].groupnoticesEnabled
             end
         else
-            data[tostring(target)].pmnotices = true
+            data[tostring(target)].settings.groupnotices = true
             save_data(config.moderation.data, data)
-            return langs[lang].noticesGroupEnabled
+            return langs[lang].groupnoticesEnabled
+        end
+    elseif setting_type == 'pmnotices' then
+        if data[tostring(target)].settings.pmnotices ~= nil then
+            if data[tostring(target)].settings.pmnotices then
+                return langs[lang].noticesAlreadyEnabledGroup
+            else
+                data[tostring(target)].settings.pmnotices = true
+                save_data(config.moderation.data, data)
+                return langs[lang].noticesEnabledGroup
+            end
+        else
+            data[tostring(target)].settings.pmnotices = true
+            save_data(config.moderation.data, data)
+            return langs[lang].noticesEnabledGroup
         end
     elseif setting_type == 'tagalert' then
-        if data[tostring(target)].tagalert ~= nil then
-            if data[tostring(target)].tagalert then
+        if data[tostring(target)].settings.tagalert ~= nil then
+            if data[tostring(target)].settings.tagalert then
                 return langs[lang].tagalertGroupAlreadyEnabled
             else
-                data[tostring(target)].tagalert = true
+                data[tostring(target)].settings.tagalert = true
                 save_data(config.moderation.data, data)
                 return langs[lang].tagalertGroupEnabled
             end
         else
-            data[tostring(target)].tagalert = true
+            data[tostring(target)].settings.tagalert = true
             save_data(config.moderation.data, data)
             return langs[lang].tagalertGroupEnabled
         end
@@ -2132,18 +2146,22 @@ end
 function unlockSetting(target, setting_type)
     local lang = get_lang(target)
     setting_type = groupDataDictionary[setting_type:lower()]
-    if setting_type == 'pmnotices' then
-        data[tostring(target)][tostring(setting_type)] = false
+    if setting_type == 'groupnotices' then
+        data[tostring(target)].settings[tostring(setting_type)] = false
         save_data(config.moderation.data, data)
-        return langs[lang].noticesGroupDisabled
+        return langs[lang].groupnoticesDisabled
+    elseif setting_type == 'pmnotices' then
+        data[tostring(target)].settings[tostring(setting_type)] = false
+        save_data(config.moderation.data, data)
+        return langs[lang].noticesDisabledGroup
     elseif setting_type == 'tagalert' then
-        data[tostring(target)][tostring(setting_type)] = false
+        data[tostring(target)].settings[tostring(setting_type)] = false
         save_data(config.moderation.data, data)
         return langs[lang].tagalertGroupDisabled
     end
 
-    if data[tostring(target)][tostring(setting_type)] then
-        data[tostring(target)][tostring(setting_type)] = false
+    if data[tostring(target)].settings[tostring(setting_type)] then
+        data[tostring(target)].settings[tostring(setting_type)] = false
         save_data(config.moderation.data, data)
         return langs[lang].settingUnlocked
     else
@@ -2160,11 +2178,12 @@ function showSettings(target, lang)
         local time_ban = weeks .. langs[lang].weeksWord .. days .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord
 
         local text = langs[lang].groupSettings:gsub('X', data[target].name) ..
+        langs[lang].settings.groupnotices .. tostring(data[target].settings.groupnotices) ..
+        langs[lang].settings.pmnotices .. tostring(data[target].settings.pmnotices) ..
         langs[lang].tagalert .. tostring(data[target].tagalert) ..
-        langs[lang].pmnotices .. tostring(data[target].pmnotices) ..
-        langs[lang].grouplinkLock .. tostring(data[target].lock_grouplink) ..
-        langs[lang].nameLock .. tostring(data[target].lock_name) ..
-        langs[lang].photoLock .. tostring(data[target].lock_photo) ..
+        langs[lang].grouplinkLock .. tostring(data[target].settings.lock_grouplink) ..
+        langs[lang].nameLock .. tostring(data[target].settings.lock_name) ..
+        langs[lang].photoLock .. tostring(data[target].settings.lock_photo) ..
         langs[lang].tempRestrictTime .. tostring(time_restrict) ..
         langs[lang].tempBanTime .. tostring(time_ban) ..
         langs[lang].warnSensibility .. tostring(data[target].settings.max_warns) ..
@@ -2207,7 +2226,7 @@ function muteUser(chat_id, user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:sadd(hash, user_id)
-    if areNoticesEnabled(user_id, chat_id) and not no_notice then
+    if arePMNoticesEnabled(user_id, chat_id) and not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenMuted .. database[tostring(chat_id)].print_name)
     end
     return user_id .. langs[lang].muteUserAdd
@@ -2224,7 +2243,7 @@ function unmuteUser(chat_id, user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
     redis:srem(hash, user_id)
-    if areNoticesEnabled(user_id, chat_id) and not no_notice then
+    if arePMNoticesEnabled(user_id, chat_id) and not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnmuted .. database[tostring(chat_id)].print_name)
     end
     return user_id .. langs[lang].muteUserRemove

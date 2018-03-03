@@ -89,6 +89,7 @@ function bot_init()
     config = { }
     bot = nil
 
+    loadfile("./dictionaries.lua")()
     loadfile("./utils.lua")()
     config = load_config()
     local file_bot_api_key = io.open('bot_api_key.txt', "r")

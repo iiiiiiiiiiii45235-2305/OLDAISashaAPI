@@ -1,19 +1,14 @@
 local default_group_data = {
-    goodbye = nil,
-    welcome = nil,
+    goodbye = false,
+    welcome = false,
     welcomemembers = 0,
     lang = 'en',
-    link = nil,
-    lock_grouplink = true,
+    link = false,
     name = 'TITLE',
-    lock_name = false,
     owner = '41400331',
-    photo = nil,
-    lock_photo = false,
-    rules = nil,
-    type = nil,
-    pmnotices = false,
-    tagalert = false,
+    photo = false,
+    rules = false,
+    type = false,
     moderators =
     {
         -- user_id = username or printname
@@ -25,6 +20,12 @@ local default_group_data = {
     },
     settings =
     {
+        lock_grouplink = true,
+        lock_name = false,
+        lock_photo = false,
+        groupnotices = true,
+        pmnotices = false,
+        tagalert = false,
         -- punishments
         -- 0/false = allowed
         -- 1 = delete
@@ -607,7 +608,7 @@ local function run(msg, matches)
                     data[tostring(matches[2])].owner = matches[3]
                     save_data(config.moderation.data, data)
                     sendMessage(matches[2], matches[3] .. langs[get_lang(matches[2])].setOwner)
-                    if areNoticesEnabled(matches[3], matches[2]) then
+                    if arePMNoticesEnabled(matches[3], matches[2]) then
                         sendMessage(matches[3], langs[get_lang(matches[3])].youHaveBeenDemotedMod .. database[tostring(matches[2])].print_name)
                     end
                     return matches[3] .. langs[msg.lang].setOwner
