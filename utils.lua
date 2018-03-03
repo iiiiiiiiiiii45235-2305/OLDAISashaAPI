@@ -317,15 +317,6 @@ function telegram_file_link(res)
 end
 
 ----------------------- specific cross-plugins functions---------------------
-function getUserStatus(chat_id, user_id)
-    local res = getChatMember(chat_id, user_id)
-    if res then
-        return res.result.status
-    else
-        return false
-    end
-end
-
 -- taken from http://stackoverflow.com/a/11130774/3163199
 function scandir(directory)
     local i = 0
@@ -1185,7 +1176,7 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
         text = text .. tostring(warnUser(executer, target, chat_id, reason)) .. '\n'
     end
     if not globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] then
-        if tonumber(punishment) >= 3 and data[tostring(chat_id)].type ~= 'Group' then
+        if tonumber(punishment) == 3 or tonumber(punishment) == 4 and data[tostring(chat_id)].type ~= 'Group' then
             if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
                 -- temprestrict
                 text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
@@ -1198,8 +1189,8 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
             -- kick
             text = text .. tostring(kickUser(executer, target, chat_id, reason)) .. '\n'
         end
-        if tonumber(punishment) >= 6 then
-            if tonumber(punishment) == 6 and not data[tostring(chat_id)].settings.strict and data[tostring(chat_id)].type ~= 'Group' then
+        if tonumber(punishment) == 6 or tonumber(punishment) == 7 then
+            if tonumber(punishment) == 6 and data[tostring(chat_id)].type ~= 'Group' and not data[tostring(chat_id)].settings.strict then
                 -- tempban
                 text = text .. tostring(banUser(executer, target, chat_id, reason, data[tostring(chat_id)].settings.time_ban)) .. '\n'
             else

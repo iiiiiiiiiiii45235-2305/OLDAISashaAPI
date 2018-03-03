@@ -116,6 +116,12 @@ local function run(msg, matches)
                     local text = whitegban_user(matches[4], matches[3])
                     answerCallbackQuery(msg.cb_id, text, true)
                     editMessage(msg.chat.id, msg.message_id, text)
+                    local status = getUserStatus(msg.chat.id, matches[3])
+                    if status == 'kicked' then
+                        unbanUser(bot.id, matches[3], msg.chat.id)
+                    elseif status == 'restricted' then
+                        unrestrictUser(bot.id, matches[3], msg.chat.id)
+                    end
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)

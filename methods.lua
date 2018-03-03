@@ -1554,6 +1554,16 @@ function userInChat(chat_id, user_id, no_log)
     end
 end
 
+function getUserStatus(chat_id, user_id, no_log)
+    user_id = tostring(user_id):gsub(' ', '')
+    local res = getChatMember(chat_id, user_id, no_log)
+    if type(res) == 'table' then
+        if res.ok and res.result then
+            return res.result.status
+        end
+    end
+end
+
 -- call this to restrict
 function restrictUser(executer, target, chat_id, restrictions, until_date, no_notice)
     if sendChatAction(chat_id, 'typing', true) then
