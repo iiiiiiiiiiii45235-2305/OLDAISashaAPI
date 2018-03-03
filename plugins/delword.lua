@@ -1,3 +1,8 @@
+-- tables that contains 'group_id' = message_id to delete old commands responses
+local oldResponses = {
+    lastDellist = { },
+}
+
 local function get_censorships_hash(msg)
     if msg.chat.type == 'group' then
         return 'group:' .. msg.chat.id .. ':censorships'
@@ -45,7 +50,23 @@ end
 local function run(msg, matches)
     if matches[1]:lower() == 'dellist' then
         if msg.from.is_mod then
-            return list_censorships(msg)
+            local tmp = oldResponses.lastDellist[tostring(msg.chat.id)]
+            oldResponses.lastDellist[tostring(msg.chat.id)] = sendReply(msg, list_censorships(msg))
+            if oldResponses.lastDellist[tostring(msg.chat.id)] then
+                if oldResponses.lastDellist[tostring(msg.chat.id)].result then
+                    if oldResponses.lastDellist[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastDellist[tostring(msg.chat.id)] = oldResponses.lastDellist[tostring(msg.chat.id)].result.message_id
+                    else
+                        oldResponses.lastDellist[tostring(msg.chat.id)] = nil
+                    end
+                else
+                    oldResponses.lastDellist[tostring(msg.chat.id)] = nil
+                end
+            end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
         else
             if not sendMessage(msg.from.id, list_censorships(msg)) then
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')

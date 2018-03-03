@@ -110,6 +110,16 @@ local function run(msg, matches)
                     chat_name = data[tostring(matches[4])].name or ''
                 end
                 editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[16], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
+            elseif matches[2] == 'WHITELISTGBAN' then
+                -- PUBLIC KEYBOARD
+                if is_owner2(msg.from.id, matches[4], true) then
+                    local text = whitegban_user(matches[4], matches[3])
+                    answerCallbackQuery(msg.cb_id, text, true)
+                    editMessage(msg.chat.id, msg.message_id, text)
+                    mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
+                else
+                    answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
+                end
             elseif matches[2] == 'RESTRICT' then
                 restrictionsTable[tostring(matches[5])] = restrictionsTable[tostring(matches[5])] or { }
                 restrictionsTable[tostring(matches[5])][tostring(matches[3])] = restrictionsTable[tostring(matches[5])][tostring(matches[3])] or clone_table(default_restrictions)
@@ -2248,7 +2258,7 @@ local function pre_process(msg)
                         local text = punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.gbanned, langs[msg.lang].reasonGbannedUser)
                         if text ~= '' then
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] is gbanned! punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
-                            sendMessage(msg.chat.id, text)
+                            sendKeyboard(msg.chat.id, text, keyboard_whitelist_gbanned(msg.chat.id, msg.from.id))
                             return nil
                         end
                         return msg
@@ -2276,7 +2286,7 @@ local function pre_process(msg)
                         end
                     end]]
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] gbanned user is talking! punishment=" .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
-                    sendMessage(msg.chat.id, text)
+                    sendKeyboard(msg.chat.id, text, keyboard_whitelist_gbanned(msg.chat.id, msg.from.id))
                     return nil
                 end
                 return msg
@@ -2306,6 +2316,7 @@ return {
     {
         "^(###cbbanhammer)(DELETE)(%u)$",
         "^(###cbbanhammer)(DELETE)$",
+        "^(###cbbanhammer)(WHITELISTGBAN)(%d+)(%-%d+)$",
         "^(###cbbanhammer)(BACK)(%d+)(%-%d+)(%u)$",
         "^(###cbbanhammer)(BACK)(%d+)(%-%d+)$",
         "^(###cbbanhammer)(RESTRICTIONSDONE)(%d+)(%-%d+)(%u)$",

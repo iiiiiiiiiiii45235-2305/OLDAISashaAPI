@@ -279,6 +279,13 @@ function keyboard_restrictions_list(chat_id, user_id, param_restrictions, from_o
         return keyboard
     end
 end
+function keyboard_whitelist_gbanned(chat_id, user_id)
+    local keyboard = { }
+    keyboard.inline_keyboard = { }
+    keyboard.inline_keyboard[1] = { }
+    keyboard.inline_keyboard[1][1] = { text = 'WHITELISTGBAN', callback_data = 'banhammerWHITELISTGBAN' .. user_id .. chat_id }
+    return keyboard
+end
 
 -- bot
 function keyboard_tagalert_tutorial(lang)
