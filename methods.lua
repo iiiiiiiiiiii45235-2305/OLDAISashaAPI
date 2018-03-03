@@ -947,6 +947,8 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
             end
+            print(file_id)
+            print(url)
             local res, code = sendRequest(url)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
