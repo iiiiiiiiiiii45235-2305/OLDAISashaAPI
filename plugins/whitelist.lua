@@ -108,7 +108,7 @@ local function run(msg, matches)
                 end
             else
                 mystat('/whitelist')
-                local text = langs[msg.lang].whitelistStart .. msg.chat.title .. '\n'
+                local text = langs[msg.lang].whitelistStart:gsub('X', msg.chat.title) .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.users) do
                     local user_info = redis:hgetall('user:' .. k)
                     if user_info and user_info.print_name then
@@ -137,11 +137,12 @@ local function run(msg, matches)
                     end
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 else
+                    local tmp = ''
                     if not sendMessage(msg.from.id, text) then
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                        tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    else
+                        tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                     end
-                    local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
                 return
@@ -201,7 +202,7 @@ local function run(msg, matches)
                 end
             else
                 mystat('/whitelistgban')
-                local text = langs[msg.lang].whitelistGbanStart .. msg.chat.title .. '\n'
+                local text = langs[msg.lang].whitelistGbanStart:gsub('X', msg.chat.title) .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.gbanned) do
                     local user_info = redis:hgetall('user:' .. k)
                     if user_info and user_info.print_name then
@@ -230,11 +231,12 @@ local function run(msg, matches)
                     end
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 else
+                    local tmp = ''
                     if not sendMessage(msg.from.id, text) then
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                        tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    else
+                        tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                     end
-                    local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
                 return
@@ -250,7 +252,7 @@ local function run(msg, matches)
                 end
             else
                 mystat('/whitelistlink')
-                local text = langs[msg.lang].whitelistLinkStart .. msg.chat.title .. '\n'
+                local text = langs[msg.lang].whitelistLinkStart:gsub('X', msg.chat.title) .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.links) do
                     text = text .. k .. ". " .. v .. "\n"
                 end
@@ -273,11 +275,12 @@ local function run(msg, matches)
                     end
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 else
+                    local tmp = ''
                     if not sendMessage(msg.from.id, text) then
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                        tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    else
+                        tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                     end
-                    local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
                 return

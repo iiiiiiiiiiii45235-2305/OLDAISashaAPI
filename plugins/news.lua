@@ -24,11 +24,12 @@ local function run(msg, matches)
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
         else
+            local tmp = ''
             if not sendMessage(msg.from.id, news_table.news or langs[msg.lang].newsText) then
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+            else
+                tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
             end
-            local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
         end
         return

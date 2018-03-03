@@ -321,7 +321,7 @@ local function sendGoodbye(chat, removed, message_id)
 end
 
 local function run(msg, matches)
-    if is_realm(msg) or is_group(msg) or is_super_group(msg) then
+    if data[tostring(msg.chat.id)] then
         if msg.from.is_mod then
             if matches[1]:lower() == 'getwelcome' then
                 mystat('/getwelcome')
@@ -489,58 +489,56 @@ end
 local function pre_process(msg)
     if msg then
         if msg.service then
-            if is_realm(msg) or is_group(msg) or is_super_group(msg) then
-                if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_users" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue and get_welcome(msg.chat.id) then
-                    local hash
-                    if msg.chat.type == 'group' then
-                        hash = 'chat:welcome' .. msg.chat.id
-                    end
-                    if msg.chat.type == 'supergroup' then
-                        hash = 'channel:welcome' .. msg.chat.id
-                    end
-                    redis:incr(hash)
-                    local hashonredis = redis:get(hash)
-                    if hashonredis then
-                        if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
-                            local tmp = oldResponses.lastWelcome[tostring(msg.chat.id)]
-                            oldResponses.lastWelcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id)
-                            if oldResponses.lastWelcome[tostring(msg.chat.id)] then
-                                if oldResponses.lastWelcome[tostring(msg.chat.id)].result then
-                                    if oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id then
-                                        oldResponses.lastWelcome[tostring(msg.chat.id)] = oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id
-                                    else
-                                        oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
-                                    end
+            if (msg.service_type == "chat_add_user" or msg.service_type == "chat_add_users" or msg.service_type == "chat_add_user_link") and get_memberswelcome(msg.chat.id) ~= langs[msg.lang].noSetValue and get_welcome(msg.chat.id) then
+                local hash
+                if msg.chat.type == 'group' then
+                    hash = 'chat:welcome' .. msg.chat.id
+                end
+                if msg.chat.type == 'supergroup' then
+                    hash = 'channel:welcome' .. msg.chat.id
+                end
+                redis:incr(hash)
+                local hashonredis = redis:get(hash)
+                if hashonredis then
+                    if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
+                        local tmp = oldResponses.lastWelcome[tostring(msg.chat.id)]
+                        oldResponses.lastWelcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id)
+                        if oldResponses.lastWelcome[tostring(msg.chat.id)] then
+                            if oldResponses.lastWelcome[tostring(msg.chat.id)].result then
+                                if oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id then
+                                    oldResponses.lastWelcome[tostring(msg.chat.id)] = oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id
                                 else
                                     oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
                                 end
-                            end
-                            redis:getset(hash, 0)
-                            if tmp then
-                                deleteMessage(msg.chat.id, tmp, true)
+                            else
+                                oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
                             end
                         end
-                    else
-                        redis:set(hash, 0)
+                        redis:getset(hash, 0)
+                        if tmp then
+                            deleteMessage(msg.chat.id, tmp, true)
+                        end
                     end
+                else
+                    redis:set(hash, 0)
                 end
-                if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then
-                    local tmp = oldResponses.lastGoodbye[tostring(msg.chat.id)]
-                    oldResponses.lastGoodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id)
-                    if oldResponses.lastGoodbye[tostring(msg.chat.id)] then
-                        if oldResponses.lastGoodbye[tostring(msg.chat.id)].result then
-                            if oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id then
-                                oldResponses.lastGoodbye[tostring(msg.chat.id)] = oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id
-                            else
-                                oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
-                            end
+            end
+            if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then
+                local tmp = oldResponses.lastGoodbye[tostring(msg.chat.id)]
+                oldResponses.lastGoodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id)
+                if oldResponses.lastGoodbye[tostring(msg.chat.id)] then
+                    if oldResponses.lastGoodbye[tostring(msg.chat.id)].result then
+                        if oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastGoodbye[tostring(msg.chat.id)] = oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id
                         else
                             oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
                         end
+                    else
+                        oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
                     end
-                    if tmp then
-                        deleteMessage(msg.chat.id, tmp, true)
-                    end
+                end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
                 end
             end
         end

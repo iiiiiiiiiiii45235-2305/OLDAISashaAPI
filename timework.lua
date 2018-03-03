@@ -22,8 +22,10 @@ elseif action == 'deletemessage' then
     local t = message_ids:split(',')
     for k, v in pairs(t) do
         if v then
-            if not deleteMessage(chat_id, v, true) then
-                -- sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, v)
+            if v ~= '' then
+                if not deleteMessage(chat_id, v, true) then
+                    -- sendMessage(chat_id, langs[get_lang(chat_id)].cantDeleteMessage, false, v)
+                end
             end
         end
     end

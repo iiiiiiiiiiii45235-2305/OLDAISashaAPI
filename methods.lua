@@ -639,7 +639,7 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
 end
 
 function sendChatAction(chat_id, action, no_log)
-    -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location, record_videonote, upload_videonote
+    -- Support actions are typing, upload_photo, record_video, upload_video, record_audio, upload_audio, upload_document, find_location, record_video_note, upload_video_note
     local url = BASE_URL ..
     '/sendChatAction?chat_id=' .. chat_id ..
     '&action=' .. action
@@ -937,7 +937,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
 end
 
 function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
-    if sendChatAction(chat_id, 'record_videonote', true) then
+    if sendChatAction(chat_id, 'record_video_note', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/sendVideoNote?chat_id=' .. chat_id ..
@@ -1183,7 +1183,7 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
 end
 
 function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length)
-    if sendChatAction(chat_id, 'record_videonote', true) then
+    if sendChatAction(chat_id, 'record_video_note', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideoNote'
             local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
@@ -1938,13 +1938,10 @@ function getWarn(chat_id)
     local lang = get_lang(chat_id)
     if data[tostring(chat_id)] then
         if data[tostring(chat_id)].settings then
-            if not data[tostring(chat_id)].settings.max_warns then
-                return langs[lang].noWarnSet
-            end
-            return langs[lang].warnSet .. data[tostring(chat_id)].settings.max_warns .. '\n' .. langs[lang].punishedWith .. reverse_punishments_table[data[tostring(chat_id)].settings.warns_punishment]
+            return data[tostring(chat_id)].name .. '\n' .. langs[lang].warnSet .. data[tostring(chat_id)].settings.max_warns .. '\n' .. langs[lang].punishedWith .. reverse_punishments_table[data[tostring(chat_id)].settings.warns_punishment]
         end
     end
-    return langs[lang].noWarnSet
+    return data[tostring(chat_id)].name .. '\n' .. langs[lang].noWarnSet
 end
 
 function getUserWarns(user_id, chat_id)
@@ -2155,51 +2152,52 @@ function unlockSetting(target, setting_type)
 end
 
 function showSettings(target, lang)
-    if data[tostring(target)] then
-        local seconds, minutes, hours, days, weeks = unixToDate(data[tostring(target)].settings.time_restrict)
+    target = tostring(target)
+    if data[target] then
+        local seconds, minutes, hours, days, weeks = unixToDate(data[target].settings.time_restrict)
         local time_restrict = weeks .. langs[lang].weeksWord .. days .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord
-        seconds, minutes, hours, days, weeks = unixToDate(data[tostring(target)].settings.time_ban)
+        seconds, minutes, hours, days, weeks = unixToDate(data[target].settings.time_ban)
         local time_ban = weeks .. langs[lang].weeksWord .. days .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord
 
-        local text = langs[lang].groupSettings ..
-        langs[lang].tagalert .. tostring(data[tostring(target)].tagalert) ..
-        langs[lang].pmnotices .. tostring(data[tostring(target)].pmnotices) ..
-        langs[lang].grouplinkLock .. tostring(data[tostring(target)].lock_grouplink) ..
-        langs[lang].nameLock .. tostring(data[tostring(target)].lock_name) ..
-        langs[lang].photoLock .. tostring(data[tostring(target)].lock_photo) ..
+        local text = langs[lang].groupSettings:gsub('X', data[target].name) ..
+        langs[lang].tagalert .. tostring(data[target].tagalert) ..
+        langs[lang].pmnotices .. tostring(data[target].pmnotices) ..
+        langs[lang].grouplinkLock .. tostring(data[target].lock_grouplink) ..
+        langs[lang].nameLock .. tostring(data[target].lock_name) ..
+        langs[lang].photoLock .. tostring(data[target].lock_photo) ..
         langs[lang].tempRestrictTime .. tostring(time_restrict) ..
         langs[lang].tempBanTime .. tostring(time_ban) ..
-        langs[lang].warnSensibility .. tostring(data[tostring(target)].settings.max_warns) ..
-        langs[lang].warnPunishment .. tostring(data[tostring(target)].settings.warns_punishment) ..
-        langs[lang].strictrules .. tostring(data[tostring(target)].settings.strict) ..
+        langs[lang].warnSensibility .. tostring(data[target].settings.max_warns) ..
+        langs[lang].warnPunishment .. tostring(data[target].settings.warns_punishment) ..
+        langs[lang].strictrules .. tostring(data[target].settings.strict) ..
         '\n' .. langs[lang].locksWord ..
-        langs[lang].arabicLock .. tostring(data[tostring(target)].settings.locks.arabic) ..
-        langs[lang].botsLock .. tostring(data[tostring(target)].settings.locks.bots) ..
-        langs[lang].censorshipsLock .. tostring(data[tostring(target)].settings.locks.delword) ..
-        langs[lang].floodLock .. tostring(data[tostring(target)].settings.locks.flood) ..
-        langs[lang].floodSensibility .. tostring(data[tostring(target)].settings.max_flood) ..
-        langs[lang].forwardLock .. tostring(data[tostring(target)].settings.locks.forward) ..
-        langs[lang].gbannedLock .. tostring(data[tostring(target)].settings.locks.gbanned) ..
-        langs[lang].leaveLock .. tostring(data[tostring(target)].settings.locks.leave) ..
-        langs[lang].linksLock .. tostring(data[tostring(target)].settings.locks.links) ..
-        langs[lang].membersLock .. tostring(data[tostring(target)].settings.locks.members) ..
-        langs[lang].rtlLock .. tostring(data[tostring(target)].settings.locks.rtl) ..
-        langs[lang].spamLock .. tostring(data[tostring(target)].settings.locks.spam) ..
+        langs[lang].arabicLock .. tostring(data[target].settings.locks.arabic) ..
+        langs[lang].botsLock .. tostring(data[target].settings.locks.bots) ..
+        langs[lang].censorshipsLock .. tostring(data[target].settings.locks.delword) ..
+        langs[lang].floodLock .. tostring(data[target].settings.locks.flood) ..
+        langs[lang].floodSensibility .. tostring(data[target].settings.max_flood) ..
+        langs[lang].forwardLock .. tostring(data[target].settings.locks.forward) ..
+        langs[lang].gbannedLock .. tostring(data[target].settings.locks.gbanned) ..
+        langs[lang].leaveLock .. tostring(data[target].settings.locks.leave) ..
+        langs[lang].linksLock .. tostring(data[target].settings.locks.links) ..
+        langs[lang].membersLock .. tostring(data[target].settings.locks.members) ..
+        langs[lang].rtlLock .. tostring(data[target].settings.locks.rtl) ..
+        langs[lang].spamLock .. tostring(data[target].settings.locks.spam) ..
         '\n' .. langs[lang].mutesWord ..
-        langs[lang].allMute .. tostring(data[tostring(target)].settings.mutes.all) ..
-        langs[lang].audiosMute .. tostring(data[tostring(target)].settings.mutes.audios) ..
-        langs[lang].contactsMute .. tostring(data[tostring(target)].settings.mutes.contacts) ..
-        langs[lang].documentsMute .. tostring(data[tostring(target)].settings.mutes.documents) ..
-        langs[lang].gamesMute .. tostring(data[tostring(target)].settings.mutes.games) ..
-        langs[lang].gifsMute .. tostring(data[tostring(target)].settings.mutes.gifs) ..
-        langs[lang].locationsMute .. tostring(data[tostring(target)].settings.mutes.locations) ..
-        langs[lang].photosMute .. tostring(data[tostring(target)].settings.mutes.photos) ..
-        langs[lang].stickersMute .. tostring(data[tostring(target)].settings.mutes.stickers) ..
-        langs[lang].textMute .. tostring(data[tostring(target)].settings.mutes.text) ..
-        langs[lang].tgservicesMute .. tostring(data[tostring(target)].settings.mutes.tgservices) ..
-        langs[lang].videosMute .. tostring(data[tostring(target)].settings.mutes.videos) ..
-        langs[lang].videoNotesMute .. tostring(data[tostring(target)].settings.mutes.video_notes) ..
-        langs[lang].voiceNotesMute .. tostring(data[tostring(target)].settings.mutes.voice_notes)
+        langs[lang].allMute .. tostring(data[target].settings.mutes.all) ..
+        langs[lang].audiosMute .. tostring(data[target].settings.mutes.audios) ..
+        langs[lang].contactsMute .. tostring(data[target].settings.mutes.contacts) ..
+        langs[lang].documentsMute .. tostring(data[target].settings.mutes.documents) ..
+        langs[lang].gamesMute .. tostring(data[target].settings.mutes.games) ..
+        langs[lang].gifsMute .. tostring(data[target].settings.mutes.gifs) ..
+        langs[lang].locationsMute .. tostring(data[target].settings.mutes.locations) ..
+        langs[lang].photosMute .. tostring(data[target].settings.mutes.photos) ..
+        langs[lang].stickersMute .. tostring(data[target].settings.mutes.stickers) ..
+        langs[lang].textMute .. tostring(data[target].settings.mutes.text) ..
+        langs[lang].tgservicesMute .. tostring(data[target].settings.mutes.tgservices) ..
+        langs[lang].videosMute .. tostring(data[target].settings.mutes.videos) ..
+        langs[lang].videoNotesMute .. tostring(data[target].settings.mutes.video_notes) ..
+        langs[lang].voiceNotesMute .. tostring(data[target].settings.mutes.voice_notes)
         return text
     end
 end

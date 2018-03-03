@@ -176,18 +176,18 @@ local function modList(chat_id, lang)
         return langs[lang].noGroupMods
     end
     local i = 1
-    local message = langs[lang].modListStart .. string.gsub(data[tostring(chat_id)].name, '_', ' ') .. ':\n'
+    local text = langs[lang].modListStart:gsub('X', data[tostring(chat_id)].name)
     for k, v in pairs(data[tostring(chat_id)].moderators) do
-        message = message .. i .. '. ' .. v .. ' - ' .. k .. '\n'
+        text = text .. '\n' .. i .. '. ' .. v .. ' - ' .. k
         i = i + 1
     end
-    return message
+    return text
 end
 -- end RANKS MANAGEMENT
 
 local max_lines = 20
 local function logPages(chat_id, page)
-    local message = ""
+    local text = ""
     if not page then
         page = 1
     end
@@ -217,11 +217,11 @@ local function logPages(chat_id, page)
         if v ~= '' then
             tot_lines = tot_lines + 1
             if tot_lines >=(((page - 1) * max_lines) + 1) and tot_lines <=(max_lines * page) then
-                message = message .. v .. '\n'
+                text = text .. v .. '\n'
             end
         end
     end
-    return message
+    return text
 end
 
 local function userPermissions(chat_id, user_id)
@@ -572,38 +572,34 @@ local function run(msg, matches)
     end
     if matches[1]:lower() == 'admin' or matches[1]:lower() == 'admins' then
         mystat('/admins')
-        if is_group(msg) or is_super_group(msg) then
-            if not cronTable.adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
-                cronTable.adminsContacted[tostring(msg.chat.id)] = true
-                local hashtag = '#admins' .. tostring(msg.message_id)
-                local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-                local group_link = data[tostring(msg.chat.id)].link
-                if group_link then
-                    chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
-                end
-                local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
-                if msg.from.username then
-                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                else
-                    text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
-                end
-                text = text .. langs[msg.lang].msgText .. html_escape(msg.text or '') .. '\n' ..
-                'HASHTAG: ' .. hashtag
-                text = text:gsub('"', '\\"')
-                if msg.reply then
-                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "' .. msg.reply_to_message.message_id .. '" "' .. hashtag .. '" "' .. text .. '"')
-                else
-                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "false" "' .. hashtag .. '" "' .. text .. '"')
-                end
-                return
-            else
-                if not cronTable.noticeContacted[tostring(msg.chat.id)] then
-                    cronTable.noticeContacted[tostring(msg.chat.id)] = true
-                    return langs[msg.lang].dontFloodAdmins
-                end
+        if not cronTable.adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
+            cronTable.adminsContacted[tostring(msg.chat.id)] = true
+            local hashtag = '#admins' .. tostring(msg.message_id)
+            local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+            local group_link = data[tostring(msg.chat.id)].link
+            if group_link then
+                chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
             end
+            local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
+            if msg.from.username then
+                text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+            else
+                text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
+            end
+            text = text .. langs[msg.lang].msgText .. html_escape(msg.text or '') .. '\n' ..
+            'HASHTAG: ' .. hashtag
+            text = text:gsub('"', '\\"')
+            if msg.reply then
+                io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "' .. msg.reply_to_message.message_id .. '" "' .. hashtag .. '" "' .. text .. '"')
+            else
+                io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "false" "' .. hashtag .. '" "' .. text .. '"')
+            end
+            return
         else
-            return langs[msg.lang].useYourGroups
+            if not cronTable.noticeContacted[tostring(msg.chat.id)] then
+                cronTable.noticeContacted[tostring(msg.chat.id)] = true
+                return langs[msg.lang].dontFloodAdmins
+            end
         end
     end
 
@@ -618,7 +614,7 @@ local function run(msg, matches)
                     oldResponses.lastRules[tostring(msg.chat.id)] = sendReply(msg, langs[msg.lang].noRules)
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(oldResponses.lastRules[tostring(msg.chat.id)].result.message_id or '') .. '"')
                 else
-                    oldResponses.lastRules[tostring(msg.chat.id)] = sendReply(msg, langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules)
+                    oldResponses.lastRules[tostring(msg.chat.id)] = sendReply(msg, langs[msg.lang].rules:gsub('X', msg.chat.title) .. '\n' .. data[tostring(msg.chat.id)].rules)
                 end
                 if oldResponses.lastRules[tostring(msg.chat.id)] then
                     if oldResponses.lastRules[tostring(msg.chat.id)].result then
@@ -641,13 +637,14 @@ local function run(msg, matches)
                 if not data[tostring(msg.chat.id)].rules then
                     txt = langs[msg.lang].noRules
                 else
-                    txt = langs[msg.lang].rules .. data[tostring(msg.chat.id)].rules
+                    txt = langs[msg.lang].rules:gsub('X', msg.chat.title) .. '\n' .. data[tostring(msg.chat.id)].rules
                 end
+                local tmp = ''
                 if not sendMessage(msg.from.id, txt) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -726,11 +723,12 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 return getWarn(msg.chat.id)
             else
+                local tmp = ''
                 if not sendMessage(msg.from.id, getWarn(msg.chat.id)) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1107,11 +1105,12 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
+                local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1138,11 +1137,12 @@ local function run(msg, matches)
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             else
+                local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1165,11 +1165,12 @@ local function run(msg, matches)
                     return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                 end
             else
+                local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1196,11 +1197,12 @@ local function run(msg, matches)
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             else
+                local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return
@@ -1369,11 +1371,12 @@ local function run(msg, matches)
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             else
+                local tmp = ''
                 if not sendMessage(msg.from.id, modList(msg.chat.id, msg.lang)) then
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                else
+                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 end
-                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
             return

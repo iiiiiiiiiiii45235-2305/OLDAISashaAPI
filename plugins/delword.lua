@@ -39,9 +39,9 @@ local function list_censorships(msg)
 
     if hash then
         local names = redis:hkeys(hash)
-        local text = langs[msg.lang].delwordList
+        local text = langs[msg.lang].delwordList:gsub('X', msg.chat.print_name or msg.chat.title)
         for i = 1, #names do
-            text = text .. names[i] .. '\n'
+            text = text .. '\n' .. names[i]
         end
         return text
     end
@@ -68,11 +68,12 @@ local function run(msg, matches)
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
         else
+            local tmp = ''
             if not sendMessage(msg.from.id, list_censorships(msg)) then
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+            else
+                tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
             end
-            local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
         end
         return

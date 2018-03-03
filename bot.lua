@@ -726,7 +726,7 @@ function msg_valid(msg)
             end
         end
 
-        if not is_realm(msg) and not is_group(msg) and not is_super_group(msg) then
+        if not data[tostring(msg.chat.id)] then
             print(clr.white .. 'Preprocess', 'database')
             local res, err = pcall( function()
                 plugins.database.pre_process(msg)
