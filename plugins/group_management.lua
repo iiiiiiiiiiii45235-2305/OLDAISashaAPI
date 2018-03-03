@@ -1905,14 +1905,14 @@ local function pre_process(msg)
                 end
             end
             if msg.service_type == 'chat_rename' then
-                if data[tostring(msg.chat.id)].settings.lock_name then
+                if data[tostring(msg.chat.id)].settings.lock_groupname then
                     setChatTitle(msg.chat.id, data[tostring(msg.chat.id)].name)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat N")
                 else
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] renamed the chat Y")
                 end
             elseif msg.service_type == 'chat_change_photo' then
-                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                if data[tostring(msg.chat.id)].settings.lock_groupphoto and data[tostring(msg.chat.id)].photo then
                     setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo N")
                 else
@@ -1930,7 +1930,7 @@ local function pre_process(msg)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] changed chat's photo Y")
                 end
             elseif msg.service_type == 'delete_chat_photo' then
-                if data[tostring(msg.chat.id)].settings.lock_photo and data[tostring(msg.chat.id)].photo then
+                if data[tostring(msg.chat.id)].settings.lock_groupphoto and data[tostring(msg.chat.id)].photo then
                     setChatPhotoId(msg.chat.id, data[tostring(msg.chat.id)].photo)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted chat's photo N")
                 else
@@ -2071,10 +2071,11 @@ return {
         "^[#!/]([Pp][Rr][Oo][Mm][Oo][Tt][Ee])$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee]) ([^%s]+)$",
         "^[#!/]([Dd][Ee][Mm][Oo][Tt][Ee])$",
-        "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])",
+        "^[#!/]([Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Tt][Ee][Xx][Tt][Uu][Aa][Ll][Mm][Uu][Tt][Ee][Ss][Ll][Ii][Ss][Tt])$",
-        "^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+) ([^%s]+)",
-        "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) ([^%s]+)",
+        "^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+)$",
+        "^[#!/]([Mm][Uu][Tt][Ee]) ([^%s]+) ([^%s]+)$",
+        "^[#!/]([Uu][Nn][Mm][Uu][Tt][Ee]) ([^%s]+)$",
         "^[#!/]([Nn][Ee][Ww][Ll][Ii][Nn][Kk])$",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ee][Ll][Ee][Gg][Rr][Aa][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
         "^[#!/]([Ss][Ee][Tt][Ll][Ii][Nn][Kk]) ([Hh][Tt][Tt][Pp][Ss]://[Tt][Ll][Gg][Rr][Mm].[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/%S+)$",
@@ -2087,6 +2088,7 @@ return {
         "^[#!/]([Ss][Ee][Tt][Rr][Uu][Ll][Ee][Ss]) (.*)$",
         "^[#!/]([Ss][Ee][Tt][Aa][Bb][Oo][Uu][Tt]) (.*)$",
         "^[#!/]([Oo][Ww][Nn][Ee][Rr])$",
+        "^[#!/]([Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Ll][Oo][Cc][Kk]) ([^%s]+) ([^%s]+)$",
         "^[#!/]([Uu][Nn][Ll][Oo][Cc][Kk]) ([^%s]+)$",
         "^[#!/]([Mm][Oo][Dd][Ll][Ii][Ss][Tt])$",

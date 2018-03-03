@@ -616,8 +616,8 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
         keyboard.inline_keyboard[row] = { }
         if tonumber(page) == 1 then
             keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_grouplink'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_grouplink'] }
-            keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_name'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_name'] }
-            keyboard.inline_keyboard[row][3] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_photo'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_photo'] }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_groupname'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_groupname'] }
+            keyboard.inline_keyboard[row][3] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['lock_groupphoto'], callback_data = 'group_management' .. reverseGroupDataDictionary['lock_groupphoto'] }
             row = row + 1
             keyboard.inline_keyboard[row] = { }
             if data[tostring(chat_id)].settings.lock_grouplink then
@@ -625,15 +625,15 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
             else
                 keyboard.inline_keyboard[row][1] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_grouplink'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_grouplink'] .. page .. chat_id }
             end
-            if data[tostring(chat_id)].settings.lock_name then
-                keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['lock_name'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_name'] .. page .. chat_id }
+            if data[tostring(chat_id)].settings.lock_groupname then
+                keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['lock_groupname'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_groupname'] .. page .. chat_id }
             else
-                keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_name'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_name'] .. page .. chat_id }
+                keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_groupname'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_groupname'] .. page .. chat_id }
             end
-            if data[tostring(chat_id)].settings.lock_photo then
-                keyboard.inline_keyboard[row][3] = { text = '✅ ' .. reverseGroupDataDictionary['lock_photo'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_photo'] .. page .. chat_id }
+            if data[tostring(chat_id)].settings.lock_groupphoto then
+                keyboard.inline_keyboard[row][3] = { text = '✅ ' .. reverseGroupDataDictionary['lock_groupphoto'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['lock_groupphoto'] .. page .. chat_id }
             else
-                keyboard.inline_keyboard[row][3] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_photo'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_photo'] .. page .. chat_id }
+                keyboard.inline_keyboard[row][3] = { text = '☑️ ' .. reverseGroupDataDictionary['lock_groupphoto'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['lock_groupphoto'] .. page .. chat_id }
             end
             row = row + 1
             keyboard.inline_keyboard[row] = { }

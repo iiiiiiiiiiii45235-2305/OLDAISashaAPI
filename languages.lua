@@ -954,8 +954,8 @@ return {
             ["pmnotices"] = "Avvisi in privato delle azioni che bersagliano gli utenti.",
             ["tagalert"] = "Notifiche dei tag agli utenti.",
             ["lock_grouplink"] = "Rendi il link del gruppo privato o pubblico.",
-            ["lock_name"] = "Previeni cambiamenti al nome del gruppo.",
-            ["lock_photo"] = "Previeni cambiamenti alla foto del gruppo.",
+            ["lock_groupname"] = "Previeni cambiamenti al nome del gruppo.",
+            ["lock_groupphoto"] = "Previeni cambiamenti alla foto del gruppo.",
             ["arabic"] = "Blocca caratteri arabi (punizione minima delete).",
             ["bots"] = "Blocca l'aggiunta dei bot (la punizione è per l'utente che aggiunge, i bot vengono bannati) (punizione minima temprestrict).",
             ["delword"] = "Punizione in caso vengano inviate cose censurate (punizione minima delete).",
@@ -1056,12 +1056,13 @@ return {
             .. "Forward => Messages from channels not in the whitelist.\n"
             .. "Gbanned => Globally banned users.\n"
             .. "Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n"
+            .. "Groupnotices => Avvisi sul gruppo delle azioni che bersagliano gli utenti (se disabilitato i messaggi verranno comunque mandati ma eliminati dopo 60 secondi).\n"
             .. "Leave => Abbandono del gruppo.\n"
             .. "Link => Link di altri gruppi/canali, se Strict è attivato anche messaggi inoltrati e username.\n"
             .. "Member => Entrata di nuovi membri.\n"
             .. "Name => Nome del gruppo.\n"
             .. "Photo => Foto del gruppo.\n"
-            .. "PMnotices => Notices in private to users.\n"
+            .. "PMnotices => Avvisi in privato delle azioni che bersagliano gli utenti.\n"
             .. "RTL => Caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n"
             .. "Spam => Messaggio più lungo di 2048 caratteri o con più di 40 caratteri non stampabili oppure nomi più lunghi di 70 caratteri o con più di 40 caratteri non stampabili.\n"
             .. "Strict => Aumento delle punizioni temporanee a permanenti.\n"
@@ -2480,8 +2481,8 @@ return {
             ["pmnotices"] = "PM notices of actions targeting users.",
             ["tagalert"] = "Tags notifications to users.",
             ["lock_grouplink"] = "Make group's link private or public.",
-            ["lock_name"] = "Prevent group's name changes.",
-            ["lock_photo"] = "Prevent group's photo changes.",
+            ["lock_groupname"] = "Prevent group's name changes.",
+            ["lock_groupphoto"] = "Prevent group's photo changes.",
             ["arabic"] = "Block of arabic characters (minimum punishment delete).",
             ["bots"] = "Punishment for adding bots (punishment is for adder, bots are banned directly) (minimum punishment temprestrict).",
             ["delword"] = "Punishment for writing something censored (minimum punishment delete).",
@@ -2582,12 +2583,13 @@ return {
             .. "Forward => Messages from channels not in the whitelist.\n"
             .. "Gbanned => Globally banned users.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
+            .. "Groupnotices => Group Notices of actions targeting users (if disabled they will be sent anyway but deleted after 60 seconds)..\n"
             .. "Leave => Group leave.\n"
             .. "Links => Other groups'/channels' links, if Strict is enabled also forwarded messages and usernames.\n"
             .. "Members => New members.\n"
             .. "Name => Group's name.\n"
             .. "Photo => Group's photo.\n"
-            .. "PMnotices => Notices in private to users.\n"
+            .. "PMnotices => PM notices of actions targeting users.\n"
             .. "RTL => Right to left characters (those that reverse messages).\n"
             .. "Spam => Message longer than 2048 characters or with more than 40 non-printable characters or names longer than 70 characters or with more than 40 non-printable characters.\n"
             .. "Strict => Increase from temporary to permanent punishments.\n"
@@ -2934,7 +2936,7 @@ return {
             "<code>/settime(restrict|ban) [{weeks} {days} {hours} {minutes} {seconds}]</code>: Sasha sets the specified temporary punishment to the specified time or sends a keyboard in private.",
             "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha locks/mutes {setting} with {punishment}.",
             "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha unlocks/unmutes {setting}.",
-            "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
+            "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|groupname|groupnotices|groupphoto|leave|links|members|pmnotices|rtl|spam|strict|tagalert|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
             "<code>{punishment}</code> può essere: <code>nothing|delete|warn|temprestrict|restrict|kick|tempban|ban</code>.",
             "<b>SUPERGROUP</b>",
             "<code>/[silent]pin {reply}</code>: Sasha [silently] pins {reply}.",

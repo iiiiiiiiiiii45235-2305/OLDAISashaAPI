@@ -21,8 +21,8 @@ local default_group_data = {
     settings =
     {
         lock_grouplink = true,
-        lock_name = false,
-        lock_photo = false,
+        lock_groupname = false,
+        lock_groupphoto = false,
         groupnotices = true,
         pmnotices = false,
         tagalert = false,

@@ -2045,35 +2045,35 @@ function lockSetting(target, setting_type, punishment)
             save_data(config.moderation.data, data)
             return langs[lang].settingLocked
         end
-    elseif setting_type == 'lock_name' then
-        if data[tostring(target)].settings.lock_name ~= nil then
-            if data[tostring(target)].settings.lock_name then
+    elseif setting_type == 'lock_groupname' then
+        if data[tostring(target)].settings.lock_groupname ~= nil then
+            if data[tostring(target)].settings.lock_groupname then
                 return langs[lang].settingAlreadyLocked
             else
-                data[tostring(target)].settings.lock_name = true
+                data[tostring(target)].settings.lock_groupname = true
                 save_data(config.moderation.data, data)
                 return langs[lang].settingLocked
             end
         else
-            data[tostring(target)].settings.lock_name = true
+            data[tostring(target)].settings.lock_groupname = true
             save_data(config.moderation.data, data)
             return langs[lang].settingLocked
         end
-    elseif setting_type == 'lock_photo' then
+    elseif setting_type == 'lock_groupphoto' then
         local obj = getChat(target)
         if type(obj) == 'table' then
             if obj.photo then
                 data[tostring(target)].photo = obj.photo.big_file_id
-                if data[tostring(target)].settings.lock_photo ~= nil then
-                    if data[tostring(target)].settings.lock_photo then
+                if data[tostring(target)].settings.lock_groupphoto ~= nil then
+                    if data[tostring(target)].settings.lock_groupphoto then
                         return langs[lang].settingAlreadyLocked
                     else
-                        data[tostring(target)].settings.lock_photo = true
+                        data[tostring(target)].settings.lock_groupphoto = true
                         save_data(config.moderation.data, data)
                         return langs[lang].settingLocked
                     end
                 else
-                    data[tostring(target)].settings.lock_photo = true
+                    data[tostring(target)].settings.lock_groupphoto = true
                     save_data(config.moderation.data, data)
                     return langs[lang].settingLocked
                 end
@@ -2182,8 +2182,8 @@ function showSettings(target, lang)
         langs[lang].settings.pmnotices .. tostring(data[target].settings.pmnotices) ..
         langs[lang].tagalert .. tostring(data[target].tagalert) ..
         langs[lang].grouplinkLock .. tostring(data[target].settings.lock_grouplink) ..
-        langs[lang].nameLock .. tostring(data[target].settings.lock_name) ..
-        langs[lang].photoLock .. tostring(data[target].settings.lock_photo) ..
+        langs[lang].nameLock .. tostring(data[target].settings.lock_groupname) ..
+        langs[lang].photoLock .. tostring(data[target].settings.lock_groupphoto) ..
         langs[lang].tempRestrictTime .. tostring(time_restrict) ..
         langs[lang].tempBanTime .. tostring(time_ban) ..
         langs[lang].warnSensibility .. tostring(data[target].settings.max_warns) ..
