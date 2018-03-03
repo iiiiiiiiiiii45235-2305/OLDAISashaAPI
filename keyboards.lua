@@ -592,25 +592,25 @@ function keyboard_settings_list(chat_id, page, setting_add_row, from_other_plugi
     local row = 1
     if data[tostring(chat_id)] then
         keyboard.inline_keyboard[row] = { }
-        keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['groupnotices'], callback_data = 'group_management' .. reverseGroupDataDictionary['groupnotices'] }
-        keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_management' .. reverseGroupDataDictionary['pmnotices'] }
-        keyboard.inline_keyboard[row][3] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_management' .. reverseGroupDataDictionary['tagalert'] }
+        -- keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['groupnotices'], callback_data = 'group_management' .. reverseGroupDataDictionary['groupnotices'] }
+        keyboard.inline_keyboard[row][1] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_management' .. reverseGroupDataDictionary['pmnotices'] }
+        keyboard.inline_keyboard[row][2] = { text = langs[lang].infoEmoji .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_management' .. reverseGroupDataDictionary['tagalert'] }
         row = row + 1
         keyboard.inline_keyboard[row] = { }
-        if data[tostring(chat_id)].settings.groupnotices then
+        --[[if data[tostring(chat_id)].settings.groupnotices then
             keyboard.inline_keyboard[row][1] = { text = '✅ ' .. reverseGroupDataDictionary['groupnotices'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['groupnotices'] .. page .. chat_id }
         else
             keyboard.inline_keyboard[row][1] = { text = '☑️ ' .. reverseGroupDataDictionary['groupnotices'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['groupnotices'] .. page .. chat_id }
-        end
+        end]]
         if data[tostring(chat_id)].settings.pmnotices then
-            keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['pmnotices'] .. page .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = '✅ ' .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['pmnotices'] .. page .. chat_id }
         else
-            keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['pmnotices'] .. page .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = '☑️ ' .. reverseGroupDataDictionary['pmnotices'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['pmnotices'] .. page .. chat_id }
         end
         if data[tostring(chat_id)].settings.tagalert then
-            keyboard.inline_keyboard[row][3] = { text = '✅ ' .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['tagalert'] .. page .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = '✅ ' .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_managementUNLOCK' .. reverseGroupDataDictionary['tagalert'] .. page .. chat_id }
         else
-            keyboard.inline_keyboard[row][3] = { text = '☑️ ' .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['tagalert'] .. page .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = '☑️ ' .. reverseGroupDataDictionary['tagalert'], callback_data = 'group_managementLOCK' .. reverseGroupDataDictionary['tagalert'] .. page .. chat_id }
         end
         row = row + 1
         keyboard.inline_keyboard[row] = { }
