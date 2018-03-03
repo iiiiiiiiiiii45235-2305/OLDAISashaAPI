@@ -1409,7 +1409,7 @@ return {
             "<code>/settime(restrict|ban) [{weeks} {days} {hours} {minutes} {seconds}]</code>: Sasha imposta la punizione temporanea specificata al tempo specificato o manda una tastiera in privato.",
             "<code>/lock|/mute {setting} {punishment}</code>: Sasha blocca/muta {setting} con {punishment}.",
             "<code>/unlock|/unmute {setting}</code>: Sasha sblocca/smuta {setting}.",
-            "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|leave|links|members|name|photo|rtl|spam|strict|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
+            "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|groupname|groupnotices|groupphoto|leave|links|members|pmnotices|rtl|spam|strict|tagalert|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
             "<code>{punishment}</code> può essere: <code>nothing|delete|warn|temprestrict|restrict|kick|tempban|ban</code>.",
             "<b>SUPERGRUPPO</b>",
             "<code>/[silent]pin {reply}</code>: Sasha fissa [silenziosamente] {reply}.",
