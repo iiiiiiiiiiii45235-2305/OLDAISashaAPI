@@ -166,10 +166,10 @@ end
 local function unescapeGoodbyeWelcome(goodbyewelcome)
     if string.match(goodbyewelcome, '^photo') then
         goodbyewelcome = goodbyewelcome:gsub('^photo', '')
-    elseif string.match(goodbyewelcome, '^video') then
-        goodbyewelcome = goodbyewelcome:gsub('^video', '')
     elseif string.match(goodbyewelcome, '^video_note') then
         goodbyewelcome = goodbyewelcome:gsub('^video_note', '')
+    elseif string.match(goodbyewelcome, '^video') then
+        goodbyewelcome = goodbyewelcome:gsub('^video', '')
     elseif string.match(goodbyewelcome, '^audio') then
         goodbyewelcome = goodbyewelcome:gsub('^audio', '')
     elseif string.match(goodbyewelcome, '^voice_note') or string.match(goodbyewelcome, '^voice') then
@@ -193,15 +193,15 @@ local function sendWelcome(chat, added, message_id)
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
             return sendPhotoId(chat.id, media_id, caption, message_id)
+        elseif string.match(welcome, '^video_note') then
+            welcome = welcome:gsub('^video_note', '')
+            local media_id = welcome:match('^([^%s]+)')
+            return sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(welcome, '^video') then
             welcome = welcome:gsub('^video', '')
             local media_id = welcome:match('^([^%s]+)')
             local caption = welcome:match('^[^%s]+ (.*)')
             return sendVideoId(chat.id, media_id, caption, message_id)
-        elseif string.match(welcome, '^video_note') then
-            welcome = welcome:gsub('^video_note', '')
-            local media_id = welcome:match('^([^%s]+)')
-            return sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(welcome, '^audio') then
             welcome = welcome:gsub('^audio', '')
             local media_id = welcome:match('^([^%s]+)')
@@ -268,15 +268,15 @@ local function sendGoodbye(chat, removed, message_id)
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
             return sendPhotoId(chat.id, media_id, caption, message_id)
+        elseif string.match(goodbye, '^video_note') then
+            goodbye = goodbye:gsub('^video_note', '')
+            local media_id = goodbye:match('^([^%s]+)')
+            return sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(goodbye, '^video') then
             goodbye = goodbye:gsub('^video', '')
             local media_id = goodbye:match('^([^%s]+)')
             local caption = goodbye:match('^[^%s]+ (.*)')
             return sendVideoId(chat.id, media_id, caption, message_id)
-        elseif string.match(goodbye, '^video_note') then
-            goodbye = goodbye:gsub('^video_note', '')
-            local media_id = goodbye:match('^([^%s]+)')
-            return sendVideoNoteId(chat.id, media_id, message_id)
         elseif string.match(goodbye, '^audio') then
             goodbye = goodbye:gsub('^audio', '')
             local media_id = goodbye:match('^([^%s]+)')

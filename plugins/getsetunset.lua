@@ -617,19 +617,16 @@ local function pre_process(msg)
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendPhotoId(msg.chat.id, media_id, caption, msg.message_id)
                         return msg
+                    elseif string.match(answer, '^video_note') then
+                        answer = answer:gsub('^video_note', '')
+                        local media_id = answer:match('^([^%s]+)')
+                        sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
+                        return msg
                     elseif string.match(answer, '^video') then
                         answer = answer:gsub('^video', '')
                         local media_id = answer:match('^([^%s]+)')
                         local caption = answer:match('^[^%s]+ (.*)')
                         sendVideoId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^video_note') then
-                        print('in')
-                        answer = answer:gsub('^video_note', '')
-                        print(answer)
-                        local media_id = answer:match('^([^%s]+)')
-                        print(media_id)
-                        printvardump(sendVideoNoteId(msg.chat.id, media_id, msg.message_id))
                         return msg
                     elseif string.match(answer, '^audio') then
                         answer = answer:gsub('^audio', '')
