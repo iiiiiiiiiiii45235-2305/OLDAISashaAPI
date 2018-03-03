@@ -610,7 +610,6 @@ local function pre_process(msg)
             local t = vars:split('\n')
             for i, word in pairs(t) do
                 local answer = check_word(msg, word:lower(), true)
-                print(answer)
                 if answer then
                     if string.match(answer, '^photo') then
                         answer = answer:gsub('^photo', '')
@@ -625,10 +624,12 @@ local function pre_process(msg)
                         sendVideoId(msg.chat.id, media_id, caption, msg.message_id)
                         return msg
                     elseif string.match(answer, '^video_note') then
+                        print('in')
                         answer = answer:gsub('^video_note', '')
+                        print(answer)
                         local media_id = answer:match('^([^%s]+)')
                         print(media_id)
-                        sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
+                        printvardump(sendVideoNoteId(msg.chat.id, media_id, msg.message_id))
                         return msg
                     elseif string.match(answer, '^audio') then
                         answer = answer:gsub('^audio', '')
