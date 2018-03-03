@@ -2,7 +2,7 @@ if not config.bot_api_key then
     error('You did not set your bot token in config.lua!')
 end
 
-local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', title = 'FAKE USER CHAT', username = 'USERNAME', id = 'FAKE ID' }
+local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', print_name = 'FAKE USER CHAT', title = 'FAKE USER CHAT', username = 'USERNAME', id = 'FAKE ID' }
 local unknown_user = { first_name = 'UNKNOWN', last_name = 'USER', username = 'USERNAME', id = 'UNKNOWN ID' }
 
 local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
@@ -201,7 +201,7 @@ function getChatMember(chat_id, user_id, no_log)
             return sendRequest(url, no_log)
         end
     else
-        local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
+        local fake_user = { first_name = 'FAKECOMMAND', last_name = 'FAKECOMMAND', print_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
         return fake_user
     end
 end
@@ -1484,12 +1484,20 @@ function getChat(id_or_username, no_log)
             end
             ]]
             if ok then
-                return obj
+                if obj.type == 'private' then
+                    return adjust_user(obj)
+                elseif obj.type == 'group' then
+                    return adjust_group(obj)
+                elseif obj.type == 'supergroup' then
+                    return adjust_supergroup(obj)
+                elseif obj.type == 'channel' then
+                    return adjust_channel(obj)
+                end
             end
         end
         return nil
     else
-        local fake_user = { first_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username, type = 'fake' }
+        local fake_user = { first_name = 'FAKECOMMAND', last_name = 'FAKECOMMAND', print_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username, type = 'fake' }
         return fake_user
     end
 end
