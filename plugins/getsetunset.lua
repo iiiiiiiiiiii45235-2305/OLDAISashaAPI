@@ -626,6 +626,7 @@ local function pre_process(msg)
                     elseif string.match(answer, '^video_note') then
                         answer = answer:gsub('^video_note', '')
                         local media_id = answer:match('^([^%s]+)')
+                        print(media_id)
                         sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
                         return msg
                     elseif string.match(answer, '^audio') then
