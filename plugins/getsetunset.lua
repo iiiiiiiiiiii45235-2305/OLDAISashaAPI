@@ -338,23 +338,32 @@ local function run(msg, matches)
     if matches[1]:lower() == 'get' or matches[1]:lower() == 'getlist' then
         if not matches[2] then
             mystat('/get')
-            local tmp = oldResponses.lastGet[tostring(msg.chat.id)]
-            oldResponses.lastGet[tostring(msg.chat.id)] = sendMessage(msg.chat.id, list_variables(msg, false))
-            if oldResponses.lastGet[tostring(msg.chat.id)] then
-                if oldResponses.lastGet[tostring(msg.chat.id)].result then
-                    if oldResponses.lastGet[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastGet[tostring(msg.chat.id)] = oldResponses.lastGet[tostring(msg.chat.id)].result.message_id
+            if msg.from.is_mod then
+                local tmp = oldResponses.lastGet[tostring(msg.chat.id)]
+                oldResponses.lastGet[tostring(msg.chat.id)] = sendReply(msg, list_variables(msg, false))
+                if oldResponses.lastGet[tostring(msg.chat.id)] then
+                    if oldResponses.lastGet[tostring(msg.chat.id)].result then
+                        if oldResponses.lastGet[tostring(msg.chat.id)].result.message_id then
+                            oldResponses.lastGet[tostring(msg.chat.id)] = oldResponses.lastGet[tostring(msg.chat.id)].result.message_id
+                        else
+                            oldResponses.lastGet[tostring(msg.chat.id)] = nil
+                        end
                     else
                         oldResponses.lastGet[tostring(msg.chat.id)] = nil
                     end
-                else
-                    oldResponses.lastGet[tostring(msg.chat.id)] = nil
                 end
+                if tmp then
+                    deleteMessage(msg.chat.id, tmp, true)
+                end
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            else
+                if not sendMessage(msg.from.id, list_variables(msg, false)) then
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                end
+                local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
-            if tmp then
-                deleteMessage(msg.chat.id, tmp, true)
-            end
-            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
             return
         else
             mystat('/get <var_name>')
@@ -384,23 +393,33 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'getglobal' or matches[1]:lower() == 'getgloballist' then
         mystat('/getglobal')
-        local tmp = oldResponses.lastGetGlobal[tostring(msg.chat.id)]
-        oldResponses.lastGetGlobal[tostring(msg.chat.id)] = sendMessage(msg.chat.id, list_variables(msg, true))
-        if oldResponses.lastGetGlobal[tostring(msg.chat.id)] then
-            if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result then
-                if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id then
-                    oldResponses.lastGetGlobal[tostring(msg.chat.id)] = oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id
+        if msg.from.is_mod then
+            local tmp = oldResponses.lastGetGlobal[tostring(msg.chat.id)]
+            oldResponses.lastGetGlobal[tostring(msg.chat.id)] = sendReply(msg, list_variables(msg, true))
+            if oldResponses.lastGetGlobal[tostring(msg.chat.id)] then
+                if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result then
+                    if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id then
+                        oldResponses.lastGetGlobal[tostring(msg.chat.id)] = oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id
+                    else
+                        oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
+                    end
                 else
                     oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
                 end
-            else
-                oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
             end
+            if tmp then
+                deleteMessage(msg.chat.id, tmp, true)
+            end
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+            return
+        else
+            if not sendMessage(msg.from.id, list_variables(msg, true)) then
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+            end
+            local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
         end
-        if tmp then
-            deleteMessage(msg.chat.id, tmp, true)
-        end
-        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
         return
     end
 

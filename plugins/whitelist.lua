@@ -56,7 +56,7 @@ local function run(msg, matches)
     if data[tostring(msg.chat.id)] then
         if matches[1]:lower() == "whitelist" then
             if msg.reply then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/whitelist <user>')
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -77,7 +77,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             elseif matches[2] and matches[2] ~= '' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/whitelist <user>')
                     if msg.entities then
                         for k, v in pairs(msg.entities) do
@@ -118,29 +118,38 @@ local function run(msg, matches)
                         text = text .. " [" .. k .. "]\n"
                     end
                 end
-                local tmp = oldResponses.lastWhitelist[tostring(msg.chat.id)]
-                oldResponses.lastWhitelist[tostring(msg.chat.id)] = sendMessage(msg.chat.id, text)
-                if oldResponses.lastWhitelist[tostring(msg.chat.id)] then
-                    if oldResponses.lastWhitelist[tostring(msg.chat.id)].result then
-                        if oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastWhitelist[tostring(msg.chat.id)] = oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id
+                if msg.from.is_mod then
+                    local tmp = oldResponses.lastWhitelist[tostring(msg.chat.id)]
+                    oldResponses.lastWhitelist[tostring(msg.chat.id)] = sendReply(msg, text)
+                    if oldResponses.lastWhitelist[tostring(msg.chat.id)] then
+                        if oldResponses.lastWhitelist[tostring(msg.chat.id)].result then
+                            if oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id then
+                                oldResponses.lastWhitelist[tostring(msg.chat.id)] = oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id
+                            else
+                                oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
+                            end
                         else
                             oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
                         end
-                    else
-                        oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
                     end
+                    if tmp then
+                        deleteMessage(msg.chat.id, tmp, true)
+                    end
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                else
+                    if not sendMessage(msg.from.id, text) then
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    end
+                    local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
-                if tmp then
-                    deleteMessage(msg.chat.id, tmp, true)
-                end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 return
             end
         end
         if matches[1]:lower() == "whitelistgban" then
             if msg.reply then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/whitelistgban <user>')
                     if matches[2] then
                         if matches[2]:lower() == 'from' then
@@ -161,7 +170,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_owner
                 end
             elseif matches[2] and matches[2] ~= '' then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/whitelistgban <user>')
                     if msg.entities then
                         for k, v in pairs(msg.entities) do
@@ -202,29 +211,38 @@ local function run(msg, matches)
                         text = text .. " [" .. k .. "]\n"
                     end
                 end
-                local tmp = oldResponses.lastWhitelistGban[tostring(msg.chat.id)]
-                oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = sendMessage(msg.chat.id, text)
-                if oldResponses.lastWhitelistGban[tostring(msg.chat.id)] then
-                    if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result then
-                        if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id
+                if msg.from.is_mod then
+                    local tmp = oldResponses.lastWhitelistGban[tostring(msg.chat.id)]
+                    oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = sendReply(msg, text)
+                    if oldResponses.lastWhitelistGban[tostring(msg.chat.id)] then
+                        if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result then
+                            if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id then
+                                oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id
+                            else
+                                oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
+                            end
                         else
                             oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
                         end
-                    else
-                        oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
                     end
+                    if tmp then
+                        deleteMessage(msg.chat.id, tmp, true)
+                    end
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                else
+                    if not sendMessage(msg.from.id, text) then
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    end
+                    local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
-                if tmp then
-                    deleteMessage(msg.chat.id, tmp, true)
-                end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 return
             end
         end
         if matches[1]:lower() == "whitelistlink" then
             if matches[2] then
-                if is_owner(msg) then
+                if msg.from.is_owner then
                     mystat('/whitelistlink <link>')
                     return whitelist_link(msg.chat.id, matches[2])
                 else
@@ -236,23 +254,32 @@ local function run(msg, matches)
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.links) do
                     text = text .. k .. ". " .. v .. "\n"
                 end
-                local tmp = oldResponses.lastWhitelistLink[tostring(msg.chat.id)]
-                oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = sendMessage(msg.chat.id, text)
-                if oldResponses.lastWhitelistLink[tostring(msg.chat.id)] then
-                    if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result then
-                        if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id
+                if msg.from.is_mod then
+                    local tmp = oldResponses.lastWhitelistLink[tostring(msg.chat.id)]
+                    oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = sendReply(msg, text)
+                    if oldResponses.lastWhitelistLink[tostring(msg.chat.id)] then
+                        if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result then
+                            if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id then
+                                oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id
+                            else
+                                oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
+                            end
                         else
                             oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
                         end
-                    else
-                        oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
                     end
+                    if tmp then
+                        deleteMessage(msg.chat.id, tmp, true)
+                    end
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                else
+                    if not sendMessage(msg.from.id, text) then
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                    end
+                    local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
-                if tmp then
-                    deleteMessage(msg.chat.id, tmp, true)
-                end
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                 return
             end
         end
@@ -267,7 +294,7 @@ return {
     {
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt])$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn])$",
-        "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Ll][Ii][Nn][Kk])$",
+        "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Ll][Ii][Nn][Kk])[Ss]?$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Gg][Bb][Aa][Nn]) ([^%s]+)$",
         "^[#!/]([Ww][Hh][Ii][Tt][Ee][Ll][Ii][Ss][Tt][Ll][Ii][Nn][Kk]) ([^%s]+)$",

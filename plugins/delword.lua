@@ -44,7 +44,17 @@ end
 
 local function run(msg, matches)
     if matches[1]:lower() == 'dellist' then
-        return list_censorships(msg)
+        if msg.from.is_mod then
+            return list_censorships(msg)
+        else
+            if not sendMessage(msg.from.id, list_censorships(msg)) then
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
+                return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+            end
+            local tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
+        end
+        return
     end
     if matches[1]:lower() == 'delword' then
         if msg.from.is_mod then
