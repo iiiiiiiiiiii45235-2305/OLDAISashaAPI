@@ -112,13 +112,13 @@ local function run(msg, matches)
                 editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[16], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
             elseif matches[2] == 'WHITELISTGBAN' then
                 -- PUBLIC KEYBOARD
-                if is_owner2(msg.from.id, matches[4], true) then
-                    local text = whitegban_user(matches[4], matches[3])
+                if is_owner2(msg.from.id, msg.chat.id, true) then
+                    local text = whitegban_user(msg.chat.id, matches[3]) .. '\n'
                     local status = getUserStatus(msg.chat.id, matches[3])
                     if status == 'kicked' then
-                        text = text .. '\n' .. unbanUser(bot.id, matches[3], msg.chat.id)
+                        text = text .. unbanUser(msg.from.id, matches[3], msg.chat.id)
                     elseif status == 'restricted' then
-                        text = text .. '\n' .. unrestrictUser(bot.id, matches[3], msg.chat.id)
+                        text = text .. unrestrictUser(msg.from.id, matches[3], msg.chat.id)
                     end
                     answerCallbackQuery(msg.cb_id, text, true)
                     editMessage(msg.chat.id, msg.message_id, text)
