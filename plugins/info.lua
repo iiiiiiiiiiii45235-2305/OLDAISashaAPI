@@ -1367,10 +1367,16 @@ return {
         "^(###cbinfo)(DELETE)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%-?%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
+        -- A
+        "^(###cbinfo)(DELETE)(%-?%d+)(%-?%d+)$",
+        -- B
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-?%d+)(%-%d+)$",
+        -- A
+        "^(###cbinfo)(BACK)(%-?%d+)(%-?%d+)$",
+        -- B
         "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELISTGBAN)(%d+)(%-%d+)$",
