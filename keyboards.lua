@@ -971,7 +971,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
             if obj.first_name then
                 if obj.first_name == '' then
                     if database[tostring(obj.id)] then
-                        return { inline_keyboard = { { { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }, { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' } } } }
+                        return { inline_keyboard = { { { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. '$' .. chat_id }, { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' } } } }
                     else
                         return { inline_keyboard = { { { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' } } } }
                     end

@@ -215,7 +215,7 @@ local function run(msg, matches)
                 end
                 if matches[4] == 'BACK' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time(matches[1], matches[2], matches[6], matches[5], time, matches[7] or false))
+                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[5], time, matches[7] or false))
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     local seconds, minutes, hours, days, weeks = unixToDate(time)
                     if matches[4] == 'SECONDS' then
@@ -274,7 +274,7 @@ local function run(msg, matches)
                             end
                         end
                     end
-                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time(matches[1], matches[2], matches[6], matches[7], time, matches[8] or false))
+                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                 elseif matches[4] == 'DONE' then
                     local text = banUser(msg.from.id, matches[5], matches[6], '', time)
@@ -295,7 +295,7 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
                     restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
-                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time(matches[1], matches[2], matches[6], matches[5], time, matches[7] or false))
+                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[5], time, matches[7] or false))
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
                     restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
@@ -357,7 +357,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time(matches[1], matches[2], matches[6], matches[7], time, matches[8] or false))
+                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
