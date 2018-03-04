@@ -896,13 +896,17 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
         text = text .. tostring(warnUser(executer, target, chat_id, reason)) .. '\n'
     end
     if not globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] then
-        if tonumber(punishment) == 3 or tonumber(punishment) == 4 and data[tostring(chat_id)].type ~= 'Group' then
-            if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
-                -- temprestrict
-                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
+        if tonumber(punishment) == 3 or tonumber(punishment) == 4 then
+            if data[tostring(chat_id)].type ~= 'Group' then
+                if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
+                    -- temprestrict
+                    text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
+                else
+                    -- restrict
+                    text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
+                end
             else
-                -- restrict
-                text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions)) .. '\n'
+                punishment = 7
             end
         end
         if tonumber(punishment) == 5 then
@@ -1072,6 +1076,9 @@ function setPunishment(target, setting_type, punishment)
         punishment = false
     end
     local lang = get_lang(target)
+    if data[tostring(chat_id)].type == 'Group' and(punishment == 3 or punishment == 4 or punishment == 6) then
+        punishment = 7
+    end
     if data[tostring(target)].settings[tostring(setting_type)] ~= nil then
         data[tostring(target)].settings[tostring(setting_type)] = punishment
     elseif data[tostring(target)].settings.locks[tostring(setting_type)] ~= nil then

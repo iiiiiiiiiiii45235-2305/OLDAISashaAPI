@@ -928,7 +928,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 else
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED ☑️', callback_data = 'infoBAN' .. obj.id .. chat_id }
                                 end
-                                if tostring(chat_id):starts('-100') then
+                                if data[tostring(chat_id)].type == 'SuperGroup' then
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
                                     keyboard.inline_keyboard[row][column] = { text = '⌨️⏳ TEMPBAN ⏳⌨️', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
@@ -957,7 +957,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ WHITELISTEDGBAN ☑️', callback_data = 'infoWHITELISTGBAN' .. obj.id .. chat_id }
                                 end
                             end
-                            if tostring(chat_id):starts('-100') then
+                            if data[tostring(chat_id)].type == 'SuperGroup' then
                                 -- supergroup
                                 row = row + 1
                                 keyboard.inline_keyboard[row] = { }
@@ -1087,7 +1087,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                 else
                                     keyboard.inline_keyboard[row][column] = { text = '☑️ BANNED ☑️', callback_data = 'infoBAN' .. obj.id .. chat_id }
                                 end
-                                if tostring(chat_id):starts('-100') then
+                                if data[tostring(chat_id)].type == 'SuperGroup' then
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
                                     keyboard.inline_keyboard[row][column] = { text = '⌨️⏳ TEMPBAN ⏳⌨️', callback_data = 'banhammerTEMPBAN0BACK' .. obj.id .. chat_id .. 'I' }
@@ -1129,7 +1129,7 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                                         keyboard.inline_keyboard[row][column] = { text = '☑️ MODERATOR ☑️', callback_data = 'infoPROMOTE' .. obj.id .. chat_id }
                                     end
                                 end
-                                if tostring(chat_id):starts('-100') then
+                                if data[tostring(chat_id)].type == 'SuperGroup' then
                                     -- supergroup
                                     row = row + 1
                                     keyboard.inline_keyboard[row] = { }
