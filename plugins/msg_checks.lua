@@ -27,6 +27,7 @@ local test_data = {
             members = 7,
             rtl = 7,
             spam = 7,
+            username = 7,
         },
         mutes =
         {
@@ -163,6 +164,7 @@ local function check_msg(msg, group_data, pre_process_function)
     local lock_members = group_data.settings.locks.members
     local lock_rtl = group_data.settings.locks.rtl
     local lock_spam = group_data.settings.locks.spam
+    local lock_username = group_data.settings.locks.username
     -- mutes
     local mute_all = group_data.settings.mutes.all
     local mute_audio = group_data.settings.mutes.audios
@@ -222,6 +224,21 @@ local function check_msg(msg, group_data, pre_process_function)
                             end
                         end
                     end
+                end
+            end
+        end
+        if my_tonumber(lock_username) > 0 then
+            if not msg.from.username then
+                if pre_process_function then
+                    print('user without username')
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for user without username punishment = " .. tostring(mute_all))
+                    local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_username, langs[msg.lang].reasonLockUsername, msg.message_id)).result.message_id
+                    if not groupnotices then
+                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    end
+                    return nil
+                else
+                    text = text .. langs[msg.lang].reasonLockUsername
                 end
             end
         end

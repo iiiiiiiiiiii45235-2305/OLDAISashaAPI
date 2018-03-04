@@ -2202,6 +2202,7 @@ function showSettings(target, lang)
         langs[lang].membersLock .. tostring(data[target].settings.locks.members) ..
         langs[lang].rtlLock .. tostring(data[target].settings.locks.rtl) ..
         langs[lang].spamLock .. tostring(data[target].settings.locks.spam) ..
+        langs[lang].usernameLock .. tostring(data[target].settings.locks.username) ..
         '\n' .. langs[lang].mutesWord ..
         langs[lang].allMute .. tostring(data[target].settings.mutes.all) ..
         langs[lang].audiosMute .. tostring(data[target].settings.mutes.audios) ..

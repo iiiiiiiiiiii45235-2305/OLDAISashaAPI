@@ -333,6 +333,7 @@ return {
         reasonLockMembers = "\nBlocco membri abilitato.",
         reasonLockRTL = "\nBlocco RTL abilitato.",
         reasonLockSpam = "\nBlocco spam abilitato.",
+        reasonLockUsername = "\nBlocco username abilitato.",
         reasonInviteBanned = "Aggiunta di utente/i bannato/i.",
         reasonInactive = "Utente inattivo.",
         reasonRandom = "Kick casuale.",
@@ -700,6 +701,7 @@ return {
         membersLock = "\nBlocco membri: ",
         rtlLock = "\nBlocco RTL: ",
         spamLock = "\nBlocco spam: ",
+        usernameLock = "\nBlocco username: ",
         allMute = "\nMuto totale: ",
         audiosMute = "\nMuto audio: ",
         contactsMute = "\nMuto contatti: ",
@@ -967,6 +969,7 @@ return {
             ["members"] = "Punizione per gli utenti che entrano nel gruppo (punizione minima temprestrict).",
             ["rtl"] = "Blocco dei caratteri right to left (punizione minima delete).",
             ["spam"] = "Blocco dei messaggi con più di 2048 caratteri o con più di 40 caratteri non stampabili o di nomi con più di 70 caratteri (punizione minima delete).",
+            ["username"] = "Blocco utenti senza username (punizione minima delete).",
             ["max_flood"] = "Massimo numero di messaggi in 2 secondi.",
             ["max_warns"] = "Massimo numero di avvertimenti.",
             ["all"] = "Eliminazione di ogni messaggio (punizione minima delete).",
@@ -1065,6 +1068,7 @@ return {
             .. "PMnotices => Avvisi in privato delle azioni che bersagliano gli utenti.\n"
             .. "RTL => Caratteri right to left (quelli che fanno apparire i messaggi scritti al contrario).\n"
             .. "Spam => Messaggio più lungo di 2048 caratteri o con più di 40 caratteri non stampabili oppure nomi più lunghi di 70 caratteri o con più di 40 caratteri non stampabili.\n"
+            .. "Username => Utenti senza username.\n"
             .. "Strict => Aumento delle punizioni temporanee a permanenti.\n"
             .. "Tagalert => Tag alerts to users.\n"
             .. "All => Tutto.\n"
@@ -1410,7 +1414,7 @@ return {
             "<code>/settime(restrict|ban) [{weeks} {days} {hours} {minutes} {seconds}]</code>: Sasha imposta la punizione temporanea specificata al tempo specificato o manda una tastiera in privato.",
             "<code>/lock|/mute {setting} {punishment}</code>: Sasha blocca/muta {setting} con {punishment}.",
             "<code>/unlock|/unmute {setting}</code>: Sasha sblocca/smuta {setting}.",
-            "<code>{setting}</code> può essere: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|groupname|groupnotices|groupphoto|leave|links|members|pmnotices|rtl|spam|strict|tagalert|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
+            "<code>{setting}</code> può essere: <code>all|arabic|audios|bots|contacts|delword|documents|flood|forward|games|gbanned|gifs|grouplink|groupname|groupnotices|groupphoto|leave|links|locations|members|photos|pmnotices|rtl|spam|stickers|strict|tagalert|text|tgservices|username|videos|video_notes|voice_notes|warns_punishment</code>.",
             "<code>{punishment}</code> può essere: <code>nothing|delete|warn|temprestrict|restrict|kick|tempban|ban</code>.",
             "<b>SUPERGRUPPO</b>",
             "<code>/[silent]pin {reply}</code>: Sasha fissa [silenziosamente] {reply}.",
@@ -1849,6 +1853,7 @@ return {
         reasonLockMembers = "\nLock members enabled.",
         reasonLockRTL = "\nLock RTL enabled.",
         reasonLockSpam = "\nLock spam enabled.",
+        reasonLockUsername = "\nLock username enabled.",
         reasonInviteBanned = "Added banned user(s).",
         reasonInactive = "Inactive user.",
         reasonRandom = "Random kick.",
@@ -2221,6 +2226,7 @@ return {
         membersLock = "\nLock members: ",
         rtlLock = "\nLock RTL: ",
         spamLock = "\nLock spam: ",
+        usernameLock = "\nLock username: ",
         allMute = "\nMute all: ",
         audiosMute = "\nMute audios: ",
         contactsMute = "\nMute contacts: ",
@@ -2495,6 +2501,7 @@ return {
             ["members"] = "Punishment to users joining the group (minimum punishment temprestrict).",
             ["rtl"] = "Block of characters right to left (minimum punishment delete).",
             ["spam"] = "Block of messages with more than 2048 characters or with more than 40 non-printable characters or users with more than 70 characters in the name (minimum punishment delete).",
+            ["username"] = "Block of users without username (minimum punishment delete).",
             ["max_flood"] = "Maximum number of messages every 2 seconds.",
             ["max_warns"] = "Maximum number of warns.",
             ["all"] = "Deletion of every message (minimum punishment delete).",
@@ -2593,6 +2600,7 @@ return {
             .. "PMnotices => PM notices of actions targeting users.\n"
             .. "RTL => Right to left characters (those that reverse messages).\n"
             .. "Spam => Message longer than 2048 characters or with more than 40 non-printable characters or names longer than 70 characters or with more than 40 non-printable characters.\n"
+            .. "Username => Users without username.\n"
             .. "Strict => Increase from temporary to permanent punishments.\n"
             .. "Tagalert => Tag alerts to users.\n"
             .. "All => Everything.\n"
@@ -2938,7 +2946,7 @@ return {
             "<code>/settime(restrict|ban) [{weeks} {days} {hours} {minutes} {seconds}]</code>: Sasha sets the specified temporary punishment to the specified time or sends a keyboard in private.",
             "<code>/lock|/mute {group_id} {setting} {punishment}</code>: Sasha locks/mutes {setting} with {punishment}.",
             "<code>/unlock|/unmute {group_id} {setting}</code>: Sasha unlocks/unmutes {setting}.",
-            "<code>{setting}</code> can be: <code>arabic|bots|delword|flood|forward|gbanned|grouplink|groupname|groupnotices|groupphoto|leave|links|members|pmnotices|rtl|spam|strict|tagalert|all|audios|contacts|documents|games|gifs|locations|photos|stickers|text|tgservices|videos|video_notes|voice_notes|warns_punishment</code>.",
+            "<code>{setting}</code> can be: <code>all|arabic|audios|bots|contacts|delword|documents|flood|forward|games|gbanned|gifs|grouplink|groupname|groupnotices|groupphoto|leave|links|locations|members|photos|pmnotices|rtl|spam|stickers|strict|tagalert|text|tgservices|username|videos|video_notes|voice_notes|warns_punishment</code>.",
             "<code>{punishment}</code> può essere: <code>nothing|delete|warn|temprestrict|restrict|kick|tempban|ban</code>.",
             "<b>SUPERGROUP</b>",
             "<code>/[silent]pin {reply}</code>: Sasha [silently] pins {reply}.",

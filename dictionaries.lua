@@ -36,6 +36,8 @@ groupDataDictionary = {
     member = "members",
     rtl = "rtl",
     spam = "spam",
+    usernames = "username",
+    username = "username",
     -- mutes
     all = "all",
     audio = "audios",
@@ -110,6 +112,8 @@ reverseGroupDataDictionary = {
     member = "member",
     rtl = "rtl",
     spam = "spam",
+    usernames = "usernames",
+    username = "usernames",
     -- mutes
     all = "all",
     audio = "audio",

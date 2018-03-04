@@ -1037,6 +1037,15 @@ function adjust_punishment(setting, punishment, change)
                     punishment = 6
                 end
             end
+        elseif setting == 'username' then
+            if punishment == 5 then
+                -- if kick move to tempban
+                if decrement then
+                    punishment = 4
+                else
+                    punishment = 6
+                end
+            end
         elseif setting == 'tgservices' then
             if punishment > 1 then
                 -- if not delete disable
