@@ -2,7 +2,7 @@ local function run(msg, matches)
     if is_sudo(msg) then
         mystat('/lua <command>')
         local output = loadstring(matches[1])()
-        if not output then
+        if output == nil then
             output = langs[msg.lang].doneNoOutput
         else
             if type(output) == 'table' then
