@@ -814,8 +814,8 @@ return {
         deletingMessages = "Sto eliminando i messaggi, quest'operazione potrebbe richiedere del tempo, sii paziente.",
         errorDelall = "Devi prima usare /delfrom /delto e assicurarti che il messaggio di delfrom sia più vecchio di quello di delto.\nSolo l'owner può eliminare più di 70 messaggi per volta.",
         messageTooOld = "Il messaggio è troppo vecchio (massimo 48h).",
-        groupnoticesEnabled = "Le azioni effettuate sugli utenti non verranno più eliminate.",
-        groupnoticesDisabled = "Le azioni effettuate sugli utenti verranno eliminate dopo 5 minuti.",
+        groupnoticesEnabled = "Le azioni automatiche che bersagliano gli utenti non verranno più eliminate.",
+        groupnoticesDisabled = "Le azioni automatiche che bersagliano gli utenti verranno eliminate dopo 5 minuti.",
 
         -- info.lua --
         infoWord = "INFO",
@@ -950,7 +950,7 @@ return {
         -- settings dictionary
         settingsDictionary =
         {
-            ["groupnotices"] = "Avvisi sul gruppo delle azioni che bersagliano gli utenti (se disabilitato i messaggi verranno comunque mandati ma eliminati dopo 5 minuti).",
+            ["groupnotices"] = "Avvisi sul gruppo delle azioni automatiche che bersagliano gli utenti (se disabilitato i messaggi verranno comunque mandati ma eliminati dopo 5 minuti).",
             ["pmnotices"] = "Avvisi in privato delle azioni che bersagliano gli utenti.",
             ["tagalert"] = "Notifiche dei tag agli utenti.",
             ["lock_grouplink"] = "Rendi il link del gruppo privato o pubblico.",
@@ -1056,7 +1056,7 @@ return {
             .. "Forward => Messages from channels not in the whitelist.\n"
             .. "Gbanned => Globally banned users.\n"
             .. "Grouplink => Permettere o no ai normali utenti di ottenere il link del gruppo con il comando /link.\n"
-            .. "Groupnotices => Avvisi sul gruppo delle azioni che bersagliano gli utenti (se disabilitato i messaggi verranno comunque mandati ma eliminati dopo 5 minuti).\n"
+            .. "Groupnotices => Avvisi sul gruppo delle azioni automatiche che bersagliano gli utenti (se disabilitato i messaggi verranno comunque mandati ma eliminati dopo 5 minuti).\n"
             .. "Leave => Abbandono del gruppo.\n"
             .. "Link => Link di altri gruppi/canali, se Strict è attivato anche messaggi inoltrati e username.\n"
             .. "Member => Entrata di nuovi membri.\n"
@@ -2342,8 +2342,8 @@ return {
         deletingMessages = "I'm deleting the messages, this could take a while, please be patient.",
         errorDelall = "You must set /delfrom /delto and ensure that the message of delfrom is older than the the one of delto.\nOnly the owner can delete more than 70 messages at once.",
         messageTooOld = "The message is too old (maximum 48h).",
-        groupnoticesEnabled = "Actions on users will never be deleted.",
-        groupnoticesDisabled = "Actions on users will be deleted after 5 minutes.",
+        groupnoticesEnabled = "Automatic actions on users will never be deleted.",
+        groupnoticesDisabled = "Automatic actions on users will be deleted after 5 minutes.",
 
         -- info.lua --
         infoWord = "INFO",
@@ -2478,7 +2478,7 @@ return {
         -- settings dictionary
         settingsDictionary =
         {
-            ["groupnotices"] = "Group Notices of actions targeting users (if disabled they will be sent anyway but deleted after 5 minutes).",
+            ["groupnotices"] = "Group Notices of automatic actions targeting users (if disabled they will be sent anyway but deleted after 5 minutes).",
             ["pmnotices"] = "PM notices of actions targeting users.",
             ["tagalert"] = "Tags notifications to users.",
             ["lock_grouplink"] = "Make group's link private or public.",
@@ -2584,7 +2584,7 @@ return {
             .. "Forward => Messages from channels not in the whitelist.\n"
             .. "Gbanned => Globally banned users.\n"
             .. "Grouplink => Normal users obtaining group's link using /link.\n"
-            .. "Groupnotices => Group Notices of actions targeting users (if disabled they will be sent anyway but deleted after 5 minutes)..\n"
+            .. "Groupnotices => Group Notices of automatic actions targeting users (if disabled they will be sent anyway but deleted after 5 minutes)..\n"
             .. "Leave => Group leave.\n"
             .. "Links => Other groups'/channels' links, if Strict is enabled also forwarded messages and usernames.\n"
             .. "Members => New members.\n"
