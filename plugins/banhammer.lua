@@ -948,7 +948,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if data[tostring(chat_id)].type == 'SuperGroup' then
+            if tostring(msg.chat.id):starts('-100') then
                 if matches[1]:lower() == 'temprestrict' then
                     if msg.from.is_mod then
                         restrictionsTable[tostring(msg.chat.id)] = restrictionsTable[tostring(msg.chat.id)] or { }
@@ -1589,7 +1589,7 @@ local function run(msg, matches)
                     return langs[msg.lang].require_mod
                 end
             end
-            if data[tostring(chat_id)].type == 'SuperGroup' then
+            if tostring(msg.chat.id):starts('-100') then
                 if matches[1]:lower() == 'tempban' then
                     if msg.from.is_mod then
                         mystat('/ban')

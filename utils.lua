@@ -897,7 +897,7 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
     end
     if not globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] then
         if tonumber(punishment) == 3 or tonumber(punishment) == 4 then
-            if data[tostring(chat_id)].type ~= 'Group' then
+            if tostring(chat_id):starts('-100') then
                 if tonumber(punishment) == 3 and not data[tostring(chat_id)].settings.strict then
                     -- temprestrict
                     text = text .. tostring(restrictUser(executer, target, chat_id, default_restrictions, data[tostring(chat_id)].settings.time_restrict)) .. '\n'
@@ -914,7 +914,7 @@ function punishmentAction(executer, target, chat_id, punishment, reason, message
             text = text .. tostring(kickUser(executer, target, chat_id, reason)) .. '\n'
         end
         if tonumber(punishment) == 6 or tonumber(punishment) == 7 then
-            if tonumber(punishment) == 6 and data[tostring(chat_id)].type ~= 'Group' and not data[tostring(chat_id)].settings.strict then
+            if tonumber(punishment) == 6 and tostring(chat_id):starts('-100') and not data[tostring(chat_id)].settings.strict then
                 -- tempban
                 text = text .. tostring(banUser(executer, target, chat_id, reason, data[tostring(chat_id)].settings.time_ban)) .. '\n'
             else
@@ -1076,7 +1076,7 @@ function setPunishment(target, setting_type, punishment)
         punishment = false
     end
     local lang = get_lang(target)
-    if data[tostring(target)].type == 'Group' and(punishment == 3 or punishment == 4 or punishment == 6) then
+    if not tostring(target):starts('-100') and(punishment == 3 or punishment == 4 or punishment == 6) then
         punishment = 7
     end
     if data[tostring(target)].settings[tostring(setting_type)] ~= nil then
