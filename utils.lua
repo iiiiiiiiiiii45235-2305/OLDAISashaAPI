@@ -1076,7 +1076,7 @@ function setPunishment(target, setting_type, punishment)
         punishment = false
     end
     local lang = get_lang(target)
-    if data[tostring(chat_id)].type == 'Group' and(punishment == 3 or punishment == 4 or punishment == 6) then
+    if data[tostring(target)].type == 'Group' and(punishment == 3 or punishment == 4 or punishment == 6) then
         punishment = 7
     end
     if data[tostring(target)].settings[tostring(setting_type)] ~= nil then
