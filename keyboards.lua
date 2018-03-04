@@ -1181,15 +1181,15 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
         if deeper then
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. chat_id }
-            keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. chat_id }
-            keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].infoPage, callback_data = 'infoBACK' .. obj.id .. '$' .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].updateKeyboard, callback_data = 'info' .. deeper .. obj.id .. '$' .. chat_id }
+            keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. '$' .. chat_id }
             keyboard.inline_keyboard[row][4] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         else
             row = row + 1
             keyboard.inline_keyboard[row] = { }
-            keyboard.inline_keyboard[row][1] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. chat_id }
-            keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. chat_id }
+            keyboard.inline_keyboard[row][1] = { text = langs[lang].updateKeyboard, callback_data = 'infoBACK' .. obj.id .. '$' .. chat_id }
+            keyboard.inline_keyboard[row][2] = { text = langs[lang].deleteKeyboard, callback_data = 'infoDELETE' .. obj.id .. '$' .. chat_id }
             keyboard.inline_keyboard[row][3] = { text = langs[lang].deleteMessage, callback_data = 'infoDELETE' }
         end
         return keyboard
