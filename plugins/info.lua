@@ -477,9 +477,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'GBAN' then
                 if is_admin2(msg.from.id) then
-                    local text = gbanUser(matches[3])
-                    answerCallbackQuery(msg.cb_id, text, true)
-                    sendMessage(matches[4], text)
+                    answerCallbackQuery(msg.cb_id, gbanUser(matches[3]), true)
                     deeper = 'ADMINCOMMANDS'
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
@@ -487,9 +485,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'UNGBAN' then
                 if is_admin2(msg.from.id) then
-                    local text = ungbanUser(matches[3])
-                    answerCallbackQuery(msg.cb_id, text, true)
-                    sendMessage(matches[4], text)
+                    answerCallbackQuery(msg.cb_id, ungbanUser(matches[3]), true)
                     deeper = 'ADMINCOMMANDS'
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
@@ -497,9 +493,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'PMBLOCK' then
                 if is_admin2(msg.from.id) then
-                    local text = blockUser(matches[3])
-                    answerCallbackQuery(msg.cb_id, text, true)
-                    sendMessage(matches[4], text)
+                    answerCallbackQuery(msg.cb_id, blockUser(matches[3]), true)
                     deeper = 'ADMINCOMMANDS'
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
@@ -507,9 +501,7 @@ local function run(msg, matches)
                 end
             elseif matches[2] == 'PMUNBLOCK' then
                 if is_admin2(msg.from.id) then
-                    local text = unblockUser(matches[3])
-                    answerCallbackQuery(msg.cb_id, text, true)
-                    sendMessage(matches[4], text)
+                    answerCallbackQuery(msg.cb_id, unblockUser(matches[3]), true)
                     deeper = 'ADMINCOMMANDS'
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
@@ -1366,15 +1358,11 @@ return {
         "^(###cbinfo)(DELETE)$",
         "^(###cbinfo)(DELETE)(%-%d+)$",
         "^(###cbinfo)(BACK)(%-%d+)$",
-        -- A
         "^(###cbinfo)(DELETE)(%-?%d+)%$(%-?%d+)$",
-        -- B
         "^(###cbinfo)(LINK)(%-%d+)$",
         "^(###cbinfo)(NEWLINK)(%-%d+)$",
         "^(###cbinfo)(DELETE)(%d+)(%-%d+)$",
-        -- A
         "^(###cbinfo)(BACK)(%-?%d+)%$(%-?%d+)$",
-        -- B
         "^(###cbinfo)(INVITE)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELIST)(%d+)(%-%d+)$",
         "^(###cbinfo)(WHITELISTGBAN)(%d+)(%-%d+)$",
