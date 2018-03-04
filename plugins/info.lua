@@ -105,10 +105,26 @@ local function get_object_info(obj, chat_id)
             if obj.username then
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
+            local nickname = redis:hget('tagalert:nicknames', obj.id)
+            if nickname then
+                text = text .. langs[lang].nickname .. nickname
+            end
             local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
             text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true)] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
+            local pmnotices = redis:get('notice:' .. obj.id)
+            if pmnotices then
+                text = text .. langs[lang].pmnoticesRegistration .. 'true'
+            else
+                text = text .. langs[lang].pmnoticesRegistration .. 'false'
+            end
+            local tagalert = redis:hget('tagalert:usernames', obj.id)
+            if tagalert then
+                text = text .. langs[lang].tagalertRegistration .. 'true'
+            else
+                text = text .. langs[lang].tagalertRegistration .. 'false'
+            end
             local otherinfo = langs[lang].otherInfo
             if isGbanned(obj.id) then
                 otherinfo = otherinfo .. 'GBANNED '
@@ -156,6 +172,24 @@ local function get_object_info(obj, chat_id)
             if obj.title then
                 text = text .. langs[lang].groupName .. obj.title
             end
+            local groupnotices = data[tostring(obj.id)].settings.groupnotices
+            if groupnotices then
+                text = text .. langs[lang].groupnoticesRegistration .. 'true'
+            else
+                text = text .. langs[lang].groupnoticesRegistration .. 'false'
+            end
+            local pmnotices = data[tostring(obj.id)].settings.pmnotices
+            if pmnotices then
+                text = text .. langs[lang].pmnoticesRegistration .. 'true'
+            else
+                text = text .. langs[lang].pmnoticesRegistration .. 'false'
+            end
+            local tagalert = data[tostring(obj.id)].settings.tagalert
+            if tagalert then
+                text = text .. langs[lang].tagalertRegistration .. 'true'
+            else
+                text = text .. langs[lang].tagalertRegistration .. 'false'
+            end
             text = text .. langs[lang].date .. os.date('%c') ..
             langs[lang].long_id .. obj.id
         elseif obj.type == 'supergroup' then
@@ -165,6 +199,24 @@ local function get_object_info(obj, chat_id)
             end
             if obj.username then
                 text = text .. langs[lang].username .. '@' .. obj.username
+            end
+            local groupnotices = data[tostring(obj.id)].settings.groupnotices
+            if groupnotices then
+                text = text .. langs[lang].groupnoticesRegistration .. 'true'
+            else
+                text = text .. langs[lang].groupnoticesRegistration .. 'false'
+            end
+            local pmnotices = data[tostring(obj.id)].settings.pmnotices
+            if pmnotices then
+                text = text .. langs[lang].pmnoticesRegistration .. 'true'
+            else
+                text = text .. langs[lang].pmnoticesRegistration .. 'false'
+            end
+            local tagalert = data[tostring(obj.id)].settings.tagalert
+            if tagalert then
+                text = text .. langs[lang].tagalertRegistration .. 'true'
+            else
+                text = text .. langs[lang].tagalertRegistration .. 'false'
             end
             text = text .. langs[lang].date .. os.date('%c') ..
             langs[lang].long_id .. obj.id
