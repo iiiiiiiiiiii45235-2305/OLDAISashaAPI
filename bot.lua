@@ -630,7 +630,9 @@ function pre_process_service_msg(msg)
         msg.service = true
         msg.text = '!!tgservice migrated_from ' ..(msg.text or '')
         msg.service_type = 'migrated_from'
-        migrate_to_supergroup(msg)
+        if data[tostring(msg.migrate_from_chat_id)] then
+            migrate_to_supergroup(msg)
+        end
     elseif msg.pinned_message then
         msg.service = true
         msg.text = '!!tgservice pinned_message ' ..(msg.text or '')
