@@ -246,6 +246,9 @@ local function promoteMod(chat_id, user)
     end
     data[tostring(chat_id)].moderators[tostring(user.id)] =(user.username or user.print_name or user.first_name)
     save_data(config.moderation.data, data)
+    if arePMNoticesEnabled(user.id, chat_id) then
+        sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenPromotedMod .. database[tostring(chat_id)].print_name)
+    end
     return(user.username or user.print_name or user.first_name) .. langs[lang].promoteMod
 end
 
@@ -256,6 +259,9 @@ local function demoteMod(chat_id, user)
     end
     data[tostring(chat_id)].moderators[tostring(user.id)] = nil
     save_data(config.moderation.data, data)
+    if arePMNoticesEnabled(user.id, chat_id) then
+        sendMessage(user.id, langs[get_lang(user.id)].youHaveBeenDemotedMod .. database[tostring(chat_id)].print_name)
+    end
     return(user.username or user.print_name or user.first_name) .. langs[lang].demoteMod
 end
 
