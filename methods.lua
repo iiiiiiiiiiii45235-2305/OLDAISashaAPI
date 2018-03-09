@@ -1671,7 +1671,13 @@ function kickUser(executer, target, chat_id, reason, no_notice)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if arePMNoticesEnabled(target, chat_id) and not no_notice then
-                    sendMessage(target, langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                    local text = langs[get_lang(target)].youHaveBeenKicked .. obj_chat.title
+                    if reason then
+                        if reason:gsub(' ', '') ~= '' then
+                            text = text .. '\n' .. langs[get_lang(target)].reason .. reason
+                        end
+                    end
+                    sendMessage(target, text)
                 end
                 return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
                 '\n#user' .. target .. ' #executer' .. executer .. ' #kick ' ..(reason or '')
@@ -1735,7 +1741,13 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 local sent_msg = { from = bot, chat = obj_chat, remover = obj_remover or unknown_user, removed = obj_removed or unknown_user, text = text, service = true, service_type = 'chat_del_user' }
                 print_msg(sent_msg)
                 if arePMNoticesEnabled(target, chat_id) and not no_notice then
-                    sendMessage(target, langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                    local text = langs[get_lang(target)].youHaveBeenBanned .. obj_chat.title
+                    if reason then
+                        if reason:gsub(' ', '') ~= '' then
+                            text = text .. '\n' .. langs[get_lang(target)].reason .. reason
+                        end
+                    end
+                    sendMessage(target, text)
                 end
                 local tempban = false
                 if until_date then
@@ -1774,7 +1786,13 @@ function unbanUser(executer, target, chat_id, reason, no_notice)
             local res, code = unbanChatMember(target, chat_id)
         end
         if arePMNoticesEnabled(target, chat_id) and not no_notice then
-            sendMessage(target, langs[get_lang(target)].youHaveBeenUnbanned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            local text = langs[get_lang(target)].youHaveBeenUnbanned .. database[tostring(chat_id)].print_name
+            if reason then
+                if reason:gsub(' ', '') ~= '' then
+                    text = text .. '\n' .. langs[get_lang(target)].reason .. reason
+                end
+            end
+            sendMessage(target, text)
         end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
@@ -1974,7 +1992,13 @@ function warnUser(executer, target, chat_id, reason, no_notice)
                 return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, langs[lang].reasonWarnMax)
             end
             if arePMNoticesEnabled(target, chat_id) and not no_notice then
-                sendMessage(target, langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                local text = langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name
+                if reason then
+                    if reason:gsub(' ', '') ~= '' then
+                        text = text .. '\n' .. langs[get_lang(target)].reason .. reason
+                    end
+                end
+                sendMessage(target, text)
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].warned:gsub('X', tostring(hashonredis)) ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #warn ' ..(reason or '')
@@ -1999,7 +2023,13 @@ function unwarnUser(executer, target, chat_id, reason, no_notice)
         else
             redis:set(chat_id .. ':warn:' .. target, warns - 1)
             if arePMNoticesEnabled(target, chat_id) and not no_notice then
-                sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+                local text = langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name
+                if reason then
+                    if reason:gsub(' ', '') ~= '' then
+                        text = text .. '\n' .. langs[get_lang(target)].reason .. reason
+                    end
+                end
+                sendMessage(target, text)
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
             '\n#user' .. target .. ' #executer' .. executer .. ' #unwarn ' ..(reason or '')
@@ -2017,7 +2047,13 @@ function unwarnallUser(executer, target, chat_id, reason, no_notice)
         redis:set(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
         if arePMNoticesEnabled(target, chat_id) and not no_notice then
-            sendMessage(target, langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name .. '\n' .. langs[get_lang(target)].reason ..(reason or '/'))
+            local text = langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name
+            if reason then
+                if reason:gsub(' ', '') ~= '' then
+                    text = text .. '\n' .. langs[get_lang(target)].reason .. reason
+                end
+            end
+            sendMessage(target, text)
         end
         return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
         '\n#user' .. target .. ' #executer' .. executer .. ' #unwarnall ' ..(reason or '')

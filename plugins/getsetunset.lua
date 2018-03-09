@@ -28,13 +28,11 @@ local function get_variables_hash(msg, global)
 end
 
 local function list_variables(msg, global)
-    local hash = nil
+    local hash = get_variables_hash(msg, global)
     local text = ''
     if global then
-        hash = get_variables_hash(msg, true)
         text = langs[msg.lang].getGlobalStart
     else
-        hash = get_variables_hash(msg, false)
         text = langs[msg.lang].getStart:gsub('X', msg.chat.print_name or msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or '')))
     end
 
