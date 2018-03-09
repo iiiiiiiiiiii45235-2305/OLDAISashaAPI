@@ -40,8 +40,8 @@ local function list_variables(msg, global)
 
     if hash then
         local names = redis:hkeys(hash)
-        for i = 1, #names do
-            text = text .. '\n' .. names[i]:gsub('_', ' ')
+        for i, word in pairs(names) do
+            text = text .. '\n' .. word:gsub('_', ' ')
         end
         return text
     end
@@ -605,81 +605,58 @@ end
 local function pre_process(msg)
     if msg then
         -- local
-        local vars = list_variables(msg, false)
-        if vars ~= nil then
-            local t = vars:split('\n')
-            for i, word in pairs(t) do
-                local answer = check_word(msg, word:lower(), true)
-                if answer then
-                    if string.match(answer, '^photo') then
-                        answer = answer:gsub('^photo', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        local caption = answer:match('^[^%s]+ (.*)')
-                        sendPhotoId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^video_note') then
-                        answer = answer:gsub('^video_note', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^video') then
-                        answer = answer:gsub('^video', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        local caption = answer:match('^[^%s]+ (.*)')
-                        sendVideoId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^audio') then
-                        answer = answer:gsub('^audio', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        local caption = answer:match('^[^%s]+ (.*)')
-                        sendAudioId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^voice_note') or string.match(answer, '^voice') then
-                        answer = answer:gsub('^voice_note', '')
-                        answer = answer:gsub('^voice', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        local caption = answer:match('^[^%s]+ (.*)')
-                        sendVoiceId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^gif') then
-                        answer = answer:gsub('^gif', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        local caption = answer:match('^[^%s]+ (.*)')
-                        sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^document') then
-                        answer = answer:gsub('^document', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        local caption = answer:match('^[^%s]+ (.*)')
-                        sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
-                        return msg
-                    elseif string.match(answer, '^sticker') then
-                        answer = answer:gsub('^sticker', '')
-                        local media_id = answer:match('^([^%s]+)')
-                        sendStickerId(msg.chat.id, media_id, msg.message_id)
-                        return msg
-                    else
-                        if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
-                            if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
-                                if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
-                                    sendReply(msg, adjust_value(answer, msg))
-                                end
-                            end
-                        else
-                            sendReply(msg, adjust_value(answer, msg))
-                        end
-                        return msg
-                    end
-                end
-            end
-        end
-        -- global
-        local vars = list_variables(msg, true)
-        if vars ~= nil then
-            local t = vars:split('\n')
-            for i, word in pairs(t) do
-                local answer = check_word(msg, word:lower(), true)
-                if answer then
+        local vars = redis:hkeys(get_variables_hash(msg, false))
+        for i, word in pairs(vars) do
+            local answer = check_word(msg, word:lower(), true)
+            if answer then
+                if string.match(answer, '^photo') then
+                    answer = answer:gsub('^photo', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    local caption = answer:match('^[^%s]+ (.*)')
+                    sendPhotoId(msg.chat.id, media_id, caption, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^video_note') then
+                    answer = answer:gsub('^video_note', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    sendVideoNoteId(msg.chat.id, media_id, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^video') then
+                    answer = answer:gsub('^video', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    local caption = answer:match('^[^%s]+ (.*)')
+                    sendVideoId(msg.chat.id, media_id, caption, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^audio') then
+                    answer = answer:gsub('^audio', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    local caption = answer:match('^[^%s]+ (.*)')
+                    sendAudioId(msg.chat.id, media_id, caption, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^voice_note') or string.match(answer, '^voice') then
+                    answer = answer:gsub('^voice_note', '')
+                    answer = answer:gsub('^voice', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    local caption = answer:match('^[^%s]+ (.*)')
+                    sendVoiceId(msg.chat.id, media_id, caption, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^gif') then
+                    answer = answer:gsub('^gif', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    local caption = answer:match('^[^%s]+ (.*)')
+                    sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^document') then
+                    answer = answer:gsub('^document', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    local caption = answer:match('^[^%s]+ (.*)')
+                    sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
+                    return msg
+                elseif string.match(answer, '^sticker') then
+                    answer = answer:gsub('^sticker', '')
+                    local media_id = answer:match('^([^%s]+)')
+                    sendStickerId(msg.chat.id, media_id, msg.message_id)
+                    return msg
+                else
                     if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
                         if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
                             if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
@@ -691,6 +668,23 @@ local function pre_process(msg)
                     end
                     return msg
                 end
+            end
+        end
+        -- global
+        local vars = redis:hkeys(get_variables_hash(msg, true))
+        for i, word in pairs(vars) do
+            local answer = check_word(msg, word:lower(), true)
+            if answer then
+                if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
+                    if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
+                        if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
+                            sendReply(msg, adjust_value(answer, msg))
+                        end
+                    end
+                else
+                    sendReply(msg, adjust_value(answer, msg))
+                end
+                return msg
             end
         end
         return msg
