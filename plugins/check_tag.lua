@@ -384,7 +384,6 @@ local function pre_process(msg)
                             end
                             text = text .. '\n#tag' .. k
                             if msg.media and msg.caption then
-                                print(msg.media_type)
                                 if msg.media_type == 'photo' then
                                     local bigger_pic_id = ''
                                     local size = 0
@@ -451,7 +450,6 @@ local function pre_process(msg)
                                     end
                                     text = text .. '\n#tag' .. usernames[i]
                                     if msg.media and msg.caption then
-                                        print(msg.media_type)
                                         if msg.media_type == 'photo' then
                                             local bigger_pic_id = ''
                                             local size = 0
@@ -519,7 +517,6 @@ local function pre_process(msg)
                                                 end
                                                 text = text .. '\n#tag' .. nicknames[i]
                                                 if msg.media and msg.caption then
-                                                    print(msg.media_type)
                                                     if msg.media_type == 'photo' then
                                                         local bigger_pic_id = ''
                                                         local size = 0

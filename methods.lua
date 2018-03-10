@@ -414,7 +414,6 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound,
                     end
                     if print_res_msg(res) then
                         msgs_plus_plus(chat_id)
-                        return res, code
                     else
                         local obj = getChat(chat_id)
                         local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
@@ -501,7 +500,6 @@ function forwardMessage(chat_id, from_chat_id, message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj_from = getChat(from_chat_id)
                 local obj_to = getChat(chat_id)
@@ -513,6 +511,7 @@ function forwardMessage(chat_id, from_chat_id, message_id)
                 end
                 print_msg(sent_msg)
             end
+            return res, code
         end
     else
         return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
@@ -566,12 +565,12 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, 
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, text = text, cb = true, reply = reply }
                 print_msg(sent_msg)
             end
+            return res, code
             -- return false, and the code
         end
     else
@@ -587,12 +586,11 @@ function answerCallbackQuery(callback_query_id, text, show_alert)
         url = url .. '&show_alert=true'
     end
     local res, code = sendRequest(url)
-    if print_res_msg(res) then
-        return res, code
-    else
+    if not print_res_msg(res) then
         local sent_msg = { from = bot, chat = fake_user_chat, text = text, cb = true }
         print_msg(sent_msg)
     end
+    return res, code
 end
 
 function editMessage(chat_id, message_id, text, keyboard, parse_mode)
@@ -625,13 +623,12 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
                 printvardump(tab)
             end
         end
-        if print_res_msg(res) then
-            return res, code
-        else
+        if not print_res_msg(res) then
             local obj = getChat(chat_id)
             local sent_msg = { from = fake_user_chat, chat = obj, text = text, edited = true }
             print_msg(sent_msg)
         end
+        return res, code
         -- return false, and the code
     else
         return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
@@ -814,10 +811,8 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
                     if num_msg > 1 then
-                        print('sendmessage')
                         sendMessage(chat_id, caption)
                     else
-                        print('caption')
                         url = url .. '&caption=' .. caption
                     end
                 end
@@ -836,12 +831,12 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -866,12 +861,12 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -909,12 +904,12 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -952,12 +947,12 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -982,12 +977,12 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -1025,12 +1020,12 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -1068,12 +1063,12 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
@@ -1294,12 +1289,12 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
             end
             if print_res_msg(res) then
                 msgs_plus_plus(chat_id)
-                return res, code
             else
                 local obj = getChat(chat_id)
                 local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'location' }
                 print_msg(sent_msg)
             end
+            return res, code
         end
     end
 end
