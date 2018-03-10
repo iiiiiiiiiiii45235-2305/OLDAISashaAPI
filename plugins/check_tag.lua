@@ -379,8 +379,14 @@ local function pre_process(msg)
 
                             if msg.caption then
                                 local tot_len = string.len(text .. '\n#tag' .. k)
+                                local caption_len = string.len(msg.caption)
                                 local allowed_len = 200 - tot_len
-                                text = text .. msg.caption:sub(1, allowed_len) .. '\n#tag' .. k
+                                if caption_len > allowed_len then
+                                    text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
+                                else
+                                    text = text .. msg.caption
+                                end
+                                text = text .. '\n#tag' .. k
                                 if msg.media_type == 'photo' then
                                     local bigger_pic_id = ''
                                     local size = 0
@@ -441,20 +447,23 @@ local function pre_process(msg)
                                     text = text .. langs[lang].msgText
 
                                     if msg.caption then
-                                        text = text .. msg.caption
-                                    else
-                                        text = text .. msg.text
-                                    end
-                                    text = text .. '\n#tag' .. usernames[i]
-                                    if msg.media and msg.caption then
+                                        local tot_len = string.len(text .. '\n#tag' .. usernames[i])
+                                        local caption_len = string.len(msg.caption)
+                                        local allowed_len = 200 - tot_len
+                                        if caption_len > allowed_len then
+                                            text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
+                                        else
+                                            text = text .. msg.caption
+                                        end
+                                        text = text .. '\n#tag' .. usernames[i]
                                         if msg.media_type == 'photo' then
                                             local bigger_pic_id = ''
                                             local size = 0
-                                            for k, v in pairsByKeys(msg.photo) do
-                                                if v.file_size then
-                                                    if v.file_size > size then
-                                                        size = v.file_size
-                                                        bigger_pic_id = v.file_id
+                                            for k1, v1 in pairsByKeys(msg.photo) do
+                                                if v1.file_size then
+                                                    if v1.file_size > size then
+                                                        size = v1.file_size
+                                                        bigger_pic_id = v1.file_id
                                                     end
                                                 end
                                             end
@@ -469,6 +478,7 @@ local function pre_process(msg)
                                             sendDocumentId(usernames[i], msg.document.file_id, text)
                                         end
                                     else
+                                        text = text .. msg.text .. '\n#tag' .. usernames[i]
                                         sendMessage(usernames[i], text)
                                     end
                                     sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, usernames[i]))
@@ -508,20 +518,23 @@ local function pre_process(msg)
                                                 text = text .. langs[lang].msgText
 
                                                 if msg.caption then
-                                                    text = text .. msg.caption
-                                                else
-                                                    text = text .. msg.text
-                                                end
-                                                text = text .. '\n#tag' .. nicknames[i]
-                                                if msg.media and msg.caption then
+                                                    local tot_len = string.len(text .. '\n#tag' .. nicknames[i])
+                                                    local caption_len = string.len(msg.caption)
+                                                    local allowed_len = 200 - tot_len
+                                                    if caption_len > allowed_len then
+                                                        text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
+                                                    else
+                                                        text = text .. msg.caption
+                                                    end
+                                                    text = text .. '\n#tag' .. nicknames[i]
                                                     if msg.media_type == 'photo' then
                                                         local bigger_pic_id = ''
                                                         local size = 0
-                                                        for k, v in pairsByKeys(msg.photo) do
-                                                            if v.file_size then
-                                                                if v.file_size > size then
-                                                                    size = v.file_size
-                                                                    bigger_pic_id = v.file_id
+                                                        for k1, v1 in pairsByKeys(msg.photo) do
+                                                            if v1.file_size then
+                                                                if v1.file_size > size then
+                                                                    size = v1.file_size
+                                                                    bigger_pic_id = v1.file_id
                                                                 end
                                                             end
                                                         end
@@ -536,6 +549,7 @@ local function pre_process(msg)
                                                         sendDocumentId(nicknames[i], msg.document.file_id, text)
                                                     end
                                                 else
+                                                    text = text .. msg.text .. '\n#tag' .. nicknames[i]
                                                     sendMessage(nicknames[i], text)
                                                 end
                                                 sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, nicknames[i]))
