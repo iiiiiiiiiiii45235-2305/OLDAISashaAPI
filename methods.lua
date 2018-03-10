@@ -347,8 +347,8 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
-local max_msgs = 2
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound, no_log)
+    local max_msgs = 2
     if sendChatAction(chat_id, 'typing', true) and text and type(text) ~= 'table' then
         text = tostring(text)
         if text == '' then
@@ -809,7 +809,14 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
             '&photo=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. '&caption=' .. caption
+                    local caption_max = 200
+                    local caption_len = string.len(caption)
+                    local num_msg = math.ceil(caption_len / caption_max)
+                    if num_msg > 1 then
+                        sendMessage(chat_id, caption)
+                    else
+                        url = url .. '&caption=' .. caption
+                    end
                 end
             end
             local reply = false
@@ -874,7 +881,14 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
             '&voice=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. '&caption=' .. caption
+                    local caption_max = 200
+                    local caption_len = string.len(caption)
+                    local num_msg = math.ceil(caption_len / caption_max)
+                    if num_msg > 1 then
+                        sendMessage(chat_id, caption)
+                    else
+                        url = url .. '&caption=' .. caption
+                    end
                 end
             end
             local reply = false
@@ -909,7 +923,14 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
             '&audio=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. '&caption=' .. caption
+                    local caption_max = 200
+                    local caption_len = string.len(caption)
+                    local num_msg = math.ceil(caption_len / caption_max)
+                    if num_msg > 1 then
+                        sendMessage(chat_id, caption)
+                    else
+                        url = url .. '&caption=' .. caption
+                    end
                 end
             end
             local reply = false
@@ -974,7 +995,14 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
             '&video=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. '&caption=' .. caption
+                    local caption_max = 200
+                    local caption_len = string.len(caption)
+                    local num_msg = math.ceil(caption_len / caption_max)
+                    if num_msg > 1 then
+                        sendMessage(chat_id, caption)
+                    else
+                        url = url .. '&caption=' .. caption
+                    end
                 end
             end
             local reply = false
@@ -1009,7 +1037,14 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
             '&document=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. '&caption=' .. caption
+                    local caption_max = 200
+                    local caption_len = string.len(caption)
+                    local num_msg = math.ceil(caption_len / caption_max)
+                    if num_msg > 1 then
+                        sendMessage(chat_id, caption)
+                    else
+                        url = url .. '&caption=' .. caption
+                    end
                 end
             end
             local reply = false

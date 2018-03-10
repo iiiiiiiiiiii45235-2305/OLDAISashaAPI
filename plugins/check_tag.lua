@@ -376,16 +376,37 @@ local function pre_process(msg)
                             end
                             text = text .. langs[lang].msgText
 
-                            if msg.text then
+                            if msg.caption then
+                                text = text .. msg.caption
+                            else
                                 text = text .. msg.text
                             end
-                            if msg.media then
-                                if msg.caption then
-                                    text = text .. msg.caption
-                                end
-                            end
                             text = text .. '\n#tag' .. k
-                            sendMessage(k, text)
+                            if msg.media and msg.caption then
+                                if msg.media_type == 'photo' then
+                                    local bigger_pic_id = ''
+                                    local size = 0
+                                    for k1, v1 in pairsByKeys(msg.photo) do
+                                        if v1.file_size then
+                                            if v1.file_size > size then
+                                                size = v1.file_size
+                                                bigger_pic_id = v1.file_id
+                                            end
+                                        end
+                                    end
+                                    sendPhotoId(k, bigger_pic_id, text)
+                                elseif msg.media_type == 'video' then
+                                    sendVideoId(k, msg.video.file_id, text)
+                                elseif msg.media_type == 'audio' then
+                                    sendAudioId(k, msg.audio.file_id, text)
+                                elseif msg.media_type == 'voice_note' then
+                                    sendVoiceId(k, msg.voice.file_id, text)
+                                elseif msg.media_type == 'gif' or msg.media_type == 'document' then
+                                    sendDocumentId(k, msg.document.file_id, text)
+                                end
+                            else
+                                sendMessage(k, text)
+                            end
                             sendKeyboard(k, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, k))
                         end
                     end
@@ -420,16 +441,37 @@ local function pre_process(msg)
                                     end
                                     text = text .. langs[lang].msgText
 
-                                    if msg.text then
+                                    if msg.caption then
+                                        text = text .. msg.caption
+                                    else
                                         text = text .. msg.text
                                     end
-                                    if msg.media then
-                                        if msg.caption then
-                                            text = text .. msg.caption
-                                        end
-                                    end
                                     text = text .. '\n#tag' .. usernames[i]
-                                    sendMessage(usernames[i], text)
+                                    if msg.media and msg.caption then
+                                        if msg.media_type == 'photo' then
+                                            local bigger_pic_id = ''
+                                            local size = 0
+                                            for k, v in pairsByKeys(msg.photo) do
+                                                if v.file_size then
+                                                    if v.file_size > size then
+                                                        size = v.file_size
+                                                        bigger_pic_id = v.file_id
+                                                    end
+                                                end
+                                            end
+                                            sendPhotoId(usernames[i], bigger_pic_id, text)
+                                        elseif msg.media_type == 'video' then
+                                            sendVideoId(usernames[i], msg.video.file_id, text)
+                                        elseif msg.media_type == 'audio' then
+                                            sendAudioId(usernames[i], msg.audio.file_id, text)
+                                        elseif msg.media_type == 'voice_note' then
+                                            sendVoiceId(usernames[i], msg.voice.file_id, text)
+                                        elseif msg.media_type == 'gif' or msg.media_type == 'document' then
+                                            sendDocumentId(usernames[i], msg.document.file_id, text)
+                                        end
+                                    else
+                                        sendMessage(usernames[i], text)
+                                    end
                                     sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, usernames[i]))
                                 else
                                     print("TAG FOUND BUT COMMAND")
@@ -466,16 +508,37 @@ local function pre_process(msg)
                                                 end
                                                 text = text .. langs[lang].msgText
 
-                                                if msg.text then
+                                                if msg.caption then
+                                                    text = text .. msg.caption
+                                                else
                                                     text = text .. msg.text
                                                 end
-                                                if msg.media then
-                                                    if msg.caption then
-                                                        text = text .. msg.caption
-                                                    end
-                                                end
                                                 text = text .. '\n#tag' .. nicknames[i]
-                                                sendMessage(nicknames[i], text)
+                                                if msg.media and msg.caption then
+                                                    if msg.media_type == 'photo' then
+                                                        local bigger_pic_id = ''
+                                                        local size = 0
+                                                        for k, v in pairsByKeys(msg.photo) do
+                                                            if v.file_size then
+                                                                if v.file_size > size then
+                                                                    size = v.file_size
+                                                                    bigger_pic_id = v.file_id
+                                                                end
+                                                            end
+                                                        end
+                                                        sendPhotoId(nicknames[i], bigger_pic_id, text)
+                                                    elseif msg.media_type == 'video' then
+                                                        sendVideoId(nicknames[i], msg.video.file_id, text)
+                                                    elseif msg.media_type == 'audio' then
+                                                        sendAudioId(nicknames[i], msg.audio.file_id, text)
+                                                    elseif msg.media_type == 'voice_note' then
+                                                        sendVoiceId(nicknames[i], msg.voice.file_id, text)
+                                                    elseif msg.media_type == 'gif' or msg.media_type == 'document' then
+                                                        sendDocumentId(nicknames[i], msg.document.file_id, text)
+                                                    end
+                                                else
+                                                    sendMessage(nicknames[i], text)
+                                                end
                                                 sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, nicknames[i]))
                                             end
                                         end
