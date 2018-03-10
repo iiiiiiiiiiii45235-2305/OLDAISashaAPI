@@ -362,6 +362,7 @@ local function pre_process(msg)
                     if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then
                         -- exclude autotags and tags from tg-cli version and tags of tg-cli version
                         if check_tag(msg, k, v) then
+                            print('sudo', k)
                             local lang = get_lang(k)
                             -- set user as notified to not send multiple notifications
                             notified[tostring(k)] = true
@@ -383,6 +384,7 @@ local function pre_process(msg)
                             end
                             text = text .. '\n#tag' .. k
                             if msg.media and msg.caption then
+                                print(msg.media_type)
                                 if msg.media_type == 'photo' then
                                     local bigger_pic_id = ''
                                     local size = 0
@@ -448,6 +450,7 @@ local function pre_process(msg)
                                     end
                                     text = text .. '\n#tag' .. usernames[i]
                                     if msg.media and msg.caption then
+                                        print(msg.media_type)
                                         if msg.media_type == 'photo' then
                                             local bigger_pic_id = ''
                                             local size = 0
@@ -515,6 +518,7 @@ local function pre_process(msg)
                                                 end
                                                 text = text .. '\n#tag' .. nicknames[i]
                                                 if msg.media and msg.caption then
+                                                    print(msg.media_type)
                                                     if msg.media_type == 'photo' then
                                                         local bigger_pic_id = ''
                                                         local size = 0

@@ -809,6 +809,7 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
             '&photo=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
+                    caption = tostring(caption)
                     local caption_max = 200
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
@@ -881,6 +882,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
             '&voice=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
+                    caption = tostring(caption)
                     local caption_max = 200
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
@@ -923,6 +925,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
             '&audio=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
+                    caption = tostring(caption)
                     local caption_max = 200
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
@@ -995,6 +998,7 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
             '&video=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
+                    caption = tostring(caption)
                     local caption_max = 200
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
@@ -1037,6 +1041,7 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
             '&document=' .. file_id
             if caption then
                 if type(caption) == 'string' or type(caption) == 'number' then
+                    caption = tostring(caption)
                     local caption_max = 200
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
