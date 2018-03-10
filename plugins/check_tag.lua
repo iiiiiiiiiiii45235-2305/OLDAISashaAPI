@@ -395,7 +395,6 @@ local function pre_process(msg)
                                             end
                                         end
                                     end
-                                    print(k, bigger_pic_id, text)
                                     sendPhotoId(k, bigger_pic_id, text)
                                 elseif msg.media_type == 'video' then
                                     sendVideoId(k, msg.video.file_id, text)

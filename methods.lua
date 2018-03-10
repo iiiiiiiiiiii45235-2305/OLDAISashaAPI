@@ -814,7 +814,7 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
                     if num_msg > 1 then
                         sendMessage(chat_id, caption)
                     else
-                        url = url .. '&caption=' .. caption
+                        url = url .. '&caption=' .. URL.escape(caption)
                     end
                 end
             end
@@ -823,9 +823,7 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
             end
-            print(url)
             local res, code = sendRequest(url)
-            print(res, code)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
                 if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
@@ -889,7 +887,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
                     if num_msg > 1 then
                         sendMessage(chat_id, caption)
                     else
-                        url = url .. '&caption=' .. caption
+                        url = url .. '&caption=' .. URL.escape(caption)
                     end
                 end
             end
@@ -932,7 +930,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
                     if num_msg > 1 then
                         sendMessage(chat_id, caption)
                     else
-                        url = url .. '&caption=' .. caption
+                        url = url .. '&caption=' .. URL.escape(caption)
                     end
                 end
             end
@@ -1005,7 +1003,7 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
                     if num_msg > 1 then
                         sendMessage(chat_id, caption)
                     else
-                        url = url .. '&caption=' .. caption
+                        url = url .. '&caption=' .. URL.escape(caption)
                     end
                 end
             end
@@ -1048,7 +1046,7 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
                     if num_msg > 1 then
                         sendMessage(chat_id, caption)
                     else
-                        url = url .. '&caption=' .. caption
+                        url = url .. '&caption=' .. URL.escape(caption)
                     end
                 end
             end
