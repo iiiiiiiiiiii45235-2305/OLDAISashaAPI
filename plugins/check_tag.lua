@@ -341,6 +341,57 @@ local function run(msg, matches)
     end]]
 end
 
+local function send_tag_alert(msg, user_id)
+    local lang = get_lang(user_id)
+    if msg.reply then
+        forwardMessage(user_id, msg.chat.id, msg.reply_to_message.message_id)
+    end
+    local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
+    if msg.from.username then
+        text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+    else
+        text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
+    end
+    text = text .. langs[lang].msgText
+
+    if msg.caption then
+        local tot_len = string.len(text .. '\n#tag' .. user_id)
+        local caption_len = string.len(msg.caption)
+        local allowed_len = 200 - tot_len
+        if caption_len > allowed_len then
+            text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
+        else
+            text = text .. msg.caption
+        end
+        text = text .. '\n#tag' .. user_id
+        if msg.media_type == 'photo' then
+            local bigger_pic_id = ''
+            local size = 0
+            for k, v in pairsByKeys(msg.photo) do
+                if v.file_size then
+                    if v.file_size > size then
+                        size = v.file_size
+                        bigger_pic_id = v.file_id
+                    end
+                end
+            end
+            sendPhotoId(user_id, bigger_pic_id, text)
+        elseif msg.media_type == 'video' then
+            sendVideoId(user_id, msg.video.file_id, text)
+        elseif msg.media_type == 'audio' then
+            sendAudioId(user_id, msg.audio.file_id, text)
+        elseif msg.media_type == 'voice_note' then
+            sendVoiceId(user_id, msg.voice.file_id, text)
+        elseif msg.media_type == 'gif' or msg.media_type == 'document' then
+            sendDocumentId(user_id, msg.document.file_id, text)
+        end
+    else
+        text = text .. msg.text .. '\n#tag' .. user_id
+        sendMessage(user_id, text)
+    end
+    sendKeyboard(user_id, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, user_id))
+end
+
 local function pre_process(msg)
     if msg then
         notified = { }
@@ -363,56 +414,9 @@ local function pre_process(msg)
                         -- exclude autotags and tags from tg-cli version and tags of tg-cli version
                         if check_tag(msg, k, v) then
                             print('sudo', k)
-                            local lang = get_lang(k)
                             -- set user as notified to not send multiple notifications
                             notified[tostring(k)] = true
-                            if msg.reply then
-                                forwardMessage(k, msg.chat.id, msg.reply_to_message.message_id)
-                            end
-                            local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
-                            if msg.from.username then
-                                text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                            else
-                                text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-                            end
-                            text = text .. langs[lang].msgText
-
-                            if msg.caption then
-                                local tot_len = string.len(text .. '\n#tag' .. k)
-                                local caption_len = string.len(msg.caption)
-                                local allowed_len = 200 - tot_len
-                                if caption_len > allowed_len then
-                                    text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
-                                else
-                                    text = text .. msg.caption
-                                end
-                                text = text .. '\n#tag' .. k
-                                if msg.media_type == 'photo' then
-                                    local bigger_pic_id = ''
-                                    local size = 0
-                                    for k1, v1 in pairsByKeys(msg.photo) do
-                                        if v1.file_size then
-                                            if v1.file_size > size then
-                                                size = v1.file_size
-                                                bigger_pic_id = v1.file_id
-                                            end
-                                        end
-                                    end
-                                    sendPhotoId(k, bigger_pic_id, text)
-                                elseif msg.media_type == 'video' then
-                                    sendVideoId(k, msg.video.file_id, text)
-                                elseif msg.media_type == 'audio' then
-                                    sendAudioId(k, msg.audio.file_id, text)
-                                elseif msg.media_type == 'voice_note' then
-                                    sendVoiceId(k, msg.voice.file_id, text)
-                                elseif msg.media_type == 'gif' or msg.media_type == 'document' then
-                                    sendDocumentId(k, msg.document.file_id, text)
-                                end
-                            else
-                                text = text .. msg.text .. '\n#tag' .. k
-                                sendMessage(k, text)
-                            end
-                            sendKeyboard(k, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, k))
+                            send_tag_alert(msg, k)
                         end
                     end
                 end
@@ -432,56 +436,9 @@ local function pre_process(msg)
                             if check_tag(msg, usernames[i], usr) then
                                 print('username', usernames[i])
                                 if not msg.command then
-                                    local lang = get_lang(usernames[i])
                                     -- set user as notified to not send multiple notifications
                                     notified[tostring(usernames[i])] = true
-                                    if msg.reply then
-                                        forwardMessage(usernames[i], msg.chat.id, msg.reply_to_message.message_id)
-                                    end
-                                    local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
-                                    if msg.from.username then
-                                        text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                                    else
-                                        text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-                                    end
-                                    text = text .. langs[lang].msgText
-
-                                    if msg.caption then
-                                        local tot_len = string.len(text .. '\n#tag' .. usernames[i])
-                                        local caption_len = string.len(msg.caption)
-                                        local allowed_len = 200 - tot_len
-                                        if caption_len > allowed_len then
-                                            text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
-                                        else
-                                            text = text .. msg.caption
-                                        end
-                                        text = text .. '\n#tag' .. usernames[i]
-                                        if msg.media_type == 'photo' then
-                                            local bigger_pic_id = ''
-                                            local size = 0
-                                            for k1, v1 in pairsByKeys(msg.photo) do
-                                                if v1.file_size then
-                                                    if v1.file_size > size then
-                                                        size = v1.file_size
-                                                        bigger_pic_id = v1.file_id
-                                                    end
-                                                end
-                                            end
-                                            sendPhotoId(usernames[i], bigger_pic_id, text)
-                                        elseif msg.media_type == 'video' then
-                                            sendVideoId(usernames[i], msg.video.file_id, text)
-                                        elseif msg.media_type == 'audio' then
-                                            sendAudioId(usernames[i], msg.audio.file_id, text)
-                                        elseif msg.media_type == 'voice_note' then
-                                            sendVoiceId(usernames[i], msg.voice.file_id, text)
-                                        elseif msg.media_type == 'gif' or msg.media_type == 'document' then
-                                            sendDocumentId(usernames[i], msg.document.file_id, text)
-                                        end
-                                    else
-                                        text = text .. msg.text .. '\n#tag' .. usernames[i]
-                                        sendMessage(usernames[i], text)
-                                    end
-                                    sendKeyboard(usernames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, usernames[i]))
+                                    send_tag_alert(msg, usernames[i])
                                 else
                                     print("TAG FOUND BUT COMMAND")
                                 end
@@ -503,56 +460,9 @@ local function pre_process(msg)
                                         if obj.ok and obj.result then
                                             obj = obj.result
                                             if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
-                                                local lang = get_lang(nicknames[i])
                                                 -- set user as notified to not send multiple notifications
                                                 notified[tostring(nicknames[i])] = true
-                                                if msg.reply then
-                                                    forwardMessage(nicknames[i], msg.chat.id, msg.reply_to_message.message_id)
-                                                end
-                                                local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
-                                                if msg.from.username then
-                                                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-                                                else
-                                                    text = text .. msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n'
-                                                end
-                                                text = text .. langs[lang].msgText
-
-                                                if msg.caption then
-                                                    local tot_len = string.len(text .. '\n#tag' .. nicknames[i])
-                                                    local caption_len = string.len(msg.caption)
-                                                    local allowed_len = 200 - tot_len
-                                                    if caption_len > allowed_len then
-                                                        text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
-                                                    else
-                                                        text = text .. msg.caption
-                                                    end
-                                                    text = text .. '\n#tag' .. nicknames[i]
-                                                    if msg.media_type == 'photo' then
-                                                        local bigger_pic_id = ''
-                                                        local size = 0
-                                                        for k1, v1 in pairsByKeys(msg.photo) do
-                                                            if v1.file_size then
-                                                                if v1.file_size > size then
-                                                                    size = v1.file_size
-                                                                    bigger_pic_id = v1.file_id
-                                                                end
-                                                            end
-                                                        end
-                                                        sendPhotoId(nicknames[i], bigger_pic_id, text)
-                                                    elseif msg.media_type == 'video' then
-                                                        sendVideoId(nicknames[i], msg.video.file_id, text)
-                                                    elseif msg.media_type == 'audio' then
-                                                        sendAudioId(nicknames[i], msg.audio.file_id, text)
-                                                    elseif msg.media_type == 'voice_note' then
-                                                        sendVoiceId(nicknames[i], msg.voice.file_id, text)
-                                                    elseif msg.media_type == 'gif' or msg.media_type == 'document' then
-                                                        sendDocumentId(nicknames[i], msg.document.file_id, text)
-                                                    end
-                                                else
-                                                    text = text .. msg.text .. '\n#tag' .. nicknames[i]
-                                                    sendMessage(nicknames[i], text)
-                                                end
-                                                sendKeyboard(nicknames[i], langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, nicknames[i]))
+                                                send_tag_alert(msg, nicknames[i])
                                             end
                                         end
                                     end
