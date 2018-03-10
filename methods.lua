@@ -347,8 +347,8 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
-local max_msgs = 2
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound, no_log)
+    local max_msgs = 2
     if sendChatAction(chat_id, 'typing', true) and text and type(text) ~= 'table' then
         text = tostring(text)
         if text == '' then
@@ -419,6 +419,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound,
                         local sent_msg = { from = bot, chat = obj, text = text, reply = reply }
                         print_msg(sent_msg)
                     end
+                    return res, code
                 else
                     local my_text = string.sub(text, 1, 4090)
                     local rest = string.sub(text, 4090, text_len)
