@@ -814,8 +814,10 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
                     local caption_len = string.len(caption)
                     local num_msg = math.ceil(caption_len / caption_max)
                     if num_msg > 1 then
+                        print('sendmessage')
                         sendMessage(chat_id, caption)
                     else
+                        print('caption')
                         url = url .. '&caption=' .. caption
                     end
                 end
