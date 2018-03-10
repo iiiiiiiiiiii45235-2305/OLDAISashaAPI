@@ -347,8 +347,8 @@ function leaveChat(chat_id)
     return sendRequest(url)
 end
 
+local max_msgs = 2
 function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound, no_log)
-    local max_msgs = 2
     if sendChatAction(chat_id, 'typing', true) and text and type(text) ~= 'table' then
         text = tostring(text)
         if text == '' then
