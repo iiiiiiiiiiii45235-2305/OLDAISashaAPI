@@ -378,12 +378,9 @@ local function pre_process(msg)
                             text = text .. langs[lang].msgText
 
                             if msg.caption then
-                                text = text .. msg.caption
-                            else
-                                text = text .. msg.text
-                            end
-                            text = text .. '\n#tag' .. k
-                            if msg.media and msg.caption then
+                                local tot_len = string.len(text .. '\n#tag' .. k)
+                                local allowed_len = 200 - tot_len
+                                text = text .. msg.caption:sub(1, allowed_len) .. '\n#tag' .. k
                                 if msg.media_type == 'photo' then
                                     local bigger_pic_id = ''
                                     local size = 0
@@ -406,6 +403,7 @@ local function pre_process(msg)
                                     sendDocumentId(k, msg.document.file_id, text)
                                 end
                             else
+                                text = text .. msg.text .. '\n#tag' .. k
                                 sendMessage(k, text)
                             end
                             sendKeyboard(k, langs[lang].whatDoYouWantToDo, keyboard_tag(msg.chat.id, msg.message_id, false, k))
