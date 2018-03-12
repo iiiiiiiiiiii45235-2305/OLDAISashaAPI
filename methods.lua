@@ -269,36 +269,24 @@ end
     can_pin_messages = true,
     can_promote_members = true]]
 function promoteChatMember(chat_id, user_id, permissions)
-    local demote = true
-    for key, var in pairs(permissions) do
-        if permissions[key] then
-            demote = false
-        end
-    end
-    printvardump(permissions)
-
-    if demote then
-        return demoteChatMember(chat_id, user_id)
-    else
-        user_id = tostring(user_id):gsub(' ', '')
-        if sendChatAction(chat_id, 'typing', true) then
-            local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
-            '&user_id=' .. user_id
-            if permissions then
-                for k, v in pairs(permissions) do
-                    url = url .. '&' .. k .. '=' .. tostring(permissions[k])
-                end
+    user_id = tostring(user_id):gsub(' ', '')
+    if sendChatAction(chat_id, 'typing', true) then
+        local url = BASE_URL .. '/promoteChatMember?chat_id=' .. chat_id ..
+        '&user_id=' .. user_id
+        if permissions then
+            for k, v in pairs(permissions) do
+                url = url .. '&' .. k .. '=' .. tostring(permissions[k])
             end
-            local res, code = sendRequest(url)
-
-            if not res and code then
-                -- if the request failed and a code is returned (not 403 and 429)
-                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                    savelog('promote_user', code)
-                end
-            end
-            return res
         end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('promote_user', code)
+            end
+        end
+        return res
     end
 end
 
