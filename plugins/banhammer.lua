@@ -366,23 +366,15 @@ local function run(msg, matches)
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
                     restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
                     if restrictionsTable[tostring(matches[6])][tostring(matches[5])] then
-                        local obj_user = getChat(matches[5])
-                        if obj_user then
-                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                local restrictions = restrictionsTable[tostring(matches[6])][tostring(obj_user.id)]
-                                local txt = restrictUser(matches[6], obj_user, restrictions, time)
-                                answerCallbackQuery(msg.cb_id, txt, false)
-                                restrictionsTable[tostring(matches[6])][tostring(obj_user.id)] = nil
-                                sendMessage(matches[6], txt)
-                                if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
-                                end
-                                mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
-                            end
-                        else
-                            answerCallbackQuery(msg.cb_id, langs[msg.lang].noObject, false)
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].noObject)
+                        local restrictions = restrictionsTable[tostring(matches[6])][tostring(matches[5])]
+                        local txt = restrictUser(msg.from.id, matches[6], matches[5], restrictions, time)
+                        answerCallbackQuery(msg.cb_id, txt, false)
+                        restrictionsTable[tostring(matches[6])][tostring(matches[5])] = nil
+                        sendMessage(matches[6], txt)
+                        if not deleteMessage(msg.chat.id, msg.message_id, true) then
+                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
+                        mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
