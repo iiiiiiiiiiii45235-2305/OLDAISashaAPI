@@ -198,9 +198,9 @@ local function run(msg, matches)
                         obj_user = nil
                     end
                     if obj_user then
-                        local txt = restrictUser(msg.from.id, matches[4], obj_user.user, restrictionsTable[tostring(matches[4])][tostring(matches[3])])
+                        local txt = restrictUser(msg.from.id, matches[3], matches[4], restrictionsTable[tostring(matches[4])][tostring(matches[3])])
                         answerCallbackQuery(msg.cb_id, txt, false)
-                        restrictionsTable[tostring(matches[4])][tostring(obj_user.id)] = nil
+                        restrictionsTable[tostring(matches[4])][tostring(matches[3])] = nil
                         editMessage(msg.chat.id, msg.message_id, txt)
                     end
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
