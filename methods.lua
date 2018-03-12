@@ -1604,57 +1604,68 @@ end
 
 -- call this to restrict
 function restrictUser(executer, target, chat_id, restrictions, until_date, no_notice)
-    if sendChatAction(chat_id, 'typing', true) then
-        local lang = get_lang(chat_id)
-        if isWhitelisted(chat_id, target) then
-            savelog(chat_id, "[" .. executer .. "] tried to restrict user " .. target .. " that is whitelisted")
-            return langs[lang].cantRestrictWhitelisted
+    local unrestrict = true
+    for key, var in pairs(restrictions) do
+        if restrictions[key] ~= default_restrictions[key] then
+            unrestrict = false
         end
-        if compare_ranks(executer, target, chat_id, false, true) then
-            if restrictChatMember(chat_id, target, restrictions, until_date) then
-                -- if the user has been restricted, then...
-                globalCronTable.punishedTable[tostring(chat_id)] = globalCronTable.punishedTable[tostring(chat_id)] or { }
-                globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
-                local all = true
-                local text = ''
-                for k, v in pairs(restrictions) do
-                    if not restrictions[k] then
-                        text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+    end
+
+    if unrestrict then
+        return unrestrictUser(executer, target, chat_id, no_notice)
+    else
+        if sendChatAction(chat_id, 'typing', true) then
+            local lang = get_lang(chat_id)
+            if isWhitelisted(chat_id, target) then
+                savelog(chat_id, "[" .. executer .. "] tried to restrict user " .. target .. " that is whitelisted")
+                return langs[lang].cantRestrictWhitelisted
+            end
+            if compare_ranks(executer, target, chat_id, false, true) then
+                if restrictChatMember(chat_id, target, restrictions, until_date) then
+                    -- if the user has been restricted, then...
+                    globalCronTable.punishedTable[tostring(chat_id)] = globalCronTable.punishedTable[tostring(chat_id)] or { }
+                    globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
+                    local all = true
+                    local text = ''
+                    for k, v in pairs(restrictions) do
+                        if not restrictions[k] then
+                            text = text .. reverseRestrictionsDictionary[k:lower()] .. ' '
+                        else
+                            all = false
+                        end
+                    end
+                    savelog(chat_id, "[" .. executer .. "] restricted user " .. target .. ' ' .. text)
+                    if arePMNoticesEnabled(target, chat_id) and not no_notice then
+                        sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
+                        langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
+                        langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
+                        langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
+                        langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
+                    end
+                    if all then
+                        text = langs[get_lang(chat_id)].allRestrictionsApplied
+                    end
+                    text = '\n' .. text
+                    local temprestrict = false
+                    if until_date then
+                        if os.time() + until_date >= 30 or os.time() + until_date <= 31622400 then
+                            temprestrict = true
+                        end
+                    end
+                    if temprestrict then
+                        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
+                        '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date)
                     else
-                        all = false
+                        return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
+                        '\n#user' .. target .. ' #executer' .. executer .. ' #restrict'
                     end
-                end
-                savelog(chat_id, "[" .. executer .. "] restricted user " .. target .. ' ' .. text)
-                if arePMNoticesEnabled(target, chat_id) and not no_notice then
-                    sendMessage(target, langs[lang].youHaveBeenRestrictedUnrestricted .. database[tostring(chat_id)].print_name .. '\n' .. langs[lang].restrictions ..
-                    langs[lang].restrictionSendMessages .. tostring(restrictions.can_send_messages) ..
-                    langs[lang].restrictionSendMediaMessages .. tostring(restrictions.can_send_media_messages) ..
-                    langs[lang].restrictionSendOtherMessages .. tostring(restrictions.can_send_other_messages) ..
-                    langs[lang].restrictionAddWebPagePreviews .. tostring(restrictions.can_add_web_page_previews))
-                end
-                if all then
-                    text = langs[get_lang(chat_id)].allRestrictionsApplied
-                end
-                text = '\n' .. text
-                local temprestrict = false
-                if until_date then
-                    if os.time() + until_date >= 30 or os.time() + until_date <= 31622400 then
-                        temprestrict = true
-                    end
-                end
-                if temprestrict then
-                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date)
                 else
-                    return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #restrict'
+                    return langs[lang].checkMyPermissions
                 end
             else
-                return langs[lang].checkMyPermissions
+                savelog(chat_id, "[" .. executer .. "] tried to restrict user " .. target .. " require higher rank")
+                return langs[get_lang(chat_id)].require_rank
             end
-        else
-            savelog(chat_id, "[" .. executer .. "] tried to restrict user " .. target .. " require higher rank")
-            return langs[get_lang(chat_id)].require_rank
         end
     end
 end
