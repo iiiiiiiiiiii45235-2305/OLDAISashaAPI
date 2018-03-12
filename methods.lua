@@ -275,6 +275,7 @@ function promoteChatMember(chat_id, user_id, permissions)
             demote = false
         end
     end
+    printvardump(permissions)
 
     if demote then
         return demoteChatMember(chat_id, user_id)
@@ -304,12 +305,12 @@ end
 function demoteChatMember(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
     local demote_table = {
-        ['can_change_info'] = false,
-        ['can_delete_messages'] = false,
-        ['can_invite_users'] = false,
-        ['can_restrict_members'] = false,
-        ['can_pin_messages'] = false,
-        ['can_promote_members'] = false,
+        can_change_info = false,
+        can_delete_messages = false,
+        can_invite_users = false,
+        can_restrict_members = false,
+        can_pin_messages = false,
+        can_promote_members = false,
     }
     return promoteChatMember(chat_id, user_id, demote_table)
 end
