@@ -1606,7 +1606,7 @@ end
 function restrictUser(executer, target, chat_id, restrictions, until_date, no_notice)
     local unrestrict = true
     for key, var in pairs(restrictions) do
-        if restrictions[key] ~= default_restrictions[key] then
+        if not restrictions[key] then
             unrestrict = false
         end
     end
