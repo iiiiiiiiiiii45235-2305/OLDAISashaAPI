@@ -109,7 +109,7 @@ local function run(msg, matches)
                 if data[tostring(matches[4])] then
                     chat_name = data[tostring(matches[4])].name or ''
                 end
-                editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[4] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[16], keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
+                editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_restrictions_list(matches[4], matches[3], nil, matches[5] or false))
             elseif matches[2] == 'WHITELISTGBAN' then
                 -- PUBLIC KEYBOARD
                 if msg.from.is_owner then
@@ -151,7 +151,7 @@ local function run(msg, matches)
                 if restrictionsDictionary[matches[4]:lower()] == 'can_add_web_page_previews' then
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = false
                 end
-                editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[16], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
             elseif matches[2] == 'UNRESTRICT' then
                 restrictionsTable[tostring(matches[5])] = restrictionsTable[tostring(matches[5])] or { }
@@ -178,7 +178,7 @@ local function run(msg, matches)
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])]['can_send_media_messages'] = true
                     restrictionsTable[tostring(matches[5])][tostring(matches[3])][restrictionsDictionary[matches[4]:lower()]] = true
                 end
-                editMessage(msg.chat.id, msg.message_id, string.gsub(string.gsub(langs[msg.lang].restrictionsOf, 'Y', '(' .. matches[5] .. ') ' .. chat_name), 'X', tostring('(' .. matches[3] .. ') ' ..(database[tostring(matches[3])]['print_name'] or ''))) .. '\n' .. langs[msg.lang].restrictionsIntro .. langs[msg.lang].faq[16], keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
+                editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_restrictions_list(matches[5], matches[3], restrictionsTable[tostring(matches[5])][tostring(matches[3])], matches[6] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5])
             elseif matches[2] == 'RESTRICTIONSDONE' then
                 restrictionsTable[tostring(matches[4])] = restrictionsTable[tostring(matches[4])] or { }
@@ -215,7 +215,7 @@ local function run(msg, matches)
                 end
                 if matches[4] == 'BACK' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[5], time, matches[7] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_time('banhammer', matches[2], matches[6], matches[5], time, matches[7] or false))
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     local seconds, minutes, hours, days, weeks = unixToDate(time)
                     if matches[4] == 'SECONDS' then
@@ -274,7 +274,7 @@ local function run(msg, matches)
                             end
                         end
                     end
-                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                 elseif matches[4] == 'DONE' then
                     local text = banUser(msg.from.id, matches[5], matches[6], '', time)
@@ -295,7 +295,7 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
                     restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
-                    editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ') ' ..(database[tostring(matches[5])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[5], time, matches[7] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_time('banhammer', matches[2], matches[6], matches[5], time, matches[7] or false))
                 elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
                     restrictionsTable[tostring(matches[6])][tostring(matches[5])] = restrictionsTable[tostring(matches[6])][tostring(matches[5])] or clone_table(default_restrictions)
@@ -357,7 +357,7 @@ local function run(msg, matches)
                                 end
                             end
                         end
-                        editMessage(msg.chat.id, msg.message_id, '(' .. matches[7] .. ') ' ..(database[tostring(matches[7])]['print_name'] or '') .. ' in ' .. '(' .. matches[6] .. ') ' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
+                        editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                     else
                         editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)

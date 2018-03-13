@@ -10,19 +10,19 @@ function run(msg, matches)
                     end
                 elseif matches[2] == 'BACK' then
                     answerCallbackQuery(msg.cb_id, pathString)
-                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, matches[3]))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path, matches[3]))
                 elseif matches[2] == 'PAGES' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
                 elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
                 elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-                    editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
                 elseif matches[2] == 'CD' then
                     if matches[3] == '.' then
                         answerCallbackQuery(msg.cb_id, pathString)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                        editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path))
                     elseif matches[3] == '..' then
                         if path ~= '/' then
                             local pathComponents = path:split('/')
@@ -55,7 +55,7 @@ function run(msg, matches)
                     if io.popen('find ' .. path .. matches[3]):read("*all") ~= '' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].sendingYou .. matches[3])
                         sendDocument(msg.chat.id, path .. matches[3])
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(path))
+                        editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path))
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain)
                     end

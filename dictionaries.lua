@@ -1,3 +1,7 @@
+empty_keyboard = {
+    inline_keyboard = { }
+}
+
 -- group data
 groupDataDictionary = {
     -- settings

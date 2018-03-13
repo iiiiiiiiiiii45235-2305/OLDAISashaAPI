@@ -153,16 +153,16 @@ local function run(msg, matches)
             answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
         elseif matches[2] == 'BACK' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
+            editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), matches[3] or 1), 'html')
         elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
+            editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), 'html')
         elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
+            editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_help_pages(msg.chat.id, get_rank(msg.from.id, msg.chat.id, true), tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), 'html')
         elseif matches[2] == 'BACKFAQ' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faqList, keyboard_faq_list(msg.chat.id), 'html')
+            editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_faq_list(msg.chat.id), 'html')
         elseif matches[2] == 'FAQ' then
             answerCallbackQuery(msg.cb_id, 'FAQ' .. matches[3])
             if langs[msg.lang].faq[tonumber(matches[3])] then

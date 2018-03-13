@@ -165,13 +165,13 @@ local function run(msg, matches)
             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             if matches[4] then
                 if is_owner2(msg.from.id, matches[4]) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_pages(msg.from.id, false, matches[3] or 1, tonumber(matches[4]), matches[5] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, matches[3] or 1, tonumber(matches[4]), matches[5] or false))
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 if is_sudo(msg) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, matches[3] or 1))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, matches[3] or 1))
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
@@ -180,13 +180,13 @@ local function run(msg, matches)
             answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
             if matches[4] then
                 if is_owner2(msg.from.id, matches[4]) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 if is_sudo(msg) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
@@ -195,13 +195,13 @@ local function run(msg, matches)
             answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
             if matches[4] then
                 if is_owner2(msg.from.id, matches[4]) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[4], keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 if is_sudo(msg) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
                 else
                     editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
@@ -211,11 +211,11 @@ local function run(msg, matches)
             if is_owner2(msg.from.id, matches[5]) then
                 if matches[2] == 'ENABLE' then
                     answerCallbackQuery(msg.cb_id, reenable_plugin_on_chat(matches[3], tonumber(matches[5])), false)
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[5], keyboard_plugins_pages(msg.from.id, false, matches[4] or 1, tonumber(matches[5]), matches[6] or false))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, matches[4] or 1, tonumber(matches[5]), matches[6] or false))
                 elseif matches[2] == 'DISABLE' then
                     if not system_plugin(matches[3]) then
                         answerCallbackQuery(msg.cb_id, disable_plugin_on_chat(matches[3], tonumber(matches[5])), false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro .. '\n\n' .. langs[msg.lang].pluginsList .. matches[5], keyboard_plugins_pages(msg.from.id, false, matches[4] or 1, tonumber(matches[5]), matches[6] or false))
+                        editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, matches[4] or 1, tonumber(matches[5]), matches[6] or false))
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                     end
@@ -229,11 +229,11 @@ local function run(msg, matches)
             if is_sudo(msg) then
                 if matches[2] == 'ENABLE' then
                     answerCallbackQuery(msg.cb_id, enable_plugin(matches[3], msg.chat.id), false)
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, matches[4] or 1))
+                    editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, matches[4] or 1))
                 elseif matches[2] == 'DISABLE' then
                     if not system_plugin(matches[3]) then
                         answerCallbackQuery(msg.cb_id, disable_plugin(matches[3], msg.chat.id), false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].pluginsIntro, keyboard_plugins_pages(msg.from.id, true, matches[4] or 1))
+                        editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, matches[4] or 1))
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].systemPlugin, false)
                     end

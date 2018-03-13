@@ -638,7 +638,7 @@ function editMessageReplyMarkup(chat_id, message_id, reply_markup)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/editMessageReplyMarkup?chat_id=' .. chat_id ..
         '&message_id=' .. message_id ..
-        '&reply_markup=' .. URL.escape(json:encode(reply_markup))
+        '&reply_markup=' .. URL.escape(json:encode(reply_markup or empty_keyboard))
         local res, code = sendRequest(url)
 
         if not res and code then
