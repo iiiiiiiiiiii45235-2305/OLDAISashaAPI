@@ -618,7 +618,7 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
         if not res and code then
             -- if the request failed and a code is returned (not 403 and 429)
             if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
-                savelog('send_msg', code .. '\n' .. text)
+                savelog('edit_msg', code .. '\n' .. text)
             end
             if code == 429 then
                 printvardump(tab)
@@ -631,8 +631,32 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
         end
         return res, code
         -- return false, and the code
-    else
-        return sendMessage(chat_id, langs[get_lang(chat_id)].noObject)
+    end
+end
+
+function editMessageReplyMarkup(chat_id, message_id, reply_markup)
+    if sendChatAction(chat_id, 'typing', true) then
+        local url = BASE_URL .. '/editMessageReplyMarkup?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id ..
+        '&reply_markup=' .. URL.escape(json:encode(reply_markup))
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('edit_markup', code .. '\n' .. text)
+            end
+            if code == 429 then
+                printvardump(tab)
+            end
+        end
+        if not print_res_msg(res) then
+            local obj = getChat(chat_id)
+            local sent_msg = { from = fake_user_chat, chat = obj, text = text, edited = true }
+            print_msg(sent_msg)
+        end
+        return res, code
+        -- return false, and the code
     end
 end
 
