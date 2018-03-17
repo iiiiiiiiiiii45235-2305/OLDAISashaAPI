@@ -354,7 +354,6 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound,
         if text == '' then
             return nil
         end
-        print(text)
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         local text_max = 4096
         local text_len = string.len(text)
@@ -1551,8 +1550,6 @@ function getChat(id_or_username, no_log)
                 end
             end
             ]]
-        printvardump(obj)
-        print(id_or_username)
         if ok then
             if obj.type == 'private' then
                 return adjust_user(obj)
