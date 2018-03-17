@@ -633,8 +633,9 @@ end
 function doSendBackup()
     -- save redis db
     redis:bgsave()
-    -- deletes all files in tmp folder
+    -- deletes all files in tmp folders
     io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
+    io.popen('rm -f /home/pi/AISasha/data/tmp/*'):read("*all")
     -- save crontab
     io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
 
