@@ -641,15 +641,18 @@ function doSendBackup()
     local time = os.time()
     local tar_command = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- exclusions
-    '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.luarocks --exclude=/home/pi/AISasha/patches --exclude=/home/pi/AISasha/tg ' ..
-    '--exclude=/home/pi/AISashaAPI/.git ' ..
-    '--exclude=/home/pi/MyBotForReported/.git ' ..
+    '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.luarocks --exclude=/home/pi/AISasha/patches --exclude=/home/pi/AISasha/tg  --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore --exclude=/home/pi/AISasha/README.md' ..
+    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore --exclude=/home/pi/AISashaAPI/libs --exclude=/home/pi/AISashaAPI/README.md ' ..
+    '--exclude=/home/pi/Grabber/__pycache__ ' ..
+    '--exclude=/home/pi/MyBotForReported/.git --exclude=/home/pi/MyBotForReported/libs ' ..
     -- desktop
     '/home/pi/Desktop ' ..
     -- sasha user
     '/home/pi/AISasha ' ..
     -- sasha bot
     '/home/pi/AISashaAPI ' ..
+    -- grabber
+    '/home/pi/Grabber ' ..
     -- bot for reported
     '/home/pi/MyBotForReported ' ..
     -- redis database
