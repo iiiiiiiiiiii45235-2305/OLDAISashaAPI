@@ -1550,6 +1550,8 @@ function getChat(id_or_username, no_log)
                 end
             end
             ]]
+        printvardump(obj)
+        print(id_or_username)
         if ok then
             if obj.type == 'private' then
                 return adjust_user(obj)
