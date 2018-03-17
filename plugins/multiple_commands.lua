@@ -205,7 +205,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. user
                         else
-                            local obj = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj = getChat(string.match(user, '^[^%s]+') or '')
                             if obj then
                                 txt = txt .. obj.id
                             else
@@ -279,7 +279,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. is_here(msg.chat.id, tonumber(user))
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. is_here(msg.chat.id, obj_user.id)
@@ -318,7 +318,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. get_reverse_rank(msg.chat.id, user, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. get_reverse_rank(msg.chat.id, obj_user.id, true)
@@ -357,7 +357,7 @@ local function run(msg, matches)
                         if string.match(user, '^%-?%d+$') then
                             txt = txt .. get_object_info(getChat(user), msg.chat.id) .. '\n'
                         else
-                            txt = txt .. get_object_info(getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or '')), msg.chat.id) .. '\n'
+                            txt = txt .. get_object_info(getChat(string.match(user, '^[^%s]+') or ''), msg.chat.id) .. '\n'
                         end
                     end
                     txt = txt .. '\n'
@@ -389,7 +389,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. getUserWarns(user, msg.chat.id)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. getUserWarns(obj_user.id, msg.chat.id)
@@ -445,7 +445,7 @@ local function run(msg, matches)
                                 txt = txt .. langs[msg.lang].require_rank
                             end
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     -- ignore higher or same rank
@@ -493,7 +493,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. warnUser(msg.from.id, user, msg.chat.id, nil, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. warnUser(msg.from.id, obj_user.id, msg.chat.id, nil, true)
@@ -532,7 +532,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. unwarnUser(msg.from.id, user, msg.chat.id, nil, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. unwarnUser(msg.from.id, obj_user.id, msg.chat.id, nil, true)
@@ -571,7 +571,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. unwarnallUser(msg.from.id, user, msg.chat.id, nil, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. unwarnallUser(msg.from.id, obj_user.id, msg.chat.id, nil, true)
@@ -610,7 +610,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. kickUser(msg.from.id, user, msg.chat.id, nil, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. kickUser(msg.from.id, obj_user.id, msg.chat.id, nil, true)
@@ -649,7 +649,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. banUser(msg.from.id, user, msg.chat.id, nil, nil, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. banUser(msg.from.id, obj_user.id, msg.chat.id, nil, nil, true)
@@ -688,7 +688,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. unbanUser(msg.from.id, user, msg.chat.id, nil, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. unbanUser(msg.from.id, obj_user.id, msg.chat.id, nil, true)
@@ -735,7 +735,7 @@ local function run(msg, matches)
                                 txt = txt .. langs[msg.lang].notFound
                             end
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     if database[tostring(obj_user.id)] then
@@ -788,7 +788,7 @@ local function run(msg, matches)
                                 txt = txt .. langs[msg.lang].notFound
                             end
                         else
-                            local obj = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj = getChat(string.match(user, '^[^%s]+') or '')
                             if obj then
                                 if database[tostring(obj.id)] then
                                     database[tostring(obj.id)] = nil
@@ -853,7 +853,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. blockUser(user, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. blockUser(obj_user.id, true)
@@ -892,7 +892,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. unblockUser(user, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. unblockUser(obj_user.id, true)
@@ -931,7 +931,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. gbanUser(user, true, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. gbanUser(obj_user.id, true, true)
@@ -970,7 +970,7 @@ local function run(msg, matches)
                         if string.match(user, '^%d+$') then
                             txt = txt .. ungbanUser(user, true)
                         else
-                            local obj_user = getChat('@' ..(string.match(user, '^[^%s]+'):gsub('@', '') or ''))
+                            local obj_user = getChat(string.match(user, '^[^%s]+') or '')
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                     txt = txt .. ungbanUser(obj_user.id, true)

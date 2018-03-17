@@ -579,7 +579,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return matches[2]
             else
-                local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                local obj = getChat(string.match(matches[2], '^[^%s]+') or '')
                 if obj then
                     return obj.id
                 else
@@ -689,7 +689,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return get_reverse_rank(msg.chat.id, matches[2], true)
             else
-                local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return get_reverse_rank(msg.chat.id, obj_user.id, true)
@@ -737,7 +737,7 @@ local function run(msg, matches)
             if string.match(matches[2], '^%d+$') then
                 return is_here(msg.chat.id, tonumber(matches[2]))
             else
-                local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         return is_here(msg.chat.id, obj_user.id)
@@ -799,7 +799,7 @@ local function run(msg, matches)
                         return langs[msg.lang].cantTrackUser
                     end
                 else
-                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             local res = sendReply(msg, profileLink(obj_user.id, matches[3] or matches[2] or obj_user.id), 'html')
@@ -883,7 +883,7 @@ local function run(msg, matches)
                             return txt
                         end
                     else
-                        local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj = getChat(string.match(matches[2], '^[^%s]+') or '')
                         local txt = get_object_info(obj, matches[3])
                         if txt ~= langs[msg.lang].noObject then
                             if not sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, obj, matches[3])) then
@@ -1129,7 +1129,7 @@ local function run(msg, matches)
                         return
                     end
                 else
-                    local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    local obj = getChat(string.match(matches[2], '^[^%s]+') or '')
                     local txt = get_object_info(obj, msg.chat.id)
                     if txt ~= langs[msg.lang].noObject then
                         if sendKeyboard(msg.from.id, txt, get_object_info_keyboard(msg.from.id, obj, msg.chat.id)) then
@@ -1194,7 +1194,7 @@ local function run(msg, matches)
                         local obj = getChat(matches[2])
                         return get_object_info(obj, matches[3])
                     else
-                        local obj = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj = getChat(string.match(matches[2], '^[^%s]+') or '')
                         return get_object_info(obj, matches[3])
                     end
                 else
@@ -1254,7 +1254,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%-?%d+$') then
                     return get_object_info(getChat(matches[2]), msg.chat.id)
                 else
-                    return get_object_info(getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or '')), msg.chat.id)
+                    return get_object_info(getChat(string.match(matches[2], '^[^%s]+') or ''), msg.chat.id)
                 end
             else
                 return langs[msg.lang].require_mod

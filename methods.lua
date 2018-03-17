@@ -1482,57 +1482,62 @@ end
 
 -- call this to get the chat
 function getChat(id_or_username, no_log)
+    if not id_or_username or tostring(id_or_username) == '' then
+        return
+    end
     id_or_username = tostring(id_or_username):gsub(' ', '')
+    if not(string.match(id_or_username, '^%d') or string.match(id_or_username, '^%*%d')) then
+        id_or_username = '@' .. id_or_username:gsub('@', '')
+    end
     if not string.match(id_or_username, '^%*%d') then
-        if tostring(id_or_username) ~= '@' then
-            local obj = nil
-            local ok = false
-            -- API
-            if not ok then
-                if not tostring(id_or_username):match('^@') then
-                    -- getChat if not a username
-                    obj = APIgetChat(id_or_username, true)
-                    if type(obj) == 'table' then
-                        if obj.result then
-                            obj = obj.result
-                            ok = true
-                            saveUsername(obj)
-                        end
+        local obj = nil
+        local ok = false
+        -- API
+        if not ok then
+            if not tostring(id_or_username):match('^@') then
+                -- getChat if not a username
+                obj = APIgetChat(id_or_username, true)
+                if type(obj) == 'table' then
+                    if obj.result then
+                        obj = obj.result
+                        ok = true
+                        saveUsername(obj)
                     end
                 end
             end
-            -- redis db then API
-            if not ok then
-                local hash = 'bot:usernames'
-                local stored = nil
-                if type(id_or_username) == 'string' then
-                    stored = redis:hget(hash, id_or_username:lower())
-                else
-                    stored = redis:hget(hash, id_or_username)
-                end
-                if stored then
-                    -- check API
-                    obj = APIgetChat(stored, no_log)
-                    if type(obj) == 'table' then
-                        if obj.result then
-                            obj = obj.result
-                            ok = true
-                            saveUsername(obj)
-                        end
+        end
+        -- redis db then API
+        if not ok then
+            local hash = 'bot:usernames'
+            local stored = nil
+            if type(id_or_username) == 'string' then
+                stored = redis:hget(hash, id_or_username:lower())
+            else
+                stored = redis:hget(hash, id_or_username)
+            end
+            if stored then
+                -- check API
+                obj = APIgetChat(stored, no_log)
+                if type(obj) == 'table' then
+                    if obj.result then
+                        obj = obj.result
+                        ok = true
+                        saveUsername(obj)
                     end
-                else
-                    -- check API if not in redis db, it could be a channel username that was not checked before
-                    obj = APIgetChat(id_or_username, no_log)
-                    if type(obj) == 'table' then
-                        if obj.result then
-                            obj = obj.result
-                            ok = true
-                            saveUsername(obj)
-                        end
+                end
+            else
+                -- check API if not in redis db, it could be a channel username that was not checked before
+                obj = APIgetChat(id_or_username, no_log)
+                if type(obj) == 'table' then
+                    if obj.result then
+                        obj = obj.result
+                        ok = true
+                        saveUsername(obj)
                     end
                 end
             end
-            --[[
+        end
+        --[[
             -- PWR API
             if not ok then
                 obj = resolveChat(id_or_username, no_log)
@@ -1545,16 +1550,15 @@ function getChat(id_or_username, no_log)
                 end
             end
             ]]
-            if ok then
-                if obj.type == 'private' then
-                    return adjust_user(obj)
-                elseif obj.type == 'group' then
-                    return adjust_group(obj)
-                elseif obj.type == 'supergroup' then
-                    return adjust_supergroup(obj)
-                elseif obj.type == 'channel' then
-                    return adjust_channel(obj)
-                end
+        if ok then
+            if obj.type == 'private' then
+                return adjust_user(obj)
+            elseif obj.type == 'group' then
+                return adjust_group(obj)
+            elseif obj.type == 'supergroup' then
+                return adjust_supergroup(obj)
+            elseif obj.type == 'channel' then
+                return adjust_channel(obj)
             end
         end
         return nil

@@ -304,7 +304,7 @@ local function run(msg, matches)
                     return langs[msg.lang].objectBlockedBot
                 end
             else
-                local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                 if obj_user then
                     if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                         if sendChatAction(obj_user.id, 'typing', true) then

@@ -1332,7 +1332,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return setOwner(obj_user, msg.chat.id)
@@ -1440,7 +1440,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 if matches[3] then
@@ -1501,7 +1501,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return demoteTgAdmin(msg.chat.id, obj_user)
@@ -1559,7 +1559,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return promoteMod(msg.chat.id, obj_user)
@@ -1621,7 +1621,7 @@ local function run(msg, matches)
                             return langs[msg.lang].noObject .. '\n' .. demoteMod(msg.chat.id, { username = "Unknown", id = matches[2] })
                         end
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 return demoteMod(msg.chat.id, obj_user)
@@ -1724,7 +1724,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                        local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                                 if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
@@ -1785,7 +1785,7 @@ local function run(msg, matches)
                 if string.match(matches[2], '^%d+$') then
                     return showPermissions(msg.chat.id, matches[2], msg.lang)
                 else
-                    local obj_user = getChat('@' ..(string.match(matches[2], '^[^%s]+'):gsub('@', '') or ''))
+                    local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                     if obj_user then
                         if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
                             return showPermissions(msg.chat.id, obj_user.id, msg.lang)
