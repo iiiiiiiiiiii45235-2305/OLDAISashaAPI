@@ -354,6 +354,7 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound,
         if text == '' then
             return nil
         end
+        print(text)
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         local text_max = 4096
         local text_len = string.len(text)
@@ -1486,7 +1487,7 @@ function getChat(id_or_username, no_log)
         return
     end
     id_or_username = tostring(id_or_username):gsub(' ', '')
-    if not(string.match(id_or_username, '^%d') or string.match(id_or_username, '^%*%d')) then
+    if not(string.match(id_or_username, '^%-?%d') or string.match(id_or_username, '^%*%d')) then
         id_or_username = '@' .. id_or_username:gsub('@', '')
     end
     if not string.match(id_or_username, '^%*%d') then
