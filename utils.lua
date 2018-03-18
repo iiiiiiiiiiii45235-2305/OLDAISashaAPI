@@ -630,6 +630,30 @@ function id_to_cli(id)
     end
 end
 
+function executeBackupCommand(tar_command, time)
+    local backup_name = string.match(tar_command, 'backup(.*)%d+%.tar%.gz')
+    local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
+    local file_backup_log = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
+    file_backup_log:write(log)
+    file_backup_log:flush()
+    file_backup_log:close()
+    -- send last backup
+    local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
+    local backups = { }
+    if files then
+        for k, v in pairsByKeys(files) do
+            if string.match(v, '^backup' .. backup_name .. '%d+%.tar%.gz$') then
+                backups[string.match(v, '%d+')] = v
+            end
+        end
+        local last_backup = ''
+        for k, v in pairsByKeys(backups) do
+            last_backup = v
+        end
+        sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
+    end
+end
+
 function doSendBackup()
     -- save redis db
     redis:bgsave()
@@ -640,7 +664,8 @@ function doSendBackup()
     io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
 
     local time = os.time()
-    local tar_command = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
+    -- OLD BACKUP METHOD
+    --[[local tar_command = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     -- exclusions
     '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.luarocks --exclude=/home/pi/AISasha/patches --exclude=/home/pi/AISasha/tg  --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore --exclude=/home/pi/AISasha/README.md' ..
     '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore --exclude=/home/pi/AISashaAPI/libs --exclude=/home/pi/AISashaAPI/README.md ' ..
@@ -677,7 +702,33 @@ function doSendBackup()
             last_backup = v
         end
         sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
-    end
+    end]]
+
+    -- AISASHA
+    local AISasha_tar = 'sudo tar -zcvf backupAISasha' .. time .. '.tar.gz ' ..
+    '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore ' ..
+    '/home/pi/AISasha '
+    executeBackupCommand(AISasha_tar, time)
+    -- AISASHAAPI
+    local AISashaAPI_tar = 'sudo tar -zcvf backupAISashaAPI' .. time .. '.tar.gz ' ..
+    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore ' ..
+    '/home/pi/AISashaAPI '
+    executeBackupCommand(AISashaAPI_tar, time)
+    -- RASPBERRYPI
+    local RaspberryPi_tar = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
+    '/home/pi/Desktop ' ..
+    '/var/lib/redis '
+    executeBackupCommand(RaspberryPi_tar, time)
+    -- GRABBER
+    local Grabber_tar = 'sudo tar -zcvf backupGrabber' .. time .. '.tar.gz ' ..
+    '--exclude=/home/pi/Grabber/__pycache__ ' ..
+    '/home/pi/Grabber '
+    executeBackupCommand(Grabber_tar, time)
+    -- MYBOTFORREPORTED
+    local MyBotForReported_tar = 'sudo tar -zcvf backupMyBotForReported' .. time .. '.tar.gz ' ..
+    '--exclude=/home/pi/MyBotForReported/.git ' ..
+    '/home/pi/MyBotForReported '
+    executeBackupCommand(MyBotForReported_tar, time)
 end
 
 function adjustPermissions(param_permissions)
