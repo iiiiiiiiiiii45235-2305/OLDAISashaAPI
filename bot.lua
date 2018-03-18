@@ -1002,7 +1002,7 @@ function cron_administrator()
         -- deletes all previous backups (they're in telegram so no problem)
         io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
         sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
-        -- AISASHAAPI
+        --[[-- AISASHAAPI
         -- send database
         if io.popen('find /home/pi/AISashaAPI/data/database.json'):read("*all") ~= '' then
             sendDocument_SUDOERS('/home/pi/AISashaAPI/data/database.json')
@@ -1011,7 +1011,7 @@ function cron_administrator()
         -- send database
         if io.popen('find /home/pi/AISasha/data/database.json'):read("*all") ~= '' then
             sendDocument_SUDOERS('/home/pi/AISasha/data/database.json')
-        end
+        end]]
         -- send the whole backup
         doSendBackup()
         -- deletes all files in log folder
