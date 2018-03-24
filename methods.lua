@@ -2291,8 +2291,8 @@ function showSettings(target, lang)
         local time_ban = weeks .. langs[lang].weeksWord .. days .. langs[lang].daysWord .. hours .. langs[lang].hoursWord .. minutes .. langs[lang].minutesWord .. seconds .. langs[lang].secondsWord
 
         local text = langs[lang].groupSettings:gsub('X', data[target].name) ..
-        langs[lang].settings.groupnotices .. tostring(data[target].settings.groupnotices) ..
-        langs[lang].settings.pmnotices .. tostring(data[target].settings.pmnotices) ..
+        langs[lang].groupnotices .. tostring(data[target].settings.groupnotices) ..
+        langs[lang].pmnotices .. tostring(data[target].settings.pmnotices) ..
         langs[lang].tagalert .. tostring(data[target].tagalert) ..
         langs[lang].grouplinkLock .. tostring(data[target].settings.lock_grouplink) ..
         langs[lang].nameLock .. tostring(data[target].settings.lock_groupname) ..
