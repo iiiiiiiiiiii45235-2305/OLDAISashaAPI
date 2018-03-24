@@ -2051,7 +2051,7 @@ end
 function warnUser(executer, target, chat_id, reason, no_notice)
     target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
-    if reason == langs[lang].reasonWarnMax then
+    if reason:find(langs[lang].reasonWarnMax) then
         return ''
     end
     if compare_ranks(executer, target, chat_id) then
@@ -2066,7 +2066,7 @@ function warnUser(executer, target, chat_id, reason, no_notice)
         if tonumber(warn_chat) > 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
                 redis:getset(chat_id .. ':warn:' .. target, 0)
-                return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, langs[lang].reasonWarnMax)
+                return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, reason .. '\n' .. langs[lang].reasonWarnMax)
             end
             if arePMNoticesEnabled(target, chat_id) and not no_notice then
                 local text = langs[get_lang(target)].youHaveBeenWarned .. database[tostring(chat_id)].print_name
