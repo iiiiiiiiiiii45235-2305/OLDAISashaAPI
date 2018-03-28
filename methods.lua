@@ -1439,9 +1439,12 @@ end
 -- *** END API FUNCTIONS ***
 
 -- *** START PWRTELEGRAM API FUNCTIONS ***
-function resolveChat(id_or_username, no_log)
+function resolveChat(id_or_username, fullfetch, no_log)
     id_or_username = tostring(id_or_username):gsub(' ', '')
     local url = PWR_URL .. '/getChat?chat_id=' .. id_or_username
+    if fullfetch then
+        url = url .. '&fullfetch=true'
+    end
     local dat, code = HTTPS.request(url)
 
     if not dat then
@@ -1569,7 +1572,7 @@ function getChat(id_or_username, no_log)
 end
 
 function getChatParticipants(chat_id)
-    local obj = resolveChat(chat_id)
+    local obj = resolveChat(chat_id, true)
     if type(obj) == 'table' then
         if obj.result then
             obj = obj.result
