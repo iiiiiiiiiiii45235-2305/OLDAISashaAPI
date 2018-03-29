@@ -6,7 +6,6 @@ local fake_user_chat = { first_name = 'FAKE', last_name = 'USER CHAT', print_nam
 local unknown_user = { first_name = 'UNKNOWN', last_name = 'USER', username = 'USERNAME', id = 'UNKNOWN ID' }
 
 local BASE_URL = 'https://api.telegram.org/bot' .. config.bot_api_key
-local PWR_URL = 'https://api.pwrtelegram.xyz/bot' .. config.bot_api_key
 
 local curl_context = curl.easy { verbose = false }
 local api_errors = {
@@ -1438,36 +1437,6 @@ function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
 end
 -- *** END API FUNCTIONS ***
 
--- *** START PWRTELEGRAM API FUNCTIONS ***
-function resolveChat(id_or_username, fullfetch, no_log)
-    id_or_username = tostring(id_or_username):gsub(' ', '')
-    local url = PWR_URL .. '/getChat?chat_id=' .. id_or_username
-    if fullfetch then
-        url = url .. '&fullfetch=true'
-    end
-    local dat, code = HTTPS.request(url)
-
-    if not dat then
-        return false, code
-    end
-
-    local tab = json:decode(dat)
-
-    if code ~= 200 then
-        if not tab then
-            return false
-        else
-            if not no_log then
-                sendLog('#BadRequest PWRTelegram API\n' .. vardumptext(tab) .. '\n' .. code)
-            end
-            return false
-        end
-    end
-
-    return tab
-end
--- *** END PWRTELEGRAM API FUNCTIONS ***
-
 function saveUsername(obj, chat_id)
     if obj then
         if type(obj) == 'table' then
@@ -1540,19 +1509,6 @@ function getChat(id_or_username, no_log)
                 end
             end
         end
-        --[[
-            -- PWR API
-            if not ok then
-                obj = resolveChat(id_or_username, no_log)
-                if type(obj) == 'table' then
-                    if obj.result then
-                        obj = obj.result
-                        ok = true
-                        saveUsername(obj)
-                    end
-                end
-            end
-            ]]
         if ok then
             if obj.type == 'private' then
                 return adjust_user(obj)
@@ -1568,18 +1524,6 @@ function getChat(id_or_username, no_log)
     else
         local fake_user = { first_name = 'FAKECOMMAND', last_name = 'FAKECOMMAND', print_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = id_or_username, type = 'fake' }
         return fake_user
-    end
-end
-
-function getChatParticipants(chat_id)
-    local obj = resolveChat(chat_id, true)
-    if type(obj) == 'table' then
-        if obj.result then
-            obj = obj.result
-            if obj.participants then
-                return obj.participants
-            end
-        end
     end
 end
 
