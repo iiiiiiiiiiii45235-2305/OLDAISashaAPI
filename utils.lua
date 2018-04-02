@@ -638,7 +638,10 @@ function executeBackupCommand(tar_command, time)
     file_backup_log:flush()
     file_backup_log:close()
     -- send last backup
-    local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
+    local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all")
+    if files then
+        files = files:split('\n')
+    end
     local backups = { }
     if files then
         for k, v in pairsByKeys(files) do
