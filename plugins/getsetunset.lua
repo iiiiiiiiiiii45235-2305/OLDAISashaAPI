@@ -4,31 +4,31 @@ local oldResponses = {
     lastGetGlobal = { },
 }
 
-local function get_variables_hash(msg, global)
+local function get_variables_hash(chat_id, chat_type, global)
     if global then
-        if not redis:get(msg.chat.id .. ':gvariables') then
+        if not redis:get(chat_id .. ':gvariables') then
             return 'gvariables'
         end
         return false
     else
-        if msg.chat.type == 'private' then
-            return 'user:' .. msg.from.id .. ':variables'
+        if chat_type == 'private' then
+            return 'user:' .. chat_id .. ':variables'
         end
-        if msg.chat.type == 'group' then
-            return 'group:' .. msg.chat.id .. ':variables'
+        if chat_type == 'group' then
+            return 'group:' .. chat_id .. ':variables'
         end
-        if msg.chat.type == 'supergroup' then
-            return 'supergroup:' .. msg.chat.id .. ':variables'
+        if chat_type == 'supergroup' then
+            return 'supergroup:' .. chat_id .. ':variables'
         end
-        if msg.chat.type == 'channel' then
-            return 'channel:' .. msg.chat.id .. ':variables'
+        if chat_type == 'channel' then
+            return 'channel:' .. chat_id .. ':variables'
         end
         return false
     end
 end
 
 local function list_variables(msg, global)
-    local hash = get_variables_hash(msg, global)
+    local hash = get_variables_hash(msg.chat.id, msg.chat.type, global)
     local text = ''
     if global then
         text = langs[msg.lang].getGlobalStart
@@ -45,10 +45,10 @@ local function list_variables(msg, global)
     end
 end
 
-local function get_value(msg, var_name)
+local function get_value(chat_id, chat_type, var_name)
     var_name = var_name:gsub(' ', '_')
-    if not redis:get(msg.chat.id .. ':gvariables') then
-        local hash = get_variables_hash(msg, true)
+    if not redis:get(chat_id .. ':gvariables') then
+        local hash = get_variables_hash(chat_id, chat_type, true)
         if hash then
             local value = redis:hget(hash, var_name)
             if value then
@@ -57,7 +57,7 @@ local function get_value(msg, var_name)
         end
     end
 
-    local hash = get_variables_hash(msg, false)
+    local hash = get_variables_hash(chat_id, chat_type, false)
     if hash then
         local value = redis:hget(hash, var_name)
         if value then
@@ -246,54 +246,54 @@ local function adjust_value(value, msg, parse_mode)
     return value
 end
 
-local function set_unset_variables_hash(msg, global)
+local function set_unset_variables_hash(chat_id, chat_type, global)
     if global then
         return 'gvariables'
     else
-        if msg.chat.type == 'private' then
-            return 'user:' .. msg.from.id .. ':variables'
+        if chat_type == 'private' then
+            return 'user:' .. chat_id .. ':variables'
         end
-        if msg.chat.type == 'group' then
-            return 'group:' .. msg.chat.id .. ':variables'
+        if chat_type == 'group' then
+            return 'group:' .. chat_id .. ':variables'
         end
-        if msg.chat.type == 'supergroup' then
-            return 'supergroup:' .. msg.chat.id .. ':variables'
+        if chat_type == 'supergroup' then
+            return 'supergroup:' .. chat_id .. ':variables'
         end
-        if msg.chat.type == 'channel' then
-            return 'channel:' .. msg.chat.id .. ':variables'
+        if chat_type == 'channel' then
+            return 'channel:' .. chat_id .. ':variables'
         end
         return false
     end
 end
 
-local function set_value(msg, name, value, global)
+local function set_value(chat_id, chat_type, name, value, global)
     if (not name or not value) then
-        return langs[msg.lang].errorTryAgain
+        return langs[get_lang(chat_id)].errorTryAgain
     end
 
-    local hash = set_unset_variables_hash(msg, global)
+    local hash = set_unset_variables_hash(chat_id, chat_type, global)
     if hash then
         redis:hset(hash, name, value)
         if global then
-            return name .. langs[msg.lang].gSaved
+            return name .. langs[get_lang(chat_id)].gSaved
         else
-            return name .. langs[msg.lang].saved
+            return name .. langs[get_lang(chat_id)].saved
         end
     end
 end
 
-local function unset_var(msg, name, global)
+local function unset_var(chat_id, chat_type, name, global)
     if (not name) then
-        return langs[msg.lang].errorTryAgain
+        return langs[get_lang(chat_id)].errorTryAgain
     end
 
-    local hash = set_unset_variables_hash(msg, global)
+    local hash = set_unset_variables_hash(chat_id, chat_type, global)
     if hash then
         redis:hdel(hash, name:lower())
         if global then
-            return name:lower() .. langs[msg.lang].gDeleted
+            return name:lower() .. langs[get_lang(chat_id)].gDeleted
         else
-            return name:lower() .. langs[msg.lang].deleted
+            return name:lower() .. langs[get_lang(chat_id)].deleted
         end
     end
 end
@@ -301,9 +301,9 @@ end
 local function check_word(msg, word, pre)
     if msg.text then
         if pre then
-            if not string.match(msg.text, "^[#!/][Gg][Ee][Tt] (.*)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Ss][Ee][Tt][Ss]) (.+)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Rr][Oo][Uu][Pp][Ss][Ee][Tt][Ss]) (.+)$") then
-                if string.match(msg.text:lower(), word) then
-                    local value = get_value(msg, word)
+            if not string.match(msg.text, "^[#!/][Gg][Ee][Tt] (.*)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt][Gg][Ll][Oo][Bb][Aa][Ll] ([^%s]+)$") and not string.match(msg.text, "^[#!/]([Ii][Mm][Pp][Oo][Rr][Tt][Gg][Ll][Oo][Bb][Aa][Ll][Ss][Ee][Tt][Ss]) (.+)$") and not string.match(msg.text, "^[#!/][Uu][Nn][Ss][Ee][Tt] ([^%s]+)$") and not string.match(msg.text, "^[#!/][Ii][Mm][Pp][Oo][Rr][Tt][Gg][Rr][Oo][Uu][Pp][Ss][Ee][Tt][Ss] (.+)$") then
+                if string.match(msg.text:lower(), word:lower()) then
+                    local value = get_value(msg.chat.id, msg.chat.type, word:lower())
                     if value then
                         print('GET FOUND')
                         return value
@@ -311,8 +311,8 @@ local function check_word(msg, word, pre)
                 end
             end
         else
-            if string.match(msg.text:lower(), word) then
-                local value = get_value(msg, word)
+            if string.match(msg.text:lower(), word:lower()) then
+                local value = get_value(msg.chat.id, msg.chat.type, word:lower())
                 if value then
                     print('GET FOUND')
                     return value
@@ -322,8 +322,8 @@ local function check_word(msg, word, pre)
     end
     if msg.media then
         if msg.caption then
-            if string.match(msg.caption:lower(), word) then
-                local value = get_value(msg, word)
+            if string.match(msg.caption:lower(), word:lower()) then
+                local value = get_value(msg.chat.id, msg.chat.type, word:lower())
                 if value then
                     print('GET FOUND')
                     return value
@@ -432,7 +432,7 @@ local function run(msg, matches)
                 local tab = list_variables(msg, false):split('\n')
                 local newtab = { }
                 for i, word in pairs(tab) do
-                    newtab[word] = get_value(msg, word:lower())
+                    newtab[word] = get_value(msg.chat.id, msg.chat.type, word:lower())
                 end
                 local text = ''
                 for word, answer in pairs(newtab) do
@@ -452,7 +452,7 @@ local function run(msg, matches)
                 local tab = list_variables(msg, true):split('\n')
                 local newtab = { }
                 for i, word in pairs(tab) do
-                    newtab[word] = get_value(msg, word:lower())
+                    newtab[word] = get_value(msg.chat.id, msg.chat.type, word:lower())
                 end
                 local text = ''
                 for word, answer in pairs(newtab) do
@@ -493,7 +493,7 @@ local function run(msg, matches)
                     return langs[msg.lang].errorTryAgain
                 end
 
-                local hash = set_unset_variables_hash(msg)
+                local hash = set_unset_variables_hash(msg.chat.id, msg.chat.type)
                 if hash then
                     if msg.reply_to_message.media then
                         local file_id = ''
@@ -555,7 +555,7 @@ local function run(msg, matches)
             if pcall( function()
                     string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
                 end ) then
-                return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
+                return set_value(msg.chat.id, msg.chat.type, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), false)
             else
                 return langs[msg.lang].errorTryAgain
             end
@@ -573,7 +573,7 @@ local function run(msg, matches)
             if pcall( function()
                     string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
                 end ) then
-                return set_value(msg, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
+                return set_value(msg.chat.id, msg.chat.type, string.sub(matches[2]:lower(), 1, 50), string.sub(matches[3], 1, 4096), true)
             else
                 return langs[msg.lang].errorTryAgain
             end
@@ -585,7 +585,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'unset' then
         mystat('/unset')
         if msg.from.is_mod then
-            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), ' ', '_'):lower(), false)
+            return unset_var(msg.chat.id, msg.chat.type, string.gsub(string.sub(matches[2], 1, 50), ' ', '_'):lower(), false)
         else
             return langs[msg.lang].require_mod
         end
@@ -593,7 +593,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'unsetglobal' then
         mystat('/unsetglobal')
         if is_admin(msg) then
-            return unset_var(msg, string.gsub(string.sub(matches[2], 1, 50), ' ', '_'):lower(), true)
+            return unset_var(msg.chat.id, msg.chat.type, string.gsub(string.sub(matches[2], 1, 50), ' ', '_'):lower(), true)
         else
             return langs[msg.lang].require_admin
         end
@@ -603,7 +603,7 @@ end
 local function pre_process(msg)
     if msg then
         -- local
-        local vars = redis:hkeys(get_variables_hash(msg, false))
+        local vars = redis:hkeys(get_variables_hash(msg.chat.id, msg.chat.type, false))
         for i, word in pairs(vars) do
             local answer = check_word(msg, word:lower(), true)
             if answer then
@@ -669,7 +669,7 @@ local function pre_process(msg)
             end
         end
         -- global
-        local vars = redis:hkeys(get_variables_hash(msg, true))
+        local vars = redis:hkeys(get_variables_hash(msg.chat.id, msg.chat.type, true))
         for i, word in pairs(vars) do
             local answer = check_word(msg, word:lower(), true)
             if answer then
