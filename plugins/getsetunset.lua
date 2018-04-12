@@ -95,11 +95,7 @@ local function adjust_value(value, msg, parse_mode)
         value = value:gsub('$rules', get_rules(chat.id))
     end
     if string.find(value, '$grouplink') then
-        if data[tostring(chat.id)].link then
-            value = value:gsub('$grouplink', data[tostring(chat.id)].link)
-        else
-            value = value:gsub('$grouplink', 'NO GROUP LINK SET')
-        end
+        value = value:gsub('$grouplink', data[tostring(chat.id)].link or 'NO GROUP LINK SET')
     end
 
     -- user
@@ -111,16 +107,10 @@ local function adjust_value(value, msg, parse_mode)
         value = value:gsub('$firstname', user.first_name)
     end
     if string.find(value, '$lastname') then
-        if user.last_name then
-            value = value:gsub('$lastname', user.last_name)
-        end
+        value = value:gsub('$lastname', user.last_name or '')
     end
     if string.find(value, '$printname') then
-        user.print_name = user.first_name
-        if user.last_name then
-            user.print_name = user.print_name .. ' ' .. user.last_name
-        end
-        value = value:gsub('$printname', user.print_name)
+        value = value:gsub('$printname', user.first_name .. ' ' ..(user.last_name or ''))
     end
     if string.find(value, '$username') then
         if user.username then
@@ -153,16 +143,10 @@ local function adjust_value(value, msg, parse_mode)
         value = value:gsub('$replyfirstname', replyuser.first_name)
     end
     if string.find(value, '$replylastname') then
-        if replyuser.last_name then
-            value = value:gsub('$replylastname', replyuser.last_name)
-        end
+        value = value:gsub('$replylastname', replyuser.last_name or '')
     end
     if string.find(value, '$replyprintname') then
-        replyuser.print_name = replyuser.first_name
-        if replyuser.last_name then
-            replyuser.print_name = replyuser.print_name .. ' ' .. replyuser.last_name
-        end
-        value = value:gsub('$replyprintname', replyuser.print_name)
+        value = value:gsub('$replyprintname', replyuser.first_name .. ' ' ..(replyuser.last_name or ''))
     end
     if string.find(value, '$replyusername') then
         if replyuser.username then
@@ -214,16 +198,10 @@ local function adjust_value(value, msg, parse_mode)
         value = value:gsub('$forwardfirstname', fwd_user.first_name)
     end
     if string.find(value, '$forwardlastname') then
-        if fwd_user.last_name then
-            value = value:gsub('$forwardlastname', fwd_user.last_name)
-        end
+        value = value:gsub('$forwardlastname', fwd_user.last_name or '')
     end
     if string.find(value, '$forwardprintname') then
-        fwd_user.print_name = fwd_user.first_name
-        if fwd_user.last_name then
-            fwd_user.print_name = fwd_user.print_name .. ' ' .. fwd_user.last_name
-        end
-        value = value:gsub('$forwardprintname', fwd_user.print_name)
+        value = value:gsub('$forwardprintname', fwd_user.first_name .. ' ' ..(fwd_user.last_name or ''))
     end
     if string.find(value, '$forwardusername') then
         if fwd_user.username then

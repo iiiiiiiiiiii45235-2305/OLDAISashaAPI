@@ -116,11 +116,7 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user, parse_mode)
         goodbyewelcome = goodbyewelcome:gsub('$rules', get_rules(chat.id))
     end
     if string.find(goodbyewelcome, '$grouplink') then
-        if data[tostring(chat.id)].link then
-            goodbyewelcome = goodbyewelcome:gsub('$grouplink', data[tostring(chat.id)].link)
-        else
-            goodbyewelcome = goodbyewelcome:gsub('$grouplink', 'NO GROUP LINK SET')
-        end
+        goodbyewelcome = goodbyewelcome:gsub('$grouplink', data[tostring(chat.id)].link or 'NO GROUP LINK SET')
     end
 
     -- user
@@ -131,16 +127,10 @@ local function adjust_goodbyewelcome(goodbyewelcome, chat, user, parse_mode)
         goodbyewelcome = goodbyewelcome:gsub('$firstname', user.first_name)
     end
     if string.find(goodbyewelcome, '$lastname') then
-        if user.last_name then
-            goodbyewelcome = goodbyewelcome:gsub('$lastname', user.last_name)
-        end
+        goodbyewelcome = goodbyewelcome:gsub('$lastname', user.last_name or '')
     end
     if string.find(goodbyewelcome, '$printname') then
-        user.print_name = user.first_name
-        if user.last_name then
-            user.print_name = user.print_name .. ' ' .. user.last_name
-        end
-        goodbyewelcome = goodbyewelcome:gsub('$printname', user.print_name)
+        goodbyewelcome = goodbyewelcome:gsub('$printname', user.first_name .. ' ' ..(user.last_name or ''))
     end
     if string.find(goodbyewelcome, '$username') then
         if user.username then
