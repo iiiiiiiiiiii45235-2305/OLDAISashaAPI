@@ -416,7 +416,9 @@ local function pre_process(msg)
                             print('sudo', k)
                             -- set user as notified to not send multiple notifications
                             notified[tostring(k)] = true
-                            send_tag_alert(msg, k)
+                            if sendChatAction(k, 'typing') then
+                                send_tag_alert(msg, k)
+                            end
                         end
                     end
                 end
@@ -438,7 +440,9 @@ local function pre_process(msg)
                                 if not msg.command then
                                     -- set user as notified to not send multiple notifications
                                     notified[tostring(usernames[i])] = true
-                                    send_tag_alert(msg, usernames[i])
+                                    if sendChatAction(usernames[i], 'typing') then
+                                        send_tag_alert(msg, usernames[i])
+                                    end
                                 else
                                     print("TAG FOUND BUT COMMAND")
                                 end
@@ -462,7 +466,9 @@ local function pre_process(msg)
                                             if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
                                                 -- set user as notified to not send multiple notifications
                                                 notified[tostring(nicknames[i])] = true
-                                                send_tag_alert(msg, nicknames[i])
+                                                if sendChatAction(nicknames[i], 'typing') then
+                                                    send_tag_alert(msg, nicknames[i])
+                                                end
                                             end
                                         end
                                     end
