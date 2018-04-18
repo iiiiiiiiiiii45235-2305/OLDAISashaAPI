@@ -655,6 +655,7 @@ function executeBackupCommand(tar_command, time)
         end
         sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
     end
+    return log
 end
 
 function doSendBackup()
@@ -666,6 +667,7 @@ function doSendBackup()
     -- save crontab
     io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
 
+    local log = io.popen('sudo ntpdate -s time.nist.gov'):read('*all')
     local time = os.time()
     -- OLD BACKUP METHOD
     --[[local tar_command = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
@@ -711,27 +713,27 @@ function doSendBackup()
     local AISasha_tar = 'sudo tar -zcvf backupAISasha' .. time .. '.tar.gz ' ..
     '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore ' ..
     '/home/pi/AISasha '
-    executeBackupCommand(AISasha_tar, time)
+    log = log .. '\n' .. executeBackupCommand(AISasha_tar, time)
     -- AISASHAAPI
     local AISashaAPI_tar = 'sudo tar -zcvf backupAISashaAPI' .. time .. '.tar.gz ' ..
     '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore ' ..
     '/home/pi/AISashaAPI '
-    executeBackupCommand(AISashaAPI_tar, time)
+    log = log .. '\n' .. executeBackupCommand(AISashaAPI_tar, time)
     -- RASPBERRYPI
     local RaspberryPi_tar = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     '/home/pi/Desktop ' ..
     '/var/lib/redis '
-    executeBackupCommand(RaspberryPi_tar, time)
+    log = log .. '\n' .. executeBackupCommand(RaspberryPi_tar, time)
     -- GRABBER
     local Grabber_tar = 'sudo tar -zcvf backupGrabber' .. time .. '.tar.gz ' ..
     '--exclude=/home/pi/Grabber/__pycache__ ' ..
     '/home/pi/Grabber '
-    executeBackupCommand(Grabber_tar, time)
+    log = log .. '\n' .. executeBackupCommand(Grabber_tar, time)
     -- MYBOTFORREPORTED
     local MyBotForReported_tar = 'sudo tar -zcvf backupMyBotForReported' .. time .. '.tar.gz ' ..
     '--exclude=/home/pi/MyBotForReported/.git ' ..
     '/home/pi/MyBotForReported '
-    executeBackupCommand(MyBotForReported_tar, time)
+    log = log .. '\n' .. executeBackupCommand(MyBotForReported_tar, time)
 end
 
 function adjustPermissions(param_permissions)
