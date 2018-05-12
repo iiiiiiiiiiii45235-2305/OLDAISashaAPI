@@ -17,9 +17,8 @@ if action == 'backup' then
     -- send the backups
     doSendBackup()
     -- deletes all files in log folder
-    -- TEMPORARY DISABLED
-    -- io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
-    -- io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
+    io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
+    io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
 elseif action == 'sendmessage' then
     print('TIMEWORK SENDMESSAGE')
     action, sleep_time, chat_id, parse_mode, text = ...
