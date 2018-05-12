@@ -1,3 +1,4 @@
+-- io.popen('lua timework.lua "ACTION" "SLEEP_TIME" OTHER PARAMETERS')
 loadfile("./introtimework.lua")()
 local action, sleep_time = ...
 if sleep_time then
@@ -7,7 +8,19 @@ if sleep_time then
         end
     end
 end
-if action == 'sendmessage' then
+if action == 'backup' then
+    print('TIMEWORK BACKUP')
+    -- deletes all previous backups (they're in telegram so no problem)
+    print("Deleting old backups")
+    io.popen('sudo rm -f /home/pi/BACKUPS/*'):read("*all")
+    sendMessage_SUDOERS(langs['en'].autoSendBackupDb, 'markdown')
+    -- send the backups
+    doSendBackup()
+    -- deletes all files in log folder
+    -- TEMPORARY DISABLED
+    -- io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
+    -- io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
+elseif action == 'sendmessage' then
     print('TIMEWORK SENDMESSAGE')
     action, sleep_time, chat_id, parse_mode, text = ...
     text = text:gsub('\\"', '"')

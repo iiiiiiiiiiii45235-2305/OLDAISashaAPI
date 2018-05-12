@@ -995,6 +995,9 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == "backup" then
                 mystat('/backup')
+                -- save database
+                save_data(config.database.db, database, true)
+                io.popen('lua timework.lua "backup" "0"')
                 doSendBackup()
                 return langs[msg.lang].backupDone
             end

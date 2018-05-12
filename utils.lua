@@ -631,12 +631,14 @@ function id_to_cli(id)
 end
 
 function executeBackupCommand(tar_command, time)
+    print("Executing " .. tar_command)
     local backup_name = string.match(tar_command, 'backup(.*)%d+%.tar%.gz')
     local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
     local file_backup_log = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
     file_backup_log:write(log)
     file_backup_log:flush()
     file_backup_log:close()
+    print("Finished")
     -- send last backup
     local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all")
     if files then
@@ -660,54 +662,19 @@ end
 
 function doSendBackup()
     -- save redis db
+    print("Saving Redis DB")
     redis:bgsave()
     -- deletes all files in tmp folders
+    print("Deleting all files in tmp folders")
     io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
     io.popen('rm -f /home/pi/AISasha/data/tmp/*'):read("*all")
     -- save crontab
+    print("Saving Crontab")
     io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
 
+    print("Synchronizing time")
     local log = io.popen('sudo ntpdate -s time.nist.gov'):read('*all')
     local time = os.time()
-    -- OLD BACKUP METHOD
-    --[[local tar_command = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
-    -- exclusions
-    '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.luarocks --exclude=/home/pi/AISasha/patches --exclude=/home/pi/AISasha/tg  --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore --exclude=/home/pi/AISasha/README.md' ..
-    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore --exclude=/home/pi/AISashaAPI/libs --exclude=/home/pi/AISashaAPI/README.md ' ..
-    '--exclude=/home/pi/Grabber/__pycache__ ' ..
-    '--exclude=/home/pi/MyBotForReported/.git --exclude=/home/pi/MyBotForReported/libs ' ..
-    -- desktop
-    '/home/pi/Desktop ' ..
-    -- sasha user
-    '/home/pi/AISasha ' ..
-    -- sasha bot
-    '/home/pi/AISashaAPI ' ..
-    -- grabber
-    '/home/pi/Grabber ' ..
-    -- bot for reported
-    '/home/pi/MyBotForReported ' ..
-    -- redis database
-    '/var/lib/redis'
-    local log = io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all')
-    local file_backup_log = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
-    file_backup_log:write(log)
-    file_backup_log:flush()
-    file_backup_log:close()
-    -- send last backup
-    local files = io.popen('ls "/home/pi/BACKUPS/"'):read("*all"):split('\n')
-    local backups = { }
-    if files then
-        for k, v in pairsByKeys(files) do
-            if string.match(v, '^backupRaspberryPi%d+%.tar%.gz$') then
-                backups[string.match(v, '%d+')] = v
-            end
-        end
-        local last_backup = ''
-        for k, v in pairsByKeys(backups) do
-            last_backup = v
-        end
-        sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
-    end]]
 
     -- AISASHA
     local AISasha_tar = 'sudo tar -zcvf backupAISasha' .. time .. '.tar.gz ' ..
