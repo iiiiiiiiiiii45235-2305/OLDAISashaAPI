@@ -497,22 +497,22 @@ function keyboard_log_pages(chat_id, page)
     -- adjust buttons
     for k, v in pairs(keyboard.inline_keyboard[1]) do
         if keyboard.inline_keyboard[1][k].text == langs[lang].updateKeyboard then
-            keyboard.inline_keyboard[1][k].callback_data = 'group_managementBACKLOG' .. page .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'group_managementBACKLOG' .. page .. "$" .. chat_id
         elseif keyboard.inline_keyboard[1][k].text == langs[lang].previousPage then
-            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1MINUS' .. page .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1MINUS' .. page .. "$"  .. chat_id
         elseif keyboard.inline_keyboard[1][k].text == langs[lang].nextPage then
-            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1PLUS' .. page .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1PLUS' .. page .. "$"  .. chat_id
         end
     end
     for k, v in pairs(keyboard.inline_keyboard[2]) do
         if keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].sevenNumber then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7MINUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7MINUS' .. page .. "$"  .. chat_id
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].threeNumber then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3MINUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3MINUS' .. page .. "$"  .. chat_id
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].threeNumber .. langs[lang].nextPage then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3PLUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3PLUS' .. page .. "$"  .. chat_id
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].sevenNumber .. langs[lang].nextPage then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7PLUS' .. page .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7PLUS' .. page .. "$"  .. chat_id
         end
     end
     return keyboard
