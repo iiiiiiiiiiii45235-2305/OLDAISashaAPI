@@ -545,7 +545,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'log' then
-        if msg.from.is_owner then
+        if msg.from.is_owner or msg.chat.type ~= 'private' then
             mystat('/log')
             if sendKeyboard(msg.from.id, logPages(msg.chat.id), keyboard_log_pages(msg.chat.id)) then
                 savelog(msg.chat.id, "log keyboard requested by owner/admin")
@@ -562,7 +562,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'sendlog' then
-        if msg.from.is_owner then
+        if msg.from.is_owner or msg.chat.type ~= 'private' then
             mystat('/log')
             savelog(msg.chat.id, "log file created by owner/admin")
             return sendDocument(msg.chat.id, "./groups/logs/" .. msg.chat.id .. "log.txt")
@@ -570,41 +570,40 @@ local function run(msg, matches)
             return langs[msg.lang].require_owner
         end
     end
-    if matches[1]:lower() == 'admin' or matches[1]:lower() == 'admins' then
-        mystat('/admins')
-        if not cronTable.adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
-            cronTable.adminsContacted[tostring(msg.chat.id)] = true
-            local hashtag = '#admins' .. tostring(msg.message_id)
-            local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
-            local group_link = data[tostring(msg.chat.id)].link
-            if group_link then
-                chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
-            end
-            local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
-            if msg.from.username then
-                text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
-            else
-                text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
-            end
-            text = text .. langs[msg.lang].msgText .. html_escape(msg.text or '') .. '\n' ..
-            'HASHTAG: ' .. hashtag
-            text = text:gsub('"', '\\"')
-            if msg.reply then
-                io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "' .. msg.reply_to_message.message_id .. '" "' .. hashtag .. '" "' .. text .. '"')
-            else
-                io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "false" "' .. hashtag .. '" "' .. text .. '"')
-            end
-            return
-        else
-            if not cronTable.noticeContacted[tostring(msg.chat.id)] then
-                cronTable.noticeContacted[tostring(msg.chat.id)] = true
-                return langs[msg.lang].dontFloodAdmins
-            end
-        end
-    end
-
     -- INGROUP/SUPERGROUP
     if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') and data[tostring(msg.chat.id)] then
+        if matches[1]:lower() == 'admin' or matches[1]:lower() == 'admins' then
+            mystat('/admins')
+            if not cronTable.adminsContacted[tostring(msg.chat.id)] or is_admin(msg) then
+                cronTable.adminsContacted[tostring(msg.chat.id)] = true
+                local hashtag = '#admins' .. tostring(msg.message_id)
+                local chat_name = msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']'
+                local group_link = data[tostring(msg.chat.id)].link
+                if group_link then
+                    chat_name = "<a href=\"" .. group_link .. "\">" .. html_escape(chat_name) .. "</a>"
+                end
+                local text = langs[msg.lang].receiver .. chat_name .. '\n' .. langs[msg.lang].sender
+                if msg.from.username then
+                    text = text .. '@' .. msg.from.username .. ' [' .. msg.from.id .. ']\n'
+                else
+                    text = text .. html_escape(msg.from.print_name:gsub("_", " ") .. ' [' .. msg.from.id .. ']\n')
+                end
+                text = text .. langs[msg.lang].msgText .. html_escape(msg.text or '') .. '\n' ..
+                'HASHTAG: ' .. hashtag
+                text = text:gsub('"', '\\"')
+                if msg.reply then
+                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "' .. msg.reply_to_message.message_id .. '" "' .. hashtag .. '" "' .. text .. '"')
+                else
+                    io.popen('lua timework.lua "contactadmins" "0.5" "' .. msg.chat.id .. '" "false" "' .. hashtag .. '" "' .. text .. '"')
+                end
+                return
+            else
+                if not cronTable.noticeContacted[tostring(msg.chat.id)] then
+                    cronTable.noticeContacted[tostring(msg.chat.id)] = true
+                    return langs[msg.lang].dontFloodAdmins
+                end
+            end
+        end
         if matches[1]:lower() == 'rules' then
             mystat('/rules')
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group rules")

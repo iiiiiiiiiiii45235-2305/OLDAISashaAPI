@@ -459,14 +459,14 @@ local function pre_process(msg)
                             if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
                                 print('nickname', nicknames[i])
                                 if not msg.command then
-                                    local obj = getChatMember(msg.chat.id, nicknames[i])
-                                    if type(obj) == 'table' then
-                                        if obj.ok and obj.result then
-                                            obj = obj.result
-                                            if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
-                                                -- set user as notified to not send multiple notifications
-                                                notified[tostring(nicknames[i])] = true
-                                                if sendChatAction(nicknames[i], 'typing') then
+                                    -- set user as notified to not send multiple notifications
+                                    notified[tostring(nicknames[i])] = true
+                                    if sendChatAction(nicknames[i], 'typing') then
+                                        local obj = getChatMember(msg.chat.id, nicknames[i])
+                                        if type(obj) == 'table' then
+                                            if obj.ok and obj.result then
+                                                obj = obj.result
+                                                if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
                                                     send_tag_alert(msg, nicknames[i])
                                                 end
                                             end

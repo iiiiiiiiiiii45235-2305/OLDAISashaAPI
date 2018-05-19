@@ -1,4 +1,4 @@
--- io.popen('lua timework.lua "ACTION" "SLEEP_TIME" OTHER PARAMETERS')
+-- CALL IT LIKE THIS: io.popen('lua timework.lua "ACTION" "SLEEP_TIME" "OTHER" "PARAMETERS"')
 loadfile("./introtimework.lua")()
 local action, sleep_time = ...
 if sleep_time then
