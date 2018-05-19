@@ -99,7 +99,7 @@ end
 
 local function pre_process(msg)
     if msg then
-        if msg.chat.type == 'group' or msg.chat.type == 'supergroup' then
+        if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') and not msg.cb then
             local hash = 'flame:' .. msg.chat.id
             local tokick = 'tokick:' .. msg.chat.id
             if tostring(msg.from.id) == tostring(redis:get(tokick)) then
