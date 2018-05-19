@@ -545,7 +545,7 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'log' then
-        if msg.from.is_owner or msg.chat.type ~= 'private' then
+        if msg.from.is_owner or msg.chat.type == 'private' then
             mystat('/log')
             if sendKeyboard(msg.from.id, logPages(msg.chat.id), keyboard_log_pages(msg.chat.id)) then
                 savelog(msg.chat.id, "log keyboard requested by owner/admin")
@@ -562,7 +562,7 @@ local function run(msg, matches)
         end
     end
     if matches[1]:lower() == 'sendlog' then
-        if msg.from.is_owner or msg.chat.type ~= 'private' then
+        if msg.from.is_owner or msg.chat.type == 'private' then
             mystat('/log')
             savelog(msg.chat.id, "log file created by owner/admin")
             return sendDocument(msg.chat.id, "./groups/logs/" .. msg.chat.id .. "log.txt")
