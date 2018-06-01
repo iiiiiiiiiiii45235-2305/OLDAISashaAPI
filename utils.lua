@@ -895,7 +895,7 @@ function arePMNoticesEnabled(user_id, chat_id)
         return true
     end
     local pm = false
-    if redis:get('notice:' .. user_id) then
+    if redis:get('notice:' .. user_id) and sendChatAction(user_id, 'typing', true) then
         pm = true
     end
     if data[tostring(chat_id)] then

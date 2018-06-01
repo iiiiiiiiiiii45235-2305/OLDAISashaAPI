@@ -749,25 +749,23 @@ function msg_valid(msg)
         end
     end
 
-    if msg.edited then
-        -- Edited messages
-        if msg.date < os.time() -20 then
-            -- Message sent more than 20 seconds ago
-            msg = get_tg_rank(msg)
-            local res, err = pcall( function()
-                print(clr.white .. 'Preprocess edited message', 'database')
-                msg = plugins.database.pre_process(msg)
-                print(clr.white .. 'Preprocess edited message', 'delword')
-                msg = plugins.delword.pre_process(msg)
-                print(clr.white .. 'Preprocess edited message', 'msg_checks')
-                msg = plugins.msg_checks.pre_process(msg)
-                print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
-            end )
-            return false
-        end
-    else
-        if msg.date < os.time() -5 then
-            -- Before bot was started more or less
+    if msg.edited and msg.date < os.time() -20 then
+        -- Edited messages sent more than 20 seconds ago
+        msg = get_tg_rank(msg)
+        local res, err = pcall( function()
+            print(clr.white .. 'Preprocess old edited message', 'database')
+            msg = plugins.database.pre_process(msg)
+            print(clr.white .. 'Preprocess old edited message', 'delword')
+            msg = plugins.delword.pre_process(msg)
+            print(clr.white .. 'Preprocess old edited message', 'msg_checks')
+            msg = plugins.msg_checks.pre_process(msg)
+        end )
+        print(clr.yellow .. 'Not valid: old edited msg' .. clr.reset)
+        return false
+    elseif msg.date < os.time() -5 then
+        -- Old messages (more than 5 seconds ago)
+        if msg.date > os.time() -60 then
+            -- If more recent than 60 seconds ago check them
             msg = get_tg_rank(msg)
             local res, err = pcall( function()
                 print(clr.white .. 'Preprocess old message', 'database')
@@ -778,10 +776,10 @@ function msg_valid(msg)
                 msg = plugins.delword.pre_process(msg)
                 print(clr.white .. 'Preprocess old message', 'msg_checks')
                 msg = plugins.msg_checks.pre_process(msg)
-                print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
             end )
-            return false
         end
+        print(clr.yellow .. 'Not valid: old msg' .. clr.reset)
+        return false
     end
 
     if isBlocked(msg.from.id) and msg.chat.type == 'private' then

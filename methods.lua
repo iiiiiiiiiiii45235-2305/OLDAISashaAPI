@@ -680,7 +680,7 @@ function deleteMessage(chat_id, message_id, no_log)
                 savelog('delete_message', code)
             end
         end
-        return res
+        return res, code
     end
 end
 
@@ -2390,12 +2390,11 @@ function print_msg(msg, dont_print)
     if msg then
         if not msg.printed then
             msg.printed = true
-            local hour = os.date('%H')
-            local minute = os.date('%M')
-            local second = os.date('%S')
+            local seconds, minutes, hours = unixToDate(msg.date)
+            -- IT IS UTC TIME
             local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
             local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
-            local print_text = clr.cyan .. ' [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
+            local print_text = clr.cyan .. 'UTC [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
             if msg.cb then
                 print_text = print_text .. clr.blue .. '[inline keyboard callback] ' .. clr.reset
             end
