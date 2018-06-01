@@ -2394,7 +2394,7 @@ function print_msg(msg, dont_print)
             -- IT IS UTC TIME
             local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
             local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
-            local print_text = clr.cyan .. 'UTC [' .. hour .. ':' .. minute .. ':' .. second .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
+            local print_text = clr.cyan .. 'UTC [' .. hours .. ':' .. minutes .. ':' .. seconds .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
             if msg.cb then
                 print_text = print_text .. clr.blue .. '[inline keyboard callback] ' .. clr.reset
             end
