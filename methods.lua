@@ -2390,7 +2390,7 @@ function print_msg(msg, dont_print)
     if msg then
         if not msg.printed then
             msg.printed = true
-            local seconds, minutes, hours = unixToDate(msg.date)
+            local seconds, minutes, hours = unixToDate(msg.date or os.time())
             -- IT IS UTC TIME
             local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
             local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
