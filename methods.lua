@@ -195,10 +195,8 @@ end
 function getChatMember(chat_id, user_id, no_log)
     user_id = tostring(user_id):gsub(' ', '')
     if not string.match(user_id, '^%*%d') then
-        if sendChatAction(chat_id, 'typing', true) then
-            local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
-            return sendRequest(url, no_log)
-        end
+        local url = BASE_URL .. '/getChatMember?chat_id=' .. chat_id .. '&user_id=' .. user_id
+        return sendRequest(url, no_log)
     else
         local fake_user = { first_name = 'FAKECOMMAND', last_name = 'FAKECOMMAND', print_name = 'FAKECOMMAND', username = '@FAKECOMMAND', id = user_id, type = 'fake', status = 'fake' }
         return fake_user
