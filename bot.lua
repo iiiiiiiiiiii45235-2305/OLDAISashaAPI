@@ -847,7 +847,7 @@ function match_plugins(msg)
 
                 local disabled = plugin_disabled_on_chat(name, msg.chat.id)
                 print(pattern)
-                print((string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil)
+                print(string.find(pattern, "^###.*BACK") or string.find(pattern, "^###.*PAGE") or string.find(pattern, "^###.*DELETE"))
                 print(string.match(pattern, "^###.*BACK"), string.match(pattern, "^###.*PAGE"), string.match(pattern, "^###.*DELETE"))
                 print(pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil))
                 if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil) then
