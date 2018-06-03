@@ -846,11 +846,10 @@ function match_plugins(msg)
                 print(clr.magenta .. "msg matches: ", name, " => ", pattern .. clr.reset)
 
                 local disabled = plugin_disabled_on_chat(name, msg.chat.id)
-                print(pattern)
-                print(string.find(pattern, "^###.*BACK") or string.find(pattern, "^###.*PAGE") or string.find(pattern, "^###.*DELETE"))
-                print(string.match(pattern, "^###.*BACK"), string.match(pattern, "^###.*PAGE"), string.match(pattern, "^###.*DELETE"))
-                print(pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil))
-                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil) then
+                print((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil)
+                print(msg.text:match("^###.*BACK"), msg.text:match("^###.*PAGE"), msg.text:match("^###.*DELETE"))
+                print(pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil))
+                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil) then
                     if msg.chat.type == 'private' then
                         if disabled then
                             savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
