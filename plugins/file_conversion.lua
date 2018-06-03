@@ -32,7 +32,7 @@ local function run(msg, matches)
             end
             local res = getFile(file_id)
             local download_link = telegram_file_link(res)
-            local file_path, res_code = download_to_file(download_link, "/home/pi/AISashaAPI/tmp/" .. file_name)
+            local file_path, res_code = download_to_file(download_link, "/home/pi/AISashaAPI/data/tmp/" .. file_name)
             --[[if msg.reply_to_message.media_type == 'photo' then
                 file_name = msg.reply_to_message.photo.file_name or msg.reply_to_message.photo.file_id
                 file_id = msg.reply_to_message.photo.file_id
