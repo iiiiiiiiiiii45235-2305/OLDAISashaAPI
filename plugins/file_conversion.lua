@@ -36,25 +36,17 @@ local function run(msg, matches)
             --[[if msg.reply_to_message.media_type == 'photo' then
                 file_name = msg.reply_to_message.photo.file_name or msg.reply_to_message.photo.file_id
                 file_id = msg.reply_to_message.photo.file_id
-            elseif msg.reply_to_message.media_type == 'video' then
-                file_name = msg.reply_to_message.video.file_name or msg.reply_to_message.video.file_id
-                file_id = msg.reply_to_message.video.file_id
             elseif msg.reply_to_message.media_type == 'video_note' then
                 file_name = msg.reply_to_message.video_note.file_name or msg.reply_to_message.video_note.file_id
                 file_id = msg.reply_to_message.video_note.file_id
-            else]]if msg.reply_to_message.media_type == 'audio' then
+            else]]if msg.reply_to_message.media_type == 'video' then
+                return sendDocument(msg.chat.id, file_path)
+            elseif msg.reply_to_message.media_type == 'audio' then
                 return sendVoice(msg.chat.id, file_path)
             elseif msg.reply_to_message.media_type == 'voice_note' then
                 return sendAudio(msg.chat.id, file_path)
-            --[[elseif msg.reply_to_message.media_type == 'gif' then
-                file_name = msg.reply_to_message.document.file_name or msg.reply_to_message.document.file_id
-                file_id = msg.reply_to_message.document.file_id
-            elseif msg.reply_to_message.media_type == 'document' then
-                file_name = msg.reply_to_message.document.file_name or msg.reply_to_message.document.file_id
-                file_id = msg.reply_to_message.document.file_id
-            elseif msg.reply_to_message.media_type == 'sticker' then
-                file_name = msg.reply_to_message.sticker.file_name or msg.reply_to_message.sticker.file_id
-                file_id = msg.reply_to_message.sticker.file_id]]
+            elseif msg.reply_to_message.media_type == 'gif' then
+                return sendVideo(msg.chat.id, file_path)
             else
                 return langs[msg.lang].useQuoteOnFile
             end
