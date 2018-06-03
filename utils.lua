@@ -805,6 +805,8 @@ function adjust_plugin_names(p, lang)
         return langs[lang].pluginFakecommand or 'ERR'
     elseif p == 'feedback' then
         return langs[lang].pluginFeedback or 'ERR'
+    elseif p == 'fileconversion' then
+        return langs[lang].pluginFileconversion or 'ERR'
     elseif p == 'filemanager' then
         return langs[lang].pluginFilemanager or 'ERR'
     elseif p == 'flame' then
