@@ -846,9 +846,6 @@ function match_plugins(msg)
                 print(clr.magenta .. "msg matches: ", name, " => ", pattern .. clr.reset)
 
                 local disabled = plugin_disabled_on_chat(name, msg.chat.id)
-                print((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil)
-                print(msg.text:match("^###.*BACK"), msg.text:match("^###.*PAGE"), msg.text:match("^###.*DELETE"))
-                print(pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil))
                 if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil) then
                     if msg.chat.type == 'private' then
                         if disabled then
