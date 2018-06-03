@@ -784,87 +784,87 @@ end
 
 function adjust_plugin_names(p, lang)
     if p == 'administrator' then
-        return langs[lang].pluginAdministrator or 'ERR'
+        return langs[lang].pluginAdministrator or p or 'ERR'
     elseif p == 'alternatives' then
-        return langs[lang].pluginAlternatives or 'ERR'
+        return langs[lang].pluginAlternatives or p or 'ERR'
     elseif p == 'anti_spam' then
-        return langs[lang].pluginAnti_spam or 'ERR'
+        return langs[lang].pluginAnti_spam or p or 'ERR'
     elseif p == 'banhammer' then
-        return langs[lang].pluginBanhammer or 'ERR'
+        return langs[lang].pluginBanhammer or p or 'ERR'
     elseif p == 'bot' then
-        return langs[lang].pluginBot or 'ERR'
+        return langs[lang].pluginBot or p or 'ERR'
     elseif p == 'check_tag' then
-        return langs[lang].pluginCheck_tag or 'ERR'
+        return langs[lang].pluginCheck_tag or p or 'ERR'
     elseif p == 'database' then
-        return langs[lang].pluginDatabase or 'ERR'
+        return langs[lang].pluginDatabase or p or 'ERR'
     elseif p == 'delword' then
-        return langs[lang].pluginDelword or 'ERR'
+        return langs[lang].pluginDelword or p or 'ERR'
     elseif p == 'dogify' then
-        return langs[lang].pluginDogify or 'ERR'
+        return langs[lang].pluginDogify or p or 'ERR'
     elseif p == 'fakecommand' then
-        return langs[lang].pluginFakecommand or 'ERR'
+        return langs[lang].pluginFakecommand or p or 'ERR'
     elseif p == 'feedback' then
-        return langs[lang].pluginFeedback or 'ERR'
+        return langs[lang].pluginFeedback or p or 'ERR'
     elseif p == 'fileconversion' then
-        return langs[lang].pluginFileconversion or 'ERR'
+        return langs[lang].pluginFileconversion or p or 'ERR'
     elseif p == 'filemanager' then
-        return langs[lang].pluginFilemanager or 'ERR'
+        return langs[lang].pluginFilemanager or p or 'ERR'
     elseif p == 'flame' then
-        return langs[lang].pluginFlame or 'ERR'
+        return langs[lang].pluginFlame or p or 'ERR'
     elseif p == 'getsetunset' then
-        return langs[lang].pluginGetsetunset or 'ERR'
+        return langs[lang].pluginGetsetunset or p or 'ERR'
     elseif p == 'goodbyewelcome' then
-        return langs[lang].pluginGoodbyewelcome or 'ERR'
+        return langs[lang].pluginGoodbyewelcome or p or 'ERR'
     elseif p == 'group_management' then
-        return langs[lang].pluginGroup_management or 'ERR'
+        return langs[lang].pluginGroup_management or p or 'ERR'
     elseif p == 'help' then
-        return langs[lang].pluginHelp or 'ERR'
+        return langs[lang].pluginHelp or p or 'ERR'
     elseif p == 'info' then
-        return langs[lang].pluginInfo or 'ERR'
+        return langs[lang].pluginInfo or p or 'ERR'
     elseif p == 'interact' then
-        return langs[lang].pluginInteract or 'ERR'
+        return langs[lang].pluginInteract or p or 'ERR'
     elseif p == 'likecounter' then
-        return langs[lang].pluginLikecounter or 'ERR'
+        return langs[lang].pluginLikecounter or p or 'ERR'
     elseif p == 'lua_exec' then
-        return langs[lang].pluginLua_exec or 'ERR'
+        return langs[lang].pluginLua_exec or p or 'ERR'
     elseif p == 'me' then
-        return langs[lang].pluginMe or 'ERR'
+        return langs[lang].pluginMe or p or 'ERR'
     elseif p == 'msg_checks' then
-        return langs[lang].pluginMsg_checks or 'ERR'
+        return langs[lang].pluginMsg_checks or p or 'ERR'
     elseif p == 'multiple_commands' then
-        return langs[lang].pluginMultiple_commands or 'ERR'
+        return langs[lang].pluginMultiple_commands or p or 'ERR'
     elseif p == 'news' then
-        return langs[lang].pluginNews or 'ERR'
+        return langs[lang].pluginNews or p or 'ERR'
     elseif p == 'plugins' then
-        return langs[lang].pluginPlugins or 'ERR'
+        return langs[lang].pluginPlugins or p or 'ERR'
     elseif p == 'pokedex' then
-        return langs[lang].pluginPokedex or 'ERR'
+        return langs[lang].pluginPokedex or p or 'ERR'
     elseif p == 'qr' then
-        return langs[lang].pluginQr or 'ERR'
+        return langs[lang].pluginQr or p or 'ERR'
     elseif p == 'scheduled_commands' then
-        return langs[lang].pluginScheduled_commands or 'ERR'
+        return langs[lang].pluginScheduled_commands or p or 'ERR'
     elseif p == 'shout' then
-        return langs[lang].pluginShout or 'ERR'
+        return langs[lang].pluginShout or p or 'ERR'
     elseif p == 'spam' then
-        return langs[lang].pluginSpam or 'ERR'
+        return langs[lang].pluginSpam or p or 'ERR'
     elseif p == 'stats' then
-        return langs[lang].pluginStats or 'ERR'
+        return langs[lang].pluginStats or p or 'ERR'
     elseif p == 'strings' then
-        return langs[lang].pluginStrings or 'ERR'
+        return langs[lang].pluginStrings or p or 'ERR'
     elseif p == 'tempmessage' then
-        return langs[lang].pluginTempmessage or 'ERR'
+        return langs[lang].pluginTempmessage or p or 'ERR'
     elseif p == 'test' then
-        return 'TEST' or 'ERR'
+        return 'TEST' or p or 'ERR'
     elseif p == 'tex' then
-        return langs[lang].pluginTex or 'ERR'
+        return langs[lang].pluginTex or p or 'ERR'
     elseif p == 'tgcli_to_api_migration' then
-        return langs[lang].pluginTgcli_to_api_migration or 'ERR'
+        return langs[lang].pluginTgcli_to_api_migration or p or 'ERR'
     elseif p == 'urbandictionary' then
-        return langs[lang].pluginUrbandictionary or 'ERR'
+        return langs[lang].pluginUrbandictionary or p or 'ERR'
     elseif p == 'webshot' then
-        return langs[lang].pluginWebshot or 'ERR'
+        return langs[lang].pluginWebshot or p or 'ERR'
     elseif p == 'whitelist' then
-        return langs[lang].pluginWhitelist or 'ERR'
+        return langs[lang].pluginWhitelist or p or 'ERR'
     end
     return 'ERR'
 end
