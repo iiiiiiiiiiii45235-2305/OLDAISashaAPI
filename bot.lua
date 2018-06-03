@@ -847,8 +847,6 @@ function match_plugins(msg)
 
                 local disabled = plugin_disabled_on_chat(name, msg.chat.id)
                 if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and (string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil then
-                    print("in", (string.match(pattern, "^###.*BACK") or string.match(pattern, "^###.*PAGE") or string.match(pattern, "^###.*DELETE")) == nil)
-                    print(string.match(pattern, "^###.*BACK") , string.match(pattern, "^###.*PAGE") , string.match(pattern, "^###.*DELETE"))
                     if msg.chat.type == 'private' then
                         if disabled then
                             savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
