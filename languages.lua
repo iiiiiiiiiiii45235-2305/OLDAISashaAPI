@@ -571,6 +571,9 @@ return {
         feedUsername = "\nUsername: @",
         feedSent = "Feedback inviato!",
 
+        -- fileconversion.lua --
+        alreadyFile = "Questo è già un file.",
+
         -- filemanager.lua --
         backHomeFolder = "Sei tornato alla cartella base: ",
         youAreHere = "Sei qui: ",
@@ -1306,6 +1309,14 @@ return {
             "Plugin per mandare feedback.",
             "<b>USER</b>",
             "<code>/feedback {text}</code>: Sasha invia {text} come feedback.",
+        },
+
+        fileconversion =
+        {
+            "🅿️ <b>FILECONVERSION</b> 🅿️",
+            "Plugin per la conversione di files.",
+            "<b>USER</b>",
+            "<code>/convert {reply}</code>: Sasha converte il file di {reply} da audio a voice_note o vice versa, altrimenti Sasha lo invierà come document.",
         },
 
         filemanager =
@@ -2100,6 +2111,9 @@ return {
         feedUsername = "\nUsername: @",
         feedSent = "Feedback sent!",
 
+        -- fileconversion.lua --
+        alreadyFile = "This is already a file.",
+
         -- filemanager.lua --
         backHomeFolder = "You're in the base folder: ",
         youAreHere = "You are here: ",
@@ -2842,6 +2856,14 @@ return {
             "Plugin for feedbacks.",
             "<b>USER</b>",
             "<code>/feedback {text}</code>: Sasha sends {text} as feedback.",
+        },
+
+        fileconversion =
+        {
+            "🅿️ <b>FILECONVERSION</b> 🅿️",
+            "Plugin for converting files.",
+            "<b>USER</b>",
+            "<code>/convert {reply}</code>: Sasha converts the file in {reply} from audio to voice_note or vice versa, otherwise Sasha will send it in the form of document.",
         },
 
         filemanager =

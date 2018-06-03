@@ -153,8 +153,18 @@ function run(msg, matches)
                         local file_name = ''
                         local file_id = ''
                         if msg.reply_to_message.media_type == 'photo' then
-                            file_name = msg.reply_to_message.photo.file_name or msg.reply_to_message.photo.file_id
-                            file_id = msg.reply_to_message.photo.file_id
+                            local bigger_pic_id = ''
+                            local size = 0
+                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
+                                if v.file_size then
+                                    if v.file_size > size then
+                                        size = v.file_size
+                                        bigger_pic_id = v.file_id
+                                    end
+                                end
+                            end
+                            file_id = bigger_pic_id
+                            file_name = bigger_pic_id
                         elseif msg.reply_to_message.media_type == 'video' then
                             file_name = msg.reply_to_message.video.file_name or msg.reply_to_message.video.file_id
                             file_id = msg.reply_to_message.video.file_id
