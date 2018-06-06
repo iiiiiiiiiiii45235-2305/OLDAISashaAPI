@@ -588,9 +588,13 @@ function get_lang(chat_id)
         return 'en'
     end
     if tonumber(chat_id) < 0 then
-        if data[tostring(chat_id)] then
-            data[tostring(chat_id)].lang = data[tostring(chat_id)].lang or 'en'
-            return data[tostring(chat_id)].lang
+        if data then
+            if data[tostring(chat_id)] then
+                data[tostring(chat_id)].lang = data[tostring(chat_id)].lang or 'en'
+                return data[tostring(chat_id)].lang
+            else
+                return 'en'
+            end
         else
             return 'en'
         end
