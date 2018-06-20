@@ -839,6 +839,7 @@ local function run(msg, matches)
                     text = text .. data[tostring(k)].name .. " [" .. k .. "]: " .. tostring(sendChatAction(k, 'typing', true)) .. '\n'
                 end
             end
+            return text
         end
         if matches[1]:lower() == 'textuallist' then
             if matches[2]:lower() == 'groups' then
