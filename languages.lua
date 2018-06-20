@@ -2423,7 +2423,7 @@ return {
         pluginsWord = "📝 PLUGINS 📝",
 
         -- interact.lua
-        objectBlockedBot = "The specifided object blocked the bot.",
+        objectBlockedBot = "The specified object blocked the bot.",
         objectDidNotBlockedBot = "The specified object did not block the bot .",
         cantEditOthersMessages = "I can't edit others' messages.",
 
