@@ -831,6 +831,15 @@ local function run(msg, matches)
             mystat('/checkspeed')
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
         end
+        if matches[1]:lower() == 'checkchats' then
+            mystat('/checkchats')
+            local text = ''
+            for k, v in pairsByGroupName(data) do
+                if data[tostring(k)] then
+                    text = text .. data[tostring(k)].name .. " [" .. k .. "]: " .. tostring(sendChatAction(k, 'typing')) .. '\n'
+                end
+            end
+        end
         if matches[1]:lower() == 'textuallist' then
             if matches[2]:lower() == 'groups' then
                 mystat('/list groups')
@@ -1091,6 +1100,7 @@ return {
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
         "^[#!/]([Cc][Oo][Mm][Mm][Aa][Nn][Dd][Ss][Ss][Tt][Aa][Tt][Ss])$",
         "^[#!/]([Cc][Hh][Ee][Cc][Kk][Ss][Pp][Ee][Ee][Dd])$",
+        "^[#!/]([Cc][Hh][Ee][Cc][Kk][Cc][Hh][Aa][Tt][Ss])$",
         "^[#!/]([Rr][Ee][Bb][Oo][Oo][Tt][Cc][Ll][Ii])$",
         "^[#!/]([Pp][Ii][Nn][Gg])$",
         "^[#!/]([Ll][Aa][Ss][Tt][Ss][Tt][Aa][Rr][Tt])$",
@@ -1116,6 +1126,7 @@ return {
         "/pmunblock {user}",
         "/list admins|(groups [createlinks])",
         "/checkspeed",
+        "/checkchats",
         "/requestslog",
         "/vardump [{reply}]",
         "/commandsstats",

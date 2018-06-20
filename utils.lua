@@ -683,7 +683,8 @@ function doSendBackup()
     -- AISASHA
     local AISasha_tar = 'sudo tar -zcvf backupAISasha' .. time .. '.tar.gz ' ..
     '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore ' ..
-    '/home/pi/AISasha '
+    '/home/pi/AISasha ' ..
+    '/home/pi/.telegram-cli'
     log = log .. '\n' .. executeBackupCommand(AISasha_tar, time)
     -- AISASHAAPI
     local AISashaAPI_tar = 'sudo tar -zcvf backupAISashaAPI' .. time .. '.tar.gz ' ..
@@ -693,6 +694,9 @@ function doSendBackup()
     -- RASPBERRYPI
     local RaspberryPi_tar = 'sudo tar -zcvf backupRaspberryPi' .. time .. '.tar.gz ' ..
     '/home/pi/Desktop ' ..
+    '/home/pi/tmux-mem-cpu-load ' ..
+    '/home/pi/.tmux.conf ' ..
+    '/home/pi/.tmux.conf.local ' ..
     '/var/lib/redis '
     log = log .. '\n' .. executeBackupCommand(RaspberryPi_tar, time)
     -- GRABBER
