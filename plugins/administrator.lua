@@ -836,7 +836,7 @@ local function run(msg, matches)
             local text = ''
             for k, v in pairsByGroupName(data) do
                 if data[tostring(k)] then
-                    text = text .. data[tostring(k)].name .. " [" .. k .. "]: " .. tostring(sendChatAction(k, 'typing')) .. '\n'
+                    text = text .. data[tostring(k)].name .. " [" .. k .. "]: " .. tostring(sendChatAction(k, 'typing', true)) .. '\n'
                 end
             end
         end
