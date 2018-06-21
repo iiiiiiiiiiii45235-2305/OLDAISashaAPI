@@ -1012,7 +1012,6 @@ local function run(msg, matches)
                 -- save database
                 save_data(config.database.db, database, true)
                 io.popen('lua timework.lua "backup" "0"')
-                doSendBackup()
                 return langs[msg.lang].backupDone
             end
             if matches[1]:lower() == 'getip' then
