@@ -84,6 +84,7 @@ elseif action == 'contactadmins' then
                 already_contacted[tostring(v.id)] = v.id
                 if sendChatAction(v.id, 'typing', true) then
                     sendMessage(v.id, text, 'html')
+                    os.execute('sleep 0.4')
                 else
                     cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
                 end
@@ -101,6 +102,7 @@ elseif action == 'contactadmins' then
                         forwardMessage(admin.user.id, chat_id, fwd_msg)
                     end
                     sendMessage(admin.user.id, text, 'html')
+                    os.execute('sleep 0.4')
                 else
                     cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
                 end
@@ -118,6 +120,7 @@ elseif action == 'contactadmins' then
                     forwardMessage(owner, chat_id, fwd_msg)
                 end
                 sendMessage(owner, text, 'html')
+                os.execute('sleep 0.4')
             else
                 cant_contact = cant_contact .. owner .. '\n'
             end
@@ -134,6 +137,7 @@ elseif action == 'contactadmins' then
                         forwardMessage(k, chat_id, fwd_msg)
                     end
                     sendMessage(k, text, 'html')
+                    os.execute('sleep 0.4')
                 else
                     cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
                 end
