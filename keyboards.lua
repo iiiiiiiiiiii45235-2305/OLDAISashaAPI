@@ -499,20 +499,20 @@ function keyboard_log_pages(chat_id, page)
         if keyboard.inline_keyboard[1][k].text == langs[lang].updateKeyboard then
             keyboard.inline_keyboard[1][k].callback_data = 'group_managementBACKLOG' .. page .. "$" .. chat_id
         elseif keyboard.inline_keyboard[1][k].text == langs[lang].previousPage then
-            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1MINUS' .. page .. "$"  .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1MINUS' .. page .. "$" .. chat_id
         elseif keyboard.inline_keyboard[1][k].text == langs[lang].nextPage then
-            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1PLUS' .. page .. "$"  .. chat_id
+            keyboard.inline_keyboard[1][k].callback_data = 'group_managementPAGE1PLUS' .. page .. "$" .. chat_id
         end
     end
     for k, v in pairs(keyboard.inline_keyboard[2]) do
         if keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].sevenNumber then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7MINUS' .. page .. "$"  .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7MINUS' .. page .. "$" .. chat_id
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].previousPage .. langs[lang].threeNumber then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3MINUS' .. page .. "$"  .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3MINUS' .. page .. "$" .. chat_id
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].threeNumber .. langs[lang].nextPage then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3PLUS' .. page .. "$"  .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE3PLUS' .. page .. "$" .. chat_id
         elseif keyboard.inline_keyboard[2][k].text == langs[lang].sevenNumber .. langs[lang].nextPage then
-            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7PLUS' .. page .. "$"  .. chat_id
+            keyboard.inline_keyboard[2][k].callback_data = 'group_managementPAGE7PLUS' .. page .. "$" .. chat_id
         end
     end
     return keyboard
@@ -1163,6 +1163,21 @@ function get_object_info_keyboard(executer, obj, chat_id, deeper)
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].newlinkWord, callback_data = 'infoNEWLINK' .. obj.id }
+                if is_admin2(executer) then
+                    local chat_member_executer = getChatMember(chat_id, executer)
+                    if type(chat_member_executer) == 'table' then
+                        if chat_member_executer.result then
+                            chat_member_executer = chat_member_executer.result
+                            if chat_member_executer.status then
+                                if chat_member_executer.status == 'kicked' or chat_member_executer.status == 'restricted' then
+                                    row = row + 1
+                                    keyboard.inline_keyboard[row] = { }
+                                    keyboard.inline_keyboard[row][column] = { text = langs[lang].freeMe, callback_data = 'infoFREE' .. executer .. obj.id .. '$' .. chat_id }
+                                end
+                            end
+                        end
+                    end
+                end
                 row = row + 1
                 keyboard.inline_keyboard[row] = { }
                 keyboard.inline_keyboard[row][column] = { text = langs[lang].settingsWord, callback_data = 'group_managementBACKSETTINGS1' .. obj.id .. 'I' }

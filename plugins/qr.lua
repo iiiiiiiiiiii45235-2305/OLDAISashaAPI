@@ -46,7 +46,11 @@ local function run(msg, matches)
     end
 
     if #response > 0 then
-        return sendPhotoFromUrl(msg.chat.id, url)
+        if downloadCache[url] then
+            return sendPhoto(msg.chat.id, downloadCache[url])
+        else
+            return sendPhotoFromUrl(msg.chat.id, url)
+        end
     end
     return langs[msg.lang].opsError
 end

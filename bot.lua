@@ -30,6 +30,9 @@ globalCronTable = {
         -- chat_id = { user_id = false/true }
     }
 }
+downloadCache = {
+    -- link = filepath
+}
 
 -- Save the content of config to config.lua
 function save_config()
@@ -846,7 +849,7 @@ function match_plugins(msg)
                 print(clr.magenta .. "msg matches: ", name, " => ", pattern .. clr.reset)
 
                 local disabled = plugin_disabled_on_chat(name, msg.chat.id)
-                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and ((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil) then
+                if pattern ~= "([\216-\219][\128-\191])" and pattern ~= "!!tgservice (.*)" and not msg.media and((msg.text:match("^###.*BACK") or msg.text:match("^###.*PAGE") or msg.text:match("^###.*DELETE")) == nil) then
                     if msg.chat.type == 'private' then
                         if disabled then
                             savelog(msg.chat.id, msg.chat.print_name:gsub('_', ' ') .. ' ID: ' .. '[' .. msg.chat.id .. ']' .. '\nCommand "' .. msg.text .. '" received but plugin is disabled on chat.')
@@ -998,6 +1001,11 @@ function cron_administrator()
         -- save database
         save_data(config.database.db, database, true)
         io.popen('lua timework.lua "backup" "0"')
+        -- deletes all files in tmp folders
+        print("Deleting all files in tmp folders")
+        io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
+        io.popen('rm -f /home/pi/AISasha/data/tmp/*'):read("*all")
+        downloadCache = { }
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
     end

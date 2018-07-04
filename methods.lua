@@ -1417,6 +1417,7 @@ function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id
         return langs[get_lang(chat_id)].errorFileDownload
     else
         print("File path: " .. file_path)
+        downloadCache[url_to_download] = file_path
         return sendPhoto(chat_id, file_path, caption, reply_to_message_id)
     end
 end

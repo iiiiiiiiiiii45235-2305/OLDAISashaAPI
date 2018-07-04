@@ -3,7 +3,11 @@ local function run(msg, matches)
     local url = "http://latex.codecogs.com/png.download?" ..
     "\\dpi{300}%20\\LARGE%20" .. eq
 
-    return sendPhotoFromUrl(msg.chat.id, url)
+    if downloadCache[url] then
+        return sendPhoto(msg.chat.id, downloadCache[url])
+    else
+        return sendPhotoFromUrl(msg.chat.id, url)
+    end
 end
 
 return {

@@ -6,7 +6,11 @@ local function run(msg, matches)
         elseif matches[2] and matches[3] then
             url = url .. "&width=" .. matches[2] .. "&height=" .. matches[3]
         end
-        return sendPhotoFromUrl(msg.chat.id, url)
+        if downloadCache[url] then
+            return sendPhoto(msg.chat.id, downloadCache[url])
+        else
+            return sendPhotoFromUrl(msg.chat.id, url)
+        end
     else
         return langs[msg.lang].require_mod
     end
