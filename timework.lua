@@ -19,6 +19,9 @@ if action == 'backup' then
     -- deletes all files in log folder
     io.popen('rm -f /home/pi/AISasha/groups/logs/*'):read("*all")
     io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
+elseif action == 'update' then
+    print('TIMEWORK UPDATE')
+    sendMessage(chat_id, io.popen('git pull'):read('*all'))
 elseif action == 'sendmessage' then
     print('TIMEWORK SENDMESSAGE')
     action, sleep_time, chat_id, parse_mode, text = ...

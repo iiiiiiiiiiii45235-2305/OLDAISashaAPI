@@ -994,7 +994,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == "update" then
                 mystat('/update')
-                return io.popen('git pull'):read('*all')
+                io.popen('lua timework.lua "update" "0"')
             end
             if matches[1] == 'botrestart' then
                 mystat('/botrestart')
