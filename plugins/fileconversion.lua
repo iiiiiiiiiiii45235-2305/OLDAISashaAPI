@@ -44,11 +44,11 @@ local function run(msg, matches)
             local download_link = telegram_file_link(res)
             local file_path, res_code = download_to_file(download_link, "/home/pi/AISashaAPI/data/tmp/" .. file_name)
             if msg.reply_to_message.media_type == 'photo' or msg.reply_to_message.media_type == 'video' or msg.reply_to_message.media_type == 'video_note' or msg.reply_to_message.media_type == 'gif' or msg.reply_to_message.media_type == 'sticker' then
-                return sendDocument(msg.chat.id, file_path)
+                return sendDocument(msg.chat.id, file_path, langs[msg.lang].downloadAndRename)
             elseif msg.reply_to_message.media_type == 'audio' then
-                return sendVoice(msg.chat.id, file_path)
+                return sendVoice(msg.chat.id, file_path, langs[msg.lang].downloadAndRename)
             elseif msg.reply_to_message.media_type == 'voice_note' then
-                return sendAudio(msg.chat.id, file_path)
+                return sendAudio(msg.chat.id, file_path, langs[msg.lang].downloadAndRename)
             elseif msg.reply_to_message.media_type == 'document' then
                 return langs[msg.lang].alreadyFile
             else

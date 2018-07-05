@@ -573,6 +573,7 @@ return {
 
         -- fileconversion.lua --
         alreadyFile = "Questo è già un file.",
+        downloadAndRename = "Scarica il file e aggiungi l'estensione appropriata (rinominalo).",
 
         -- filemanager.lua --
         backHomeFolder = "Sei tornato alla cartella base: ",
@@ -2116,6 +2117,7 @@ return {
 
         -- fileconversion.lua --
         alreadyFile = "This is already a file.",
+        downloadAndRename = "Download the file and put the appropriate extension (rename it).",
 
         -- filemanager.lua --
         backHomeFolder = "You're in the base folder: ",
