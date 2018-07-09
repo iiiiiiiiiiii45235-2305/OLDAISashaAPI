@@ -2391,8 +2391,14 @@ function print_msg(msg, dont_print)
             msg.printed = true
             local seconds, minutes, hours = unixToDate(msg.date or os.time())
             -- IT IS UTC TIME
-            local chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
-            local sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
+            local chat_name = "ERROR CHAT NAME"
+            if msg.chat then
+                chat_name = msg.chat.title or(msg.chat.first_name ..(msg.chat.last_name or ''))
+            end
+            local sender_name = "ERROR FROM NAME"
+            if msg.from then
+                sender_name = msg.from.title or(msg.from.first_name ..(msg.from.last_name or ''))
+            end
             local print_text = clr.cyan .. 'UTC [' .. hours .. ':' .. minutes .. ':' .. seconds .. ']  ' .. chat_name .. ' ' .. clr.reset .. clr.red .. sender_name .. clr.reset .. clr.blue .. ' >>> ' .. clr.reset
             if msg.cb then
                 print_text = print_text .. clr.blue .. '[inline keyboard callback] ' .. clr.reset
@@ -2401,7 +2407,7 @@ function print_msg(msg, dont_print)
                 print_text = print_text .. clr.blue .. '[edited] ' .. clr.reset
             end
             if msg.forward then
-                local forwarder = ''
+                local forwarder = "ERROR FORWARD NAME"
                 if msg.forward_from then
                     forwarder = msg.forward_from.first_name ..(msg.forward_from.last_name or '')
                 elseif msg.forward_from_chat then
@@ -2413,7 +2419,7 @@ function print_msg(msg, dont_print)
                 print_text = print_text .. clr.blue .. '[reply] ' .. clr.reset
             end
             if msg.media then
-                print_text = print_text .. clr.blue .. '[' ..(msg.media_type or 'unsupported media') .. '] ' .. clr.reset
+                print_text = print_text .. clr.blue .. '[' ..(msg.media_type or 'ERROR MEDIA NOT SUPPORTED') .. '] ' .. clr.reset
                 if msg.caption then
                     print_text = print_text .. clr.blue .. msg.caption .. clr.reset
                 end
@@ -2430,7 +2436,7 @@ function print_msg(msg, dont_print)
                 elseif msg.service_type == 'chat_add_user_link' then
                     print_text = print_text .. clr.red ..(msg.adder.first_name ..(msg.adder.last_name or '')) .. clr.reset .. clr.blue .. ' joined chat by invite link ' .. clr.reset
                 else
-                    print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'unsupported service') .. '] ' .. clr.reset
+                    print_text = print_text .. clr.blue .. '[' ..(msg.service_type or 'ERROR SERVICE NOT SUPPORTED') .. '] ' .. clr.reset
                 end
             end
             if msg.text then
