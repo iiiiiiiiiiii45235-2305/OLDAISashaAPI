@@ -1321,6 +1321,7 @@ return {
             "Plugin per la conversione di files.",
             "<b>USER</b>",
             "<code>/convert {reply}</code>: Sasha converte il file di {reply} da audio a voice_note o vice versa, altrimenti Sasha lo invierà come document.",
+            "<code>/filetovoice {reply}</code>: Sasha converte il file di {reply} a voice_note.",
         },
 
         filemanager =
@@ -2872,6 +2873,7 @@ return {
             "Plugin for converting files.",
             "<b>USER</b>",
             "<code>/convert {reply}</code>: Sasha converts the file in {reply} from audio to voice_note or vice versa, otherwise Sasha will send it in the form of document.",
+            "<code>/filetovoice {reply}</code>: Sasha converts the file in {reply} to voice_note.",
         },
 
         filemanager =

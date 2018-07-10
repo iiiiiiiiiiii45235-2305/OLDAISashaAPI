@@ -58,6 +58,24 @@ local function run(msg, matches)
             return langs[msg.lang].useQuoteOnFile
         end
     end
+    if matches[1]:lower() == 'filetovoice' and msg.reply then
+        if msg.reply_to_message.media then
+            local file_name = ''
+            local file_id = ''
+            if msg.reply_to_message.media_type == 'document' then
+                file_name = msg.reply_to_message.document.file_name or msg.reply_to_message.document.file_id
+                file_id = msg.reply_to_message.document.file_id
+            else
+                return langs[msg.lang].useQuoteOnFile
+            end
+            local res = getFile(file_id)
+            local download_link = telegram_file_link(res)
+            local file_path, res_code = download_to_file(download_link, "/home/pi/AISashaAPI/data/tmp/" .. file_name)
+            return sendVoice(msg.chat.id, file_path, langs[msg.lang].downloadAndRename)
+        else
+            return langs[msg.lang].useQuoteOnFile
+        end
+    end
 end
 
 return {
@@ -65,6 +83,7 @@ return {
     patterns =
     {
         "^[#!/]([Cc][Oo][Nn][Vv][Ee][Rr][Tt])$",
+        "^[#!/]([Ff][Ii][Ll][Ee][Tt][Oo][Vv][Oo][Ii][Cc][Ee])$",
     },
     run = run,
     min_rank = 1,
@@ -72,5 +91,6 @@ return {
     {
         "USER",
         "/convert {reply}",
+        "/filetovoice {reply}",
     }
 }
