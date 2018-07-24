@@ -983,6 +983,7 @@ function on_msg_receive(msg)
 end
 
 -- Call and postpone execution for cron plugins
+-- every minute
 function cron_plugins()
     if last_cron ~= last_redis_cron then
         for name, plugin in pairs(plugins) do
@@ -1005,6 +1006,7 @@ function cron_plugins()
     end
 end
 
+-- every day
 function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- save database
