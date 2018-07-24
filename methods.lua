@@ -353,15 +353,17 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound,
         end
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
         if tmp_msg then
-            local executer = tmp_msg.from.id
-            if get_rank(executer, chat_id, true) == 1 and(text == langs[get_lang(chat_id)].require_rank or text == langs[get_lang(chat_id)].require_mod or text == langs[get_lang(chat_id)].require_owner or text == langs[get_lang(chat_id)].require_admin or text == langs[get_lang(chat_id)].require_sudo) then
-                globalCronTable.executersTable[tostring(chat_id)][tostring(executer)] = true
-            end
-            if globalCronTable then
-                if globalCronTable.executersTable then
-                    if globalCronTable.executersTable[tostring(chat_id)] then
-                        if globalCronTable.executersTable[tostring(chat_id)][tostring(executer)] then
-                            return nil
+            if tmp_msg.from then
+                local executer = tmp_msg.from.id
+                if get_rank(executer, chat_id, true) == 1 and(text == langs[get_lang(chat_id)].require_rank or text == langs[get_lang(chat_id)].require_mod or text == langs[get_lang(chat_id)].require_owner or text == langs[get_lang(chat_id)].require_admin or text == langs[get_lang(chat_id)].require_sudo) then
+                    globalCronTable.executersTable[tostring(chat_id)][tostring(executer)] = true
+                end
+                if globalCronTable then
+                    if globalCronTable.executersTable then
+                        if globalCronTable.executersTable[tostring(chat_id)] then
+                            if globalCronTable.executersTable[tostring(chat_id)][tostring(executer)] then
+                                return nil
+                            end
                         end
                     end
                 end
