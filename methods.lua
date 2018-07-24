@@ -352,6 +352,19 @@ function sendMessage(chat_id, text, parse_mode, reply_to_message_id, send_sound,
             return nil
         end
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
+        local executer = tmp_msg.from.id
+        if get_rank(executer, chat_id, true) == 1 and(text == langs[get_lang(chat_id)].require_rank or text == langs[get_lang(chat_id)].require_mod or text == langs[get_lang(chat_id)].require_owner or text == langs[get_lang(chat_id)].require_admin or text == langs[get_lang(chat_id)].require_sudo) then
+            globalCronTable.executersTable[tostring(chat_id)][tostring(executer)] = true
+        end
+        if globalCronTable then
+            if globalCronTable.executersTable then
+                if globalCronTable.executersTable[tostring(chat_id)] then
+                    if globalCronTable.executersTable[tostring(chat_id)][tostring(executer)] then
+                        return nil
+                    end
+                end
+            end
+        end
         local text_max = 4096
         local text_len = string.len(text)
         local num_msg = math.ceil(text_len / text_max)
@@ -1628,10 +1641,10 @@ function restrictUser(executer, target, chat_id, restrictions, until_date, no_no
                     end
                     if temprestrict then
                         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
-                        '\n#user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date)
+                        '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #temprestrict ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date)
                     else
                         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].restricted .. text ..
-                        '\n#user' .. target .. ' #executer' .. executer .. ' #restrict'
+                        '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #restrict'
                     end
                 else
                     return langs[lang].checkMyPermissions
@@ -1659,7 +1672,7 @@ function unrestrictUser(executer, target, chat_id, no_notice)
                     langs[lang].restrictionAddWebPagePreviews .. tostring(true))
                 end
                 return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unrestricted ..
-                '\n#user' .. target .. ' #executer' .. executer .. ' #unrestrict'
+                '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #unrestrict'
             else
                 return langs[lang].checkMyPermissions
             end
@@ -1703,7 +1716,7 @@ function kickUser(executer, target, chat_id, reason, no_notice)
                     sendMessage(target, text)
                 end
                 return langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
-                '\n#user' .. target .. ' #executer' .. executer .. ' #kick ' ..(reason or '')
+                '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #kick ' ..(reason or '')
             else
                 return code2text(code, get_lang(chat_id))
             end
@@ -1729,7 +1742,7 @@ function preBanUser(executer, target, chat_id, reason)
         redis:sadd(hash, tostring(target))
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
         '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
-        '\n#user' .. target .. ' #executer' .. executer .. ' #preban #ban ' ..(reason or '')
+        '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #preban #ban ' ..(reason or '')
     else
         savelog(chat_id, "[" .. executer .. "] tried to ban user " .. target .. " require higher rank")
         return langs[get_lang(chat_id)].require_rank
@@ -1781,11 +1794,11 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 if tempban then
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #tempban ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date) ..(reason or '')
+                    '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #tempban ' .. langs[get_lang(chat_id)].untilWord .. ' ' .. os.date('%Y-%m-%d %H:%M:%S', os.time() + until_date) ..(reason or '')
                 else
                     return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
                     '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
-                    '\n#user' .. target .. ' #executer' .. executer .. ' #ban ' ..(reason or '')
+                    '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #ban ' ..(reason or '')
                 end
             else
                 return preBanUser(executer, target, chat_id, reason)
@@ -1818,7 +1831,7 @@ function unbanUser(executer, target, chat_id, reason, no_notice)
             sendMessage(target, text)
         end
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].unbanned ..
-        '\n#user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
+        '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #unban ' ..(reason or '')
     else
         savelog(chat_id, "[" .. executer .. "] tried to unban user " .. target .. " require higher rank")
         return langs[get_lang(chat_id)].require_rank
@@ -2024,7 +2037,7 @@ function warnUser(executer, target, chat_id, reason, no_notice)
                 sendMessage(target, text)
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].warned:gsub('X', tostring(hashonredis)) ..
-            '\n#user' .. target .. ' #executer' .. executer .. ' #warn ' ..(reason or '')
+            '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #warn ' ..(reason or '')
         else
             return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, reason)
         end
@@ -2055,7 +2068,7 @@ function unwarnUser(executer, target, chat_id, reason, no_notice)
                 sendMessage(target, text)
             end
             return langs[lang].user .. target .. ' ' .. langs[lang].unwarned ..
-            '\n#user' .. target .. ' #executer' .. executer .. ' #unwarn ' ..(reason or '')
+            '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #unwarn ' ..(reason or '')
         end
     else
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " N")
@@ -2079,7 +2092,7 @@ function unwarnallUser(executer, target, chat_id, reason, no_notice)
             sendMessage(target, text)
         end
         return langs[lang].user .. target .. ' ' .. langs[lang].zeroWarnings ..
-        '\n#user' .. target .. ' #executer' .. executer .. ' #unwarnall ' ..(reason or '')
+        '\n#chat' .. chat_id:gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #unwarnall ' ..(reason or '')
     else
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " N")
         return langs[lang].require_rank

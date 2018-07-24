@@ -1954,7 +1954,7 @@ return {
         realmListStart = "Realms:\n",
         groupListCreated = "Group list created.",
         realmListCreated = "Realm list created.",
-        notMyGroup = "This is not one of my groups.\nFor more information contact my creator, you should know who is he, if not just ask in my groups.",
+        notMyGroup = "This is not one of my groups.\nFor more information contact my creator, you should know who he is, if not just ask in my groups.",
         -- ex group_management.lua --
         none = "No one",
         realm = "Realm ",

@@ -28,6 +28,11 @@ globalCronTable = {
     invitedTable =
     {
         -- chat_id = { user_id = false/true }
+    },
+    -- temp table to not keep answering "can't do this because of your privileges" to users
+    executersTable =
+    {
+        -- chat_id = { user_id = false/true }
     }
 }
 downloadCache = {
@@ -701,13 +706,15 @@ function msg_valid(msg)
                         sendMessage(data[tostring(msg.chat.id)].owner, langs[get_lang(data[tostring(msg.chat.id)].owner)].chatWillBeRemoved)
                     end
                 end
+                return false
             end
         elseif msg.service_type == 'chat_add_user' or msg.service_type == 'chat_add_users' then
             for k, v in pairs(msg.added) do
                 if tostring(v.id) == tostring(bot.id) then
                     sendLog('#ADDEDTO ' .. msg.chat.id .. ' ' .. msg.chat.title, false, true)
-                    if not is_admin(msg) then
+                    if not is_admin(msg) and not sudoInChat(msg.chat.id) then
                         sendMessage(msg.chat.id, langs[msg.lang].notMyGroup)
+                        leaveChat(msg.chat.id)
                     end
                 end
             end
@@ -953,6 +960,7 @@ function on_msg_receive(msg)
     base_logging(msg)
     globalCronTable.punishedTable[tostring(msg.chat.id)] = globalCronTable.punishedTable[tostring(msg.chat.id)] or { }
     globalCronTable.invitedTable[tostring(msg.chat.id)] = globalCronTable.invitedTable[tostring(msg.chat.id)] or { }
+    globalCronTable.executersTable[tostring(msg.chat.id)] = globalCronTable.executersTable[tostring(msg.chat.id)] or { }
     if msg.service then
         if msg.added then
             for k, v in pairs(msg.added) do
@@ -989,7 +997,8 @@ function cron_plugins()
         end
         globalCronTable = {
             punishedTable = { },
-            invitedTable = { }
+            invitedTable = { },
+            executersTable = { }
         }
         -- Run cron jobs every minute.
         last_cron = last_redis_cron
