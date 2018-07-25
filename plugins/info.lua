@@ -19,6 +19,23 @@ local function get_reverse_rank(chat_id, user_id, check_local)
     return langs[lang].rank .. reverse_rank_table[rank]
 end
 
+local function fixObjType(obj_type)
+    if msg.chat.type == 'private' then
+        -- private chat
+        return "user"
+    elseif msg.chat.type == 'group' then
+        -- group
+        return "chat"
+    elseif msg.chat.type == 'supergroup' then
+        -- supergroup
+        return "chat"
+    elseif msg.chat.type == 'channel' then
+        -- channel
+        return "channel"
+    end
+    return "unknown"
+end
+
 local function get_object_info(obj, chat_id)
     local lang = get_lang(chat_id)
     if obj then
@@ -26,7 +43,7 @@ local function get_object_info(obj, chat_id)
         if data[tostring(chat_id)] then
             chat_name = data[tostring(chat_id)].name or ''
         end
-        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', '(' .. chat_id .. ') ' .. chat_name), 'X', tostring('(' .. obj.id .. ') ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or '')))
+        local text = string.gsub(string.gsub(langs[lang].infoOf, 'Y', '(#chat' .. tostring(chat_id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#' .. fixObjType(obj.type) .. tostring(obj.id):gsub("-", "") .. ') ' ..(obj.first_name or obj.title) .. ' ' ..(obj.last_name or '')))
         if obj.type == 'bot' or obj.is_bot then
             text = text .. langs[lang].chatType .. langs[lang].botWord
             if obj.first_name then

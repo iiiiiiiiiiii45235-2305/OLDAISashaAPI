@@ -427,7 +427,7 @@ local function run(msg, matches)
             end
             if matches[4] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                editMessage(msg.chat.id, msg.message_id, '(' .. matches[5] .. ')' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
+                editMessage(msg.chat.id, msg.message_id, '(#chat' .. tostring(matches[5]) .. ')' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
             elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                 local seconds, minutes, hours, days, weeks = unixToDate(time)
                 if matches[4] == 'SECONDS' then
@@ -493,7 +493,7 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                     data[tostring(matches[5])].settings[groupDataDictionary[matches[2]:lower()]] = time
                     save_data(config.moderation.data, data)
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(' .. matches[5] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, nil, matches[6] or false))
+                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(matches[5]) .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, nil, matches[6] or false))
                 else
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRangePunishments, true)
                 end
@@ -983,7 +983,7 @@ local function run(msg, matches)
                     end
                 end
             else
-                if sendKeyboard(msg.from.id, '(' .. msg.chat.id .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_restrict', msg.chat.id, data[tostring(msg.chat.id)].settings.time_restrict)) then
+                if sendKeyboard(msg.from.id, '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_restrict', msg.chat.id, data[tostring(msg.chat.id)].settings.time_restrict)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_restrict ")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
@@ -1016,7 +1016,7 @@ local function run(msg, matches)
                     end
                 end
             else
-                if sendKeyboard(msg.from.id, '(' .. msg.chat.id .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_ban', msg.chat.id, data[tostring(msg.chat.id)].settings.time_ban)) then
+                if sendKeyboard(msg.from.id, '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_ban', msg.chat.id, data[tostring(msg.chat.id)].settings.time_ban)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_ban ")
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
@@ -1092,7 +1092,7 @@ local function run(msg, matches)
                 if data[tostring(msg.chat.id)] then
                     chat_name = data[tostring(msg.chat.id)].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 2)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 2)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
@@ -1152,7 +1152,7 @@ local function run(msg, matches)
                 if data[tostring(msg.chat.id)] then
                     chat_name = data[tostring(msg.chat.id)].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. msg.chat.id .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 1)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 1)) then
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
                         io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
@@ -1648,7 +1648,7 @@ local function run(msg, matches)
                         if matches[2]:lower() == 'from' then
                             if msg.reply_to_message.forward then
                                 if msg.reply_to_message.forward_from then
-                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.forward_from.id .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(msg.reply_to_message.forward_from.id) .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                         permissionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = userPermissions(msg.chat.id, msg.reply_to_message.forward_from.id)
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
@@ -1666,7 +1666,7 @@ local function run(msg, matches)
                             end
                         end
                     else
-                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.reply_to_message.from.id .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
+                        if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(msg.reply_to_message.from.id) .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
                             permissionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = userPermissions(msg.chat.id, msg.reply_to_message.from.id)
                             if msg.chat.type ~= 'private' then
                                 local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
@@ -1687,7 +1687,7 @@ local function run(msg, matches)
                             -- check if there's a text_mention
                             if msg.entities[k].type == 'text_mention' and msg.entities[k].user then
                                 if ((string.find(msg.text, matches[2]) or 0) -1) == msg.entities[k].offset then
-                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. msg.entities[k].user.id .. ') ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.entities[k].user.id)) then
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(msg.entities[k].user.id) .. ') ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.entities[k].user.id)) then
                                         permissionsTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = userPermissions(msg.chat.id, msg.entities[k].user.id)
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
@@ -1707,7 +1707,7 @@ local function run(msg, matches)
                         if type(obj_user) == 'table' then
                             if obj_user then
                                 if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(obj_user.id) .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                         permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
                                         if msg.chat.type ~= 'private' then
                                             local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
@@ -1726,7 +1726,7 @@ local function run(msg, matches)
                         local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
                         if obj_user then
                             if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(' .. msg.chat.id .. ') ' .. chat_name), 'X', tostring('(' .. obj_user.id .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(obj_user.id) .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                     permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
                                     if msg.chat.type ~= 'private' then
                                         local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id

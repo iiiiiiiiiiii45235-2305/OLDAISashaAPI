@@ -21,7 +21,8 @@ if action == 'backup' then
     io.popen('rm -f /home/pi/AISashaAPI/groups/logs/*'):read("*all")
 elseif action == 'update' then
     print('TIMEWORK UPDATE')
-    sendMessage_SUDOERS(io.popen('git pull'):read('*all'))
+    action, sleep_time, chat_id = ...
+    sendMessage(chat_id, io.popen('git pull'):read('*all'))
 elseif action == 'sendmessage' then
     print('TIMEWORK SENDMESSAGE')
     action, sleep_time, chat_id, parse_mode, text = ...

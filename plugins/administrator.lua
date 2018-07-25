@@ -560,7 +560,7 @@ local function run(msg, matches)
                 if data[tostring(matches[2])] then
                     chat_name = data[tostring(matches[2])].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 2)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(#chat' .. tostring(matches[2]):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 2)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
@@ -582,7 +582,7 @@ local function run(msg, matches)
                 if data[tostring(matches[2])] then
                     chat_name = data[tostring(matches[2])].name or ''
                 end
-                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(' .. matches[2] .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 1)) then
+                if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(matches[2]):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 1)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
                     if msg.chat.type ~= 'private' then
                         local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
@@ -994,7 +994,7 @@ local function run(msg, matches)
             end
             if matches[1]:lower() == "update" then
                 mystat('/update')
-                io.popen('lua timework.lua "update" "0"')
+                io.popen('lua timework.lua "update" "0" "' .. msg.chat.id .. '"')
             end
             if matches[1] == 'botrestart' then
                 mystat('/botrestart')
