@@ -574,6 +574,7 @@ return {
         -- fileconversion.lua --
         downloadAndRename = "Scarica il file e aggiungi l'estensione appropriata (rinominalo).",
         unknownType = "Tipo sconosciuto, controlla la sintassi.",
+        cantSendAs = "Non posso inviare questo media come ",
 
         -- filemanager.lua --
         backHomeFolder = "Sei tornato alla cartella base: ",
@@ -2119,6 +2120,7 @@ return {
         -- fileconversion.lua --
         downloadAndRename = "Download the file and put the appropriate extension (rename it).",
         unknownType = "Unknown type, check the syntax.",
+        cantSendAs = "I can't send this media as ",
 
         -- filemanager.lua --
         backHomeFolder = "You're in the base folder: ",
