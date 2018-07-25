@@ -68,6 +68,8 @@ local function run(msg, matches)
                     elseif mediaDictionary[matches[2]:lower()] == 'voice' then
                         return sendVoice(msg.chat.id, file_path)
                     end
+                else
+                    return langs[msg.lang].useQuoteOnFile
                 end
             else
                 return langs[msg.lang].useQuoteOnFile
