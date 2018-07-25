@@ -82,23 +82,12 @@ elseif action == 'contactadmins' then
         fwd_msg = shitstorm
     end
     sendMessage(chat_id, hashtag)
-    local lang = get_lang(chat_id)
-    local keyboard = { }
-    keyboard.inline_keyboard = { }
-    local i = 1
-    if data[tostring(chat_id)].link then
-        keyboard.inline_keyboard[i] = { }
-        keyboard.inline_keyboard[i][1] = { text = langs[lang].gotoGroup, url = data[tostring(chat_id)].link }
-        i = i + 1
-    end
-    keyboard.inline_keyboard[i] = { }
-    keyboard.inline_keyboard[i][1] = { text = langs[lang].alreadyRead, callback_data = 'group_managementDELETE' }
     if shitstormFlag then
         for k, v in pairs(config.sudo_users) do
             if not already_contacted[tostring(v.id)] then
                 already_contacted[tostring(v.id)] = v.id
                 if sendChatAction(v.id, 'typing', true) then
-                    sendKeyboard(v.id, text, keyboard, 'html')
+                    sendMessage(v.id, text, 'html')
                     os.execute('sleep 0.4')
                 else
                     cant_contact = cant_contact .. v.id .. ' ' ..(v.username or('NOUSER ' .. v.first_name .. ' ' ..(v.last_name or ''))) .. '\n'
@@ -116,7 +105,7 @@ elseif action == 'contactadmins' then
                         -- @admins command
                         forwardMessage(admin.user.id, chat_id, fwd_msg)
                     end
-                    sendKeyboard(admin.user.id, text, keyboard, 'html')
+                    sendMessage(admin.user.id, text, 'html')
                     os.execute('sleep 0.4')
                 else
                     cant_contact = cant_contact .. admin.user.id .. ' ' ..(admin.user.username or('NOUSER ' .. admin.user.first_name .. ' ' ..(admin.user.last_name or ''))) .. '\n'
@@ -134,7 +123,7 @@ elseif action == 'contactadmins' then
                     -- @admins command
                     forwardMessage(owner, chat_id, fwd_msg)
                 end
-                sendKeyboard(owner, text, keyboard, 'html')
+                sendMessage(owner, text, 'html')
                 os.execute('sleep 0.4')
             else
                 cant_contact = cant_contact .. owner .. '\n'
@@ -151,7 +140,7 @@ elseif action == 'contactadmins' then
                         -- @admins command
                         forwardMessage(k, chat_id, fwd_msg)
                     end
-                    sendKeyboard(k, text, keyboard, 'html')
+                    sendMessage(k, text, 'html')
                     os.execute('sleep 0.4')
                 else
                     cant_contact = cant_contact .. k .. ' ' ..(v or '') .. '\n'
