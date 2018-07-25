@@ -20,16 +20,16 @@ local function get_reverse_rank(chat_id, user_id, check_local)
 end
 
 local function fixObjType(obj_type)
-    if msg.chat.type == 'private' then
+    if obj_type == 'private' then
         -- private chat
         return "user"
-    elseif msg.chat.type == 'group' then
+    elseif obj_type == 'group' then
         -- group
         return "chat"
-    elseif msg.chat.type == 'supergroup' then
+    elseif obj_type == 'supergroup' then
         -- supergroup
         return "chat"
-    elseif msg.chat.type == 'channel' then
+    elseif obj_type == 'channel' then
         -- channel
         return "channel"
     end
