@@ -1321,7 +1321,7 @@ return {
             "🅿️ <b>FILECONVERSION</b> 🅿️",
             "Plugin per la conversione di files.",
             "<b>MOD</b>",
-            "<code>/to{type} {reply}</code>: Sasha converte {reply} nel tipo specificato.",
+            "<code>/to{type} {reply}</code>: Sasha converte {reply} nel tipo specificato se possibile.",
             "<code>{type}</code> può essere: <code>audio|document|photo|sticker|video|videonote|voice</code>.",
         },
 
@@ -2874,7 +2874,7 @@ return {
             "🅿️ <b>FILECONVERSION</b> 🅿️",
             "Plugin for converting files.",
             "<b>MOD</b>",
-            "<code>/to{type} {reply}</code>: Sasha converts {reply} to the specified type.",
+            "<code>/to{type} {reply}</code>: Sasha converts {reply} to the specified type if possible.",
             "<code>{type}</code> can be: <code>audio|document|photo|sticker|video|videonote|voice</code>.",
         },
 
