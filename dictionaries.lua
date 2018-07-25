@@ -2,6 +2,22 @@ empty_keyboard = {
     inline_keyboard = { }
 }
 
+-- media types for conversion
+mediaDictionary = {
+    audio = "audio",
+    document = "document",
+    file = "document",
+    image = "photo",
+    photo = "photo",
+    pic = "photo",
+    picture = "photo",
+    sticker = "sticker",
+    video = "video",
+    videonote = "video_note",
+    voice = "voice",
+    voicenote = "voice",
+}
+
 -- group data
 groupDataDictionary = {
     -- settings

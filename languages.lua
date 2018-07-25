@@ -572,8 +572,8 @@ return {
         feedSent = "Feedback inviato!",
 
         -- fileconversion.lua --
-        alreadyFile = "Questo è già un file.",
         downloadAndRename = "Scarica il file e aggiungi l'estensione appropriata (rinominalo).",
+        unknownType = "Tipo sconosciuto, controlla la sintassi.",
 
         -- filemanager.lua --
         backHomeFolder = "Sei tornato alla cartella base: ",
@@ -1319,9 +1319,9 @@ return {
         {
             "🅿️ <b>FILECONVERSION</b> 🅿️",
             "Plugin per la conversione di files.",
-            "<b>USER</b>",
-            "<code>/convert {reply}</code>: Sasha converte il file di {reply} da audio a voice_note o vice versa, altrimenti Sasha lo invierà come document.",
-            "<code>/filetovoice {reply}</code>: Sasha converte il file di {reply} a voice_note.",
+            "<b>MOD</b>",
+            "<code>/to{type} {reply}</code>: Sasha converte {reply} nel tipo specificato.",
+            "<code>{type}</code> può essere: <code>audio|document|photo|sticker|video|videonote|voice</code>.",
         },
 
         filemanager =
@@ -2117,8 +2117,8 @@ return {
         feedSent = "Feedback sent!",
 
         -- fileconversion.lua --
-        alreadyFile = "This is already a file.",
         downloadAndRename = "Download the file and put the appropriate extension (rename it).",
+        unknownType = "Unknown type, check the syntax.",
 
         -- filemanager.lua --
         backHomeFolder = "You're in the base folder: ",
@@ -2871,9 +2871,9 @@ return {
         {
             "🅿️ <b>FILECONVERSION</b> 🅿️",
             "Plugin for converting files.",
-            "<b>USER</b>",
-            "<code>/convert {reply}</code>: Sasha converts the file in {reply} from audio to voice_note or vice versa, otherwise Sasha will send it in the form of document.",
-            "<code>/filetovoice {reply}</code>: Sasha converts the file in {reply} to voice_note.",
+            "<b>MOD</b>",
+            "<code>/to{type} {reply}</code>: Sasha converts {reply} to the specified type.",
+            "<code>{type}</code> can be: <code>audio|document|photo|sticker|video|videonote|voice</code>.",
         },
 
         filemanager =
