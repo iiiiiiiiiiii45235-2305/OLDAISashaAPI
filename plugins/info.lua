@@ -20,7 +20,7 @@ local function get_reverse_rank(chat_id, user_id, check_local)
 end
 
 local function fixObjType(obj_type)
-    if obj_type == 'private' then
+    if obj_type == 'private' or obj_type == 'user' or obj_type == 'bot' then
         -- private chat
         return "user"
     elseif obj_type == 'group' then
