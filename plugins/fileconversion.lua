@@ -74,13 +74,13 @@ local function run(msg, matches)
                             return langs[msg.lang].cantSendAs .. mediaDictionary[matches[2]:lower()]
                         end
                     elseif mediaDictionary[matches[2]:lower()] == 'video' then
-                        if msg.reply_to_message.media_type == 'audio' or msg.reply_to_message.media_type == 'document' or msg.reply_to_message.media_type == 'video_note' or msg.reply_to_message.media_type == 'voice_note' then
+                        if msg.reply_to_message.media_type == 'audio' or msg.reply_to_message.media_type == 'document' or msg.reply_to_message.media_type == 'gif' or msg.reply_to_message.media_type == 'video_note' or msg.reply_to_message.media_type == 'voice_note' then
                             return sendVideo(msg.chat.id, file_path)
                         else
                             return langs[msg.lang].cantSendAs .. mediaDictionary[matches[2]:lower()]
                         end
                     elseif mediaDictionary[matches[2]:lower()] == 'video_note' then
-                        if msg.reply_to_message.media_type == 'audio' or msg.reply_to_message.media_type == 'document' or msg.reply_to_message.media_type == 'video' or msg.reply_to_message.media_type == 'voice_note' then
+                        if msg.reply_to_message.media_type == 'audio' or msg.reply_to_message.media_type == 'document' or msg.reply_to_message.media_type == 'gif' or msg.reply_to_message.media_type == 'video' or msg.reply_to_message.media_type == 'voice_note' then
                             return sendVideoNote(msg.chat.id, file_path)
                         else
                             return langs[msg.lang].cantSendAs .. mediaDictionary[matches[2]:lower()]
