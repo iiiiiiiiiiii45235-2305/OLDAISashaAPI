@@ -116,7 +116,7 @@ return {
     min_rank = 2,
     syntax =
     {
-        "USER",
+        "MOD",
         "/to{type} {reply}",
     }
 }
