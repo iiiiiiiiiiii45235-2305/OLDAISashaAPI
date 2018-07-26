@@ -96,7 +96,7 @@ local function run(msg, matches)
             elseif matches[2] == 'GOTO' then
                 local link_in_keyboard = false
                 if msg.from.username then
-                    local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
+                    local res = sendKeyboard(matches[4], 'UP @' .. msg.from.username .. '\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], false, true)
                     if data[tostring(matches[4])] then
                         if is_mod2(msg.from.id, matches[4]) or(not data[tostring(matches[4])].settings.lock_grouplink) then
                             if data[tostring(matches[4])].link then
@@ -125,15 +125,15 @@ local function run(msg, matches)
                     end
                 else
                     local sent = false
-                    local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name:mEscape_hard() .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3], true)
+                    local res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name:mEscape_hard() .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'markdown', matches[3], false, true)
                     if res then
                         sent = true
                     else
-                        res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. html_escape(msg.from.first_name) .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3], true)
+                        res = sendKeyboard(matches[4], 'UP <a href="tg://user?id=' .. msg.from.id .. '">' .. html_escape(msg.from.first_name) .. '</a>\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), 'html', matches[3], false, true)
                         if res then
                             sent = true
                         else
-                            res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], true)
+                            res = sendKeyboard(matches[4], 'UP [' .. msg.from.first_name .. '](tg://user?id=' .. msg.from.id .. ')\n#tag' .. msg.from.id, keyboard_tag(matches[4], matches[3], true, msg.from.id), false, matches[3], false, true)
                             if res then
                                 sent = true
                             end

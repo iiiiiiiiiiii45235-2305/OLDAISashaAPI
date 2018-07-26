@@ -485,7 +485,7 @@ function sendLog(text, parse_mode, novardump, keyboard)
             if keyboard then
                 local obj = getChat(tmp_msg.chat.id)
                 if obj then
-                    sendKeyboard(config.log_chat, 'KEYBOARD OF THE CHAT IN WHICH THAT HAPPENED', get_object_info_keyboard(bot.id, obj, config.log_chat))
+                    sendKeyboard(config.log_chat, 'KEYBOARD OF THE CHAT IN WHICH THAT HAPPENED', get_object_info_keyboard(bot.id, obj, config.log_chat), false, false, true)
                 end
             end
         end
@@ -498,13 +498,17 @@ function sendLog(text, parse_mode, novardump, keyboard)
     end
 end
 
-function forwardMessage(chat_id, from_chat_id, message_id)
+function forwardMessage(chat_id, from_chat_id, message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) and sendChatAction(from_chat_id, 'typing', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
             '/forwardMessage?chat_id=' .. chat_id ..
             '&from_chat_id=' .. from_chat_id ..
             '&message_id=' .. message_id
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local res, code = sendRequest(url)
 
             if not res and code then
@@ -536,20 +540,20 @@ end
 function forwardMessage_SUDOERS(from_chat_id, message_id)
     for k, v in pairs(config.sudo_users) do
         if k ~= bot.userVersion.id then
-            forwardMessage(k, from_chat_id, message_id)
+            forwardMessage(k, from_chat_id, message_id, true)
         end
     end
 end
 
 function forwardLog(from_chat_id, message_id)
     if config.log_chat then
-        forwardMessage(config.log_chat, from_chat_id, message_id)
+        forwardMessage(config.log_chat, from_chat_id, message_id, true)
     else
-        forwardMessage_SUDOERS(from_chat_id, message_id)
+        forwardMessage_SUDOERS(from_chat_id, message_id, true)
     end
 end
 
-function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, no_log)
+function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, send_sound, no_log)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL .. '/sendMessage?chat_id=' .. chat_id
         if parse_mode then
@@ -562,13 +566,18 @@ function sendKeyboard(chat_id, text, keyboard, parse_mode, reply_to_message_id, 
             end
         end
         text = text:gsub('[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc] ', '')
-        url = url .. '&text=' .. URL.escape(text)
-        url = url .. '&disable_web_page_preview=true'
-        url = url .. '&reply_markup=' .. URL.escape(json:encode(keyboard))
+        url = url ..
+        '&text=' .. URL.escape(text) ..
+        '&disable_web_page_preview=true' ..
+        '&reply_markup=' .. URL.escape(json:encode(keyboard))
         local reply = false
         if reply_to_message_id then
             url = url .. '&reply_to_message_id=' .. reply_to_message_id
             reply = true
+        end
+        if not send_sound then
+            url = url .. '&disable_notification=true'
+            -- messages are silent by default
         end
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local res, code = sendRequest(url, no_log)
@@ -837,7 +846,7 @@ function setChatPhotoId(chat_id, file_id)
     end
 end
 
-function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
+function sendPhotoId(chat_id, file_id, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_photo', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -861,6 +870,10 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local res, code = sendRequest(url)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
@@ -880,7 +893,7 @@ function sendPhotoId(chat_id, file_id, caption, reply_to_message_id)
     end
 end
 
-function sendStickerId(chat_id, file_id, reply_to_message_id)
+function sendStickerId(chat_id, file_id, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -890,6 +903,10 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
             if reply_to_message_id then
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
             end
             local res, code = sendRequest(url)
             if not res and code then
@@ -910,7 +927,7 @@ function sendStickerId(chat_id, file_id, reply_to_message_id)
     end
 end
 
-function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
+function sendVoiceId(chat_id, file_id, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'record_audio', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -934,6 +951,10 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local res, code = sendRequest(url)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
@@ -953,7 +974,7 @@ function sendVoiceId(chat_id, file_id, caption, reply_to_message_id)
     end
 end
 
-function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
+function sendAudioId(chat_id, file_id, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_audio', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -977,6 +998,10 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local res, code = sendRequest(url)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
@@ -996,7 +1021,7 @@ function sendAudioId(chat_id, file_id, caption, reply_to_message_id)
     end
 end
 
-function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
+function sendVideoNoteId(chat_id, file_id, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'record_video_note', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -1006,6 +1031,10 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
             if reply_to_message_id then
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
             end
             local res, code = sendRequest(url)
             if not res and code then
@@ -1026,7 +1055,7 @@ function sendVideoNoteId(chat_id, file_id, reply_to_message_id)
     end
 end
 
-function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
+function sendVideoId(chat_id, file_id, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_video', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -1050,6 +1079,10 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local res, code = sendRequest(url)
             if not res and code then
                 -- if the request failed and a code is returned (not 403 and 429)
@@ -1069,7 +1102,7 @@ function sendVideoId(chat_id, file_id, caption, reply_to_message_id)
     end
 end
 
-function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
+function sendDocumentId(chat_id, file_id, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_document', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -1092,6 +1125,10 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id)
             if reply_to_message_id then
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
             end
             local res, code = sendRequest(url)
             if not res and code then
@@ -1132,7 +1169,7 @@ function setChatPhoto(chat_id, photo)
     end
 end
 
-function sendPhoto(chat_id, photo, caption, reply_to_message_id)
+function sendPhoto(chat_id, photo, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_photo', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendPhoto'
@@ -1145,6 +1182,10 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
             if caption then
                 curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
             print_msg(sent_msg)
@@ -1154,7 +1195,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id)
     end
 end
 
-function sendSticker(chat_id, sticker, reply_to_message_id)
+function sendSticker(chat_id, sticker, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendSticker'
@@ -1163,6 +1204,10 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
             if reply_to_message_id then
                 curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
                 reply = true
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
             end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
@@ -1173,7 +1218,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id)
     end
 end
 
-function sendVoice(chat_id, voice, caption, reply_to_message_id)
+function sendVoice(chat_id, voice, caption, reply_to_message_id, duration, send_sound)
     if sendChatAction(chat_id, 'record_audio', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVoice'
@@ -1191,6 +1236,10 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
             if duration then
                 curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
             print_msg(sent_msg)
@@ -1200,7 +1249,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id)
     end
 end
 
-function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title)
+function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, performer, title, send_sound)
     if sendChatAction(chat_id, 'upload_audio', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendAudio'
@@ -1224,6 +1273,10 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
             if title then
                 curl_command = curl_command .. ' -F "title=' .. title .. '"'
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
             print_msg(sent_msg)
@@ -1233,7 +1286,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
     end
 end
 
-function sendVideo(chat_id, video, reply_to_message_id, caption, duration, performer, title)
+function sendVideo(chat_id, video, reply_to_message_id, caption, duration, performer, title, send_sound)
     if sendChatAction(chat_id, 'upload_video', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideo'
@@ -1249,6 +1302,10 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
             if duration then
                 curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
             print_msg(sent_msg)
@@ -1258,7 +1315,7 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
     end
 end
 
-function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length)
+function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, length, send_sound)
     if sendChatAction(chat_id, 'record_video_note', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideoNote'
@@ -1274,6 +1331,10 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
             if length then
                 curl_command = curl_command .. ' -F "length=' .. length .. '"'
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
             print_msg(sent_msg)
@@ -1283,7 +1344,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
     end
 end
 
-function sendDocument(chat_id, document, caption, reply_to_message_id)
+function sendDocument(chat_id, document, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_document', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendDocument'
@@ -1296,6 +1357,10 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
                 curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
                 reply = true
             end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
             print_msg(sent_msg)
@@ -1306,7 +1371,7 @@ function sendDocument(chat_id, document, caption, reply_to_message_id)
 end
 
 -- must be updated with live_period and stoplivelocation and editlivelocation
-function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
+function sendLocation(chat_id, latitude, longitude, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'find_location', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL ..
@@ -1317,6 +1382,10 @@ function sendLocation(chat_id, latitude, longitude, reply_to_message_id)
             if reply_to_message_id then
                 url = url .. '&reply_to_message_id=' .. reply_to_message_id
                 reply = true
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
             end
             local res, code = sendRequest(url)
 
@@ -1341,7 +1410,7 @@ end
 function sendDocument_SUDOERS(document)
     for k, v in pairs(config.sudo_users) do
         if k ~= bot.userVersion.id then
-            sendDocument(k, document)
+            sendDocument(k, document, false, false, true)
         end
     end
 end
@@ -1426,8 +1495,7 @@ function tempDownloadFile(url, file_name)
 end
 
 -- Download the image and send to receiver, it will be deleted.
--- cb_function and extra are optionals callback
-function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id)
+function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id, send_sound)
     local file_path = tempDownloadFile(url_to_download, false)
     if not file_path then
         -- Error
@@ -1435,20 +1503,19 @@ function sendPhotoFromUrl(chat_id, url_to_download, caption, reply_to_message_id
     else
         print("File path: " .. file_path)
         downloadCache[url_to_download] = file_path
-        return sendPhoto(chat_id, file_path, caption, reply_to_message_id)
+        return sendPhoto(chat_id, file_path, caption, reply_to_message_id, send_sound)
     end
 end
 
 -- Download the document and send to receiver, it will be deleted.
--- cb_function and extra are optionals callback
-function sendDocumentFromUrl(chat_id, url_to_download, reply_to_message_id)
+function sendDocumentFromUrl(chat_id, url_to_download, caption, reply_to_message_id, send_sound)
     local file_path = tempDownloadFile(url_to_download, false)
     if not file_path then
         -- Error
         return langs[get_lang(chat_id)].errorFileDownload
     else
         print("File path: " .. file_path)
-        return sendDocument(chat_id, file_path, reply_to_message_id)
+        return sendDocument(chat_id, file_path, nil, reply_to_message_id, send_sound)
     end
 end
 -- *** END API FUNCTIONS ***

@@ -764,32 +764,32 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'setphoto' then
             if msg.from.is_mod then
+                local file_id, file_name, file_size
                 if msg.reply then
                     if msg.reply_to_message.media then
-                        local file_id = ''
-                        local caption = matches[3] or ''
                         if msg.reply_to_message.media_type == 'photo' then
-                            local bigger_pic_id = ''
-                            local size = 0
-                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                                if v.file_size then
-                                    if v.file_size > size then
-                                        size = v.file_size
-                                        bigger_pic_id = v.file_id
-                                    end
-                                end
-                            end
-                            file_id = bigger_pic_id
-                            mystat('/setphoto')
-                            return setChatPhotoId(msg.chat.id, file_id)
+                            file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                         else
                             return langs[msg.lang].needPhoto
                         end
                     else
                         return langs[msg.lang].needPhoto
                     end
+                elseif msg.media then
+                    if msg.media_type == 'photo' then
+                        file_id, file_name, file_size = extractMediaDetails(msg)
+                    else
+                        return langs[msg.lang].needPhoto
+                    end
                 else
-                    return langs[msg.lang].needReply
+                    return langs[msg.lang].needPhoto
+                end
+                if file_id and file_name and file_size then
+                    local caption = matches[3] or ''
+                    mystat('/setphoto')
+                    return setChatPhotoId(msg.chat.id, file_id)
+                else
+                    return langs[msg.lang].useCommandOnFile
                 end
             else
                 return langs[msg.lang].require_mod
@@ -2139,7 +2139,7 @@ return {
         "/unpin",
         "/settitle {text}",
         "/setdescription {text}",
-        "/setphoto {reply}",
+        "/setphoto {photo}|{reply_photo}",
         "/unsetphoto",
         "OWNER",
         "/syncmodlist",

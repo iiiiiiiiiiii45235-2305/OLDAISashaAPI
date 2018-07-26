@@ -1168,3 +1168,63 @@ function dateToUnix(seconds, minutes, hours, days, weeks)
     local time =((weeks or 0) * 7 * 24 * 60 * 60) +((days or 0) * 24 * 60 * 60) +((hours or 0) * 60 * 60) +((minutes or 0) * 60) +(seconds or 0)
     return time
 end
+
+function extractMediaDetails(message)
+    if message.media then
+        local file_id = ''
+        local file_name = ''
+        local file_size = ''
+        if message.media_type == 'photo' then
+            local bigger_pic_id = ''
+            local size = 0
+            for k, v in pairsByKeys(message.photo) do
+                if v.file_size then
+                    if v.file_size > size then
+                        size = v.file_size
+                        bigger_pic_id = v.file_id
+                    end
+                end
+            end
+            file_id = bigger_pic_id
+            file_name = bigger_pic_id
+            file_size = size
+            -- document, sticker
+        elseif message.media_type == 'audio' then
+            file_id = message.audio.file_id
+            file_name = message.audio.file_name or message.audio.file_id
+            file_size = message.audio.file_size
+            -- document, video, video_note, voice
+        elseif message.media_type == 'document' then
+            file_id = message.document.file_id
+            file_name = message.document.file_name or message.document.file_id
+            file_size = message.document.file_size
+            -- audio, document, photo, sticker, video, video_note, voice
+        elseif message.media_type == 'gif' then
+            file_id = message.document.file_id
+            file_name = message.document.file_name or message.document.file_id
+            file_size = message.document.file_size
+            -- document, video, video_note
+        elseif message.media_type == 'sticker' then
+            file_id = message.sticker.file_id
+            file_name = message.sticker.file_name or message.sticker.file_id
+            file_size = message.sticker.file_size
+            -- document, photo
+        elseif message.media_type == 'video' then
+            file_id = message.video.file_id
+            file_name = message.video.file_name or message.video.file_id
+            file_size = message.video.file_size
+            -- audio, document, video_note, voice
+        elseif message.media_type == 'video_note' then
+            file_id = message.video_note.file_id
+            file_name = message.video_note.file_name or message.video_note.file_id
+            file_size = message.video_note.file_size
+            -- audio, document, video, voice
+        elseif message.media_type == 'voice_note' then
+            file_id = message.voice.file_id
+            file_name = message.voice.file_name or message.voice.file_id
+            file_size = message.voice.file_size
+            -- audio, document, video, video_note
+        end
+        return file_id, file_name, file_size
+    end
+end

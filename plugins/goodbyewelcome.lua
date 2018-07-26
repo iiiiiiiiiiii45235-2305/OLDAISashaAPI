@@ -359,41 +359,29 @@ local function run(msg, matches)
                 mystat('/setwelcome')
                 if msg.reply then
                     if msg.reply_to_message.media then
-                        local file_id = ''
                         local caption = matches[2] or ''
-                        if msg.reply_to_message.media_type == 'photo' then
-                            local bigger_pic_id = ''
-                            local size = 0
-                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                                if v.file_size > size then
-                                    size = v.file_size
-                                    bigger_pic_id = v.file_id
-                                end
+                        local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
+                        if file_id and file_name and file_size then
+                            if caption ~= '' then
+                                caption = ' ' .. caption
                             end
-                            file_id = bigger_pic_id
-                        elseif msg.reply_to_message.media_type == 'video' then
-                            file_id = msg.reply_to_message.video.file_id
-                        elseif msg.reply_to_message.media_type == 'video_note' then
-                            file_id = msg.reply_to_message.video_note.file_id
-                        elseif msg.reply_to_message.media_type == 'audio' then
-                            file_id = msg.reply_to_message.audio.file_id
-                        elseif msg.reply_to_message.media_type == 'voice_note' then
-                            file_id = msg.reply_to_message.voice.file_id
-                        elseif msg.reply_to_message.media_type == 'gif' then
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'document' then
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'sticker' then
-                            file_id = msg.reply_to_message.sticker.file_id
+                            return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
                         else
-                            sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+                            return langs[msg.lang].useCommandOnFile
                         end
+                    else
+                        return set_welcome(msg.chat.id, unescapeGoodbyeWelcome(msg.reply_to_message.text))
+                    end
+                elseif msg.media then
+                    local caption = matches[2] or ''
+                    local file_id, file_name, file_size = extractMediaDetails(msg)
+                    if file_id and file_name and file_size then
                         if caption ~= '' then
                             caption = ' ' .. caption
                         end
-                        return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
+                        return set_welcome(msg.chat.id, msg.media_type .. file_id .. caption)
                     else
-                        return set_welcome(msg.chat.id, unescapeGoodbyeWelcome(msg.reply_to_message.text))
+                        return langs[msg.lang].useCommandOnFile
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
@@ -406,41 +394,29 @@ local function run(msg, matches)
                 mystat('/setgoodbye')
                 if msg.reply then
                     if msg.reply_to_message.media then
-                        local file_id = ''
                         local caption = matches[2] or ''
-                        if msg.reply_to_message.media_type == 'photo' then
-                            local bigger_pic_id = ''
-                            local size = 0
-                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                                if v.file_size > size then
-                                    size = v.file_size
-                                    bigger_pic_id = v.file_id
-                                end
+                        local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
+                        if file_id and file_name and file_size then
+                            if caption ~= '' then
+                                caption = ' ' .. caption
                             end
-                            file_id = bigger_pic_id
-                        elseif msg.reply_to_message.media_type == 'video' then
-                            file_id = msg.reply_to_message.video.file_id
-                        elseif msg.reply_to_message.media_type == 'video_note' then
-                            file_id = msg.reply_to_message.video_note.file_id
-                        elseif msg.reply_to_message.media_type == 'audio' then
-                            file_id = msg.reply_to_message.audio.file_id
-                        elseif msg.reply_to_message.media_type == 'voice_note' then
-                            file_id = msg.reply_to_message.voice.file_id
-                        elseif msg.reply_to_message.media_type == 'gif' then
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'document' then
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'sticker' then
-                            file_id = msg.reply_to_message.sticker.file_id
+                            return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
                         else
-                            sendMessage(msg.chat.id, langs[msg.lang].useQuoteOnFile)
+                            return langs[msg.lang].useCommandOnFile
                         end
+                    else
+                        return set_goodbye(msg.chat.id, unescapeGoodbyeWelcome(msg.reply_to_message.text))
+                    end
+                elseif msg.media then
+                    local caption = matches[2] or ''
+                    local file_id, file_name, file_size = extractMediaDetails(msg)
+                    if file_id and file_name and file_size then
                         if caption ~= '' then
                             caption = ' ' .. caption
                         end
-                        return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
+                        return set_goodbye(msg.chat.id, msg.media_type .. file_id .. caption)
                     else
-                        return set_goodbye(msg.chat.id, unescapeGoodbyeWelcome(msg.reply_to_message.text))
+                        return langs[msg.lang].useCommandOnFile
                     end
                 elseif matches[2] then
                     if string.match(matches[2], '[Cc][Rr][Oo][Ss][Ss][Ee][Xx][Ee][Cc]') then
@@ -563,8 +539,8 @@ return {
         "/getgoodbye",
         "/previewwelcome",
         "/previewgoodbye",
-        "/setwelcome {text}|({reply_media} [{caption}])",
-        "/setgoodbye {text}|({reply_media} [{caption}])",
+        "/setwelcome {text}|({media}|{reply_media} [{caption}])",
+        "/setgoodbye {text}|({media}|{reply_media} [{caption}])",
         "/unsetwelcome",
         "/unsetgoodbye",
         "/setmemberswelcome {value}",

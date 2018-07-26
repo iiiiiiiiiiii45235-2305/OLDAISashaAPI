@@ -148,54 +148,19 @@ function run(msg, matches)
             end
             if matches[1]:lower() == 'download' then
                 mystat('/download')
+                local file_id, file_name, file_size
                 if msg.reply then
-                    if msg.reply_to_message.media then
-                        local file_name = ''
-                        local file_id = ''
-                        if msg.reply_to_message.media_type == 'photo' then
-                            local bigger_pic_id = ''
-                            local size = 0
-                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                                if v.file_size then
-                                    if v.file_size > size then
-                                        size = v.file_size
-                                        bigger_pic_id = v.file_id
-                                    end
-                                end
-                            end
-                            file_id = bigger_pic_id
-                            file_name = bigger_pic_id
-                        elseif msg.reply_to_message.media_type == 'video' then
-                            file_name = msg.reply_to_message.video.file_name or msg.reply_to_message.video.file_id
-                            file_id = msg.reply_to_message.video.file_id
-                        elseif msg.reply_to_message.media_type == 'video_note' then
-                            file_name = msg.reply_to_message.video_note.file_name or msg.reply_to_message.video_note.file_id
-                            file_id = msg.reply_to_message.video_note.file_id
-                        elseif msg.reply_to_message.media_type == 'audio' then
-                            file_name = msg.reply_to_message.audio.file_name or msg.reply_to_message.audio.file_id
-                            file_id = msg.reply_to_message.audio.file_id
-                        elseif msg.reply_to_message.media_type == 'voice_note' then
-                            file_name = msg.reply_to_message.voice.file_name or msg.reply_to_message.voice.file_id
-                            file_id = msg.reply_to_message.voice.file_id
-                        elseif msg.reply_to_message.media_type == 'gif' then
-                            file_name = msg.reply_to_message.document.file_name or msg.reply_to_message.document.file_id
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'document' then
-                            file_name = msg.reply_to_message.document.file_name or msg.reply_to_message.document.file_id
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'sticker' then
-                            file_name = msg.reply_to_message.sticker.file_name or msg.reply_to_message.sticker.file_id
-                            file_id = msg.reply_to_message.sticker.file_id
-                        else
-                            return langs[msg.lang].useQuoteOnFile
-                        end
-                        local res = getFile(file_id)
-                        local download_link = telegram_file_link(res)
-                        local file_path, res_code = download_to_file(download_link, path .. file_name)
-                        return langs[msg.lang].fileDownloadedTo ..(file_path or res_code)
-                    end
+                    file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
+                elseif msg.media then
+                    file_id, file_name, file_size = extractMediaDetails(msg)
                 else
-                    return langs[msg.lang].useQuoteOnFile
+                    return langs[msg.lang].useCommandOnFile
+                end
+                if file_id and file_name and file_size then
+                    io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '" "' .. file_size .. '"')
+                    return langs[msg.lang].workingOnYourRequest
+                else
+                    return langs[msg.lang].useCommandOnFile
                 end
             end
             return
@@ -256,7 +221,7 @@ return {
         "/cp {file} {directory}",
         "/mv {file} {directory}",
         "/upload {file}",
-        "/download {reply}",
+        "/download {media}|{reply_media}",
     },
 }
 -- Thanks to @imandaneshi

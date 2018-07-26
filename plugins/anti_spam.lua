@@ -103,33 +103,10 @@ local function pre_process(msg)
         -- Check for a distributed flood in one minute
         local hash
         if msg.media then
-            local file_id = ''
-            if msg.media_type == 'photo' then
-                local bigger_pic_id = ''
-                local size = 0
-                for k, v in pairsByKeys(msg.photo) do
-                    if v.file_size > size then
-                        size = v.file_size
-                        bigger_pic_id = v.file_id
-                    end
-                end
-                file_id = bigger_pic_id
-            elseif msg.media_type == 'video' then
-                file_id = msg.video.file_id
-            elseif msg.media_type == 'video_note' then
-                file_id = msg.video_note.file_id
-            elseif msg.media_type == 'audio' then
-                file_id = msg.audio.file_id
-            elseif msg.media_type == 'voice_note' then
-                file_id = msg.voice.file_id
-            elseif msg.media_type == 'gif' then
-                file_id = msg.document.file_id
-            elseif msg.media_type == 'document' then
-                file_id = msg.document.file_id
-            elseif msg.media_type == 'sticker' then
-                file_id = msg.sticker.file_id
+            local file_id, file_name, file_size = extractMediaDetails(msg)
+            if file_id and file_name and file_size then
+                hash = file_id
             end
-            hash = file_id
         else
             hash = sha2.hash256(msg.text)
         end

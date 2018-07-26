@@ -466,57 +466,34 @@ local function run(msg, matches)
     if matches[1]:lower() == 'setmedia' then
         if msg.from.is_mod then
             mystat('/setmedia')
-            if msg.reply then
-                if not matches[2] then
-                    return langs[msg.lang].errorTryAgain
+            if not matches[2] then
+                return langs[msg.lang].errorTryAgain
+            end
+            local hash = set_unset_variables_hash(msg.chat.id, msg.chat.type)
+            if hash then
+                local caption = matches[3] or ''
+                local file_id, file_name, file_size, media_type
+                if msg.reply then
+                    file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
+                    media_type = msg.reply_to_message.media_type
+                elseif msg.media then
+                    file_id, file_name, file_size = extractMediaDetails(msg)
+                    media_type = msg.media_type
                 end
-
-                local hash = set_unset_variables_hash(msg.chat.id, msg.chat.type)
-                if hash then
-                    if msg.reply_to_message.media then
-                        local file_id = ''
-                        local caption = matches[3] or ''
-                        if msg.reply_to_message.media_type == 'photo' then
-                            local bigger_pic_id = ''
-                            local size = 0
-                            for k, v in pairsByKeys(msg.reply_to_message.photo) do
-                                if v.file_size then
-                                    if v.file_size > size then
-                                        size = v.file_size
-                                        bigger_pic_id = v.file_id
-                                    end
-                                end
-                            end
-                            file_id = bigger_pic_id
-                        elseif msg.reply_to_message.media_type == 'video' then
-                            file_id = msg.reply_to_message.video.file_id
-                        elseif msg.reply_to_message.media_type == 'video_note' then
-                            file_id = msg.reply_to_message.video_note.file_id
-                        elseif msg.reply_to_message.media_type == 'audio' then
-                            file_id = msg.reply_to_message.audio.file_id
-                        elseif msg.reply_to_message.media_type == 'voice_note' then
-                            file_id = msg.reply_to_message.voice.file_id
-                        elseif msg.reply_to_message.media_type == 'gif' then
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'document' then
-                            file_id = msg.reply_to_message.document.file_id
-                        elseif msg.reply_to_message.media_type == 'sticker' then
-                            file_id = msg.reply_to_message.sticker.file_id
-                        else
-                            return langs[msg.lang].useQuoteOnFile
-                        end
-                        if caption ~= '' then
-                            caption = ' ' .. caption
-                        end
-                        if pcall( function()
-                                string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
-                            end ) then
-                            redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), msg.reply_to_message.media_type .. file_id .. caption)
-                            return langs[msg.lang].mediaSaved
-                        else
-                            return langs[msg.lang].errorTryAgain
-                        end
+                if file_id and file_name and file_size then
+                    if caption ~= '' then
+                        caption = ' ' .. caption
                     end
+                    if pcall( function()
+                            string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
+                        end ) then
+                        redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), media_type .. file_id .. caption)
+                        return langs[msg.lang].mediaSaved
+                    else
+                        return langs[msg.lang].errorTryAgain
+                    end
+                else
+                    return langs[msg.lang].useCommandOnFile
                 end
             end
         else
@@ -705,7 +682,7 @@ return {
         "(/getgloballist|/getglobal)",
         "MOD",
         "/set {var_name}|{pattern} {text}",
-        "/setmedia {var_name}|{pattern} {reply_media} [{caption}]",
+        "/setmedia {var_name}|{pattern} {media}|{reply_media} [{caption}]",
         "/unset {var_name}|{pattern}",
         "OWNER",
         "/enableglobal",

@@ -898,7 +898,7 @@ local function run(msg, matches)
             if matches[1] == 'broadcast' then
                 mystat('/broadcast')
                 for k, v in pairs(data['groups']) do
-                    io.popen('lua timework.lua "sendmessage" "' .. math.random(#data['groups']) .. '" "' .. v .. '" "nil" "' .. matches[2] .. '"')
+                    io.popen('lua timework.lua "sendmessage" "' .. math.random(#data['groups']) .. '" "' .. v .. '" "nil" "' .. matches[2]:gsub('"', '\\"') .. '"')
                 end
                 return
             end
