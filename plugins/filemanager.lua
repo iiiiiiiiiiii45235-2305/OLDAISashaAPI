@@ -157,8 +157,12 @@ function run(msg, matches)
                     return langs[msg.lang].useCommandOnFile
                 end
                 if file_id and file_name and file_size then
-                    io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '" "' .. file_size .. '"')
-                    return langs[msg.lang].workingOnYourRequest
+                    if file_size <= 20971520 then
+                        io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '" "' .. file_size .. '"')
+                        return langs[msg.lang].workingOnYourRequest
+                    else
+                        return langs[msg.lang].cantDownloadMoreThan20MB
+                    end
                 else
                     return langs[msg.lang].useCommandOnFile
                 end

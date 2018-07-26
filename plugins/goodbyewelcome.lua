@@ -362,10 +362,14 @@ local function run(msg, matches)
                         local caption = matches[2] or ''
                         local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                         if file_id and file_name and file_size then
-                            if caption ~= '' then
-                                caption = ' ' .. caption
+                            if file_size <= 20971520 then
+                                if caption ~= '' then
+                                    caption = ' ' .. caption
+                                end
+                                return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
+                            else
+                                return langs[msg.lang].cantDownloadMoreThan20MB
                             end
-                            return set_welcome(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
                         else
                             return langs[msg.lang].useCommandOnFile
                         end
@@ -376,10 +380,14 @@ local function run(msg, matches)
                     local caption = matches[2] or ''
                     local file_id, file_name, file_size = extractMediaDetails(msg)
                     if file_id and file_name and file_size then
-                        if caption ~= '' then
-                            caption = ' ' .. caption
+                        if file_size <= 20971520 then
+                            if caption ~= '' then
+                                caption = ' ' .. caption
+                            end
+                            return set_welcome(msg.chat.id, msg.media_type .. file_id .. caption)
+                        else
+                            return langs[msg.lang].cantDownloadMoreThan20MB
                         end
-                        return set_welcome(msg.chat.id, msg.media_type .. file_id .. caption)
                     else
                         return langs[msg.lang].useCommandOnFile
                     end
@@ -397,10 +405,14 @@ local function run(msg, matches)
                         local caption = matches[2] or ''
                         local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                         if file_id and file_name and file_size then
-                            if caption ~= '' then
-                                caption = ' ' .. caption
+                            if file_size <= 20971520 then
+                                if caption ~= '' then
+                                    caption = ' ' .. caption
+                                end
+                                return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
+                            else
+                                return langs[msg.lang].cantDownloadMoreThan20MB
                             end
-                            return set_goodbye(msg.chat.id, msg.reply_to_message.media_type .. file_id .. caption)
                         else
                             return langs[msg.lang].useCommandOnFile
                         end
@@ -411,10 +423,14 @@ local function run(msg, matches)
                     local caption = matches[2] or ''
                     local file_id, file_name, file_size = extractMediaDetails(msg)
                     if file_id and file_name and file_size then
-                        if caption ~= '' then
-                            caption = ' ' .. caption
+                        if file_size <= 20971520 then
+                            if caption ~= '' then
+                                caption = ' ' .. caption
+                            end
+                            return set_goodbye(msg.chat.id, msg.media_type .. file_id .. caption)
+                        else
+                            return langs[msg.lang].cantDownloadMoreThan20MB
                         end
-                        return set_goodbye(msg.chat.id, msg.media_type .. file_id .. caption)
                     else
                         return langs[msg.lang].useCommandOnFile
                     end

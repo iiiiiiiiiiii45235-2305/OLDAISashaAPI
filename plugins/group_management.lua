@@ -785,9 +785,13 @@ local function run(msg, matches)
                     return langs[msg.lang].needPhoto
                 end
                 if file_id and file_name and file_size then
-                    local caption = matches[3] or ''
-                    mystat('/setphoto')
-                    return setChatPhotoId(msg.chat.id, file_id)
+                    if file_size <= 20971520 then
+                        local caption = matches[3] or ''
+                        mystat('/setphoto')
+                        return setChatPhotoId(msg.chat.id, file_id)
+                    else
+                        return langs[msg.lang].cantDownloadMoreThan20MB
+                    end
                 else
                     return langs[msg.lang].useCommandOnFile
                 end

@@ -432,28 +432,36 @@ local function run(msg, matches)
             elseif msg.reply then
                 local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                 if file_id and file_name and file_size then
-                    matches[2] = matches[2]:gsub('[#!]', '/')
-                    if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
-                        alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                    if file_size <= 20971520 then
+                        matches[2] = matches[2]:gsub('[#!]', '/')
+                        if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
+                            alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                        end
+                        table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
+                        alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
+                        save_alternatives()
+                        return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeSaved
+                    else
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
-                    table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
-                    alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
-                    save_alternatives()
-                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeSaved
                 else
                     return langs[msg.lang].useCommandOnFile
                 end
             elseif msg.media then
                 local file_id, file_name, file_size = extractMediaDetails(msg)
                 if file_id and file_name and file_size then
-                    matches[2] = matches[2]:gsub('[#!]', '/')
-                    if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
-                        alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                    if file_size <= 20971520 then
+                        matches[2] = matches[2]:gsub('[#!]', '/')
+                        if not alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
+                            alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                        end
+                        table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.media_type .. file_id)
+                        alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
+                        save_alternatives()
+                        return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].alternativeSaved
+                    else
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
-                    table.insert(alternatives[tostring(msg.chat.id)].cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.media_type .. file_id)
-                    alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
-                    save_alternatives()
-                    return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].alternativeSaved
                 else
                     return langs[msg.lang].useCommandOnFile
                 end
@@ -487,28 +495,36 @@ local function run(msg, matches)
             elseif msg.reply then
                 local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                 if file_id and file_name and file_size then
-                    matches[2] = matches[2]:gsub('[#!]', '/')
-                    if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
-                        alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                    if file_size <= 20971520 then
+                        matches[2] = matches[2]:gsub('[#!]', '/')
+                        if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
+                            alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                        end
+                        table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
+                        alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
+                        save_alternatives()
+                        return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
+                    else
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
-                    table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.reply_to_message.media_type .. file_id)
-                    alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
-                    save_alternatives()
-                    return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
                 else
                     return langs[msg.lang].useCommandOnFile
                 end
             elseif msg.media then
                 local file_id, file_name, file_size = extractMediaDetails(msg)
                 if file_id and file_name and file_size then
-                    matches[2] = matches[2]:gsub('[#!]', '/')
-                    if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
-                        alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                    if file_size <= 20971520 then
+                        matches[2] = matches[2]:gsub('[#!]', '/')
+                        if not alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] then
+                            alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)] = { }
+                        end
+                        table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.media_type .. file_id)
+                        alternatives.global.altCmd['media:' .. msg.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
+                        save_alternatives()
+                        return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
+                    else
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
-                    table.insert(alternatives.global.cmdAlt[string.sub(matches[2]:lower(), 1, 50)], 'media:' .. msg.media_type .. file_id)
-                    alternatives.global.altCmd['media:' .. msg.media_type .. file_id] = string.sub(matches[2]:lower(), 1, 50)
-                    save_alternatives()
-                    return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].gAlternativeSaved
                 else
                     return langs[msg.lang].useCommandOnFile
                 end
@@ -561,22 +577,26 @@ local function run(msg, matches)
             elseif msg.reply then
                 local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                 if file_id and file_name and file_size then
-                    if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
-                        local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
-                        alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
-                        if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
-                            local tmptable = { }
-                            for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
-                                if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
-                                    table.insert(tmptable, v)
+                    if file_size <= 20971520 then
+                        if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
+                            local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
+                            alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
+                            if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
+                                local tmptable = { }
+                                for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
+                                    if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
+                                        table.insert(tmptable, v)
+                                    end
                                 end
+                                alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
                             end
-                            alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
+                            save_alternatives()
+                            return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeDeleted
+                        else
+                            return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                         end
-                        save_alternatives()
-                        return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativeDeleted
                     else
-                        return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else
                     return langs[msg.lang].useCommandOnFile
@@ -584,22 +604,26 @@ local function run(msg, matches)
             elseif msg.media then
                 local file_id, file_name, file_size = extractMediaDetails(msg)
                 if file_id and file_name and file_size then
-                    if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id] then
-                        local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id]
-                        alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id] = nil
-                        if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
-                            local tmptable = { }
-                            for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
-                                if v ~=('media:' .. msg.media_type .. file_id) then
-                                    table.insert(tmptable, v)
+                    if file_size <= 20971520 then
+                        if alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id] then
+                            local tempcmd = alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id]
+                            alternatives[tostring(msg.chat.id)].altCmd['media:' .. msg.media_type .. file_id] = nil
+                            if alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] then
+                                local tmptable = { }
+                                for k, v in pairs(alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd]) do
+                                    if v ~=('media:' .. msg.media_type .. file_id) then
+                                        table.insert(tmptable, v)
+                                    end
                                 end
+                                alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
                             end
-                            alternatives[tostring(msg.chat.id)].cmdAlt[tempcmd] = tmptable
+                            save_alternatives()
+                            return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].alternativeDeleted
+                        else
+                            return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.media_type .. file_id)
                         end
-                        save_alternatives()
-                        return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].alternativeDeleted
                     else
-                        return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.media_type .. file_id)
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else
                     return langs[msg.lang].useCommandOnFile
@@ -633,22 +657,26 @@ local function run(msg, matches)
             elseif msg.reply then
                 local file_id, file_name, file_size = extractMediaDetails(msg.reply_to_message)
                 if file_id and file_name and file_size then
-                    if alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
-                        local tempcmd = alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
-                        alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
-                        if alternatives.global.cmdAlt[tempcmd] then
-                            local tmptable = { }
-                            for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
-                                if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
-                                    table.insert(tmptable, v)
+                    if file_size <= 20971520 then
+                        if alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] then
+                            local tempcmd = alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id]
+                            alternatives.global.altCmd['media:' .. msg.reply_to_message.media_type .. file_id] = nil
+                            if alternatives.global.cmdAlt[tempcmd] then
+                                local tmptable = { }
+                                for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
+                                    if v ~=('media:' .. msg.reply_to_message.media_type .. file_id) then
+                                        table.insert(tmptable, v)
+                                    end
                                 end
+                                alternatives.global.cmdAlt[tempcmd] = tmptable
                             end
-                            alternatives.global.cmdAlt[tempcmd] = tmptable
+                            save_alternatives()
+                            return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativegDeleted
+                        else
+                            return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
                         end
-                        save_alternatives()
-                        return 'media:' .. msg.reply_to_message.media_type .. file_id .. langs[msg.lang].alternativegDeleted
                     else
-                        return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.reply_to_message.media_type .. file_id)
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else
                     return langs[msg.lang].useCommandOnFile
@@ -656,22 +684,26 @@ local function run(msg, matches)
             elseif msg.media then
                 local file_id, file_name, file_size = extractMediaDetails(msg)
                 if file_id and file_name and file_size then
-                    if alternatives.global.altCmd['media:' .. msg.media_type .. file_id] then
-                        local tempcmd = alternatives.global.altCmd['media:' .. msg.media_type .. file_id]
-                        alternatives.global.altCmd['media:' .. msg.media_type .. file_id] = nil
-                        if alternatives.global.cmdAlt[tempcmd] then
-                            local tmptable = { }
-                            for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
-                                if v ~=('media:' .. msg.media_type .. file_id) then
-                                    table.insert(tmptable, v)
+                    if file_size <= 20971520 then
+                        if alternatives.global.altCmd['media:' .. msg.media_type .. file_id] then
+                            local tempcmd = alternatives.global.altCmd['media:' .. msg.media_type .. file_id]
+                            alternatives.global.altCmd['media:' .. msg.media_type .. file_id] = nil
+                            if alternatives.global.cmdAlt[tempcmd] then
+                                local tmptable = { }
+                                for k, v in pairs(alternatives.global.cmdAlt[tempcmd]) do
+                                    if v ~=('media:' .. msg.media_type .. file_id) then
+                                        table.insert(tmptable, v)
+                                    end
                                 end
+                                alternatives.global.cmdAlt[tempcmd] = tmptable
                             end
-                            alternatives.global.cmdAlt[tempcmd] = tmptable
+                            save_alternatives()
+                            return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].alternativegDeleted
+                        else
+                            return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.media_type .. file_id)
                         end
-                        save_alternatives()
-                        return 'media:' .. msg.media_type .. file_id .. langs[msg.lang].alternativegDeleted
                     else
-                        return langs[msg.lang].noCommandsAlternative:gsub('X', 'media:' .. msg.media_type .. file_id)
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else
                     return langs[msg.lang].useCommandOnFile

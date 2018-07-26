@@ -576,7 +576,7 @@ return {
         unknownType = "Tipo sconosciuto, controlla la sintassi.",
         cantSendAs = "Non posso inviare questo media come ",
         workingOnYourRequest = "Sto elaborando la tua richiesta.",
-        contactMyAdmins = "Contatta i miei amministratori per convertire files più grandi di 50MB.",
+        cantDownloadMoreThan20MB = "Non posso scaricare più di 20MB a causa delle API di telegram.",
 
         -- filemanager.lua --
         backHomeFolder = "Sei tornato alla cartella base: ",
@@ -2125,7 +2125,7 @@ return {
         unknownType = "Unknown type, check the syntax.",
         cantSendAs = "I can't send this media as ",
         workingOnYourRequest = "I'm working on your request.",
-        contactMyAdmins = "Contact my administrators to convert files bigger than 50MB.",
+        cantDownloadMoreThan20MB = "I can't download files bigger than 20MB due tom Telegram's API.",
 
         -- filemanager.lua --
         backHomeFolder = "You're in the base folder: ",

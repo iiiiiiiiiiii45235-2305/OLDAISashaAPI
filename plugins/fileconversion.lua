@@ -12,11 +12,11 @@ local function run(msg, matches)
                 return langs[msg.lang].useCommandOnFile
             end
             if file_id and file_name and file_size then
-                if file_size < 52428800 or is_admin(msg) then
+                if file_size <= 20971520 then
                     io.popen('lua timework.lua "fileconversion" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' .. file_name:gsub('"', '\\"') .. '" "' .. file_size .. '" "' .. media_type .. '" "' .. mediaDictionary[matches[2]:lower()] .. '"')
                     return langs[msg.lang].workingOnYourRequest
                 else
-                    return langs[msg.lang].contactMyAdmins
+                    return langs[msg.lang].cantDownloadMoreThan20MB
                 end
             else
                 return langs[msg.lang].useCommandOnFile

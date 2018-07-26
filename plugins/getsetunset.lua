@@ -481,16 +481,20 @@ local function run(msg, matches)
                     media_type = msg.media_type
                 end
                 if file_id and file_name and file_size then
-                    if caption ~= '' then
-                        caption = ' ' .. caption
-                    end
-                    if pcall( function()
-                            string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
-                        end ) then
-                        redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), media_type .. file_id .. caption)
-                        return langs[msg.lang].mediaSaved
+                    if file_size <= 20971520 then
+                        if caption ~= '' then
+                            caption = ' ' .. caption
+                        end
+                        if pcall( function()
+                                string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
+                            end ) then
+                            redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), media_type .. file_id .. caption)
+                            return langs[msg.lang].mediaSaved
+                        else
+                            return langs[msg.lang].errorTryAgain
+                        end
                     else
-                        return langs[msg.lang].errorTryAgain
+                        return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else
                     return langs[msg.lang].useCommandOnFile
