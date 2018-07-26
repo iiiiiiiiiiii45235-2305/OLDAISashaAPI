@@ -1200,9 +1200,9 @@ function extractMediaDetails(message)
             file_size = message.document.file_size
             -- audio, document, photo, sticker, video, video_note, voice
         elseif message.media_type == 'gif' then
-            file_id = message.document.file_id
-            file_name = message.document.file_name or message.document.file_id
-            file_size = message.document.file_size
+            file_id = message.animation.file_id
+            file_name = message.animation.file_name or message.animation.file_id
+            file_size = message.animation.file_size
             -- document, video, video_note
         elseif message.media_type == 'sticker' then
             file_id = message.sticker.file_id

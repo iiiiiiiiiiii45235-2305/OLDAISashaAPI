@@ -617,7 +617,7 @@ function answerCallbackQuery(callback_query_id, text, show_alert)
     return res, code
 end
 
-function editMessage(chat_id, message_id, text, keyboard, parse_mode)
+function editMessageText(chat_id, message_id, text, keyboard, parse_mode)
     if sendChatAction(chat_id, 'typing', true) then
         local url = BASE_URL ..
         '/editMessageText?chat_id=' .. chat_id ..
@@ -650,6 +650,46 @@ function editMessage(chat_id, message_id, text, keyboard, parse_mode)
         if not print_res_msg(res) then
             local obj = getChat(chat_id)
             local sent_msg = { from = fake_user_chat, chat = obj, text = text, edited = true }
+            print_msg(sent_msg)
+        end
+        return res, code
+        -- return false, and the code
+    end
+end
+
+function editMessageCaption(chat_id, message_id, caption, keyboard, parse_mode)
+    if sendChatAction(chat_id, 'typing', true) then
+        local url = BASE_URL ..
+        '/editMessageCaption?chat_id=' .. chat_id ..
+        '&message_id=' .. message_id ..
+        '&caption=' .. URL.escape(caption)
+        if parse_mode then
+            if parse_mode:lower() == 'html' then
+                url = url .. '&parse_mode=HTML'
+            elseif parse_mode:lower() == 'markdown' then
+                url = url .. '&parse_mode=Markdown'
+            else
+                -- no parse_mode
+            end
+        end
+        url = url .. '&disable_web_page_preview=true'
+        if keyboard then
+            url = url .. '&reply_markup=' .. URL.escape(json:encode(keyboard))
+        end
+        local res, code = sendRequest(url)
+
+        if not res and code then
+            -- if the request failed and a code is returned (not 403 and 429)
+            if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                savelog('edit_msg', code .. '\n' .. caption)
+            end
+            if code == 429 then
+                printvardump(tab)
+            end
+        end
+        if not print_res_msg(res) then
+            local obj = getChat(chat_id)
+            local sent_msg = { from = fake_user_chat, chat = obj, media = true, caption = caption, edited = true }
             print_msg(sent_msg)
         end
         return res, code
@@ -1149,6 +1189,53 @@ function sendDocumentId(chat_id, file_id, caption, reply_to_message_id, send_sou
     end
 end
 
+function sendAnimationId(chat_id, file_id, caption, reply_to_message_id, send_sound)
+    if sendChatAction(chat_id, 'upload_document', true) then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL ..
+            '/sendAnimation?chat_id=' .. chat_id ..
+            '&animation=' .. file_id
+            if caption then
+                if type(caption) == 'string' or type(caption) == 'number' then
+                    caption = tostring(caption)
+                    local caption_max = 200
+                    local caption_len = string.len(caption)
+                    local num_msg = math.ceil(caption_len / caption_max)
+                    if num_msg > 1 then
+                        sendMessage(chat_id, caption)
+                    else
+                        url = url .. '&caption=' .. URL.escape(caption)
+                    end
+                end
+            end
+            local reply = false
+            if reply_to_message_id then
+                url = url .. '&reply_to_message_id=' .. reply_to_message_id
+                reply = true
+            end
+            if not send_sound then
+                url = url .. '&disable_notification=true'
+                -- messages are silent by default
+            end
+            local res, code = sendRequest(url)
+            if not res and code then
+                -- if the request failed and a code is returned (not 403 and 429)
+                if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+                    savelog('send_animation', code)
+                end
+            end
+            if print_res_msg(res) then
+                msgs_plus_plus(chat_id)
+            else
+                local obj = getChat(chat_id)
+                local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'gif' }
+                print_msg(sent_msg)
+            end
+            return res, code
+        end
+    end
+end
+
 ----------------------------To curl--------------------------------------------
 
 function curlRequest(curl_command)
@@ -1183,7 +1270,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id, send_sound)
                 curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
@@ -1206,7 +1293,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id, send_sound)
                 reply = true
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
@@ -1237,7 +1324,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id, duration, send_
                 curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
@@ -1274,7 +1361,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
                 curl_command = curl_command .. ' -F "title=' .. title .. '"'
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
@@ -1303,7 +1390,7 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
                 curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
@@ -1332,7 +1419,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
                 curl_command = curl_command .. ' -F "length=' .. length .. '"'
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
@@ -1358,11 +1445,37 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
                 reply = true
             end
             if not send_sound then
-                url = url .. '&disable_notification=true'
+                curl_command = curl_command .. ' -F "disable_notification=true"'
                 -- messages are silent by default
             end
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return curlRequest(curl_command)
+        end
+    end
+end
+
+function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_sound)
+    if sendChatAction(chat_id, 'upload_document', true) then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendAnimation'
+            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "animation=@' .. animation .. '"'
+            if caption then
+                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+            end
+            local reply = false
+            if reply_to_message_id then
+                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                reply = true
+            end
+            if not send_sound then
+                curl_command = curl_command .. ' -F "disable_notification=true"'
+                -- messages are silent by default
+            end
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'gif' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
             return curlRequest(curl_command)

@@ -7,8 +7,14 @@ local function run(msg, matches)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    if not editMessage(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
-                        return langs[msg.lang].errorTryAgain
+                    if msg.reply_to_message.media then
+                        if not editMessageCaption(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
+                            return langs[msg.lang].errorTryAgain
+                        end
+                    else
+                        if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
+                            return langs[msg.lang].errorTryAgain
+                        end
                     end
                 else
                     return langs[msg.lang].cantEditOthersMessages
@@ -29,8 +35,14 @@ local function run(msg, matches)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    if not editMessage(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
-                        return sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
+                    if msg.reply_to_message.media then
+                        if not editMessageCaption(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
+                            return sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
+                        end
+                    else
+                        if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'markdown') then
+                            return sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
+                        end
                     end
                 else
                     return sendMessage(msg.chat.id, langs[msg.lang].cantEditOthersMessages)
@@ -89,8 +101,14 @@ local function run(msg, matches)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    if not editMessage(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
-                        return langs[msg.lang].errorTryAgain
+                    if msg.reply_to_message.media then
+                        if not editMessageCaption(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
+                            return langs[msg.lang].errorTryAgain
+                        end
+                    else
+                        if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
+                            return langs[msg.lang].errorTryAgain
+                        end
                     end
                 else
                     return langs[msg.lang].cantEditOthersMessages
@@ -111,8 +129,14 @@ local function run(msg, matches)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    if not editMessage(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
-                        return sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
+                    if msg.reply_to_message.media then
+                        if not editMessageCaption(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
+                            return sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
+                        end
+                    else
+                        if not editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2], nil, 'html') then
+                            return sendMessage(msg.chat.id, langs[msg.lang].errorTryAgain)
+                        end
                     end
                 else
                     return sendMessage(msg.chat.id, langs[msg.lang].cantEditOthersMessages)
@@ -171,7 +195,11 @@ local function run(msg, matches)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    return editMessage(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    if msg.reply_to_message.media then
+                        return editMessageCaption(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    else
+                        return editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    end
                 else
                     return langs[msg.lang].cantEditOthersMessages
                 end
@@ -191,7 +219,11 @@ local function run(msg, matches)
             end
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    return editMessage(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    if msg.reply_to_message.media then
+                        return editMessageCaption(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    else
+                        return editMessageText(msg.chat.id, msg.reply_to_message.message_id, matches[2])
+                    end
                 else
                     return sendMessage(msg.chat.id, langs[msg.lang].cantEditOthersMessages)
                 end

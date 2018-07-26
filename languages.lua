@@ -1325,7 +1325,7 @@ return {
             "Plugin per la conversione di files.",
             "<b>USER</b>",
             "<code>/to{type} {media}|{reply_media}</code>: Sasha converte {media}|{reply_media} nel tipo specificato se possibile.",
-            "<code>{type}</code> può essere: <code>audio|document|photo|sticker|video|videonote|voice</code>.",
+            "<code>{type}</code> può essere: <code>audio|document|gif|photo|sticker|video|videonote|voice</code>.",
         },
 
         filemanager =
@@ -2881,7 +2881,7 @@ return {
             "Plugin for converting files.",
             "<b>USER</b>",
             "<code>/to{type} {media}|{reply_media}</code>: Sasha converts {media}|{reply_media} to the specified type if possible.",
-            "<code>{type}</code> can be: <code>audio|document|photo|sticker|video|videonote|voice</code>.",
+            "<code>{type}</code> can be: <code>audio|document|gif|photo|sticker|video|videonote|voice</code>.",
         },
 
         filemanager =

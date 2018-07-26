@@ -43,7 +43,7 @@ local function run(msg, matches)
         if matches[1] == '###cbdelword' then
             if matches[2] == 'DELETE' then
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
             elseif string.match(matches[2], '^%d+$') then
                 if delword_table[tostring(msg.from.id)] then
@@ -109,20 +109,20 @@ local function run(msg, matches)
                             delword_table[tostring(msg.from.id)] = nil
                             sendMessage(matches[4], text)
                             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                             mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                         end
                     end
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                 end
             end
         elseif matches[1]:lower() == '###cbschedule' then
             if is_sudo(msg) then
                 if matches[2] == 'DELETE' then
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif string.match(matches[2], '^%d+$') then
                     if schedule_table[tostring(msg.from.id)] then
@@ -173,11 +173,11 @@ local function run(msg, matches)
                             schedule_table[tostring(msg.from.id)] = nil
                             sendMessage(matches[4], 'SCHEDULED')
                             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                             end
                         end
                     else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 end
             end

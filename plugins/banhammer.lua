@@ -101,7 +101,7 @@ local function run(msg, matches)
         if msg.cb then
             if matches[2] == 'DELETE' then
                 if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                 end
             elseif matches[2] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
@@ -121,7 +121,7 @@ local function run(msg, matches)
                         text = text .. unrestrictUser(msg.from.id, matches[3], msg.chat.id)
                     end
                     answerCallbackQuery(msg.cb_id, text, true)
-                    editMessage(msg.chat.id, msg.message_id, text)
+                    editMessageText(msg.chat.id, msg.message_id, text)
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].require_owner, true)
@@ -201,11 +201,11 @@ local function run(msg, matches)
                         local txt = restrictUser(msg.from.id, matches[3], matches[4], restrictionsTable[tostring(matches[4])][tostring(matches[3])])
                         answerCallbackQuery(msg.cb_id, txt, false)
                         restrictionsTable[tostring(matches[4])][tostring(matches[3])] = nil
-                        editMessage(msg.chat.id, msg.message_id, txt)
+                        editMessageText(msg.chat.id, msg.message_id, txt)
                     end
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
                 end
             elseif matches[2] == 'TEMPBAN' then
                 local time = tonumber(matches[3])
@@ -281,7 +281,7 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, text, false)
                     sendMessage(matches[6], text)
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                     mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                 end
@@ -360,7 +360,7 @@ local function run(msg, matches)
                         editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_time('banhammer', matches[2], matches[6], matches[7], time, matches[8] or false))
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6] .. matches[7])
                     else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 elseif matches[4] == 'DONE' then
                     restrictionsTable[tostring(matches[6])] = restrictionsTable[tostring(matches[6])] or { }
@@ -372,11 +372,11 @@ local function run(msg, matches)
                         restrictionsTable[tostring(matches[6])][tostring(matches[5])] = nil
                         sendMessage(matches[6], txt)
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] .. matches[6])
                     else
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
                     end
                 end
             end

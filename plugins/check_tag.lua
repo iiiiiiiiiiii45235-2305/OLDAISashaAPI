@@ -66,7 +66,7 @@ local function run(msg, matches)
         if matches[2] == 'ALREADYREAD' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].markedAsRead, false)
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
             end
         elseif matches[2] == 'REGISTER' then
             if not redis:hget('tagalert:usernames', msg.from.id) then
@@ -80,8 +80,8 @@ local function run(msg, matches)
             else
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].pmnoticesAlreadyRegistered, true)
             end
-            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
-            -- editMessage(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
+            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname)
+            -- editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage .. '\n' .. langs[msg.lang].nowSetNickname, { inline_keyboard = { { { text = langs[msg.lang].tutorialWord, url = 'http://telegra.ph/TUTORIAL-AISASHABOT-09-15' } } } })
         else
             if matches[2] == 'DELETEUP' then
                 if tonumber(matches[3]) == tonumber(msg.from.id) then
@@ -89,7 +89,7 @@ local function run(msg, matches)
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].upMessageDeleted, false)
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].cantDeleteMessage, false)
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 end
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
@@ -102,9 +102,9 @@ local function run(msg, matches)
                             if data[tostring(matches[4])].link then
                                 link_in_keyboard = true
                                 if res then
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
                                 else
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
                                 end
                             end
                         end
@@ -117,9 +117,9 @@ local function run(msg, matches)
                         end
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             if sent then
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                             else
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                             end
                         end
                     end
@@ -144,9 +144,9 @@ local function run(msg, matches)
                             if data[tostring(matches[4])].link then
                                 link_in_keyboard = true
                                 if sent then
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
                                 else
-                                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
+                                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage, { inline_keyboard = { { { text = langs[msg.lang].alreadyRead, callback_data = 'check_tagALREADYREAD' } }, { { text = langs[msg.lang].gotoGroup, url = data[tostring(matches[4])].link } } } }, false, false, true)
                                 end
                             end
                         end
@@ -159,9 +159,9 @@ local function run(msg, matches)
                     if not link_in_keyboard then
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             if sent then
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].repliedToMessage)
                             else
-                                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
+                                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].cantFindMessage)
                             end
                         end
                     end
@@ -382,7 +382,9 @@ local function send_tag_alert(msg, user_id)
             sendAudioId(user_id, msg.audio.file_id, text)
         elseif msg.media_type == 'voice_note' then
             sendVoiceId(user_id, msg.voice.file_id, text)
-        elseif msg.media_type == 'gif' or msg.media_type == 'document' then
+        elseif msg.media_type == 'gif' then
+            sendAnimationId(user_id, msg.animation.file_id, text)
+        elseif msg.media_type == 'document' then
             sendDocumentId(user_id, msg.document.file_id, text)
         end
     else

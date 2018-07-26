@@ -147,7 +147,7 @@ local function run(msg, matches)
     if msg.cb then
         if matches[2] == 'DELETE' then
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             end
         elseif matches[2] == 'PAGES' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
@@ -166,9 +166,9 @@ local function run(msg, matches)
         elseif matches[2] == 'FAQ' then
             answerCallbackQuery(msg.cb_id, 'FAQ' .. matches[3])
             if langs[msg.lang].faq[tonumber(matches[3])] then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faq[tonumber(matches[3])], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].faq[0], { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACKFAQ' }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
             end
             mystat(matches[1] .. matches[2] .. matches[3])
         else
@@ -177,12 +177,12 @@ local function run(msg, matches)
             local temp = plugin_help(matches[2]:lower(), msg.chat.id, get_rank(msg.from.id, msg.chat.id, true))
             if temp ~= nil then
                 if temp ~= '' then
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } }, 'html')
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].helpIntro .. temp, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } }, 'html')
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_higher, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
                 end
             else
-                editMessage(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
+                editMessageText(msg.chat.id, msg.message_id, matches[2]:lower() .. langs[msg.lang].notExists, { inline_keyboard = { { { text = langs[msg.lang].previousPage, callback_data = 'helpBACK' ..(matches[3] or 1) }, { text = langs[msg.lang].deleteMessage, callback_data = 'helpDELETE' } } } })
             end
             mystat(matches[1] .. matches[2])
         end

@@ -86,6 +86,12 @@ elseif action == 'filedownload' or action == 'fileconversion' then
             end
         elseif to_type == 'document' then
             return sendDocument(chat_id, file_path, langs[get_lang(chat_id)].downloadAndRename)
+        elseif to_type == 'gif' then
+            if from_type == 'audio' or from_type == 'document' or from_type == 'video' or from_type == 'video_note' or from_type == 'voice_note' then
+                return sendAnimation(chat_id, file_path)
+            else
+                return langs[get_lang(chat_id)].cantSendAs .. to_type
+            end
         elseif to_type == 'photo' then
             if from_type == 'document' or from_type == 'sticker' then
                 return sendPhoto(chat_id, file_path)

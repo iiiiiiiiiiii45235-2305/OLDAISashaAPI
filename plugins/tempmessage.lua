@@ -8,7 +8,7 @@ local function run(msg, matches)
     if msg.cb then
         if matches[2] == 'DELETE' then
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             end
         elseif string.match(matches[2], '^%d+$') then
             if text_table[tostring(msg.from.id)] then
@@ -63,13 +63,13 @@ local function run(msg, matches)
                             io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. matches[4] .. '" "' .. message_id .. '"')
                         end
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                            editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                            editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                         end
                         mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
                     end
                 end
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].errorTryAgain)
             end
         end
         return

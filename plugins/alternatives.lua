@@ -366,9 +366,9 @@ local function run(msg, matches)
                             sendVoiceId(msg.chat.id, string.match(k, '^media:voice(.*)'), '', msg.message_id)
                         end
                     elseif string.match(k, '^media:gif') then
-                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                        sendAnimationId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
                     elseif string.match(k, '^media:document') then
-                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                        sendDocumentId(msg.chat.id, string.match(k, '^media:document(.*)'), '', msg.message_id)
                     elseif string.match(k, '^media:sticker') then
                         sendStickerId(msg.chat.id, string.match(k, '^media:sticker(.*)'), msg.message_id)
                     else
@@ -395,9 +395,9 @@ local function run(msg, matches)
                             sendVoiceId(msg.chat.id, string.match(k, '^media:voice(.*)'), '', msg.message_id)
                         end
                     elseif string.match(k, '^media:gif') then
-                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                        sendAnimationId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
                     elseif string.match(k, '^media:document') then
-                        sendDocumentId(msg.chat.id, string.match(k, '^media:gif(.*)'), '', msg.message_id)
+                        sendDocumentId(msg.chat.id, string.match(k, '^media:document(.*)'), '', msg.message_id)
                     elseif string.match(k, '^media:sticker') then
                         sendStickerId(msg.chat.id, string.match(k, '^media:sticker(.*)'), msg.message_id)
                     else

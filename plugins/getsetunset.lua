@@ -600,7 +600,7 @@ local function pre_process(msg)
                     answer = answer:gsub('^gif', '')
                     local media_id = answer:match('^([^%s]+)')
                     local caption = answer:match('^[^%s]+ (.*)')
-                    sendDocumentId(msg.chat.id, media_id, caption, msg.message_id)
+                    sendAnimationId(msg.chat.id, media_id, caption, msg.message_id)
                     return msg
                 elseif string.match(answer, '^document') then
                     answer = answer:gsub('^document', '')

@@ -247,19 +247,19 @@ local function run(msg, matches)
     if msg.cb then
         if matches[2] == 'DELETE' then
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             end
         elseif matches[2] == 'PAGES' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
         elseif matches[2] == 'BACKLOG' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-            editMessage(msg.chat.id, msg.message_id, logPages(matches[4], matches[3]), keyboard_log_pages(matches[4], matches[3]))
+            editMessageText(msg.chat.id, msg.message_id, logPages(matches[4], matches[3]), keyboard_log_pages(matches[4], matches[3]))
         elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-            editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
+            editMessageText(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
         elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].turningPage)
-            editMessage(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
+            editMessageText(msg.chat.id, msg.message_id, logPages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))), keyboard_log_pages(matches[4], tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
         elseif matches[2] == 'BACKPERMISSIONS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
             local chat_name = ''
@@ -311,14 +311,14 @@ local function run(msg, matches)
                     if res ~= langs[get_lang(matches[4])].checkMyPermissions and res ~= langs[get_lang(matches[4])].notMyGroup then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                         permissionsTable[tostring(matches[4])][tostring(matches[3])] = nil
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].done)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].done)
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].checkMyPermissions, false)
                     end
                 end
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4])
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
             end
         elseif matches[2] == 'BACKSETTINGS' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
@@ -344,7 +344,7 @@ local function run(msg, matches)
         elseif matches[2] == 'LOCK' then
             if is_mod2(msg.from.id, matches[5]) then
                 if (groupDataDictionary[matches[3]:lower()] == 'groupnotices' or groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
-                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
                 answerCallbackQuery(msg.cb_id, lockSetting(matches[5], matches[3]), false)
                 local chat_name = ''
@@ -354,12 +354,12 @@ local function run(msg, matches)
                 editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_settings_list(matches[5], matches[4], nil, matches[6] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
         elseif matches[2] == 'UNLOCK' then
             if is_mod2(msg.from.id, matches[5]) then
                 if (groupDataDictionary[matches[3]:lower()] == 'groupnotices' or groupDataDictionary[matches[3]:lower()] == 'pmnotices' or groupDataDictionary[matches[3]:lower()] == 'tagalert') and not is_owner2(msg.from.id, matches[5]) then
-                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
                 answerCallbackQuery(msg.cb_id, unlockSetting(matches[5], matches[3]), false)
                 local chat_name = ''
@@ -369,7 +369,7 @@ local function run(msg, matches)
                 editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_settings_list(matches[5], matches[4], nil, matches[6] or false))
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[4] .. matches[5] ..(matches[6] or ''))
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
         elseif matches[2] == 'FLOOD--' or matches[2] == 'FLOOD++' then
             if is_mod2(msg.from.id, matches[4]) then
@@ -393,7 +393,7 @@ local function run(msg, matches)
                 end
                 editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_settings_list(matches[4], matches[3], nil, matches[5] or false))
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
         elseif matches[2] == 'WARNS--' or matches[2] == 'WARNS++' then
             if is_mod2(msg.from.id, matches[4]) then
@@ -417,7 +417,7 @@ local function run(msg, matches)
                 end
                 editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_settings_list(matches[4], matches[3], nil, matches[5] or false))
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_mod)
             end
         elseif matches[2] == 'time_ban' or matches[2] == 'time_restrict' then
             local time = tonumber(matches[3])
@@ -427,7 +427,7 @@ local function run(msg, matches)
             end
             if matches[4] == 'BACK' then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].keyboardUpdated, false)
-                editMessage(msg.chat.id, msg.message_id, '(#chat' .. tostring(matches[5]) .. ')' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
+                editMessageText(msg.chat.id, msg.message_id, '(#chat' .. tostring(matches[5]) .. ')' .. chat_name .. langs[msg.lang].tempActionIntro, keyboard_time_punishments(matches[2], matches[5], time, matches[6] or false))
             elseif matches[4] == 'SECONDS' or matches[4] == 'MINUTES' or matches[4] == 'HOURS' or matches[4] == 'DAYS' or matches[4] == 'WEEKS' then
                 local seconds, minutes, hours, days, weeks = unixToDate(time)
                 if matches[4] == 'SECONDS' then
@@ -493,7 +493,7 @@ local function run(msg, matches)
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
                     data[tostring(matches[5])].settings[groupDataDictionary[matches[2]:lower()]] = time
                     save_data(config.moderation.data, data)
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(matches[5]) .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, nil, matches[6] or false))
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(matches[5]) .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[5], 1, nil, matches[6] or false))
                 else
                     answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTimeRangePunishments, true)
                 end
@@ -502,7 +502,7 @@ local function run(msg, matches)
             -- change punishment
             if groupDataDictionary[matches[3]:lower()] then
                 if (groupDataDictionary[matches[3]:lower()] == 'all' or groupDataDictionary[matches[3]:lower()] == 'text') and not is_owner2(msg.from.id, matches[5]) then
-                    return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
                 local new_punishment = adjust_punishment(matches[3]:lower(), matches[2])
                 answerCallbackQuery(msg.cb_id, setPunishment(matches[5], groupDataDictionary[matches[3]:lower()], new_punishment), false)

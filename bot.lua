@@ -496,7 +496,11 @@ function pre_process_media_msg(msg)
         msg.caption_entities = nil
     end
 
-    if msg.audio then
+    if msg.animation then
+        msg.media = true
+        msg.text = "%[gif%]"
+        msg.media_type = 'gif'
+    elseif msg.audio then
         msg.media = true
         msg.text = "%[audio%]"
         msg.media_type = 'audio'
@@ -508,10 +512,6 @@ function pre_process_media_msg(msg)
         msg.media = true
         msg.text = "%[document%]"
         msg.media_type = 'document'
-        if msg.document.mime_type == 'video/mp4' then
-            msg.text = "%[gif%]"
-            msg.media_type = 'gif'
-        end
     elseif msg.location then
         msg.media = true
         msg.text = "%[location%]"

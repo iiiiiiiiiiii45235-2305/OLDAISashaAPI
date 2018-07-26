@@ -157,7 +157,7 @@ local function run(msg, matches)
     if msg.cb then
         if matches[2] == 'DELETE' then
             if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
             end
         elseif matches[2] == 'PAGES' then
             answerCallbackQuery(msg.cb_id, langs[msg.lang].uselessButton, false)
@@ -167,13 +167,13 @@ local function run(msg, matches)
                 if is_owner2(msg.from.id, matches[4]) then
                     editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, matches[3] or 1, tonumber(matches[4]), matches[5] or false))
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 if is_sudo(msg) then
                     editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, matches[3] or 1))
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
             end
         elseif matches[2]:gsub('%d', '') == 'PAGEMINUS' then
@@ -182,13 +182,13 @@ local function run(msg, matches)
                 if is_owner2(msg.from.id, matches[4]) then
                     editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 if is_sudo(msg) then
                     editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) + 1)) - tonumber(matches[2]:match('%d'))))
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
             end
         elseif matches[2]:gsub('%d', '') == 'PAGEPLUS' then
@@ -197,13 +197,13 @@ local function run(msg, matches)
                 if is_owner2(msg.from.id, matches[4]) then
                     editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, false, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d')), tonumber(matches[4]), matches[5] or false))
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
                 end
             else
                 if is_sudo(msg) then
                     editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_plugins_pages(msg.from.id, true, tonumber(matches[3] or(tonumber(matches[2]:match('%d')) -1)) + tonumber(matches[2]:match('%d'))))
                 else
-                    editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
+                    editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
                 end
             end
         elseif matches[5] then
@@ -222,7 +222,7 @@ local function run(msg, matches)
                 end
                 mystat(matches[1] .. matches[2] .. matches[3] .. matches[5])
             else
-                return editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
+                return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_owner)
             end
         else
             -- Enable/Disable a plugin
@@ -240,7 +240,7 @@ local function run(msg, matches)
                 end
                 mystat(matches[1] .. matches[2] .. matches[3])
             else
-                editMessage(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
+                editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].require_sudo)
             end
         end
         return

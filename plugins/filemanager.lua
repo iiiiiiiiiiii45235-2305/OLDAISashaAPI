@@ -6,7 +6,7 @@ function run(msg, matches)
                 local pathString = langs[msg.lang].youAreHere .. path
                 if matches[2] == 'DELETE' then
                     if not deleteMessage(msg.chat.id, msg.message_id, true) then
-                        editMessage(msg.chat.id, msg.message_id, langs[msg.lang].stop)
+                        editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
                     end
                 elseif matches[2] == 'BACK' then
                     answerCallbackQuery(msg.cb_id, pathString)
@@ -37,7 +37,7 @@ function run(msg, matches)
                                 pathString = langs[msg.lang].youAreHere .. folder
                                 answerCallbackQuery(msg.cb_id, pathString)
                                 redis:set('api:path', folder)
-                                editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
+                                editMessageText(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                             else
                                 answerCallbackQuery(msg.cb_id, pathString)
                             end
@@ -49,7 +49,7 @@ function run(msg, matches)
                         pathString = langs[msg.lang].youAreHere .. folder
                         answerCallbackQuery(msg.cb_id, pathString)
                         redis:set('api:path', folder)
-                        editMessage(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
+                        editMessageText(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                     end
                 elseif matches[2] == 'UP' then
                     if io.popen('find ' .. path .. matches[3]):read("*all") ~= '' then
