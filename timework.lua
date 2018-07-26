@@ -74,10 +74,10 @@ elseif action == 'filedownload' or action == 'fileconversion' then
     local file_path = ''
     if action == 'filedownload' then
         file_path, res_code = download_to_file(download_link, file_name)
-        sendMessage(chat_id, langs[msg.lang].fileDownloadedTo ..(file_path or res_code))
+        sendMessage(chat_id, langs[get_lang(chat_id)].fileDownloadedTo ..(file_path or res_code))
     elseif action == 'fileconversion' then
         file_path = tempDownloadFile(download_link, file_name)
-        sendMessage(chat_id, langs[msg.lang].fileDownloadedTo .. tostring(file_path))
+        sendMessage(chat_id, langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_path))
         if to_type == 'audio' then
             if from_type == 'document' or from_type == 'video' or from_type == 'video_note' or from_type == 'voice_note' then
                 return sendAudio(chat_id, file_path)
