@@ -36,10 +36,10 @@ return {
         "^[#!/]([Tt][Oo])(%w+)$",
     },
     run = run,
-    min_rank = 2,
+    min_rank = 1,
     syntax =
     {
-        "MOD",
+        "USER",
         "/to{type} {media}|{reply_media}",
     }
 }
