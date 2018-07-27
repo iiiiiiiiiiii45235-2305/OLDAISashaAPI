@@ -1309,19 +1309,20 @@ end
 -- *** START PYROGRAM FUNCTIONS ***
 function pyrogramDownload(chat_id, file_id, file_name)
     print(chat_id, file_id, file_name)
-    -- async
+    -- async, if you want it sync => os.execute("blabla")
     io.popen('python3 pyrogramFiles.py DOWNLOAD ' ..
     chat_id .. ' ' ..
     file_id .. ' "' ..
     (file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' ..
     langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
+    msgs_plus_plus(chat_id)
 end
 
 function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, caption)
     if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
         print(chat_id, media_type, file_path, reply_to_message_id, caption)
         msgs_plus_plus(chat_id)
-        -- async
+        -- async, if you want it sync => os.execute("blabla")
         io.popen('python3 pyrogramFiles.py UPLOAD ' ..
         chat_id .. ' ' ..
         media_type .. ' "' ..
