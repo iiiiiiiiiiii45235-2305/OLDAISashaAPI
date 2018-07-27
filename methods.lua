@@ -1458,11 +1458,11 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
 end
 
 function pyrogramDownload(chat_id, file_id, file_name)
-    io.popen('python pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' "' .. file_id .. '" "' ..(file_name or "") .. '"')
+    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' "' .. file_id .. '" "' ..(file_name or "") .. '"')
 end
 
 function pyrogramUpload(chat_id, file_path, reply_to_message_id)
-    io.popen('python pyrogramFiles.py UPLOAD ' .. chat_id .. ' "' .. file_path .. '" "' ..(reply_to_message_id or "") .. '"')
+    io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' "' .. file_path .. '" "' ..(reply_to_message_id or "") .. '"')
 end
 
 function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_sound)
