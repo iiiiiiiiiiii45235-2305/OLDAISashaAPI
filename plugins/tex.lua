@@ -36,7 +36,7 @@ local function run(msg, matches)
         -- Error
         return langs[msg.lang].errorFileDownload
     else
-        return pyrogramUpload(msg.chat.id, "sticker", file_path, msg.message_id)
+        return pyrogramUpload(msg.chat.id, "sticker", "http://latex.codecogs.com/png.download?\\dpi{300}%20\\LARGE%20" .. URL.escape(matches[1]), msg.message_id)
     end
 end
 
