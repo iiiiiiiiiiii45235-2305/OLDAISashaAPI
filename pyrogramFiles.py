@@ -2,9 +2,14 @@ import sys
 from pyrogram import Client
 print("BEGIN")
 method = sys.argv[1]
-with open('bot_api_key.txt') as f:
-	bot_api_key = f.readline()
-app = Client(session_name=str(bot_api_key), workers=1)
+bot_api_key = ''
+try:
+    f = open("bot_api_key.txt", 'r')
+    bot_api_key = f.readline()
+    f.close()
+except Exception as e:
+    print(e)
+app = Client(session_name=bot_api_key, workers=1)
 app.start()
 if method == "DOWNLOAD":
     ffile = str(sys.argv[2]).replace('\\"', '"')
