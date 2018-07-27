@@ -35,9 +35,6 @@ globalCronTable = {
         -- chat_id = { user_id = false/true }
     }
 }
-downloadCache = {
-    -- link = filepath
-}
 
 -- Save the content of config to config.lua
 function save_config()
@@ -1016,7 +1013,6 @@ function cron_administrator()
         print("Deleting all files in tmp folders")
         io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
         io.popen('rm -f /home/pi/AISasha/data/tmp/*'):read("*all")
-        downloadCache = { }
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
     end

@@ -26,11 +26,7 @@ local function run(msg, matches)
     langs[msg.lang].pokeHeight .. height .. " m"
 
     if pokemon.sprites then
-        if downloadCache[pokemon.sprites.front_default] then
-            return sendPhoto(msg.chat.id, downloadCache[pokemon.sprites.front_default])
-        else
-            return sendPhotoFromUrl(msg.chat.id, pokemon.sprites.front_default, text)
-        end
+        return pyrogramUpload(msg.chat.id, "photo", pokemon.sprites.front_default, msg.message_id, text)
     end
 end
 

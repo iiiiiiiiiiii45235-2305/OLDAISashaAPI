@@ -1,14 +1,8 @@
 local function run(msg, matches)
     local base = "http://dogr.io/"
     local path = string.gsub(matches[1], " ", "%%20")
-    local url = base .. path .. '.png?split=false&.png'
-    local urlm = "https?://[%%%w-_%.%?%.:/%+=&]+"
-
-    if string.match(url, urlm) == url then
-        return sendPhotoFromUrl(msg.chat.id, url)
-    else
-        return langs[msg.lang].opsError
-    end
+    local url = base .. URL.escape(matches[1]) .. '.png?split=false&.png'
+    return pyrogramUpload(msg.chat.id, "photo", url, msg.message_id)
 end
 
 return {

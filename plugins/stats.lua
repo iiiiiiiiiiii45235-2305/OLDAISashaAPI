@@ -189,7 +189,7 @@ local function run(msg, matches)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
                     return langs[msg.lang].useAISasha
                     -- chat_stats(msg.chat.id, msg.lang)
-                    -- return sendDocument(msg.chat.id, "./groups/lists/" .. msg.chat.id .. "stats.txt")
+                    -- return pyrogramUpload(msg.chat.id, "document", ./groups/lists/" .. msg.chat.id .. "stats.txt", msg.message_id)
                 end
             else
                 return langs[msg.lang].require_mod
@@ -200,7 +200,7 @@ local function run(msg, matches)
                 if msg.chat.type ~= 'private' and msg.chat.type ~= 'channel' then
                     savelog(matches[3], msg.from.print_name .. " [" .. msg.from.id .. "] requested group stats ")
                     chat_stats(matches[3], msg.lang)
-                    return sendDocument(msg.chat.id, "./groups/lists/" .. matches[3] .. "stats.txt")
+                    return pyrogramUpload(msg.chat.id, "document", ./groups/lists/" .. matches[3] .. "stats.txt", msg.message_id)
                 end
             else
                 return langs[msg.lang].require_admin

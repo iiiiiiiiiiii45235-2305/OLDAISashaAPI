@@ -46,11 +46,7 @@ local function run(msg, matches)
     end
 
     if #response > 0 then
-        if downloadCache[url] then
-            return sendPhoto(msg.chat.id, downloadCache[url])
-        else
-            return sendPhotoFromUrl(msg.chat.id, url)
-        end
+        return pyrogramUpload(msg.chat.id, "photo", url, msg.message_id)
     end
     return langs[msg.lang].opsError
 end

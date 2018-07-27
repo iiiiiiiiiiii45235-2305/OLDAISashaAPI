@@ -821,7 +821,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'sendrequestslog' then
             mystat('/requestslog')
-            return sendDocument(msg.chat.id, "./groups/logs/requestslog.txt")
+            return pyrogramUpload(msg.chat.id, "document", "./groups/logs/requestslog.txt")
         end
         if matches[1]:lower() == 'vardump' then
             mystat('/vardump')
@@ -849,7 +849,7 @@ local function run(msg, matches)
             if matches[2]:lower() == 'groups' then
                 mystat('/list groups')
                 -- groupsList(msg)
-                -- sendDocument(msg.from.id, "./groups/lists/groups.txt")
+                -- pyrogramUpload(msg.from.id, "document", "./groups/lists/groups.txt")
                 if matches[2]:lower() == 'groups' then
                     sendReply(msg, groupsList(msg, false), 'html')
                 elseif matches[2]:lower() == 'groups createlinks' then

@@ -565,7 +565,7 @@ local function run(msg, matches)
         if msg.from.is_owner or msg.chat.type == 'private' then
             mystat('/log')
             savelog(msg.chat.id, "log file created by owner/admin")
-            return sendDocument(msg.chat.id, "./groups/logs/" .. msg.chat.id .. "log.txt")
+            return pyrogramUpload(msg.chat.id, "document", "./groups/logs/" .. msg.chat.id .. "log.txt", msg.message_id)
         else
             return langs[msg.lang].require_owner
         end
