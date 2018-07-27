@@ -36,7 +36,7 @@ local function run(msg, matches)
         -- Error
         return langs[msg.lang].errorFileDownload
     else
-        return pyrogramUpload(msg.chat.id, "photo", file_path, msg.message_id)
+        return pyrogramUpload(msg.chat.id, "document", file_path, msg.message_id)
     end
 end
 
