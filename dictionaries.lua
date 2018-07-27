@@ -16,8 +16,8 @@ mediaDictionary = {
     sticker = "sticker",
     video = "video",
     videonote = "video_note",
-    voice = "voice",
-    voicenote = "voice",
+    voice = "voice_note",
+    voicenote = "voice_note",
 }
 
 -- group data

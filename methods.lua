@@ -135,7 +135,7 @@ function sendRequest(url, no_log)
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
         print(clr.yellow .. 'Data:' .. clr.reset, dat)
-        error('Incorrect response')
+        sendLog(dat .. "\n" .. code)
     end
 
     if code ~= 200 then
@@ -147,12 +147,18 @@ function sendRequest(url, no_log)
         print(clr.red .. code, tab.description .. clr.reset)
         redis:hincrby('bot:errors', code, 1)
 
+        local retry_after
+        if code == 429 then
+            retry_after = tab.parameters.retry_after
+            print(('%sRate limited for %d seconds%s'):format(clr.yellow, retry_after, clr.reset))
+        end
+
         if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
             if not no_log then
                 sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code, false, false, true)
             end
         end
-        return nil, code, tab.description
+        return nil, code, tab.description, retry_after
     end
 
     if not tab.ok then
@@ -1238,21 +1244,19 @@ end
 
 ----------------------------To curl--------------------------------------------
 
-function curlRequest(curl_command)
-    -- Use at your own risk. Will not check for success.
-    io.popen(curl_command)
-end
-
 function setChatPhoto(chat_id, photo)
     if sendChatAction(chat_id, 'upload_photo', true) then
-        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
-            local url = BASE_URL .. '/setChatPhoto'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
-            -- print_msg(sent_msg)
-            return curlRequest(curl_command)
-        end
+        local url = BASE_URL .. '/setChatPhoto'
+        curl_context:setopt_url(url)
+        local form = curl.form()
+        form:add_content("chat_id", chat_id)
+        form:add_file("photo", photo)
+        local data = { }
+        local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
+        local obj = getChat(chat_id)
+        local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
+        print_msg(sent_msg)
+        return table.concat(data), c:getinfo_response_code()
     end
 end
 
@@ -1260,24 +1264,29 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_photo', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendPhoto'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "photo=@' .. photo .. '"'
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("photo", photo)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
             if caption then
-                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+                form:add_content("caption", caption)
             end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'photo' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1286,21 +1295,26 @@ function sendSticker(chat_id, sticker, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'typing', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendSticker'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "sticker=@' .. sticker .. '"'
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("sticker", sticker)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'sticker' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1309,29 +1323,32 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id, duration, send_
     if sendChatAction(chat_id, 'record_audio', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVoice'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "voice=@' .. voice .. '"'
-            if caption then
-                if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. ' -F "caption=' .. caption .. '"'
-                end
-            end
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("voice", voice)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
+            if caption then
+                form:add_content("caption", caption)
+            end
             if duration then
-                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+                form:add_content("duration", duration)
             end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'voice_note' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1340,35 +1357,38 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
     if sendChatAction(chat_id, 'upload_audio', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendAudio'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "audio=@' .. audio .. '"'
-            if caption then
-                if type(caption) == 'string' or type(caption) == 'number' then
-                    url = url .. ' -F "caption=' .. caption .. '"'
-                end
-            end
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("audio", audio)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
+            if caption then
+                form:add_content("caption", caption)
+            end
             if duration then
-                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+                form:add_content("duration", duration)
             end
             if performer then
-                curl_command = curl_command .. ' -F "performer=' .. performer .. '"'
+                form:add_content("performer", performer)
             end
             if title then
-                curl_command = curl_command .. ' -F "title=' .. title .. '"'
+                form:add_content("title", title)
             end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'audio' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1377,27 +1397,38 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
     if sendChatAction(chat_id, 'upload_video', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideo'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video=@' .. video .. '"'
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("video", video)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
             if caption then
-                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
+                form:add_content("caption", caption)
             end
             if duration then
-                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+                form:add_content("duration", duration)
+            end
+            if performer then
+                form:add_content("performer", performer)
+            end
+            if title then
+                form:add_content("title", title)
             end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'video' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1406,27 +1437,32 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
     if sendChatAction(chat_id, 'record_video_note', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendVideoNote'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "video_note=@' .. video_note .. '"'
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("video_note", video_note)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
             if duration then
-                curl_command = curl_command .. ' -F "duration=' .. duration .. '"'
+                form:add_content("duration", duration)
             end
             if length then
-                curl_command = curl_command .. ' -F "length=' .. length .. '"'
+                form:add_content("length", length)
             end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, reply = reply, media = true, media_type = 'video_note' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1435,24 +1471,29 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
     if sendChatAction(chat_id, 'upload_document', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendDocument'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "document=@' .. document .. '"'
-            if caption then
-                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-            end
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("document", document)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
+            if caption then
+                form:add_content("caption", caption)
+            end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
             local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
@@ -1473,24 +1514,29 @@ function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_so
     if sendChatAction(chat_id, 'upload_document', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
             local url = BASE_URL .. '/sendAnimation'
-            local curl_command = 'curl "' .. url .. '" -F "chat_id=' .. chat_id .. '" -F "animation=@' .. animation .. '"'
-            if caption then
-                curl_command = curl_command .. ' -F "caption=' .. caption .. '"'
-            end
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("animation", animation)
             local reply = false
             if reply_to_message_id then
-                curl_command = curl_command .. ' -F "reply_to_message_id=' .. reply_to_message_id .. '"'
+                form:add_content("reply_to_message_id", reply_to_message_id)
                 reply = true
             end
+            if caption then
+                form:add_content("caption", caption)
+            end
             if not send_sound then
-                curl_command = curl_command .. ' -F "disable_notification=true"'
+                form:add_content("disable_notification", true)
                 -- messages are silent by default
             end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
             local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'gif' }
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
             print_msg(sent_msg)
             msgs_plus_plus(chat_id)
-            return curlRequest(curl_command)
+            return table.concat(data), c:getinfo_response_code()
         end
     end
 end
