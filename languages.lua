@@ -2125,7 +2125,7 @@ return {
         unknownType = "Unknown type, check the syntax.",
         cantSendAs = "I can't send this media as ",
         workingOnYourRequest = "I'm working on your request.",
-        cantDownloadMoreThan20MB = "I can't download files bigger than 20MB due tom Telegram's API.",
+        cantDownloadMoreThan20MB = "I can't download files bigger than 20MB due to Telegram's API.",
 
         -- filemanager.lua --
         backHomeFolder = "You're in the base folder: ",

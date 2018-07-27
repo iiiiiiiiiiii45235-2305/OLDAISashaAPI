@@ -65,21 +65,13 @@ elseif action == 'banuser' then
     else
         kickChatMember(user_id, chat_id)
     end
-elseif action == 'filedownload' or action == 'fileconversion' then
-    print('TIMEWORK FILEDOWNLOAD/FILECONVERSION')
-    action, sleep_time, chat_id, file_id, file_path = ...
+elseif action == 'fileconversion' then
+    print('TIMEWORK FILECONVERSION')
+    action, sleep_time, chat_id, file_id, file_path, from_type, to_type, text = ...
     file_path = file_path:gsub('\\"', '"')
+    text = text:gsub('\\"', '"')
     local res = getFile(file_id)
-    local download_link = telegram_file_link(res)
-    local file_path = ''
-    if action == 'filedownload' then
-        action, sleep_time, chat_id, file_id, file_path, text = ...
-        text = text:gsub('\\"', '"')
-        -- sync
-        os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
-    elseif action == 'fileconversion' then
-        action, sleep_time, chat_id, file_id, file_path, from_type, to_type, text = ...
-        text = text:gsub('\\"', '"')
+    if res then
         -- sync
         os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
         if to_type == 'audio' then

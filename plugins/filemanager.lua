@@ -54,6 +54,7 @@ function run(msg, matches)
                 elseif matches[2] == 'UP' then
                     if io.popen('find ' .. path .. matches[3]):read("*all") ~= '' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].sendingYou .. matches[3])
+                        -- pyrogramUpload(msg.chat.id, path .. matches[3])
                         sendDocument(msg.chat.id, path .. matches[3])
                         editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path))
                     else
@@ -142,7 +143,7 @@ function run(msg, matches)
                 if io.popen('find ' .. path .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
-                    -- pyrogramUpload(chat_id, file_path, reply_to_message_id)
+                    -- pyrogramUpload(msg.chat.id, path .. matches[2], msg.message_id)
                     sendDocument(msg.chat.id, path .. matches[2])
                     return langs[msg.lang].sendingYou .. matches[2]
                 end
@@ -158,13 +159,8 @@ function run(msg, matches)
                     return langs[msg.lang].useCommandOnFile
                 end
                 if file_id and file_name and file_size then
-                    if file_size <= 20971520 then
-                        io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '" "' .. langs[msg.lang].fileDownloadedTo .. tostring(path .. file_name):gsub('"', '\\"') .. '"')
-                        return langs[msg.lang].workingOnYourRequest
-                    else
-                        pyrogramDownload(msg.chat.id, file_id, path .. file_name)
-                        return langs[msg.lang].cantDownloadMoreThan20MB
-                    end
+                    pyrogramDownload(msg.chat.id, file_id, path .. file_name)
+                    return langs[msg.lang].workingOnYourRequest
                 else
                     return langs[msg.lang].useCommandOnFile
                 end
