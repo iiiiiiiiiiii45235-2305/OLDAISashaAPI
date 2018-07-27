@@ -24,9 +24,9 @@ if method == "DOWNLOAD":
     app.send_message(chat_id=chat_id, text=text)
 elif method == "UPLOAD":
     ffile = str(sys.argv[3]).replace('\\"', '"')
-    reply_id = int(sys.argv[4])
+    reply_id = str(sys.argv[4])
     if reply_id != "":
-        app.send_document(chat_id=chat_id, document=ffile, reply_to_message_id=reply_id)
+        app.send_document(chat_id=chat_id, document=ffile, reply_to_message_id=int(reply_id))
     else:
         app.send_document(chat_id=chat_id, document=ffile)
 app.stop()
