@@ -1,6 +1,8 @@
 # pyrogram version => 0.7.5
 import sys
-from pyrogram import Client, ChatAction
+
+from pyrogram import ChatAction, Client
+
 print("BEGIN")
 bot_api_key = ''
 try:
