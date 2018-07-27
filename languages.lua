@@ -572,7 +572,7 @@ return {
         feedSent = "Feedback inviato!",
 
         -- fileconversion.lua --
-        downloadAndRename = "Scarica il file e aggiungi l'estensione appropriata (rinominalo).",
+        downloadAndRename = "Scarica il file e aggiungi l'estensione appropriata se necessario (rinominalo).",
         unknownType = "Tipo sconosciuto, controlla la sintassi.",
         cantSendAs = "Non posso inviare questo media come ",
         workingOnYourRequest = "Sto elaborando la tua richiesta.",
@@ -2121,7 +2121,7 @@ return {
         feedSent = "Feedback sent!",
 
         -- fileconversion.lua --
-        downloadAndRename = "Download the file and put the appropriate extension (rename it).",
+        downloadAndRename = "Download the file and put the appropriate extension if necessary (rename it).",
         unknownType = "Unknown type, check the syntax.",
         cantSendAs = "I can't send this media as ",
         workingOnYourRequest = "I'm working on your request.",
