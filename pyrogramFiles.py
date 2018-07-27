@@ -1,11 +1,11 @@
 import sys
 from pyrogram import Client
+print("BEGIN")
 method = sys.argv[1]
 with open('bot_api_key.txt') as f:
 	bot_api_key = f.readline()
-app = Client(bot_api_key, workers=1)
+app = Client(session_name=str(bot_api_key), workers=1)
 app.start()
-method = "DOWNLOAD"
 if method == "DOWNLOAD":
     ffile = str(sys.argv[2]).replace('\\"', '"')
     file_name = str(sys.argv[3]).replace('\\"', '"')
@@ -22,4 +22,4 @@ elif method == "UPLOAD":
     else:
         app.send_document(chat_id=chat_id, document=ffile)
 app.stop()
-print("miao")
+print("END")
