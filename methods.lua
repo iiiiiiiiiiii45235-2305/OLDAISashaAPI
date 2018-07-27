@@ -1318,7 +1318,7 @@ function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, cap
         print(chat_id, file_path, reply_to_message_id)
         msgs_plus_plus(chat_id)
         -- async
-        io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. media_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(reply_to_message_id or "") .. '" "' ..(caption or ""):gsub('"', '\\"') '" "' .. langs[get_lang(chat_id)].cantSendAs .. '"')
+        io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. media_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(tostring(reply_to_message_id) or "") .. '" "' ..(caption or ""):gsub('"', '\\"') '" "' .. langs[get_lang(chat_id)].cantSendAs .. '"')
     end
 end
 -- *** END PYROGRAM FUNCTIONS ***
