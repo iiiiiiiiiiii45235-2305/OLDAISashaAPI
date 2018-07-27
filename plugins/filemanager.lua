@@ -142,6 +142,7 @@ function run(msg, matches)
                 if io.popen('find ' .. path .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
+                    -- pyrogramUpload(chat_id, file_path, reply_to_message_id)
                     sendDocument(msg.chat.id, path .. matches[2])
                     return langs[msg.lang].sendingYou .. matches[2]
                 end
@@ -158,9 +159,10 @@ function run(msg, matches)
                 end
                 if file_id and file_name and file_size then
                     if file_size <= 20971520 then
-                        io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '" "' .. file_size .. '"')
+                        io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '"')
                         return langs[msg.lang].workingOnYourRequest
                     else
+                        pyrogramDownload(msg.chat.id, file_id,(path .. file_name):gsub('"', '\\"'))
                         return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else

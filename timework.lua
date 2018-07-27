@@ -67,7 +67,7 @@ elseif action == 'banuser' then
     end
 elseif action == 'filedownload' or action == 'fileconversion' then
     print('TIMEWORK FILEDOWNLOAD/FILECONVERSION')
-    action, sleep_time, chat_id, file_id, file_name, file_size, from_type, to_type = ...
+    action, sleep_time, chat_id, file_id, file_name, from_type, to_type = ...
     file_name = file_name:gsub('\\"', '"')
     local res = getFile(file_id)
     local download_link = telegram_file_link(res)

@@ -1457,6 +1457,14 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
     end
 end
 
+function pyrogramDownload(chat_id, file_id, file_name)
+    io.popen('python pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' "' .. file_id .. '" "' ..(file_name or "") .. '"')
+end
+
+function pyrogramUpload(chat_id, file_path, reply_to_message_id)
+    io.popen('python pyrogramFiles.py UPLOAD ' .. chat_id .. ' "' .. file_path .. '" "' ..(reply_to_message_id or "") .. '"')
+end
+
 function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'upload_document', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
