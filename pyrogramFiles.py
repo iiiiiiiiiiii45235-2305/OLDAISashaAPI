@@ -1,6 +1,7 @@
 import sys
 from pyrogram import Client
 print("BEGIN")
+print(sys.argv)
 method = sys.argv[1]
 bot_api_key = ''
 try:
@@ -12,7 +13,7 @@ except Exception as e:
 app = Client(session_name=bot_api_key, workers=1)
 app.start()
 if method == "DOWNLOAD":
-    ffile = str(sys.argv[2]).replace('\\"', '"')
+    ffile = sys.argv[2]
     file_name = str(sys.argv[3]).replace('\\"', '"')
     if file_name != "":
         app.download_media(message=ffile, file_name=file_name)

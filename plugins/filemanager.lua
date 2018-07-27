@@ -162,7 +162,7 @@ function run(msg, matches)
                         io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '"')
                         return langs[msg.lang].workingOnYourRequest
                     else
-                        pyrogramDownload(msg.chat.id, file_id,(path .. file_name):gsub('"', '\\"'))
+                        pyrogramDownload(msg.chat.id, file_id, path .. file_name)
                         return langs[msg.lang].cantDownloadMoreThan20MB
                     end
                 else
