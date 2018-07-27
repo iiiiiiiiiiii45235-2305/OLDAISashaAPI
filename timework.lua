@@ -68,13 +68,14 @@ elseif action == 'banuser' then
 elseif action == 'fileconversion' then
     print('TIMEWORK FILECONVERSION')
     action, sleep_time, chat_id, file_id, file_path, from_type, to_type, text = ...
+    local data = load_data(config.moderation.data)
     file_path = file_path:gsub('\\"', '"')
     text = text:gsub('\\"', '"')
     local res = getFile(file_id)
     if res then
         -- sync
         os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
-        os.execute('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. to_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "" "' .. langs[get_lang(chat_id)].downloadAndRename .. '"')
+        os.execute('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. to_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "" "' .. langs[get_lang(chat_id)].downloadAndRename .. '" "' .. langs[get_lang(chat_id)].cantSendAs .. '"')
         return
         --[[if to_type == 'audio' then
             if from_type == 'document' or from_type == 'video' or from_type == 'video_note' or from_type == 'voice_note' then
