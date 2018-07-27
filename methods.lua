@@ -1529,18 +1529,6 @@ function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_so
     end
 end
 
-function pyrogramDownload(chat_id, file_id, file_name)
-    print(chat_id, file_id, file_name)
-    -- async
-    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' .. langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
-end
-
-function pyrogramUploadDocument(chat_id, file_path, reply_to_message_id)
-    print(chat_id, file_path, reply_to_message_id)
-    -- async
-    io.popen('python3 pyrogramFiles.py UPLOADDOCUMENT ' .. chat_id .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(reply_to_message_id or "") .. '"')
-end
-
 -- should be updated with live_period and stoplivelocation and editlivelocation
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'find_location', true) then
@@ -1690,6 +1678,20 @@ function sendDocumentFromUrl(chat_id, url_to_download, caption, reply_to_message
     end
 end
 -- *** END API FUNCTIONS ***
+
+-- *** START PYROGRAM FUNCTIONS ***
+function pyrogramDownload(chat_id, file_id, file_name)
+    print(chat_id, file_id, file_name)
+    -- async
+    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' .. langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
+end
+
+function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, caption)
+    print(chat_id, file_path, reply_to_message_id)
+    -- async
+    io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. media_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(reply_to_message_id or "") .. '" "' ..(caption or ""):gsub('"', '\\"') .. '"')
+end
+-- *** END PYROGRAM FUNCTIONS ***
 
 function saveUsername(obj, chat_id)
     if obj then

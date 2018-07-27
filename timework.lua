@@ -74,7 +74,9 @@ elseif action == 'fileconversion' then
     if res then
         -- sync
         os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
-        if to_type == 'audio' then
+        os.execute('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. to_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "" "' .. langs[get_lang(chat_id)].downloadAndRename .. '"')
+        return
+        --[[if to_type == 'audio' then
             if from_type == 'document' or from_type == 'video' or from_type == 'video_note' or from_type == 'voice_note' then
                 return sendAudio(chat_id, file_path)
             else
@@ -118,7 +120,7 @@ elseif action == 'fileconversion' then
             else
                 return langs[get_lang(chat_id)].cantSendAs .. to_type
             end
-        end
+        end]]
     end
 elseif action == 'contactadmins' then
     print('TIMEWORK CONTACT ADMINS')
