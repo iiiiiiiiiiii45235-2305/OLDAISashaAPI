@@ -1459,7 +1459,7 @@ end
 
 function pyrogramDownload(file_id, file_name)
     print(file_id, file_name)
-    io.popen('python3 pyrogramFiles.py DOWNLOAD "' .. file_id .. '" "' ..(file_name or ""):gsub('"', '\\"') .. '"')
+    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. file_id .. ' "' ..(file_name or ""):gsub('"', '\\"') .. '"')
 end
 
 function pyrogramUpload(chat_id, file_path, reply_to_message_id)
