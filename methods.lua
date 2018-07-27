@@ -225,16 +225,16 @@ function getCode(error)
     return 7
 end
 
-function code2text(code, ln)
+function code2text(code, lang)
     -- the default error description can't be sent as output, so a translation is needed
     if code == 101 or code == 105 or code == 107 then
-        return langs[ln].errors[1]
+        return langs[lang].errors[1]
     elseif code == 102 or code == 104 then
-        return langs[ln].errors[2]
+        return langs[lang].errors[2]
     elseif code == 103 then
-        return langs[ln].errors[3]
+        return langs[lang].errors[3]
     elseif code == 106 then
-        return langs[ln].errors[4]
+        return langs[lang].errors[4]
     elseif code == 7 then
         return false
     end
