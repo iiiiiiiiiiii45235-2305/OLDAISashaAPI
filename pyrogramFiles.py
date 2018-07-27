@@ -32,6 +32,10 @@ elif method == "UPLOAD":
     error_string = str(sys.argv[7])
     if reply_id == "":
         reply_id = -1
+    else:
+        int(reply_id)
+    if caption == "":
+        caption = ""
     try:
         if media_type == "audio":
             app.send_chat_action(chat_id=chat_id, action=ChatAction.UPLOAD_AUDIO)
