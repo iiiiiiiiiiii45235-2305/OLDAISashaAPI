@@ -67,18 +67,15 @@ elseif action == 'banuser' then
     end
 elseif action == 'fileconversion' then
     print('TIMEWORK FILECONVERSION')
-    action, sleep_time, chat_id, file_id, file_path, from_type, to_type, text = ...
+    action, sleep_time, chat_id, file_id, file_path, to_type, text = ...
     local data = load_data(config.moderation.data)
-    file_path = file_path:gsub('\\"', '"')
-    text = text:gsub('\\"', '"')
-    local res = getFile(file_id)
-    if res then
-        -- sync
-        os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
-        -- async
-        pyrogramUpload(chat_id, to_type, file_path, nil, langs[get_lang(chat_id)].downloadAndRename)
-        return
-    end
+    file_path = tostring(file_path or ""):gsub('\\"', '"')
+    text = tostring(text or ""):gsub('\\"', '"')
+    -- sync
+    os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
+    -- async
+    pyrogramUpload(chat_id, to_type, file_path, nil, langs[get_lang(chat_id)].downloadAndRename)
+    return
 elseif action == 'contactadmins' then
     print('TIMEWORK CONTACT ADMINS')
     action, sleep_time, chat_id, shitstorm, hashtag, text = ...

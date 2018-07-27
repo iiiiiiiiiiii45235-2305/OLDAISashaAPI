@@ -12,7 +12,7 @@ local function run(msg, matches)
         end
         if file_id and file_name and file_size then
             if file_size <= 20971520 or is_admin(msg) then
-                io.popen('lua timework.lua "fileconversion" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "data/tmp/' .. file_name:gsub('"', '\\"') .. '" "' .. media_type .. '" "' .. mediaDictionary[matches[2]:lower()] .. '" "' .. langs[msg.lang].fileDownloadedTo .. tostring('data/tmp/' .. file_name):gsub('"', '\\"') .. '"')
+                io.popen('lua timework.lua "fileconversion" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "data/tmp/' .. file_name:gsub('"', '\\"') .. '" "' .. mediaDictionary[matches[2]:lower()] .. '" "' .. langs[msg.lang].fileDownloadedTo .. tostring('data/tmp/' .. file_name):gsub('"', '\\"') .. '"')
                 return langs[msg.lang].workingOnYourRequest
             else
                 return langs[msg.lang].cantDownloadMoreThan20MB

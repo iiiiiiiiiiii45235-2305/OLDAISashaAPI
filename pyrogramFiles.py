@@ -20,10 +20,11 @@ if method == "DOWNLOAD":
     file_path = str(sys.argv[4]).replace('\\"', '"')
     text = str(sys.argv[5]).replace('\\"', '"')
     if file_path == "":
-        file_path = None
+        file_path = ""
     app.download_media(message=ffile, file_name=file_path)
-    app.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
-    app.send_message(chat_id=chat_id, text=text)
+    if text != "":
+        app.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
+        app.send_message(chat_id=chat_id, text=text)
 elif method == "UPLOAD":
     media_type = str(sys.argv[3])
     ffile = str(sys.argv[4]).replace('\\"', '"')
