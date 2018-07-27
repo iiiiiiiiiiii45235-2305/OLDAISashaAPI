@@ -1310,7 +1310,12 @@ end
 function pyrogramDownload(chat_id, file_id, file_name)
     print(chat_id, file_id, file_name)
     -- async
-    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' .. langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
+    io.popen('python3 pyrogramFiles.py DOWNLOAD ' ..
+    chat_id .. ' ' ..
+    file_id .. ' "' ..
+    (file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' ..
+    langs[get_lang(chat_id)].fileDownloadedTo ..
+    tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
 end
 
 function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, caption)
@@ -1318,7 +1323,13 @@ function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, cap
         print(chat_id, file_path, reply_to_message_id)
         msgs_plus_plus(chat_id)
         -- async
-        io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' ' .. media_type .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(tostring(reply_to_message_id) or "") .. '" "' ..(caption or ""):gsub('"', '\\"') '" "' .. langs[get_lang(chat_id)].cantSendAs .. '"')
+        io.popen('python3 pyrogramFiles.py UPLOAD ' ..
+        chat_id .. ' ' ..
+        media_type .. ' "' ..
+        file_path:gsub('"', '\\"') .. '" "' ..
+        (reply_to_message_id or "") .. '" "' ..
+        (caption or ""):gsub('"', '\\"') '" "' ..
+        langs[get_lang(chat_id)].cantSendAs .. '"')
     end
 end
 -- *** END PYROGRAM FUNCTIONS ***
