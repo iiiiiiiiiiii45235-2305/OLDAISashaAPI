@@ -1277,7 +1277,7 @@ function sendPhoto(chat_id, photo, caption, reply_to_message_id, send_sound)
                 form:add_content("caption", caption)
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1305,7 +1305,7 @@ function sendSticker(chat_id, sticker, reply_to_message_id, send_sound)
                 reply = true
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1339,7 +1339,7 @@ function sendVoice(chat_id, voice, caption, reply_to_message_id, duration, send_
                 form:add_content("duration", duration)
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1379,7 +1379,7 @@ function sendAudio(chat_id, audio, caption, reply_to_message_id, duration, perfo
                 form:add_content("title", title)
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1419,7 +1419,7 @@ function sendVideo(chat_id, video, reply_to_message_id, caption, duration, perfo
                 form:add_content("title", title)
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1453,7 +1453,7 @@ function sendVideoNote(chat_id, video_note, reply_to_message_id, duration, lengt
                 form:add_content("length", length)
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1484,7 +1484,38 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
                 form:add_content("caption", caption)
             end
             if not send_sound then
-                form:add_content("disable_notification", true)
+                form:add_content("disable_notification", "true")
+                -- messages are silent by default
+            end
+            local data = { }
+            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
+            local obj = getChat(chat_id)
+            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
+            print_msg(sent_msg)
+            msgs_plus_plus(chat_id)
+            return table.concat(data), c:getinfo_response_code()
+        end
+    end
+end
+
+function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_sound)
+    if sendChatAction(chat_id, 'upload_document', true) then
+        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
+            local url = BASE_URL .. '/sendAnimation'
+            curl_context:setopt_url(url)
+            local form = curl.form()
+            form:add_content("chat_id", chat_id)
+            form:add_file("animation", animation)
+            local reply = false
+            if reply_to_message_id then
+                form:add_content("reply_to_message_id", reply_to_message_id)
+                reply = true
+            end
+            if caption then
+                form:add_content("caption", caption)
+            end
+            if not send_sound then
+                form:add_content("disable_notification", "true")
                 -- messages are silent by default
             end
             local data = { }
@@ -1510,38 +1541,7 @@ function pyrogramUploadDocument(chat_id, file_path, reply_to_message_id)
     io.popen('python3 pyrogramFiles.py UPLOADDOCUMENT ' .. chat_id .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(reply_to_message_id or "") .. '"')
 end
 
-function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_sound)
-    if sendChatAction(chat_id, 'upload_document', true) then
-        if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
-            local url = BASE_URL .. '/sendAnimation'
-            curl_context:setopt_url(url)
-            local form = curl.form()
-            form:add_content("chat_id", chat_id)
-            form:add_file("animation", animation)
-            local reply = false
-            if reply_to_message_id then
-                form:add_content("reply_to_message_id", reply_to_message_id)
-                reply = true
-            end
-            if caption then
-                form:add_content("caption", caption)
-            end
-            if not send_sound then
-                form:add_content("disable_notification", true)
-                -- messages are silent by default
-            end
-            local data = { }
-            local c = curl_context:setopt_writefunction(table.insert, data):setopt_httppost(form):perform():reset()
-            local obj = getChat(chat_id)
-            local sent_msg = { from = bot, chat = obj, caption = caption, reply = reply, media = true, media_type = 'document' }
-            print_msg(sent_msg)
-            msgs_plus_plus(chat_id)
-            return table.concat(data), c:getinfo_response_code()
-        end
-    end
-end
-
--- must be updated with live_period and stoplivelocation and editlivelocation
+-- should be updated with live_period and stoplivelocation and editlivelocation
 function sendLocation(chat_id, latitude, longitude, reply_to_message_id, send_sound)
     if sendChatAction(chat_id, 'find_location', true) then
         if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
