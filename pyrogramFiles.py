@@ -13,16 +13,16 @@ except Exception as e:
 app = Client(session_name=bot_api_key, workers=1)
 app.start()
 if method == "DOWNLOAD":
-    ffile = sys.argv[2]
+    ffile = str(sys.argv[2])
     file_name = str(sys.argv[3]).replace('\\"', '"')
     if file_name != "":
         app.download_media(message=ffile, file_name=file_name)
     else:
         app.download_media(message=ffile)
 elif method == "UPLOAD":
-    chat_id = sys.argv[2]
+    chat_id = int(sys.argv[2])
     ffile = str(sys.argv[3]).replace('\\"', '"')
-    reply_id = sys.argv[4]
+    reply_id = int(sys.argv[4])
     if reply_id != "":
         app.send_document(chat_id=chat_id, document=ffile, reply_to_message_id=reply_id)
     else:
