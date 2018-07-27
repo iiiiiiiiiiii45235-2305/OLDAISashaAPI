@@ -1463,10 +1463,10 @@ function pyrogramDownload(chat_id, file_id, file_name)
     io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' .. langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
 end
 
-function pyrogramUpload(chat_id, file_path, reply_to_message_id)
+function pyrogramUploadDocument(chat_id, file_path, reply_to_message_id)
     print(chat_id, file_path, reply_to_message_id)
     -- async
-    io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(reply_to_message_id or "") .. '"')
+    io.popen('python3 pyrogramFiles.py UPLOADDOCUMENT ' .. chat_id .. ' "' .. file_path:gsub('"', '\\"') .. '" "' ..(reply_to_message_id or "") .. '"')
 end
 
 function sendAnimation(chat_id, animation, caption, reply_to_message_id, send_sound)

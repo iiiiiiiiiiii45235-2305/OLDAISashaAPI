@@ -1,3 +1,4 @@
+# pyrogram version => 0.7.5
 import sys
 from pyrogram import Client
 print("BEGIN")
@@ -22,7 +23,7 @@ if method == "DOWNLOAD":
     else:
         app.download_media(message=ffile)
     app.send_message(chat_id=chat_id, text=text)
-elif method == "UPLOAD":
+elif method == "UPLOADDOCUMENT":
     ffile = str(sys.argv[3]).replace('\\"', '"')
     reply_id = str(sys.argv[4])
     if reply_id != "":

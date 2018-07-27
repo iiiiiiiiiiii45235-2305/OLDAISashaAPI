@@ -54,7 +54,7 @@ function run(msg, matches)
                 elseif matches[2] == 'UP' then
                     if io.popen('find ' .. path .. matches[3]):read("*all") ~= '' then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].sendingYou .. matches[3])
-                        pyrogramUpload(msg.chat.id, path .. matches[3])
+                        pyrogramUploadDocument(msg.chat.id, path .. matches[3])
                         editMessageReplyMarkup(msg.chat.id, msg.message_id, keyboard_filemanager(path))
                     else
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].errorTryAgain)
@@ -142,7 +142,7 @@ function run(msg, matches)
                 if io.popen('find ' .. path .. matches[2]):read("*all") == '' then
                     return matches[2] .. langs[msg.lang].noSuchFile
                 else
-                    pyrogramUpload(msg.chat.id, path .. matches[2], msg.message_id)
+                    pyrogramUploadDocument(msg.chat.id, path .. matches[2], msg.message_id)
                     return langs[msg.lang].sendingYou .. matches[2]
                 end
             end
