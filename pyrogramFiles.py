@@ -2,7 +2,8 @@ import sys
 from pyrogram import Client
 print("BEGIN")
 print(sys.argv)
-method = sys.argv[1]
+method = str(sys.argv[1])
+chat_id = int(sys.argv[2])
 bot_api_key = ''
 try:
     f = open("bot_api_key.txt", 'r')
@@ -13,14 +14,14 @@ except Exception as e:
 app = Client(session_name=bot_api_key, workers=1)
 app.start()
 if method == "DOWNLOAD":
-    ffile = str(sys.argv[2])
-    file_name = str(sys.argv[3]).replace('\\"', '"')
+    ffile = str(sys.argv[3])
+    file_name = str(sys.argv[4]).replace('\\"', '"')
     if file_name != "":
         app.download_media(message=ffile, file_name=file_name)
     else:
         app.download_media(message=ffile)
+    app.send_message(chat_id=chat_id, text=ffile + " downloaded to "(file_name if file_name != "" else "UNKNOWN_LOCATION"))
 elif method == "UPLOAD":
-    chat_id = int(sys.argv[2])
     ffile = str(sys.argv[3]).replace('\\"', '"')
     reply_id = int(sys.argv[4])
     if reply_id != "":
