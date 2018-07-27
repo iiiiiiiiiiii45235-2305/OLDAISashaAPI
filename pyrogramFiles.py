@@ -33,7 +33,7 @@ elif method == "UPLOAD":
     if reply_id == "":
         reply_id = -1
     else:
-        int(reply_id)
+        reply_id = int(reply_id)
     if caption == "":
         caption = ""
     try:
