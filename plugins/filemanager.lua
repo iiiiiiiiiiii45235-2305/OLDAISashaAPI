@@ -159,7 +159,7 @@ function run(msg, matches)
                 end
                 if file_id and file_name and file_size then
                     if file_size <= 20971520 then
-                        io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '"')
+                        io.popen('lua timework.lua "filedownload" "0" "' .. msg.chat.id .. '" "' .. file_id .. '" "' ..(path .. file_name):gsub('"', '\\"') .. '" "' .. langs[msg.lang].fileDownloadedTo .. tostring(path .. file_name):gsub('"', '\\"') .. '"')
                         return langs[msg.lang].workingOnYourRequest
                     else
                         pyrogramDownload(msg.chat.id, file_id, path .. file_name)

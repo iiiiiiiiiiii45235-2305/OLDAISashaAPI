@@ -1458,13 +1458,14 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
 end
 
 function pyrogramDownload(chat_id, file_id, file_name)
-    print(file_id, file_name)
-    os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or ""):gsub('"', '\\"') .. '"')
-    -- io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or ""):gsub('"', '\\"') .. '"')
+    print(chat_id, file_id, file_name)
+    -- async
+    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' ..(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' .. langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
 end
 
 function pyrogramUpload(chat_id, file_path, reply_to_message_id)
     print(chat_id, file_path, reply_to_message_id)
+    -- async
     io.popen('python3 pyrogramFiles.py UPLOAD ' .. chat_id .. ' "' .. file_path:gsub('"', '\\"') .. '" ' ..(reply_to_message_id or ""))
 end
 

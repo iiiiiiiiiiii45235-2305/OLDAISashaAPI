@@ -67,17 +67,21 @@ elseif action == 'banuser' then
     end
 elseif action == 'filedownload' or action == 'fileconversion' then
     print('TIMEWORK FILEDOWNLOAD/FILECONVERSION')
-    action, sleep_time, chat_id, file_id, file_name, from_type, to_type = ...
-    file_name = file_name:gsub('\\"', '"')
+    action, sleep_time, chat_id, file_id, file_path = ...
+    file_path = file_path:gsub('\\"', '"')
     local res = getFile(file_id)
     local download_link = telegram_file_link(res)
     local file_path = ''
     if action == 'filedownload' then
-        file_path, res_code = download_to_file(download_link, file_name)
-        sendMessage(chat_id, langs[get_lang(chat_id)].fileDownloadedTo ..(file_path or res_code))
+        action, sleep_time, chat_id, file_id, file_path, text = ...
+        text = text:gsub('\\"', '"')
+        -- sync
+        os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
     elseif action == 'fileconversion' then
-        file_path = tempDownloadFile(download_link, file_name)
-        sendMessage(chat_id, langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_path))
+        action, sleep_time, chat_id, file_id, file_path, from_type, to_type, text = ...
+        text = text:gsub('\\"', '"')
+        -- sync
+        os.execute('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
         if to_type == 'audio' then
             if from_type == 'document' or from_type == 'video' or from_type == 'video_note' or from_type == 'voice_note' then
                 return sendAudio(chat_id, file_path)
