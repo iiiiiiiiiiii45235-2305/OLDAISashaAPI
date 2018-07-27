@@ -1457,9 +1457,9 @@ function sendDocument(chat_id, document, caption, reply_to_message_id, send_soun
     end
 end
 
-function pyrogramDownload(chat_id, file_id, file_name)
-    print(chat_id, file_id, file_name)
-    io.popen('python3 pyrogramFiles.py DOWNLOAD ' .. chat_id .. ' "' .. file_id .. '" "' ..(file_name or "") .. '"')
+function pyrogramDownload(file_id, file_name)
+    print(file_id, file_name)
+    io.popen('python3 pyrogramFiles.py DOWNLOAD "' .. file_id .. '" "' ..(file_name or "") .. '"')
 end
 
 function pyrogramUpload(chat_id, file_path, reply_to_message_id)
