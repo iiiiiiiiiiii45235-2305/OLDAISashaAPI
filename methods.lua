@@ -1320,7 +1320,7 @@ end
 
 function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, caption)
     if check_chat_msgs(chat_id) <= 19 and check_total_msgs() <= 29 then
-        print(chat_id, file_path, reply_to_message_id)
+        print(chat_id, media_type, file_path, reply_to_message_id, caption)
         msgs_plus_plus(chat_id)
         -- async
         io.popen('python3 pyrogramFiles.py UPLOAD ' ..
