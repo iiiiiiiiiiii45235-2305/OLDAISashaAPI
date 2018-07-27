@@ -1,4 +1,4 @@
---  Saves file to /tmp/. If file_name isn't provided, will get the text after the last "/" for filename and content-type for extension
+--  Saves file to ./data/tmp/
 local function tempDownloadFile(url, file_name)
     print("url to download: " .. url)
     local respbody = { }
@@ -32,11 +32,10 @@ end
 
 local function run(msg, matches)
     local file_path = tempDownloadFile("http://latex.codecogs.com/png.download?\\dpi{300}%20\\LARGE%20" .. URL.escape(matches[1]), false)
-    if not file_path then
-        -- Error
-        return langs[msg.lang].errorFileDownload
+    if file_path then
+        return pyrogramUpload(msg.chat.id, "sticker", file_path, msg.message_id)
     else
-        return pyrogramUpload(msg.chat.id, "sticker", "http://latex.codecogs.com/png.download?\\dpi{300}%20\\LARGE%20" .. URL.escape(matches[1]), msg.message_id)
+        return langs[msg.lang].errorFileDownload
     end
 end
 
