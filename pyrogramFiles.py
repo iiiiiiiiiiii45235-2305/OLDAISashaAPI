@@ -2,18 +2,19 @@
 import sys
 from pyrogram import Client, ChatAction
 print("BEGIN")
-print(sys.argv)
-method = str(sys.argv[1])
-chat_id = int(sys.argv[2])
 bot_api_key = ''
 try:
     f = open("bot_api_key.txt", 'r')
     bot_api_key = f.readline()
     f.close()
 except Exception as e:
-    print(e)
+    print(str(e))
+    sys.exit()
 app = Client(session_name=bot_api_key, workers=1)
 app.start()
+print(sys.argv)
+method = str(sys.argv[1])
+chat_id = int(sys.argv[2])
 if method == "DOWNLOAD":
     ffile = str(sys.argv[3])
     file_path = str(sys.argv[4]).replace('\\"', '"')
@@ -30,9 +31,7 @@ elif method == "UPLOAD":
     caption = str(sys.argv[6]).replace('\\"', '"')
     error_string = str(sys.argv[7])
     if reply_id == "":
-        reply_id = None
-    if caption == "":
-        caption = None
+        reply_id = -1
     try:
         if media_type == "audio":
             app.send_chat_action(chat_id=chat_id, action=ChatAction.UPLOAD_AUDIO)
