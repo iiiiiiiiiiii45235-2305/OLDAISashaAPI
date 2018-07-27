@@ -1314,8 +1314,7 @@ function pyrogramDownload(chat_id, file_id, file_name)
     chat_id .. ' ' ..
     file_id .. ' "' ..
     (file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' ..
-    langs[get_lang(chat_id)].fileDownloadedTo ..
-    tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
+    langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
 end
 
 function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, caption)
@@ -1328,7 +1327,7 @@ function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, cap
         media_type .. ' "' ..
         file_path:gsub('"', '\\"') .. '" "' ..
         (reply_to_message_id or "") .. '" "' ..
-        (caption or ""):gsub('"', '\\"') '" "' ..
+        (caption or ""):gsub('"', '\\"') .. '" "' ..
         langs[get_lang(chat_id)].cantSendAs .. '"')
     end
 end
