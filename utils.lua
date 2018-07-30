@@ -637,7 +637,7 @@ end
 function executeBackupCommand(tar_command, time)
     print("Executing " .. tar_command)
     local backup_name = string.match(tar_command, 'backup(.*)%d+%.tar%.gz')
-    local log = assert(io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command):read('*all'))
+    local log = assert(io.popen('cd "/home/pi/BACKUPS/" && ' .. tar_command .. ' && cd "/home/pi/AISashaAPI/"'):read('*all'))
     local file_backup_log = io.open("/home/pi/BACKUPS/backupLog" .. time .. ".txt", "w")
     file_backup_log:write(log)
     file_backup_log:flush()
