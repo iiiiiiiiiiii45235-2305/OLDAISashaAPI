@@ -12,6 +12,7 @@ def workdirs_generator(size=15, chars=string.digits + string.ascii_letters):
 
 print("BEGIN")
 bot_api_key = open("bot_api_key.txt", "r").read()
+print(bot_api_key)
 if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
