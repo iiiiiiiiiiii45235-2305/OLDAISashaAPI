@@ -659,7 +659,8 @@ function executeBackupCommand(tar_command, time)
         for k, v in pairsByKeys(backups) do
             last_backup = v
         end
-        sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
+        pyrogramUpload(41400331, "document", '/home/pi/BACKUPS/' .. last_backup)
+        -- sendDocument_SUDOERS('/home/pi/BACKUPS/' .. last_backup)
     end
     return log
 end
