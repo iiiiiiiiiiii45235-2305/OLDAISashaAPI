@@ -3,6 +3,7 @@ import sys
 import random
 import string
 import shutil
+import os
 
 from pyrogram import ChatAction, Client
 
@@ -15,6 +16,7 @@ if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
 workdir = './pyrogram_workdirs/' + workdirs_generator()
+os.makedirs(workdir)
 shutil.copyfile("./config.ini", workdir + '/config.ini')
 app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file="./config.ini")
 app.start()
