@@ -16,6 +16,7 @@ print(bot_api_key)
 if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
+bot_api_key = str(bot_api_key).strip()
 workdir = './pyrogram_workdirs/' + workdirs_generator()
 os.makedirs(workdir)
 shutil.copyfile("./config.ini", workdir + '/config.ini')
