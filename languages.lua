@@ -605,8 +605,8 @@ return {
         -- help.lua --
         require_higher = "🚫 Questo plugin richiede privilegi superiori a quelli che possiedi. 🚫\n",
         pluginListStart = "ℹ️ Lista plugin: \n\n",
-        helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️\nℹ️ O \"!helpall\" per mostrare tutte le informazioni. ℹ️",
-        -- helpInfo = "ℹ️ Scrivi \"!help <plugin_name>|<plugin_number>\" per maggiori informazioni su quel plugin. ℹ️",
+        helpInfo = "ℹ️ Scrivi \"!help {plugin_name}|{plugin_number}\" per maggiori informazioni su quel plugin. ℹ️\nℹ️ O \"!helpall\" per mostrare tutte le informazioni. ℹ️",
+        -- helpInfo = "ℹ️ Scrivi \"!help {plugin_name}|{plugin_number}\" per maggiori informazioni su quel plugin. ℹ️",
         errorNoPlugin = "Questo plugin non esiste o non ha una descrizione.",
         helpIntro = "<i>Ogni '/' può essere sostituito con i simboli '!' o '#'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale</i> (<b>E NON DEVI METTERLE</b>).\n<i>'|' significa \"oppure\" evidenzia una scelta</i> (<b>E NON DEVI METTERLO</b>).\n<i>Le parentesi tonde</i> <b>NON DEVI METTERLE</b>.\n<i>Le parentesi graffe indicano qualcosa che varia a seconda dell'input dell'utente, ciò che c'è al loro interno dà un'idea di ciò dovrebbe essere messo in quella posizione</i> (<b>E NON DEVI METTERLE</b>).\n<i>Clicca sopra ad un comando per copiarlo.\nSe hai domande consulta prima le</i> <code>/faq</code>.\n<i>{user} = {id}|{username}|{reply}|from</i>\n\n",
         syntaxIntro = "<i>Ogni '/' può essere sostituito con i simboli '!' o '#'.\nTutti i comandi sono Case Insensitive.\nLe parentesi quadre significano opzionale</i> (<b>E NON DEVI METTERLE</b>).\n<i>'|' significa \"oppure\" evidenzia una scelta</i> (<b>E NON DEVI METTERLO</b>).\n<i>Le parentesi tonde</i> <b>NON DEVI METTERLE</b>.\n<i>Le parentesi graffe indicano qualcosa che varia a seconda dell'input dell'utente, ciò che c'è al loro interno dà un'idea di ciò dovrebbe essere messo in quella posizione</i> (<b>E NON DEVI METTERLE</b>).\n<i>Se hai domande consulta prima le</i> <code>/faq</code>.\n<i>{user} = {id}|{username}|{reply}|from</i>\n\n",
@@ -2154,8 +2154,8 @@ return {
         -- help.lua --
         require_higher = "🚫 This plugin requires higher privileges. 🚫\n",
         pluginListStart = "ℹ️ Plugins list: \n\n",
-        helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin. ℹ️\nℹ️ Or \"!helpall\" to have all commands. ℹ️",
-        -- helpInfo = "ℹ️ Write \"!help <plugin_name>|<plugin_number>\" for more info on that plugin. ℹ️",
+        helpInfo = "ℹ️ Write \"!help {plugin_name}|{plugin_number}\" for more info on that plugin. ℹ️\nℹ️ Or \"!helpall\" to have all commands. ℹ️",
+        -- helpInfo = "ℹ️ Write \"!help {plugin_name}|{plugin_number}\" for more info on that plugin. ℹ️",
         errorNoPlugin = "This plugin doesn't exist or doesn't have a description.",
         helpIntro = "<i>Every '/' can be replaced with '!' or '#'.\nAll commands are Case Insensitive.\nSquare brackets means optional</i> (<b>AND YOU MUST NOT WRITE THEM</b>).\n<i>'|' means \"or\"</i> (<b>AND YOU MUST NOT WRITE IT</b>).\n<i>Round brackets</i> <b>MUST NOT BE WRITTEN</b>.\n<i>Curly brackets indicate something that vary with the user's input, what is inside these brackets helps you to understand the thing that should be put there</i> (<b>AND YOU MUST NOT WRITE THEM</b>).\n<i>Tap on a command to copy it.\nIf you have any question see</i> <code>/faq</code> <i>first.\n{user} = {id}|{username}|{reply}|from</i>\n\n",
         syntaxIntro = "<i>Every '/' can be replaced with '!' or '#'.\nAll commands are Case Insensitive.\nSquare brackets means optional</i> (<b>AND YOU MUST NOT WRITE THEM</b>).\n<i>'|' means \"or\"</i> (<b>AND YOU MUST NOT WRITE IT</b>).\n<i>Round brackets</i> <b>MUST NOT BE WRITTEN</b>.\n<i>Curly brackets indicate something that vary with the user's input, what is inside these brackets helps you to understand the thing that should be put there</i> (<b>AND YOU MUST NOT WRITE THEM</b>).\n<i>If you have any question see</i> <code>/faq</code> <i>first.\n{user} = {id}|{username}|{reply}|from</i>\n\n",

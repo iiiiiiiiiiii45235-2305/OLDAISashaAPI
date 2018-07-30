@@ -4,13 +4,9 @@ import sys
 from pyrogram import ChatAction, Client
 
 print("BEGIN")
-bot_api_key = ''
-try:
-    f = open("bot_api_key.txt", 'r')
-    bot_api_key = f.readline()
-    f.close()
-except Exception as e:
-    print(str(e))
+bot_api_key = open("bot_api_key.txt", "r").read()
+if bot_api_key is None or bot_api_key == "":
+    print("MISSING TELEGRAM API KEY")
     sys.exit()
 app = Client(session_name=bot_api_key, workers=1)
 app.start()
