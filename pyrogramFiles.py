@@ -16,7 +16,7 @@ if bot_api_key is None or bot_api_key == "":
     sys.exit()
 workdir = './pyrogram_workdirs/' + workdirs_generator()
 shutil.copyfile("./config.ini", workdir + '/config.ini')
-app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file=workdir + "/config.ini")
+app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file="./config.ini")
 app.start()
 print(sys.argv)
 method = str(sys.argv[1])
