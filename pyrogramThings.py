@@ -7,9 +7,11 @@ import os
 
 from pyrogram import ChatAction, Client
 
+#used to generate random working directories
 def workdirs_generator(size=15, chars=string.digits + string.ascii_letters):
     return ''.join(random.choice(chars) for _ in range(size))
 
+###API KEY
 print("BEGIN")
 bot_api_key = open("bot_api_key.txt", "r").read()
 print(bot_api_key)
@@ -17,10 +19,17 @@ if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
 bot_api_key = str(bot_api_key).strip()
+#fixes some errors
+
+###PREPARE THE WORKING ENVIRONMENT
 workdir = './pyrogram_workdirs/' + workdirs_generator()
 os.makedirs(workdir)
+#copy config.ini and the session file from the base directory to the working
+#directory
 shutil.copyfile("./config.ini", workdir + '/config.ini')
 shutil.copyfile("./283058260.session", workdir + '/283058260.session')
+
+###ACTUAL WORK
 app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file="./config.ini")
 app.start()
 print(sys.argv)
@@ -80,5 +89,8 @@ elif method == "UPLOAD":
         app.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
         app.send_message(chat_id=chat_id, text=error_string + media_type + "\n" + str(e))
 app.stop()
+
+###CLEAN
 shutil.rmtree(workdir)
+#deletes the working directory once it's finished
 print("END")
