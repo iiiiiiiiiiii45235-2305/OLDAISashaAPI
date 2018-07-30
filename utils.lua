@@ -684,7 +684,7 @@ function doSendBackup()
     log = log .. '\n' .. executeBackupCommand(AISasha_tar, time)
     -- AISASHAAPI
     local AISashaAPI_tar = 'sudo tar -zcvf backupAISashaAPI' .. time .. '.tar.gz ' ..
-    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore ' ..
+    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore --exclude=\'*.sync\' ' ..
     '/home/pi/AISashaAPI '
     log = log .. '\n' .. executeBackupCommand(AISashaAPI_tar, time)
     -- RASPBERRYPI
@@ -697,7 +697,7 @@ function doSendBackup()
     log = log .. '\n' .. executeBackupCommand(RaspberryPi_tar, time)
     -- GRABBER
     local Grabber_tar = 'sudo tar -zcvf backupGrabber' .. time .. '.tar.gz ' ..
-    '--exclude=/home/pi/Grabber/__pycache__ ' ..
+    '--exclude=/home/pi/Grabber/__pycache__ --exclude=\'*.sync\' ' ..
     '/home/pi/Grabber '
     log = log .. '\n' .. executeBackupCommand(Grabber_tar, time)
     -- MYBOTFORREPORTED
