@@ -66,5 +66,6 @@ elif method == "UPLOAD":
     except Exception as e:
         app.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
         app.send_message(chat_id=chat_id, text=error_string + media_type + "\n" + str(e))
-app.stop()
-print("END")
+    finally:
+        app.stop()
+        print("END")
