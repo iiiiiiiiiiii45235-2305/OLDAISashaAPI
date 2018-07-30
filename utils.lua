@@ -707,6 +707,37 @@ function doSendBackup()
     log = log .. '\n' .. executeBackupCommand(MyBotForReported_tar, time)
 end
 
+function testBackup()
+    -- save redis db
+    print("Saving Redis DB")
+    redis:bgsave()
+    -- save crontab
+    print("Saving Crontab")
+    io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
+
+    print("Synchronizing time")
+    local log = io.popen('sudo ntpdate -s time.nist.gov'):read('*all')
+    local time = os.time()
+
+    -- AISASHA
+    local tar = 'sudo tar -zcvf backupRPI' .. time .. '.tar.gz ' ..
+    '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore ' ..
+    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore ' ..
+    '--exclude=/home/pi/Grabber/__pycache__ --exclude=\'*.sync\' ' ..
+    '--exclude=/home/pi/MyBotForReported/.git ' ..
+    '/home/pi/AISasha ' ..
+    '/home/pi/.telegram-cli ' ..
+    '/home/pi/AISashaAPI ' ..
+    '/home/pi/Desktop ' ..
+    '/home/pi/tmux-mem-cpu-load ' ..
+    '/home/pi/.tmux.conf ' ..
+    '/home/pi/.tmux.conf.local ' ..
+    '/var/lib/redis ' ..
+    '/home/pi/Grabber ' ..
+    '/home/pi/MyBotForReported '
+    log = log .. '\n' .. executeBackupCommand(tar, time)
+end
+
 function adjustPermissions(param_permissions)
     local permissions = {
         can_change_info = false,
