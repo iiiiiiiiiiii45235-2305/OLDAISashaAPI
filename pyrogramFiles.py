@@ -5,12 +5,15 @@ import string
 
 from pyrogram import ChatAction, Client
 
+def workdirs_generator(size=15, chars=string.digits + string.ascii_letters):
+    return ''.join(random.choice(chars) for _ in range(size))
+
 print("BEGIN")
 bot_api_key = open("bot_api_key.txt", "r").read()
 if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
-app = Client(session_name=bot_api_key, workers=1, workdir='./pyrogram_workdirs/' + ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(15)))
+app = Client(session_name=bot_api_key, workers=1, workdir='./pyrogram_workdirs/' + workdirs_generator())
 app.start()
 print(sys.argv)
 method = str(sys.argv[1])
