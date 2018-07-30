@@ -2,6 +2,7 @@
 import sys
 import random
 import string
+import shutil
 
 from pyrogram import ChatAction, Client
 
@@ -13,7 +14,9 @@ bot_api_key = open("bot_api_key.txt", "r").read()
 if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
-app = Client(session_name=bot_api_key, workers=1, workdir='./pyrogram_workdirs/' + workdirs_generator(), config_file="./config.ini")
+workdir = './pyrogram_workdirs/' + workdirs_generator()
+shutil.copyfile("./config.ini", workdir + '/config.ini')
+app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file=workdir + "/config.ini")
 app.start()
 print(sys.argv)
 method = str(sys.argv[1])
@@ -21,7 +24,7 @@ chat_id = int(sys.argv[2])
 if method == "DOWNLOAD":
     ffile = str(sys.argv[3])
     file_path = str(sys.argv[4]).replace('\\"', '"')
-    text = str(sys.argv[5]).replace('\\"', '"')
+    text = str(sys.argv[5] if len(sys.argv) >= 6 else "").replace('\\"', '"')
     if file_path == "":
         file_path = ""
     app.download_media(message=ffile, file_name=file_path)
@@ -31,9 +34,9 @@ if method == "DOWNLOAD":
 elif method == "UPLOAD":
     media_type = str(sys.argv[3])
     ffile = str(sys.argv[4]).replace('\\"', '"')
-    reply_id = str(sys.argv[5])
-    caption = str(sys.argv[6]).replace('\\"', '"')
-    error_string = str(sys.argv[7])
+    reply_id = str(sys.argv[5] if len(sys.argv) >= 6 else "")
+    caption = str(sys.argv[6] if len(sys.argv) >= 7 else "").replace('\\"', '"')
+    error_string = str(sys.argv[7] if len(sys.argv) >= 8 else "")
     if reply_id == "":
         reply_id = -1
     else:
@@ -72,4 +75,5 @@ elif method == "UPLOAD":
         app.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
         app.send_message(chat_id=chat_id, text=error_string + media_type + "\n" + str(e))
 app.stop()
+shutil.rmtree(workdir)
 print("END")
