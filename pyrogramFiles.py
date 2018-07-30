@@ -13,7 +13,7 @@ bot_api_key = open("bot_api_key.txt", "r").read()
 if bot_api_key is None or bot_api_key == "":
     print("MISSING TELEGRAM API KEY")
     sys.exit()
-app = Client(session_name=bot_api_key, workers=1, workdir='./pyrogram_workdirs/' + workdirs_generator())
+app = Client(session_name=bot_api_key, workers=1, workdir='./pyrogram_workdirs/' + workdirs_generator(), config_file="./config.ini")
 app.start()
 print(sys.argv)
 method = str(sys.argv[1])
