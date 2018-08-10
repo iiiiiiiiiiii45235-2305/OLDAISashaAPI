@@ -1585,7 +1585,8 @@ function pyrogramDownload(chat_id, file_id, file_name)
     chat_id .. ' ' ..
     file_id .. ' "' ..
     (file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' ..
-    langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '"')
+    langs[get_lang(chat_id)].fileDownloadedTo .. tostring(file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '\n' ..
+    langs[get_lang(chat_id)].sendingYou .. tostring(file_name or file_id):gsub('"', '\\"') .. '"')
     msgs_plus_plus(chat_id)
 end
 
