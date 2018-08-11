@@ -18,13 +18,13 @@ local function check_tag(msg, user_id, user)
             -- only sudoers
             -- check if first name is in message
             if msg.text then
-                if string.match(msg.text:lower(), "^" .. user.first_name) or string.match(msg.text:lower(), "%W+" .. user.first_name .. "%W+") or string.match(msg.text:lower(), user.first_name .. "$") then
+                if string.match(msg.text, "^" .. user.first_name) or string.match(msg.text, "%W+" .. user.first_name .. "%W+") or string.match(msg.text, user.first_name .. "$") then
                     return true
                 end
             end
             if msg.media then
                 if msg.caption then
-                    if string.match(msg.caption:lower(), "^" .. user.first_name) or string.match(msg.caption:lower(), "%W+" .. user.first_name .. "%W+") or string.match(msg.caption:lower(), user.first_name .. "$") then
+                    if string.match(msg.caption, "^" .. user.first_name) or string.match(msg.caption, "%W+" .. user.first_name .. "%W+") or string.match(msg.caption, user.first_name .. "$") then
                         return true
                     end
                 end
