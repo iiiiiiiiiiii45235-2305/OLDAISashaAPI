@@ -22,25 +22,11 @@ local function check_tag(msg, user_id, user)
                     return true
                 end
             end
-            if msg.media then
-                if msg.caption then
-                    if string.match(msg.caption, "^" .. user.first_name) or string.match(msg.caption, "%W+" .. user.first_name .. "%W+") or string.match(msg.caption, user.first_name .. "$") then
-                        return true
-                    end
-                end
-            end
             if user.username then
                 -- check if username is in message
                 if msg.text then
                     if string.match(msg.text:lower(), "^" .. user.username:lower()) or string.match(msg.text:lower(), "%W+" .. user.username:lower() .. "%W+") or string.match(msg.text:lower(), user.username:lower() .. "$") then
                         return true
-                    end
-                end
-                if msg.media then
-                    if msg.caption then
-                        if string.match(msg.caption:lower(), "^" .. user.username:lower()) or string.match(msg.caption:lower(), "%W+" .. user.username:lower() .. "%W+") or string.match(msg.caption:lower(), user.username:lower() .. "$") then
-                            return true
-                        end
                     end
                 end
             end
@@ -49,13 +35,6 @@ local function check_tag(msg, user_id, user)
             if msg.text then
                 if string.match(msg.text:lower(), "^" .. user:lower()) or string.match(msg.text:lower(), "%W+" .. user:lower() .. "%W+") or string.match(msg.text:lower(), user:lower() .. "$") then
                     return true
-                end
-            end
-            if msg.media then
-                if msg.caption then
-                    if string.match(msg.caption:lower(), "^" .. user:lower()) or string.match(msg.caption:lower(), "%W+" .. user:lower() .. "%W+") or string.match(msg.caption:lower(), user:lower() .. "$") then
-                        return true
-                    end
                 end
             end
         end
@@ -355,14 +334,14 @@ local function send_tag_alert(msg, user_id)
     end
     text = text .. langs[lang].msgText
 
-    if msg.caption then
+    if msg.media then
         local tot_len = string.len(text .. '\n#tag' .. user_id)
-        local caption_len = string.len(msg.caption)
+        local caption_len = string.len(msg.text)
         local allowed_len = 200 - tot_len
         if caption_len > allowed_len then
-            text = text .. msg.caption:sub(1, allowed_len - 3) .. '...'
+            text = text .. msg.text:sub(1, allowed_len - 3) .. '...'
         else
-            text = text .. msg.caption
+            text = text .. msg.text
         end
         text = text .. '\n#tag' .. user_id
         if msg.media_type == 'photo' then

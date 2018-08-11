@@ -64,7 +64,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'delkeyboard' then
             if msg.reply then
                 if msg.reply_to_message.from.id == bot.id then
-                    if msg.reply_to_message.text or msg.reply_to_message.caption then
+                    if msg.reply_to_message.text then
                         mystat('/delkeyboard')
                         return editMessageReplyMarkup(msg.chat.id, msg.reply_to_message.message_id)
                     end

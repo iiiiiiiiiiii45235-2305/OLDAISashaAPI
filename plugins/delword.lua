@@ -98,13 +98,6 @@ local function pre_process(msg)
                                 found = true
                             end
                         end
-                        if msg.media then
-                            if msg.caption then
-                                if string.match(msg.caption:lower(), temp) then
-                                    found = true
-                                end
-                            end
-                        end
                         if found then
                             local hash = get_censorships_hash(msg)
                             local time = redis:hget(hash, temp)

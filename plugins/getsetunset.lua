@@ -298,17 +298,6 @@ local function check_word(msg, word, pre)
             end
         end
     end
-    if msg.media then
-        if msg.caption then
-            if string.match(msg.caption:lower(), word:lower()) then
-                local value = get_value(msg.chat.id, msg.chat.type, word:lower())
-                if value then
-                    print('GET FOUND')
-                    return value
-                end
-            end
-        end
-    end
     return false
 end
 

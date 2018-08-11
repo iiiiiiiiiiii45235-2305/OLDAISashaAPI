@@ -492,18 +492,24 @@ function pre_process_media_msg(msg)
         msg.entities = clone_table(msg.caption_entities)
         msg.caption_entities = nil
     end
+    if msg.caption then
+        msg.text = msg.caption
+        msg.caption = nil
+    else
+        msg.text = ""
+    end
 
     if msg.animation then
         msg.media = true
-        msg.text = "%[gif%]"
+        -- msg.text = "%[gif%]"
         msg.media_type = 'gif'
     elseif msg.audio then
         msg.media = true
-        msg.text = "%[audio%]"
+        -- msg.text = "%[audio%]"
         msg.media_type = 'audio'
     elseif msg.contact then
         msg.media = true
-        msg.text = "%[contact%]"
+        -- msg.text = "%[contact%]"
         msg.media_type = 'contact'
     elseif msg.document then
         msg.media = true
@@ -511,27 +517,27 @@ function pre_process_media_msg(msg)
         msg.media_type = 'document'
     elseif msg.location then
         msg.media = true
-        msg.text = "%[location%]"
+        -- msg.text = "%[location%]"
         msg.media_type = 'location'
     elseif msg.photo then
         msg.media = true
-        msg.text = "%[photo%]"
+        -- msg.text = "%[photo%]"
         msg.media_type = 'photo'
     elseif msg.sticker then
         msg.media = true
-        msg.text = "%[sticker%]"
+        -- msg.text = "%[sticker%]"
         msg.media_type = 'sticker'
     elseif msg.video then
         msg.media = true
-        msg.text = "%[video%]"
+        -- msg.text = "%[video%]"
         msg.media_type = 'video'
     elseif msg.video_note then
         msg.media = true
-        msg.text = "%[video_note%]"
+        -- msg.text = "%[video_note%]"
         msg.media_type = 'video_note'
     elseif msg.voice then
         msg.media = true
-        msg.text = "%[voice_note%]"
+        -- msg.text = "%[voice_note%]"
         msg.media_type = 'voice_note'
     end
     if msg.reply then

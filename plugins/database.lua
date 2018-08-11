@@ -444,11 +444,6 @@ local function save_to_db(msg)
             if msg.text then
                 tmp = msg.text:lower()
             end
-            if msg.media then
-                if msg.caption then
-                    tmp = msg.caption:lower()
-                end
-            end
             -- make all the telegram's links t.me
             tmp = links_to_tdotme(tmp)
             -- remove http(s)

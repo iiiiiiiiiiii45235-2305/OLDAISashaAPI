@@ -269,9 +269,6 @@ local function check_msg(msg, group_data, pre_process_function)
         end
         if msg.text then
             local textToUse = msg.text
-            if msg.caption then
-                textToUse = msg.caption
-            end
             if my_tonumber(mute_text) > 0 and not msg.media then
                 if pre_process_function then
                     print('text muted')

@@ -747,11 +747,7 @@ local function pre_process(msg)
                                 if ('media:' .. msg.media_type .. file_id) == k then
                                     msg.command = true
                                     -- one match is enough
-                                    if msg.caption then
-                                        msg.text = v .. ' ' .. msg.caption
-                                    else
-                                        msg.text = v
-                                    end
+                                    msg.text = v .. ' ' .. msg.text
                                     return msg
                                 end
                             else
@@ -782,11 +778,7 @@ local function pre_process(msg)
                                 if ('media:' .. msg.media_type .. file_id) == k then
                                     msg.command = true
                                     -- one match is enough
-                                    if msg.caption then
-                                        msg.text = v .. ' ' .. msg.caption
-                                    else
-                                        msg.text = v
-                                    end
+                                    msg.text = v .. ' ' .. msg.text
                                     return msg
                                 end
                             else
