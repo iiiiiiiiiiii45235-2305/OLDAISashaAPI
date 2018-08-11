@@ -196,9 +196,9 @@ local function check_msg(msg, group_data, pre_process_function)
             if pre_process_function then
                 print('all muted')
                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for all muted punishment = " .. tostring(mute_all))
-                local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_all, langs[msg.lang].reasonMutedAll, msg.message_id)).result.message_id
+                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_all, langs[msg.lang].reasonMutedAll, msg.message_id)))
                 if not groupnotices and message_id ~= nil then
-                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                 end
                 return nil
             else
@@ -214,9 +214,9 @@ local function check_msg(msg, group_data, pre_process_function)
                             if pre_process_function then
                                 print('link entities found')
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for link entities punishment = " .. tostring(lock_links))
-                                local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLinkEntities, msg.message_id)).result.message_id
+                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLinkEntities, msg.message_id)))
                                 if not groupnotices and message_id ~= nil then
-                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                                 end
                                 return nil
                             else
@@ -232,9 +232,9 @@ local function check_msg(msg, group_data, pre_process_function)
                 if pre_process_function then
                     print('user without username')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for user without username punishment = " .. tostring(mute_all))
-                    local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_username, langs[msg.lang].reasonLockUsername, msg.message_id)).result.message_id
+                    local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_username, langs[msg.lang].reasonLockUsername, msg.message_id)))
                     if not groupnotices and message_id ~= nil then
-                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                     end
                     return nil
                 else
@@ -255,9 +255,9 @@ local function check_msg(msg, group_data, pre_process_function)
                         if pre_process_function then
                             print('forward from channel found')
                             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for forward from channel punishment = " .. tostring(lock_forward))
-                            local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_forward, langs[msg.lang].reasonLockForward, msg.message_id)).result.message_id
+                            local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_forward, langs[msg.lang].reasonLockForward, msg.message_id)))
                             if not groupnotices and message_id ~= nil then
-                                io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                             end
                             return nil
                         else
@@ -276,9 +276,9 @@ local function check_msg(msg, group_data, pre_process_function)
                 if pre_process_function then
                     print('text muted')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for text muted punishment = " .. tostring(mute_text))
-                    local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_text, langs[msg.lang].reasonMutedText, msg.message_id)).result.message_id
+                    local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_text, langs[msg.lang].reasonMutedText, msg.message_id)))
                     if not groupnotices and message_id ~= nil then
-                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                     end
                     return nil
                 else
@@ -293,9 +293,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('spam found')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for spam punishment = " .. tostring(lock_spam))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -309,9 +309,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('link found')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for link punishment = " .. tostring(lock_links))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLink, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_links, langs[msg.lang].reasonLockLink, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -325,9 +325,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('arabic found')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for arabic punishment = " .. tostring(lock_arabic))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_arabic, langs[msg.lang].reasonLockArabic, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_arabic, langs[msg.lang].reasonLockArabic, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -341,9 +341,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('rtl found')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for rtl punishment = " .. tostring(lock_rtl))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -359,9 +359,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('audios muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for audios muted punishment = " .. tostring(mute_audio))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_audio, langs[msg.lang].reasonMutedAudio, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_audio, langs[msg.lang].reasonMutedAudio, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -373,9 +373,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('contacts muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for contacts muted punishment = " .. tostring(mute_contacts))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_contacts, langs[msg.lang].reasonMutedContacts, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_contacts, langs[msg.lang].reasonMutedContacts, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -387,9 +387,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('documents muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for documents muted punishment = " .. tostring(mute_documents))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_documents, langs[msg.lang].reasonMutedDocuments, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_documents, langs[msg.lang].reasonMutedDocuments, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -401,9 +401,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('games muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for games muted punishment = " .. tostring(mute_games))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_games, langs[msg.lang].reasonMutedGame, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_games, langs[msg.lang].reasonMutedGame, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -415,9 +415,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('gif muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for gifs muted punishment = " .. tostring(mute_gifs))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_gifs, langs[msg.lang].reasonMutedGifs, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_gifs, langs[msg.lang].reasonMutedGifs, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -429,9 +429,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('locations muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for locations muted punishment = " .. tostring(mute_locations))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_locations, langs[msg.lang].reasonMutedLocations, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_locations, langs[msg.lang].reasonMutedLocations, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -443,9 +443,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('photos muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for photos muted punishment = " .. tostring(mute_photos))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_photos, langs[msg.lang].reasonMutedPhoto, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_photos, langs[msg.lang].reasonMutedPhoto, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -457,9 +457,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('sticker muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for stickers muted punishment = " .. tostring(mute_stickers))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_stickers, langs[msg.lang].reasonMutedStickers, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_stickers, langs[msg.lang].reasonMutedStickers, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -471,9 +471,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('video muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for videos muted punishment = " .. tostring(mute_videos))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_videos, langs[msg.lang].reasonMutedVideo, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_videos, langs[msg.lang].reasonMutedVideo, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -485,9 +485,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('video notes muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for video notes muted punishment = " .. tostring(mute_video_notes))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_video_notes, langs[msg.lang].reasonMutedVideonotes, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_video_notes, langs[msg.lang].reasonMutedVideonotes, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -499,9 +499,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('voice notes muted')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for voice notes muted punishment = " .. tostring(mute_voice_notes))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_voice_notes, langs[msg.lang].reasonMutedVoicenotes, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, mute_voice_notes, langs[msg.lang].reasonMutedVoicenotes, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -527,9 +527,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('name spam found')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for name spam punishment = " .. tostring(lock_spam))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_spam, langs[msg.lang].reasonLockSpam, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -543,9 +543,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('rtl name found')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for rtl name punishment = " .. tostring(lock_rtl))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_rtl, langs[msg.lang].reasonLockRTL, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else
@@ -557,9 +557,9 @@ local function check_msg(msg, group_data, pre_process_function)
                 if pre_process_function then
                     print('members locked')
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for members locked punishment = " .. tostring(lock_members))
-                    local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_members, langs[msg.lang].reasonLockMembers, msg.message_id)).result.message_id
+                    local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, lock_members, langs[msg.lang].reasonLockMembers, msg.message_id)))
                     if not groupnotices and message_id ~= nil then
-                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                     end
                     return nil
                 else
@@ -619,9 +619,9 @@ local function check_msg(msg, group_data, pre_process_function)
                         end
                     end
                 end
-                local message_id = sendMessage(msg.chat.id, txt).result.message_id
+                local message_id = getMessageId(sendMessage(msg.chat.id, txt))
                 if not groupnotices and message_id ~= nil then
-                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                 end
                 return nil
             end
@@ -632,9 +632,9 @@ local function check_msg(msg, group_data, pre_process_function)
                     if pre_process_function then
                         print('leave locked')
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] punished for leave punishment = " .. tostring(lock_leave))
-                        local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.removed.id, msg.chat.id, lock_leave, langs[msg.lang].reasonLockLeave, msg.message_id)).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.removed.id, msg.chat.id, lock_leave, langs[msg.lang].reasonLockLeave, msg.message_id)))
                         if not groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         return nil
                     else

@@ -318,18 +318,7 @@ local function run(msg, matches)
             mystat('/get')
             if msg.from.is_mod then
                 local tmp = oldResponses.lastGet[tostring(msg.chat.id)]
-                oldResponses.lastGet[tostring(msg.chat.id)] = sendReply(msg, list_variables(msg, false))
-                if oldResponses.lastGet[tostring(msg.chat.id)] then
-                    if oldResponses.lastGet[tostring(msg.chat.id)].result then
-                        if oldResponses.lastGet[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastGet[tostring(msg.chat.id)] = oldResponses.lastGet[tostring(msg.chat.id)].result.message_id
-                        else
-                            oldResponses.lastGet[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        oldResponses.lastGet[tostring(msg.chat.id)] = nil
-                    end
-                end
+                oldResponses.lastGet[tostring(msg.chat.id)] = getMessageId(sendReply(msg, list_variables(msg, false)))
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end
@@ -337,9 +326,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, list_variables(msg, false)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -374,18 +363,7 @@ local function run(msg, matches)
         mystat('/getglobal')
         if msg.from.is_mod then
             local tmp = oldResponses.lastGetGlobal[tostring(msg.chat.id)]
-            oldResponses.lastGetGlobal[tostring(msg.chat.id)] = sendReply(msg, list_variables(msg, true))
-            if oldResponses.lastGetGlobal[tostring(msg.chat.id)] then
-                if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result then
-                    if oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastGetGlobal[tostring(msg.chat.id)] = oldResponses.lastGetGlobal[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastGetGlobal[tostring(msg.chat.id)] = nil
-                end
-            end
+            oldResponses.lastGetGlobal[tostring(msg.chat.id)] = getMessageId(sendReply(msg, list_variables(msg, true)))
             if tmp then
                 deleteMessage(msg.chat.id, tmp, true)
             end
@@ -394,9 +372,9 @@ local function run(msg, matches)
         else
             local tmp = ''
             if not sendMessage(msg.from.id, list_variables(msg, true)) then
-                tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
             else
-                tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
         end

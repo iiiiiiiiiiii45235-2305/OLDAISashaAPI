@@ -550,8 +550,8 @@ local function run(msg, matches)
             if sendKeyboard(msg.from.id, logPages(msg.chat.id), keyboard_log_pages(msg.chat.id)) then
                 savelog(msg.chat.id, "log keyboard requested by owner/admin")
                 if msg.chat.type ~= 'private' then
-                    local message_id = sendReply(msg, langs[msg.lang].sendLogPvt, 'html').result.message_id
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                    local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendLogPvt, 'html'))
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                     return
                 end
             else
@@ -610,21 +610,10 @@ local function run(msg, matches)
             if msg.from.is_mod then
                 local tmp = oldResponses.lastRules[tostring(msg.chat.id)]
                 if not data[tostring(msg.chat.id)].rules then
-                    oldResponses.lastRules[tostring(msg.chat.id)] = sendReply(msg, langs[msg.lang].noRules)
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(oldResponses.lastRules[tostring(msg.chat.id)].result.message_id or '') .. '"')
+                    oldResponses.lastRules[tostring(msg.chat.id)] = getMessageId(sendReply(msg, langs[msg.lang].noRules))
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' ..(oldResponses.lastRules[tostring(msg.chat.id)] or '') .. '"')
                 else
-                    oldResponses.lastRules[tostring(msg.chat.id)] = sendReply(msg, langs[msg.lang].rules:gsub('X', msg.chat.title) .. '\n' .. data[tostring(msg.chat.id)].rules)
-                end
-                if oldResponses.lastRules[tostring(msg.chat.id)] then
-                    if oldResponses.lastRules[tostring(msg.chat.id)].result then
-                        if oldResponses.lastRules[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastRules[tostring(msg.chat.id)] = oldResponses.lastRules[tostring(msg.chat.id)].result.message_id
-                        else
-                            oldResponses.lastRules[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        oldResponses.lastRules[tostring(msg.chat.id)] = nil
-                    end
+                    oldResponses.lastRules[tostring(msg.chat.id)] = getMessageId(sendReply(msg, langs[msg.lang].rules:gsub('X', msg.chat.title) .. '\n' .. data[tostring(msg.chat.id)].rules))
                 end
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
@@ -640,9 +629,9 @@ local function run(msg, matches)
                 end
                 local tmp = ''
                 if not sendMessage(msg.from.id, txt) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -724,9 +713,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, getWarn(msg.chat.id)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -867,8 +856,8 @@ local function run(msg, matches)
                         mystat('/delfrom')
                         delAll[tostring(msg.chat.id)] = delAll[tostring(msg.chat.id)] or { }
                         delAll[tostring(msg.chat.id)].from = msg.reply_to_message.message_id
-                        local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].ok))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                     else
                         return langs[msg.lang].messageTooOld
                     end
@@ -889,8 +878,8 @@ local function run(msg, matches)
                 else
                     delAll[tostring(msg.chat.id)].to = msg.message_id
                 end
-                local message_id = sendReply(msg, langs[msg.lang].ok).result.message_id
-                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                local message_id = getMessageId(sendReply(msg, langs[msg.lang].ok))
+                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
             else
                 return langs[msg.lang].require_mod
             end
@@ -919,8 +908,8 @@ local function run(msg, matches)
                                     io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. var:sub(1, -2) .. '"')
                                 end
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
-                                local message_id = sendReply(msg, langs[msg.lang].deletingMessages).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                local message_id = getMessageId(sendReply(msg, langs[msg.lang].deletingMessages))
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                             elseif delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from <= 70 then
                                 mystat('/delall')
                                 for i = delAll[tostring(msg.chat.id)].from, delAll[tostring(msg.chat.id)].to do
@@ -928,8 +917,8 @@ local function run(msg, matches)
                                     io.popen('lua timework.lua "deletemessage" "' .. rndtime .. '" "' .. msg.chat.id .. '" "' .. i .. '"')
                                 end
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] deleted all messages from " .. delAll[tostring(msg.chat.id)].from .. " to " .. delAll[tostring(msg.chat.id)].to)
-                                local message_id = sendReply(msg, langs[msg.lang].deletingMessages).result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                local message_id = getMessageId(sendReply(msg, langs[msg.lang].deletingMessages))
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                             else
                                 return langs[msg.lang].errorDelall
                             end
@@ -990,8 +979,8 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_restrict', msg.chat.id, data[tostring(msg.chat.id)].settings.time_restrict)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_restrict ")
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else
@@ -1023,8 +1012,8 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. msg.chat.title .. langs[msg.lang].tempActionIntro, keyboard_time_punishments('time_ban', msg.chat.id, data[tostring(msg.chat.id)].settings.time_ban)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested to change time_ban ")
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else
@@ -1098,8 +1087,8 @@ local function run(msg, matches)
                 end
                 if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 2)) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendMutesPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else
@@ -1108,9 +1097,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -1121,18 +1110,7 @@ local function run(msg, matches)
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist")
             if msg.from.is_mod then
                 local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
-                oldResponses.lastSettings[tostring(msg.chat.id)] = sendReply(msg, showSettings(msg.chat.id, msg.lang))
-                if oldResponses.lastSettings[tostring(msg.chat.id)] then
-                    if oldResponses.lastSettings[tostring(msg.chat.id)].result then
-                        if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
-                        else
-                            oldResponses.lastSettings[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
-                    end
-                end
+                oldResponses.lastSettings[tostring(msg.chat.id)] = getMessageId(sendReply(msg, showSettings(msg.chat.id, msg.lang)))
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end
@@ -1140,9 +1118,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -1158,8 +1136,8 @@ local function run(msg, matches)
                 end
                 if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(msg.chat.id, 1)) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else
@@ -1168,9 +1146,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -1181,18 +1159,7 @@ local function run(msg, matches)
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings ")
             if msg.from.is_mod then
                 local tmp = oldResponses.lastSettings[tostring(msg.chat.id)]
-                oldResponses.lastSettings[tostring(msg.chat.id)] = sendReply(msg, showSettings(msg.chat.id, msg.lang))
-                if oldResponses.lastSettings[tostring(msg.chat.id)] then
-                    if oldResponses.lastSettings[tostring(msg.chat.id)].result then
-                        if oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastSettings[tostring(msg.chat.id)] = oldResponses.lastSettings[tostring(msg.chat.id)].result.message_id
-                        else
-                            oldResponses.lastSettings[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        oldResponses.lastSettings[tostring(msg.chat.id)] = nil
-                    end
-                end
+                oldResponses.lastSettings[tostring(msg.chat.id)] = getMessageId(sendReply(msg, showSettings(msg.chat.id, msg.lang)))
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end
@@ -1200,9 +1167,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, showSettings(msg.chat.id, msg.lang)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -1355,18 +1322,7 @@ local function run(msg, matches)
             savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group modlist")
             if msg.from.is_mod then
                 local tmp = oldResponses.lastModlist[tostring(msg.chat.id)]
-                oldResponses.lastModlist[tostring(msg.chat.id)] = sendReply(msg, modList(msg.chat.id, msg.lang))
-                if oldResponses.lastModlist[tostring(msg.chat.id)] then
-                    if oldResponses.lastModlist[tostring(msg.chat.id)].result then
-                        if oldResponses.lastModlist[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastModlist[tostring(msg.chat.id)] = oldResponses.lastModlist[tostring(msg.chat.id)].result.message_id
-                        else
-                            oldResponses.lastModlist[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        oldResponses.lastModlist[tostring(msg.chat.id)] = nil
-                    end
-                end
+                oldResponses.lastModlist[tostring(msg.chat.id)] = getMessageId(sendReply(msg, modList(msg.chat.id, msg.lang)))
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end
@@ -1374,9 +1330,9 @@ local function run(msg, matches)
             else
                 local tmp = ''
                 if not sendMessage(msg.from.id, modList(msg.chat.id, msg.lang)) then
-                    tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                    tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                 else
-                    tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                    tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                 end
                 io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
             end
@@ -1655,8 +1611,8 @@ local function run(msg, matches)
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(msg.reply_to_message.forward_from.id) .. ') ' .. msg.reply_to_message.forward_from.first_name .. ' ' ..(msg.reply_to_message.forward_from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.forward_from.id)) then
                                         permissionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.forward_from.id)] = userPermissions(msg.chat.id, msg.reply_to_message.forward_from.id)
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                            local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                                             return
                                         end
                                     else
@@ -1673,8 +1629,8 @@ local function run(msg, matches)
                         if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(msg.reply_to_message.from.id) .. ') ' .. msg.reply_to_message.from.first_name .. ' ' ..(msg.reply_to_message.from.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.reply_to_message.from.id)) then
                             permissionsTable[tostring(msg.chat.id)][tostring(msg.reply_to_message.from.id)] = userPermissions(msg.chat.id, msg.reply_to_message.from.id)
                             if msg.chat.type ~= 'private' then
-                                local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                                 return
                             end
                         else
@@ -1694,8 +1650,8 @@ local function run(msg, matches)
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(msg.entities[k].user.id) .. ') ' .. msg.entities[k].user.first_name .. ' ' ..(msg.entities[k].user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, msg.entities[k].user.id)) then
                                         permissionsTable[tostring(msg.chat.id)][tostring(msg.entities[k].user.id)] = userPermissions(msg.chat.id, msg.entities[k].user.id)
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                            local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                                             return
                                         end
                                     else
@@ -1714,8 +1670,8 @@ local function run(msg, matches)
                                     if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(obj_user.id) .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                         permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
                                         if msg.chat.type ~= 'private' then
-                                            local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                            local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
+                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                                             return
                                         end
                                     else
@@ -1733,8 +1689,8 @@ local function run(msg, matches)
                                 if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(obj_user.id) .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
                                     permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
                                     if msg.chat.type ~= 'private' then
-                                        local message_id = sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html').result.message_id
-                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                                         return
                                     end
                                 else

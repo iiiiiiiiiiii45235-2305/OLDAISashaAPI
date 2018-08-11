@@ -57,10 +57,10 @@ local function run(msg, matches)
                 elseif matches[3] == 'DONE' then
                     if is_mod2(msg.from.id, matches[4], false) then
                         answerCallbackQuery(msg.cb_id, langs[msg.lang].done, false)
-                        local message_id = sendMessage(matches[4], text_table[tostring(msg.from.id)]).result.message_id
+                        local message_id = getMessageId(sendMessage(matches[4], text_table[tostring(msg.from.id)]))
                         text_table[tostring(msg.from.id)] = nil
                         if message_id then
-                            io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. matches[4] .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. matches[4] .. '" "' ..(message_id or '') .. '"')
                         end
                         if not deleteMessage(msg.chat.id, msg.message_id, true) then
                             editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].stop)
@@ -83,9 +83,9 @@ local function run(msg, matches)
                     if time >= max_time then
                         time = max_time - 1
                     end
-                    local message_id = sendMessage(msg.chat.id, matches[5]).result.message_id
+                    local message_id = getMessageId(sendMessage(msg.chat.id, matches[5]))
                     if message_id then
-                        io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                     end
                 else
                     text_table[tostring(msg.from.id)] = matches[2]

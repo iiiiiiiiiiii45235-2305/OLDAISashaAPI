@@ -51,18 +51,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'dellist' then
         if msg.from.is_mod then
             local tmp = oldResponses.lastDellist[tostring(msg.chat.id)]
-            oldResponses.lastDellist[tostring(msg.chat.id)] = sendReply(msg, list_censorships(msg))
-            if oldResponses.lastDellist[tostring(msg.chat.id)] then
-                if oldResponses.lastDellist[tostring(msg.chat.id)].result then
-                    if oldResponses.lastDellist[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastDellist[tostring(msg.chat.id)] = oldResponses.lastDellist[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastDellist[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastDellist[tostring(msg.chat.id)] = nil
-                end
-            end
+            oldResponses.lastDellist[tostring(msg.chat.id)] = getMessageId(sendReply(msg, list_censorships(msg)))
             if tmp then
                 deleteMessage(msg.chat.id, tmp, true)
             end
@@ -70,9 +59,9 @@ local function run(msg, matches)
         else
             local tmp = ''
             if not sendMessage(msg.from.id, list_censorships(msg)) then
-                tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
             else
-                tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
         end
@@ -121,15 +110,15 @@ local function pre_process(msg)
                             local time = redis:hget(hash, temp)
                             local text = ''
                             if time == 'true' or time == '0' then
-                                local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)).result.message_id
+                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)))
                                 if not data[tostring(msg.chat.id)].settings.groupnotices then
-                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                                 end
                             else
                                 io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                local message_id = sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)).result.message_id
+                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)))
                                 if not data[tostring(msg.chat.id)].settings.groupnotices then
-                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                                 end
                             end
                             return nil

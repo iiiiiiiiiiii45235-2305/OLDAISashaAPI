@@ -563,8 +563,8 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, langs[msg.lang].mutesOf .. '(#chat' .. tostring(matches[2]):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 2)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested SuperGroup muteslist " .. matches[2])
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendMutesPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendMutesPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else
@@ -585,8 +585,8 @@ local function run(msg, matches)
                 if sendKeyboard(msg.from.id, langs[msg.lang].settingsOf .. '(#chat' .. tostring(matches[2]):gsub("-", "") .. ') ' .. chat_name .. '\n' .. langs[msg.lang].settingsIntro, keyboard_settings_list(matches[2], 1)) then
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] requested group settings " .. matches[2])
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendSettingsPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else
@@ -811,8 +811,8 @@ local function run(msg, matches)
             if sendKeyboard(msg.from.id, requestsPages(msg.chat.id), keyboard_requests_pages(msg.chat.id)) then
                 savelog(msg.chat.id, "requestslog keyboard requested by admin")
                 if msg.chat.type ~= 'private' then
-                    local message_id = sendReply(msg, langs[msg.lang].sendLogPvt, 'html').result.message_id
-                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                    local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendLogPvt, 'html'))
+                    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                     return
                 end
             else
@@ -867,8 +867,8 @@ local function run(msg, matches)
                 if matches[2]:lower() == 'groups' then
                     if sendKeyboard(msg.from.id, groupsPages(1), keyboard_list_groups_pages(msg.chat.id, 1), 'html') then
                         if msg.chat.type ~= 'private' then
-                            local message_id = sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html').result.message_id
-                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                            local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendKeyboardPvt, 'html'))
+                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                             return
                         end
                     else

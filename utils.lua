@@ -1262,3 +1262,14 @@ function extractMediaDetails(message)
         return file_id, file_name, file_size
     end
 end
+
+function getMessageId(object)
+    if object.message_id then
+        return object.message_id
+    elseif object.result then
+        if object.result.message_id then
+            return object.result.message_id
+        end
+    end
+    return nil
+end

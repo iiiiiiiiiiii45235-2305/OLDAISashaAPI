@@ -7,18 +7,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'news' then
         if msg.from.is_mod then
             local tmp = oldResponses.lastNews[tostring(msg.chat.id)]
-            oldResponses.lastNews[tostring(msg.chat.id)] = sendReply(msg, news_table.news or langs[msg.lang].newsText)
-            if oldResponses.lastNews[tostring(msg.chat.id)] then
-                if oldResponses.lastNews[tostring(msg.chat.id)].result then
-                    if oldResponses.lastNews[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastNews[tostring(msg.chat.id)] = oldResponses.lastNews[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastNews[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastNews[tostring(msg.chat.id)] = nil
-                end
-            end
+            oldResponses.lastNews[tostring(msg.chat.id)] = getMessageId(sendReply(msg, news_table.news or langs[msg.lang].newsText))
             if tmp then
                 deleteMessage(msg.chat.id, tmp, true)
             end
@@ -26,9 +15,9 @@ local function run(msg, matches)
         else
             local tmp = ''
             if not sendMessage(msg.from.id, news_table.news or langs[msg.lang].newsText) then
-                tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
             else
-                tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
             end
             io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
         end
@@ -48,7 +37,7 @@ local function run(msg, matches)
             news_table.spam = true
             news_table.counter = 0
             news_table.chat_msg_to_update = msg.chat.id
-            news_table.msg_to_update = sendMessage(msg.chat.id, "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats)).result.message_id or nil
+            news_table.msg_to_update = getMessageId(sendMessage(msg.chat.id, "SPAMMING NEWS " .. news_table.counter .. "/" .. tostring(news_table.tot_chats)))
         else
             return langs[msg.lang].require_sudo
         end

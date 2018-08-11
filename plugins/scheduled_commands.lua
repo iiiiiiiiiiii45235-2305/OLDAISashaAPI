@@ -202,8 +202,8 @@ local function run(msg, matches)
                     else
                         if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_less_time('delword', msg.chat.id)) then
                             if msg.chat.type ~= 'private' then
-                                local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
-                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                                local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html'))
+                                io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                                 return
                             end
                         else
@@ -229,8 +229,8 @@ local function run(msg, matches)
                 schedule_table[tostring(msg.from.id)] = { method = matches[2]:lower(), chat_id = matches[3], text = matches[4] }
                 if sendKeyboard(msg.from.id, 'SCHEDULE', keyboard_less_time('schedule', msg.chat.id)) then
                     if msg.chat.type ~= 'private' then
-                        local message_id = sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html').result.message_id
-                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendTimeKeyboardPvt, 'html'))
+                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
                         return
                     end
                 else

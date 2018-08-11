@@ -14,8 +14,8 @@ local function run(msg, matches)
     local usermsgs = tonumber(redis:get('msgs:' .. msg.from.id .. ':' .. msg.chat.id) or 0)
     local percentage =(usermsgs * 100) / chattotal
     local txt = string.gsub(string.gsub(string.gsub(langs[msg.lang].meString, 'W', tostring(usermsgs)), 'X', string.format('%d', percentage)), 'Z', tostring(chattotal))
-    local message_id = sendReply(msg, txt).result.message_id
-    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. message_id .. '"')
+    local message_id = getMessageId(sendReply(msg, txt))
+    io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
     return
 end
 

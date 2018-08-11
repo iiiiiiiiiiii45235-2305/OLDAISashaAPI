@@ -149,9 +149,9 @@ local function pre_process(msg)
                 end
                 local username = msg.from.username or 'USERNAME'
                 savelog(msg.chat.id, msg.from.print_name .. " @" .. username .. " [" .. msg.from.id .. "] punished for #flood punishment = " .. tostring(data[tostring(msg.chat.id)].settings.locks.flood))
-                local message_id = sendMessage(msg.chat.id, text).result.message_id
+                local message_id = getMessageId(sendMessage(msg.chat.id, text))
                 if not data[tostring(msg.chat.id)].settings.groupnotices and message_id ~= nil then
-                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                 end
                 -- incr it on redis
                 local gbanspam = 'gban:spam' .. msg.from.id
@@ -183,15 +183,15 @@ local function pre_process(msg)
                 if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] then
                     if not data[tostring(msg.chat.id)].settings.strict then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for possible shitstorm")
-                        local message_id = sendMessage(msg.chat.id, restrictUser(bot.id, msg.from.id, msg.chat.id, default_restrictions) .. '\n' .. langs[msg.lang].reasonFlood .. '\n#possibleshitstorm').result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, restrictUser(bot.id, msg.from.id, msg.chat.id, default_restrictions) .. '\n' .. langs[msg.lang].reasonFlood .. '\n#possibleshitstorm'))
                         if not data[tostring(msg.chat.id)].settings.groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                     else
-                        local message_id = sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood .. '\n#possibleshitstorm')).result.message_id
+                        local message_id = getMessageId(sendMessage(msg.chat.id, banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonFlood .. '\n#possibleshitstorm')))
                         if not data[tostring(msg.chat.id)].settings.groupnotices and message_id ~= nil then
-                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                            io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                         end
                         globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] = true
                     end
@@ -203,9 +203,9 @@ local function pre_process(msg)
                 if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(msg.from.id)] and cronTable.commandsHashes[tostring(msg.chat.id)][tostring(msg.from.id)][tostring(hash)] > 4 then
                     -- if not yet punished and user spammed more than 4 equal commands in one minute (it has no sense, so restrict that user for 10 minutes)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] restricted for flooding commands")
-                    local message_id = sendMessage(msg.chat.id, restrictUser(bot.id, msg.from.id, msg.chat.id, default_restrictions, 600) .. '\n' .. langs[msg.lang].commandsFlooderRestricted).result.message_id
+                    local message_id = getMessageId(sendMessage(msg.chat.id, restrictUser(bot.id, msg.from.id, msg.chat.id, default_restrictions, 600) .. '\n' .. langs[msg.lang].commandsFlooderRestricted))
                     if not data[tostring(msg.chat.id)].settings.groupnotices and message_id ~= nil then
-                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' .. message_id .. '"')
+                        io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                     end
                 end
             end

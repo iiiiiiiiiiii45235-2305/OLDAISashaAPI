@@ -326,16 +326,7 @@ local function run(msg, matches)
                 if oldResponses.lastWelcome[tostring(msg.chat.id)] then
                     deleteMessage(msg.chat.id, oldResponses.lastWelcome[tostring(msg.chat.id)], true)
                 end
-                oldResponses.lastWelcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, { preview_user }, msg.message_id)
-                if oldResponses.lastWelcome[tostring(msg.chat.id)].result then
-                    if oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastWelcome[tostring(msg.chat.id)] = oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
-                end
+                oldResponses.lastWelcome[tostring(msg.chat.id)] = getMessageId(sendWelcome(msg.chat, { preview_user }, msg.message_id))
                 return
             end
             if matches[1]:lower() == 'previewgoodbye' then
@@ -343,16 +334,7 @@ local function run(msg, matches)
                 if oldResponses.lastGoodbye[tostring(msg.chat.id)] then
                     deleteMessage(msg.chat.id, oldResponses.lastGoodbye[tostring(msg.chat.id)], true)
                 end
-                oldResponses.lastGoodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, preview_user, msg.message_id)
-                if oldResponses.lastGoodbye[tostring(msg.chat.id)].result then
-                    if oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id then
-                        oldResponses.lastGoodbye[tostring(msg.chat.id)] = oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id
-                    else
-                        oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
-                    end
-                else
-                    oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
-                end
+                oldResponses.lastGoodbye[tostring(msg.chat.id)] = getMessageId(sendGoodbye(msg.chat, preview_user, msg.message_id))
                 return
             end
             if matches[1]:lower() == 'setwelcome' then
@@ -484,18 +466,7 @@ local function pre_process(msg)
                 if hashonredis then
                     if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
                         local tmp = oldResponses.lastWelcome[tostring(msg.chat.id)]
-                        oldResponses.lastWelcome[tostring(msg.chat.id)] = sendWelcome(msg.chat, msg.added, msg.message_id)
-                        if oldResponses.lastWelcome[tostring(msg.chat.id)] then
-                            if oldResponses.lastWelcome[tostring(msg.chat.id)].result then
-                                if oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id then
-                                    oldResponses.lastWelcome[tostring(msg.chat.id)] = oldResponses.lastWelcome[tostring(msg.chat.id)].result.message_id
-                                else
-                                    oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
-                                end
-                            else
-                                oldResponses.lastWelcome[tostring(msg.chat.id)] = nil
-                            end
-                        end
+                        oldResponses.lastWelcome[tostring(msg.chat.id)] = getMessageId(sendWelcome(msg.chat, msg.added, msg.message_id))
                         redis:getset(hash, 0)
                         if tmp then
                             deleteMessage(msg.chat.id, tmp, true)
@@ -507,18 +478,7 @@ local function pre_process(msg)
             end
             if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then
                 local tmp = oldResponses.lastGoodbye[tostring(msg.chat.id)]
-                oldResponses.lastGoodbye[tostring(msg.chat.id)] = sendGoodbye(msg.chat, msg.removed, msg.message_id)
-                if oldResponses.lastGoodbye[tostring(msg.chat.id)] then
-                    if oldResponses.lastGoodbye[tostring(msg.chat.id)].result then
-                        if oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id then
-                            oldResponses.lastGoodbye[tostring(msg.chat.id)] = oldResponses.lastGoodbye[tostring(msg.chat.id)].result.message_id
-                        else
-                            oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
-                        end
-                    else
-                        oldResponses.lastGoodbye[tostring(msg.chat.id)] = nil
-                    end
-                end
+                oldResponses.lastGoodbye[tostring(msg.chat.id)] = getMessageId(sendGoodbye(msg.chat, msg.removed, msg.message_id))
                 if tmp then
                     deleteMessage(msg.chat.id, tmp, true)
                 end

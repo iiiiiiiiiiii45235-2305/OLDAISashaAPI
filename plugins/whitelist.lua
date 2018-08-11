@@ -120,18 +120,7 @@ local function run(msg, matches)
                 end
                 if msg.from.is_mod then
                     local tmp = oldResponses.lastWhitelist[tostring(msg.chat.id)]
-                    oldResponses.lastWhitelist[tostring(msg.chat.id)] = sendReply(msg, text)
-                    if oldResponses.lastWhitelist[tostring(msg.chat.id)] then
-                        if oldResponses.lastWhitelist[tostring(msg.chat.id)].result then
-                            if oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id then
-                                oldResponses.lastWhitelist[tostring(msg.chat.id)] = oldResponses.lastWhitelist[tostring(msg.chat.id)].result.message_id
-                            else
-                                oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
-                            end
-                        else
-                            oldResponses.lastWhitelist[tostring(msg.chat.id)] = nil
-                        end
-                    end
+                    oldResponses.lastWhitelist[tostring(msg.chat.id)] = getMessageId(sendReply(msg, text))
                     if tmp then
                         deleteMessage(msg.chat.id, tmp, true)
                     end
@@ -139,9 +128,9 @@ local function run(msg, matches)
                 else
                     local tmp = ''
                     if not sendMessage(msg.from.id, text) then
-                        tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                        tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                     else
-                        tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                        tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                     end
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
@@ -214,18 +203,7 @@ local function run(msg, matches)
                 end
                 if msg.from.is_mod then
                     local tmp = oldResponses.lastWhitelistGban[tostring(msg.chat.id)]
-                    oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = sendReply(msg, text)
-                    if oldResponses.lastWhitelistGban[tostring(msg.chat.id)] then
-                        if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result then
-                            if oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id then
-                                oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = oldResponses.lastWhitelistGban[tostring(msg.chat.id)].result.message_id
-                            else
-                                oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
-                            end
-                        else
-                            oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = nil
-                        end
-                    end
+                    oldResponses.lastWhitelistGban[tostring(msg.chat.id)] = getMessageId(sendReply(msg, text))
                     if tmp then
                         deleteMessage(msg.chat.id, tmp, true)
                     end
@@ -233,9 +211,9 @@ local function run(msg, matches)
                 else
                     local tmp = ''
                     if not sendMessage(msg.from.id, text) then
-                        tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                        tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                     else
-                        tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                        tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                     end
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
@@ -258,18 +236,7 @@ local function run(msg, matches)
                 end
                 if msg.from.is_mod then
                     local tmp = oldResponses.lastWhitelistLink[tostring(msg.chat.id)]
-                    oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = sendReply(msg, text)
-                    if oldResponses.lastWhitelistLink[tostring(msg.chat.id)] then
-                        if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result then
-                            if oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id then
-                                oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = oldResponses.lastWhitelistLink[tostring(msg.chat.id)].result.message_id
-                            else
-                                oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
-                            end
-                        else
-                            oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = nil
-                        end
-                    end
+                    oldResponses.lastWhitelistLink[tostring(msg.chat.id)] = getMessageId(sendReply(msg, text))
                     if tmp then
                         deleteMessage(msg.chat.id, tmp, true)
                     end
@@ -277,9 +244,9 @@ local function run(msg, matches)
                 else
                     local tmp = ''
                     if not sendMessage(msg.from.id, text) then
-                        tmp = sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id).result.message_id
+                        tmp = getMessageId(sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id))
                     else
-                        tmp = sendReply(msg, langs[msg.lang].generalSendPvt, 'html').result.message_id
+                        tmp = getMessageId(sendReply(msg, langs[msg.lang].generalSendPvt, 'html'))
                     end
                     io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' .. tmp .. '"')
                 end
