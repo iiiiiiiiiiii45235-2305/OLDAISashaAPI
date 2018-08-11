@@ -513,7 +513,7 @@ function pre_process_media_msg(msg)
         msg.media_type = 'contact'
     elseif msg.document then
         msg.media = true
-        msg.text = "%[document%]"
+        -- msg.text = "%[document%]"
         msg.media_type = 'document'
     elseif msg.location then
         msg.media = true
