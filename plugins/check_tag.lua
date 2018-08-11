@@ -15,15 +15,16 @@ local function check_tag(msg, user_id, user)
 
     if user then
         if type(user) == 'table' then
+            -- only sudoers
             -- check if first name is in message
             if msg.text then
-                if string.find(msg.text, user.first_name) then
+                if string.match(msg.text:lower(), "^" .. user.first_name) or string.match(msg.text:lower(), "%W+" .. user.first_name .. "%W+") or string.match(msg.text:lower(), user.first_name .. "$") then
                     return true
                 end
             end
             if msg.media then
                 if msg.caption then
-                    if string.find(msg.caption, user.first_name) then
+                    if string.match(msg.caption:lower(), "^" .. user.first_name) or string.match(msg.caption:lower(), "%W+" .. user.first_name .. "%W+") or string.match(msg.caption:lower(), user.first_name .. "$") then
                         return true
                     end
                 end
@@ -31,13 +32,13 @@ local function check_tag(msg, user_id, user)
             if user.username then
                 -- check if username is in message
                 if msg.text then
-                    if string.find(msg.text:lower(), user.username:lower()) then
+                    if string.match(msg.text:lower(), "^" .. user.username:lower()) or string.match(msg.text:lower(), "%W+" .. user.username:lower() .. "%W+") or string.match(msg.text:lower(), user.username:lower() .. "$") then
                         return true
                     end
                 end
                 if msg.media then
                     if msg.caption then
-                        if string.find(msg.caption:lower(), user.username:lower()) then
+                        if string.match(msg.caption:lower(), "^" .. user.username:lower()) or string.match(msg.caption:lower(), "%W+" .. user.username:lower() .. "%W+") or string.match(msg.caption:lower(), user.username:lower() .. "$") then
                             return true
                         end
                     end
@@ -46,13 +47,13 @@ local function check_tag(msg, user_id, user)
             return false
         else
             if msg.text then
-                if string.find(msg.text:lower(), user:lower()) then
+                if string.match(msg.text:lower(), "^" .. user:lower()) or string.match(msg.text:lower(), "%W+" .. user:lower() .. "%W+") or string.match(msg.text:lower(), user:lower() .. "$") then
                     return true
                 end
             end
             if msg.media then
                 if msg.caption then
-                    if string.find(msg.caption:lower(), user:lower()) then
+                    if string.match(msg.caption:lower(), "^" .. user:lower()) or string.match(msg.caption:lower(), "%W+" .. user:lower() .. "%W+") or string.match(msg.caption:lower(), user:lower() .. "$") then
                         return true
                     end
                 end
