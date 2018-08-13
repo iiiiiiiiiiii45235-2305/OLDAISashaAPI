@@ -89,6 +89,7 @@ end
 function bot_init()
     config = { }
     bot = nil
+    rdb = { }
 
     loadfile("./dictionaries.lua")()
     loadfile("./utils.lua")()
