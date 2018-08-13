@@ -499,12 +499,6 @@ function pre_process_media_msg(msg)
         msg.entities = clone_table(msg.caption_entities)
         msg.caption_entities = nil
     end
-    if msg.caption then
-        msg.text = msg.caption
-        msg.caption = nil
-    else
-        msg.text = ""
-    end
 
     if msg.animation then
         msg.media = true
@@ -546,6 +540,12 @@ function pre_process_media_msg(msg)
         msg.media = true
         -- msg.text = "%[voice_note%]"
         msg.media_type = 'voice_note'
+    end
+    if msg.caption then
+        msg.text = msg.caption
+        msg.caption = nil
+    elseif msg.media then
+        msg.text = ""
     end
     if msg.reply then
         pre_process_media_msg(msg.reply_to_message)
