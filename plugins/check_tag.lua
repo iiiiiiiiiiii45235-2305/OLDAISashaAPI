@@ -409,6 +409,7 @@ local function pre_process(msg)
                 -- if group is enabled to tagalert notifications then
                 local usernames = redis_get_something('tagalert:usernames')
                 for k, v in pairs(usernames) do
+                    print(k, v)
                     if not notified[tostring(k)] then
                         -- exclude already notified
                         if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then
@@ -434,6 +435,7 @@ local function pre_process(msg)
                 end
                 local nicknames = redis_get_something('tagalert:nicknames')
                 for k, v in pairs(nicknames) do
+                    print(k, v)
                     if not notified[tostring(k)] then
                         -- exclude already notified
                         if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then

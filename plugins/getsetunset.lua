@@ -531,6 +531,7 @@ local function pre_process(msg)
         -- local
         local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, false))
         for key, word in pairs(vars) do
+            print(key, word)
             local answer = check_word(msg, key:gsub('_', ' '):lower(), true)
             if answer then
                 if string.match(answer, '^photo') then
