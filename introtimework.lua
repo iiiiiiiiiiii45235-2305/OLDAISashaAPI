@@ -73,6 +73,7 @@ function create_config()
         moderation = { data = 'data/moderation.json' },
         likecounter = { db = 'data/likecounterdb.json' },
         database = { db = 'data/database.json' },
+        rdb = { db = 'data/rdb.json' },
         about_text = "AISashaAPI by @EricSolinas based on @GroupButler_bot and @TeleSeed supergroup branch with something taken from @DBTeam.\nThanks guys.",
         log_chat = - 1001043389864,
         vardump_chat = - 167065200,
@@ -92,6 +93,7 @@ function bot_init()
     loadfile("./dictionaries.lua")()
     loadfile("./utils.lua")()
     config = load_config()
+
     local file_bot_api_key = io.open('bot_api_key.txt', "r")
     if file_bot_api_key then
         -- read all contents of file into a string
@@ -105,6 +107,7 @@ function bot_init()
     loadfile("./methods.lua")()
     loadfile("./ranks.lua")()
     loadfile("./keyboards.lua")()
+    loadfile("./libs/myRedis.lua")()
 
     bot = {
         first_name = "Sasha A.I. BOT",
