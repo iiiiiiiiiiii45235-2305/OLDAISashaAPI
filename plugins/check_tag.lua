@@ -408,22 +408,22 @@ local function pre_process(msg)
             if data[tostring(msg.chat.id)].settings.tagalert then
                 -- if group is enabled to tagalert notifications then
                 local usernames = redis_get_something('tagalert:usernames')
-                for i = 1, #usernames do
-                    if not notified[tostring(usernames[i])] then
+                for k, v in pairs(usernames) do
+                    if not notified[tostring(k)] then
                         -- exclude already notified
-                        if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(usernames[i]) ~= tonumber(bot.userVersion.id) then
+                        if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            local usr = redis_hget_something('tagalert:usernames', usernames[i])
+                            local usr = redis_hget_something('tagalert:usernames', k)
                             if usr == 'true' then
                                 usr = nil
                             end
-                            if check_tag(msg, usernames[i], usr) then
-                                print('username', usernames[i])
+                            if check_tag(msg, k, usr) then
+                                print('username', k)
                                 if not msg.command then
                                     -- set user as notified to not send multiple notifications
-                                    notified[tostring(usernames[i])] = true
-                                    if sendChatAction(usernames[i], 'typing') then
-                                        send_tag_alert(msg, usernames[i])
+                                    notified[tostring(k)] = true
+                                    if sendChatAction(k, 'typing') then
+                                        send_tag_alert(msg, k)
                                     end
                                 else
                                     print("TAG FOUND BUT COMMAND")
@@ -433,23 +433,23 @@ local function pre_process(msg)
                     end
                 end
                 local nicknames = redis_get_something('tagalert:nicknames')
-                for i = 1, #nicknames do
-                    if not notified[tostring(nicknames[i])] then
+                for k, v in pairs(nicknames) do
+                    if not notified[tostring(k)] then
                         -- exclude already notified
-                        if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(nicknames[i]) ~= tonumber(bot.userVersion.id) then
+                        if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            if check_tag(msg, nicknames[i], redis_hget_something('tagalert:nicknames', nicknames[i])) then
-                                print('nickname', nicknames[i])
+                            if check_tag(msg, k, redis_hget_something('tagalert:nicknames', k)) then
+                                print('nickname', k)
                                 if not msg.command then
                                     -- set user as notified to not send multiple notifications
-                                    notified[tostring(nicknames[i])] = true
-                                    if sendChatAction(nicknames[i], 'typing') then
-                                        local obj = getChatMember(msg.chat.id, nicknames[i])
+                                    notified[tostring(k)] = true
+                                    if sendChatAction(k, 'typing') then
+                                        local obj = getChatMember(msg.chat.id, k)
                                         if type(obj) == 'table' then
                                             if obj.ok and obj.result then
                                                 obj = obj.result
                                                 if obj.status == 'creator' or obj.status == 'administrator' or obj.status == 'member' or obj.status == 'restricted' then
-                                                    send_tag_alert(msg, nicknames[i])
+                                                    send_tag_alert(msg, k)
                                                 end
                                             end
                                         end

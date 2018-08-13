@@ -26,8 +26,8 @@ local function cli_list_variables(msg)
     if cli_get_hash(msg) then
         local names = redis_get_something(cli_get_hash(msg))
         local text = ''
-        for i = 1, #names do
-            text = text .. names[i]:gsub('_', ' ') .. '\n'
+        for k, v in pairs(names) do
+            text = text .. k:gsub('_', ' ') .. '\n'
         end
         return text
     end
@@ -72,8 +72,8 @@ local function cli_list_censorships(msg)
     if hash then
         local names = redis_get_something(hash)
         local text = ''
-        for i = 1, #names do
-            text = text .. names[i] .. '\n'
+        for k, v in pairs(names) do
+            text = text .. k .. '\n'
         end
         return text
     end
@@ -292,6 +292,7 @@ local function run(msg, matches)
             end
 
             -- migrate ban
+            -- FIX THIS SHIT IT CAN CAUSE FLOOD_WAITS
             local banned = redis_get_something('banned:' .. id_to_cli(msg.chat.id))
             if next(banned) then
                 for i = 1, #banned do

@@ -694,8 +694,8 @@ local function run(msg, matches)
             local hash = 'commands:stats'
             local names = redis_get_something(hash)
             local num = redis_hvals(hash)
-            for i = 1, #names do
-                text = text .. '- ' .. names[i] .. ': ' .. num[i] .. '\n'
+            for k, v in pairs(names) do
+                text = text .. '- ' .. k .. ': ' .. v .. '\n'
             end
             return text
         end

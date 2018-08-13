@@ -38,8 +38,8 @@ local function list_variables(msg, global)
 
     if hash then
         local names = redis_get_something(hash)
-        for i, word in pairs(names) do
-            text = text .. '\n' .. word:gsub('_', ' ')
+        for key, value in pairs(names) do
+            text = text .. '\n' .. key:gsub('_', ' ')
         end
         return text
     end
@@ -530,8 +530,8 @@ local function pre_process(msg)
     if msg then
         -- local
         local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, false))
-        for i, word in pairs(vars) do
-            local answer = check_word(msg, word:gsub('_', ' '):lower(), true)
+        for key, word in pairs(vars) do
+            local answer = check_word(msg, key:gsub('_', ' '):lower(), true)
             if answer then
                 if string.match(answer, '^photo') then
                     answer = answer:gsub('^photo', '')
@@ -596,8 +596,8 @@ local function pre_process(msg)
         end
         -- global
         local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, true))
-        for i, word in pairs(vars) do
-            local answer = check_word(msg, word:gsub('_', ' '):lower(), true)
+        for key, word in pairs(vars) do
+            local answer = check_word(msg, key:gsub('_', ' '):lower(), true)
             if answer then
                 if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
                     if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then

@@ -24,8 +24,8 @@ local function clean_chat_stats(chat_id)
     local hash = 'chat:' .. chat_id .. ':users'
     local users = redis_get_something(hash)
 
-    for i = 1, #users do
-        local user_id = users[i]
+    for k, v in pairs(users) do
+        local user_id = k
         redis_set_something('msgs:' .. user_id .. ':' .. chat_id, 0)
     end
 
@@ -36,8 +36,6 @@ end
 local function real_chat_stats(chat_id)
     local lang = get_lang(chat_id)
     local chattotal = 0
-    local hash = 'chat:' .. chat_id .. ':users'
-    local users = redis_get_something(hash)
     local users_info = { }
     local participants = getChatParticipants(chat_id)
 
@@ -89,9 +87,9 @@ local function chat_stats(chat_id, lang)
     local chattotal = get_msgs_chat(chat_id)
 
     -- Get user info
-    for i = 1, #users do
-        if tonumber(users[i]) ~= tonumber(bot.id) then
-            local user_id = users[i]
+    for k, v in pairs(users) do
+        if tonumber(k) ~= tonumber(bot.id) then
+            local user_id = k
             local user_info = get_msgs_user_chat(user_id, chat_id)
             local percentage =(user_info.msgs * 100) / chattotal
             user_info.percentage = string.format('%d', percentage)
@@ -126,9 +124,9 @@ local function chat_stats2(chat_id, lang)
     local chattotal = get_msgs_chat(chat_id)
 
     -- Get user info
-    for i = 1, #users do
-        if tonumber(users[i]) ~= tonumber(bot.id) then
-            local user_id = users[i]
+    for k, v in pairs(users) do
+        if tonumber(k) ~= tonumber(bot.id) then
+            local user_id = k
             local user_info = get_msgs_user_chat(user_id, chat_id)
             local percentage =(user_info.msgs * 100) / chattotal
             user_info.percentage = string.format('%d', percentage)

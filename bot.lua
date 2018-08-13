@@ -570,12 +570,13 @@ function migrate_to_supergroup(msg)
 
     -- migrate get
     local vars = redis_get_something('group:' .. old .. ':variables')
-    for name, value in pairs(vars) do
-        redis_hset_something('supergroup:' .. new .. ':variables', name, value)
-        redis_hdelsrem_something('group:' .. old .. ':variables', name)
+    for key, value in pairs(vars) do
+        redis_hset_something('supergroup:' .. new .. ':variables', key, value)
+        redis_hdelsrem_something('group:' .. old .. ':variables', key)
     end
 
     -- migrate ban
+    -- FIX THIS SHIT IT CAN CAUSE FLOOD_WAITS
     local banned = redis_get_something('banned:' .. old)
     if next(banned) then
         for i = 1, #banned do

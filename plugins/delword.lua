@@ -40,8 +40,8 @@ local function list_censorships(msg)
     if hash then
         local names = redis_get_something(hash)
         local text = langs[msg.lang].delwordList:gsub('X', msg.chat.print_name or msg.chat.title)
-        for i = 1, #names do
-            text = text .. '\n' .. names[i]
+        for k, v in pairs(names) do
+            text = text .. '\n' .. k
         end
         return text
     end
