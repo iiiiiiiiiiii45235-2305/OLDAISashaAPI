@@ -1,25 +1,25 @@
 function redis_get_something(hash)
-    if rdb[hash] then
-        return rdb[hash]
+    if rdb[tostring(hash)] then
+        return rdb[tostring(hash)]
     end
 end
 
 function redis_hget_something(hash, key)
-    if rdb[hash] then
-        if rdb[hash][key] then
-            return rdb[hash][key]
+    if rdb[tostring(hash)] then
+        if rdb[tostring(hash)][tostring(key)] then
+            return rdb[tostring(hash)][tostring(key)]
         end
     end
 end
 
 function redis_set_something(hash, value)
-    rdb[hash] = value
+    rdb[tostring(hash)] = value
     return true
 end
 
 function redis_hset_something(hash, key, value)
-    rdb[hash] = rdb[hash] or { }
-    rdb[hash][key] = value
+    rdb[tostring(hash)] = rdb[tostring(hash)] or { }
+    rdb[tostring(hash)][tostring(key)] = value
     return true
 end
 
@@ -42,43 +42,43 @@ end
 
 function redis_incr(hash, value)
     if not tonumber(value) then
-        rdb[hash] =(rdb[hash] or 0) + 1
+        rdb[tostring(hash)] =(rdb[tostring(hash)] or 0) + 1
         return true
     else
-        rdb[hash] =(rdb[hash] or 0) + tonumber(value)
+        rdb[tostring(hash)] =(rdb[tostring(hash)] or 0) + tonumber(value)
         return true
     end
     return false
 end
 
 function redis_hincr(hash, key, value)
-    rdb[hash] = rdb[hash] or { }
+    rdb[tostring(hash)] = rdb[tostring(hash)] or { }
     if not tonumber(value) then
-        rdb[hash][key] =(rdb[hash][key] or 0) + 1
+        rdb[tostring(hash)][tostring(key)] =(rdb[tostring(hash)][tostring(key)] or 0) + 1
         return true
     else
-        rdb[hash][key] =(rdb[hash][key] or 0) + tonumber(value)
+        rdb[tostring(hash)][tostring(key)] =(rdb[tostring(hash)][tostring(key)] or 0) + tonumber(value)
         return true
     end
     return false
 end
 
 function redis_del_something(hash)
-    rdb[hash] = nil
+    rdb[tostring(hash)] = nil
     return true
 end
 
 function redis_hdelsrem_something(hash, key)
-    if rdb[hash] then
-        rdb[hash][key] = nil
+    if rdb[tostring(hash)] then
+        rdb[tostring(hash)][tostring(key)] = nil
         return true
     end
     return true
 end
 
 function redis_sis_stored(hash, key)
-    if rdb[hash] then
-        if rdb[hash][key] then
+    if rdb[tostring(hash)] then
+        if rdb[tostring(hash)][tostring(key)] then
             return true
         end
     end
