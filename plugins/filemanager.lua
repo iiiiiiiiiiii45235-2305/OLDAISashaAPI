@@ -1,6 +1,6 @@
 function run(msg, matches)
     if is_sudo(msg) then
-        local path = redis:get('api:path')
+        local path = redis_get_something('api:path')
         if path then
             if msg.cb then
                 local pathString = langs[msg.lang].youAreHere .. path
@@ -36,7 +36,7 @@ function run(msg, matches)
                                 local folder = path:gsub(lastFolder, '')
                                 pathString = langs[msg.lang].youAreHere .. folder
                                 answerCallbackQuery(msg.cb_id, pathString)
-                                redis:set('api:path', folder)
+                                redis_set_something('api:path', folder)
                                 editMessageText(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                             else
                                 answerCallbackQuery(msg.cb_id, pathString)
@@ -48,7 +48,7 @@ function run(msg, matches)
                         local folder = path .. '' .. matches[3] .. '/'
                         pathString = langs[msg.lang].youAreHere .. folder
                         answerCallbackQuery(msg.cb_id, pathString)
-                        redis:set('api:path', folder)
+                        redis_set_something('api:path', folder)
                         editMessageText(msg.chat.id, msg.message_id, pathString, keyboard_filemanager(folder))
                     end
                 elseif matches[2] == 'UP' then
@@ -80,10 +80,10 @@ function run(msg, matches)
             if matches[1]:lower() == 'cd' then
                 mystat('/cd')
                 if not matches[2] then
-                    redis:set('api:path', '/')
+                    redis_set_something('api:path', '/')
                     return langs[msg.lang].backHomeFolder .. '/'
                 else
-                    redis:set('api:path', matches[2])
+                    redis_set_something('api:path', matches[2])
                     return langs[msg.lang].youAreHere .. matches[2]
                 end
             end
@@ -165,7 +165,7 @@ function run(msg, matches)
             end
             return
         else
-            redis:set('api:path', '/')
+            redis_set_something('api:path', '/')
             return langs[msg.lang].youAreHere .. '/'
         end
     else

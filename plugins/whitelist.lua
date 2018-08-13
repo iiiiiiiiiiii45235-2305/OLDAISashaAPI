@@ -110,7 +110,7 @@ local function run(msg, matches)
                 mystat('/whitelist')
                 local text = langs[msg.lang].whitelistStart:gsub('X', msg.chat.title) .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.users) do
-                    local user_info = redis:hgetall('user:' .. k)
+                    local user_info = redis_get_something('user:' .. k)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
                         text = text .. print_name .. " [" .. k .. "]\n"
@@ -193,7 +193,7 @@ local function run(msg, matches)
                 mystat('/whitelistgban')
                 local text = langs[msg.lang].whitelistGbanStart:gsub('X', msg.chat.title) .. '\n'
                 for k, v in pairs(data[tostring(msg.chat.id)].whitelist.gbanned) do
-                    local user_info = redis:hgetall('user:' .. k)
+                    local user_info = redis_get_something('user:' .. k)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
                         text = text .. print_name .. " [" .. k .. "]\n"

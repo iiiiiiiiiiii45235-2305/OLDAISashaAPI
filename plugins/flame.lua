@@ -4,8 +4,8 @@ local function flame_user(executer, target, chat_id)
     local tokick = 'tokick:' .. chat_id
     -- ignore higher or same rank
     if compare_ranks(executer, target, chat_id) then
-        redis:set(hash, 0);
-        redis:set(tokick, target);
+        redis_set_something(hash, 0);
+        redis_set_something(tokick, target);
         return langs[lang].hereIAm
     else
         return langs[lang].require_rank
@@ -54,10 +54,10 @@ local function run(msg, matches)
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
                 -- ignore higher or same rank
-                if redis:get(tokick) then
-                    if compare_ranks(msg.from.id, redis:get(tokick), msg.chat.id) then
-                        redis:del(hash)
-                        redis:del(tokick)
+                if redis_get_something(tokick) then
+                    if compare_ranks(msg.from.id, redis_get_something(tokick), msg.chat.id) then
+                        redis_del_something(hash)
+                        redis_del_something(tokick)
                         return langs[msg.lang].stopFlame
                     else
                         return langs[msg.lang].require_rank
@@ -67,8 +67,8 @@ local function run(msg, matches)
                 mystat('/flameinfo')
                 local hash = 'flame:' .. msg.chat.id
                 local tokick = 'tokick:' .. msg.chat.id
-                local hashonredis = redis:get(hash)
-                local user = redis:get(tokick)
+                local hashonredis = redis_get_something(hash)
+                local user = redis_get_something(tokick)
                 if hashonredis and user then
                     local obj_user = getChat(user)
                     if type(obj_user) == 'table' then
@@ -102,18 +102,18 @@ local function pre_process(msg)
         if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') and not msg.cb then
             local hash = 'flame:' .. msg.chat.id
             local tokick = 'tokick:' .. msg.chat.id
-            if tostring(msg.from.id) == tostring(redis:get(tokick)) then
-                redis:incr(hash)
-                local hashonredis = redis:get(hash)
+            if tostring(msg.from.id) == tostring(redis_get_something(tokick)) then
+                redis_incr_something(hash)
+                local hashonredis = redis_get_something(hash)
                 if hashonredis then
                     sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])
                     if tonumber(hashonredis) == #langs.phrases.flame then
-                        local user_id = redis:get(tokick)
+                        local user_id = redis_get_something(tokick)
                         if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(user_id)] then
                             sendMessage(msg.chat.id, kickUser(bot.id, user_id, msg.chat.id, langs[msg.lang].reasonFlame))
                         end
-                        redis:del(hash)
-                        redis:del(tokick)
+                        redis_del_something(hash)
+                        redis_del_something(tokick)
                     end
                 end
             end

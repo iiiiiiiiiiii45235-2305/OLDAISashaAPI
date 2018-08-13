@@ -6,7 +6,7 @@ local oldResponses = {
 
 local function get_variables_hash(chat_id, chat_type, global)
     if global then
-        if not redis:get(chat_id .. ':gvariables') then
+        if not redis_get_something(chat_id .. ':gvariables') then
             return 'gvariables'
         end
         return false
@@ -37,7 +37,7 @@ local function list_variables(msg, global)
     end
 
     if hash then
-        local names = redis:hkeys(hash)
+        local names = redis_get_something(hash)
         for i, word in pairs(names) do
             text = text .. '\n' .. word:gsub('_', ' ')
         end
@@ -47,10 +47,10 @@ end
 
 local function get_value(chat_id, chat_type, var_name)
     var_name = var_name:gsub(' ', '_')
-    if not redis:get(chat_id .. ':gvariables') then
+    if not redis_get_something(chat_id .. ':gvariables') then
         local hash = get_variables_hash(chat_id, chat_type, true)
         if hash then
-            local value = redis:hget(hash, var_name)
+            local value = redis_hget_something(hash, var_name)
             if value then
                 return value
             end
@@ -59,7 +59,7 @@ local function get_value(chat_id, chat_type, var_name)
 
     local hash = get_variables_hash(chat_id, chat_type, false)
     if hash then
-        local value = redis:hget(hash, var_name)
+        local value = redis_hget_something(hash, var_name)
         if value then
             return value
         end
@@ -251,7 +251,7 @@ local function set_value(chat_id, chat_type, name, value, global)
 
     local hash = set_unset_variables_hash(chat_id, chat_type, global)
     if hash then
-        redis:hset(hash, name, value)
+        redis_hset_something(hash, name, value)
         if global then
             return name .. langs[get_lang(chat_id)].gSaved
         else
@@ -267,7 +267,7 @@ local function unset_var(chat_id, chat_type, name, global)
 
     local hash = set_unset_variables_hash(chat_id, chat_type, global)
     if hash then
-        redis:hdel(hash, name:lower())
+        redis_hdelsrem_something(hash, name:lower())
         if global then
             return name:lower() .. langs[get_lang(chat_id)].gDeleted
         else
@@ -413,7 +413,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'enableglobal' then
         mystat('/enableglobal')
         if msg.from.is_owner then
-            redis:del(msg.chat.id .. ':gvariables')
+            redis_del_something(msg.chat.id .. ':gvariables')
             return langs[msg.lang].globalEnable
         else
             return langs[msg.lang].require_owner
@@ -423,7 +423,7 @@ local function run(msg, matches)
     if matches[1]:lower() == 'disableglobal' then
         mystat('/disableglobal')
         if msg.from.is_owner then
-            redis:set(msg.chat.id .. ':gvariables', true)
+            redis_set_something(msg.chat.id .. ':gvariables', true)
             return langs[msg.lang].globalDisable
         else
             return langs[msg.lang].require_owner
@@ -455,7 +455,7 @@ local function run(msg, matches)
                         if pcall( function()
                                 string.match(string.sub(matches[2]:lower(), 1, 50), string.sub(matches[2]:lower(), 1, 50))
                             end ) then
-                            redis:hset(hash, string.sub(matches[2]:lower(), 1, 50), media_type .. file_id .. caption)
+                            redis_hset_something(hash, string.sub(matches[2]:lower(), 1, 50), media_type .. file_id .. caption)
                             return langs[msg.lang].mediaSaved
                         else
                             return langs[msg.lang].errorTryAgain
@@ -529,7 +529,7 @@ end
 local function pre_process(msg)
     if msg then
         -- local
-        local vars = redis:hkeys(get_variables_hash(msg.chat.id, msg.chat.type, false))
+        local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, false))
         for i, word in pairs(vars) do
             local answer = check_word(msg, word:gsub('_', ' '):lower(), true)
             if answer then
@@ -595,7 +595,7 @@ local function pre_process(msg)
             end
         end
         -- global
-        local vars = redis:hkeys(get_variables_hash(msg.chat.id, msg.chat.type, true))
+        local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, true))
         for i, word in pairs(vars) do
             local answer = check_word(msg, word:gsub('_', ' '):lower(), true)
             if answer then

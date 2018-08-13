@@ -100,7 +100,7 @@ local function get_object_info(obj, chat_id)
             if obj.username then
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
-            local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
+            local msgs = tonumber(redis_get_something('msgs:' .. obj.id .. ':' .. chat_id) or 0)
             text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true)] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs

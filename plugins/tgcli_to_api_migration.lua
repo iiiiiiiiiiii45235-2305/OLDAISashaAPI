@@ -16,7 +16,7 @@ end
 local function cli_get_value(msg, var_name)
     var_name = var_name:gsub(' ', '_')
     if cli_get_hash(msg) then
-        local value = redis:hget(cli_get_hash(msg), var_name)
+        local value = redis_hget_something(cli_get_hash(msg), var_name)
         if value then
             return value
         end
@@ -24,7 +24,7 @@ local function cli_get_value(msg, var_name)
 end
 local function cli_list_variables(msg)
     if cli_get_hash(msg) then
-        local names = redis:hkeys(cli_get_hash(msg))
+        local names = redis_get_something(cli_get_hash(msg))
         local text = ''
         for i = 1, #names do
             text = text .. names[i]:gsub('_', ' ') .. '\n'
@@ -53,7 +53,7 @@ local function api_set_value(msg, name, value)
     end
 
     if api_get_hash(msg) then
-        redis:hset(api_get_hash(msg), name:gsub(' ', '_'), value)
+        redis_hset_something(api_get_hash(msg), name:gsub(' ', '_'), value)
         return name .. langs[msg.lang].saved
     end
 end
@@ -70,7 +70,7 @@ local function cli_list_censorships(msg)
     local hash = cli_get_censorships_hash(msg)
 
     if hash then
-        local names = redis:hkeys(hash)
+        local names = redis_get_something(hash)
         local text = ''
         for i = 1, #names do
             text = text .. names[i] .. '\n'
@@ -90,11 +90,11 @@ end
 local function api_setunset_delword(msg, var_name)
     local hash = api_get_censorships_hash(msg)
     if hash then
-        if redis:hget(hash, var_name) then
-            redis:hdel(hash, var_name)
+        if redis_hget_something(hash, var_name) then
+            redis_hdelsrem_something(hash, var_name)
             return langs[msg.lang].delwordRemoved .. var_name
         else
-            redis:hset(hash, var_name, true)
+            redis_hset_something(hash, var_name, true)
             return langs[msg.lang].delwordAdded .. var_name
         end
     end
@@ -292,7 +292,7 @@ local function run(msg, matches)
             end
 
             -- migrate ban
-            local banned = redis:smembers('banned:' .. id_to_cli(msg.chat.id))
+            local banned = redis_get_something('banned:' .. id_to_cli(msg.chat.id))
             if next(banned) then
                 for i = 1, #banned do
                     preBanUser(bot.id, banned[i], msg.chat.id)

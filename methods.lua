@@ -145,7 +145,7 @@ function sendRequest(url, no_log)
         end
 
         print(clr.red .. code, tab.description .. clr.reset)
-        redis:hincrby('bot:errors', code, 1)
+        redis_hincr('bot:errors', code, 1)
 
         local retry_after
         if code == 429 then
@@ -1609,10 +1609,10 @@ function saveUsername(obj, chat_id)
     if obj then
         if type(obj) == 'table' then
             if obj.username then
-                redis:hset('bot:usernames', '@' .. obj.username:lower(), obj.id)
+                redis_hset_something('bot:usernames', '@' .. obj.username:lower(), obj.id)
                 if obj.type ~= 'bot' and obj.type ~= 'private' and obj.type ~= 'user' then
                     if chat_id then
-                        redis:hset('bot:usernames:' .. chat_id, '@' .. obj.username:lower(), obj.id)
+                        redis_hset_something('bot:usernames:' .. chat_id, '@' .. obj.username:lower(), obj.id)
                     end
                 end
             end
@@ -1651,9 +1651,9 @@ function getChat(id_or_username, no_log)
             local hash = 'bot:usernames'
             local stored = nil
             if type(id_or_username) == 'string' then
-                stored = redis:hget(hash, id_or_username:lower())
+                stored = redis_hget_something(hash, id_or_username:lower())
             else
-                stored = redis:hget(hash, id_or_username)
+                stored = redis_hget_something(hash, id_or_username)
             end
             if stored then
                 -- check API
@@ -1856,7 +1856,7 @@ function kickUser(executer, target, chat_id, reason, no_notice)
                 globalCronTable.punishedTable[tostring(chat_id)] = globalCronTable.punishedTable[tostring(chat_id)] or { }
                 globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
                 savelog(chat_id, "[" .. executer .. "] kicked user " .. target)
-                redis:hincrby('bot:general', 'kick', 1)
+                redis_hincr('bot:general', 'kick', 1)
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
                 local obj_removed = getChat(target, true)
@@ -1892,10 +1892,10 @@ function preBanUser(executer, target, chat_id, reason)
     if compare_ranks(executer, target, chat_id, true, true) then
         -- try to kick. "code" is already specific
         savelog(chat_id, "[" .. executer .. "] banned user " .. target)
-        redis:hincrby('bot:general', 'ban', 1)
+        redis_hincr('bot:general', 'ban', 1)
         -- general: save how many kicks
         local hash = 'banned:' .. chat_id
-        redis:sadd(hash, tostring(target))
+        redis_set_something(hash, tostring(target))
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
         '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
         '\n#chat' .. tostring(chat_id):gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #preban #ban ' ..(reason or '')
@@ -1922,10 +1922,10 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
                 if not tostring(chat_id):starts('-100') then
                     local hash = 'banned:' .. chat_id
-                    redis:sadd(hash, tostring(target))
+                    redis_set_something(hash, tostring(target))
                 end
                 savelog(chat_id, "[" .. executer .. "] banned user " .. target)
-                redis:hincrby('bot:general', 'ban', 1)
+                redis_hincr('bot:general', 'ban', 1)
                 -- general: save how many kicks
                 local obj_chat = getChat(chat_id, true)
                 local obj_remover = getChat(executer, true)
@@ -1973,7 +1973,7 @@ function unbanUser(executer, target, chat_id, reason, no_notice)
         savelog(chat_id, "[" .. target .. "] unbanned")
         -- remove from the local banlist
         local hash = 'banned:' .. chat_id
-        redis:srem(hash, tostring(target))
+        redis_hdelsrem_something(hash, tostring(target))
         if getChat(target, true) then
             local res, code = unbanChatMember(target, chat_id)
         end
@@ -1999,17 +1999,17 @@ function isBanned(user_id, chat_id)
     user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'banned:' .. chat_id
-    local banned = redis:sismember(hash, tostring(user_id))
+    local banned = redis_sis_stored(hash, tostring(user_id))
     return banned or false
 end
 
 -- Returns chat_id ban list
 function banList(chat_id)
     local hash = 'banned:' .. chat_id
-    local list = redis:smembers(hash)
+    local list = redis_get_something(hash)
     local text = langs[get_lang(chat_id)].banListStart
     for k, v in pairs(list) do
-        local user_info = redis:hgetall('user:' .. v)
+        local user_info = redis_get_something('user:' .. v)
         if user_info and user_info.print_name then
             local print_name = string.gsub(user_info.print_name, "_", " ")
             local print_name = string.gsub(print_name, "?", "")
@@ -2035,7 +2035,7 @@ function gbanUser(user_id, no_log, no_notice)
     end
     -- Save to redis
     local hash = 'gbanned'
-    redis:sadd(hash, user_id)
+    redis_set_something(hash, user_id)
     if not no_log then
         sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
     end
@@ -2051,7 +2051,7 @@ function ungbanUser(user_id, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'gbanned'
-    redis:srem(hash, user_id)
+    redis_hdelsrem_something(hash, user_id)
     if not no_notice then
         sendMessage(user_id, langs[lang].youHaveBeenUngbanned)
     end
@@ -2063,7 +2063,7 @@ function isGbanned(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     -- Save on redis
     local hash = 'gbanned'
-    local gbanned = redis:sismember(hash, user_id)
+    local gbanned = redis_sis_stored(hash, user_id)
     return gbanned or false
 end
 
@@ -2071,7 +2071,7 @@ function blockUser(user_id, no_notice)
     local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     if not is_admin2(user_id) then
-        redis:sadd('bot:blocked', user_id)
+        redis_set_something('bot:blocked', user_id)
         if not no_notice then
             sendMessage(user_id, langs[lang].youHaveBeenBlocked)
         end
@@ -2084,7 +2084,7 @@ end
 function unblockUser(user_id, no_notice)
     local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
-    redis:srem('bot:blocked', user_id)
+    redis_hdelsrem_something('bot:blocked', user_id)
     if not no_notice then
         sendMessage(user_id, langs[lang].youHaveBeenUnblocked)
     end
@@ -2093,7 +2093,7 @@ end
 
 function isBlocked(user_id)
     user_id = tostring(user_id):gsub(' ', '')
-    if redis:sismember('bot:blocked', user_id) then
+    if redis_sis_stored('bot:blocked', user_id) then
         return true
     else
         return false
@@ -2157,7 +2157,7 @@ end
 function getUserWarns(user_id, chat_id)
     user_id = tostring(user_id):gsub(' ', '')
     local lang = get_lang(chat_id)
-    local hashonredis = redis:get(chat_id .. ':warn:' .. user_id) or 0
+    local hashonredis = redis_get_something(chat_id .. ':warn:' .. user_id) or 0
     local warn_msg = langs[lang].yourWarnings
     local warn_chat = data[tostring(chat_id)].settings.max_warns or 0
     return string.gsub(string.gsub(warn_msg, 'Y', warn_chat), 'X', tostring(hashonredis))
@@ -2171,16 +2171,16 @@ function warnUser(executer, target, chat_id, reason, no_notice)
     end
     if compare_ranks(executer, target, chat_id) then
         local warn_chat = tonumber(data[tostring(chat_id)].settings.max_warns or 0)
-        redis:incr(chat_id .. ':warn:' .. target)
-        local hashonredis = redis:get(chat_id .. ':warn:' .. target)
+        redis_incr_something(chat_id .. ':warn:' .. target)
+        local hashonredis = redis_get_something(chat_id .. ':warn:' .. target)
         if not hashonredis then
-            redis:set(chat_id .. ':warn:' .. target, 1)
+            redis_set_something(chat_id .. ':warn:' .. target, 1)
             hashonredis = 1
         end
         savelog(chat_id, "[" .. executer .. "] warned user " .. target .. " Y")
         if tonumber(warn_chat) > 0 then
             if tonumber(hashonredis) >= tonumber(warn_chat) then
-                redis:getset(chat_id .. ':warn:' .. target, 0)
+                redis_get_set_something(chat_id .. ':warn:' .. target, 0)
                 return punishmentAction(executer, target, chat_id, data[tostring(chat_id)].settings.warns_punishment, reason .. '\n' .. langs[lang].reasonWarnMax)
             end
             if arePMNoticesEnabled(target, chat_id) and not no_notice then
@@ -2207,13 +2207,13 @@ function unwarnUser(executer, target, chat_id, reason, no_notice)
     target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        local warns = redis:get(chat_id .. ':warn:' .. target) or 0
+        local warns = redis_get_something(chat_id .. ':warn:' .. target) or 0
         savelog(chat_id, "[" .. executer .. "] unwarned user " .. target .. " Y")
         if tonumber(warns) <= 0 then
-            redis:set(chat_id .. ':warn:' .. target, 0)
+            redis_set_something(chat_id .. ':warn:' .. target, 0)
             return langs[lang].user .. target .. ' ' .. langs[lang].alreadyZeroWarnings
         else
-            redis:set(chat_id .. ':warn:' .. target, warns - 1)
+            redis_set_something(chat_id .. ':warn:' .. target, warns - 1)
             if arePMNoticesEnabled(target, chat_id) and not no_notice then
                 local text = langs[get_lang(target)].youHaveBeenUnwarned .. database[tostring(chat_id)].print_name
                 if reason then
@@ -2236,7 +2236,7 @@ function unwarnallUser(executer, target, chat_id, reason, no_notice)
     target = tostring(target):gsub(' ', '')
     local lang = get_lang(chat_id)
     if compare_ranks(executer, target, chat_id) then
-        redis:set(chat_id .. ':warn:' .. target, 0)
+        redis_set_something(chat_id .. ':warn:' .. target, 0)
         savelog(chat_id, "[" .. executer .. "] unwarnedall user " .. target .. " Y")
         if arePMNoticesEnabled(target, chat_id) and not no_notice then
             local text = langs[get_lang(target)].youHaveBeenUnwarnedall .. database[tostring(chat_id)].print_name
@@ -2454,7 +2454,7 @@ end
 function muteUser(chat_id, user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
-    redis:sadd(hash, user_id)
+    redis_set_something(hash, user_id)
     if arePMNoticesEnabled(user_id, chat_id) and not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenMuted .. database[tostring(chat_id)].print_name)
     end
@@ -2464,14 +2464,14 @@ end
 function isMutedUser(chat_id, user_id)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
-    local muted = redis:sismember(hash, user_id)
+    local muted = redis_sis_stored(hash, user_id)
     return muted or false
 end
 
 function unmuteUser(chat_id, user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
-    redis:srem(hash, user_id)
+    redis_hdelsrem_something(hash, user_id)
     if arePMNoticesEnabled(user_id, chat_id) and not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenUnmuted .. database[tostring(chat_id)].print_name)
     end
@@ -2482,10 +2482,10 @@ end
 function mutedUserList(chat_id)
     local lang = get_lang(chat_id)
     local hash = 'mute_user:' .. chat_id
-    local list = redis:smembers(hash)
+    local list = redis_get_something(hash)
     local text = langs[lang].mutedUsersStart .. chat_id .. "\n\n"
     for k, v in pairsByKeys(list) do
-        local user_info = redis:hgetall('user:' .. v)
+        local user_info = redis_get_something('user:' .. v)
         if user_info and user_info.print_name then
             local print_name = string.gsub(user_info.print_name, "_", " ")
             local print_name = string.gsub(print_name, "?", "")
@@ -2515,7 +2515,7 @@ end
         return obj
     else
         local hash = 'bot:usernames'
-        local stored = redis:hget(hash, username)
+        local stored = redis_hget_something(hash, username)
         if stored then
             local obj = getChat(stored)
             if obj.result then

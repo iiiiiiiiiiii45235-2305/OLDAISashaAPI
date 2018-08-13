@@ -124,7 +124,7 @@ function string:starts(text)
 end
 
 function mystat(cmd)
-    redis:hincrby('commands:stats', cmd, 1)
+    redis_hincr('commands:stats', cmd, 1)
 end
 
 function printvardump(value)
@@ -599,9 +599,9 @@ function get_lang(chat_id)
             return 'en'
         end
     else
-        local lang = redis:get('lang:' .. chat_id)
+        local lang = redis_get_something('lang:' .. chat_id)
         if not lang then
-            redis:set('lang:' .. chat_id, 'en')
+            redis_set_something('lang:' .. chat_id, 'en')
             lang = 'en'
         end
         return lang
@@ -910,13 +910,13 @@ end
 function check_chat_msgs(chat_id)
     -- Chat bot msgs in 60 seconds
     local hash = 'bot:' .. chat_id .. ':msgs'
-    return tonumber(redis:get(hash) or 0)
+    return tonumber(redis_get_something(hash) or 0)
 end
 
 function check_total_msgs()
     -- Total bot msgs in 1 second
     local hash = 'bot:msgs'
-    return tonumber(redis:get(hash) or 0)
+    return tonumber(redis_get_something(hash) or 0)
 end
 
 function msgs_plus_plus(chat_id)
@@ -924,8 +924,8 @@ function msgs_plus_plus(chat_id)
     local chat_hash = 'bot:' .. chat_id .. ':msgs'
     -- Total bot msgs in 1 second
     local hash = 'bot:msgs'
-    local chat_msgs = tonumber(redis:get(chat_hash) or 0)
-    local tot_msgs = tonumber(redis:get(hash) or 0)
+    local chat_msgs = tonumber(redis_get_something(chat_hash) or 0)
+    local tot_msgs = tonumber(redis_get_something(hash) or 0)
     redis:setex(chat_hash, 60, chat_msgs + 1)
     redis:setex(hash, 1, tot_msgs + 1)
 end
@@ -935,7 +935,7 @@ function arePMNoticesEnabled(user_id, chat_id)
         return true
     end
     local pm = false
-    if redis:get('notice:' .. user_id) and sendChatAction(user_id, 'typing', true) then
+    if redis_get_something('notice:' .. user_id) and sendChatAction(user_id, 'typing', true) then
         pm = true
     end
     if data[tostring(chat_id)] then

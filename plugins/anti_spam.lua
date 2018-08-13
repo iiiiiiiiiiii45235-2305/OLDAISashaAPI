@@ -43,23 +43,23 @@ local function pre_process(msg)
 
         -- Save chat's total messages
         local totalhash = 'chatmsgs:' .. msg.chat.id
-        if not redis:get(totalhash) then
-            redis:set(totalhash, 0)
+        if not redis_get_something(totalhash) then
+            redis_set_something(totalhash, 0)
         end
-        redis:incr(totalhash)
+        redis_incr(totalhash)
 
         -- Save user on Redis
         if msg.from.type == 'user' then
             local savehash = 'user:' .. msg.from.id
             print('Saving user', savehash)
             if msg.from.print_name then
-                redis:hset(savehash, 'print_name', msg.from.print_name)
+                redis_hset_something(savehash, 'print_name', msg.from.print_name)
             end
             if msg.from.first_name then
-                redis:hset(savehash, 'first_name', msg.from.first_name)
+                redis_hset_something(savehash, 'first_name', msg.from.first_name)
             end
             if msg.from.last_name then
-                redis:hset(savehash, 'last_name', msg.from.last_name)
+                redis_hset_something(savehash, 'last_name', msg.from.last_name)
             end
         end
 
@@ -68,7 +68,7 @@ local function pre_process(msg)
         if msg.chat.type == 'private' then
             statshash = 'chat:' .. msg.from.id
         end
-        redis:sadd(statshash, msg.from.id)
+        redis_set_something(statshash, msg.from.id)
 
         -- Total user msgs in TIME_CHECK seconds
         local userhash = 'api:user:' .. msg.from.id .. ':msgs'
@@ -88,7 +88,7 @@ local function pre_process(msg)
         else
             -- Total user msgs in that chat excluding keyboard interactions
             local msgshash = 'msgs:' .. msg.from.id .. ':' .. msg.chat.id
-            redis:incr(msgshash)
+            redis_incr(msgshash)
         end
 
         -- Ignore edited messages
@@ -155,9 +155,9 @@ local function pre_process(msg)
                 end
                 -- incr it on redis
                 local gbanspam = 'gban:spam' .. msg.from.id
-                redis:incr(gbanspam)
+                redis_incr(gbanspam)
                 local gbanspam = 'gban:spam' .. msg.from.id
-                local gbanspamonredis = redis:get(gbanspam)
+                local gbanspamonredis = redis_get_something(gbanspam)
                 -- Check if user has spammed is group more than 4 times
                 if gbanspamonredis then
                     if tonumber(gbanspamonredis) == 4 and not msg.from.is_owner then
@@ -165,7 +165,7 @@ local function pre_process(msg)
                         gbanUser(msg.from.id)
                         local gbanspam = 'gban:spam' .. msg.from.id
                         -- reset the counter
-                        redis:set(gbanspam, 0)
+                        redis_set_something(gbanspam, 0)
                         -- Send this to that chat
                         local text = langs[msg.lang].user .. " [ " .. profileLink(msg.from.id, msg.from.print_name) .. " ] ( @" .. username .. " ) " .. msg.from.id
                         sendMessage(msg.chat.id, text .. langs[msg.lang].gbanned .. " (SPAM)", 'html')

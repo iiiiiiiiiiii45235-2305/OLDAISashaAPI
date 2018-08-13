@@ -461,19 +461,19 @@ local function pre_process(msg)
                 if msg.chat.type == 'supergroup' then
                     hash = 'channel:welcome' .. msg.chat.id
                 end
-                redis:incr(hash)
-                local hashonredis = redis:get(hash)
+                redis_incr_something(hash)
+                local hashonredis = redis_get_something(hash)
                 if hashonredis then
                     if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then
                         local tmp = oldResponses.lastWelcome[tostring(msg.chat.id)]
                         oldResponses.lastWelcome[tostring(msg.chat.id)] = getMessageId(sendWelcome(msg.chat, msg.added, msg.message_id))
-                        redis:getset(hash, 0)
+                        redis_get_set_something(hash, 0)
                         if tmp then
                             deleteMessage(msg.chat.id, tmp, true)
                         end
                     end
                 else
-                    redis:set(hash, 0)
+                    redis_set_something(hash, 0)
                 end
             end
             if (msg.service_type == "chat_del_user" or msg.service_type == "chat_del_user_leave") and get_goodbye(msg.chat.id) then

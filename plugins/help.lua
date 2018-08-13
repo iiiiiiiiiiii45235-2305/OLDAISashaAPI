@@ -212,7 +212,7 @@ local function run(msg, matches)
                 if v.username then
                     text = text .. langs[lang].username .. '@' .. v.username
                 end
-                local msgs = tonumber(redis:get('msgs:' .. v.id .. ':' .. msg.chat.id) or 0)
+                local msgs = tonumber(redis_get_something('msgs:' .. v.id .. ':' .. msg.chat.id) or 0)
                 text = text .. langs[lang].date .. os.date('%c') ..
                 langs[lang].totalMessages .. msgs
             else

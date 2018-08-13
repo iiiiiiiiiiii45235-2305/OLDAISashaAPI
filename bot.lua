@@ -101,6 +101,7 @@ function create_config()
         moderation = { data = 'data/moderation.json' },
         likecounter = { db = 'data/likecounterdb.json' },
         database = { db = 'data/database.json' },
+        rdb = { db = 'data/rdb.json' },
         about_text = "AISashaAPI by @EricSolinas based on @GroupButler_bot and @TeleSeed supergroup branch with something taken from @DBTeam.\nThanks guys.",
         log_chat = - 1001043389864,
         vardump_chat = - 167065200,
@@ -210,6 +211,7 @@ function bot_init()
     bot = nil
     plugins = { }
     database = nil
+    rdb = nil
     data = nil
     alternatives = { }
 
@@ -230,6 +232,7 @@ function bot_init()
     loadfile("./methods.lua")()
     loadfile("./ranks.lua")()
     loadfile("./keyboards.lua")()
+    loadfile("./libs/myRedis.lua")()
 
     while not bot do
         -- Get bot info and retry if unable to connect.
@@ -252,6 +255,9 @@ function bot_init()
     print(clr.white .. 'Loading database.json' .. clr.reset)
     database = load_data(config.database.db)
 
+    print(clr.white .. 'Loading rdb.json' .. clr.reset)
+    rdb = load_data(config.rdb.db)
+
     print(clr.white .. 'Loading moderation.json' .. clr.reset)
     data = load_data(config.moderation.data)
 
@@ -263,7 +269,7 @@ function bot_init()
     end
 
     print('\n' .. clr.green .. 'BOT RUNNING:\n@' .. bot.username .. '\n' .. bot.first_name .. '\n' .. bot.id .. clr.reset)
-    redis:hincrby('bot:general', 'starts', 1)
+    redis_hincr('bot:general', 'starts', 1)
     sendMessage_SUDOERS(string.gsub(string.gsub(langs['en'].botStarted, 'Y', tot_plugins), 'X', os.date('On %A, %d %B %Y\nAt %X')), 'markdown')
 
     -- Generate a random seed and "pop" the first random number. :)
@@ -280,28 +286,28 @@ function bot_init()
 end
 
 function update_redis_cron()
-    if redis:get('api:last_redis_cron') then
-        if redis:get('api:last_redis_cron') ~= os.date('%M') then
+    if redis_get_something('api:last_redis_cron') then
+        if redis_get_something('api:last_redis_cron') ~= os.date('%M') then
             local value = os.date('%M')
-            redis:set('api:last_redis_cron', value)
+            redis_set_something('api:last_redis_cron', value)
         end
-        last_redis_cron = redis:get('api:last_redis_cron')
+        last_redis_cron = redis_get_something('api:last_redis_cron')
     else
         local value = os.date('%M')
-        redis:set('api:last_redis_cron', value)
-        last_redis_cron = redis:get('api:last_redis_cron')
+        redis_set_something('api:last_redis_cron', value)
+        last_redis_cron = redis_get_something('api:last_redis_cron')
     end
 
-    if redis:get('api:last_redis_administrator_cron') then
-        if redis:get('api:last_redis_administrator_cron') ~= os.date('%d') then
+    if redis_get_something('api:last_redis_administrator_cron') then
+        if redis_get_something('api:last_redis_administrator_cron') ~= os.date('%d') then
             local value = os.date('%d')
-            redis:set('api:last_redis_administrator_cron', value)
+            redis_set_something('api:last_redis_administrator_cron', value)
         end
-        last_redis_administrator_cron = redis:get('api:last_redis_administrator_cron')
+        last_redis_administrator_cron = redis_get_something('api:last_redis_administrator_cron')
     else
         local value = os.date('%d')
-        redis:set('api:last_redis_administrator_cron', value)
-        last_redis_administrator_cron = redis:get('api:last_redis_administrator_cron')
+        redis_set_something('api:last_redis_administrator_cron', value)
+        last_redis_administrator_cron = redis_get_something('api:last_redis_administrator_cron')
     end
 end
 
@@ -401,7 +407,7 @@ end
 
 local function collect_stats(msg)
     -- count the number of messages
-    redis:hincrby('bot:general', 'messages', 1)
+    redis_hincr('bot:general', 'messages', 1)
 
     -- for resolve username
     saveUsername(msg.from, msg.chat.id)
@@ -422,28 +428,28 @@ local function collect_stats(msg)
     if not(msg.chat.type == 'private') then
         -- user in the group stats
         if msg.from.id then
-            redis:hset('chat:' .. msg.chat.id .. ':userlast', msg.from.id, os.time())
+            redis_hset_something('chat:' .. msg.chat.id .. ':userlast', msg.from.id, os.time())
             -- last message for each user
-            redis:hincrby('chat:' .. msg.chat.id .. ':userstats', msg.from.id, 1)
+            redis_hincr('chat:' .. msg.chat.id .. ':userstats', msg.from.id, 1)
             -- number of messages for each user
             if msg.media then
-                redis:hincrby('chat:' .. msg.chat.id .. ':usermedia', msg.from.id, 1)
+                redis_hincr('chat:' .. msg.chat.id .. ':usermedia', msg.from.id, 1)
             end
         end
-        redis:incrby('chat:' .. msg.chat.id .. ':totalmsgs', 1)
+        redis_incr('chat:' .. msg.chat.id .. ':totalmsgs', 1)
         -- total number of messages of the group
     end
 
     -- user stats
     if msg.from then
-        redis:hincrby('user:' .. msg.from.id, 'msgs', 1)
+        redis_hincr('user:' .. msg.from.id, 'msgs', 1)
         if msg.media then
-            redis:hincrby('user:' .. msg.from.id, 'media', 1)
+            redis_hincr('user:' .. msg.from.id, 'media', 1)
         end
     end
 
     if msg.cb and msg.from and msg.chat then
-        redis:hincrby('chat:' .. msg.chat.id .. ':cb', msg.from.id, 1)
+        redis_hincr('chat:' .. msg.chat.id .. ':cb', msg.from.id, 1)
     end
 end
 
@@ -562,14 +568,14 @@ function migrate_to_supergroup(msg)
     save_data(config.moderation.data, data)
 
     -- migrate get
-    local vars = redis:hgetall('group:' .. old .. ':variables')
+    local vars = redis_get_something('group:' .. old .. ':variables')
     for name, value in pairs(vars) do
-        redis:hset('supergroup:' .. new .. ':variables', name, value)
-        redis:hdel('group:' .. old .. ':variables', name)
+        redis_hset_something('supergroup:' .. new .. ':variables', name, value)
+        redis_hdelsrem_something('group:' .. old .. ':variables', name)
     end
 
     -- migrate ban
-    local banned = redis:smembers('banned:' .. old)
+    local banned = redis_get_something('banned:' .. old)
     if next(banned) then
         for i = 1, #banned do
             banUser(bot.id, banned[i], new)
@@ -1013,6 +1019,7 @@ end
 function cron_administrator()
     if last_administrator_cron ~= last_redis_administrator_cron then
         -- save database
+        save_data(config.rdb.db, rdb, true)
         save_data(config.database.db, database, true)
         io.popen('lua timework.lua "backup" "0"')
         -- deletes all files in tmp folders

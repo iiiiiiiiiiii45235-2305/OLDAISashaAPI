@@ -32,7 +32,7 @@ end
 local function get_name(user_id)
     local user_info = { }
     local uhash = 'user:' .. user_id
-    local user = redis:hgetall(uhash)
+    local user = redis_get_something(uhash)
     user_info.name = user.print_name or database[tostring(user_id)].print_name or ''
     return user_info
 end

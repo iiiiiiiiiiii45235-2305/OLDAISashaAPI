@@ -49,12 +49,12 @@ local function run(msg, matches)
                 editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].markedAsRead)
             end
         elseif matches[2] == 'REGISTER' then
-            if not redis:hget('tagalert:usernames', msg.from.id) then
+            if not redis_hget_something('tagalert:usernames', msg.from.id) then
                 answerCallbackQuery(msg.cb_id, langs[msg.lang].tagalertRegistered, true)
                 if msg.from.username then
-                    redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+                    redis_hset_something('tagalert:usernames', msg.from.id, msg.from.username:lower())
                 else
-                    redis:hset('tagalert:usernames', msg.from.id, true)
+                    redis_hset_something('tagalert:usernames', msg.from.id, true)
                 end
                 mystat(matches[1] .. matches[2] .. msg.from.id)
             else
@@ -182,9 +182,9 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'registernotices' then
         if msg.chat.type == 'private' then
-            if not redis:get('notice:' .. msg.from.id) then
+            if not redis_get_something('notice:' .. msg.from.id) then
                 mystat('/registernotices')
-                redis:set('notice:' .. msg.from.id, 1)
+                redis_set_something('notice:' .. msg.from.id, 1)
                 return langs[msg.lang].pmnoticesRegistered
             else
                 return langs[msg.lang].pmnoticesAlreadyRegistered
@@ -196,9 +196,9 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'unregisternotices' then
         if msg.chat.type == 'private' then
-            if redis:get('notice:' .. msg.from.id) then
+            if redis_get_something('notice:' .. msg.from.id) then
                 mystat('/unregisternotices')
-                redis:del('notice:' .. msg.from.id)
+                redis_del_something('notice:' .. msg.from.id)
                 return langs[msg.lang].pmnoticesUnregistered
             else
                 return langs[msg.lang].pmnoticesAlreadyUnregistered
@@ -238,12 +238,12 @@ local function run(msg, matches)
 
     if matches[1]:lower() == 'registertagalert' then
         if msg.chat.type == 'private' then
-            if not redis:hget('tagalert:usernames', msg.from.id) then
+            if not redis_hget_something('tagalert:usernames', msg.from.id) then
                 mystat('/registertagalert')
                 if msg.from.username then
-                    redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+                    redis_hset_something('tagalert:usernames', msg.from.id, msg.from.username:lower())
                 else
-                    redis:hset('tagalert:usernames', msg.from.id, true)
+                    redis_hset_something('tagalert:usernames', msg.from.id, true)
                 end
                 return langs[msg.lang].tagalertRegistered
             else
@@ -255,10 +255,10 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'unregistertagalert' then
-        if redis:hget('tagalert:usernames', msg.from.id) then
+        if redis_hget_something('tagalert:usernames', msg.from.id) then
             mystat('/unregistertagalert')
-            redis:hdel('tagalert:usernames', msg.from.id)
-            redis:hdel('tagalert:nicknames', msg.from.id)
+            redis_hdelsrem_something('tagalert:usernames', msg.from.id)
+            redis_hdelsrem_something('tagalert:nicknames', msg.from.id)
             return langs[msg.lang].tagalertUnregistered
         else
             return langs[msg.lang].tagalertAlreadyUnregistered
@@ -266,10 +266,10 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'setnickname' and matches[2] then
-        if redis:hget('tagalert:usernames', msg.from.id) then
+        if redis_hget_something('tagalert:usernames', msg.from.id) then
             if string.len(matches[2]) >= 3 and matches[2]:match('%w+') then
                 mystat('/setnickname')
-                redis:hset('tagalert:nicknames', msg.from.id, matches[2]:lower())
+                redis_hset_something('tagalert:nicknames', msg.from.id, matches[2]:lower())
                 return langs[msg.lang].tagalertNicknameSet
             else
                 return langs[msg.lang].tagalertNicknameTooShort
@@ -280,9 +280,9 @@ local function run(msg, matches)
     end
 
     if matches[1]:lower() == 'unsetnickname' then
-        if redis:hget('tagalert:usernames', msg.from.id) then
+        if redis_hget_something('tagalert:usernames', msg.from.id) then
             mystat('/unsetnickname')
-            redis:hdel('tagalert:nicknames', msg.from.id)
+            redis_hdelsrem_something('tagalert:nicknames', msg.from.id)
             return langs[msg.lang].tagalertNicknameUnset
         else
             return langs[msg.lang].tagalertRegistrationNeeded
@@ -378,13 +378,13 @@ local function pre_process(msg)
     if msg then
         notified = { }
         -- update usernames
-        if redis:hget('tagalert:usernames', msg.from.id) then
+        if redis_hget_something('tagalert:usernames', msg.from.id) then
             if msg.from.username then
-                if redis:hget('tagalert:usernames', msg.from.id) ~= msg.from.username:lower() then
-                    redis:hset('tagalert:usernames', msg.from.id, msg.from.username:lower())
+                if redis_hget_something('tagalert:usernames', msg.from.id) ~= msg.from.username:lower() then
+                    redis_hset_something('tagalert:usernames', msg.from.id, msg.from.username:lower())
                 end
             else
-                redis:hset('tagalert:usernames', msg.from.id, true)
+                redis_hset_something('tagalert:usernames', msg.from.id, true)
             end
         end
         if data[tostring(msg.chat.id)] then
@@ -407,13 +407,13 @@ local function pre_process(msg)
             end
             if data[tostring(msg.chat.id)].settings.tagalert then
                 -- if group is enabled to tagalert notifications then
-                local usernames = redis:hkeys('tagalert:usernames')
+                local usernames = redis_get_something('tagalert:usernames')
                 for i = 1, #usernames do
                     if not notified[tostring(usernames[i])] then
                         -- exclude already notified
                         if tonumber(msg.from.id) ~= tonumber(usernames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(usernames[i]) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            local usr = redis:hget('tagalert:usernames', usernames[i])
+                            local usr = redis_hget_something('tagalert:usernames', usernames[i])
                             if usr == 'true' then
                                 usr = nil
                             end
@@ -432,13 +432,13 @@ local function pre_process(msg)
                         end
                     end
                 end
-                local nicknames = redis:hkeys('tagalert:nicknames')
+                local nicknames = redis_get_something('tagalert:nicknames')
                 for i = 1, #nicknames do
                     if not notified[tostring(nicknames[i])] then
                         -- exclude already notified
                         if tonumber(msg.from.id) ~= tonumber(nicknames[i]) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(nicknames[i]) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            if check_tag(msg, nicknames[i], redis:hget('tagalert:nicknames', nicknames[i])) then
+                            if check_tag(msg, nicknames[i], redis_hget_something('tagalert:nicknames', nicknames[i])) then
                                 print('nickname', nicknames[i])
                                 if not msg.command then
                                     -- set user as notified to not send multiple notifications

@@ -16,18 +16,18 @@ end
 local function setunset_delword(msg, var_name, time)
     local hash = get_censorships_hash(msg)
     if hash then
-        if redis:hget(hash, var_name) then
-            redis:hdel(hash, var_name)
+        if redis_hget_something(hash, var_name) then
+            redis_hdelsrem_something(hash, var_name)
             return langs[msg.lang].delwordRemoved .. var_name
         else
             if time then
                 if tonumber(time) == 0 then
-                    redis:hset(hash, var_name, true)
+                    redis_hset_something(hash, var_name, true)
                 else
-                    redis:hset(hash, var_name, time)
+                    redis_hset_something(hash, var_name, time)
                 end
             else
-                redis:hset(hash, var_name, true)
+                redis_hset_something(hash, var_name, true)
             end
             return langs[msg.lang].delwordAdded .. var_name
         end
@@ -38,7 +38,7 @@ local function list_censorships(msg)
     local hash = get_censorships_hash(msg)
 
     if hash then
-        local names = redis:hkeys(hash)
+        local names = redis_get_something(hash)
         local text = langs[msg.lang].delwordList:gsub('X', msg.chat.print_name or msg.chat.title)
         for i = 1, #names do
             text = text .. '\n' .. names[i]
@@ -100,7 +100,7 @@ local function pre_process(msg)
                         end
                         if found then
                             local hash = get_censorships_hash(msg)
-                            local time = redis:hget(hash, temp)
+                            local time = redis_hget_something(hash, temp)
                             local text = ''
                             if time == 'true' or time == '0' then
                                 local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)))

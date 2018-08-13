@@ -2,9 +2,9 @@
 local function get_msgs_user_chat(user_id, chat_id)
     local user_info = { }
     local uhash = 'user:' .. user_id
-    local user = redis:hgetall(uhash)
+    local user = redis_get_something(uhash)
     local um_hash = 'msgs:' .. user_id .. ':' .. chat_id
-    user_info.msgs = tonumber(redis:get(um_hash) or 0)
+    user_info.msgs = tonumber(redis_get_something(um_hash) or 0)
     user_info.name =(user.print_name or '') .. ' [' .. user_id .. ']'
     user_info.id = user_id
     return user_info
@@ -13,7 +13,7 @@ end
 -- Returns chat's total messages
 local function get_msgs_chat(chat_id)
     local hash = 'chatmsgs:' .. chat_id
-    local msgs = redis:get(hash)
+    local msgs = redis_get_something(hash)
     if not msgs then
         return 0
     end
@@ -22,22 +22,22 @@ end
 
 local function clean_chat_stats(chat_id)
     local hash = 'chat:' .. chat_id .. ':users'
-    local users = redis:smembers(hash)
+    local users = redis_get_something(hash)
 
     for i = 1, #users do
         local user_id = users[i]
-        redis:set('msgs:' .. user_id .. ':' .. chat_id, 0)
+        redis_set_something('msgs:' .. user_id .. ':' .. chat_id, 0)
     end
 
     local hash = 'chatmsgs:' .. chat_id
-    redis:set(hash, 0)
+    redis_set_something(hash, 0)
 end
 
 local function real_chat_stats(chat_id)
     local lang = get_lang(chat_id)
     local chattotal = 0
     local hash = 'chat:' .. chat_id .. ':users'
-    local users = redis:smembers(hash)
+    local users = redis_get_something(hash)
     local users_info = { }
     local participants = getChatParticipants(chat_id)
 
@@ -45,7 +45,7 @@ local function real_chat_stats(chat_id)
     for k, v in pairs(participants) do
         if v.user then
             v = v.user
-            chattotal = chattotal + tonumber(redis:get('msgs:' .. v.id .. ':' .. chat_id) or 0)
+            chattotal = chattotal + tonumber(redis_get_something('msgs:' .. v.id .. ':' .. chat_id) or 0)
         end
     end
 
@@ -82,7 +82,7 @@ end
 local function chat_stats(chat_id, lang)
     -- Users on chat
     local hash = 'chat:' .. chat_id .. ':users'
-    local users = redis:smembers(hash)
+    local users = redis_get_something(hash)
     local users_info = { }
 
     -- Get total messages
@@ -119,7 +119,7 @@ end
 local function chat_stats2(chat_id, lang)
     -- Users on chat
     local hash = 'chat:' .. chat_id .. ':users'
-    local users = redis:smembers(hash)
+    local users = redis_get_something(hash)
     local users_info = { }
 
     -- Get total messages

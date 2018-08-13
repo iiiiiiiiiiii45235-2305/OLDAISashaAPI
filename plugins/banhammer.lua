@@ -14,9 +14,9 @@ local cronTable = {
 local function user_msgs(user_id, chat_id)
     local user_info
     local uhash = 'user:' .. user_id
-    local user = redis:hgetall(uhash)
+    local user = redis_get_something(uhash)
     local um_hash = 'msgs:' .. user_id .. ':' .. chat_id
-    user_info = tonumber(redis:get(um_hash) or 0)
+    user_info = tonumber(redis_get_something(um_hash) or 0)
     return user_info
 end
 
@@ -1575,7 +1575,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'countbanlist' and not matches[2] then
                 if msg.from.is_mod then
                     mystat('/countbanlist')
-                    local list = redis:smembers('banned:' .. msg.chat.id)
+                    local list = redis_get_something('banned:' .. msg.chat.id)
                     return #list
                 else
                     return langs[msg.lang].require_mod
@@ -2105,7 +2105,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'countbanlist' and matches[2] then
             if is_admin(msg) then
                 mystat('/countbanlist <group_id>')
-                local list = redis:smembers('banned:' .. matches[2])
+                local list = redis_get_something('banned:' .. matches[2])
                 return #list
             else
                 return langs[msg.lang].require_admin
@@ -2115,10 +2115,10 @@ local function run(msg, matches)
             if is_admin(msg) then
                 mystat('/gbanlist')
                 local hash = 'gbanned'
-                local list = redis:smembers(hash)
+                local list = redis_get_something(hash)
                 local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
                 for k, v in pairs(list) do
-                    local user_info = redis:hgetall('user:' .. v)
+                    local user_info = redis_get_something('user:' .. v)
                     if user_info and user_info.print_name then
                         local print_name = string.gsub(user_info.print_name, "_", " ")
                         local print_name = string.gsub(print_name, "?", "")
@@ -2135,7 +2135,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'countgbanlist' then
             if is_admin(msg) then
                 mystat('/countgbanlist')
-                local list = redis:smembers('gbanned')
+                local list = redis_get_something('gbanned')
                 return #list
             else
                 return langs[msg.lang].require_admin
@@ -2178,7 +2178,7 @@ local function pre_process(msg)
                                 local txt = punishmentAction(bot.id, v.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.gbanned, langs[msg.lang].reasonGbannedUser)
                                 if txt ~= '' then
                                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                                    redis:incr(banhash)
+                                    redis_incr_something(banhash)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a [g]banned user > " .. v.id)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. v.id .. "] is gbanned! punishment = " .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
                                     text = text .. txt
@@ -2187,7 +2187,7 @@ local function pre_process(msg)
                                 -- if banned and not mod and not yet punished for something
                                 print('User is banned!')
                                 local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                                redis:incr(banhash)
+                                redis_incr_something(banhash)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user > " .. v.id)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. v.id .. "] is banned!")
                                 text = text .. banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonBannedUser)
@@ -2195,13 +2195,13 @@ local function pre_process(msg)
                         end
                     end
                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                    local banaddredis = redis:get(banhash)
+                    local banaddredis = redis_get_something(banhash)
                     if banaddredis and not msg.from.is_owner then
                         if tonumber(banaddredis) >= 8 then
                             text = text .. banUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'
                             -- Ban user who adds ban ppl more than 7 times
                             local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                            redis:set(banhash, 0)
+                            redis_set_something(banhash, 0)
                             -- Reset the Counter
                         elseif tonumber(banaddredis) >= 4 then
                             text = text .. kickUser(bot.id, msg.from.id, msg.chat.id, langs[msg.lang].reasonInviteBanned) .. '\n'

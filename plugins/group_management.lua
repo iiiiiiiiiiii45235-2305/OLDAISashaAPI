@@ -1761,7 +1761,7 @@ local function run(msg, matches)
             if msg.from.is_owner then
                 if matches[2]:lower() == 'banlist' then
                     mystat('/clean banlist')
-                    redis:del('banned:' .. msg.chat.id)
+                    redis_del_something('banned:' .. msg.chat.id)
                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned banlist")
                     return langs[msg.lang].banlistCleaned
                 elseif matches[2]:lower() == 'modlist' then

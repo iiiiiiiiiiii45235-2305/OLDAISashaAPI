@@ -122,21 +122,21 @@ local function get_object_info(obj, chat_id)
             if obj.username then
                 text = text .. langs[lang].username .. '@' .. obj.username
             end
-            local nickname = redis:hget('tagalert:nicknames', obj.id)
+            local nickname = redis_hget_something('tagalert:nicknames', obj.id)
             if nickname then
                 text = text .. langs[lang].nickname .. nickname
             end
-            local msgs = tonumber(redis:get('msgs:' .. obj.id .. ':' .. chat_id) or 0)
+            local msgs = tonumber(redis_get_something('msgs:' .. obj.id .. ':' .. chat_id) or 0)
             text = text .. langs[lang].rank .. reverse_rank_table[get_rank(obj.id, chat_id, true)] ..
             langs[lang].date .. os.date('%c') ..
             langs[lang].totalMessages .. msgs
-            local pmnotices = redis:get('notice:' .. obj.id)
+            local pmnotices = redis_get_something('notice:' .. obj.id)
             if pmnotices then
                 text = text .. langs[lang].pmnoticesRegistration .. 'true'
             else
                 text = text .. langs[lang].pmnoticesRegistration .. 'false'
             end
-            local tagalert = redis:hget('tagalert:usernames', obj.id)
+            local tagalert = redis_hget_something('tagalert:usernames', obj.id)
             if tagalert then
                 text = text .. langs[lang].tagalertRegistration .. 'true'
             else

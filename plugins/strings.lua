@@ -11,12 +11,12 @@ local function run(msg, matches)
             if data[tostring(msg.chat.id)] then
                 data[tostring(msg.chat.id)].lang = matches[2]:lower()
             else
-                redis:set('lang:' .. msg.chat.id, matches[2]:lower())
+                redis_set_something('lang:' .. msg.chat.id, matches[2]:lower())
             end
 
             msg.lang = get_lang(msg.chat.id)
             if matches[3] == 'B' then
-                if not redis:hget('tagalert:usernames', msg.from.id) then
+                if not redis_hget_something('tagalert:usernames', msg.from.id) then
                     return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage, keyboard_tagalert_tutorial(msg.lang))
                 else
                     return editMessageText(msg.chat.id, msg.message_id, langs[msg.lang].startMessage)
@@ -32,7 +32,7 @@ local function run(msg, matches)
         mystat('/setlang')
         if matches[2] then
             if msg.chat.type == 'private' then
-                redis:set('lang:' .. msg.chat.id, matches[2]:lower())
+                redis_set_something('lang:' .. msg.chat.id, matches[2]:lower())
                 return langs[matches[2]:lower()].langSet
             elseif msg.from.is_owner and data[tostring(msg.chat.id)] then
                 data[tostring(msg.chat.id)].lang = matches[2]:lower()

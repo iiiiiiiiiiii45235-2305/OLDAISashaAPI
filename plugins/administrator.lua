@@ -692,8 +692,8 @@ local function run(msg, matches)
             mystat('/commandsstats')
             local text = langs[msg.lang].botStats
             local hash = 'commands:stats'
-            local names = redis:hkeys(hash)
-            local num = redis:hvals(hash)
+            local names = redis_get_something(hash)
+            local num = redis_hvals(hash)
             for i = 1, #names do
                 text = text .. '- ' .. names[i] .. ': ' .. num[i] .. '\n'
             end
@@ -1011,6 +1011,7 @@ local function run(msg, matches)
                 mystat('/backup')
                 -- save database
                 save_data(config.database.db, database, true)
+                save_data(config.rdb.db, rdb, true)
                 io.popen('lua timework.lua "backup" "0"')
                 return langs[msg.lang].backupDone
             end

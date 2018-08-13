@@ -20,18 +20,18 @@ end
 local function setunset_delword(msg, var_name, time)
     local hash = get_censorships_hash(msg)
     if hash then
-        if redis:hget(hash, var_name) then
-            redis:hdel(hash, var_name)
+        if redis_hget_something(hash, var_name) then
+            redis_hdelsrem_something(hash, var_name)
             return langs[msg.lang].delwordRemoved .. var_name
         else
             if time then
                 if tonumber(time) == 0 then
-                    redis:hset(hash, var_name, true)
+                    redis_hset_something(hash, var_name, true)
                 else
-                    redis:hset(hash, var_name, time)
+                    redis_hset_something(hash, var_name, time)
                 end
             else
-                redis:hset(hash, var_name, true)
+                redis_hset_something(hash, var_name, true)
             end
             return langs[msg.lang].delwordAdded .. var_name
         end
@@ -196,8 +196,8 @@ local function run(msg, matches)
                 delword_table[tostring(msg.from.id)] = matches[2]:lower()
                 local hash = get_censorships_hash(msg)
                 if hash then
-                    if redis:hget(hash, matches[2]:lower()) then
-                        redis:hdel(hash, matches[2]:lower())
+                    if redis_hget_something(hash, matches[2]:lower()) then
+                        redis_hdelsrem_something(hash, matches[2]:lower())
                         return langs[msg.lang].delwordRemoved .. matches[2]:lower()
                     else
                         if sendKeyboard(msg.from.id, langs[msg.lang].delwordIntro:gsub('X', matches[2]:lower()), keyboard_less_time('delword', msg.chat.id)) then
