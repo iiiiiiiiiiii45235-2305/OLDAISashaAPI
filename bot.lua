@@ -218,6 +218,10 @@ function bot_init()
     loadfile("./dictionaries.lua")()
     loadfile("./utils.lua")()
     config = load_config()
+
+    print(clr.white .. 'Loading rdb.json' .. clr.reset)
+    rdb = load_data(config.rdb.db)
+
     alternatives = load_alternatives()
     local file_bot_api_key = io.open('bot_api_key.txt', "r")
     if file_bot_api_key then
@@ -254,9 +258,6 @@ function bot_init()
     local tot_plugins = load_plugins()
     print(clr.white .. 'Loading database.json' .. clr.reset)
     database = load_data(config.database.db)
-
-    print(clr.white .. 'Loading rdb.json' .. clr.reset)
-    rdb = load_data(config.rdb.db)
 
     print(clr.white .. 'Loading moderation.json' .. clr.reset)
     data = load_data(config.moderation.data)
