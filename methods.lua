@@ -1895,7 +1895,7 @@ function preBanUser(executer, target, chat_id, reason)
         redis_hincr('bot:general', 'ban', 1)
         -- general: save how many kicks
         local hash = 'banned:' .. chat_id
-        redis_set_something(hash, tostring(target))
+        redis_hset_something(hash, tostring(target), tostring(target))
         return langs[get_lang(chat_id)].user .. target .. langs[get_lang(chat_id)].banned ..
         '\n' .. langs.phrases.banhammer[math.random(#langs.phrases.banhammer)] ..
         '\n#chat' .. tostring(chat_id):gsub("-", "") .. ' #user' .. target .. ' #executer' .. executer .. ' #preban #ban ' ..(reason or '')
@@ -1922,7 +1922,7 @@ function banUser(executer, target, chat_id, reason, until_date, no_notice)
                 globalCronTable.punishedTable[tostring(chat_id)][tostring(target)] = true
                 if not tostring(chat_id):starts('-100') then
                     local hash = 'banned:' .. chat_id
-                    redis_set_something(hash, tostring(target))
+                    redis_hset_something(hash, tostring(target), tostring(target))
                 end
                 savelog(chat_id, "[" .. executer .. "] banned user " .. target)
                 redis_hincr('bot:general', 'ban', 1)
@@ -2035,7 +2035,7 @@ function gbanUser(user_id, no_log, no_notice)
     end
     -- Save to redis
     local hash = 'gbanned'
-    redis_set_something(hash, user_id)
+    redis_hset_something(hash, user_id, user_id)
     if not no_log then
         sendLog(langs[lang].user .. user_id .. langs[lang].gbannedFrom .. tmp_msg.chat.id, false, true)
     end
@@ -2071,7 +2071,7 @@ function blockUser(user_id, no_notice)
     local lang = get_lang(user_id)
     user_id = tostring(user_id):gsub(' ', '')
     if not is_admin2(user_id) then
-        redis_set_something('bot:blocked', user_id)
+        redis_hset_something('bot:blocked', user_id, user_id)
         if not no_notice then
             sendMessage(user_id, langs[lang].youHaveBeenBlocked)
         end
@@ -2454,7 +2454,7 @@ end
 function muteUser(chat_id, user_id, lang, no_notice)
     user_id = tostring(user_id):gsub(' ', '')
     local hash = 'mute_user:' .. chat_id
-    redis_set_something(hash, user_id)
+    redis_hset_something(hash, user_id, user_id)
     if arePMNoticesEnabled(user_id, chat_id) and not no_notice then
         sendMessage(user_id, langs[get_lang(user_id)].youHaveBeenMuted .. database[tostring(chat_id)].print_name)
     end
