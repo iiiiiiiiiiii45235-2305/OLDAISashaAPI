@@ -2483,7 +2483,7 @@ function mutedUserList(chat_id)
     local lang = get_lang(chat_id)
     local hash = 'mute_user:' .. chat_id
     local list = redis_get_something(hash) or { }
-    print(list)
+    print(list, hash)
     local text = langs[lang].mutedUsersStart .. chat_id .. "\n\n"
     for k, v in pairsByKeys(list) do
         local user_info = redis_get_something('user:' .. v)
