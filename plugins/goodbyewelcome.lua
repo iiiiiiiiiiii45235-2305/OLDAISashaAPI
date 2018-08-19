@@ -461,7 +461,7 @@ local function pre_process(msg)
                 if msg.chat.type == 'supergroup' then
                     hash = 'channel:welcome' .. msg.chat.id
                 end
-                redis_incr_something(hash)
+                redis_incr(hash)
                 local hashonredis = redis_get_something(hash)
                 if hashonredis then
                     if tonumber(hashonredis) >= tonumber(get_memberswelcome(msg.chat.id)) and tonumber(get_memberswelcome(msg.chat.id)) ~= 0 then

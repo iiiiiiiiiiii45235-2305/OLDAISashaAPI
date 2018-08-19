@@ -2178,7 +2178,7 @@ local function pre_process(msg)
                                 local txt = punishmentAction(bot.id, v.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.gbanned, langs[msg.lang].reasonGbannedUser)
                                 if txt ~= '' then
                                     local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                                    redis_incr_something(banhash)
+                                    redis_incr(banhash)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a [g]banned user > " .. v.id)
                                     savelog(msg.chat.id, msg.from.print_name .. " [" .. v.id .. "] is gbanned! punishment = " .. tostring(data[tostring(msg.chat.id)].settings.locks.gbanned))
                                     text = text .. txt
@@ -2187,7 +2187,7 @@ local function pre_process(msg)
                                 -- if banned and not mod and not yet punished for something
                                 print('User is banned!')
                                 local banhash = 'addedbanuser:' .. msg.chat.id .. ':' .. msg.from.id
-                                redis_incr_something(banhash)
+                                redis_incr(banhash)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] added a banned user > " .. v.id)
                                 savelog(msg.chat.id, msg.from.print_name .. " [" .. v.id .. "] is banned!")
                                 text = text .. banUser(bot.id, v.id, msg.chat.id, langs[msg.lang].reasonBannedUser)

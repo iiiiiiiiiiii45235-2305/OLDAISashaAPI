@@ -103,7 +103,7 @@ local function pre_process(msg)
             local hash = 'flame:' .. msg.chat.id
             local tokick = 'tokick:' .. msg.chat.id
             if tostring(msg.from.id) == tostring(redis_get_something(tokick)) then
-                redis_incr_something(hash)
+                redis_incr(hash)
                 local hashonredis = redis_get_something(hash)
                 if hashonredis then
                     sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])

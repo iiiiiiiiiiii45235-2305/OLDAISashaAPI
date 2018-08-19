@@ -2171,7 +2171,7 @@ function warnUser(executer, target, chat_id, reason, no_notice)
     end
     if compare_ranks(executer, target, chat_id) then
         local warn_chat = tonumber(data[tostring(chat_id)].settings.max_warns or 0)
-        redis_incr_something(chat_id .. ':warn:' .. target)
+        redis_incr(chat_id .. ':warn:' .. target)
         local hashonredis = redis_get_something(chat_id .. ':warn:' .. target)
         if not hashonredis then
             redis_set_something(chat_id .. ':warn:' .. target, 1)
