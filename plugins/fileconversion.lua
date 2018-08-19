@@ -21,7 +21,9 @@ local function run(msg, matches)
             return langs[msg.lang].useCommandOnFile
         end
     else
-        return langs[msg.lang].unknownType
+        if matches[2]:lower() ~= "do" then
+            return langs[msg.lang].unknownType
+        end
     end
 end
 
