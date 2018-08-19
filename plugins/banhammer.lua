@@ -1575,7 +1575,7 @@ local function run(msg, matches)
             if matches[1]:lower() == 'countbanlist' and not matches[2] then
                 if msg.from.is_mod then
                     mystat('/countbanlist')
-                    local list = redis_get_something('banned:' .. msg.chat.id)
+                    local list = redis_get_something('banned:' .. msg.chat.id) or { }
                     return #list
                 else
                     return langs[msg.lang].require_mod
@@ -2105,7 +2105,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'countbanlist' and matches[2] then
             if is_admin(msg) then
                 mystat('/countbanlist <group_id>')
-                local list = redis_get_something('banned:' .. matches[2])
+                local list = redis_get_something('banned:' .. matches[2]) or { }
                 return #list
             else
                 return langs[msg.lang].require_admin
@@ -2115,7 +2115,7 @@ local function run(msg, matches)
             if is_admin(msg) then
                 mystat('/gbanlist')
                 local hash = 'gbanned'
-                local list = redis_get_something(hash)
+                local list = redis_get_something(hash) or { }
                 local gbanlist = langs[get_lang(msg.chat.id)].gbanListStart
                 for k, v in pairs(list) do
                     local user_info = redis_get_something('user:' .. v)
@@ -2135,7 +2135,7 @@ local function run(msg, matches)
         if matches[1]:lower() == 'countgbanlist' then
             if is_admin(msg) then
                 mystat('/countgbanlist')
-                local list = redis_get_something('gbanned')
+                local list = redis_get_something('gbanned') or { }
                 return #list
             else
                 return langs[msg.lang].require_admin
