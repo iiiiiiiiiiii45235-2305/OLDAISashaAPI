@@ -1258,7 +1258,7 @@ local function run(msg, matches)
             return langs[msg.lang].ownerIs .. group_owner
         end
         if matches[1]:lower() == 'setowner' then
-            if msg.from.is_owner then
+            if is_owner(msg) then
                 mystat('/setowner')
                 if msg.reply then
                     if matches[2] then
