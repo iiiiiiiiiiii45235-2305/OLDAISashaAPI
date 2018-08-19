@@ -1460,7 +1460,7 @@ return {
             "<code>{permissions}</code> può essere: <code>[change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]</code>.",
             "<code>/demoteadmin {user}</code>: Sasha degrada da amministratore di telegram {user}.",
             "<code>/setowner {user}</code>: Sasha imposta {user} come proprietario.",
-            "<code>/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha pulisce il parametro specificato.",
+            "<code>/clean banlist|modlist|mutelist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha pulisce il parametro specificato.",
         },
 
         help =
@@ -3015,7 +3015,7 @@ return {
             "<code>{permissions}</code> can be: <code>[change_info] [delete_messages] [invite_users] [restrict_members] [pin_messages] [promote_members]</code>.",
             "<code>/demoteadmin {user}</code>: Sasha demotes from telegram administrator {user}.",
             "<code>/setowner {user}</code>: Sasha sets {user} as owner.",
-            "<code>/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha cleans the specified parameter.",
+            "<code>/clean banlist|modlist|mutelist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha cleans the specified parameter.",
             "<code>/getadmins</code>: Sasha sends telegram's administrators list.",
         },
 

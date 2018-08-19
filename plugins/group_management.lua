@@ -1766,10 +1766,9 @@ local function run(msg, matches)
                     return langs[msg.lang].banlistCleaned
                 elseif matches[2]:lower() == 'mutelist' then
                     mystat('/clean mutelist')
-                    rdb[tostring(msg.chat.id)].moderators = { }
-                    save_data(config.moderation.data, data)
-                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned modlist")
-                    return langs[msg.lang].modlistCleaned
+                    redis_del_something('mute_user:' .. msg.chat.id)
+                    savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] cleaned mutelist")
+                    return langs[msg.lang].mutelistCleaned
                 elseif matches[2]:lower() == 'modlist' then
                     mystat('/clean modlist')
                     data[tostring(msg.chat.id)].moderators = { }
@@ -2120,6 +2119,6 @@ return {
         "/setowner {id}|{username}|{reply}",
         "/mute all|text",
         "/unmute all|text",
-        "/clean banlist|modlist|rules|whitelist|whitelistgban|whitelistlink",
+        "/clean banlist|modlist|mutelist|rules|whitelist|whitelistgban|whitelistlink",
     },
 }
