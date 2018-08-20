@@ -2483,9 +2483,9 @@ function mutedUserList(chat_id)
     local lang = get_lang(chat_id)
     local hash = 'mute_user:' .. chat_id
     local list = redis_get_something(hash) or { }
-    print(list)
     local text = langs[lang].mutedUsersStart .. chat_id .. "\n\n"
     for k, v in pairsByKeys(list) do
+        print(k, v)
         local user_info = redis_get_something('user:' .. v)
         if user_info and user_info.print_name then
             local print_name = string.gsub(user_info.print_name, "_", " ")
