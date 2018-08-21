@@ -94,7 +94,7 @@ try:
         msg = app.get_messages(chat_id=chat_id, message_ids=message_id)
         app.send_chat_action(chat_id=chat_id, action=ChatAction.UPLOAD_DOCUMENT)
         app.send_message(chat_id=chat_id, text=str(msg))
-except:
+finally:
     app.stop()
 
 ###CLEAN
