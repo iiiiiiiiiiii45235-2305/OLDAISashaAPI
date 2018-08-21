@@ -1108,6 +1108,7 @@ return {
         "^[#!/]([Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Ss][Ee][Nn][Dd][Rr][Ee][Qq][Uu][Ee][Ss][Tt][Ss][Ll][Oo][Gg])$",
         "^[#!/]([Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
+        "^[#!/]([Pp][Yy][Rr][Oo][Gg][Rr][Aa][Mm][Vv][Aa][Rr][Dd][Uu][Mm][Pp])$",
         "^[#!/]([Rr][Ee][Ll][Oo][Aa][Dd][Bb][Oo][Tt])$",
         "^[#!/]([Bb][Oo][Tt][Rr][Ee][Ss][Tt][Aa][Rr][Tt])$",
         "^[#!/]([Rr][Ee][Dd][Ii][Ss][Ss][Aa][Vv][Ee])$",
