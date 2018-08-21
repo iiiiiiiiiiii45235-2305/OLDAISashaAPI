@@ -1974,7 +1974,7 @@ function unbanUser(executer, target, chat_id, reason, no_notice)
         -- remove from the local banlist
         local hash = 'banned:' .. chat_id
         redis_hdelsrem_something(hash, tostring(target))
-        if getChat(target, true) then
+        if getChat(target, true) and not is_super_group( { chat = { id = chat_id } }) then
             local res, code = unbanChatMember(target, chat_id)
         end
         if arePMNoticesEnabled(target, chat_id) and not no_notice then
