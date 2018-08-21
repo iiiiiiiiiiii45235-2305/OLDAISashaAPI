@@ -829,7 +829,7 @@ local function run(msg, matches)
         end
         if matches[1]:lower() == 'pyrogramvardump' then
             mystat('/pyrogramvardump')
-            io.popen('python3 pyrogramThings.py VARDUMP ' .. msg.chat.id .. ' ' .. msg.id)
+            io.popen('python3 pyrogramThings.py VARDUMP ' .. msg.chat.id .. ' ' .. msg.message_id)
         end
         if matches[1]:lower() == 'checkspeed' then
             mystat('/checkspeed')
