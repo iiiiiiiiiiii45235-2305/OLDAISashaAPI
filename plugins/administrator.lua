@@ -827,6 +827,10 @@ local function run(msg, matches)
             mystat('/vardump')
             return 'VARDUMP (<msg>)\n' .. serpent.block(msg, { sortkeys = false, comment = false })
         end
+        if matches[1]:lower() == 'pyrogramvardump' then
+            mystat('/pyrogramvardump')
+            io.popen('python3 pyrogramThings.py VARDUMP ' .. msg.chat.id .. ' ' .. msg.id)
+        end
         if matches[1]:lower() == 'checkspeed' then
             mystat('/checkspeed')
             return os.date('%S', os.difftime(tonumber(os.time()), tonumber(msg.date)))
@@ -1138,6 +1142,7 @@ return {
         "/checkchats",
         "/requestslog",
         "/vardump [{reply}]",
+        "/pyrogramvardump [{reply}]",
         "/commandsstats",
         "/ping",
         "/laststart",
