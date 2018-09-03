@@ -102,18 +102,20 @@ local function pre_process(msg)
         if (msg.chat.type == 'group' or msg.chat.type == 'supergroup') and not msg.cb then
             local hash = 'flame:' .. msg.chat.id
             local tokick = 'tokick:' .. msg.chat.id
-            if tostring(msg.from.id) == tostring(redis_get_something(tokick)) then
-                redis_incr(hash)
-                local hashonredis = redis_get_something(hash)
-                if hashonredis then
-                    sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])
-                    if tonumber(hashonredis) == #langs.phrases.flame then
-                        local user_id = redis_get_something(tokick)
-                        if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(user_id)] then
-                            sendMessage(msg.chat.id, kickUser(bot.id, user_id, msg.chat.id, langs[msg.lang].reasonFlame))
+            if redis_get_something(tokick) and redis_get_something(hash) then
+                if tostring(msg.from.id) == tostring(redis_get_something(tokick)) then
+                    redis_incr(hash)
+                    local hashonredis = redis_get_something(hash)
+                    if hashonredis then
+                        sendReply(msg, langs.phrases.flame[tonumber(hashonredis)])
+                        if tonumber(hashonredis) == #langs.phrases.flame then
+                            local user_id = redis_get_something(tokick)
+                            if not globalCronTable.punishedTable[tostring(msg.chat.id)][tostring(user_id)] then
+                                sendMessage(msg.chat.id, kickUser(bot.id, user_id, msg.chat.id, langs[msg.lang].reasonFlame))
+                            end
+                            redis_del_something(hash)
+                            redis_del_something(tokick)
                         end
-                        redis_del_something(hash)
-                        redis_del_something(tokick)
                     end
                 end
             end

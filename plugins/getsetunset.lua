@@ -585,34 +585,30 @@ local function pre_process(msg)
                         if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
                             if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
                                 sendReply(msg, adjust_value(answer, msg))
-                                return msg
                             end
                         end
                     else
                         sendReply(msg, adjust_value(answer, msg))
-                        return msg
                     end
+                    return msg
                 end
             end
         end
         -- global
         local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, true))
-        print(vars)
         for key, word in pairs(vars) do
             local answer = check_word(msg, key:gsub('_', ' '):lower(), true)
-            print(key, word, answer)
             if answer then
                 if string.find(answer, '$mention') or string.find(answer, '$replymention') or string.find(answer, '$forwardmention') then
                     if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
                         if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
                             sendReply(msg, adjust_value(answer, msg))
-                            return msg
                         end
                     end
                 else
                     sendReply(msg, adjust_value(answer, msg))
-                    return msg
                 end
+                return msg
             end
         end
         return msg
