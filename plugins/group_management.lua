@@ -1292,14 +1292,12 @@ local function run(msg, matches)
                     if string.match(matches[2], '^%d+$') then
                         savelog(msg.chat.id, msg.from.print_name .. " [" .. msg.from.id .. "] set [" .. matches[2] .. "] as owner")
                         local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return setOwner(obj_user, msg.chat.id)
-                                end
-                            else
-                                return langs[msg.lang].noObject
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return setOwner(obj_user, msg.chat.id)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     else
                         local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
@@ -1386,17 +1384,15 @@ local function run(msg, matches)
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if matches[3] then
-                                        permissions = adjustPermissions(matches[3]:lower())
-                                    end
-                                    return promoteTgAdmin(msg.chat.id, obj_user, permissions)
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if matches[3] then
+                                    permissions = adjustPermissions(matches[3]:lower())
                                 end
-                            else
-                                return langs[msg.lang].noObject
+                                return promoteTgAdmin(msg.chat.id, obj_user, permissions)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     else
                         local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
@@ -1450,14 +1446,12 @@ local function run(msg, matches)
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return demoteTgAdmin(msg.chat.id, obj_user)
-                                end
-                            else
-                                return langs[msg.lang].noObject
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return demoteTgAdmin(msg.chat.id, obj_user)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     else
                         local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
@@ -1508,14 +1502,12 @@ local function run(msg, matches)
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    return promoteMod(msg.chat.id, obj_user)
-                                end
-                            else
-                                return langs[msg.lang].noObject
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                return promoteMod(msg.chat.id, obj_user)
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     else
                         local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')
@@ -1664,23 +1656,21 @@ local function run(msg, matches)
                     matches[2] = tostring(matches[2]):gsub(' ', '')
                     if string.match(matches[2], '^%d+$') then
                         local obj_user = getChat(matches[2])
-                        if type(obj_user) == 'table' then
-                            if obj_user then
-                                if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
-                                    if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(obj_user.id) .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
-                                        permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
-                                        if msg.chat.type ~= 'private' then
-                                            local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
-                                            io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
-                                            return
-                                        end
-                                    else
-                                        return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
+                        if obj_user then
+                            if obj_user.type == 'bot' or obj_user.type == 'private' or obj_user.type == 'user' then
+                                if sendKeyboard(msg.from.id, string.gsub(string.gsub(langs[msg.lang].permissionsOf, 'Y', '(#chat' .. tostring(msg.chat.id):gsub("-", "") .. ') ' .. chat_name), 'X', tostring('(#user' .. tostring(obj_user.id) .. ') ' .. obj_user.first_name .. ' ' ..(obj_user.last_name or ''))) .. '\n' .. langs[msg.lang].permissionsIntro .. langs[msg.lang].faq[15], keyboard_permissions_list(msg.chat.id, obj_user.id)) then
+                                    permissionsTable[tostring(msg.chat.id)][tostring(obj_user.id)] = userPermissions(msg.chat.id, obj_user.id)
+                                    if msg.chat.type ~= 'private' then
+                                        local message_id = getMessageId(sendReply(msg, langs[msg.lang].sendPermissionsPvt, 'html'))
+                                        io.popen('lua timework.lua "deletemessage" "60" "' .. msg.chat.id .. '" "' .. msg.message_id .. ',' ..(message_id or '') .. '"')
+                                        return
                                     end
+                                else
+                                    return sendKeyboard(msg.chat.id, langs[msg.lang].cantSendPvt, { inline_keyboard = { { { text = "/start", url = bot.link } } } }, false, msg.message_id)
                                 end
-                            else
-                                return langs[msg.lang].noObject
                             end
+                        else
+                            return langs[msg.lang].noObject
                         end
                     else
                         local obj_user = getChat(string.match(matches[2], '^[^%s]+') or '')

@@ -153,7 +153,7 @@ function sendRequest(url, no_log)
             print(('%sRate limited for %d seconds%s'):format(clr.yellow, retry_after, clr.reset))
         end
 
-        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 then
+        if code ~= 403 and code ~= 429 and code ~= 110 and code ~= 111 and code ~= 502 then
             if not no_log then
                 sendLog('#BadRequest\n' .. vardumptext(tab) .. '\n' .. code, false, false, true)
             end
