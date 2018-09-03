@@ -585,12 +585,13 @@ local function pre_process(msg)
                         if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
                             if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
                                 sendReply(msg, adjust_value(answer, msg))
+                                return msg
                             end
                         end
                     else
                         sendReply(msg, adjust_value(answer, msg))
+                        return msg
                     end
-                    return msg
                 end
             end
         end
@@ -605,12 +606,13 @@ local function pre_process(msg)
                     if not sendReply(msg, adjust_value(answer, msg, 'markdown'), 'markdown') then
                         if not sendReply(msg, adjust_value(answer, msg, 'html'), 'html') then
                             sendReply(msg, adjust_value(answer, msg))
+                            return msg
                         end
                     end
                 else
                     sendReply(msg, adjust_value(answer, msg))
+                    return msg
                 end
-                return msg
             end
         end
         return msg
