@@ -596,6 +596,7 @@ local function pre_process(msg)
         end
         -- global
         local vars = redis_get_something(get_variables_hash(msg.chat.id, msg.chat.type, true))
+        print(vars)
         for key, word in pairs(vars) do
             local answer = check_word(msg, key:gsub('_', ' '):lower(), true)
             print(key, word, answer)
