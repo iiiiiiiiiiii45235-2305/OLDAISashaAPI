@@ -288,28 +288,28 @@ function bot_init()
 end
 
 function update_redis_cron()
-    if redis_get_something('api:last_redis_cron') then
-        if redis_get_something('api:last_redis_cron') ~= os.date('%M') then
+    if redis:get('api:last_redis_cron') then
+        if redis:get('api:last_redis_cron') ~= os.date('%M') then
             local value = os.date('%M')
-            redis_set_something('api:last_redis_cron', value)
+            redis:set('api:last_redis_cron', value)
         end
-        last_redis_cron = redis_get_something('api:last_redis_cron')
+        last_redis_cron = redis:get('api:last_redis_cron')
     else
         local value = os.date('%M')
-        redis_set_something('api:last_redis_cron', value)
-        last_redis_cron = redis_get_something('api:last_redis_cron')
+        redis:set('api:last_redis_cron', value)
+        last_redis_cron = redis:get('api:last_redis_cron')
     end
 
-    if redis_get_something('api:last_redis_administrator_cron') then
-        if redis_get_something('api:last_redis_administrator_cron') ~= os.date('%d') then
+    if redis:get('api:last_redis_administrator_cron') then
+        if redis:get('api:last_redis_administrator_cron') ~= os.date('%d') then
             local value = os.date('%d')
-            redis_set_something('api:last_redis_administrator_cron', value)
+            redis:set('api:last_redis_administrator_cron', value)
         end
-        last_redis_administrator_cron = redis_get_something('api:last_redis_administrator_cron')
+        last_redis_administrator_cron = redis:get('api:last_redis_administrator_cron')
     else
         local value = os.date('%d')
-        redis_set_something('api:last_redis_administrator_cron', value)
-        last_redis_administrator_cron = redis_get_something('api:last_redis_administrator_cron')
+        redis:set('api:last_redis_administrator_cron', value)
+        last_redis_administrator_cron = redis:get('api:last_redis_administrator_cron')
     end
 end
 
@@ -1027,8 +1027,8 @@ function cron_administrator()
         io.popen('lua timework.lua "backup" "0"')
         -- deletes all files in tmp folders
         print("Deleting all files in tmp folders")
-        io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*'):read("*all")
-        io.popen('rm -f /home/pi/AISasha/data/tmp/*'):read("*all")
+        io.popen('rm -f /home/pi/AISashaAPI/data/tmp/*')
+        io.popen('rm -f /home/pi/AISasha/data/tmp/*')
         -- Run cron jobs every day.
         last_administrator_cron = last_redis_administrator_cron
     end
