@@ -2,6 +2,7 @@ function run(msg, matches)
     if is_sudo(msg) then
         local path = redis_get_something('api:path')
         if path then
+            print(path)
             if msg.cb then
                 local pathString = langs[msg.lang].youAreHere .. path
                 if matches[2] == 'DELETE' then
