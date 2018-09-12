@@ -678,13 +678,11 @@ function doSendBackup()
 
     -- AISASHA
     local AISasha_tar = 'sudo tar -zcvf backupAISasha' .. time .. '.tar.gz ' ..
-    -- '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore ' ..
     '/home/pi/AISasha ' ..
     '/home/pi/.telegram-cli'
     log = log .. '\n' .. executeBackupCommand(AISasha_tar, time)
     -- AISASHAAPI
     local AISashaAPI_tar = 'sudo tar -zcvf backupAISashaAPI' .. time .. '.tar.gz ' ..
-    -- '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore --exclude=\'*.sync\' ' ..
     '/home/pi/AISashaAPI '
     log = log .. '\n' .. executeBackupCommand(AISashaAPI_tar, time)
     -- RASPBERRYPI
@@ -700,34 +698,14 @@ function doSendBackup()
     log = log .. '\n' .. executeBackupCommand(RaspberryPi_tar, time)
     -- GRABBER
     local Grabber_tar = 'sudo tar -zcvf backupGrabber' .. time .. '.tar.gz ' ..
-    -- '--exclude=/home/pi/Grabber/__pycache__ --exclude=\'*.sync\' ' ..
     '/home/pi/Grabber '
     log = log .. '\n' .. executeBackupCommand(Grabber_tar, time)
     -- MYBOTFORREPORTED
     local MyBotForReported_tar = 'sudo tar -zcvf backupMyBotForReported' .. time .. '.tar.gz ' ..
-    -- '--exclude=/home/pi/MyBotForReported/.git ' ..
     '/home/pi/MyBotForReported '
     log = log .. '\n' .. executeBackupCommand(MyBotForReported_tar, time)
-end
-
-function testBackup()
-    -- save redis db
-    print("Saving Redis DB")
-    redis:bgsave()
-    -- save crontab
-    print("Saving Crontab")
-    io.popen('crontab -l > /home/pi/Desktop/crontab.txt'):read("*all")
-
-    print("Synchronizing time")
-    local log = io.popen('sudo ntpdate -s time.nist.gov'):read('*all')
-    local time = os.time()
-
-    -- AISASHA
+    -- GLOBAL
     local tar = 'sudo tar -zcvf backupRPI' .. time .. '.tar.gz ' ..
-    '--exclude=/home/pi/AISasha/.git --exclude=/home/pi/AISasha/.gitmodules --exclude=/home/pi/AISasha/.gitignore ' ..
-    '--exclude=/home/pi/AISashaAPI/.git --exclude=/home/pi/AISashaAPI/.gitignore ' ..
-    '--exclude=/home/pi/Grabber/__pycache__ --exclude=\'*.sync\' ' ..
-    '--exclude=/home/pi/MyBotForReported/.git ' ..
     '/home/pi/AISasha ' ..
     '/home/pi/.telegram-cli ' ..
     '/home/pi/AISashaAPI ' ..
@@ -735,6 +713,9 @@ function testBackup()
     '/home/pi/tmux-mem-cpu-load ' ..
     '/home/pi/.tmux.conf ' ..
     '/home/pi/.tmux.conf.local ' ..
+    '/home/pi/.vnc/config.d/vncserver-x11 ' ..
+    '/etc/ssh/sshd_config ' ..
+    '/etc/ssmtp/ssmtp.conf ' ..
     '/var/lib/redis ' ..
     '/home/pi/Grabber ' ..
     '/home/pi/MyBotForReported '
