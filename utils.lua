@@ -676,6 +676,7 @@ function doSendBackup()
     local log = io.popen('sudo ntpdate -s time.nist.gov'):read('*all')
     local time = os.time()
 
+    --[[
     -- AISASHA
     local AISasha_tar = 'sudo tar -zcvf backupAISasha' .. time .. '.tar.gz ' ..
     '/home/pi/AISasha ' ..
@@ -704,6 +705,8 @@ function doSendBackup()
     local MyBotForReported_tar = 'sudo tar -zcvf backupMyBotForReported' .. time .. '.tar.gz ' ..
     '/home/pi/MyBotForReported '
     log = log .. '\n' .. executeBackupCommand(MyBotForReported_tar, time)
+    ]]
+    -- Do one backup for everything
     -- GLOBAL
     local tar = 'sudo tar -zcvf backupRPI' .. time .. '.tar.gz ' ..
     '/home/pi/AISasha ' ..
