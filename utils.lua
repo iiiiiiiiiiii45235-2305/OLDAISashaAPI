@@ -716,7 +716,6 @@ function doSendBackup()
     '/home/pi/tmux-mem-cpu-load ' ..
     '/home/pi/.tmux.conf ' ..
     '/home/pi/.tmux.conf.local ' ..
-    '/home/pi/.vnc/config.d/vncserver-x11 ' ..
     '/etc/ssh/sshd_config ' ..
     '/etc/ssmtp/ssmtp.conf ' ..
     '/var/lib/redis ' ..
