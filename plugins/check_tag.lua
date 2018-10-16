@@ -324,7 +324,9 @@ end
 local function send_tag_alert(msg, user_id)
     local lang = get_lang(user_id)
     if msg.reply then
-        forwardMessage(user_id, msg.chat.id, msg.reply_to_message.message_id)
+        if not msg.reply_to_message.service then
+            forwardMessage(user_id, msg.chat.id, msg.reply_to_message.message_id)
+        end
     end
     local text = langs[lang].receiver .. msg.chat.print_name:gsub("_", " ") .. ' [' .. msg.chat.id .. ']\n' .. langs[lang].sender
     if msg.from.username then
