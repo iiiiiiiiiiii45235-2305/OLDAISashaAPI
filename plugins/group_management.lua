@@ -890,7 +890,7 @@ local function run(msg, matches)
                 if delAll[tostring(msg.chat.id)] then
                     if delAll[tostring(msg.chat.id)].from and delAll[tostring(msg.chat.id)].to then
                         if delAll[tostring(msg.chat.id)].to > delAll[tostring(msg.chat.id)].from then
-                            if delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from > 70 and msg.from.is_owner then
+                            if delAll[tostring(msg.chat.id)].to - delAll[tostring(msg.chat.id)].from <= 200 and msg.from.is_owner then
                                 mystat('/delall')
                                 local counter = 1
                                 local t = { }
