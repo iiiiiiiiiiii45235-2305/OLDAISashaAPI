@@ -88,17 +88,14 @@ local function pre_process(msg)
                     for i, word in pairs(t) do
                         local temp = word:lower()
                         if msg.text then
-                            print(string.match(msg.text:lower(), temp))
                             if string.match(msg.text:lower(), temp) then
                                 found = true
                             end
                         end
                         if found then
-                            print("found")
                             local hash = get_censorships_hash(msg)
                             local time = redis_hget_something(hash, temp)
-                            print(hash, time)
-                            if time ~= 'true' and time ~= '0' then
+                            if time ~= 'true' and time ~= true and time ~= '0' and time ~= 0 then
                                 io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
                                 print("deleted after x")
                             else
