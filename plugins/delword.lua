@@ -105,16 +105,13 @@ local function pre_process(msg)
                             local time = redis_hget_something(hash, temp)
                             local text = ''
                             if time == 'true' or time == '0' then
-                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)))
-                                if not data[tostring(msg.chat.id)].settings.groupnotices then
-                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
-                                end
+                                deleteMessage(msg.chat.id, msg.message_id)
                             else
                                 io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)))
-                                if not data[tostring(msg.chat.id)].settings.groupnotices then
-                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
-                                end
+                            end
+                            local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)))
+                            if not data[tostring(msg.chat.id)].settings.groupnotices then
+                                io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                             end
                             return nil
                         end
