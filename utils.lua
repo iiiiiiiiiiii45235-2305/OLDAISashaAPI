@@ -933,13 +933,17 @@ function profileLink(id, name)
     return "<a href=\"tg://user?id=" .. id .. "\">" .. html_escape(name) .. "</a>"
 end
 
-function punishmentAction(executer, target, chat_id, punishment, reason, message_id)
+function punishmentAction(executer, target, chat_id, punishment, reason, message_id, time)
     print(executer, target, chat_id, punishment, reason, message_id)
     local lang = get_lang(chat_id)
     local text = ''
     if tonumber(punishment) >= 1 and message_id then
         -- delete
-        deleteMessage(chat_id, message_id, true)
+        if time then
+            io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. chat_id .. '" "' .. message_id .. '"')
+        else
+            deleteMessage(chat_id, message_id, true)
+        end
     end
     if tonumber(punishment) >= 2 and string.match(getWarn(chat_id), "%d+") then
         -- warn

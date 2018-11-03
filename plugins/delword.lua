@@ -95,13 +95,10 @@ local function pre_process(msg)
                         if found then
                             local hash = get_censorships_hash(msg)
                             local time = redis_hget_something(hash, temp)
-                            if time ~= 'true' and time ~= true and time ~= '0' and time ~= 0 then
-                                io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                print("deleted after x")
-                            else
-                                print("deleted")
+                            if time == 'true' or time == true then
+                                time = 0
                             end
-                            local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)))
+                            local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, time)))
                             if not data[tostring(msg.chat.id)].settings.groupnotices then
                                 io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                             end
