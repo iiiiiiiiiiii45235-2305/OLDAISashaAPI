@@ -855,6 +855,7 @@ function pre_process_msg(msg)
             end
         end
     end )
+    print(res, err)
     return msg
 end
 
