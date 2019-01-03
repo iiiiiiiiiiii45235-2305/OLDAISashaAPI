@@ -901,7 +901,7 @@ function match_plugins(msg)
                         end
                     end )
                     if not res then
-                        sendLog('An #error occurred.\n' .. err .. '\n' .. vardumptext(msg))
+                        sendLog('An #error occurred.\n' .. tostring(err) .. '\n' .. vardumptext(msg))
                     end
                 end
                 -- One patterns matches

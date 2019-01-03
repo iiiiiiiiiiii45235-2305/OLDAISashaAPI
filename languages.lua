@@ -3010,6 +3010,7 @@ return {
             "<code>/[send]log</code>: Sasha sends the daily log of the chat.",
             "<code>/setlink {link}</code>: Sasha saves {link} as group's link.",
             "<code>/unsetlink</code>: Sasha deletes the saved link.",
+            "<code>/getadmins</code>: Sasha sends telegram's administrators list.",
             "<code>/[textual]permissions {user}</code>: Sasha sends the permissions of {user}.",
             "<code>/promote {user}</code>: Sasha promotes to mod {user}.",
             "<code>/demote {user}</code>: Sasha demotes from mod {user}.",
@@ -3018,7 +3019,6 @@ return {
             "<code>/demoteadmin {user}</code>: Sasha demotes from telegram administrator {user}.",
             "<code>/setowner {user}</code>: Sasha sets {user} as owner.",
             "<code>/clean banlist|modlist|mutelist|rules|whitelist|whitelistgban|whitelistlink</code>: Sasha cleans the specified parameter.",
-            "<code>/getadmins</code>: Sasha sends telegram's administrators list.",
         },
 
         help =
@@ -3042,8 +3042,8 @@ return {
             "🅿️ <b>INFO</b> 🅿️",
             "Plugin to obtain info.",
             "<b>USER</b>",
-            "<code>/id [{user}]</code>: Sasha sends the id of {user}/chat, otherwise the id of the user and the id of the chat.",
-            "<code>/username [{user}]</code>: Sasha sends the username of {user}/chat, otherwise the username of the user and the username of the chat.",
+            "<code>/id [{user}]</code>: Sasha sends the id of the user/chat, otherwise the id of the user and the id of the chat.",
+            "<code>/username [{user}]</code>: Sasha sends the username of the user/chat, otherwise the username of the user and the username of the chat.",
             "<code>/getrank [{user}]</code>: Sasha sends the rank of {user}.",
             "<code>/whoami</code>: Sasha sends user's info.",
             "<code>/info</code>: Sasha sends user's info and chat's info or her info.",
