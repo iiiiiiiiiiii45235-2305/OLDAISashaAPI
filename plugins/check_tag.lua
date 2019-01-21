@@ -440,7 +440,11 @@ local function pre_process(msg)
                         -- exclude already notified
                         if tonumber(msg.from.id) ~= tonumber(k) and tonumber(msg.from.id) ~= tonumber(bot.userVersion.id) and tonumber(k) ~= tonumber(bot.userVersion.id) then
                             -- exclude autotags and tags from tg-cli version and tags of tg-cli version
-                            if check_tag(msg, k, redis_hget_something('tagalert:nicknames', k)) then
+                            local nck = redis_hget_something('tagalert:usernames', k)
+                            if nck == 'true' then
+                                nck = nil
+                            end
+                            if check_tag(msg, k, nck) then
                                 print('nickname', k)
                                 if not msg.command then
                                     -- set user as notified to not send multiple notifications
