@@ -1581,7 +1581,7 @@ end
 function pyrogramDownload(chat_id, file_id, file_name)
     print(chat_id, file_id, file_name)
     -- async, if you want it sync => os.execute("blabla")
-    io.popen('python3 pyrogramThings.py DOWNLOAD ' ..
+    io.popen('python3.7 pyrogramThings.py DOWNLOAD ' ..
     chat_id .. ' ' ..
     file_id .. ' "' ..
     (file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' ..
@@ -1594,7 +1594,7 @@ function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, cap
         print(chat_id, media_type, file_path, reply_to_message_id, caption)
         msgs_plus_plus(chat_id)
         -- async, if you want it sync => os.execute("blabla")
-        io.popen('python3 pyrogramThings.py UPLOAD ' ..
+        io.popen('python3.7 pyrogramThings.py UPLOAD ' ..
         chat_id .. ' ' ..
         media_type .. ' "' ..
         file_path:gsub('"', '\\"') .. '" "' ..
