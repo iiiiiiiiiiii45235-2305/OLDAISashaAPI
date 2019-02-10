@@ -1,4 +1,4 @@
-# pyrogram version => 0.7.5
+# pyrogram version => 0.11.0
 import sys
 import random
 import string
@@ -30,7 +30,7 @@ shutil.copyfile("./config.ini", workdir + '/config.ini')
 shutil.copyfile("./283058260.session", workdir + '/283058260.session')
 
 ###ACTUAL WORK
-app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file="./config.ini")
+app = Client(session_name=bot_api_key, workers=1, workdir=workdir, config_file="./config.ini", no_updates=True)
 app.start()
 print(sys.argv)
 method = str(sys.argv[1])

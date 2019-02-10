@@ -1,4 +1,4 @@
-# pyrogram version => 0.7.5
+# pyrogram version => 0.11.0
 # this is only useful to fill the session file
 import sys
 
