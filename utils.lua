@@ -719,8 +719,10 @@ function doSendBackup()
     '/etc/ssh/sshd_config ' ..
     '/etc/ssmtp/ssmtp.conf ' ..
     '/var/lib/redis ' ..
-    '/home/pi/Grabber ' ..
-    '/home/pi/MyBotForReported '
+    '/home/pi/cloudexplorerbot ' ..
+    '/home/pi/telegramlinkgrabber ' ..
+    '/home/pi/telegrampersonaluserbot ' ..
+    '/home/pi/mybotforreported '
     log = log .. '\n' .. executeBackupCommand(tar, time)
 end
 
