@@ -67,7 +67,7 @@ try:
                 app.send_document(chat_id=chat_id, document=ffile, reply_to_message_id=reply_id, caption=caption)
             elif media_type == "gif":
                 app.send_chat_action(chat_id=chat_id, action=ChatAction.UPLOAD_VIDEO)
-                app.send_gif(chat_id=chat_id, gif=ffile, reply_to_message_id=reply_id, caption=caption)
+                app.send_animation(chat_id=chat_id, gif=ffile, reply_to_message_id=reply_id, caption=caption)
             elif media_type == "photo":
                 app.send_chat_action(chat_id=chat_id, action=ChatAction.UPLOAD_PHOTO)
                 app.send_photo(chat_id=chat_id, photo=ffile, reply_to_message_id=reply_id, caption=caption)
