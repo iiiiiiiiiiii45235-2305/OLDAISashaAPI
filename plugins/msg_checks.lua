@@ -634,7 +634,7 @@ local function check_msg(msg, group_data, pre_process_function)
         if my_tonumber(mute_tgservices) > 0 then
             if pre_process_function then
                 print('tgservices muted')
-                deleteMessage(msg.chat.id, msg.message_id)
+                deleteMessage(msg.chat.id, msg.message_id, true)
                 return nil
             else
                 text = text .. langs[msg.lang].reasonMutedTgservice
