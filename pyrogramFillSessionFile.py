@@ -2,7 +2,7 @@
 # this is only useful to fill the session file
 import sys
 
-from pyrogram import ChatAction, Client
+from pyrogram import Client
 
 print("BEGIN")
 bot_api_key = open("bot_api_key.txt", "r").read()
