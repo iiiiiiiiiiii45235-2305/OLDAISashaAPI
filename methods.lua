@@ -119,9 +119,14 @@ function performRequest(url)
     local data = { }
 
     -- if multithreading is made, this request must be in critical section
-    local c = curl_context:setopt_url(url):setopt_writefunction(table.insert, data):perform()
+    local c = nil
+    local ok, err = pcall( function()
+        c = curl_context:setopt_url(url):setopt_writefunction(table.insert, data):perform()
+    end )
 
-    return table.concat(data), c:getinfo_response_code()
+    if ok then
+        return table.concat(data), c:getinfo_response_code()
+    end
 end
 
 function sendRequest(url, no_log)
