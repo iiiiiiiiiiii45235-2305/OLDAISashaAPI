@@ -135,12 +135,16 @@ function sendRequest(url, no_log)
         savelog('requests', method)
     end
     local dat, code = performRequest(url)
-    local tab = json:decode(dat)
+    local tab = nil
+    if dat then
+        tab = json:decode(dat)
+    end
 
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
         print(clr.yellow .. 'Data:' .. clr.reset, dat)
         sendLog(dat .. "\n" .. code)
+        return
     end
 
     if code ~= 200 then
