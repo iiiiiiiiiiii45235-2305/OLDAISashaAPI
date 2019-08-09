@@ -143,7 +143,6 @@ function sendRequest(url, no_log)
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
         print(clr.yellow .. 'Data:' .. clr.reset, dat)
-        sendLog(tostring(dat) .. "\n" .. tostring(code))
         return
     end
 
