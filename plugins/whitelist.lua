@@ -12,9 +12,9 @@ local function whitelist_link(chat_id, link)
     link = links_to_tdotme(link)
     -- remove http(s)
     link = link:gsub("[Hh][Tt][Tt][Pp][Ss]?://", '')
-    if link:match("^[Tt]%.[Mm][Ee]/") or link:match("^@([%a][%w_]+)") then
+    if link:match("^[Tt]%.[Mm][Ee]/") or link:match("^@([%a][%w_]+)") or link:match("^(%-%d)") then
         if not(link:match("[Tt]%.[Mm][Ee]/[Jj][Oo][Ii][Nn][Cc][Hh][Aa][Tt]/") or link:match("[Cc][Hh][Aa][Tt]%.[Ww][Hh][Aa][Tt][Ss][Aa][Pp][Pp]%.[Cc][Oo][Mm]/")) then
-            if string.match(link, '^(%d+)$') then
+            if string.match(link, '^%-(%d+)$') then
                 -- channel id
                 local obj = getChat(link, true)
                 if not obj then

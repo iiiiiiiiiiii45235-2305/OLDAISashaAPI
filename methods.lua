@@ -119,9 +119,14 @@ function performRequest(url)
     local data = { }
 
     -- if multithreading is made, this request must be in critical section
-    local c = curl_context:setopt_url(url):setopt_writefunction(table.insert, data):perform()
+    local c = nil
+    local ok, err = pcall( function()
+        c = curl_context:setopt_url(url):setopt_writefunction(table.insert, data):perform()
+    end )
 
-    return table.concat(data), c:getinfo_response_code()
+    if ok then
+        return table.concat(data), c:getinfo_response_code()
+    end
 end
 
 function sendRequest(url, no_log)
@@ -130,12 +135,15 @@ function sendRequest(url, no_log)
         savelog('requests', method)
     end
     local dat, code = performRequest(url)
-    local tab = json:decode(dat)
+    local tab = nil
+    if dat then
+        tab = json:decode(dat)
+    end
 
     if not tab then
         print(clr.red .. 'Error while parsing JSON' .. clr.reset, code)
         print(clr.yellow .. 'Data:' .. clr.reset, dat)
-        sendLog(dat .. "\n" .. code)
+        return
     end
 
     if code ~= 200 then
@@ -1581,7 +1589,7 @@ end
 function pyrogramDownload(chat_id, file_id, file_name)
     print(chat_id, file_id, file_name)
     -- async, if you want it sync => os.execute("blabla")
-    io.popen('python3 pyrogramThings.py DOWNLOAD ' ..
+    io.popen('python3.7 pyrogramThings.py DOWNLOAD ' ..
     chat_id .. ' ' ..
     file_id .. ' "' ..
     (file_name or("/data/tmp/" .. file_id)):gsub('"', '\\"') .. '" "' ..
@@ -1594,7 +1602,7 @@ function pyrogramUpload(chat_id, media_type, file_path, reply_to_message_id, cap
         print(chat_id, media_type, file_path, reply_to_message_id, caption)
         msgs_plus_plus(chat_id)
         -- async, if you want it sync => os.execute("blabla")
-        io.popen('python3 pyrogramThings.py UPLOAD ' ..
+        io.popen('python3.7 pyrogramThings.py UPLOAD ' ..
         chat_id .. ' ' ..
         media_type .. ' "' ..
         file_path:gsub('"', '\\"') .. '" "' ..

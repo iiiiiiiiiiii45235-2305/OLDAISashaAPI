@@ -13,22 +13,14 @@ local function get_censorships_hash(msg)
     return false
 end
 
-local function setunset_delword(msg, var_name, time)
+local function setunset_delword(msg, var_name)
     local hash = get_censorships_hash(msg)
     if hash then
         if redis_hget_something(hash, var_name) then
             redis_hdelsrem_something(hash, var_name)
             return langs[msg.lang].delwordRemoved .. var_name
         else
-            if time then
-                if tonumber(time) == 0 then
-                    redis_hset_something(hash, var_name, true)
-                else
-                    redis_hset_something(hash, var_name, time)
-                end
-            else
-                redis_hset_something(hash, var_name, true)
-            end
+            redis_hset_something(hash, var_name, true)
             return langs[msg.lang].delwordAdded .. var_name
         end
     end
@@ -86,37 +78,33 @@ end
 
 local function pre_process(msg)
     if msg then
-        if data[tostring(msg.chat.id)].settings.locks.delword then
-            if not msg.from.is_mod then
-                local found = false
-                local vars = list_censorships(msg)
+        if data[tostring(msg.chat.id)] then
+            if data[tostring(msg.chat.id)].settings.locks.delword then
+                if not msg.from.is_mod then
+                    local found = false
+                    local vars = list_censorships(msg)
 
-                if vars ~= nil then
-                    local t = vars:split('\n')
-                    for i, word in pairs(t) do
-                        local temp = word:lower()
-                        if msg.text then
-                            if string.match(msg.text:lower(), temp) then
-                                found = true
+                    if vars ~= nil then
+                        local t = vars:split('\n')
+                        for i, word in pairs(t) do
+                            local temp = word:lower()
+                            if msg.text then
+                                if string.match(msg.text:lower(), temp) then
+                                    found = true
+                                end
                             end
-                        end
-                        if found then
-                            local hash = get_censorships_hash(msg)
-                            local time = redis_hget_something(hash, temp)
-                            local text = ''
-                            if time == 'true' or time == '0' then
-                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id)))
+                            if found then
+                                local hash = get_censorships_hash(msg)
+                                local time = redis_hget_something(hash, temp)
+                                if time == 'true' or time == true then
+                                    time = 0
+                                end
+                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword, msg.message_id, time)))
                                 if not data[tostring(msg.chat.id)].settings.groupnotices then
                                     io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
                                 end
-                            else
-                                io.popen('lua timework.lua "deletemessage" "' .. time .. '" "' .. msg.chat.id .. '" "' .. msg.message_id .. '"')
-                                local message_id = getMessageId(sendMessage(msg.chat.id, punishmentAction(bot.id, msg.from.id, msg.chat.id, data[tostring(msg.chat.id)].settings.locks.delword, langs[msg.lang].reasonLockDelword)))
-                                if not data[tostring(msg.chat.id)].settings.groupnotices then
-                                    io.popen('lua timework.lua "deletemessage" "300" "' .. msg.chat.id .. '" "' ..(message_id or '') .. '"')
-                                end
+                                return nil
                             end
-                            return nil
                         end
                     end
                 end

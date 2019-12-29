@@ -508,15 +508,6 @@ local function check_msg(msg, group_data, pre_process_function)
             end
         end
     else
-        if my_tonumber(mute_tgservices) > 0 then
-            if pre_process_function then
-                print('tgservices muted')
-                deleteMessage(msg.chat.id, msg.message_id)
-                return nil
-            else
-                text = text .. langs[msg.lang].reasonMutedTgservice
-            end
-        end
         if msg.service_type == 'chat_add_user_link' then
             if my_tonumber(lock_spam) > 0 then
                 local _nl, ctrl_chars = string.gsub(msg.from.print_name, '%c', '')
@@ -638,6 +629,15 @@ local function check_msg(msg, group_data, pre_process_function)
                         text = text .. langs[msg.lang].reasonLockLeave
                     end
                 end
+            end
+        end
+        if my_tonumber(mute_tgservices) > 0 then
+            if pre_process_function then
+                print('tgservices muted')
+                deleteMessage(msg.chat.id, msg.message_id, true)
+                return nil
+            else
+                text = text .. langs[msg.lang].reasonMutedTgservice
             end
         end
     end

@@ -72,7 +72,7 @@ elseif action == 'fileconversion' then
     file_path = tostring(file_path or ""):gsub('\\"', '"')
     text = tostring(text or ""):gsub('\\"', '"')
     -- sync
-    os.execute('python3 pyrogramThings.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
+    os.execute('python3.7 pyrogramThings.py DOWNLOAD ' .. chat_id .. ' ' .. file_id .. ' "' .. file_path .. '" "' .. text .. '"')
     -- async
     pyrogramUpload(chat_id, to_type, file_path, nil, langs[get_lang(chat_id)].downloadAndRename)
     return
