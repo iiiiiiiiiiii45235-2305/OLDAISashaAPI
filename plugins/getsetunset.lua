@@ -381,6 +381,10 @@ local function run(msg, matches)
                 for i, word in pairs(tab) do
                     newtab[word] = get_value(msg.chat.id, msg.chat.type, word:lower())
                 end
+                file_name = string.random(50)
+                local file_path = "data/tmp/" .. file_name .. ".json"
+                save_data(file_path, newtab)
+                return pyrogramUpload(msg.chat.id, "document", file_path, msg.message_id)
             end
         else
             return langs[msg.lang].require_owner
