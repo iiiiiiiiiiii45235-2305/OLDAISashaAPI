@@ -205,26 +205,20 @@ return {
     it =
     {
         newsText = "SASHA'S NEWS\n#sashasnews\n" ..
-        "A TUTTI I MODERATORI E OWNER PER FAVORE LEGGETE.\n" ..
-        "E' passato un sacco di tempo dall'ultimo aggiornamento (pochi bugfixes e qualche miglioramento), quindi ecco un aggiornamento ENORME.\n" ..
-        "UN BEL PO' di bugfixes e miglioramenti per il codice.\n" ..
-        "Migliore gestione delle shitstorm.\n" ..
-        "Alcuni comandi ora usano le pagine per avere una gestione migliore su piccoli schermi.\n" ..
-        "(GROUP_MANAGEMENT) Nuova gestione di blocchi|muti, più complessa ma anche tanto più completa (nuova tastiera e i comandi [un]lock|[un]mute sono stati rivisitati).\n" ..
-        "!Settings e !Mutelist ora sono la stessa cosa, così come !Lock, !Mute e !Unlock, !Unmute (quelli con Mute verranno rimossi presto quindi cominciate a usare ![Un]Lock e !Settings).\n" ..
-        "Ora potete scegliere le punizioni per ogni blocco e per ogni muto, è possibile scegliere anche la punizione al raggiungimento del massimo degli warn (mod^).\n" ..
-        "Alcune punizioni non sono disponibili (troppo basse) quindi verranno saltate se selezionate.\n" ..
-        "Tagalert e PMNotices si trovano ora nella tastiera delle impostazioni(owner^).\n" ..
-        "Ora quando il Pugno di ferro è abilitato le punizioni temporanee verranno rese permanenti.\n" ..
-        "Comandi !Settimeban e !Settimekeyboard per impostare il tempo delle punizioni temporanee (mod^).\n" ..
-        "Aggiunti i blocchi gbanned e forward rispettivamente per gli utenti bannati globalmente e per i messaggi inoltrati da altri canali.\n" ..
-        "!Log ora è una tastiera con le pagine (se c'è bisogno del file usare !Sendlog) (owner^).\n" ..
-        "La sintassi di !Lock è cambiata in !Lock {setting} {punishment} (mod^).\n" ..
-        "!Delfrom, !Delto e !Delall per pulire la chat da due giorni prima (al massimo), utile per le shitstorm, selezionate l'inizio con !Delfrom e la fine con !Delto e poi usate !Delall (mod^ (più di 70 messaggi owner^)).\n" ..
-        "Può richiedere UN BEL PO' tempo.\n" ..
-        "!Permissions ora necessita la conferma prima di promuovere l'utente (owner^).\n" ..
-        "(BANHAMMER) !Restrictions ora necessita la conferma prima di limitare l'utente (mod^).\n" ..
-        "(NEWS) Le News ora sono anche in italiano.\n",
+        "A TUTTI GLI UTENTI, MODERATORI E OWNER.\n" ..
+        "E' da un po' che sto lavorando ad una nuova versione Sasha, profondamente diversa in quanto riscritta praticamente da zero.\n" ..
+        "Ora è il momento di aggiornarla e di farvi sapere che cosa cambierà e come funzionerà la migrazione da una versione all'altra:\n" ..
+        "- La migrazione avverrà tra qualche giorno (verrete informati tramite @AISashaChannel), la maggior parte dei dati di ogni gruppo sarà preservata ad eccezione delle alternative ai comandi (dovrete settarle nuovamente) e ai media impostati nei set e nelle censure.\n" ..
+        "- Durante la migrazione ovviamente il bot sarà offline, il tutto dovrebbe avvenire nel giro di mezz'ora sperando non ci siano problemi.\n" ..
+        "- Quasi TUTTI I COMANDI SONO CAMBIATI! Dovrete riabituarvi ad utilizzare Sasha in quanto moltissime cose sono cambiate, utilizzate l'help e i bottoni informativi nelle tastiere.\n" ..
+        "- Ci sono molti meno comandi testuali e più passaggi guidati da tastiere.\n" ..
+        "- Il nuovo bot non risponderà nel caso che chi utilizzi il comando non abbia i permessi adeguati o se la sintassi risulta errata, in alcuni casi verrà comunque comunicato che c'è un errore e di provare di nuovo.\n" ..
+        "- Nuovo menù delle impostazioni e svariate modifiche alle stesse.\n" ..
+        "- Sasha sarà liberamente utilizzabile da tutti.\n" ..
+        "- Sono cambiati i ranghi: utente, privilegiato, junior_mod, senior_mod e owner.\n" ..
+        "Senior Mod: Ha la possibilità di promuovere Junior Mods (e quindi di fare tutto ciò che questi possono fare) e di modificare le impostazioni del gruppo.\n" ..
+        "Junior Mod: Ha la possibilità di agire direttamente sugli utenti coi classici comandi (.ban, .kick, .warn e via dicendo).\n\n" ..
+        "Come ho detto è stata completamente riscritta, quindi nel caso di problemi o dubbi potete sempre contattarmi.",
         -- global --
         require_sudo = "🚫 Questo comando richiede i privilegi di sudo. 🚫",
         require_admin = "🚫 Questo comando richiede privilegi da admin o superiori. 🚫",
@@ -1750,26 +1744,20 @@ return {
     en =
     {
         newsText = "SASHA'S NEWS\n#sashasnews\n" ..
-        "FOR EVERY MODERATOR AND OWNER PLEASE READ.\n" ..
-        "It's been a long long time since the last updates (just little bugfixes and improvements), so here it is a HUGE update.\n" ..
-        "A LOT of bugfixes and improvements under the hood.\n" ..
-        "Better shitstorm management.\n" ..
-        "Some commands now use pages to have a better management of the keyboard with small screens.\n" ..
-        "(GROUP_MANAGEMENT) New settings|mutes management, more complex but also a lot more complete (new keyboard and [un]lock|[un]mute commands revised).\n" ..
-        "!Settings and !Mutelist are now the same thing as well as !Lock, !Mute and !Unlock, !Unmute (Mutes ones will be removed soon so start using only ![Un]Lock and !Settings).\n" ..
-        "You can now choose punishments for each lock and mute and also the punishment when reaching the maximum number of warns (mod^).\n" ..
-        "Some punishments are not available (too low) so they will be skipped if selected.\n" ..
-        "Tagalert and PMNotices are now in the settings keyboard (owner^).\n" ..
-        "Now when Strict is enabled will make permanent temporary punishments.\n" ..
-        "!Settimeban and !Settimekeyboard commands to set the time for temporary punishments (mod^).\n" ..
-        "Added lock gbanned and lock forward respectively for gbanned people and forwarded messages from channels.\n" ..
-        "!Log command now is a keyboard with pages (if you need the file use !Sendlog) (owner^).\n" ..
-        "The syntax of !Lock is changed in !Lock {setting} {punishment} (mod^).\n" ..
-        "!Delfrom, !Delto and !Delall commands to clean the chat from two days ago (at most), useful for shitstorm, just select the starting point with !Delfrom and the end with !Delto and then use !Delall (mod^ (more than 70 messages owner^)).\n" ..
-        "It can require A LOT of time.\n" ..
-        "!Permissions keyboard now wait for confirmation to promte a user (owner^).\n" ..
-        "(BANHAMMER) !Restrictions keyboard now wait for confirmation to restrict a user (mod^).\n" ..
-        "(NEWS) News are now localized with the lang of the chat.\n",
+        "A TUTTI GLI UTENTI, MODERATORI E OWNER.\n" ..
+        "E' da un po' che sto lavorando ad una nuova versione Sasha, profondamente diversa in quanto riscritta praticamente da zero.\n" ..
+        "Ora è il momento di aggiornarla e di farvi sapere che cosa cambierà e come funzionerà la migrazione da una versione all'altra:\n" ..
+        "- La migrazione avverrà tra qualche giorno (verrete informati tramite @AISashaChannel), la maggior parte dei dati di ogni gruppo sarà preservata ad eccezione delle alternative ai comandi (dovrete settarle nuovamente) e ai media impostati nei set e nelle censure.\n" ..
+        "- Durante la migrazione ovviamente il bot sarà offline, il tutto dovrebbe avvenire nel giro di mezz'ora sperando non ci siano problemi.\n" ..
+        "- Quasi TUTTI I COMANDI SONO CAMBIATI! Dovrete riabituarvi ad utilizzare Sasha in quanto moltissime cose sono cambiate, utilizzate l'help e i bottoni informativi nelle tastiere.\n" ..
+        "- Ci sono molti meno comandi testuali e più passaggi guidati da tastiere.\n" ..
+        "- Il nuovo bot non risponderà nel caso che chi utilizzi il comando non abbia i permessi adeguati o se la sintassi risulta errata, in alcuni casi verrà comunque comunicato che c'è un errore e di provare di nuovo.\n" ..
+        "- Nuovo menù delle impostazioni e svariate modifiche alle stesse.\n" ..
+        "- Sasha sarà liberamente utilizzabile da tutti.\n" ..
+        "- Sono cambiati i ranghi: utente, privilegiato, junior_mod, senior_mod e owner.\n" ..
+        "Senior Mod: Ha la possibilità di promuovere Junior Mods (e quindi di fare tutto ciò che questi possono fare) e di modificare le impostazioni del gruppo.\n" ..
+        "Junior Mod: Ha la possibilità di agire direttamente sugli utenti coi classici comandi (.ban, .kick, .warn e via dicendo).\n\n" ..
+        "Come ho detto è stata completamente riscritta, quindi nel caso di problemi o dubbi potete sempre contattarmi.",
         -- global --
         require_sudo = "🚫 This plugin requires sudo privileges. 🚫",
         require_admin = "🚫 This plugin requires admin privileges or higher. 🚫",
