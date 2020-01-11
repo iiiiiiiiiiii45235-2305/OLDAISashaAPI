@@ -216,8 +216,9 @@ return {
         "- Nuovo menù delle impostazioni e svariate modifiche alle stesse.\n" ..
         "- Sasha sarà liberamente utilizzabile da tutti.\n" ..
         "- Sono cambiati i ranghi: utente, privilegiato, junior_mod, senior_mod e owner.\n" ..
-        "Senior Mod: Ha la possibilità di promuovere Junior Mods (e quindi di fare tutto ciò che questi possono fare) e di modificare le impostazioni del gruppo.\n" ..
-        "Junior Mod: Ha la possibilità di agire direttamente sugli utenti coi classici comandi (.ban, .kick, .warn e via dicendo).\n\n" ..
+        "Senior Mod: Ha la possibilità di promuovere Junior Mods (e quindi di fare tutto ciò che questi possono fare) e di modificare le impostazioni e i plugins del gruppo.\n" ..
+        "Junior Mod: Ha la possibilità di agire direttamente sugli utenti coi classici comandi (.ban, .kick, .warn e via dicendo).\n" ..
+        "Privileged: Ha la possibilità di utilizzare i plugins che sono stati riservati per questo tipo di utenti dai senior mods o dall'owner (non sono immuni alle impostazioni di Sasha tipo il blocco dei link e via dicendo, per quella tipologia di utenti vedere la whitelist).\n\n" ..
         "Come ho detto è stata completamente riscritta, quindi nel caso di problemi o dubbi potete sempre contattarmi.",
         -- global --
         require_sudo = "🚫 Questo comando richiede i privilegi di sudo. 🚫",
@@ -1755,8 +1756,9 @@ return {
         "- Nuovo menù delle impostazioni e svariate modifiche alle stesse.\n" ..
         "- Sasha sarà liberamente utilizzabile da tutti.\n" ..
         "- Sono cambiati i ranghi: utente, privilegiato, junior_mod, senior_mod e owner.\n" ..
-        "Senior Mod: Ha la possibilità di promuovere Junior Mods (e quindi di fare tutto ciò che questi possono fare) e di modificare le impostazioni del gruppo.\n" ..
-        "Junior Mod: Ha la possibilità di agire direttamente sugli utenti coi classici comandi (.ban, .kick, .warn e via dicendo).\n\n" ..
+        "Senior Mod: Ha la possibilità di promuovere Junior Mods (e quindi di fare tutto ciò che questi possono fare) e di modificare le impostazioni e i plugins del gruppo.\n" ..
+        "Junior Mod: Ha la possibilità di agire direttamente sugli utenti coi classici comandi (.ban, .kick, .warn e via dicendo).\n" ..
+        "Privileged: Ha la possibilità di utilizzare i plugins che sono stati riservati per questo tipo di utenti dai senior mods o dall'owner (non sono immuni alle impostazioni di Sasha tipo il blocco dei link e via dicendo, per quella tipologia di utenti vedere la whitelist).\n\n" ..
         "Come ho detto è stata completamente riscritta, quindi nel caso di problemi o dubbi potete sempre contattarmi.",
         -- global --
         require_sudo = "🚫 This plugin requires sudo privileges. 🚫",
